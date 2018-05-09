@@ -27,9 +27,20 @@ android {
     warningsAsErrors true
     abortOnError true
   }
+
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+
+  androidExtensions {
+    experimental = true
+  }
 }
 
 dependencies {
+  compile project(path: ':router')
+
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
   testImplementation 'junit:junit:4.12'
 

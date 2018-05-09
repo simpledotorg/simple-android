@@ -1,6 +1,14 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
+  ext.versions = [
+      kotlin        : '1.2.41',
+      minSdk        : 19,
+      compileSdk    : 26,
+      supportLib    : '27.1.1',
+      timber        : '4.7.0',
+  ]
+
   repositories {
     google()
     jcenter()
@@ -8,6 +16,7 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:3.1.2'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
   }
 }
 

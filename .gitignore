@@ -41,5 +41,8 @@ gen-external-apklibs
 *~
 *.swp
 
+# Generated for release builds
+output.json
+
 # Keystore files
 *.jks

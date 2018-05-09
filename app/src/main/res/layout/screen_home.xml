@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout android:id="@+id/home_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".TheActivity"
-  android:id="@+id/home_root"
   tools:ignore="MergeRootFrame">
 
-  <TextView
+  <Button
+    android:id="@+id/homeMobile"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Hello World!" />
+    android:text="@string/home_mobile" />
 </FrameLayout>

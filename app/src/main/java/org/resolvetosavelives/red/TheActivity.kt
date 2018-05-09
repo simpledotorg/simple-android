@@ -1,24 +1,31 @@
 package org.resolvetosavelives.red
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import org.resolvetosavelives.home.HomeScreen
+import org.resolvetosavelives.red.home.HomeScreen
 import org.resolvetosavelives.red.router.ScreenResultBus
 import org.resolvetosavelives.red.router.screen.ActivityResult
 import org.resolvetosavelives.red.router.screen.FullScreenKey
 import org.resolvetosavelives.red.router.screen.NestedKeyChanger
 import org.resolvetosavelives.red.router.screen.ScreenRouter
-import timber.log.Timber
 
 class TheActivity : AppCompatActivity() {
 
-  private lateinit var screenRouter: ScreenRouter
+  companion object {
+    // TODO: Remove this when we setup DI.
+    @SuppressLint("StaticFieldLeak")
+    private lateinit var screenRouter: ScreenRouter
+
+    fun screenRouter(): ScreenRouter {
+      return screenRouter;
+    }
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    Timber.i("Sup world?")
   }
 
   override fun attachBaseContext(baseContext: Context) {

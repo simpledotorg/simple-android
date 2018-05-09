@@ -50,4 +50,6 @@ dependencies {
   implementation "com.jakewharton.timber:timber:$versions.timber"
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+  implementation "com.jakewharton:butterknife:$versions.butterKnife"
+  kapt "com.jakewharton:butterknife-compiler:$versions.butterKnife"
 }

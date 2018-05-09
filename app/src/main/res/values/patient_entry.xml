@@ -2,4 +2,11 @@
 <resources>
   <string name="patiententry_mobile_number">Patient mobile number</string>
   <string name="patiententry_new_patient">New patient</string>
+  <string name="patiententry_full_name">Full name</string>
+  <string name="patiententry_date_of_birth">Date of birth</string>
+  <string name="patiententry_or">or</string>
+  <string name="patiententry_age">Age</string>
+  <string name="patiententry_male">Male</string>
+  <string name="patiententry_female">Female</string>
+  <string name="patiententry_trans">Trans</string>
 </resources>

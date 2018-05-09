@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+  <issue id="GoogleAppIndexingWarning" severity="informational" />
+  <issue id="AllowBackup" severity="informational" />
+  <issue id="UnusedResources">
+    <ignore path="src/main/res/values/colors_material.xml" />
+  </issue>
+</lint>

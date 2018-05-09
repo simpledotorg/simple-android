@@ -7,6 +7,8 @@ class RedApp : Application() {
 
   override fun onCreate() {
     super.onCreate()
+
+    Timber.i("Planing timber tree")
     Timber.plant(Timber.DebugTree())
   }
 }

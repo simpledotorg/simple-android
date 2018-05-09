@@ -2,12 +2,13 @@
 
 buildscript {
   ext.versions = [
-      kotlin    : '1.2.41',
-      minSdk    : 19,
-      compileSdk: 26,
-      supportLib: '27.1.1',
-      timber    : '4.7.0',
-      dagger    : '2.16'
+      minSdk     : 19,
+      compileSdk : 26,
+      kotlin     : '1.2.41',
+      supportLib : '27.1.1',
+      timber     : '4.7.0',
+      dagger     : '2.16',
+      butterKnife: '8.8.1',
   ]
 
   repositories {

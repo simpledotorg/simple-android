@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen android:id="@+id/patientpersonaldetailsRoot"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+      android:id="@+id/fullName"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="@string/patiententry_full_name"
+      android:inputType="textPersonName" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="@string/patiententry_date_of_birth"
+        android:inputType="date" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/patiententry_or" />
+
+      <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/patiententry_age"
+        android:inputType="number" />
+    </LinearLayout>
+
+    <RadioGroup
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+
+      <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/patiententry_male" />
+
+      <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/patiententry_female" />
+
+      <RadioButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/patiententry_trans" />
+    </RadioGroup>
+  </LinearLayout>
+
+  <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:text="Next"
+    tools:ignore="HardcodedText" />
+</org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen>

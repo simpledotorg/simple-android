@@ -5,4 +5,5 @@
   <issue id="UnusedResources">
     <ignore path="src/main/res/values/colors_material.xml" />
   </issue>
+  <issue id="ParcelCreator" severity="informational" />
 </lint>

@@ -1,6 +1,9 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+apply from: "../quality/install-git-hook.gradle"
 
 android {
   compileSdkVersion versions.compileSdk
@@ -18,9 +21,26 @@ android {
       minifyEnabled false
     }
   }
+
+  lintOptions {
+    lintConfig file("$project.rootDir/quality/lint.xml")
+    warningsAsErrors true
+    abortOnError true
+  }
+
+  compileOptions {
+    targetCompatibility 1.8
+    sourceCompatibility 1.8
+  }
+
+  androidExtensions {
+    experimental = true
+  }
 }
 
 dependencies {
+  compile project(path: ':router')
+
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
   testImplementation 'junit:junit:4.12'
 
@@ -28,4 +48,6 @@ dependencies {
   implementation "com.android.support:recyclerview-v7:$versions.supportLib"
 
   implementation "com.jakewharton.timber:timber:$versions.timber"
+  implementation "com.google.dagger:dagger:$versions.dagger"
+  kapt "com.google.dagger:dagger-compiler:$versions.dagger"
 }

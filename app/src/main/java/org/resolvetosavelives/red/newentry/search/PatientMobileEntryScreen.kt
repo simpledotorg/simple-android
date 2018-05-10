@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.mobile
+package org.resolvetosavelives.red.newentry.search
 
 import android.content.Context
 import android.util.AttributeSet

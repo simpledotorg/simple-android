@@ -14,6 +14,12 @@
     <requestFocus />
   </EditText>
 
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/patientsearch_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/patientsearch_mobile_number" />
+
   <Button
     android:id="@+id/patientsearch_new_patient"
     android:layout_width="wrap_content"

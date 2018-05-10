@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.mobile
+package org.resolvetosavelives.red.newentry.search
 
 import kotlinx.android.parcel.Parcelize
 import org.resolvetosavelives.red.R

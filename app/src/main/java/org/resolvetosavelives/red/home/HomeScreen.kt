@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen
+import org.resolvetosavelives.red.newentry.search.PatientMobileEntryScreen
 import timber.log.Timber
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {

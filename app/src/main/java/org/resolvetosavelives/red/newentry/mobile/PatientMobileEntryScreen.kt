@@ -8,6 +8,8 @@ import android.widget.RelativeLayout
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.home.HomeScreen
+import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 
 class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -15,21 +17,29 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
     val KEY = PatientMobileEntryScreenKey()
   }
 
-  private val primaryMobileNumberEditText: EditText by bindView(R.id.patientmobile_primary_number)
+  private val primaryNumberEditText: EditText by bindView(R.id.patientmobile_primary_number)
   private val nextButton: Button by bindView(R.id.patientmobile_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
 
     // TODO: threading.
-    TheActivity.patientRepository()
+    val repository = TheActivity.patientRepository()
+    repository
         .ongoingEntry()
         .subscribe({ entry ->
-          primaryMobileNumberEditText.setText(entry.mobileNumber)
+          primaryNumberEditText.setText(entry.mobileNumber)
         })
 
     nextButton.setOnClickListener({
-      // TODO.
+      // TODO: threading.
+      repository.ongoingEntry()
+          .map { entry -> entry.copy(mobileNumber = primaryNumberEditText.text.toString()) }
+          .flatMapCompletable { entry: OngoingPatientEntry -> repository.save(entry) }
+          .andThen(repository.saveOngoingEntry())
+          .subscribe({
+            TheActivity.screenRouter().push(HomeScreen.KEY)
+          })
     })
   }
 }

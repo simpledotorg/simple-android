@@ -5,6 +5,10 @@ apply plugin: 'kotlin-kapt'
 
 apply from: "../quality/install-git-hook.gradle"
 
+repositories {
+  maven { url 'https://jitpack.io' }
+}
+
 android {
   compileSdkVersion versions.compileSdk
 
@@ -59,6 +63,8 @@ dependencies {
   implementation "com.jakewharton.timber:timber:$versions.timber"
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
-  implementation "com.jakewharton:butterknife:$versions.butterKnife"
-  kapt "com.jakewharton:butterknife-compiler:$versions.butterKnife"
+
+  implementation ('com.github.JakeWharton:kotterknife:e157638df1') {
+    exclude group: 'com.android.support'
+  }
 }

@@ -35,4 +35,10 @@ class PatientRepository {
       this.ongoingPatientEntry = ongoingEntry
     })
   }
+
+  fun saveOngoingEntry(): Completable {
+    return ongoingEntry()
+        .map { entry -> entry.toPatient() }
+        .flatMapCompletable { patient -> save(patient) }
+  }
 }

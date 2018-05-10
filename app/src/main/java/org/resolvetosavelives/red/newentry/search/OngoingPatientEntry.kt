@@ -5,5 +5,9 @@ data class OngoingPatientEntry(
     val mobileNumber: String? = null
 ) {
 
+  fun toPatient(): Patient {
+    return Patient(personalDetails!!.fullName, mobileNumber!!)
+  }
+
   data class PersonalDetails(val fullName: String)
 }

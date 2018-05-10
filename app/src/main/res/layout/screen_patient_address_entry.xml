@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen android:id="@+id/patientaddress_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <EditText
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="House number and street name"
+      android:inputType="textPostalAddress" />
+
+    <EditText
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:hint="Area/Colony"
+      android:inputType="textPostalAddress" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="District"
+        android:inputType="textPostalAddress" />
+
+      <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:hint="State"
+        android:inputType="textPostalAddress" />
+    </LinearLayout>
+
+    <EditText
+      android:layout_width="100dp"
+      android:layout_height="wrap_content"
+      android:hint="PIN"
+      android:inputType="textPostalAddress" />
+  </LinearLayout>
+
+  <Button
+    android:id="@+id/patientaddress_next_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:text="Next" />
+</org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen>

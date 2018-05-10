@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.screen_home.view.*
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.search.PatientMobileEntryScreen
+import org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen
 import timber.log.Timber
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -19,7 +19,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
     mobileButton.setOnClickListener({
       Timber.i("Going to patient mobile entry")
-      TheActivity.screenRouter().push(PatientMobileEntryScreen.KEY)
+      TheActivity.screenRouter().push(PatientSearchByMobileScreen.KEY)
     })
   }
 }

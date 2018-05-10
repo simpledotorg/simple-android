@@ -6,6 +6,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
+import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen
 
 class PatientAddressEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -19,7 +21,7 @@ class PatientAddressEntryScreen(context: Context, attrs: AttributeSet) : Relativ
     super.onFinishInflate()
 
     nextButton.setOnClickListener({
-      // TODO: move to phone entry screen.
+      TheActivity.screenRouter().push(PatientMobileEntryScreen.KEY)
     })
   }
 }

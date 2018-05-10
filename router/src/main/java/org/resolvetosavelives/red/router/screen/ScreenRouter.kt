@@ -14,7 +14,6 @@ import java.util.*
 
 /**
  * Responsible for routing between screens inside the host Activity.
- * Usage: https://gitlab.corp.olacabs.com/olapartner/android/wikis/ui-navigation.
  */
 class ScreenRouter(
     private val activity: Activity,

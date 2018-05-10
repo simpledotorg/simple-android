@@ -5,9 +5,9 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.router.screen.FullScreenKey
 
 @Parcelize
-class PatientMobileEntryScreenKey : FullScreenKey {
+class PatientSearchByMobileScreenKey : FullScreenKey {
 
   override fun layoutRes(): Int {
-    return R.layout.screen_patient_mobile_entry
+    return R.layout.screen_patient_search_by_mobile
   }
 }

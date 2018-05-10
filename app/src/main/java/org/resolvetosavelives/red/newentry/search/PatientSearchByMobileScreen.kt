@@ -9,10 +9,10 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
 
-class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = PatientMobileEntryScreenKey()
+    val KEY = PatientSearchByMobileScreenKey()
   }
 
   private val newPatientButton: Button by bindView(R.id.home_new_patient)

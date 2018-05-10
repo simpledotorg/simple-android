@@ -5,17 +5,17 @@
   android:layout_height="match_parent">
 
   <EditText
-    android:id="@+id/patientmobile_primary"
+    android:id="@+id/patientmobile_primary_number"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:hint="999 999 9999"
     android:inputType="phone" />
 
   <EditText
-    android:id="@+id/patientmobile_secondary"
+    android:id="@+id/patientmobile_secondary_number"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/patientmobile_primary"
+    android:layout_below="@id/patientmobile_primary_number"
     android:hint="Alternative phone"
     android:inputType="phone" />
 
@@ -25,5 +25,5 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
-    android:text="Next" />
+    android:text="Save" />
 </org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen>

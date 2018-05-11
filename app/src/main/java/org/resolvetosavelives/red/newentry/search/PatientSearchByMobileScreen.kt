@@ -15,7 +15,6 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
-import timber.log.Timber
 
 class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -58,7 +57,6 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
         }
-        .doOnNext({ patients -> Timber.i("patients: %s", patients) })
         .takeUntil(RxView.detaches(this))
         .subscribe(resultsAdapter)
   }

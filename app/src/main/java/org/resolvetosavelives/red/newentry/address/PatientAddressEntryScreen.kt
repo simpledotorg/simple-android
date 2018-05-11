@@ -11,7 +11,7 @@ import org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen
 
 class PatientAddressEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  private val nextButton: TextView by bindView(R.id.patientaddress_next_button)
+  private val nextButton by bindView<TextView>(R.id.patientaddress_next_button)
 
   companion object {
     val KEY = PatientAddressEntryScreenKey()

@@ -18,8 +18,8 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
     val KEY = PatientMobileEntryScreenKey()
   }
 
-  private val primaryNumberEditText: EditText by bindView(R.id.patientmobile_primary_number)
-  private val nextButton: Button by bindView(R.id.patientmobile_next)
+  private val primaryNumberEditText by bindView<EditText>(R.id.patientmobile_primary_number)
+  private val nextButton by bindView<Button>(R.id.patientmobile_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

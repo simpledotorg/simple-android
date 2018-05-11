@@ -33,8 +33,8 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    private val titleTextView: TextView by bindView(R.id.patientsearch_item_title)
-    private val bylineTextView: TextView by bindView(R.id.patientsearch_item_byline)
+    private val titleTextView by bindView<TextView>(R.id.patientsearch_item_title)
+    private val bylineTextView by bindView<TextView>(R.id.patientsearch_item_byline)
 
     fun render(patient: Patient) {
       titleTextView.text = patient.fullName

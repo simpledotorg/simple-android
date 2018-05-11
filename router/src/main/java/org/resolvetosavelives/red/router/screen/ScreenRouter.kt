@@ -6,11 +6,15 @@ import android.os.Parcelable
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
 import android.view.View
-import flow.*
+import flow.Flow
+import flow.History
+import flow.KeyChanger
+import flow.KeyDispatcher
+import flow.KeyParceler
 import io.reactivex.Observable
 import io.reactivex.exceptions.Exceptions
 import org.resolvetosavelives.red.router.ScreenResultBus
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Responsible for routing between screens inside the host Activity.
@@ -61,8 +65,8 @@ class ScreenRouter(
     flow().set(screenKey)
   }
 
-  fun clearHistoryAndPush(screenKey: FullScreenKey, direction: flow.Direction) {
-    flow().setHistory(History.single(screenKey), direction)
+  fun clearHistoryAndPush(screenKey: FullScreenKey, direction: Direction) {
+    flow().setHistory(History.single(screenKey), direction.flowDirection())
   }
 
   fun pop(): BackStackPopCallback {

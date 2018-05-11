@@ -11,9 +11,8 @@
     android:id="@+id/home_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:titleTextColor="#60200A"
     app:title="@string/app_name"
-    tools:ignore="UnusedAttribute" />
+    app:titleTextColor="#60200A" />
 
   <android.support.design.widget.TabLayout
     android:id="@+id/home_viewpager_tabs"

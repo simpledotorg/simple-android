@@ -12,6 +12,7 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
+import org.resolvetosavelives.red.widgets.showKeyboard
 
 class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -27,6 +28,8 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
     if (isInEditMode) {
       return
     }
+
+    fullNameEditText.showKeyboard()
 
     nextButton.setOnClickListener({
       val repository = TheActivity.patientRepository()

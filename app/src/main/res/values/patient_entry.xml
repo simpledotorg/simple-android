@@ -17,6 +17,7 @@
 
   <string name="patiententry_address_title">Patient address</string>
 
+  <string name="patiententry_mobile_title">Patient mobile</string>
   <string name="patiententry_mobile_number">Patient mobile number</string>
 
   <style name="RedApp.Button.PatientEntry">

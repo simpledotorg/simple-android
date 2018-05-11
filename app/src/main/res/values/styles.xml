@@ -1,8 +1,17 @@
 <resources>
 
-  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+  <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
     <item name="colorPrimary">@color/color_primary</item>
     <item name="colorPrimaryDark">@color/color_primary_dark</item>
     <item name="colorAccent">@color/color_accent</item>
+
+    <item name="toolbarStyle">@style/RedApp.ToolbarStyle</item>
+  </style>
+
+  <style name="RedApp" />
+
+  <style name="RedApp.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+    <item name="android:background">@color/color_primary</item>
+    <item name="titleTextColor">#60200A</item>
   </style>
 </resources>

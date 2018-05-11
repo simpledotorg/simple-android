@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
   <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
     <item name="colorPrimary">@color/color_primary</item>
@@ -13,5 +13,15 @@
   <style name="RedApp.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
     <item name="android:background">@color/color_primary</item>
     <item name="titleTextColor">#60200A</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>
+  </style>
+
+  <style name="RedApp.Button" />
+
+  <style name="RedApp.Button.PatientEntry">
+    <item name="android:textColor">@color/white</item>
+    <item name="backgroundTint">@color/color_accent</item>
+    <item name="android:paddingStart">@dimen/spacing_20</item>
+    <item name="android:paddingEnd">@dimen/spacing_20</item>
   </style>
 </resources>

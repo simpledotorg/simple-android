@@ -6,4 +6,7 @@
     <ignore path="src/main/res/values/colors_material.xml" />
   </issue>
   <issue id="ParcelCreator" severity="informational" />
+
+  <!-- TODO: Remove this once we've given a build to Dan on friday. -->
+  <issue id="HardcodedText" severity="informational" />
 </lint>

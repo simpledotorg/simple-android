@@ -5,7 +5,7 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.router.screen.FullScreenKey
 
 @Parcelize
-class PatientPersonalDetailsScreenKey : FullScreenKey {
+data class PatientPersonalDetailsScreenKey(val preFilledFullName: String? = null) : FullScreenKey {
 
   override fun layoutRes(): Int {
     return R.layout.screen_patient_personal_details_entry

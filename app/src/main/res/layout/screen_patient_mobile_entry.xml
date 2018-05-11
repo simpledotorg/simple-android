@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen android:id="@+id/patientmobileentryRoot"
+<org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen android:id="@+id/patientmobile_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
   <EditText
-    android:id="@+id/mobileNumber"
+    android:id="@+id/patientmobile_primary_number"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:hint="@string/patiententry_mobile_number"
-    android:inputType="phone">
+    android:hint="999 999 9999"
+    android:inputType="phone" />
 
-    <requestFocus />
-  </EditText>
+  <EditText
+    android:id="@+id/patientmobile_secondary_number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/patientmobile_primary_number"
+    android:hint="Alternative phone"
+    android:inputType="phone" />
 
   <Button
-    android:id="@+id/newPatientButton"
+    android:id="@+id/patientmobile_next"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
-    android:text="@string/patiententry_new_patient" />
+    android:text="Save" />
 </org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen>

@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red
 
 import android.annotation.SuppressLint
+import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,12 +16,13 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 
 class TheActivity : AppCompatActivity() {
 
+  // TODO: Remove these once we setup DI.
   companion object {
-    // TODO: Remove this when we setup DI.
     @SuppressLint("StaticFieldLeak")
     private lateinit var screenRouter: ScreenRouter
 
-    private val patientRepository: PatientRepository = PatientRepository()
+    private lateinit var patientRepository: PatientRepository
+    private lateinit var appDatabase: AppDatabase
 
     fun screenRouter(): ScreenRouter {
       return screenRouter
@@ -29,10 +31,20 @@ class TheActivity : AppCompatActivity() {
     fun patientRepository(): PatientRepository {
       return patientRepository
     }
+
+    fun appDatabase(): AppDatabase {
+      return appDatabase
+    }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
+    val databaseName = getString(R.string.app_name)
+    appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName)
+        .allowMainThreadQueries()   // We use RxJava for threading.
+        .build()
+    patientRepository = PatientRepository(appDatabase)
   }
 
   override fun attachBaseContext(baseContext: Context) {

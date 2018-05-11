@@ -10,6 +10,7 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.home.HomeScreen
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
+import java.util.UUID
 
 class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -36,7 +37,7 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
       repository.ongoingEntry()
           .map { entry -> entry.copy(mobileNumber = primaryNumberEditText.text.toString()) }
           .flatMapCompletable { entry: OngoingPatientEntry -> repository.save(entry) }
-          .andThen(repository.saveOngoingEntry())
+          .andThen(repository.saveOngoingEntry(UUID.randomUUID()))
           .subscribe({
             TheActivity.screenRouter().push(HomeScreen.KEY)
           })

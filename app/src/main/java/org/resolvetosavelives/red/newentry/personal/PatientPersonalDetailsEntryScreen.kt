@@ -17,8 +17,8 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
     val KEY = PatientPersonalDetailsScreenKey()
   }
 
-  private val fullNameEditText: EditText by bindView(R.id.patientpersonaldetails_full_name)
-  private val nextButton: Button by bindView(R.id.patientpersonaldetails_next_button)
+  private val fullNameEditText by bindView<EditText>(R.id.patientpersonaldetails_full_name)
+  private val nextButton by bindView<Button>(R.id.patientpersonaldetails_next_button)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -2,8 +2,10 @@ package org.resolvetosavelives.red.home
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.Button
 import android.widget.RelativeLayout
-import kotlinx.android.synthetic.main.screen_home.view.*
+import kotterknife.bindView
+import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen
 import timber.log.Timber
@@ -13,6 +15,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   companion object {
     val KEY = HomeScreenKey()
   }
+
+  private val mobileButton by bindView<Button>(R.id.home_search_by_mobile)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

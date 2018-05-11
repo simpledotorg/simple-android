@@ -23,9 +23,9 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
     val KEY = PatientSearchByMobileScreenKey()
   }
 
-  private val mobileNumberEditText: EditText by bindView(R.id.patientsearch_mobile_number)
-  private val newPatientButton: Button by bindView(R.id.patientsearch_new_patient)
-  private val patientRecyclerView: RecyclerView by bindView(R.id.patientsearch_recyclerview)
+  private val mobileNumberEditText by bindView<EditText>(R.id.patientsearch_mobile_number)
+  private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
+  private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

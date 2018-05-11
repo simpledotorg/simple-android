@@ -10,5 +10,6 @@
   <dimen name="spacing_24">24dp</dimen>
   <dimen name="spacing_32">32dp</dimen>
 
+  <dimen name="textsize_12">12sp</dimen>
   <dimen name="textsize_16">16sp</dimen>
 </resources>

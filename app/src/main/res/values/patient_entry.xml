@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="patiententry_cd_proceed">Proceed and entry</string>
+  <string name="patiententry_optional">Optional</string>
 
   <string name="patientsearch_new_patient">New patient</string>
 
@@ -14,5 +15,21 @@
   <string name="patiententry_personaldetails_gender_female">Female</string>
   <string name="patiententry_personaldetails_gender_trans">Trans</string>
 
+  <string name="patiententry_address_title">Patient address</string>
+
   <string name="patiententry_mobile_number">Patient mobile number</string>
+
+  <style name="RedApp.Button.PatientEntry">
+    <item name="android:textColor">@color/white</item>
+    <item name="backgroundTint">@color/color_accent</item>
+    <item name="android:paddingStart">@dimen/spacing_20</item>
+    <item name="android:paddingEnd">@dimen/spacing_20</item>
+  </style>
+
+  <style name="RedApp.Button.PatientEntry.IconOnly">
+    <item name="android:paddingTop">@dimen/spacing_12</item>
+    <item name="android:paddingStart">@dimen/spacing_32</item>
+    <item name="android:paddingEnd">@dimen/spacing_32</item>
+    <item name="android:paddingBottom">@dimen/spacing_12</item>
+  </style>
 </resources>

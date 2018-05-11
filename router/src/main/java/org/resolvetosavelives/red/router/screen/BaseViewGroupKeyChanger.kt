@@ -5,7 +5,10 @@ import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import flow.*
+import flow.Flow
+import flow.KeyChanger
+import flow.State
+import flow.TraversalCallback
 
 /**
  * Base class for key-changers that change screens in a single ViewGroup.
@@ -17,7 +20,7 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
   override fun changeKey(
       outgoingState: State?,
       incomingState: State,
-      direction: Direction,
+      direction: flow.Direction,
       incomingContexts: Map<Any, Context>,
       callback: TraversalCallback
   ) {

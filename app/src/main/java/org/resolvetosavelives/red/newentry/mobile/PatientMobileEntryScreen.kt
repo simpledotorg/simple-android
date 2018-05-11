@@ -10,8 +10,8 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.bp.PatientBpEntryScreen
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
-import org.resolvetosavelives.red.newentry.success.PatientSavedScreen
 import org.resolvetosavelives.red.widgets.showKeyboard
 import java.util.UUID
 
@@ -51,7 +51,7 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
           .subscribeOn(io())
           .observeOn(mainThread())
           .subscribe({
-            TheActivity.screenRouter().push(PatientSavedScreen.KEY)
+            TheActivity.screenRouter().push(PatientBpEntryScreen.KEY)
           })
     })
   }

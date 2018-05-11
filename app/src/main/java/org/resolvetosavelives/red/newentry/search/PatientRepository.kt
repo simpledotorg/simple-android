@@ -22,7 +22,8 @@ class PatientRepository(private val database: AppDatabase) {
         .toObservable()
   }
 
-  private fun save(patient: Patient): Completable {
+  // TODO: make this private.
+  fun save(patient: Patient): Completable {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 

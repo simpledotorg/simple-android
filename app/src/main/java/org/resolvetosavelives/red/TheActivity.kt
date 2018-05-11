@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import org.resolvetosavelives.red.home.HomeScreen
+import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.router.ScreenResultBus
 import org.resolvetosavelives.red.router.screen.ActivityResult
 import org.resolvetosavelives.red.router.screen.FullScreenKey
@@ -19,8 +20,14 @@ class TheActivity : AppCompatActivity() {
     @SuppressLint("StaticFieldLeak")
     private lateinit var screenRouter: ScreenRouter
 
+    private val patientRepository: PatientRepository = PatientRepository()
+
     fun screenRouter(): ScreenRouter {
-      return screenRouter;
+      return screenRouter
+    }
+
+    fun patientRepository(): PatientRepository {
+      return patientRepository
     }
   }
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen android:id="@+id/patientsearch_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <EditText
+    android:id="@+id/patientsearch_mobile_number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="@string/patiententry_mobile_number"
+    android:inputType="phone">
+
+    <requestFocus />
+  </EditText>
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/patientsearch_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/patientsearch_mobile_number" />
+
+  <Button
+    android:id="@+id/patientsearch_new_patient"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:text="@string/patiententry_new_patient" />
+</org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen>

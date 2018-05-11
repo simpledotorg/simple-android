@@ -5,10 +5,10 @@
   android:layout_height="wrap_content"
   android:background="?attr/selectableItemBackground"
   android:orientation="vertical"
-  android:paddingBottom="@dimen/spacing_4"
+  android:paddingBottom="@dimen/spacing_8"
   android:paddingEnd="@dimen/spacing_16"
   android:paddingStart="@dimen/spacing_16"
-  android:paddingTop="@dimen/spacing_4">
+  android:paddingTop="@dimen/spacing_8">
 
   <TextView
     android:id="@+id/patientsearch_item_title"

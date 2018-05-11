@@ -36,9 +36,24 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
     private val titleTextView by bindView<TextView>(R.id.patientsearch_item_title)
     private val bylineTextView by bindView<TextView>(R.id.patientsearch_item_byline)
 
+    init {
+      itemView.setOnClickListener({
+        // Registering a click listener just to show touch feedback.
+      })
+    }
+
     fun render(patient: Patient) {
-      titleTextView.text = patient.fullName
-      bylineTextView.text = patient.mobileNumber
+      if (patient.fullName.isNotBlank()) {
+        titleTextView.text = patient.fullName
+      } else {
+        titleTextView.text = "(no name)"
+      }
+
+      if (patient.mobileNumber.isNotBlank()) {
+        bylineTextView.text = patient.mobileNumber
+      } else {
+        bylineTextView.text = "(no number)"
+      }
     }
   }
 }

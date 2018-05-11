@@ -65,8 +65,8 @@ class ScreenRouter(
     flow().set(screenKey)
   }
 
-  fun clearHistoryAndPush(screenKey: FullScreenKey, direction: Direction) {
-    flow().setHistory(History.single(screenKey), direction.flowDirection())
+  fun clearHistoryAndPush(screenKey: FullScreenKey, direction: RouterDirection) {
+    flow().setHistory(History.single(screenKey), direction.flowDirection)
   }
 
   fun pop(): BackStackPopCallback {

@@ -14,7 +14,7 @@
     android:layout_height="wrap_content"
     android:ellipsize="end"
     android:maxLines="1"
-    android:textColor="@color/colorPrimary"
+    android:textColor="@color/color_primary"
     tools:text="Anish Acharya" />
 
   <TextView

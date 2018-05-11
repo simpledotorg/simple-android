@@ -22,7 +22,6 @@ class TheActivity : AppCompatActivity() {
     private lateinit var screenRouter: ScreenRouter
 
     private lateinit var patientRepository: PatientRepository
-    private lateinit var appDatabase: AppDatabase
 
     fun screenRouter(): ScreenRouter {
       return screenRouter
@@ -31,17 +30,13 @@ class TheActivity : AppCompatActivity() {
     fun patientRepository(): PatientRepository {
       return patientRepository
     }
-
-    fun appDatabase(): AppDatabase {
-      return appDatabase
-    }
   }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     val databaseName = getString(R.string.app_name)
-    appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName).build()
+    val appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName).build()
     patientRepository = PatientRepository(appDatabase)
   }
 

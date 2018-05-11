@@ -17,4 +17,9 @@
     <item name="titleTextColor">@color/white</item>
     <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>
   </style>
+
+  <style name="RedApp.Button.Borderless" parent="Base.Widget.AppCompat.Button.Borderless" tools:ignore="UnusedResources" />
+
+  <style name="RedApp.Button.Borderless.Colored" parent="Base.Widget.AppCompat.Button.Borderless.Colored" />
+
 </resources>

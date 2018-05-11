@@ -28,7 +28,7 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
     val frame = screenLayoutContainer()
     val incomingKey = incomingState.getKey<T>()
 
-    if (outgoingState == null && direction == Direction.REPLACE) {
+    if (outgoingState == null && direction == flow.Direction.REPLACE) {
       // Short circuit if we would just be showing the same view again. Flow
       // intentionally calls changeKey() again on onResume() with the same values.
       // See: https://github.com/square/flow/issues/173.

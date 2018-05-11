@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RelativeLayout
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
@@ -27,20 +29,24 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
       return
     }
 
-    // TODO: threading.
     val repository = TheActivity.patientRepository()
     repository
         .ongoingEntry()
+        .subscribeOn(io())
+        .observeOn(mainThread())
         .subscribe({ entry ->
           primaryNumberEditText.setText(entry.mobileNumber)
         })
 
-    nextButton.setOnClickListener({
-      // TODO: threading.
-      repository.ongoingEntry()
+    proceedButton.setOnClickListener({
+      val saveOngoingEntry = repository.ongoingEntry()
           .map { entry -> entry.copy(mobileNumber = primaryNumberEditText.text.toString()) }
           .flatMapCompletable { entry: OngoingPatientEntry -> repository.save(entry) }
           .andThen(repository.saveOngoingEntry(UUID.randomUUID()))
+
+      saveOngoingEntry
+          .subscribeOn(io())
+          .observeOn(mainThread())
           .subscribe({
             TheActivity.screenRouter().push(HomeScreen.KEY)
           })

@@ -41,9 +41,7 @@ class TheActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
 
     val databaseName = getString(R.string.app_name)
-    appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName)
-        .allowMainThreadQueries()   // We use RxJava for threading.
-        .build()
+    appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName).build()
     patientRepository = PatientRepository(appDatabase)
   }
 

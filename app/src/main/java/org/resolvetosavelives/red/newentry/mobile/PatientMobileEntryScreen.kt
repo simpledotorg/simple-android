@@ -19,10 +19,13 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
   }
 
   private val primaryNumberEditText by bindView<EditText>(R.id.patientmobile_primary_number)
-  private val nextButton by bindView<Button>(R.id.patientmobile_next)
+  private val proceedButton by bindView<Button>(R.id.patiententry_mobile_proceed)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
 
     // TODO: threading.
     val repository = TheActivity.patientRepository()

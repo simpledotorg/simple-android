@@ -22,6 +22,8 @@
 
   <string name="patiententry_bp_title">BP today</string>
 
+  <string name="patiententry_drugs_title">Current drugs</string>
+
   <style name="RedApp.Button.PatientEntry">
     <item name="android:textColor">@color/white</item>
     <item name="backgroundTint">@color/color_accent</item>

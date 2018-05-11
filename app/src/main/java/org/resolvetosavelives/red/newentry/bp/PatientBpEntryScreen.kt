@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.drugs.PatientCurrentDrugsEntryScreen
 import org.resolvetosavelives.red.widgets.showKeyboard
 
 class PatientBpEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -59,8 +60,7 @@ class PatientBpEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     })
 
     proceedButton.setOnClickListener({
-      // TODO.
-      //TheActivity.screenRouter().push(PatientCurrentDrugsScreen.KEY)
+      TheActivity.screenRouter().push(PatientCurrentDrugsEntryScreen.KEY)
     })
   }
 }

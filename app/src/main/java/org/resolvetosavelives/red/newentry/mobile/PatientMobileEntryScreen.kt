@@ -42,7 +42,7 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
       val saveOngoingEntry = repository.ongoingEntry()
           .map { entry -> entry.copy(mobileNumber = primaryNumberEditText.text.toString()) }
           .flatMapCompletable { entry: OngoingPatientEntry -> repository.save(entry) }
-          .andThen(repository.saveOngoingEntry(UUID.randomUUID()))
+          .andThen(repository.markOngoingEntryAsComplete(UUID.randomUUID()))
 
       saveOngoingEntry
           .subscribeOn(io())

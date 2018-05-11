@@ -36,7 +36,7 @@ class PatientRepository(private val database: AppDatabase) {
     })
   }
 
-  fun saveOngoingEntry(patientId: UUID): Completable {
+  fun markOngoingEntryAsComplete(patientId: UUID): Completable {
     return ongoingEntry()
         .map { entry -> entry.toPatient(patientId) }
         .flatMapCompletable { patient -> save(patient) }

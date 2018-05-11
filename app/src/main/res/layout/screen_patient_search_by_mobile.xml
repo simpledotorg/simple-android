@@ -43,5 +43,5 @@
     android:layout_alignParentBottom="true"
     android:layout_alignParentEnd="true"
     android:layout_margin="@dimen/spacing_12"
-    android:text="@string/patiententry_new_patient" />
+    android:text="@string/patientsearch_new_patient" />
 </org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen>

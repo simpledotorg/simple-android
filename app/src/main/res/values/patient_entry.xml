@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <string name="patiententry_cd_proceed">Proceed and entry</string>
+
+  <string name="patientsearch_new_patient">New patient</string>
+
+  <string name="patiententry_personaldetails_title">New patient</string>
+  <string name="patiententry_personaldetails_full_name">Full name</string>
+  <string name="patiententry_personaldetails_date_of_birth">Date of birth</string>
+  <string name="patiententry_personaldetails_date_of_birth_example">(example: 31/04/1978)</string>
+  <string name="patiententry_personaldetails_age_and_dateofbirth_separator">or</string>
+  <string name="patiententry_personaldetails_age">Age</string>
+  <string name="patiententry_personaldetails_gender_male">Male</string>
+  <string name="patiententry_personaldetails_gender_female">Female</string>
+  <string name="patiententry_personaldetails_gender_trans">Trans</string>
+
   <string name="patiententry_mobile_number">Patient mobile number</string>
-  <string name="patiententry_new_patient">New patient</string>
-  <string name="patiententry_full_name">Full name</string>
-  <string name="patiententry_date_of_birth">Date of birth</string>
-  <string name="patiententry_or">or</string>
-  <string name="patiententry_age">Age</string>
-  <string name="patiententry_male">Male</string>
-  <string name="patiententry_female">Female</string>
-  <string name="patiententry_trans">Trans</string>
 </resources>

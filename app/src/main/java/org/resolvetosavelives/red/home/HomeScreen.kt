@@ -14,7 +14,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val KEY = HomeScreenKey()
   }
 
-  private val toolbar by bindView<Toolbar>(R.id.home_toolbar)
   private val viewPagerTabs by bindView<TabLayout>(R.id.home_viewpager_tabs)
 
   override fun onFinishInflate() {
@@ -22,8 +21,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     if (isInEditMode) {
       return
     }
-
-    toolbar.setTitle(R.string.app_name)
 
     for (tabTitle in arrayOf("New BP", "Call list", "Reports")) {
       val tab = viewPagerTabs.newTab()

@@ -1,6 +1,8 @@
 package org.resolvetosavelives.red.newentry.personal
 
 import android.content.Context
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
@@ -21,6 +23,8 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
   }
 
   private val fullNameEditText by bindView<EditText>(R.id.patientpersonaldetails_full_name)
+  private val dateOfBirthEditText by bindView<EditText>(R.id.patientpersonaldetails_date_of_birth)
+  private val ageEditText by bindView<EditText>(R.id.patientpersonaldetails_age)
   private val nextButton by bindView<View>(R.id.patientpersonaldetails_next_button)
 
   override fun onFinishInflate() {
@@ -30,6 +34,18 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
     }
 
     fullNameEditText.showKeyboard()
+
+    dateOfBirthEditText.addTextChangedListener(object : TextWatcher {
+      override fun afterTextChanged(text: Editable?) {
+        if (text != null && text.length == 8) {
+          ageEditText.requestFocus()
+        }
+      }
+
+      override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+      override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+    })
 
     nextButton.setOnClickListener({
       val repository = TheActivity.patientRepository()

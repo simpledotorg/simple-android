@@ -17,6 +17,7 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
+import org.resolvetosavelives.red.widgets.showKeyboard
 
 class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -34,6 +35,7 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
       return
     }
 
+    mobileNumberEditText.showKeyboard()
     setupPatientSearchResults()
 
     newPatientButton.setOnClickListener({

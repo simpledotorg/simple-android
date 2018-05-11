@@ -12,6 +12,7 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.success.PatientSavedScreen
+import org.resolvetosavelives.red.widgets.showKeyboard
 import java.util.UUID
 
 class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -28,6 +29,8 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
     if (isInEditMode) {
       return
     }
+
+    primaryNumberEditText.showKeyboard()
 
     val repository = TheActivity.patientRepository()
     repository

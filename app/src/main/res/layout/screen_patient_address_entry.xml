@@ -32,15 +32,13 @@
         android:layout_marginBottom="@dimen/spacing_8">
 
         <EditText
+          android:id="@+id/patiententry_address_street"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="House number and street name"
           tools:ignore="RtlSymmetry"
           android:inputType="textCapSentences|textPostalAddress"
-          android:paddingEnd="56dp">
-
-          <requestFocus />
-        </EditText>
+          android:paddingEnd="56dp" />
 
         <TextView
           android:layout_width="wrap_content"
@@ -62,10 +60,7 @@
           tools:ignore="RtlSymmetry"
           android:hint="Area/Colony"
           android:inputType="textCapSentences|textPostalAddress"
-          android:paddingEnd="56dp">
-
-          <requestFocus />
-        </EditText>
+          android:paddingEnd="56dp" />
 
         <TextView
           android:layout_width="wrap_content"
@@ -99,10 +94,7 @@
               android:hint="District"
               tools:ignore="RtlSymmetry"
               android:inputType="textCapSentences|textPostalAddress"
-              android:paddingEnd="56dp">
-
-              <requestFocus />
-            </EditText>
+              android:paddingEnd="56dp" />
 
             <TextView
               android:layout_width="wrap_content"
@@ -124,10 +116,7 @@
               tools:ignore="RtlSymmetry"
               android:hint="PIN"
               android:inputType="textCapSentences|number"
-              android:paddingEnd="56dp">
-
-              <requestFocus />
-            </EditText>
+              android:paddingEnd="56dp" />
 
             <TextView
               android:layout_width="wrap_content"

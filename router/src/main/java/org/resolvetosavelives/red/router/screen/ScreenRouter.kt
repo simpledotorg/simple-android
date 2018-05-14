@@ -75,6 +75,8 @@ class ScreenRouter(
   }
 
   fun sendResultAndPop(result: Any) {
+    // TODO: Now that BaseViewGroupKeyChanger inflates a new view before removing
+    // TODO: the older one, this is no longer be required. Remove this after testing.
     // The name is actually incorrect. It's important to send the result only
     // after the previous screen is inflated and has registered for results.
     // But the name is kept in this way to maintain familiarity with how Activity

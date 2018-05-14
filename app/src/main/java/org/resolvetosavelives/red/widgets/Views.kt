@@ -8,6 +8,6 @@ fun EditText.showKeyboard() {
   post({
     this.requestFocus()
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+    inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_FORCED)
   })
 }

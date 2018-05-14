@@ -9,6 +9,7 @@ buildscript {
       timber     : '4.7.0',
       dagger     : '2.16',
       butterKnife: '8.8.1',
+      room       : '1.1.0',
   ]
 
   repositories {

@@ -1,12 +1,12 @@
 package org.resolvetosavelives.red.home
 
 import android.content.Context
+import android.support.design.widget.TabLayout
+import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.RelativeLayout
-import kotlinx.android.synthetic.main.screen_home.view.*
-import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen
-import timber.log.Timber
+import kotterknife.bindView
+import org.resolvetosavelives.red.R
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -14,12 +14,18 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val KEY = HomeScreenKey()
   }
 
+  private val viewPagerTabs by bindView<TabLayout>(R.id.home_viewpager_tabs)
+
   override fun onFinishInflate() {
     super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
 
-    mobileButton.setOnClickListener({
-      Timber.i("Going to patient mobile entry")
-      TheActivity.screenRouter().push(PatientSearchByMobileScreen.KEY)
-    })
+    for (tabTitle in arrayOf("New BP", "Call list", "Reports")) {
+      val tab = viewPagerTabs.newTab()
+      tab.text = tabTitle
+      viewPagerTabs.addTab(tab)
+    }
   }
 }

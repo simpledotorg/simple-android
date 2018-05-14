@@ -52,18 +52,23 @@ android {
 }
 
 dependencies {
-  compile project(path: ':router')
+  implementation project(path: ':router')
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
   testImplementation 'junit:junit:4.12'
 
   implementation "com.android.support:appcompat-v7:$versions.supportLib"
   implementation "com.android.support:recyclerview-v7:$versions.supportLib"
+  implementation "com.android.support:design:$versions.supportLib"
+  implementation "com.android.support:cardview-v7:$versions.supportLib"
+  implementation "android.arch.persistence.room:runtime:$versions.room"
+  kapt "android.arch.persistence.room:compiler:$versions.room"
+  implementation "android.arch.persistence.room:rxjava2:$versions.room"
 
   implementation "com.jakewharton.timber:timber:$versions.timber"
   implementation "com.google.dagger:dagger:$versions.dagger"
   kapt "com.google.dagger:dagger-compiler:$versions.dagger"
-  implementation ('com.github.JakeWharton:kotterknife:e157638df1') {
+  implementation('com.github.JakeWharton:kotterknife:e157638df1') {
     exclude group: 'com.android.support'
   }
   implementation 'io.reactivex.rxjava2:rxjava:2.1.9'

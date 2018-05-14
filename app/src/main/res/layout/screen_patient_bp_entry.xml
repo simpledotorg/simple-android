@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.newentry.bp.PatientBpEntryScreen android:id="@+id/patiententry"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/patiententry_bp_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:title="@string/patiententry_bp_title" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/patiententry_bp_toolbar"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/spacing_16">
+
+    <TextView
+      android:id="@+id/patiententry_bp_patient_fullname"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingStart="@dimen/spacing_16"
+      android:textColor="@color/black"
+      android:textSize="24sp"
+      android:textStyle="bold"
+      tools:text="Anish Acharya" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="34, female"
+      android:textColor="@color/black"
+      android:textSize="@dimen/textsize_16" />
+
+    <Button
+      style="@style/RedApp.Button.Borderless.Colored"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minHeight="0dp"
+      android:paddingBottom="@dimen/spacing_8"
+      android:paddingTop="@dimen/spacing_8"
+      android:text="PHC Hoshiarpur" />
+
+    <android.support.v7.widget.CardView
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_16">
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center_horizontal"
+          android:orientation="vertical">
+
+          <EditText
+            android:id="@+id/patiententry_bp_systolic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textSize="42sp" />
+
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/patiententry_bp_systolic"
+            android:text="Systolic" />
+        </LinearLayout>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:fontFamily="sans-serif-light"
+          android:text="/"
+          android:textColor="#A0A3A5"
+          android:textSize="42sp" />
+
+        <LinearLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:gravity="center_horizontal"
+          android:orientation="vertical">
+
+          <EditText
+            android:id="@+id/patiententry_bp_diastolic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:inputType="number"
+            android:maxLength="3"
+            android:textSize="42sp" />
+
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@+id/patiententry_bp_diastolic"
+            android:text="Diastolic" />
+        </LinearLayout>
+      </LinearLayout>
+    </android.support.v7.widget.CardView>
+  </LinearLayout>
+
+  <Button
+    android:id="@+id/patiententry_bp_proceed"
+    style="@style/RedApp.Button.PatientEntry.IconOnly"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_alignParentEnd="true"
+    android:layout_margin="@dimen/spacing_16"
+    android:contentDescription="@string/patiententry_cd_proceed"
+    android:drawableStart="@drawable/ic_arrow_forward_24dp" />
+</org.resolvetosavelives.red.newentry.bp.PatientBpEntryScreen>

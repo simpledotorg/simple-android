@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.newentry.success.PatientSavedScreen android:id="@+id/patiententry_saved_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="#373737"
+  tools:ignore="Overdraw">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:drawableTop="@drawable/ic_done_180dp"
+    android:gravity="center"
+    android:text="Saved"
+    android:textColor="@color/white"
+    android:textSize="60sp" />
+</org.resolvetosavelives.red.newentry.success.PatientSavedScreen>

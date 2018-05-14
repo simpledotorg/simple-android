@@ -3,10 +3,12 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="8dp"
+  android:background="?attr/selectableItemBackground"
   android:orientation="vertical"
-  android:paddingEnd="8dp"
-  android:paddingStart="8dp">
+  android:paddingBottom="@dimen/spacing_8"
+  android:paddingEnd="@dimen/spacing_16"
+  android:paddingStart="@dimen/spacing_16"
+  android:paddingTop="@dimen/spacing_8">
 
   <TextView
     android:id="@+id/patientsearch_item_title"
@@ -14,13 +16,14 @@
     android:layout_height="wrap_content"
     android:ellipsize="end"
     android:maxLines="1"
-    android:textColor="@color/colorPrimary"
-    tools:text="Anish Acharya" />
+    android:textColor="@color/color_accent"
+    tools:text="Anshu Acharya, 39, female" />
 
   <TextView
     android:id="@+id/patientsearch_item_byline"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="end"
-    android:maxLines="1" />
+    android:maxLines="1"
+    tools:text="55 Mansing Road, Colony 3, Hoshiarpur" />
 </LinearLayout>

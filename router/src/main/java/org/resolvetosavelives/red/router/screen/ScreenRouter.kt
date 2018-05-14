@@ -6,11 +6,15 @@ import android.os.Parcelable
 import android.support.annotation.CheckResult
 import android.support.annotation.IdRes
 import android.view.View
-import flow.*
+import flow.Flow
+import flow.History
+import flow.KeyChanger
+import flow.KeyDispatcher
+import flow.KeyParceler
 import io.reactivex.Observable
 import io.reactivex.exceptions.Exceptions
 import org.resolvetosavelives.red.router.ScreenResultBus
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Responsible for routing between screens inside the host Activity.
@@ -61,8 +65,8 @@ class ScreenRouter(
     flow().set(screenKey)
   }
 
-  fun clearHistoryAndPush(screenKey: FullScreenKey, direction: flow.Direction) {
-    flow().setHistory(History.single(screenKey), direction)
+  fun clearHistoryAndPush(screenKey: FullScreenKey, direction: RouterDirection) {
+    flow().setHistory(History.single(screenKey), direction.flowDirection)
   }
 
   fun pop(): BackStackPopCallback {
@@ -71,6 +75,8 @@ class ScreenRouter(
   }
 
   fun sendResultAndPop(result: Any) {
+    // TODO: Now that BaseViewGroupKeyChanger inflates a new view before removing
+    // TODO: the older one, this is no longer be required. Remove this after testing.
     // The name is actually incorrect. It's important to send the result only
     // after the previous screen is inflated and has registered for results.
     // But the name is kept in this way to maintain familiarity with how Activity

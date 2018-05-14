@@ -1,8 +1,25 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item>
+  <style name="AppTheme" parent="Theme.Design.Light.NoActionBar">
+    <item name="colorPrimary">@color/color_primary</item>
+    <item name="colorPrimaryDark">@color/color_primary_dark</item>
+    <item name="colorAccent">@color/color_accent</item>
+
+    <item name="toolbarStyle">@style/RedApp.ToolbarStyle</item>
   </style>
+
+  <style name="RedApp" />
+
+  <style name="RedApp.Button" />
+
+  <style name="RedApp.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+    <item name="android:background">@color/color_primary</item>
+    <item name="titleTextColor">@color/white</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>
+  </style>
+
+  <style name="RedApp.Button.Borderless" parent="Base.Widget.AppCompat.Button.Borderless" tools:ignore="UnusedResources" />
+
+  <style name="RedApp.Button.Borderless.Colored" parent="Base.Widget.AppCompat.Button.Borderless.Colored" />
+
 </resources>

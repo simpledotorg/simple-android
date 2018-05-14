@@ -10,12 +10,14 @@ import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
-import timber.log.Timber
+import org.resolvetosavelives.red.widgets.showKeyboard
 
 class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -23,9 +25,9 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
     val KEY = PatientSearchByMobileScreenKey()
   }
 
-  private val mobileNumberEditText: EditText by bindView(R.id.patientsearch_mobile_number)
-  private val newPatientButton: Button by bindView(R.id.patientsearch_new_patient)
-  private val patientRecyclerView: RecyclerView by bindView(R.id.patientsearch_recyclerview)
+  private val mobileNumberEditText by bindView<EditText>(R.id.patientsearch_mobile_number)
+  private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
+  private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -33,12 +35,15 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
       return
     }
 
+    mobileNumberEditText.showKeyboard()
     setupPatientSearchResults()
 
     newPatientButton.setOnClickListener({
       val ongoingEntry = OngoingPatientEntry(null, mobileNumberEditText.text.toString())
       TheActivity.patientRepository()
           .save(ongoingEntry)
+          .subscribeOn(io())
+          .observeOn(mainThread())
           .subscribe({
             TheActivity.screenRouter().push(PatientPersonalDetailsEntryScreen.KEY)
           })
@@ -58,7 +63,6 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
         }
-        .doOnNext({ patients -> Timber.i("patients: %s", patients) })
         .takeUntil(RxView.detaches(this))
         .subscribe(resultsAdapter)
   }

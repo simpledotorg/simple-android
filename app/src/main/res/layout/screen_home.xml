@@ -1,14 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.resolvetosavelives.red.home.HomeScreen android:id="@+id/home_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".TheActivity">
 
-  <Button
-    android:id="@+id/mobileButton"
-    android:layout_width="wrap_content"
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/home_toolbar"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:text="@string/home_mobile" />
+    app:title="@string/app_name"
+    app:titleTextColor="#60200A" />
+
+  <android.support.design.widget.TabLayout
+    android:id="@+id/home_viewpager_tabs"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/home_toolbar"
+    android:background="@color/color_primary"
+    android:elevation="@dimen/elevation_toolbar"
+    app:tabIndicatorColor="@color/white"
+    app:tabSelectedTextColor="@color/white"
+    app:tabTextColor="@color/white_opacity_60"
+    tools:ignore="UnusedAttribute" />
+
+  <include
+    layout="@layout/screen_new_bp"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/home_viewpager_tabs" />
 </org.resolvetosavelives.red.home.HomeScreen>

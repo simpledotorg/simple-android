@@ -17,7 +17,9 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
+import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
+import javax.inject.Inject
 
 class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -29,23 +31,30 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
   private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
   private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
 
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+    TheActivity.component.inject(this)
 
     mobileNumberEditText.showKeyboard()
     setupPatientSearchResults()
 
     newPatientButton.setOnClickListener({
       val ongoingEntry = OngoingPatientEntry(null, mobileNumberEditText.text.toString())
-      TheActivity.patientRepository()
+      patientRepository
           .save(ongoingEntry)
           .subscribeOn(io())
           .observeOn(mainThread())
           .subscribe({
-            TheActivity.screenRouter().push(PatientPersonalDetailsEntryScreen.KEY)
+            screenRouter.push(PatientPersonalDetailsEntryScreen.KEY)
           })
     })
   }
@@ -58,7 +67,7 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
 
     RxTextView.textChanges(mobileNumberEditText)
         .switchMap { searchQuery ->
-          TheActivity.patientRepository()
+          patientRepository
               .search(searchQuery.toString())
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())

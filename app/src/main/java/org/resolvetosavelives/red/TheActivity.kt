@@ -1,13 +1,10 @@
 package org.resolvetosavelives.red
 
-import android.annotation.SuppressLint
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import org.resolvetosavelives.red.di.TheActivityComponent
 import org.resolvetosavelives.red.home.HomeScreen
-import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.router.ScreenResultBus
 import org.resolvetosavelives.red.router.screen.ActivityResult
 import org.resolvetosavelives.red.router.screen.FullScreenKey
@@ -18,30 +15,20 @@ class TheActivity : AppCompatActivity() {
 
   // TODO: Remove these once we setup DI.
   companion object {
-    @SuppressLint("StaticFieldLeak")
-    private lateinit var screenRouter: ScreenRouter
-
-    private lateinit var patientRepository: PatientRepository
-
-    fun screenRouter(): ScreenRouter {
-      return screenRouter
-    }
-
-    fun patientRepository(): PatientRepository {
-      return patientRepository
-    }
+    lateinit var component: TheActivityComponent
   }
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    val databaseName = getString(R.string.app_name)
-    val appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName).build()
-    patientRepository = PatientRepository(appDatabase)
-  }
+  lateinit var screenRouter: ScreenRouter
 
   override fun attachBaseContext(baseContext: Context) {
     screenRouter = ScreenRouter.create(this, NestedKeyChanger(), ScreenResultBus())
+    component = RedApp.appComponent
+        .activityComponentBuilder()
+        .activity(this)
+        .screenRouter(screenRouter)
+        .build()
+    component.inject(this)
+
     val contextWithRouter = screenRouter.installInContext(baseContext, android.R.id.content, initialScreenKey())
     super.attachBaseContext(contextWithRouter)
   }

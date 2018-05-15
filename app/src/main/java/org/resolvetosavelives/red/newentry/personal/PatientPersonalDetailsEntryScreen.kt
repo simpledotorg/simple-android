@@ -5,14 +5,15 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen
-import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
-import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
@@ -24,13 +25,13 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
   }
 
   @Inject
-  lateinit var repository: PatientRepository
-
-  @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var controller: PatientPersonalDetailsEntryScreenController
+
   private val fullNameEditText by bindView<EditText>(R.id.patientpersonaldetails_full_name)
-  private val nextButton by bindView<View>(R.id.patientpersonaldetails_next_button)
+  private val proceedButton by bindView<View>(R.id.patientpersonaldetails_next_button)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -39,17 +40,25 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
     }
     TheActivity.component.inject(this)
 
-    fullNameEditText.showKeyboard()
+    Observable.merge(fullNameTextChanges(), proceedClicks())
+        .observeOn(io())
+        .compose(controller)
+        .observeOn(mainThread())
+        .subscribe { uiChange -> uiChange(this) }
+  }
 
-    nextButton.setOnClickListener({
-      repository.ongoingEntry()
-          .map { entry -> entry.copy(personalDetails = OngoingPatientEntry.PersonalDetails(fullNameEditText.text.toString())) }
-          .flatMapCompletable { entry: OngoingPatientEntry -> repository.save(entry) }
-          .subscribeOn(Schedulers.io())
-          .observeOn(AndroidSchedulers.mainThread())
-          .subscribe({
-            screenRouter.push(PatientAddressEntryScreen.KEY)
-          })
-    })
+  private fun fullNameTextChanges() = RxTextView.textChanges(fullNameEditText)
+      .map(CharSequence::toString)
+      .map(::PatientFullNameTextChanged)
+
+  private fun proceedClicks() = RxView.clicks(proceedButton)
+      .map { PatientPersonalDetailsProceedClicked() }
+
+  fun showKeyboardOnFullnameField() {
+    fullNameEditText.showKeyboard()
+  }
+
+  fun openAddressEntryScreen() {
+    screenRouter.push(PatientAddressEntryScreen.KEY)
   }
 }

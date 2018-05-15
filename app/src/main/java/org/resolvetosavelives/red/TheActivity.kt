@@ -6,17 +6,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers.io
 import org.resolvetosavelives.red.home.HomeScreen
-import org.resolvetosavelives.red.newentry.search.Patient
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.router.ScreenResultBus
 import org.resolvetosavelives.red.router.screen.ActivityResult
 import org.resolvetosavelives.red.router.screen.FullScreenKey
 import org.resolvetosavelives.red.router.screen.NestedKeyChanger
 import org.resolvetosavelives.red.router.screen.ScreenRouter
-import java.util.UUID
 
 class TheActivity : AppCompatActivity() {
 
@@ -42,8 +38,6 @@ class TheActivity : AppCompatActivity() {
     val databaseName = getString(R.string.app_name)
     val appDatabase = Room.databaseBuilder(this, AppDatabase::class.java, databaseName).build()
     patientRepository = PatientRepository(appDatabase)
-
-    seedDatabaseWithDummyPatients()
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -54,26 +48,6 @@ class TheActivity : AppCompatActivity() {
 
   private fun initialScreenKey(): FullScreenKey {
     return HomeScreen.KEY
-  }
-
-  // TODO: remove this after we've showcased the app to Dan.
-  private fun seedDatabaseWithDummyPatients() {
-    patientRepository
-        .search("")
-        .take(1)
-        .filter({ patients -> patients.isEmpty() })
-        .flatMapCompletable({ _ ->
-          val dummyPatients = listOf(
-              Patient(UUID.randomUUID().toString(), "Anish Acharya", "9999999999"),
-              Patient(UUID.randomUUID().toString(), "Anshu Acharya", "8888888888"),
-              Patient(UUID.randomUUID().toString(), "Amit Acharya", "7899859980"),
-              Patient(UUID.randomUUID().toString(), "Anish Acharya", "9535520500")
-          )
-          Observable.fromIterable(dummyPatients)
-              .flatMapCompletable { dummyPatient -> patientRepository.save(patient = dummyPatient) }
-        })
-        .subscribeOn(io())
-        .subscribe()
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

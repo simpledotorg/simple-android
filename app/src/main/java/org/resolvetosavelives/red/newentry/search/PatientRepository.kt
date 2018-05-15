@@ -4,9 +4,12 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.resolvetosavelives.red.AppDatabase
+import org.resolvetosavelives.red.di.AppScope
 import java.util.UUID
+import javax.inject.Inject
 
-class PatientRepository(private val database: AppDatabase) {
+@AppScope
+class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
@@ -22,8 +25,7 @@ class PatientRepository(private val database: AppDatabase) {
         .toObservable()
   }
 
-  // TODO: make this private.
-  fun save(patient: Patient): Completable {
+  private fun save(patient: Patient): Completable {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 

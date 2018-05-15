@@ -12,14 +12,23 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.bp.PatientBpEntryScreen
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
+import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
 import java.util.UUID
+import javax.inject.Inject
 
 class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
     val KEY = PatientMobileEntryScreenKey()
   }
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
 
   private val primaryNumberEditText by bindView<EditText>(R.id.patientmobile_primary_number)
   private val proceedButton by bindView<Button>(R.id.patiententry_mobile_proceed)
@@ -29,11 +38,11 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
     if (isInEditMode) {
       return
     }
+    TheActivity.component.inject(this)
 
     primaryNumberEditText.showKeyboard()
 
-    val repository = TheActivity.patientRepository()
-    repository
+    patientRepository
         .ongoingEntry()
         .subscribeOn(io())
         .observeOn(mainThread())
@@ -42,16 +51,16 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
         })
 
     proceedButton.setOnClickListener({
-      val saveOngoingEntry = repository.ongoingEntry()
+      val saveOngoingEntry = patientRepository.ongoingEntry()
           .map { entry -> entry.copy(mobileNumber = primaryNumberEditText.text.toString()) }
-          .flatMapCompletable { entry: OngoingPatientEntry -> repository.save(entry) }
-          .andThen(repository.markOngoingEntryAsComplete(UUID.randomUUID()))
+          .flatMapCompletable { entry: OngoingPatientEntry -> patientRepository.save(entry) }
+          .andThen(patientRepository.markOngoingEntryAsComplete(UUID.randomUUID()))
 
       saveOngoingEntry
           .subscribeOn(io())
           .observeOn(mainThread())
           .subscribe({
-            TheActivity.screenRouter().push(PatientBpEntryScreen.KEY)
+            screenRouter.push(PatientBpEntryScreen.KEY)
           })
     })
   }

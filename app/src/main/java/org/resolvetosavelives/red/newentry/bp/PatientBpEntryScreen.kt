@@ -14,13 +14,22 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.drugs.PatientCurrentDrugsEntryScreen
+import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
+import javax.inject.Inject
 
 class PatientBpEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
     val KEY = BpEntryScreenKey()
   }
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
 
   private val patientNameTextView by bindView<TextView>(R.id.patiententry_bp_patient_fullname)
   private val systolicEditText by bindView<EditText>(R.id.patiententry_bp_systolic)
@@ -32,8 +41,9 @@ class PatientBpEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     if (isInEditMode) {
       return
     }
+    TheActivity.component.inject(this)
 
-    TheActivity.patientRepository()
+    patientRepository
         .ongoingEntry()
         .map { entry ->
           when {
@@ -60,7 +70,7 @@ class PatientBpEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     })
 
     proceedButton.setOnClickListener({
-      TheActivity.screenRouter().push(PatientCurrentDrugsEntryScreen.KEY)
+      screenRouter.push(PatientCurrentDrugsEntryScreen.KEY)
     })
   }
 }

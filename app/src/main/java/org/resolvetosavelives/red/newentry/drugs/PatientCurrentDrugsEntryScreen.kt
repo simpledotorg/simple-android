@@ -10,7 +10,10 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.success.PatientSavedScreen
+import org.resolvetosavelives.red.router.screen.ScreenRouter
+import javax.inject.Inject
 
 class PatientCurrentDrugsEntryScreen(context: Context?, attrs: AttributeSet?) : RelativeLayout(context, attrs) {
 
@@ -21,13 +24,20 @@ class PatientCurrentDrugsEntryScreen(context: Context?, attrs: AttributeSet?) : 
   private val patientNameTextView by bindView<TextView>(R.id.patiententry_drugs_patient_fullname)
   private val proceedButton by bindView<Button>(R.id.patiententry_drugs_proceed)
 
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+    TheActivity.component.inject(this)
 
-    TheActivity.patientRepository()
+    patientRepository
         .ongoingEntry()
         .map { entry ->
           when {
@@ -40,7 +50,7 @@ class PatientCurrentDrugsEntryScreen(context: Context?, attrs: AttributeSet?) : 
         .subscribe({ patientFullName -> patientNameTextView.text = patientFullName })
 
     proceedButton.setOnClickListener({
-      TheActivity.screenRouter().push(PatientSavedScreen.KEY)
+      screenRouter.push(PatientSavedScreen.KEY)
     })
   }
 }

@@ -9,7 +9,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.home.HomeScreen
 import org.resolvetosavelives.red.router.screen.RouterDirection
+import org.resolvetosavelives.red.router.screen.ScreenRouter
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 class PatientSavedScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -17,14 +19,18 @@ class PatientSavedScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     val KEY = PatientSavedScreenKey()
   }
 
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+    TheActivity.component.inject(this)
 
     Observable.timer(1_500, TimeUnit.MILLISECONDS, mainThread())
         .takeUntil(RxView.detaches(this))
-        .subscribe({ TheActivity.screenRouter().clearHistoryAndPush(HomeScreen.KEY, RouterDirection.BACKWARD) })
+        .subscribe({ screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.BACKWARD) })
   }
 }

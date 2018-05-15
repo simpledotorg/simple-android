@@ -9,7 +9,8 @@ import javax.inject.Inject
 class NewBpScreenController @Inject constructor() : ObservableTransformer<UiEvent, (NewBpScreen) -> Unit> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<(NewBpScreen) -> Unit> {
+    val function = { ui: NewBpScreen -> ui.openNewPatientScreen() }
     return events.ofType(NewPatientClicked::class.java)
-        .map { { ui: NewBpScreen -> ui.openNewPatientScreen() } }
+        .map { function }
   }
 }

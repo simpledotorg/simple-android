@@ -1,1 +1,1 @@
-GIT_WORK_TREE=".." ./gradlew app:lintDebug
+GIT_WORK_TREE=".." ./gradlew lintDebug testDebug

@@ -5,15 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import io.reactivex.functions.Consumer
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 
-class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>(), Consumer<List<Patient>> {
+class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   private var patients: List<Patient>? = null
 
-  override fun accept(patients: List<Patient>) {
+  fun updateAndNotifyChanges(patients: List<Patient>) {
     this.patients = patients
     notifyDataSetChanged()
   }

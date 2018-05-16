@@ -25,7 +25,7 @@ class PatientPersonalDetailsEntryScreenController @Inject constructor(
   }
 
   private fun keyboardCalls(): Observable<UiChange> {
-    return Observable.just({ ui: Ui -> ui.showKeyboardOnFullnameField() })
+    return Observable.just { ui: Ui -> ui.showKeyboardOnFullnameField() }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {

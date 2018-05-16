@@ -38,7 +38,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
   }
 
   @Test
-  fun `when screen starts then the keyboard should be shown`() {
+  fun `when screen starts then the keyboard should be shown on full name field`() {
     verify(screen).showKeyboardOnFullnameField()
   }
 

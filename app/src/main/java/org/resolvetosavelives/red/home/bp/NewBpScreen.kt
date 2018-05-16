@@ -4,15 +4,15 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
+import com.jakewharton.rxbinding2.view.RxView
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
-import timber.log.Timber
 import javax.inject.Inject
 
-class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
     val KEY = NewBpScreenKey()
@@ -20,6 +20,9 @@ class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(contex
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var controller: NewBpScreenController
 
   private val mobileButton by bindView<View>(R.id.newbp_search_by_mobile)
 
@@ -30,9 +33,14 @@ class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(contex
     }
     TheActivity.component.inject(this)
 
-    mobileButton.setOnClickListener({
-      Timber.i("Going to patient mobile entry")
-      screenRouter.push(PatientSearchByMobileScreen.KEY)
-    })
+    RxView.clicks(mobileButton)
+        .map { NewPatientClicked() }
+        .compose(controller)
+        .takeUntil(RxView.detaches(this))
+        .subscribe { uiChange -> uiChange(this) }
+  }
+
+  fun openNewPatientScreen() {
+    screenRouter.push(PatientSearchByMobileScreen.KEY)
   }
 }

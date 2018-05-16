@@ -67,11 +67,10 @@
         android:orientation="vertical">
 
         <EditText
-          android:id="@+id/patientpersonaldetails_date_of_birth"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/patiententry_personaldetails_date_of_birth"
-          android:inputType="textCapSentences|number|date" />
+          android:inputType="textCapSentences|number" />
 
         <TextView
           android:layout_width="match_parent"
@@ -91,7 +90,6 @@
 
       <EditText
         android:layout_width="80dp"
-        android:id="@+id/patientpersonaldetails_age"
         android:layout_height="wrap_content"
         android:hint="@string/patiententry_personaldetails_age"
         android:inputType="textCapSentences|number" />

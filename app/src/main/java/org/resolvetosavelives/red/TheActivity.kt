@@ -13,7 +13,6 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 
 class TheActivity : AppCompatActivity() {
 
-  // TODO: Remove these once we setup DI.
   companion object {
     lateinit var component: TheActivityComponent
   }

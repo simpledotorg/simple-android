@@ -40,8 +40,11 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun markOngoingEntryAsComplete(patientId: UUID): Completable {
+    // TODO: Parse date and convert it to millis.
+    val dateConverter: (String) -> Long = { formattedDate -> 0 }
+
     return ongoingEntry()
-        .map { entry -> entry.toPatient(patientId) }
+        .map { entry -> entry.toPatient(patientId, dateConverter) }
         .flatMapCompletable { patient -> save(patient) }
   }
 }

@@ -44,6 +44,7 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
+        .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
 

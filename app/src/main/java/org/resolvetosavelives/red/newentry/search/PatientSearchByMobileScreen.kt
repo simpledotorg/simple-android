@@ -9,9 +9,8 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
@@ -27,15 +26,16 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
     val KEY = PatientSearchByMobileScreenKey()
   }
 
-  private val mobileNumberEditText by bindView<EditText>(R.id.patientsearch_mobile_number)
-  private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
-  private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
-
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var patientRepository: PatientRepository
+  lateinit var controller: PatientSearchByMobileScreenController
+
+  private val mobileNumberEditText by bindView<EditText>(R.id.patientsearch_mobile_number)
+  private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
+  private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
+  private val resultsAdapter = PatientSearchResultsAdapter()
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -44,35 +44,35 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
     }
     TheActivity.component.inject(this)
 
-    mobileNumberEditText.showKeyboard()
-    setupPatientSearchResults()
-
-    newPatientButton.setOnClickListener({
-      val ongoingEntry = OngoingPatientEntry(null, mobileNumberEditText.text.toString())
-      patientRepository
-          .save(ongoingEntry)
-          .subscribeOn(io())
-          .observeOn(mainThread())
-          .subscribe({
-            screenRouter.push(PatientPersonalDetailsEntryScreen.KEY)
-          })
-    })
+    Observable.merge(mobileNumberTextChanges(), proceedButtonClicks())
+        .observeOn(io())
+        .compose(controller)
+        .observeOn(mainThread())
+        .takeUntil(RxView.detaches(this))
+        .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun setupPatientSearchResults() {
-    val resultsAdapter = PatientSearchResultsAdapter()
+  private fun mobileNumberTextChanges() = RxTextView.textChanges(mobileNumberEditText)
+      .map(CharSequence::toString)
+      .map(::PatientMobileNumberTextChanged)
 
+  private fun proceedButtonClicks() = RxView.clicks(newPatientButton)
+      .map { PatientSearchByMobileProceedClicked() }
+
+  fun showKeyboardOnMobileNumberField() {
+    mobileNumberEditText.showKeyboard()
+  }
+
+  fun setupSearchResultsList() {
     patientRecyclerView.adapter = resultsAdapter
     patientRecyclerView.layoutManager = LinearLayoutManager(context)
+  }
 
-    RxTextView.textChanges(mobileNumberEditText)
-        .switchMap { searchQuery ->
-          patientRepository
-              .search(searchQuery.toString())
-              .subscribeOn(Schedulers.io())
-              .observeOn(AndroidSchedulers.mainThread())
-        }
-        .takeUntil(RxView.detaches(this))
-        .subscribe(resultsAdapter)
+  fun updatePatientSearchResults(patients: List<Patient>) {
+    resultsAdapter.updateAndNotifyChanges(patients)
+  }
+
+  fun openPersonalDetailsEntryScreen() {
+    screenRouter.push(PatientPersonalDetailsEntryScreen.KEY)
   }
 }

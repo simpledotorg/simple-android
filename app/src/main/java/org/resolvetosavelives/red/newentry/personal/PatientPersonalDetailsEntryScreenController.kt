@@ -9,7 +9,8 @@ import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
-typealias UiChange = (PatientPersonalDetailsEntryScreen) -> Unit
+private typealias Ui = PatientPersonalDetailsEntryScreen
+private typealias UiChange = (Ui) -> Unit
 
 class PatientPersonalDetailsEntryScreenController @Inject constructor(
     private val repository: PatientRepository
@@ -20,14 +21,14 @@ class PatientPersonalDetailsEntryScreenController @Inject constructor(
 
     return Observable.merge(
         keyboardCalls(),
-        submitClicks(replayedEvents))
+        saveAndProceeds(replayedEvents))
   }
 
   private fun keyboardCalls(): Observable<UiChange> {
-    return Observable.just({ screen: PatientPersonalDetailsEntryScreen -> screen.showKeyboardOnFullnameField() })
+    return Observable.just({ ui: Ui -> ui.showKeyboardOnFullnameField() })
   }
 
-  private fun submitClicks(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val fullNameChanges = events
         .ofType(PatientFullNameTextChanged::class.java)
         .map { event -> event.fullName }
@@ -39,6 +40,6 @@ class PatientPersonalDetailsEntryScreenController @Inject constructor(
         .take(1)
         .map { (entry, fullName) -> entry.copy(personalDetails = OngoingPatientEntry.PersonalDetails(fullName)) }
         .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
-        .andThen(Observable.just({ screen: PatientPersonalDetailsEntryScreen -> screen.openAddressEntryScreen() }))
+        .andThen(Observable.just({ ui: Ui -> ui.openAddressEntryScreen() }))
   }
 }

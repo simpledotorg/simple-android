@@ -11,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.widgets.UiEvent
@@ -44,13 +45,18 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   @Test
   fun `when proceed event is clicked then personal details should be saved and the next screen should be opened`() {
-    val patientName = "Ashok Kumar"
-    uiEvents.onNext(PatientFullNameTextChanged(patientName))
+    val details = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", 25, Gender.TRANS)
+
+    uiEvents.onNext(PatientFullNameTextChanged(details.fullName))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(details.dateOfBirth))
+    uiEvents.onNext(PatientAgeTextChanged(details.ageWhenCreated))
+    uiEvents.onNext(PatientGenderChanged(details.gender))
+
     uiEvents.onNext(PatientPersonalDetailsProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).save(capture())
-      assertEquals(patientName, firstValue.personalDetails!!.fullName)
+      assertEquals(details, firstValue.personalDetails)
     }
 
     verify(screen).openAddressEntryScreen()

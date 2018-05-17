@@ -3,7 +3,7 @@ package org.resolvetosavelives.red.newentry.search
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
@@ -42,7 +42,7 @@ class PatientSearchByMobileScreenController @Inject constructor(
 
     return events
         .ofType(PatientSearchByMobileProceedClicked::class.java)
-        .withLatestFrom(mobileNumberChanges, BiFunction { _: PatientSearchByMobileProceedClicked, number: String -> number })
+        .withLatestFrom(mobileNumberChanges, { _, number -> number })
         .take(1)
         .map { number -> OngoingPatientEntry(mobileNumber = number) }
         .flatMapCompletable { newEntry -> repository.save(newEntry) }

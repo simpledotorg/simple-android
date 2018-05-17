@@ -29,6 +29,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 
+  // TODO: Add a test to ensure this method always returns a Single.
+  // Changing this to Observable<> might destroy a lot of things.
+  // We don't have tests for ensuring this behavior yet.
   fun ongoingEntry(): Single<OngoingPatientEntry> {
     return Single.just(ongoingPatientEntry)
   }
@@ -40,8 +43,11 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun markOngoingEntryAsComplete(patientId: UUID): Completable {
+    // TODO: Parse date and convert it to millis.
+    val dateConverter: (String) -> Long = { formattedDate -> 0 }
+
     return ongoingEntry()
-        .map { entry -> entry.toPatient(patientId) }
+        .map { entry -> entry.toPatient(patientId, dateConverter) }
         .flatMapCompletable { patient -> save(patient) }
   }
 }

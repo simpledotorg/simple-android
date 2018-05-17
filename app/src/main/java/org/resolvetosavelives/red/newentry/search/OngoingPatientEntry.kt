@@ -14,7 +14,7 @@ data class OngoingPatientEntry(
         dateOfBirth = dateConverter(personalDetails.dateOfBirth),
         ageWhenCreated = personalDetails.ageWhenCreated,
         gender = personalDetails.gender,
-        mobileNumber = mobileNumbers!!.primary)
+        mobileNumbers = Patient.MobileNumbers(mobileNumbers!!.primary, mobileNumbers.secondary))
   }
 
   data class PersonalDetails(val fullName: String, val dateOfBirth: String, val ageWhenCreated: Int, val gender: Gender)

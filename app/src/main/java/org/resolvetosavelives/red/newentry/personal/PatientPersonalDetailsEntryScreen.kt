@@ -17,7 +17,9 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen
 import org.resolvetosavelives.red.newentry.search.Gender
+import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -47,13 +49,16 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
     TheActivity.component.inject(this)
 
     Observable
-        .mergeArray(fullNameTextChanges(), dateOfBirthTextChanges(), ageTextChanges(), genderChanges(), proceedClicks())
+        .mergeArray(screenCreates(), fullNameTextChanges(), dateOfBirthTextChanges(), ageTextChanges(), genderChanges(), proceedClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
+
+  private fun screenCreates() = RxView.attachEvents(this)
+      .map { ScreenCreated() }
 
   private fun fullNameTextChanges() = RxTextView.textChanges(fullNameEditText)
       .map(CharSequence::toString)
@@ -74,7 +79,7 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
           R.id.patiententry_personal_gender_female -> Gender.FEMALE
           R.id.patiententry_personal_gender_male -> Gender.MALE
           R.id.patiententry_personal_gender_trans -> Gender.TRANS
-          else -> throw AssertionError("Unknown gender radio: " + resources.getResourceEntryName(it))
+          else -> throw AssertionError("Unknown gender radio: ${resources.getResourceEntryName(it)}")
         }
       }
       .map { gender -> PatientGenderChanged(gender) }
@@ -84,6 +89,20 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
 
   fun showKeyboardOnFullnameField() {
     fullNameEditText.showKeyboard()
+  }
+
+  fun preFill(details: OngoingPatientEntry.PersonalDetails) {
+    fullNameEditText.setText(details.fullName)
+    dateOfBirthEditText.setText(details.dateOfBirth)
+    ageEditText.setText(details.ageWhenCreated.toString())
+
+    val genderRadioId = when (details.gender) {
+      Gender.FEMALE -> R.id.patiententry_personal_gender_female
+      Gender.MALE -> R.id.patiententry_personal_gender_male
+      Gender.TRANS -> R.id.patiententry_personal_gender_trans
+    }
+    assert(genderRadioGroup.findViewById<View>(genderRadioId) != null)
+    genderRadioGroup.check(genderRadioId)
   }
 
   fun openAddressEntryScreen() {

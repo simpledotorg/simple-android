@@ -3,9 +3,10 @@ package org.resolvetosavelives.red.newentry.personal
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.functions.BiFunction
+import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
@@ -20,25 +21,48 @@ class PatientPersonalDetailsEntryScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.merge(
-        keyboardCalls(),
+        keyboardCalls(replayedEvents),
+        preFills(replayedEvents),
         saveAndProceeds(replayedEvents))
   }
 
-  private fun keyboardCalls(): Observable<UiChange> {
-    return Observable.just({ ui: Ui -> ui.showKeyboardOnFullnameField() })
+  private fun keyboardCalls(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType(ScreenCreated::class.java)
+        .flatMap { Observable.just { ui: Ui -> ui.showKeyboardOnFullnameField() } }
+  }
+
+  private fun preFills(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType(ScreenCreated::class.java)
+        .flatMapSingle { repository.ongoingEntry() }
+        .filter { entry -> entry.personalDetails != null }
+        .map { entry -> entry.personalDetails }
+        .flatMap { personalDetails -> Observable.just { ui: Ui -> ui.preFill(personalDetails) } }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val fullNameChanges = events
         .ofType(PatientFullNameTextChanged::class.java)
-        .map { event -> event.fullName }
+        .map(PatientFullNameTextChanged::fullName)
+
+    val dateOfBirthChanges = events
+        .ofType(PatientDateOfBirthTextChanged::class.java)
+        .map(PatientDateOfBirthTextChanged::dateOfBirth)
+
+    val ageChanges = events
+        .ofType(PatientAgeTextChanged::class.java)
+        .map(PatientAgeTextChanged::age)
+
+    val genderChanges = events
+        .ofType(PatientGenderChanged::class.java)
+        .map(PatientGenderChanged::gender)
 
     return events
         .ofType(PatientPersonalDetailsProceedClicked::class.java)
         .flatMapSingle { repository.ongoingEntry() }
-        .withLatestFrom(fullNameChanges, BiFunction { entry: OngoingPatientEntry, fullName: String -> Pair(entry, fullName) })
+        .withLatestFrom(fullNameChanges, dateOfBirthChanges, ageChanges, genderChanges,
+            { entry, name, dob, age, gender -> entry to OngoingPatientEntry.PersonalDetails(name, dob, age, gender) })
         .take(1)
-        .map { (entry, fullName) -> entry.copy(personalDetails = OngoingPatientEntry.PersonalDetails(fullName)) }
+        .map { (entry, personalDetails) -> entry.copy(personalDetails = personalDetails) }
         .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
         .andThen(Observable.just({ ui: Ui -> ui.openAddressEntryScreen() }))
   }

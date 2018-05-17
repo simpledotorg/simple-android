@@ -48,8 +48,8 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
         titleTextView.text = "(no name)"
       }
 
-      if (patient.mobileNumber.isNotBlank()) {
-        bylineTextView.text = patient.mobileNumber
+      if (patient.mobileNumbers.primary.isNotBlank()) {
+        bylineTextView.text = patient.mobileNumbers.primary
       } else {
         bylineTextView.text = "(no number)"
       }

@@ -5,6 +5,8 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
@@ -35,7 +37,9 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
 
     RxView.clicks(mobileButton)
         .map { NewPatientClicked() }
+        .observeOn(io())
         .compose(controller)
+        .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }

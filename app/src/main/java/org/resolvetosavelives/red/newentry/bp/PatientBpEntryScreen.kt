@@ -22,7 +22,7 @@ import javax.inject.Inject
 class PatientBpEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = BpEntryScreenKey()
+    val KEY = PatientBpEntryScreenKey()
   }
 
   @Inject

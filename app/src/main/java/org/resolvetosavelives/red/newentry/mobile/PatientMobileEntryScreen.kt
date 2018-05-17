@@ -7,6 +7,8 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
@@ -43,7 +45,9 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
 
     Observable
         .merge(screenCreates(), proceedClicks())
+        .observeOn(Schedulers.io())
         .compose(controller)
+        .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
 

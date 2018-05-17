@@ -25,9 +25,7 @@ class PatientSearchByMobileScreenControllerTest {
   fun setUp() {
     controller = PatientSearchByMobileScreenController(repository)
 
-    uiEvents
-        .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
@@ -39,10 +37,7 @@ class PatientSearchByMobileScreenControllerTest {
   @Test
   fun `when mobile number text changes then matching patients should be shown`() {
     val partialNumber = "999"
-    val matchingPatients = listOf<Patient>(
-        mock(),
-        mock(),
-        mock())
+    val matchingPatients = listOf<Patient>(mock(), mock(), mock())
     whenever(repository.search(partialNumber)).thenReturn(Observable.just(matchingPatients))
 
     uiEvents.onNext(PatientMobileNumberTextChanged(partialNumber))
@@ -61,7 +56,7 @@ class PatientSearchByMobileScreenControllerTest {
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).save(capture())
-      assertEquals(partialNumber, firstValue.mobileNumber)
+      assertEquals(partialNumber, firstValue.mobileNumbers!!.primary)
     }
     verify(screen).openPersonalDetailsEntryScreen()
   }

@@ -44,7 +44,7 @@ class PatientMobileEntryScreenControllerTest {
   }
 
   @Test
-  fun `when screen starts and existing mobile numbers are present then existing details should be pre-filled`() {
+  fun `when screen starts and existing mobile numbers are present then they should be pre-filled`() {
     val ongoingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
 
@@ -54,7 +54,7 @@ class PatientMobileEntryScreenControllerTest {
   }
 
   @Test
-  fun `when screen starts and existing mobile numbers are not present then existing details should not be pre-filled`() {
+  fun `when screen starts and existing mobile numbers are not present then they should not be pre-filled`() {
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(mobileNumbers = null)))
 
     uiEvents.onNext(ScreenCreated())

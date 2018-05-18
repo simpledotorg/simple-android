@@ -46,7 +46,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
   }
 
   @Test
-  fun `when screen starts and existing personal details are present then existing details should be pre-filled`() {
+  fun `when screen starts and existing personal details are present then they should be pre-filled`() {
     val existingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", 25, Gender.TRANS)
     val existingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers, personalDetails = existingPersonalDetails)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(existingEntry))
@@ -57,7 +57,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
   }
 
   @Test
-  fun `when screen starts and existing personal details are not present then existing details should not be pre-filled`() {
+  fun `when screen starts and existing personal details are not present then they should not be pre-filled`() {
     val existingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers, personalDetails = null)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(existingEntry))
 

@@ -4,15 +4,13 @@ import android.Manifest
 import android.content.Context
 import android.support.v4.app.ActivityCompat
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
-import com.dlazaro66.qrcodereaderview.QRCodeReaderView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.ObservableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
-import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.router.screen.ActivityPermissionResult
@@ -21,7 +19,6 @@ import org.resolvetosavelives.red.util.RuntimePermissions
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.ScreenDestroyed
 import javax.inject.Inject
-
 
 class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
@@ -38,7 +35,7 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
   @Inject
   lateinit var activity: TheActivity
 
-  private val qrReaderView by bindView<QRCodeReaderView>(R.id.aadhaarscanner_qr_scanner)
+  private lateinit var qrReaderView: QrCodeScannerView
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -46,6 +43,8 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
       return
     }
     TheActivity.component.inject(this)
+
+    qrReaderView = findViewById<View>(R.id.aadhaarscanner_qr_scanner) as QrCodeScannerView
 
     Observable
         .mergeArray(screenCreates(), screenDestroys(), aadhaarScanClicks(), cameraPermissionChanges(), qrCodeScans())
@@ -88,25 +87,19 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
   }
 
   fun setupQrScanner() {
-    qrReaderView.setQRDecodingEnabled(true)
-    qrReaderView.setAutofocusInterval(2000L)
-    qrReaderView.setBackCamera()
+    qrReaderView.setup()
   }
 
   fun qrCodeScans(): Observable<AadhaarScanned> {
-    return Observable
-        .create<String>({ emitter: ObservableEmitter<String> ->
-          emitter.setCancellable({ qrReaderView.setOnQRCodeReadListener(null) })
-          qrReaderView.setOnQRCodeReadListener({ text, _ -> emitter.onNext(text) })
-        })
+    return qrReaderView.scans()
         .map { qrCode -> AadhaarScanned(qrCode) }
   }
 
   fun setAadhaarScannerEnabled(enabled: Boolean) {
     if (enabled) {
-      qrReaderView.startCamera()
+      qrReaderView.start()
     } else {
-      qrReaderView.startCamera()
+      qrReaderView.stop()
     }
   }
 }

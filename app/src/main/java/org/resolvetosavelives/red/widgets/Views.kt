@@ -11,3 +11,8 @@ fun EditText.showKeyboard() {
     inputMethodManager.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
   })
 }
+
+fun EditText.setTextAndCursor(text: CharSequence) {
+  setText(text)
+  setSelection(text.length)
+}

@@ -9,7 +9,7 @@ import io.reactivex.Flowable
 @Dao
 interface PatientDao {
 
-  @Query("SELECT * FROM patient WHERE full_name LIKE '%' || :query || '%' OR mobile_number LIKE '%' || :query || '%'")
+  @Query("SELECT * FROM patient WHERE full_name LIKE '%' || :query || '%' OR mobile_number_primary LIKE '%' || :query || '%'")
   fun search(query: String): Flowable<List<Patient>>
 
   @Query("SELECT * FROM patient")

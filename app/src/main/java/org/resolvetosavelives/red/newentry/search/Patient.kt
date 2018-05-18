@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red.newentry.search
 
 import android.arch.persistence.room.ColumnInfo
+import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 
@@ -22,7 +23,9 @@ data class Patient(
     @ColumnInfo(name = "age_when_created")
     val ageWhenCreated: Int,
 
-    // TODO: Mobile numbers will be stored in an array.
-    @ColumnInfo(name = "mobile_number")
-    val mobileNumber: String
-)
+    @Embedded(prefix = "mobile_number_")
+    val mobileNumbers: MobileNumbers
+) {
+
+  data class MobileNumbers(val primary: String, val secondary: String?)
+}

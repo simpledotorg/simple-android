@@ -44,7 +44,7 @@ class PatientSearchByMobileScreenController @Inject constructor(
         .ofType(PatientSearchByMobileProceedClicked::class.java)
         .withLatestFrom(mobileNumberChanges, { _, number -> number })
         .take(1)
-        .map { number -> OngoingPatientEntry(mobileNumber = number) }
+        .map { number -> OngoingPatientEntry(mobileNumbers = OngoingPatientEntry.MobileNumbers(primary = number)) }
         .flatMapCompletable { newEntry -> repository.save(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
   }

@@ -18,9 +18,10 @@ class TheActivity : AppCompatActivity() {
   }
 
   lateinit var screenRouter: ScreenRouter
+  private val screenResults: ScreenResultBus = ScreenResultBus()
 
   override fun attachBaseContext(baseContext: Context) {
-    screenRouter = ScreenRouter.create(this, NestedKeyChanger(), ScreenResultBus())
+    screenRouter = ScreenRouter.create(this, NestedKeyChanger(), screenResults)
     component = RedApp.appComponent
         .activityComponentBuilder()
         .activity(this)
@@ -38,7 +39,7 @@ class TheActivity : AppCompatActivity() {
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
-    screenRouter.sendResultAndPop(ActivityResult(requestCode, resultCode, data))
+    screenResults.send(ActivityResult(requestCode, resultCode, data))
   }
 
   override fun onBackPressed() {

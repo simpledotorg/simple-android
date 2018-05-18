@@ -4,7 +4,8 @@ import java.util.UUID
 
 data class OngoingPatientEntry(
     val personalDetails: PersonalDetails? = null,
-    val mobileNumbers: MobileNumbers? = null
+    val mobileNumbers: MobileNumbers? = null,
+    val bloodPressureMeasurements: BloodPressureMeasurement? = null
 ) {
 
   fun toPatient(patientId: UUID, dateConverter: (String) -> Long): Patient {
@@ -20,4 +21,6 @@ data class OngoingPatientEntry(
   data class PersonalDetails(val fullName: String, val dateOfBirth: String, val ageWhenCreated: Int, val gender: Gender)
 
   data class MobileNumbers(val primary: String, val secondary: String? = null)
+
+  data class BloodPressureMeasurement(val systolic: Int, val diastolic: Int)
 }

@@ -32,13 +32,13 @@
         android:layout_marginBottom="@dimen/spacing_8">
 
         <EditText
-          android:id="@+id/patiententry_address_street"
+          android:id="@+id/patiententry_address_colony_or_village"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:hint="House number and street name"
-          tools:ignore="RtlSymmetry"
+          android:hint="Colony or Village"
           android:inputType="textCapSentences|textPostalAddress"
-          android:paddingEnd="56dp" />
+          android:paddingEnd="56dp"
+          tools:ignore="RtlSymmetry" />
 
         <TextView
           android:layout_width="wrap_content"
@@ -55,12 +55,13 @@
         android:layout_marginBottom="@dimen/spacing_8">
 
         <EditText
+          android:id="@+id/patiententry_address_district"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          tools:ignore="RtlSymmetry"
-          android:hint="Area/Colony"
+          android:hint="District"
           android:inputType="textCapSentences|textPostalAddress"
-          android:paddingEnd="56dp" />
+          android:paddingEnd="56dp"
+          tools:ignore="RtlSymmetry" />
 
         <TextView
           android:layout_width="wrap_content"
@@ -71,75 +72,33 @@
           android:textSize="@dimen/textsize_12" />
       </FrameLayout>
 
-      <LinearLayout
+      <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_8"
-        android:orientation="horizontal">
-
-        <LinearLayout
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:orientation="vertical">
-
-          <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_8">
-
-            <EditText
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:hint="District"
-              tools:ignore="RtlSymmetry"
-              android:inputType="textCapSentences|textPostalAddress"
-              android:paddingEnd="56dp" />
-
-            <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical|end"
-              android:layout_marginEnd="@dimen/spacing_4"
-              android:text="@string/patiententry_optional"
-              android:textSize="@dimen/textsize_12" />
-          </FrameLayout>
-
-          <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_8">
-
-            <EditText
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              tools:ignore="RtlSymmetry"
-              android:hint="PIN"
-              android:inputType="textCapSentences|number"
-              android:paddingEnd="56dp" />
-
-            <TextView
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_gravity="center_vertical|end"
-              android:layout_marginEnd="@dimen/spacing_4"
-              android:text="@string/patiententry_optional"
-              android:textSize="@dimen/textsize_12" />
-          </FrameLayout>
-        </LinearLayout>
+        android:layout_marginBottom="@dimen/spacing_8">
 
         <EditText
-          android:layout_width="0dp"
+          android:id="@+id/patiententry_address_state"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
           android:hint="State"
-          android:inputType="textCapSentences|textPostalAddress" />
-      </LinearLayout>
+          android:inputType="textCapSentences|textPostalAddress"
+          android:paddingEnd="56dp"
+          tools:ignore="RtlSymmetry" />
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|end"
+          android:layout_marginEnd="@dimen/spacing_4"
+          android:text="@string/patiententry_optional"
+          android:textSize="@dimen/textsize_12" />
+      </FrameLayout>
     </LinearLayout>
   </LinearLayout>
 
   <Button
-    android:id="@+id/patientaddress_next_button"
+    android:id="@+id/patiententry_address_proceed"
     style="@style/RedApp.Button.PatientEntry.IconOnly"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"

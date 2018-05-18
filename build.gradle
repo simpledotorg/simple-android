@@ -6,6 +6,7 @@ buildscript {
       compileSdk : 26,
       kotlin     : '1.2.41',
       supportLib : '27.1.1',
+      supportTest: '1.0.2',
       timber     : '4.7.0',
       dagger     : '2.16',
       butterKnife: '8.8.1',

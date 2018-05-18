@@ -62,7 +62,7 @@ class PatientPersonalDetailsEntryScreenController @Inject constructor(
         .withLatestFrom(fullNameChanges, dateOfBirthChanges, ageChanges, genderChanges,
             { entry, name, dob, age, gender -> entry to OngoingPatientEntry.PersonalDetails(name, dob, age, gender) })
         .take(1)
-        .map { (entry, personalDetails) -> entry.copy(personalDetails = personalDetails) }
+        .map { (entry, updatedPersonalDetails) -> entry.copy(personalDetails = updatedPersonalDetails) }
         .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
         .andThen(Observable.just({ ui: Ui -> ui.openAddressEntryScreen() }))
   }

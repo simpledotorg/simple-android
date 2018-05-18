@@ -5,7 +5,7 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.router.screen.FullScreenKey
 
 @Parcelize
-class BpEntryScreenKey : FullScreenKey {
+class PatientBpEntryScreenKey : FullScreenKey {
 
   override fun layoutRes(): Int {
     return R.layout.screen_patient_bp_entry

@@ -8,8 +8,9 @@ import dagger.Module
 import dagger.Provides
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.R
+import org.resolvetosavelives.red.qrscan.QrDaggerModule
 
-@Module
+@Module(includes = [QrDaggerModule::class])
 class AppModule(private val appContext: Application) {
 
   @Provides

@@ -12,7 +12,6 @@ import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.util.RuntimePermissionResult
 import org.resolvetosavelives.red.util.Vibrator
-import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import timber.log.Timber
 import javax.inject.Inject
@@ -30,18 +29,10 @@ class AadhaarScanScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
-        scannerSetups(replayedEvents),
         aadhaarScannerToggles(replayedEvents),
         cameraPermissionRequests(replayedEvents),
         appInfoOpens(replayedEvents),
         aadhaarScans(replayedEvents))
-  }
-
-  // TODO: Test.
-  private fun scannerSetups(events: Observable<UiEvent>): Observable<UiChange>? {
-    return events
-        .ofType<ScreenCreated>()
-        .map { { ui: Ui -> ui.setupQrScanner() } }
   }
 
   private fun cameraPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {

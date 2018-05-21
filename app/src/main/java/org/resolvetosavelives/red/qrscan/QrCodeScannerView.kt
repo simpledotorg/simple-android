@@ -4,8 +4,6 @@ import io.reactivex.Observable
 
 interface QrCodeScannerView {
 
-  fun setup()
-
   fun start()
 
   fun stop()

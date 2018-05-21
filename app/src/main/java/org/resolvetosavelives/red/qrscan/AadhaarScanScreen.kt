@@ -19,7 +19,6 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.util.RuntimePermissions
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.ScreenDestroyed
-import timber.log.Timber
 import javax.inject.Inject
 
 class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -88,10 +87,6 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
     // TODO.
   }
 
-  fun setupQrScanner() {
-    qrReaderView.setup()
-  }
-
   fun qrCodeScans(): Observable<QrScanned> {
     return qrReaderView.scans()
         .map { qrCode -> QrScanned(qrCode) }
@@ -99,10 +94,8 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
 
   fun setAadhaarScannerEnabled(enabled: Boolean) {
     if (enabled) {
-      Timber.w("Enabling aadhaar")
       qrReaderView.start()
     } else {
-      Timber.w("Disabling aadhaar")
       qrReaderView.stop()
     }
   }

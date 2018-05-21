@@ -20,6 +20,7 @@ import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.ScreenCreated
+import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -70,10 +71,10 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
 
   private fun ageTextChanges() = RxTextView.textChanges(ageEditText)
       .map(CharSequence::toString)
-      .map(Integer::parseInt)
       .map(::PatientAgeTextChanged)
 
   private fun genderChanges() = RxRadioGroup.checkedChanges(genderRadioGroup)
+      .filter({ checkedRadioId -> checkedRadioId != -1 })   // TODO: regression test
       .map {
         when (it) {
           R.id.patiententry_personal_gender_female -> Gender.FEMALE
@@ -92,17 +93,19 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
   }
 
   fun preFill(details: OngoingPatientEntry.PersonalDetails) {
-    fullNameEditText.setText(details.fullName)
-    dateOfBirthEditText.setText(details.dateOfBirth)
-    ageEditText.setText(details.ageWhenCreated.toString())
+    fullNameEditText.setTextAndCursor(details.fullName)
+    dateOfBirthEditText.setTextAndCursor(details.dateOfBirth)
+    ageEditText.setTextAndCursor(details.ageWhenCreated)
 
-    val genderRadioId = when (details.gender) {
-      Gender.FEMALE -> R.id.patiententry_personal_gender_female
-      Gender.MALE -> R.id.patiententry_personal_gender_male
-      Gender.TRANS -> R.id.patiententry_personal_gender_trans
+    if (details.gender != null) {
+      val genderRadioId = when (details.gender) {
+        Gender.FEMALE -> R.id.patiententry_personal_gender_female
+        Gender.MALE -> R.id.patiententry_personal_gender_male
+        Gender.TRANS -> R.id.patiententry_personal_gender_trans
+      }
+      assert(genderRadioGroup.findViewById<View>(genderRadioId) != null)
+      genderRadioGroup.check(genderRadioId)
     }
-    assert(genderRadioGroup.findViewById<View>(genderRadioId) != null)
-    genderRadioGroup.check(genderRadioId)
   }
 
   fun openAddressEntryScreen() {

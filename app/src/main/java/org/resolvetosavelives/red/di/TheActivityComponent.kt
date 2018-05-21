@@ -11,6 +11,7 @@ import org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
 import org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen
 import org.resolvetosavelives.red.newentry.success.PatientSavedScreen
+import org.resolvetosavelives.red.qrscan.AadhaarScanScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 
 @Subcomponent
@@ -25,6 +26,7 @@ interface TheActivityComponent {
   fun inject(target: PatientMobileEntryScreen)
   fun inject(target: PatientSavedScreen)
   fun inject(target: PatientSearchByMobileScreen)
+  fun inject(target: AadhaarScanScreen)
 
   @Subcomponent.Builder
   interface Builder {

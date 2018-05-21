@@ -7,7 +7,7 @@ data class PatientFullNameTextChanged(val fullName: String) : UiEvent
 
 data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : UiEvent
 
-data class PatientAgeTextChanged(val age: Int) : UiEvent
+data class PatientAgeTextChanged(val age: String) : UiEvent
 
 data class PatientGenderChanged(val gender: Gender) : UiEvent
 

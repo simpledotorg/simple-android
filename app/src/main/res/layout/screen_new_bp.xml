@@ -7,19 +7,12 @@
   android:background="#E9ECEE"
   tools:ignore="Overdraw">
 
-  <FrameLayout
+  <include
+    layout="@layout/screen_aadhaar_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/newbp_search_option_container"
-    android:layout_marginBottom="-44dp"
-    android:background="@color/black">
-
-    <View
-      android:layout_width="240dp"
-      android:layout_height="240dp"
-      android:layout_gravity="center"
-      android:background="@drawable/aadhaar_qr_scanner_box" />
-  </FrameLayout>
+    android:layout_marginBottom="-44dp" />
 
   <android.support.v7.widget.CardView
     android:id="@+id/newbp_search_option_container"

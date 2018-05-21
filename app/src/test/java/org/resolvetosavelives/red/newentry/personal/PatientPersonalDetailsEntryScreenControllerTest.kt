@@ -31,7 +31,9 @@ class PatientPersonalDetailsEntryScreenControllerTest {
   fun setUp() {
     controller = PatientPersonalDetailsEntryScreenController(repository)
 
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
@@ -47,7 +49,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   @Test
   fun `when screen starts and existing personal details are present then they should be pre-filled`() {
-    val existingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", 25, Gender.TRANS)
+    val existingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANS)
     val existingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers, personalDetails = existingPersonalDetails)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(existingEntry))
 
@@ -66,14 +68,14 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   @Test
   fun `when proceed is clicked then personal details should be saved and the next screen should be opened`() {
-    val details = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", 25, Gender.TRANS)
+    val details = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANS)
 
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(mobileNumbers = dummyMobileNumbers)))
     whenever(repository.save(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged(details.fullName))
     uiEvents.onNext(PatientDateOfBirthTextChanged(details.dateOfBirth))
-    uiEvents.onNext(PatientAgeTextChanged(details.ageWhenCreated))
+    uiEvents.onNext(PatientAgeTextChanged(details.ageWhenCreated!!))
     uiEvents.onNext(PatientGenderChanged(details.gender))
     uiEvents.onNext(PatientPersonalDetailsProceedClicked())
 

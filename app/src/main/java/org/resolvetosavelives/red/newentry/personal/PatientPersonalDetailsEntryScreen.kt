@@ -70,10 +70,10 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
 
   private fun ageTextChanges() = RxTextView.textChanges(ageEditText)
       .map(CharSequence::toString)
-      .map(Integer::parseInt)
       .map(::PatientAgeTextChanged)
 
   private fun genderChanges() = RxRadioGroup.checkedChanges(genderRadioGroup)
+      .filter({ checkedRadioId -> checkedRadioId != -1 })   // TODO: regression test
       .map {
         when (it) {
           R.id.patiententry_personal_gender_female -> Gender.FEMALE
@@ -94,7 +94,7 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
   fun preFill(details: OngoingPatientEntry.PersonalDetails) {
     fullNameEditText.setText(details.fullName)
     dateOfBirthEditText.setText(details.dateOfBirth)
-    ageEditText.setText(details.ageWhenCreated.toString())
+    ageEditText.setText(details.ageWhenCreated)
 
     val genderRadioId = when (details.gender) {
       Gender.FEMALE -> R.id.patiententry_personal_gender_female

@@ -12,7 +12,7 @@ class AadhaarScanScreenControllerTest {
 
   private val screen: AadhaarScanScreen = mock()
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private val controller: AadhaarScanScreenController = AadhaarScanScreenController(mock())
+  private val controller: AadhaarScanScreenController = AadhaarScanScreenController(mock(), mock(), mock())
 
   @Before
   fun setUp() {

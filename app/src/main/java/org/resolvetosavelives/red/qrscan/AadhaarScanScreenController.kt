@@ -4,18 +4,26 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
+import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.util.RuntimePermissionResult
 import org.resolvetosavelives.red.util.Vibrator
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 private typealias Ui = AadhaarScanScreen
 private typealias UiChange = (Ui) -> Unit
 
-class AadhaarScanScreenController @Inject constructor(private val vibrator: Vibrator) : ObservableTransformer<UiEvent, UiChange> {
+class AadhaarScanScreenController @Inject constructor(
+    private val aadhaarQrCodeParser: AadhaarQrCodeParser,
+    private val vibrator: Vibrator,
+    private val repository: PatientRepository
+) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
@@ -67,18 +75,40 @@ class AadhaarScanScreenController @Inject constructor(private val vibrator: Vibr
         .map { hasPermission -> { ui: Ui -> ui.setAadhaarScannerEnabled(hasPermission) } }
   }
 
-  // TODO
+  // TODO: Test.
   private fun aadhaarScans(events: Observable<UiEvent>): Observable<UiChange> {
     val vibrations = events
-        .ofType<AadhaarScanned>()
+        .ofType<QrScanned>()
         .flatMapCompletable { Completable.fromAction({ vibrator.vibrate(millis = 100) }) }
         .toObservable<UiChange>()
 
-    val aadhaarDataReads = events
-        .ofType<AadhaarScanned>()
+    val newPatientFlows = events
+        .ofType<QrScanned>()
         .map({ event -> event.qrCode })
-        .flatMap { qrCode -> Observable.never<UiChange>() }
+        .doOnNext({ qrCode -> Timber.i("qrCode: $qrCode") })
+        .flatMapSingle { qrCode ->
+          Single.just(aadhaarQrCodeParser.parse(qrCode))
+              .doOnError({ e -> Timber.i("Couldn't parse aadhaar qr: $qrCode") })
+        }
+        .map { aadhaarData -> patientEntry(aadhaarData) }
+        .take(1)
+        .flatMapCompletable { newEntry -> repository.save(newEntry) }
+        .andThen(Observable.just({ ui: Ui -> ui.openNewPatientEntryScreen() }))
 
-    return vibrations.mergeWith(aadhaarDataReads)
+    return vibrations.mergeWith(newPatientFlows)
+  }
+
+  private fun patientEntry(aadhaarQrData: AadhaarQrData): OngoingPatientEntry {
+    return OngoingPatientEntry(
+        personalDetails = OngoingPatientEntry.PersonalDetails(
+            fullName = aadhaarQrData.fullName.orEmpty(),
+            dateOfBirth = aadhaarQrData.dateOfBirth.orEmpty(),
+            ageWhenCreated = null,
+            gender = aadhaarQrData.gender),
+        address = OngoingPatientEntry.Address(
+            colonyOrVillage = aadhaarQrData.villageOrTownOrCity.orEmpty(),
+            district = aadhaarQrData.district.orEmpty(),
+            state = aadhaarQrData.state.orEmpty())
+    )
   }
 }

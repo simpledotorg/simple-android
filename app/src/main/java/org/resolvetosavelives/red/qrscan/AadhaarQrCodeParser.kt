@@ -5,20 +5,21 @@ import javax.inject.Inject
 
 class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlParser.Factory) {
 
-  fun parse(qrCode: String): AadhaarQrCode {
+  /**
+   * FIXME: This class does not expect non-aadhaar QR codes.
+   * TODO: Handle both non-xml and non-aadhaar-xml codes.
+   */
+  fun parse(qrCode: String): AadhaarQrData {
     val xmlParser = xmlParserFactory.parse(qrCode)
     val read: (String) -> String = { tag -> xmlParser.readStrings("//PrintLetterBarcodeData/@$tag").first() }
 
-    return AadhaarQrCode(
+    return AadhaarQrData(
         fullName = read("name"),
         gender = parseGenderCode(read("gender")),
-        yearOfBirth = read("yob"),
-        house = read("house"),
-        location = read("loc"),
+        dateOfBirth = read("dob"),
         villageOrTownOrCity = read("vtc"),
         district = read("dist"),
-        state = read("state"),
-        pincode = read("pc"))
+        state = read("state"))
   }
 
   private fun parseGenderCode(genderCode: String): Gender {
@@ -26,19 +27,18 @@ class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlP
       "M" -> Gender.MALE
       "F" -> Gender.FEMALE
       "T" -> Gender.TRANS
-      else -> throw AssertionError("Unknown gender code in aadhaar: $genderCode")
+      else -> {
+        throw AssertionError("Unknown gender code in aadhaar: $genderCode")
+      }
     }
   }
 }
 
-data class AadhaarQrCode(
-    val fullName: String,
+data class AadhaarQrData(
+    val fullName: String?,
     val gender: Gender,
-    val yearOfBirth: String,
-    val house: String,
-    val location: String,
-    val villageOrTownOrCity: String,
-    val district: String,
-    val state: String,
-    val pincode: String
+    val dateOfBirth: String?,
+    val villageOrTownOrCity: String?,
+    val district: String?,
+    val state: String?
 )

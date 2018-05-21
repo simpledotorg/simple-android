@@ -7,4 +7,4 @@ data class CameraPermissionChanged(val result: RuntimePermissionResult) : UiEven
 
 class AadhaarScanClicked : UiEvent
 
-data class AadhaarScanned(val qrCode: String) : UiEvent
+data class QrScanned(val qrCode: String) : UiEvent

@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
+import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
@@ -77,21 +78,25 @@ class AadhaarScanScreenController @Inject constructor(
 
   // TODO: Test.
   private fun aadhaarScans(events: Observable<UiEvent>): Observable<UiChange> {
-    val vibrations = events
-        .ofType<QrScanned>()
-        .flatMapCompletable { Completable.fromAction({ vibrator.vibrate(millis = 100) }) }
-        .toObservable<UiChange>()
-
-    val newPatientFlows = events
+    val successfulAadhaarScans = events
         .ofType<QrScanned>()
         .map({ event -> event.qrCode })
         .doOnNext({ qrCode -> Timber.i("qrCode: $qrCode") })
         .flatMapSingle { qrCode ->
           Single.just(aadhaarQrCodeParser.parse(qrCode))
-              .doOnError({ e -> Timber.i("Couldn't parse aadhaar qr: $qrCode") })
+              .doOnError({ e -> Timber.e(e, "Couldn't parse aadhaar qr: $qrCode") })
         }
-        .map { aadhaarData -> patientEntry(aadhaarData) }
+        .share()
+        .filter({ result -> result is AadhaarQrData })
+        .cast<AadhaarQrData>()
+
+    val vibrations = successfulAadhaarScans
+        .flatMapCompletable { Completable.fromAction({ vibrator.vibrate(millis = 100) }) }
+        .toObservable<UiChange>()
+
+    val newPatientFlows = successfulAadhaarScans
         .take(1)
+        .map { aadhaarData -> patientEntry(aadhaarData) }
         .flatMapCompletable { newEntry -> repository.save(newEntry) }
         .andThen(Observable.just({ ui: Ui -> ui.openNewPatientEntryScreen() }))
 

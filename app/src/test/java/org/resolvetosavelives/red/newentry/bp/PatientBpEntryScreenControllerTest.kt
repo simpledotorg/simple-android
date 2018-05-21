@@ -25,7 +25,7 @@ class PatientBpEntryScreenControllerTest {
   private val dummyPersonalDetails = OngoingPatientEntry.PersonalDetails(
       fullName = "Ashok Kumar",
       dateOfBirth = "01/01/1900",
-      ageWhenCreated = 118,
+      ageWhenCreated = "118",
       gender = Gender.TRANS)
 
   private lateinit var controller: PatientBpEntryScreenController

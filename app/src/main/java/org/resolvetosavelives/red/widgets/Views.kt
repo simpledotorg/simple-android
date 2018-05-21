@@ -12,7 +12,7 @@ fun EditText.showKeyboard() {
   })
 }
 
-fun EditText.setTextAndCursor(text: CharSequence) {
+fun EditText.setTextAndCursor(text: CharSequence?) {
   setText(text)
-  setSelection(text.length)
+  setSelection(text?.length ?: 0)
 }

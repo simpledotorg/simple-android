@@ -11,7 +11,9 @@ class AadhaarQrCodeParserTest {
 
   @Test
   fun parse() {
-    val parser = AadhaarQrCodeParser()
+    val xmlParserFactory = JcabiXmlParser.Factory()
+
+    val parser = AadhaarQrCodeParser(xmlParserFactory)
     val parsed = parser.parse(xml)
 
     val expected = AadhaarQrCode(

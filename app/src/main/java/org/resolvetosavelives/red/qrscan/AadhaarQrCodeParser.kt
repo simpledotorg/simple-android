@@ -1,14 +1,13 @@
 package org.resolvetosavelives.red.qrscan
 
-import com.jcabi.xml.XMLDocument
 import org.resolvetosavelives.red.newentry.search.Gender
 import javax.inject.Inject
 
-class AadhaarQrCodeParser @Inject constructor() {
+class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlParser.Factory) {
 
   fun parse(qrCode: String): AadhaarQrCode {
-    val xml = XMLDocument(qrCode)
-    val read: (String) -> String = { tag -> xml.xpath("//PrintLetterBarcodeData/@$tag").first() }
+    val xmlParser = xmlParserFactory.parse(qrCode)
+    val read: (String) -> String = { tag -> xmlParser.readStrings("//PrintLetterBarcodeData/@$tag").first() }
 
     return AadhaarQrCode(
         fullName = read("name"),

@@ -76,7 +76,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
     uiEvents.onNext(PatientFullNameTextChanged(details.fullName))
     uiEvents.onNext(PatientDateOfBirthTextChanged(details.dateOfBirth))
     uiEvents.onNext(PatientAgeTextChanged(details.ageWhenCreated!!))
-    uiEvents.onNext(PatientGenderChanged(details.gender))
+    uiEvents.onNext(PatientGenderChanged(details.gender!!))
     uiEvents.onNext(PatientPersonalDetailsProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {

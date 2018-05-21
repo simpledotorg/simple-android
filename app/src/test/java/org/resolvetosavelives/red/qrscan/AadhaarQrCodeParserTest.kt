@@ -42,6 +42,19 @@ class AadhaarQrCodeParserTest {
   }
 
   @Test
+  fun `parsing should be lenient`() {
+    val parsed1 = aadharParser.parse("<?xml version=\"1.0\" encoding=\"UTF-8\"?><PrintLetterBarcodeData />")
+
+    assert(parsed1 == AadhaarQrData(
+        fullName = null,
+        gender = null,
+        dateOfBirth = null,
+        villageOrTownOrCity = null,
+        district = null,
+        state = null))
+  }
+
+  @Test
   fun `when a non-aadhaar xml is received then an unknown rsult should be returned`() {
     val parsed = aadharParser.parse("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<resources><string name=\"key\">value</string></resources>")
     assert(parsed is UnknownQr)

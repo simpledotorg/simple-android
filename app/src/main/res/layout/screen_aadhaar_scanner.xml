@@ -4,7 +4,7 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <org.resolvetosavelives.red.qrscan.ZxingBasedQrCodeScanner
+  <org.resolvetosavelives.red.qrscan.GoogleVisionBasedQrCodeScanner
     android:id="@+id/aadhaarscanner_qr_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />

@@ -17,7 +17,6 @@ class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlP
     } catch (e: InvalidXmlException) {
       return UnknownQr()
     }
-
     if (!xmlParser.hasNode("PrintLetterBarcodeData")) {
       return UnknownQr()
     }
@@ -26,18 +25,19 @@ class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlP
 
     return AadhaarQrData(
         fullName = read("name"),
-        gender = parseGenderCode(read("gender")!!),
+        gender = parseGenderCode(read("gender")),
         dateOfBirth = read("dob"),
         villageOrTownOrCity = read("vtc"),
         district = read("dist"),
         state = read("state"))
   }
 
-  private fun parseGenderCode(genderCode: String): Gender {
+  private fun parseGenderCode(genderCode: String?): Gender? {
     return when (genderCode) {
       "M" -> Gender.MALE
       "F" -> Gender.FEMALE
       "T" -> Gender.TRANS
+      null -> null
       else -> {
         throw AssertionError("Unknown gender code in aadhaar: $genderCode")
       }
@@ -51,7 +51,7 @@ class UnknownQr : ParseResult()
 
 data class AadhaarQrData(
     val fullName: String?,
-    val gender: Gender,
+    val gender: Gender?,
     val dateOfBirth: String?,
     val villageOrTownOrCity: String?,
     val district: String?,

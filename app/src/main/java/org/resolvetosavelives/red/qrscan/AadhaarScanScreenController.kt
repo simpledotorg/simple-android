@@ -54,12 +54,10 @@ class AadhaarScanScreenController @Inject constructor(
         .map { hasPermission -> { ui: Ui -> ui.setAadhaarScannerEnabled(hasPermission) } }
   }
 
-  // TODO: Test.
   private fun aadhaarScans(events: Observable<UiEvent>): Observable<UiChange> {
     val successfulAadhaarScans = events
         .ofType<QrScanned>()
         .map({ event -> event.qrCode })
-        .doOnNext({ qrCode -> Timber.i("qrCode: $qrCode") })
         .flatMapSingle { qrCode ->
           Single.just(aadhaarQrCodeParser.parse(qrCode))
               .doOnError({ e -> Timber.e(e, "Couldn't parse aadhaar qr: $qrCode") })

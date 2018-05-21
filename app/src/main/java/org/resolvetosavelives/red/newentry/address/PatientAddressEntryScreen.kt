@@ -17,6 +17,7 @@ import org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.ScreenCreated
+import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -76,9 +77,9 @@ class PatientAddressEntryScreen(context: Context, attrs: AttributeSet) : Relativ
   }
 
   fun preFill(address: OngoingPatientEntry.Address) {
-    colonyOrVillageEditText.setText(address.colonyOrVillage)
-    districtEditText.setText(address.district)
-    stateEditText.setText(address.state)
+    colonyOrVillageEditText.setTextAndCursor(address.colonyOrVillage)
+    districtEditText.setTextAndCursor(address.district)
+    stateEditText.setTextAndCursor(address.state)
   }
 
   fun openPatientMobileEntryScreen() {

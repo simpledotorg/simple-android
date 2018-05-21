@@ -31,7 +31,6 @@ class AadhaarScanScreenController @Inject constructor(
     return Observable.mergeArray(
         aadhaarScannerToggles(replayedEvents),
         cameraPermissionRequests(replayedEvents),
-        appInfoOpens(replayedEvents),
         aadhaarScans(replayedEvents))
   }
 
@@ -45,18 +44,6 @@ class AadhaarScanScreenController @Inject constructor(
         .withLatestFrom(cameraPermissionChanges)
         .filter({ (_, permissionResult) -> permissionResult == RuntimePermissionResult.DENIED })
         .flatMap { Observable.just { ui: Ui -> ui.requestCameraPermission() } }
-  }
-
-  private fun appInfoOpens(events: Observable<UiEvent>): Observable<UiChange> {
-    val cameraPermissionChanges = events
-        .ofType<CameraPermissionChanged>()
-        .map(CameraPermissionChanged::result)
-
-    return events
-        .ofType<AadhaarScanClicked>()
-        .withLatestFrom(cameraPermissionChanges)
-        .filter({ (_, permissionResult) -> permissionResult == RuntimePermissionResult.NEVER_ASK_AGAIN })
-        .flatMap { Observable.just { ui: Ui -> ui.openAppInfoToManuallyEnableCameraAccess() } }
   }
 
   private fun aadhaarScannerToggles(events: Observable<UiEvent>): Observable<UiChange> {

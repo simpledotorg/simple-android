@@ -70,21 +70,13 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
         .ofType<ActivityPermissionResult>()
         .filter { result -> result.requestCode == REQUESTCODE_CAMERA_PERMISSION }
 
-    // TODO: Emit on every app resume so that scanner can be enabled
-    // TODO: automatically when the user returns from App Info.
-    val viewResumes = screenCreates()
-
-    return Observable.merge(viewResumes, permissionGrants)
-        .map { RuntimePermissions.check(context, Manifest.permission.CAMERA) }
+    return Observable.merge(screenCreates(), permissionGrants)
+        .map { RuntimePermissions.check(activity, Manifest.permission.CAMERA) }
         .map(::CameraPermissionChanged)
   }
 
   fun requestCameraPermission() {
     ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), REQUESTCODE_CAMERA_PERMISSION)
-  }
-
-  fun openAppInfoToManuallyEnableCameraAccess() {
-    // TODO.
   }
 
   fun qrCodeScans(): Observable<QrScanned> {

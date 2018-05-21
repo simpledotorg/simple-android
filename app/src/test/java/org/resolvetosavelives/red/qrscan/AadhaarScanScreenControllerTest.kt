@@ -1,18 +1,32 @@
 package org.resolvetosavelives.red.qrscan
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
+import org.resolvetosavelives.red.newentry.search.Gender
+import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
+import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.util.RuntimePermissionResult
+import org.resolvetosavelives.red.util.Vibrator
 import org.resolvetosavelives.red.widgets.UiEvent
 
 class AadhaarScanScreenControllerTest {
 
-  private val screen: AadhaarScanScreen = mock()
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private val controller: AadhaarScanScreenController = AadhaarScanScreenController(mock(), mock(), mock())
+
+  private val screen = mock<AadhaarScanScreen>()
+  private val aadhaarQrCodeParser = mock<AadhaarQrCodeParser>()
+  private val vibrator = mock<Vibrator>()
+  private val repository = mock<PatientRepository>()
+  private val controller: AadhaarScanScreenController = AadhaarScanScreenController(aadhaarQrCodeParser, vibrator, repository)
 
   @Before
   fun setUp() {
@@ -37,5 +51,60 @@ class AadhaarScanScreenControllerTest {
 
     Mockito.verify(screen, Mockito.times(2)).setAadhaarScannerEnabled(true)
     Mockito.verify(screen, Mockito.times(2)).setAadhaarScannerEnabled(false)
+  }
+
+  @Test
+  fun `when an aadhaar qr code is identified then play a short vibration`() {
+    val aadhaarQrData = mock<AadhaarQrData>()
+    whenever(aadhaarQrCodeParser.parse("qr-code")).thenReturn(aadhaarQrData)
+    whenever(repository.save(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(QrScanned("qr-code"))
+
+    verify(vibrator).vibrate(any())
+  }
+
+  @Test
+  fun `when an aadhaar qr code is identified then start a new patient flow with pre-filled values`() {
+    val aadhaarQrData = AadhaarQrData(
+        fullName = "Saket Narayan",
+        gender = Gender.MALE,
+        dateOfBirth = "12/04/1993",
+        villageOrTownOrCity = "Harmu",
+        district = "Ranchi",
+        state = "Jharkhand")
+
+    whenever(aadhaarQrCodeParser.parse("qr-code")).thenReturn(aadhaarQrData)
+    whenever(repository.save(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(QrScanned("qr-code"))
+
+    argumentCaptor<OngoingPatientEntry>().apply {
+      verify(repository).save(capture())
+
+      assert(firstValue == OngoingPatientEntry(
+          personalDetails = OngoingPatientEntry.PersonalDetails(
+              fullName = aadhaarQrData.fullName!!,
+              dateOfBirth = aadhaarQrData.dateOfBirth!!,
+              ageWhenCreated = null,
+              gender = aadhaarQrData.gender),
+          address = OngoingPatientEntry.Address(
+              colonyOrVillage = aadhaarQrData.villageOrTownOrCity!!,
+              district = aadhaarQrData.district!!,
+              state = aadhaarQrData.state!!)
+      ))
+    }
+    verify(screen).openNewPatientEntryScreen()
+  }
+
+  @Test
+  fun `non-aadhaar qr codes should be ignored`() {
+    whenever(aadhaarQrCodeParser.parse("invalid-qr-code")).thenReturn(UnknownQr())
+    whenever(repository.save(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(QrScanned("invalid-qr-code"))
+
+    verify(repository, never()).save(any())
+    verify(screen, never()).openNewPatientEntryScreen()
   }
 }

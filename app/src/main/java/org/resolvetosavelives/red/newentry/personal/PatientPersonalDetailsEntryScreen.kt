@@ -20,6 +20,7 @@ import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.ScreenCreated
+import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -92,9 +93,9 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
   }
 
   fun preFill(details: OngoingPatientEntry.PersonalDetails) {
-    fullNameEditText.setText(details.fullName)
-    dateOfBirthEditText.setText(details.dateOfBirth)
-    ageEditText.setText(details.ageWhenCreated)
+    fullNameEditText.setTextAndCursor(details.fullName)
+    dateOfBirthEditText.setTextAndCursor(details.dateOfBirth)
+    ageEditText.setTextAndCursor(details.ageWhenCreated)
 
     val genderRadioId = when (details.gender) {
       Gender.FEMALE -> R.id.patiententry_personal_gender_female

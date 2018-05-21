@@ -74,8 +74,7 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
 
   fun preFill(numbers: OngoingPatientEntry.MobileNumbers) {
     primaryNumberEditText.setTextAndCursor(numbers.primary)
-    secondaryNumberEditText.setTextAndCursor(numbers.secondary
-        ?: "")
+    secondaryNumberEditText.setTextAndCursor(numbers.secondary ?: "")
   }
 
   fun openBloodPressureEntryScreen() {

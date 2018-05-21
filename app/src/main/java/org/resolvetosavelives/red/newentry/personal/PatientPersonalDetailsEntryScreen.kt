@@ -97,13 +97,15 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
     dateOfBirthEditText.setTextAndCursor(details.dateOfBirth)
     ageEditText.setTextAndCursor(details.ageWhenCreated)
 
-    val genderRadioId = when (details.gender) {
-      Gender.FEMALE -> R.id.patiententry_personal_gender_female
-      Gender.MALE -> R.id.patiententry_personal_gender_male
-      Gender.TRANS -> R.id.patiententry_personal_gender_trans
+    if (details.gender != null) {
+      val genderRadioId = when (details.gender) {
+        Gender.FEMALE -> R.id.patiententry_personal_gender_female
+        Gender.MALE -> R.id.patiententry_personal_gender_male
+        Gender.TRANS -> R.id.patiententry_personal_gender_trans
+      }
+      assert(genderRadioGroup.findViewById<View>(genderRadioId) != null)
+      genderRadioGroup.check(genderRadioId)
     }
-    assert(genderRadioGroup.findViewById<View>(genderRadioId) != null)
-    genderRadioGroup.check(genderRadioId)
   }
 
   fun openAddressEntryScreen() {

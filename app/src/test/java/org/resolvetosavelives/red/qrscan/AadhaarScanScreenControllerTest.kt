@@ -29,14 +29,6 @@ class AadhaarScanScreenControllerTest {
   }
 
   @Test
-  fun `when aadhaar scan is clicked but camera permission has been permanently denied then open app info`() {
-    uiEvents.onNext(CameraPermissionChanged(RuntimePermissionResult.NEVER_ASK_AGAIN))
-    uiEvents.onNext(AadhaarScanClicked())
-
-    Mockito.verify(screen).openAppInfoToManuallyEnableCameraAccess()
-  }
-
-  @Test
   fun `toggle Aadhaar scanner with camera permission toggles`() {
     uiEvents.onNext(CameraPermissionChanged(RuntimePermissionResult.GRANTED))
     uiEvents.onNext(CameraPermissionChanged(RuntimePermissionResult.DENIED))

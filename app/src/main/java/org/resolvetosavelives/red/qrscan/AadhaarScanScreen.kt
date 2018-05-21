@@ -13,11 +13,13 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
 import org.resolvetosavelives.red.router.screen.ActivityPermissionResult
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.util.RuntimePermissions
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.ScreenDestroyed
+import timber.log.Timber
 import javax.inject.Inject
 
 class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -90,16 +92,22 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
     qrReaderView.setup()
   }
 
-  fun qrCodeScans(): Observable<AadhaarScanned> {
+  fun qrCodeScans(): Observable<QrScanned> {
     return qrReaderView.scans()
-        .map { qrCode -> AadhaarScanned(qrCode) }
+        .map { qrCode -> QrScanned(qrCode) }
   }
 
   fun setAadhaarScannerEnabled(enabled: Boolean) {
     if (enabled) {
+      Timber.w("Enabling aadhaar")
       qrReaderView.start()
     } else {
+      Timber.w("Disabling aadhaar")
       qrReaderView.stop()
     }
+  }
+
+  fun openNewPatientEntryScreen() {
+    screenRouter.push(PatientPersonalDetailsEntryScreen.KEY)
   }
 }

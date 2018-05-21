@@ -2,7 +2,7 @@ package org.resolvetosavelives.red.qrscan
 
 import com.jcabi.xml.XMLDocument
 
-class JcabiXmlParser(private val xml: String) : XmlParser {
+class JcabiXmlParser(xml: String) : XmlParser {
 
   private var xmlDocument: XMLDocument = XMLDocument(xml)
 

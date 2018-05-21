@@ -9,13 +9,24 @@ class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlP
    * FIXME: This class does not expect non-aadhaar QR codes.
    * TODO: Handle both non-xml and non-aadhaar-xml codes.
    */
-  fun parse(qrCode: String): AadhaarQrData {
-    val xmlParser = xmlParserFactory.parse(qrCode)
-    val read: (String) -> String = { tag -> xmlParser.readStrings("//PrintLetterBarcodeData/@$tag").first() }
+  fun parse(qrCode: String): ParseResult {
+    val xmlParser: XmlParser
+
+    try {
+      xmlParser = xmlParserFactory.parse(qrCode)
+    } catch (e: InvalidXmlException) {
+      return UnknownQr()
+    }
+
+    if (!xmlParser.hasNode("PrintLetterBarcodeData")) {
+      return UnknownQr()
+    }
+
+    val read: (String) -> String? = { tag -> xmlParser.readStrings("//PrintLetterBarcodeData/@$tag").firstOrNull() }
 
     return AadhaarQrData(
         fullName = read("name"),
-        gender = parseGenderCode(read("gender")),
+        gender = parseGenderCode(read("gender")!!),
         dateOfBirth = read("dob"),
         villageOrTownOrCity = read("vtc"),
         district = read("dist"),
@@ -34,6 +45,10 @@ class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlP
   }
 }
 
+sealed class ParseResult
+
+class UnknownQr : ParseResult()
+
 data class AadhaarQrData(
     val fullName: String?,
     val gender: Gender,
@@ -41,4 +56,4 @@ data class AadhaarQrData(
     val villageOrTownOrCity: String?,
     val district: String?,
     val state: String?
-)
+) : ParseResult()

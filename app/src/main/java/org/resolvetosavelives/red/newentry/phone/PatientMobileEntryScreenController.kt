@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.mobile
+package org.resolvetosavelives.red.newentry.phone
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -11,10 +11,10 @@ import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
-private typealias Ui = PatientMobileEntryScreen
+private typealias Ui = PatientPhoneEntryScreen
 private typealias UiChange = (Ui) -> Unit
 
-class PatientMobileEntryScreenController @Inject constructor(
+class PatientPhoneEntryScreenController @Inject constructor(
     private val repository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -30,34 +30,34 @@ class PatientMobileEntryScreenController @Inject constructor(
   private fun keyboardCalls(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
-        .flatMap { Observable.just { ui: Ui -> ui.showKeyboardOnPrimaryMobileNumber() } }
+        .flatMap { Observable.just { ui: Ui -> ui.showKeyboardOnPrimaryPhoneNumber() } }
   }
 
   private fun preFills(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
         .flatMapSingle { repository.ongoingEntry() }
-        .filter { ongoingEntry -> ongoingEntry.mobileNumbers != null }
-        .map { ongoingEntry -> ongoingEntry.mobileNumbers }
-        .flatMap { mobileNumbers -> Observable.just { ui: Ui -> ui.preFill(mobileNumbers) } }
+        .filter { ongoingEntry -> ongoingEntry.phoneNumbers != null }
+        .map { ongoingEntry -> ongoingEntry.phoneNumbers }
+        .flatMap { phoneNumbers -> Observable.just { ui: Ui -> ui.preFill(phoneNumbers) } }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val primaryNumberChanges = events
-        .ofType<PatientPrimaryMobileTextChanged>()
-        .map(PatientPrimaryMobileTextChanged::number)
+        .ofType<PatientPrimaryPhoneTextChanged>()
+        .map(PatientPrimaryPhoneTextChanged::number)
 
     val secondaryNumberChanges = events
-        .ofType<PatientSecondaryMobileTextChanged>()
-        .map(PatientSecondaryMobileTextChanged::number)
+        .ofType<PatientSecondaryPhoneTextChanged>()
+        .map(PatientSecondaryPhoneTextChanged::number)
 
     return events
-        .ofType<PatientMobileEntryProceedClicked>()
+        .ofType<PatientPhoneEntryProceedClicked>()
         .flatMapSingle { repository.ongoingEntry() }
         .withLatestFrom(primaryNumberChanges, secondaryNumberChanges,
-            { entry, primary, secondary -> entry to OngoingPatientEntry.MobileNumbers(primary, secondary) })
+            { entry, primary, secondary -> entry to OngoingPatientEntry.PhoneNumbers(primary, secondary) })
         .take(1)
-        .map { (entry, updatedMobileNumbers) -> entry.copy(mobileNumbers = updatedMobileNumbers) }
+        .map { (entry, updatedPhoneNumbers) -> entry.copy(phoneNumbers = updatedPhoneNumbers) }
         .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openBloodPressureEntryScreen() })
   }

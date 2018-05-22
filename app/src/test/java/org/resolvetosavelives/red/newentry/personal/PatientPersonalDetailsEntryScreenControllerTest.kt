@@ -22,7 +22,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   private val screen: PatientPersonalDetailsEntryScreen = mock()
   private var repository: PatientRepository = mock()
-  private val dummyMobileNumbers = OngoingPatientEntry.MobileNumbers("123", "456")
+  private val dummyPhoneNumbers = OngoingPatientEntry.PhoneNumbers("123", "456")
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientPersonalDetailsEntryScreenController
@@ -49,8 +49,8 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   @Test
   fun `when screen starts and existing personal details are present then they should be pre-filled`() {
-    val existingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANS)
-    val existingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers, personalDetails = existingPersonalDetails)
+    val existingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANSGENDER)
+    val existingEntry = OngoingPatientEntry(phoneNumbers = dummyPhoneNumbers, personalDetails = existingPersonalDetails)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(existingEntry))
 
     uiEvents.onNext(ScreenCreated())
@@ -60,7 +60,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   @Test
   fun `when screen starts and existing personal details are not present then they should not be pre-filled`() {
-    val existingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers, personalDetails = null)
+    val existingEntry = OngoingPatientEntry(phoneNumbers = dummyPhoneNumbers, personalDetails = null)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(existingEntry))
 
     verify(screen, never()).preFill(any())
@@ -68,9 +68,9 @@ class PatientPersonalDetailsEntryScreenControllerTest {
 
   @Test
   fun `when proceed is clicked then personal details should be saved and the next screen should be opened`() {
-    val details = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANS)
+    val details = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANSGENDER)
 
-    whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(mobileNumbers = dummyMobileNumbers)))
+    whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(phoneNumbers = dummyPhoneNumbers)))
     whenever(repository.save(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged(details.fullName))

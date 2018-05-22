@@ -36,7 +36,7 @@ class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlP
     return when (genderCode) {
       "M" -> Gender.MALE
       "F" -> Gender.FEMALE
-      "T" -> Gender.TRANS
+      "T" -> Gender.TRANSGENDER
       null -> null
       else -> {
         throw AssertionError("Unknown gender code in aadhaar: $genderCode")

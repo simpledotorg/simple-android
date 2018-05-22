@@ -26,7 +26,7 @@ class PatientBpEntryScreenControllerTest {
       fullName = "Ashok Kumar",
       dateOfBirth = "01/01/1900",
       ageWhenCreated = "118",
-      gender = Gender.TRANS)
+      gender = Gender.TRANSGENDER)
 
   private lateinit var controller: PatientBpEntryScreenController
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()

@@ -1,31 +1,41 @@
 package org.resolvetosavelives.red.newentry.search
 
-import android.arch.persistence.room.ColumnInfo
-import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 
 // TODO: find a better package for Patient and its related classes.
-@Entity
+
+@Entity(
+    foreignKeys = [
+      ForeignKey(
+          entity = PatientAddress::class,
+          parentColumns = ["uuid"],
+          childColumns = ["addressUuid"])
+    ],
+    indices = [
+      Index("addressUuid", unique = true)
+    ])
 data class Patient(
     @PrimaryKey
     val uuid: String,
 
-    @ColumnInfo(name = "full_name")
+    val addressUuid: String,
+
+    val mobileNumberUuid: String,
+
     val fullName: String,
 
-    @ColumnInfo(name = "gender")
     val gender: Gender,
 
-    @ColumnInfo(name = "date_of_birth")
-    val dateOfBirth: Long,
+    val dateOfBirth: LocalDate?,
 
-    @ColumnInfo(name = "age_when_created")
-    val ageWhenCreated: Int,
+    val ageWhenCreated: Int?,
 
-    @Embedded(prefix = "mobile_number_")
-    val mobileNumbers: MobileNumbers
-) {
+    val createdAt: Instant,
 
-  data class MobileNumbers(val primary: String, val secondary: String?)
-}
+    val updatedAt: Instant
+)

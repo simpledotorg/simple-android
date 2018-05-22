@@ -5,6 +5,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
@@ -42,12 +44,32 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     })
   }
 
-  fun markOngoingEntryAsComplete(patientId: UUID): Completable {
+  fun markOngoingEntryAsComplete(): Completable {
     // TODO: Parse date and convert it to millis.
-    val dateConverter: (String) -> Long = { formattedDate -> 0 }
+    val dateConverter: (String) -> LocalDate? = { formattedDate -> null }
+
+    val patientUuid = UUID.randomUUID().toString()
+    val addressUuid = UUID.randomUUID().toString()
+    val mobileNumberUuid = UUID.randomUUID().toString()
+
+    val createdAtDateTime = Instant.now()
+    val updatedAtDateTime = createdAtDateTime
 
     return ongoingEntry()
-        .map { entry -> entry.toPatient(patientId, dateConverter) }
+        .map { entry ->
+          entry.apply {
+            Patient(
+                uuid = patientUuid,
+                addressUuid = addressUuid,
+                mobileNumberUuid = mobileNumberUuid,
+                fullName = personalDetails!!.fullName,
+                dateOfBirth = dateConverter(personalDetails.dateOfBirth),
+                ageWhenCreated = personalDetails.ageWhenCreated!!.toInt(),
+                gender = personalDetails.gender!!,
+                createdAt = createdAtDateTime,
+                updatedAt = updatedAtDateTime)
+          }
+        }
         .flatMapCompletable { patient -> save(patient) }
   }
 }

@@ -86,4 +86,6 @@ dependencies {
   implementation 'io.reactivex.rxjava2:rxkotlin:2.2.0'
   implementation 'com.github.nisrulz:qreader:2.1.2'
   implementation 'com.jcabi:jcabi-xml:0.21.4'
+  implementation "org.threeten:threetenbp:1.3.6:no-tzdb"
+  implementation "com.gabrielittner.threetenbp:lazythreetenbp:0.3.0"
 }

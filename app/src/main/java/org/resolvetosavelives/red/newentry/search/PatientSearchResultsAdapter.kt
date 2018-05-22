@@ -48,11 +48,11 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
         titleTextView.text = "(no name)"
       }
 
-      if (patient.mobileNumbers.primary.isNotBlank()) {
-        bylineTextView.text = patient.mobileNumbers.primary
-      } else {
-        bylineTextView.text = "(no number)"
-      }
+//      if (patient.mobileNumbers.primary.isNotBlank()) {
+//        bylineTextView.text = patient.mobileNumbers.primary
+//      } else {
+//        bylineTextView.text = "(no number)"
+//      }
     }
   }
 }

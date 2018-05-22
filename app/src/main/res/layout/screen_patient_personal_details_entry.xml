@@ -132,11 +132,11 @@
         android:textSize="@dimen/textsize_16" />
 
       <RadioButton
-        android:id="@+id/patiententry_personal_gender_trans"
+        android:id="@+id/patiententry_personal_gender_transgender"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="@string/patiententry_personaldetails_gender_trans"
+        android:text="@string/patiententry_personaldetails_gender_transgender"
         android:textColor="@color/black_opacity_50"
         android:textSize="@dimen/textsize_16" />
     </RadioGroup>

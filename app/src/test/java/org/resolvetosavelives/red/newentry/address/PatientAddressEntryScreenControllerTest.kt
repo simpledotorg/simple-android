@@ -73,6 +73,6 @@ class PatientAddressEntryScreenControllerTest {
       verify(repository).save(capture())
       assert(firstValue.address == dummyAddress)
     }
-    verify(screen).openPatientMobileEntryScreen()
+    verify(screen).openPatientPhoneEntryScreen()
   }
 }

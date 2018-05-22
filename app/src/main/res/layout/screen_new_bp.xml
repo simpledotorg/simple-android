@@ -44,7 +44,7 @@
         android:baselineAligned="false">
 
         <FrameLayout
-          android:id="@+id/newbp_search_by_mobile"
+          android:id="@+id/newbp_search_by_phone"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
@@ -62,7 +62,7 @@
             android:drawablePadding="@dimen/spacing_8"
             android:drawableStart="@drawable/ic_smartphone_24dp"
             android:focusable="false"
-            android:text="@string/home_search_by_mobile" />
+            android:text="@string/home_search_by_phone" />
         </FrameLayout>
 
         <FrameLayout

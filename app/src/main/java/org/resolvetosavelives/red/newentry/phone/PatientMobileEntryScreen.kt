@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.mobile
+package org.resolvetosavelives.red.newentry.phone
 
 import android.content.Context
 import android.util.AttributeSet
@@ -20,21 +20,21 @@ import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
-class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientPhoneEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = PatientMobileEntryScreenKey()
+    val KEY = PatientPhoneEntryScreenKey()
   }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PatientMobileEntryScreenController
+  lateinit var controller: PatientPhoneEntryScreenController
 
-  private val primaryNumberEditText by bindView<EditText>(R.id.patiententry_mobile_primary)
-  private val secondaryNumberEditText by bindView<EditText>(R.id.patiententry_mobile_secondary)
-  private val proceedButton by bindView<Button>(R.id.patiententry_mobile_proceed)
+  private val primaryNumberEditText by bindView<EditText>(R.id.patiententry_phone_primary)
+  private val secondaryNumberEditText by bindView<EditText>(R.id.patiententry_phone_secondary)
+  private val proceedButton by bindView<Button>(R.id.patiententry_phone_proceed)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -51,7 +51,7 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
 
-    showKeyboardOnPrimaryMobileNumber()
+    showKeyboardOnPrimaryPhoneNumber()
 
     //    patientRepository
     //        .ongoingEntry()
@@ -66,13 +66,13 @@ class PatientMobileEntryScreen(context: Context, attrs: AttributeSet) : Relative
       .map { ScreenCreated() }
 
   private fun proceedClicks() = RxView.clicks(proceedButton)
-      .map { PatientMobileEntryProceedClicked() }
+      .map { PatientPhoneEntryProceedClicked() }
 
-  fun showKeyboardOnPrimaryMobileNumber() {
+  fun showKeyboardOnPrimaryPhoneNumber() {
     primaryNumberEditText.showKeyboard()
   }
 
-  fun preFill(numbers: OngoingPatientEntry.MobileNumbers) {
+  fun preFill(numbers: OngoingPatientEntry.PhoneNumbers) {
     primaryNumberEditText.setTextAndCursor(numbers.primary)
     secondaryNumberEditText.setTextAndCursor(numbers.secondary ?: "")
   }

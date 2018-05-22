@@ -5,23 +5,23 @@ import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
 
 @Entity(
-    primaryKeys = ["patientUuid", "mobileNumberUuid"],
+    primaryKeys = ["patientUuid", "phoneNumberUuid"],
     foreignKeys = [
       ForeignKey(
           entity = Patient::class,
           parentColumns = ["uuid"],
           childColumns = ["patientUuid"]),
       ForeignKey(
-          entity = PatientMobileNumber::class,
+          entity = PatientPhoneNumber::class,
           parentColumns = ["uuid"],
-          childColumns = ["mobileNumberUuid"])
+          childColumns = ["phoneNumberUuid"])
     ],
     indices = [
       (Index("patientUuid", unique = true)),
-      (Index("mobileNumberUuid", unique = true))
+      (Index("phoneNumberUuid", unique = true))
     ]
 )
-data class PatientAndMobileNumberJoin(
+data class PatientAndPhoneNumberJoin(
     val patientUuid: String,
-    val mobileNumberUuid: String
+    val phoneNumberUuid: String
 )

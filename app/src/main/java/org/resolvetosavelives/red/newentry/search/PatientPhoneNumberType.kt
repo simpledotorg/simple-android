@@ -2,19 +2,19 @@ package org.resolvetosavelives.red.newentry.search
 
 import android.arch.persistence.room.TypeConverter
 
-enum class PatientMobileNumberType {
+enum class PatientPhoneNumberType {
   MOBILE,
   LANDLINE;
 
   class RoomTypeConverter {
     @TypeConverter
-    fun fromEnum(type: PatientMobileNumberType): String {
+    fun fromEnum(type: PatientPhoneNumberType): String {
       return type.name
     }
 
     @TypeConverter
-    fun toEnum(type: String): PatientMobileNumberType {
-      return PatientMobileNumberType.valueOf(type)
+    fun toEnum(type: String): PatientPhoneNumberType {
+      return PatientPhoneNumberType.valueOf(type)
     }
   }
 }

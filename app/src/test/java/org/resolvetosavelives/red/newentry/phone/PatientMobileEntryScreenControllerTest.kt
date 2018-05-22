@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.mobile
+package org.resolvetosavelives.red.newentry.phone
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
@@ -16,18 +16,18 @@ import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 
-class PatientMobileEntryScreenControllerTest {
+class PatientPhoneEntryScreenControllerTest {
 
-  private val screen: PatientMobileEntryScreen = mock()
+  private val screen: PatientPhoneEntryScreen = mock()
   private val repository: PatientRepository = mock()
-  private val dummyMobileNumbers = OngoingPatientEntry.MobileNumbers("123", "456")
+  private val dummyPhoneNumbers = OngoingPatientEntry.PhoneNumbers("123", "456")
 
-  private lateinit var controller: PatientMobileEntryScreenController
+  private lateinit var controller: PatientPhoneEntryScreenController
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
 
   @Before
   fun setUp() {
-    controller = PatientMobileEntryScreenController(repository)
+    controller = PatientPhoneEntryScreenController(repository)
 
     uiEvents
         .compose(controller)
@@ -40,22 +40,22 @@ class PatientMobileEntryScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showKeyboardOnPrimaryMobileNumber()
+    verify(screen).showKeyboardOnPrimaryPhoneNumber()
   }
 
   @Test
-  fun `when screen starts and existing mobile numbers are present then they should be pre-filled`() {
-    val ongoingEntry = OngoingPatientEntry(mobileNumbers = dummyMobileNumbers)
+  fun `when screen starts and existing phone numbers are present then they should be pre-filled`() {
+    val ongoingEntry = OngoingPatientEntry(phoneNumbers = dummyPhoneNumbers)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).preFill(dummyMobileNumbers)
+    verify(screen).preFill(dummyPhoneNumbers)
   }
 
   @Test
-  fun `when screen starts and existing mobile numbers are not present then they should not be pre-filled`() {
-    whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(mobileNumbers = null)))
+  fun `when screen starts and existing phone numbers are not present then they should not be pre-filled`() {
+    whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(phoneNumbers = null)))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -63,17 +63,17 @@ class PatientMobileEntryScreenControllerTest {
   }
 
   @Test
-  fun `when proceed is clicked then mobile numbers should be saved and the next screen should be opened`() {
+  fun `when proceed is clicked then phone numbers should be saved and the next screen should be opened`() {
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry()))
     whenever(repository.save(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientPrimaryMobileTextChanged(dummyMobileNumbers.primary))
-    uiEvents.onNext(PatientSecondaryMobileTextChanged(dummyMobileNumbers.secondary!!))
-    uiEvents.onNext(PatientMobileEntryProceedClicked())
+    uiEvents.onNext(PatientPrimaryPhoneTextChanged(dummyPhoneNumbers.primary))
+    uiEvents.onNext(PatientSecondaryPhoneTextChanged(dummyPhoneNumbers.secondary!!))
+    uiEvents.onNext(PatientPhoneEntryProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).save(capture())
-      assert(dummyMobileNumbers == firstValue.mobileNumbers)
+      assert(dummyPhoneNumbers == firstValue.phoneNumbers)
     }
     verify(screen).openBloodPressureEntryScreen()
   }

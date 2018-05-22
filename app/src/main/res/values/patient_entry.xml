@@ -17,8 +17,8 @@
 
   <string name="patiententry_address_title">Patient address</string>
 
-  <string name="patiententry_mobile_title">Patient mobile</string>
-  <string name="patiententry_mobile_number">Patient mobile number</string>
+  <string name="patiententry_phone_title">Patient phone</string>
+  <string name="patiententry_phone_number">Patient phone number</string>
 
   <string name="patiententry_bp_title">BP today</string>
 

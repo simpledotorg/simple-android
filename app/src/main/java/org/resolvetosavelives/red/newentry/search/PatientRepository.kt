@@ -50,7 +50,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
     val patientUuid = UUID.randomUUID().toString()
     val addressUuid = UUID.randomUUID().toString()
-    val mobileNumberUuid = UUID.randomUUID().toString()
+    val phoneNumberUuid = UUID.randomUUID().toString()
 
     val createdAtDateTime = Instant.now()
     val updatedAtDateTime = createdAtDateTime
@@ -61,7 +61,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
             Patient(
                 uuid = patientUuid,
                 addressUuid = addressUuid,
-                mobileNumberUuid = mobileNumberUuid,
+                phoneNumberUuid = phoneNumberUuid,
                 fullName = personalDetails!!.fullName,
                 gender = personalDetails.gender!!,
                 dateOfBirth = dateConverter(personalDetails.dateOfBirth),

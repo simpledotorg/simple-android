@@ -5,7 +5,7 @@ import android.arch.persistence.room.TypeConverter
 enum class Gender {
   MALE,
   FEMALE,
-  TRANS;
+  TRANSGENDER;
 
   class RoomTypeConverter {
 

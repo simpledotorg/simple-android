@@ -35,6 +35,8 @@ data class Patient(
 
     val ageWhenCreated: Int?,
 
+    val status: PatientStatus,
+
     val createdAt: Instant,
 
     val updatedAt: Instant

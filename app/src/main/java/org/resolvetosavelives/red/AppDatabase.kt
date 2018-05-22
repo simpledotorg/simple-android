@@ -10,6 +10,7 @@ import org.resolvetosavelives.red.newentry.search.PatientAndMobileNumberJoin
 import org.resolvetosavelives.red.newentry.search.PatientDao
 import org.resolvetosavelives.red.newentry.search.PatientMobileNumber
 import org.resolvetosavelives.red.newentry.search.PatientMobileNumberType
+import org.resolvetosavelives.red.newentry.search.PatientStatus
 import org.resolvetosavelives.red.util.InstantRoomTypeConverter
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 
@@ -20,6 +21,7 @@ import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 @TypeConverters(
     Gender.RoomTypeConverter::class,
     PatientMobileNumberType.RoomTypeConverter::class,
+    PatientStatus.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {

@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.search.PatientSearchByMobileScreen
+import org.resolvetosavelives.red.newentry.search.PatientSearchByPhoneScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   @Inject
   lateinit var controller: NewBpScreenController
 
-  private val mobileButton by bindView<View>(R.id.newbp_search_by_mobile)
+  private val phoneButton by bindView<View>(R.id.newbp_search_by_phone)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -35,7 +35,7 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
     }
     TheActivity.component.inject(this)
 
-    RxView.clicks(mobileButton)
+    RxView.clicks(phoneButton)
         .map { NewPatientClicked() }
         .observeOn(io())
         .compose(controller)
@@ -45,6 +45,6 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   }
 
   fun openNewPatientScreen() {
-    screenRouter.push(PatientSearchByMobileScreen.KEY)
+    screenRouter.push(PatientSearchByPhoneScreen.KEY)
   }
 }

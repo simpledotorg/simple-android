@@ -13,34 +13,34 @@ import org.junit.Before
 import org.junit.Test
 import org.resolvetosavelives.red.widgets.UiEvent
 
-class PatientSearchByMobileScreenControllerTest {
+class PatientSearchByPhoneScreenControllerTest {
 
-  private val screen: PatientSearchByMobileScreen = mock()
+  private val screen: PatientSearchByPhoneScreen = mock()
   private val repository: PatientRepository = mock()
 
-  private lateinit var controller: PatientSearchByMobileScreenController
+  private lateinit var controller: PatientSearchByPhoneScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   @Before
   fun setUp() {
-    controller = PatientSearchByMobileScreenController(repository)
+    controller = PatientSearchByPhoneScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
-  fun `when screen starts then the keyboard should be shown on mobile number field and patient list should be setup`() {
-    verify(screen).showKeyboardOnMobileNumberField()
+  fun `when screen starts then the keyboard should be shown on phone number field and patient list should be setup`() {
+    verify(screen).showKeyboardOnPhoneNumberField()
     verify(screen).setupSearchResultsList()
   }
 
   @Test
-  fun `when mobile number text changes then matching patients should be shown`() {
+  fun `when phone number text changes then matching patients should be shown`() {
     val partialNumber = "999"
     val matchingPatients = listOf<Patient>(mock(), mock(), mock())
     whenever(repository.search(partialNumber)).thenReturn(Observable.just(matchingPatients))
 
-    uiEvents.onNext(PatientMobileNumberTextChanged(partialNumber))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
 
     verify(screen).updatePatientSearchResults(matchingPatients)
   }
@@ -51,12 +51,12 @@ class PatientSearchByMobileScreenControllerTest {
     whenever(repository.search(partialNumber)).thenReturn(Observable.never())
     whenever(repository.save(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientMobileNumberTextChanged(partialNumber))
-    uiEvents.onNext(PatientSearchByMobileProceedClicked())
+    uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
+    uiEvents.onNext(PatientSearchByPhoneProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).save(capture())
-      assertEquals(partialNumber, firstValue.mobileNumbers!!.primary)
+      assertEquals(partialNumber, firstValue.phoneNumbers!!.primary)
     }
     verify(screen).openPersonalDetailsEntryScreen()
   }

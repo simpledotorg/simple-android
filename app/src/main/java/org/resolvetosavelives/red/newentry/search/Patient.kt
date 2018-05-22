@@ -25,7 +25,7 @@ data class Patient(
 
     val addressUuid: String,
 
-    val mobileNumberUuid: String,
+    val phoneNumberUuid: String,
 
     val fullName: String,
 

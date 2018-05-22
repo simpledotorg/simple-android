@@ -1,13 +1,13 @@
-package org.resolvetosavelives.red.newentry.mobile
+package org.resolvetosavelives.red.newentry.phone
 
 import kotlinx.android.parcel.Parcelize
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.router.screen.FullScreenKey
 
 @Parcelize
-class PatientMobileEntryScreenKey : FullScreenKey {
+class PatientPhoneEntryScreenKey : FullScreenKey {
 
   override fun layoutRes(): Int {
-    return R.layout.screen_patient_mobile_entry
+    return R.layout.screen_patient_phone_entry
   }
 }

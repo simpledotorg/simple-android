@@ -13,7 +13,7 @@
   <string name="patiententry_personaldetails_age">Age</string>
   <string name="patiententry_personaldetails_gender_male">Male</string>
   <string name="patiententry_personaldetails_gender_female">Female</string>
-  <string name="patiententry_personaldetails_gender_trans">Trans</string>
+  <string name="patiententry_personaldetails_gender_transgender">Trans</string>
 
   <string name="patiententry_address_title">Patient address</string>
 

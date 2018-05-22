@@ -79,7 +79,7 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
         when (it) {
           R.id.patiententry_personal_gender_female -> Gender.FEMALE
           R.id.patiententry_personal_gender_male -> Gender.MALE
-          R.id.patiententry_personal_gender_trans -> Gender.TRANS
+          R.id.patiententry_personal_gender_transgender -> Gender.TRANSGENDER
           else -> throw AssertionError("Unknown gender radio: ${resources.getResourceEntryName(it)}")
         }
       }
@@ -101,7 +101,7 @@ class PatientPersonalDetailsEntryScreen(context: Context, attrs: AttributeSet) :
       val genderRadioId = when (details.gender) {
         Gender.FEMALE -> R.id.patiententry_personal_gender_female
         Gender.MALE -> R.id.patiententry_personal_gender_male
-        Gender.TRANS -> R.id.patiententry_personal_gender_trans
+        Gender.TRANSGENDER -> R.id.patiententry_personal_gender_transgender
       }
       assert(genderRadioGroup.findViewById<View>(genderRadioId) != null)
       genderRadioGroup.check(genderRadioId)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="home_search_by_mobile">Mobile</string>
+  <string name="home_search_by_phone">Phone</string>
   <string name="home_search_by_name">Name</string>
 </resources>

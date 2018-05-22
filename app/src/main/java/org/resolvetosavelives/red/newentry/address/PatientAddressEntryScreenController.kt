@@ -60,6 +60,6 @@ class PatientAddressEntryScreenController @Inject constructor(
         .take(1)
         .map { (entry, updatedAddress) -> entry.copy(address = updatedAddress) }
         .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
-        .andThen(Observable.just({ ui: Ui -> ui.openPatientMobileEntryScreen() }))
+        .andThen(Observable.just({ ui: Ui -> ui.openPatientPhoneEntryScreen() }))
   }
 }

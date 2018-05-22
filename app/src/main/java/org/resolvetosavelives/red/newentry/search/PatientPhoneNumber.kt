@@ -5,7 +5,7 @@ import android.arch.persistence.room.PrimaryKey
 import org.threeten.bp.Instant
 
 @Entity
-data class PatientMobileNumber(
+data class PatientPhoneNumber(
     @PrimaryKey
     val uuid: String,
 
@@ -13,7 +13,7 @@ data class PatientMobileNumber(
 
     val number: String,
 
-    val mobileType: PatientMobileNumberType,
+    val phoneType: PatientPhoneNumberType,
 
     val active: Boolean,
 

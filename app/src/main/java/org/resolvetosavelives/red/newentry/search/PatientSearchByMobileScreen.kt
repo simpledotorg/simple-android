@@ -20,19 +20,19 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
-class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchByPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = PatientSearchByMobileScreenKey()
+    val KEY = PatientSearchByPhoneScreenKey()
   }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PatientSearchByMobileScreenController
+  lateinit var controller: PatientSearchByPhoneScreenController
 
-  private val mobileNumberEditText by bindView<EditText>(R.id.patientsearch_mobile_number)
+  private val phoneNumberEditText by bindView<EditText>(R.id.patientsearch_phone_number)
   private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
   private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
   private val resultsAdapter = PatientSearchResultsAdapter()
@@ -44,7 +44,7 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
     }
     TheActivity.component.inject(this)
 
-    Observable.merge(mobileNumberTextChanges(), proceedButtonClicks())
+    Observable.merge(phoneNumberTextChanges(), proceedButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -52,15 +52,15 @@ class PatientSearchByMobileScreen(context: Context, attrs: AttributeSet) : Relat
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun mobileNumberTextChanges() = RxTextView.textChanges(mobileNumberEditText)
+  private fun phoneNumberTextChanges() = RxTextView.textChanges(phoneNumberEditText)
       .map(CharSequence::toString)
-      .map(::PatientMobileNumberTextChanged)
+      .map(::PatientPhoneNumberTextChanged)
 
   private fun proceedButtonClicks() = RxView.clicks(newPatientButton)
-      .map { PatientSearchByMobileProceedClicked() }
+      .map { PatientSearchByPhoneProceedClicked() }
 
-  fun showKeyboardOnMobileNumberField() {
-    mobileNumberEditText.showKeyboard()
+  fun showKeyboardOnPhoneNumberField() {
+    phoneNumberEditText.showKeyboard()
   }
 
   fun setupSearchResultsList() {

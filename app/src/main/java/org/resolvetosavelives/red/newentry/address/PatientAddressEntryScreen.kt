@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.mobile.PatientMobileEntryScreen
+import org.resolvetosavelives.red.newentry.phone.PatientPhoneEntryScreen
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.ScreenCreated
@@ -82,8 +82,8 @@ class PatientAddressEntryScreen(context: Context, attrs: AttributeSet) : Relativ
     stateEditText.setTextAndCursor(address.state)
   }
 
-  fun openPatientMobileEntryScreen() {
-    screenRouter.push(PatientMobileEntryScreen.KEY)
+  fun openPatientPhoneEntryScreen() {
+    screenRouter.push(PatientPhoneEntryScreen.KEY)
   }
 }
 

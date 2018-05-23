@@ -19,5 +19,7 @@ data class PatientPhoneNumber(
 
     val createdAt: Instant,
 
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    val syncPending: Boolean
 )

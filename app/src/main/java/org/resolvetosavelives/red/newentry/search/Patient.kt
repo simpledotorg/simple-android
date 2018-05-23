@@ -39,5 +39,7 @@ data class Patient(
 
     val createdAt: Instant,
 
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    val syncPending: Boolean
 )

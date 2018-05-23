@@ -45,13 +45,13 @@ class PatientSearchByPhoneScreenControllerTest {
   fun `when new patient is clicked then the manual entry flow should be started`() {
     val partialNumber = "999"
     whenever(repository.search(partialNumber)).thenReturn(Observable.never())
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
     uiEvents.onNext(PatientSearchByPhoneProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
       assertEquals(partialNumber, firstValue.phoneNumbers!!.primary)
     }
     verify(screen).openPersonalDetailsEntryScreen()

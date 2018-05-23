@@ -60,14 +60,14 @@ class PatientPhoneEntryScreenControllerTest {
   @Test
   fun `when proceed is clicked then phone numbers should be saved and the next screen should be opened`() {
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry()))
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientPrimaryPhoneTextChanged(dummyPhoneNumbers.primary))
     uiEvents.onNext(PatientSecondaryPhoneTextChanged(dummyPhoneNumbers.secondary!!))
     uiEvents.onNext(PatientPhoneEntryProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
       assert(dummyPhoneNumbers == firstValue.phoneNumbers)
     }
     verify(screen).openBloodPressureEntryScreen()

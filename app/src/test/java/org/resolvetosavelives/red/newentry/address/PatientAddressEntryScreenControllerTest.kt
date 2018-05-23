@@ -62,7 +62,7 @@ class PatientAddressEntryScreenControllerTest {
   fun `when proceed is clicked then the address should be saved and the next screen should be opened`() {
     val ongoingEntry = OngoingPatientEntry(address = dummyAddress)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientAddressColonyOrVillageTextChanged(dummyAddress.colonyOrVillage))
     uiEvents.onNext(PatientAddressDistrictTextChanged(dummyAddress.district))
@@ -70,7 +70,7 @@ class PatientAddressEntryScreenControllerTest {
     uiEvents.onNext(PatientAddressEntryProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
       assert(firstValue.address == dummyAddress)
     }
     verify(screen).openPatientPhoneEntryScreen()

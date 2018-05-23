@@ -72,14 +72,14 @@ class PatientBpEntryScreenControllerTest {
   fun `when proceed is clicked then measurements should be saved and the next screen should be opened`() {
     val ongoingEntry = OngoingPatientEntry(personalDetails = dummyPersonalDetails, bloodPressureMeasurements = dummyBpMeasurements)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientBpSystolicTextChanged(dummyBpMeasurements.systolic))
     uiEvents.onNext(PatientBpDiastolicTextChanged(dummyBpMeasurements.diastolic))
     uiEvents.onNext(PatientBpEntryProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
       assert(firstValue.bloodPressureMeasurements == dummyBpMeasurements)
     }
     verify(screen).openDrugSelectionScreen()

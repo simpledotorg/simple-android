@@ -71,7 +71,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
     val details = OngoingPatientEntry.PersonalDetails("Ashok kumar", "01/01/1900", "25", Gender.TRANSGENDER)
 
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(phoneNumbers = dummyPhoneNumbers)))
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged(details.fullName))
     uiEvents.onNext(PatientDateOfBirthTextChanged(details.dateOfBirth))
@@ -80,7 +80,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
     uiEvents.onNext(PatientPersonalDetailsProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
       assertEquals(details, firstValue.personalDetails)
     }
 

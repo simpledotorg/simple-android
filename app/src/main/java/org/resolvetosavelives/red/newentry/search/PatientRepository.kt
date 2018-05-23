@@ -68,7 +68,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 ageWhenCreated = personalDetails.ageWhenCreated!!.toInt(),
                 status = PatientStatus.ACTIVE,
                 createdAt = createdAtDateTime,
-                updatedAt = updatedAtDateTime)
+                updatedAt = updatedAtDateTime,
+                syncPending = true)
           }
         }
         .flatMapCompletable { patient -> save(patient) }

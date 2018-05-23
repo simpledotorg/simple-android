@@ -9,8 +9,6 @@ data class PatientPhoneNumber(
     @PrimaryKey
     val uuid: String,
 
-    val patientUuid: String,
-
     val number: String,
 
     val phoneType: PatientPhoneNumberType,

@@ -21,7 +21,7 @@ import android.arch.persistence.room.Index
       (Index("phoneNumberUuid", unique = true))
     ]
 )
-data class PatientAndPhoneNumberJoin(
+data class PatientWithPhoneNumber(
     val patientUuid: String,
     val phoneNumberUuid: String
 )

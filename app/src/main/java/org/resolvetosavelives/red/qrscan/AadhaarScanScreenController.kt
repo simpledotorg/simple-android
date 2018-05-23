@@ -73,7 +73,7 @@ class AadhaarScanScreenController @Inject constructor(
     val newPatientFlows = successfulAadhaarScans
         .take(1)
         .map { aadhaarData -> patientEntry(aadhaarData) }
-        .flatMapCompletable { newEntry -> repository.save(newEntry) }
+        .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just({ ui: Ui -> ui.openNewPatientEntryScreen() }))
 
     return vibrations.mergeWith(newPatientFlows)

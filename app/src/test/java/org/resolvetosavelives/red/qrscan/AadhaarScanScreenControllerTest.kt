@@ -57,7 +57,7 @@ class AadhaarScanScreenControllerTest {
   fun `when an aadhaar qr code is identified then play a short vibration`() {
     val aadhaarQrData = mock<AadhaarQrData>()
     whenever(aadhaarQrCodeParser.parse("qr-code")).thenReturn(aadhaarQrData)
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(QrScanned("qr-code"))
 
@@ -75,12 +75,12 @@ class AadhaarScanScreenControllerTest {
         state = "Jharkhand")
 
     whenever(aadhaarQrCodeParser.parse("qr-code")).thenReturn(aadhaarQrData)
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(QrScanned("qr-code"))
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
 
       assert(firstValue == OngoingPatientEntry(
           personalDetails = OngoingPatientEntry.PersonalDetails(
@@ -100,11 +100,11 @@ class AadhaarScanScreenControllerTest {
   @Test
   fun `non-aadhaar qr codes should be ignored`() {
     whenever(aadhaarQrCodeParser.parse("invalid-qr-code")).thenReturn(UnknownQr())
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(QrScanned("invalid-qr-code"))
 
-    verify(repository, never()).save(any())
+    verify(repository, never()).saveOngoingEntry(any())
     verify(screen, never()).openNewPatientEntryScreen()
   }
 }

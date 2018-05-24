@@ -1,6 +1,6 @@
 package org.resolvetosavelives.red.newentry.search
 
-import android.app.Application
+import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
@@ -9,7 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.di.AppModule
 
 @RunWith(AndroidJUnit4::class)
 class PatientRepositoryTest {
@@ -20,9 +19,8 @@ class PatientRepositoryTest {
   @Before
   fun setUp() {
     val context = InstrumentationRegistry.getTargetContext()
-    val appModule = AppModule(context.applicationContext as Application, "red-test")
+    database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
 
-    database = appModule.appDatabase()
     patientRepository = PatientRepository(database)
   }
 
@@ -55,5 +53,6 @@ class PatientRepositoryTest {
   @After
   fun tearDown() {
     database.clearAllTables()
+    database.close()
   }
 }

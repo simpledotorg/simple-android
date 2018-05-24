@@ -19,7 +19,9 @@ import org.threeten.bp.LocalDate
       ForeignKey(
           entity = PatientAddress::class,
           parentColumns = ["uuid"],
-          childColumns = ["addressUuid"])
+          childColumns = ["addressUuid"],
+          onDelete = ForeignKey.CASCADE,
+          onUpdate = ForeignKey.CASCADE)
     ],
     indices = [
       Index("addressUuid", unique = true)

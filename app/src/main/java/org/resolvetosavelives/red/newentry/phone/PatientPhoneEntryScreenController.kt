@@ -58,7 +58,7 @@ class PatientPhoneEntryScreenController @Inject constructor(
             { entry, primary, secondary -> entry to OngoingPatientEntry.PhoneNumbers(primary, secondary) })
         .take(1)
         .map { (entry, updatedPhoneNumbers) -> entry.copy(phoneNumbers = updatedPhoneNumbers) }
-        .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
+        .flatMapCompletable { updatedEntry -> repository.saveOngoingEntry(updatedEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openBloodPressureEntryScreen() })
   }
 }

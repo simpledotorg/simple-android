@@ -59,7 +59,7 @@ class PatientBpEntryScreenController @Inject constructor(val repository: Patient
             { entry, systolic, diastolic -> entry to OngoingPatientEntry.BloodPressureMeasurement(systolic, diastolic) })
         .take(1)
         .map { (entry, updatedMeasurements) -> entry.copy(bloodPressureMeasurements = updatedMeasurements) }
-        .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
+        .flatMapCompletable { updatedEntry -> repository.saveOngoingEntry(updatedEntry) }
         .andThen(Observable.just({ ui: Ui -> ui.openDrugSelectionScreen() }))
   }
 }

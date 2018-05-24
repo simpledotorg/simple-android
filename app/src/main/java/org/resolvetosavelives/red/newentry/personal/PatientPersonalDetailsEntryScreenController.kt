@@ -63,7 +63,7 @@ class PatientPersonalDetailsEntryScreenController @Inject constructor(
             { entry, name, dob, age, gender -> entry to OngoingPatientEntry.PersonalDetails(name, dob, age, gender) })
         .take(1)
         .map { (entry, updatedPersonalDetails) -> entry.copy(personalDetails = updatedPersonalDetails) }
-        .flatMapCompletable { updatedEntry -> repository.save(updatedEntry) }
+        .flatMapCompletable { updatedEntry -> repository.saveOngoingEntry(updatedEntry) }
         .andThen(Observable.just({ ui: Ui -> ui.openAddressEntryScreen() }))
   }
 }

@@ -4,10 +4,13 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Vibrator
+import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.qrscan.QrDaggerModule
+
+// TODO: Should this class be named as AppDaggerModule, just like QrDaggerModule?
 
 @Module(includes = [QrDaggerModule::class])
 class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
@@ -18,7 +21,8 @@ class AppModule(private val appContext: Application, private val databaseName: S
   }
 
   @Provides
-  fun vibrator(): Vibrator {
-    return appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-  }
+  fun vibrator() = appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+  @Provides
+  fun workManager() = WorkManager.getInstance()
 }

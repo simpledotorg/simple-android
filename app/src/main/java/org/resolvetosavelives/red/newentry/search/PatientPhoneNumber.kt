@@ -1,6 +1,9 @@
 package org.resolvetosavelives.red.newentry.search
 
+import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import org.threeten.bp.Instant
 
@@ -8,8 +11,6 @@ import org.threeten.bp.Instant
 data class PatientPhoneNumber(
     @PrimaryKey
     val uuid: String,
-
-    val patientUuid: String,
 
     val number: String,
 
@@ -19,5 +20,15 @@ data class PatientPhoneNumber(
 
     val createdAt: Instant,
 
-    val updatedAt: Instant
-)
+    val updatedAt: Instant,
+
+    val syncPending: Boolean
+) {
+
+  @Dao
+  interface RoomDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(phoneNumber: PatientPhoneNumber)
+  }
+}

@@ -27,7 +27,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
-  private fun save(patient: Patient): Completable {
+  private fun savePatient(patient: Patient): Completable {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 
@@ -38,7 +38,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return Single.just(ongoingPatientEntry)
   }
 
-  fun save(ongoingEntry: OngoingPatientEntry): Completable {
+  fun saveOngoingEntry(ongoingEntry: OngoingPatientEntry): Completable {
     return Completable.fromAction({
       this.ongoingPatientEntry = ongoingEntry
     })
@@ -68,9 +68,10 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 ageWhenCreated = personalDetails.ageWhenCreated!!.toInt(),
                 status = PatientStatus.ACTIVE,
                 createdAt = createdAtDateTime,
-                updatedAt = updatedAtDateTime)
+                updatedAt = updatedAtDateTime,
+                syncPending = true)
           }
         }
-        .flatMapCompletable { patient -> save(patient) }
+        .flatMapCompletable { patient -> saveOngoingEntry(patient) }
   }
 }

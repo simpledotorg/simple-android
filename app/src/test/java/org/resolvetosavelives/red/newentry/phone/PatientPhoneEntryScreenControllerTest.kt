@@ -1,11 +1,6 @@
 package org.resolvetosavelives.red.newentry.phone
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.argumentCaptor
-import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
+import com.nhaarman.mockito_kotlin.*
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -65,14 +60,14 @@ class PatientPhoneEntryScreenControllerTest {
   @Test
   fun `when proceed is clicked then phone numbers should be saved and the next screen should be opened`() {
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry()))
-    whenever(repository.save(any())).thenReturn(Completable.complete())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientPrimaryPhoneTextChanged(dummyPhoneNumbers.primary))
     uiEvents.onNext(PatientSecondaryPhoneTextChanged(dummyPhoneNumbers.secondary!!))
     uiEvents.onNext(PatientPhoneEntryProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).save(capture())
+      verify(repository).saveOngoingEntry(capture())
       assert(dummyPhoneNumbers == firstValue.phoneNumbers)
     }
     verify(screen).openBloodPressureEntryScreen()

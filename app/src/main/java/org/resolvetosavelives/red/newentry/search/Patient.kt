@@ -30,7 +30,7 @@ data class Patient(
 
     val addressUuid: String,
 
-    val phoneNumberUuid: String,
+    val phoneNumberUuid: String?,
 
     val fullName: String,
 

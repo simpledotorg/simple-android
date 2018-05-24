@@ -27,15 +27,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
-  private fun savePatient(patient: Patient): Completable {
-    return Completable.fromAction({ database.patientDao().save(patient) })
-  }
-
-  // TODO: Add a test to ensure this method always returns a Single.
-  // Changing this to Observable<> might destroy a lot of things.
-  // We don't have tests for ensuring this behavior yet.
   fun ongoingEntry(): Single<OngoingPatientEntry> {
-    return Single.just(ongoingPatientEntry)
+    return Single.fromCallable({ ongoingPatientEntry })
   }
 
   fun saveOngoingEntry(ongoingEntry: OngoingPatientEntry): Completable {
@@ -44,34 +37,64 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     })
   }
 
-  fun markOngoingEntryAsComplete(): Completable {
+  fun saveOngoingEntryAsPatient(): Completable {
     // TODO: Parse date and convert it to millis.
+    // todo: ensure either age, or DOB is not null.
     val dateConverter: (String) -> LocalDate? = { formattedDate -> null }
 
-    val patientUuid = UUID.randomUUID().toString()
     val addressUuid = UUID.randomUUID().toString()
-    val phoneNumberUuid = UUID.randomUUID().toString()
 
-    val createdAtDateTime = Instant.now()
-    val updatedAtDateTime = createdAtDateTime
+    val single = ongoingEntry()
 
-    return ongoingEntry()
+    val addressSave = single
+        .map({ entry ->
+          with(entry) {
+            PatientAddress(
+                uuid = addressUuid,
+                colonyOrVillage = address!!.colonyOrVillage,
+                district = address.district,
+                state = address.state,
+                createdAt = Instant.now(),
+                updatedAt = Instant.now(),
+                syncPending = true)
+          }
+        })
+        .flatMapCompletable { address -> saveAddress(address) }
+
+    val patientSave = single
         .map { entry ->
-          entry.apply {
+          with(entry) {
             Patient(
-                uuid = patientUuid,
-                addressUuid = addressUuid,
-                phoneNumberUuid = phoneNumberUuid,
+                uuid = UUID.randomUUID().toString(),
                 fullName = personalDetails!!.fullName,
                 gender = personalDetails.gender!!,
-                dateOfBirth = dateConverter(personalDetails.dateOfBirth),
-                ageWhenCreated = personalDetails.ageWhenCreated!!.toInt(),
                 status = PatientStatus.ACTIVE,
-                createdAt = createdAtDateTime,
-                updatedAt = updatedAtDateTime,
+
+                dateOfBirth = dateConverter(personalDetails.dateOfBirth),
+                ageWhenCreated = personalDetails.ageWhenCreated?.toInt(),
+
+                addressUuid = addressUuid,
+                phoneNumberUuid = null,
+
+                createdAt = Instant.now(),
+                updatedAt = Instant.now(),
                 syncPending = true)
           }
         }
-        .flatMapCompletable { patient -> saveOngoingEntry(patient) }
+        .flatMapCompletable { patient -> savePatient(patient) }
+
+    return addressSave.andThen(patientSave)
+  }
+
+  private fun saveAddress(address: PatientAddress): Completable {
+    return Completable.fromAction {
+      database.addressDao().save(address)
+    }
+  }
+
+  private fun savePatient(patient: Patient): Completable {
+    return Completable.fromAction {
+      database.patientDao().save(patient)
+    }
   }
 }

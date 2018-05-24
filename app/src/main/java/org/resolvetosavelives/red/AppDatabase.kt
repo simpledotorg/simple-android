@@ -9,6 +9,7 @@ import org.resolvetosavelives.red.newentry.search.PatientAddress
 import org.resolvetosavelives.red.newentry.search.PatientPhoneNumber
 import org.resolvetosavelives.red.newentry.search.PatientPhoneNumberType
 import org.resolvetosavelives.red.newentry.search.PatientStatus
+import org.resolvetosavelives.red.newentry.search.PatientWithAddress
 import org.resolvetosavelives.red.newentry.search.PatientWithPhoneNumber
 import org.resolvetosavelives.red.util.InstantRoomTypeConverter
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
@@ -30,4 +31,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun addressDao(): PatientAddress.RoomDao
 
   abstract fun phoneNumberDao(): PatientPhoneNumber.RoomDao
+
+  abstract fun patientWithAddressDao(): PatientWithAddress.RoomDao
 }

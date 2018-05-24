@@ -7,6 +7,7 @@ import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -15,7 +16,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun search(query: String): Observable<List<Patient>> {
+  fun searchPatients(query: String): Observable<List<Patient>> {
     if (query.isEmpty()) {
       return database.patientDao()
           .allPatients()
@@ -23,6 +24,12 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     }
 
     return database.patientDao()
+        .search(query)
+        .toObservable()
+  }
+
+  fun searchPatientsWithAddresses(query: String): Observable<List<PatientWithAddress>> {
+    return database.patientWithAddressDao()
         .search(query)
         .toObservable()
   }
@@ -38,17 +45,11 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun saveOngoingEntryAsPatient(): Completable {
-    // TODO: Parse date and convert it to millis.
-    // todo: ensure either age, or DOB is not null.
-    val dateConverter: (String) -> LocalDate? = { formattedDate -> null }
-
     val addressUuid = UUID.randomUUID().toString()
 
-    val single = ongoingEntry()
-
-    val addressSave = single
-        .map({ entry ->
-          with(entry) {
+    val addressSave = ongoingEntry()
+        .map { validEntry ->
+          with(validEntry) {
             PatientAddress(
                 uuid = addressUuid,
                 colonyOrVillage = address!!.colonyOrVillage,
@@ -58,10 +59,10 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 updatedAt = Instant.now(),
                 syncPending = true)
           }
-        })
+        }
         .flatMapCompletable { address -> saveAddress(address) }
 
-    val patientSave = single
+    val patientSave = ongoingEntry()
         .map { entry ->
           with(entry) {
             Patient(
@@ -70,6 +71,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
 
+                //todo: both, dateOfBirth and ageWhenCreated, should not be null at the same time
+                //todo: ageWhenCreated should be an int
                 dateOfBirth = dateConverter(personalDetails.dateOfBirth),
                 ageWhenCreated = personalDetails.ageWhenCreated?.toInt(),
 
@@ -84,6 +87,10 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .flatMapCompletable { patient -> savePatient(patient) }
 
     return addressSave.andThen(patientSave)
+  }
+
+  private fun dateConverter(dateOfBirth: String): LocalDate? {
+    return LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: null
   }
 
   private fun saveAddress(address: PatientAddress): Completable {

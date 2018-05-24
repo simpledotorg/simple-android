@@ -34,7 +34,7 @@ class PatientSearchByPhoneScreenControllerTest {
   fun `when phone number text changes then matching patients should be shown`() {
     val partialNumber = "999"
     val matchingPatients = listOf<Patient>(mock(), mock(), mock())
-    whenever(repository.search(partialNumber)).thenReturn(Observable.just(matchingPatients))
+    whenever(repository.searchPatients(partialNumber)).thenReturn(Observable.just(matchingPatients))
 
     uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
 
@@ -44,7 +44,7 @@ class PatientSearchByPhoneScreenControllerTest {
   @Test
   fun `when new patient is clicked then the manual entry flow should be started`() {
     val partialNumber = "999"
-    whenever(repository.search(partialNumber)).thenReturn(Observable.never())
+    whenever(repository.searchPatients(partialNumber)).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))

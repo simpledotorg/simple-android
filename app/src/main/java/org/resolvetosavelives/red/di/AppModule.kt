@@ -9,10 +9,11 @@ import dagger.Module
 import dagger.Provides
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.qrscan.QrDaggerModule
+import org.resolvetosavelives.red.sync.PatientSyncModule
 
 // TODO: Should this class be named as AppDaggerModule, just like QrDaggerModule?
 
-@Module(includes = [QrDaggerModule::class])
+@Module(includes = [QrDaggerModule::class, PatientSyncModule::class])
 class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides
@@ -24,5 +25,5 @@ class AppModule(private val appContext: Application, private val databaseName: S
   fun vibrator() = appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
   @Provides
-  fun workManager() = WorkManager.getInstance()
+  fun workManager() = WorkManager.getInstance()!!
 }

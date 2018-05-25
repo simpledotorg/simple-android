@@ -7,7 +7,6 @@ import org.resolvetosavelives.red.di.AppModule
 import org.resolvetosavelives.red.di.DaggerAppComponent
 import org.resolvetosavelives.red.sync.PatientSyncScheduler
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RedApp : Application() {
@@ -31,6 +30,6 @@ class RedApp : Application() {
 
     LazyThreeTen.init(this)
 
-    syncScheduler.schedule(interval = 1, intervalUnit = TimeUnit.HOURS)
+    syncScheduler.schedule().subscribe()
   }
 }

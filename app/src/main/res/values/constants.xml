@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- TODO: We don't a production endpoint yet. -->
+  <string name="redapp_endpoint">https://google.com/</string>
+</resources>

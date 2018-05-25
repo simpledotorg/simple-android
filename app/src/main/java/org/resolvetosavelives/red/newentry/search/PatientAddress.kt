@@ -12,13 +12,14 @@ data class PatientAddress(
     @PrimaryKey
     val uuid: String,
 
-    val colonyOrVillage: String?,
+    val colonyOrVillage: String,
 
-    val district: String?,
+    val district: String,
 
-    val state: String?,
+    val state: String,
 
-    val country: String?,
+    // TODO: Don't use India as the country for everyone!
+    val country: String? = "India",
 
     val createdAt: Instant,
 

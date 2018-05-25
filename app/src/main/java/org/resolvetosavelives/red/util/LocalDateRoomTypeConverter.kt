@@ -6,17 +6,17 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class LocalDateRoomTypeConverter {
 
-  private val formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+  private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
 
   @TypeConverter
-  fun toOffsetDateTime(value: String?): LocalDate? {
+  fun toLocalDate(value: String?): LocalDate? {
     return value?.let {
       return formatter.parse(value, LocalDate::from)
     }
   }
 
   @TypeConverter
-  fun fromOffsetDateTime(date: LocalDate?): String? {
+  fun fromLocalDate(date: LocalDate?): String? {
     return date?.format(formatter)
   }
 }

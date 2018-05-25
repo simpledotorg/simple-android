@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red
 
 import android.app.Application
+import com.gabrielittner.threetenbp.LazyThreeTen
 import org.resolvetosavelives.red.di.AppComponent
 import org.resolvetosavelives.red.di.AppModule
 import org.resolvetosavelives.red.di.DaggerAppComponent
@@ -15,10 +16,12 @@ class RedApp : Application() {
   override fun onCreate() {
     super.onCreate()
 
-    Timber.plant(Timber.DebugTree())
-
     appComponent = DaggerAppComponent.builder()
         .appModule(AppModule(this))
         .build()
+
+    Timber.plant(Timber.DebugTree())
+
+    LazyThreeTen.init(this)
   }
 }

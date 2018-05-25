@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
+import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -15,7 +16,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun search(query: String): Observable<List<Patient>> {
+  fun searchPatients(query: String): Observable<List<Patient>> {
     if (query.isEmpty()) {
       return database.patientDao()
           .allPatients()
@@ -27,15 +28,14 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
-  private fun savePatient(patient: Patient): Completable {
-    return Completable.fromAction({ database.patientDao().save(patient) })
+  fun searchPatientsWithAddresses(query: String): Observable<List<PatientWithAddress>> {
+    return database.patientWithAddressDao()
+        .search(query)
+        .toObservable()
   }
 
-  // TODO: Add a test to ensure this method always returns a Single.
-  // Changing this to Observable<> might destroy a lot of things.
-  // We don't have tests for ensuring this behavior yet.
   fun ongoingEntry(): Single<OngoingPatientEntry> {
-    return Single.just(ongoingPatientEntry)
+    return Single.fromCallable({ ongoingPatientEntry })
   }
 
   fun saveOngoingEntry(ongoingEntry: OngoingPatientEntry): Completable {
@@ -44,34 +44,74 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     })
   }
 
-  fun markOngoingEntryAsComplete(): Completable {
-    // TODO: Parse date and convert it to millis.
-    val dateConverter: (String) -> LocalDate? = { formattedDate -> null }
+  fun saveOngoingEntryAsPatient(): Completable {
+    val ageValidation = ongoingEntry()
+        .flatMapCompletable {
+          if (it.hasNullDateOfBirthAndAge()) {
+            Completable.error(AssertionError("Both ageWhenCreated and dateOfBirth cannot be null."))
+          } else {
+            Completable.complete()
+          }
+        }
 
-    val patientUuid = UUID.randomUUID().toString()
     val addressUuid = UUID.randomUUID().toString()
-    val phoneNumberUuid = UUID.randomUUID().toString()
 
-    val createdAtDateTime = Instant.now()
-    val updatedAtDateTime = createdAtDateTime
-
-    return ongoingEntry()
-        .map { entry ->
-          entry.apply {
-            Patient(
-                uuid = patientUuid,
-                addressUuid = addressUuid,
-                phoneNumberUuid = phoneNumberUuid,
-                fullName = personalDetails!!.fullName,
-                gender = personalDetails.gender!!,
-                dateOfBirth = dateConverter(personalDetails.dateOfBirth),
-                ageWhenCreated = personalDetails.ageWhenCreated!!.toInt(),
-                status = PatientStatus.ACTIVE,
-                createdAt = createdAtDateTime,
-                updatedAt = updatedAtDateTime,
+    val addressSave = ongoingEntry()
+        .map {
+          with(it) {
+            PatientAddress(
+                uuid = addressUuid,
+                colonyOrVillage = address!!.colonyOrVillage,
+                district = address.district,
+                state = address.state,
+                createdAt = Instant.now(),
+                updatedAt = Instant.now(),
                 syncPending = true)
           }
         }
-        .flatMapCompletable { patient -> saveOngoingEntry(patient) }
+        .flatMapCompletable { address -> saveAddress(address) }
+
+    val patientSave = ongoingEntry()
+        .map {
+          with(it) {
+            Patient(
+                uuid = UUID.randomUUID().toString(),
+                fullName = personalDetails!!.fullName,
+                gender = personalDetails.gender!!,
+                status = PatientStatus.ACTIVE,
+
+                dateOfBirth = dateConverter(personalDetails.dateOfBirth),
+                ageWhenCreated = personalDetails.ageWhenCreated?.toInt(),
+
+                addressUuid = addressUuid,
+                phoneNumberUuid = null,
+
+                createdAt = Instant.now(),
+                updatedAt = Instant.now(),
+                syncPending = true)
+          }
+        }
+        .flatMapCompletable { patient -> savePatient(patient) }
+
+    return ageValidation
+        .andThen(addressSave)
+        .andThen(patientSave)
+  }
+
+  private fun dateConverter(dateOfBirth: String?): LocalDate? {
+    val converter = LocalDateRoomTypeConverter()
+    return converter.toLocalDate(dateOfBirth)
+  }
+
+  private fun saveAddress(address: PatientAddress): Completable {
+    return Completable.fromAction {
+      database.addressDao().save(address)
+    }
+  }
+
+  private fun savePatient(patient: Patient): Completable {
+    return Completable.fromAction {
+      database.patientDao().save(patient)
+    }
   }
 }

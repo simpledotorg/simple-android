@@ -74,7 +74,7 @@ class PatientPersonalDetailsEntryScreenControllerTest {
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged(details.fullName))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(details.dateOfBirth))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(details.dateOfBirth!!))
     uiEvents.onNext(PatientAgeTextChanged(details.ageWhenCreated!!))
     uiEvents.onNext(PatientGenderChanged(details.gender!!))
     uiEvents.onNext(PatientPersonalDetailsProceedClicked())

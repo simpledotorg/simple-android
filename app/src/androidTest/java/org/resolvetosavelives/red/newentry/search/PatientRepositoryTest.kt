@@ -39,16 +39,55 @@ class PatientRepositoryTest {
         .subscribe()
 
     val search1 = patientRepository.searchPatients("lakshman")
-        .take(1)
         .blockingFirst()
 
     assertThat(search1).isEmpty()
 
     val search2 = patientRepository.searchPatients("ashok")
-        .take(1)
         .blockingFirst()
 
     assertThat(search2).isNotEmpty()
+  }
+
+  @Test
+  fun createAnOngoingPatientEntry_withNullDateOfBirth_andAgeFilledIn_thenSaveItCompletely() {
+    val ongoingAddress = OngoingPatientEntry.Address("Noida", "Gautam Buddha Nagar", "Uttar Pradesh")
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", null, "42", Gender.MALE)
+
+    val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
+
+    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
+        .andThen(patientRepository.ongoingEntry())
+        .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
+        .flatMapCompletable { withAddress -> patientRepository.saveOngoingEntry(withAddress) }
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .subscribe()
+
+    val search1 = patientRepository.searchPatients("lakshman")
+        .blockingFirst()
+
+    assertThat(search1).isEmpty()
+
+    val search2 = patientRepository.searchPatients("ashok")
+        .blockingFirst()
+
+    val patient = search2[0]
+    assertThat(patient.fullName).isEqualTo("Ashok Kumar")
+    assertThat(patient.dateOfBirth).isNull()
+    assertThat(patient.ageWhenCreated).isEqualTo(42)
+  }
+
+  @Test
+  fun createAnOngoingPatientEntry_withNullDateOfBirth_andNullAgeWhenCreated_thenFail() {
+    val ongoingAddress = OngoingPatientEntry.Address("Noida", "Gautam Buddha Nagar", "Uttar Pradesh")
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", null, null, Gender.MALE)
+
+    val ongoingPatientEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails, address = ongoingAddress)
+
+    patientRepository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .test()
+        .assertError(AssertionError::class.java)
   }
 
   @Test
@@ -66,7 +105,6 @@ class PatientRepositoryTest {
         .subscribe()
 
     val results = patientRepository.searchPatientsWithAddresses("kumar")
-        .take(1)
         .blockingFirst()
 
     val patientWithAddress = results[0]
@@ -79,10 +117,6 @@ class PatientRepositoryTest {
     assertThat(patientWithAddress.address.state).isEqualTo("Goa")
     assertThat(patientWithAddress.address.syncPending).isTrue()
   }
-
-  //todo: test that both dateofbirth and ageWhenCreated should not be null at the same time
-
-  //todo: test the case when dateofbirth is null and ageWhenCreated has a value
 
   @After
   fun tearDown() {

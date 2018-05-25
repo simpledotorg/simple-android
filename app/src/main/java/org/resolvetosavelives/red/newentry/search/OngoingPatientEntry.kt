@@ -6,8 +6,11 @@ data class OngoingPatientEntry(
     val phoneNumbers: PhoneNumbers? = null,
     val bloodPressureMeasurements: BloodPressureMeasurement? = null
 ) {
+  fun hasNullDateOfBirthAndAge(): Boolean {
+    return personalDetails!!.dateOfBirth.isNullOrEmpty() && personalDetails.ageWhenCreated.isNullOrEmpty()
+  }
 
-  data class PersonalDetails(val fullName: String, val dateOfBirth: String, val ageWhenCreated: String?, val gender: Gender?)
+  data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val ageWhenCreated: String?, val gender: Gender?)
 
   data class PhoneNumbers(val primary: String, val secondary: String? = null)
 

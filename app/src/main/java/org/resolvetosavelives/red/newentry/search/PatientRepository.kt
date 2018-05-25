@@ -5,9 +5,9 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
+import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
 
@@ -45,11 +45,20 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun saveOngoingEntryAsPatient(): Completable {
+    val ageValidation = ongoingEntry()
+        .flatMapCompletable {
+          if (it.hasNullDateOfBirthAndAge()) {
+            Completable.error(AssertionError("Both ageWhenCreated and dateOfBirth cannot be null."))
+          } else {
+            Completable.complete()
+          }
+        }
+
     val addressUuid = UUID.randomUUID().toString()
 
     val addressSave = ongoingEntry()
-        .map { validEntry ->
-          with(validEntry) {
+        .map {
+          with(it) {
             PatientAddress(
                 uuid = addressUuid,
                 colonyOrVillage = address!!.colonyOrVillage,
@@ -63,16 +72,14 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .flatMapCompletable { address -> saveAddress(address) }
 
     val patientSave = ongoingEntry()
-        .map { entry ->
-          with(entry) {
+        .map {
+          with(it) {
             Patient(
                 uuid = UUID.randomUUID().toString(),
                 fullName = personalDetails!!.fullName,
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
 
-                //todo: both, dateOfBirth and ageWhenCreated, should not be null at the same time
-                //todo: ageWhenCreated should be an int
                 dateOfBirth = dateConverter(personalDetails.dateOfBirth),
                 ageWhenCreated = personalDetails.ageWhenCreated?.toInt(),
 
@@ -86,11 +93,14 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
         .flatMapCompletable { patient -> savePatient(patient) }
 
-    return addressSave.andThen(patientSave)
+    return ageValidation
+        .andThen(addressSave)
+        .andThen(patientSave)
   }
 
-  private fun dateConverter(dateOfBirth: String): LocalDate? {
-    return LocalDate.parse(dateOfBirth, DateTimeFormatter.ofPattern("dd-MM-yyyy")) ?: null
+  private fun dateConverter(dateOfBirth: String?): LocalDate? {
+    val converter = LocalDateRoomTypeConverter()
+    return converter.toLocalDate(dateOfBirth)
   }
 
   private fun saveAddress(address: PatientAddress): Completable {

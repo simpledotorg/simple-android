@@ -31,7 +31,7 @@ class PatientSearchByPhoneScreenController @Inject constructor(
     return events
         .ofType(PatientPhoneNumberTextChanged::class.java)
         .map(PatientPhoneNumberTextChanged::number)
-        .flatMap(repository::search)
+        .flatMap(repository::searchPatients)
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 

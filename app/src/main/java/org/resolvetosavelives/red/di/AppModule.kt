@@ -7,15 +7,13 @@ import android.os.Vibrator
 import dagger.Module
 import dagger.Provides
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.qrscan.QrDaggerModule
 
 @Module(includes = [QrDaggerModule::class])
-class AppModule(private val appContext: Application) {
+class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides
   fun appDatabase(): AppDatabase {
-    val databaseName = appContext.getString(R.string.app_name)
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName).build()
   }
 

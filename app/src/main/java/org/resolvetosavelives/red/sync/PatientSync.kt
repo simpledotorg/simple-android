@@ -5,7 +5,7 @@ import org.resolvetosavelives.red.newentry.search.PatientRepository
 import timber.log.Timber
 import javax.inject.Inject
 
-class PatientSync @Inject constructor(private val api: PatientSyncApi, private val repository: PatientRepository) {
+class PatientSync @Inject constructor(private val api: PatientSyncApiV1, private val repository: PatientRepository) {
 
   fun sync(): Completable {
     return Completable.fromAction({

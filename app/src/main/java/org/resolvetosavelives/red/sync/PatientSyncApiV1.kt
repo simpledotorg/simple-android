@@ -6,12 +6,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface PatientSyncApi {
+interface PatientSyncApiV1 {
 
-  @POST("api/v1/patients/sync")
+  companion object {
+    const val version = "v1"
+  }
+
+  @POST("$version/patients/sync")
   fun push(): Single<PatientPushResponse>
 
-  @GET("api/v1/patients/sync")
+  @GET("$version/patients/sync")
   fun pull(
       @Query("latest_record_timestamp") latestRecordTimestamp: Instant,
       @Query("first_time") isFirstSync: Boolean,

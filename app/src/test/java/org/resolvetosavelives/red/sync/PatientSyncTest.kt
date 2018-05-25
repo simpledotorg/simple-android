@@ -7,7 +7,7 @@ import org.resolvetosavelives.red.newentry.search.PatientRepository
 
 class PatientSyncTest {
 
-  private val api: PatientSyncApi = mock()
+  private val api: PatientSyncApiV1 = mock()
   private val repository: PatientRepository = mock()
 
   private lateinit var patientSync: PatientSync

@@ -12,13 +12,13 @@ import retrofit2.Retrofit
 class PatientSyncModule {
 
   @Provides
-  fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): PatientSyncApi {
+  fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): PatientSyncApiV1 {
     val baseUrl = appContext.getString(R.string.redapp_endpoint)
 
     return commonRetrofitBuilder
         .baseUrl(baseUrl)
         .build()
-        .create(PatientSyncApi::class.java)
+        .create(PatientSyncApiV1::class.java)
   }
 
   @Provides

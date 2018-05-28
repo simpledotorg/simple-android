@@ -7,11 +7,19 @@ import com.squareup.moshi.JsonClass
 data class PatientPushResponse(
 
     @Json(name = "errors")
-    val errors: List<ValidationErrors>?
-)
+    val validationErrors: List<ValidationErrors>
+) {
+
+  fun hasValidationErrors(): Boolean {
+    return validationErrors.isNotEmpty()
+  }
+}
 
 @JsonClass(generateAdapter = true)
 data class ValidationErrors(
+
+    @Json(name = "id")
+    val id: String,
 
     @Json(name = "address")
     val addressErrors: ValidationError?,
@@ -22,6 +30,9 @@ data class ValidationErrors(
 
 @JsonClass(generateAdapter = true)
 data class ValidationError(
+
+    @Json(name = "id")
+    val id: String,
 
     @Json(name = "field_with_error")
     val fieldWithError: List<String>

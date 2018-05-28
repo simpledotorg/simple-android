@@ -62,5 +62,8 @@ data class Patient(
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(patient: Patient)
+
+    @Query("UPDATE patient SET syncPending = 0 WHERE uuid IN (:patientUuids)")
+    fun markAsSynced(patientUuids: List<String>)
   }
 }

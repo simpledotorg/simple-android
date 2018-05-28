@@ -20,7 +20,7 @@ class InstantRoomTypeConverter {
   }
 }
 
-class InstantMoshiTypeConverter {
+class InstantMoshiAdapter {
 
   @FromJson
   fun toInstant(value: String?): Instant? {

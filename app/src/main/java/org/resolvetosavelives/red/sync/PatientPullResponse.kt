@@ -10,6 +10,6 @@ data class PatientPullResponse(
     @Json(name = "patients")
     val patients: List<PatientPayload>,
 
-    @Json(name = "latest_record_timestamp")
+    @Json(name = "processed_since")
     val latestRecordTimestamp: Instant
 )

@@ -2,6 +2,7 @@ package org.resolvetosavelives.red.sync
 
 import io.reactivex.Single
 import org.threeten.bp.Instant
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
@@ -13,12 +14,14 @@ interface PatientSyncApiV1 {
   }
 
   @POST("$version/patients/sync")
-  fun push(): Single<PatientPushResponse>
+  fun push(
+      @Body body: PatientPushRequest
+  ): Single<PatientPushResponse>
 
   @GET("$version/patients/sync")
   fun pull(
-      @Query("latest_record_timestamp") latestRecordTimestamp: Instant,
+      @Query("processed_since") latestRecordTimestamp: Instant? = null,
       @Query("first_time") isFirstSync: Boolean,
-      @Query("number_of_records") recordsToRetrieve: Int
+      @Query("limit") recordsToRetrieve: Int
   ): Single<PatientPullResponse>
 }

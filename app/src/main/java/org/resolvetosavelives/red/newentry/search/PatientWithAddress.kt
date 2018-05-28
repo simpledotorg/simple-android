@@ -4,6 +4,9 @@ import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
+import org.intellij.lang.annotations.Language
+import org.resolvetosavelives.red.sync.PatientAddressPayload
+import org.resolvetosavelives.red.sync.PatientPayload
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
@@ -31,14 +34,45 @@ data class PatientWithAddress(
     val address: PatientAddress
 ) {
 
+  fun toPayload(): PatientPayload {
+    return PatientPayload(
+        uuid = uuid,
+        fullName = fullName,
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        ageWhenCreated = ageWhenCreated,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        address = with(address) {
+          PatientAddressPayload(
+              uuid = uuid,
+              colonyOrVillage = colonyOrVillage,
+              district = district,
+              state = state,
+              country = country,
+              createdAt = createdAt,
+              updatedAt = updatedAt
+          )
+        }
+    )
+  }
+
   @Dao
   interface RoomDao {
 
-    @Query("SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncPending, " +
-        "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt, PA.syncPending address_syncPending   " +
-        "FROM patient P " +
-        "INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid " +
-        "WHERE fullName LIKE '%' || :query || '%'")
+    companion object {
+      @Language("RoomSql")
+      const val joinQuery = "SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncPending, " +
+          "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt, PA.syncPending address_syncPending   " +
+          "FROM patient P " +
+          "INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid"
+    }
+
+    @Query("$joinQuery WHERE fullName LIKE '%' || :query || '%'")
     fun search(query: String): Flowable<List<PatientWithAddress>>
+
+    @Query("$joinQuery WHERE P.syncPending == 1")
+    fun pendingSync(): Flowable<List<PatientWithAddress>>
   }
 }

@@ -26,7 +26,9 @@ class RedApp : Application() {
         .build()
     appComponent.inject(this)
 
-    Timber.plant(Timber.DebugTree())
+    if (BuildConfig.DEBUG) {
+      Timber.plant(Timber.DebugTree())
+    }
 
     LazyThreeTen.init(this)
 

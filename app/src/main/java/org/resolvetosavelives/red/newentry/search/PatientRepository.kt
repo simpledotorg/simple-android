@@ -34,6 +34,34 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
+  fun pendingSyncPatients(): Single<List<PatientWithAddress>> {
+    return database.patientWithAddressDao()
+        .pendingSync()
+        .firstOrError()
+  }
+
+  fun markPatientsAsSynced(patients: List<PatientWithAddress>): Completable {
+    return Completable.fromAction({
+      val patientUuids = patients
+          .map { it.uuid }
+
+      val patientAddressUuids = patients
+          .map { it.address.uuid }
+
+      database.beginTransaction()
+
+      database.patientDao().markAsSynced(patientUuids)
+      database.addressDao().markAsSynced(patientAddressUuids)
+
+      database.setTransactionSuccessful()
+      database.endTransaction()
+    })
+  }
+
+  private fun savePatient(patient: Patient): Completable {
+    return Completable.fromAction({ database.patientDao().save(patient) })
+  }
+
   fun ongoingEntry(): Single<OngoingPatientEntry> {
     return Single.fromCallable({ ongoingPatientEntry })
   }
@@ -106,12 +134,6 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   private fun saveAddress(address: PatientAddress): Completable {
     return Completable.fromAction {
       database.addressDao().save(address)
-    }
-  }
-
-  private fun savePatient(patient: Patient): Completable {
-    return Completable.fromAction {
-      database.patientDao().save(patient)
     }
   }
 }

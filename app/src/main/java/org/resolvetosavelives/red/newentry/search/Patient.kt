@@ -60,10 +60,19 @@ data class Patient(
     @Query("SELECT * FROM patient")
     fun allPatients(): Flowable<List<Patient>>
 
+    @Query("SELECT * FROM patient WHERE uuid = :uuid LIMIT 1")
+    fun get(uuid: String): Patient?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(patient: Patient)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(patient: List<Patient>)
+
     @Query("UPDATE patient SET syncPending = 0 WHERE uuid IN (:patientUuids)")
     fun markAsSynced(patientUuids: List<String>)
+
+    @Query("SELECT COUNT(*) FROM patient")
+    fun patientCount(): Flowable<Int>
   }
 }

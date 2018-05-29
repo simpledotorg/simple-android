@@ -1,11 +1,17 @@
 package org.resolvetosavelives.red.sync
 
 import com.f2prateek.rx.preferences2.Preference
+import com.gojuno.koptional.None
+import com.gojuno.koptional.Optional
+import com.gojuno.koptional.Some
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toCompletable
+import io.reactivex.schedulers.Schedulers.single
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.PatientWithAddress
+import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
@@ -16,7 +22,8 @@ import javax.inject.Named
 class PatientSync @Inject constructor(
     private val api: PatientSyncApiV1,
     private val repository: PatientRepository,
-    @Named("first_patient_sync_done") private val firstSyncDone: Preference<Boolean>
+    private val configProvider: Single<PatientSyncConfig>,
+    @Named("last_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable {
@@ -58,11 +65,37 @@ class PatientSync @Inject constructor(
   }
 
   fun pull(): Completable {
-    // TODO.
-    return Completable.complete()
+    // Plan:
+    // [x] get config values for latest timestamp, batch size etc.
+    // [x] make API call in a loop until number of patients received is less than batch size
+    // [x] save patients to database
+    // [ ] ignore stale patients
+    // [x] save last sync time
+    return configProvider
+        .flatMapCompletable { config ->
+          lastPullTimestamp.asObservable()
+              .take(1)
+              .flatMapSingle { lastPullTime ->
+                when (lastPullTime) {
+                  is Some -> api.pull(recordsToRetrieve = config.batchSize, latestRecordTimestamp = lastPullTime.value)
+                  is None -> api.pull(recordsToRetrieve = config.batchSize, isFirstSync = true)
+                }
+              }
+              .flatMap { response ->
+                repository.mergeWithLocalDatabase(response.patients)
+                    .observeOn(single())
+                    .andThen({ lastPullTimestamp.set(Some(response.latestRecordTimestamp)) }.toCompletable())
+                    .andThen(Observable.just(response))
+              }
+              .repeat()
+              .takeWhile({ response -> response.patients.size >= config.batchSize })
+              .ignoreElements()
+        }
   }
 }
 
 sealed class PatientPullResult
+
 data class Pushed(val syncedPatients: List<PatientWithAddress>) : PatientPullResult()
+
 data class FailedWithValidationErrors(val errors: List<ValidationErrors>?) : PatientPullResult()

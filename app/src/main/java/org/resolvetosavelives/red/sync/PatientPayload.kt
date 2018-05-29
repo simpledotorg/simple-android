@@ -3,6 +3,8 @@ package org.resolvetosavelives.red.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.resolvetosavelives.red.newentry.search.Gender
+import org.resolvetosavelives.red.newentry.search.Patient
+import org.resolvetosavelives.red.newentry.search.PatientAddress
 import org.resolvetosavelives.red.newentry.search.PatientStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -36,7 +38,23 @@ data class PatientPayload(
 
     @Json(name = "address")
     val address: PatientAddressPayload
-)
+) {
+
+  fun toDatabaseModel(): Patient {
+    return Patient(
+        uuid = uuid,
+        addressUuid = address.uuid,
+        phoneNumberUuid = null,   // TODO: Insert this when we have phone numbers.
+        fullName = fullName,
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        ageWhenCreated = ageWhenCreated,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        syncPending = false)
+  }
+}
 
 @JsonClass(generateAdapter = true)
 data class PatientAddressPayload(
@@ -60,4 +78,17 @@ data class PatientAddressPayload(
 
     @Json(name = "updated_at")
     val updatedAt: Instant
-)
+) {
+
+  fun toDatabaseModel(): PatientAddress {
+    return PatientAddress(
+        uuid = uuid,
+        colonyOrVillage = colonyOrVillage,
+        district = district,
+        state = state,
+        country = country,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        syncPending = false)
+  }
+}

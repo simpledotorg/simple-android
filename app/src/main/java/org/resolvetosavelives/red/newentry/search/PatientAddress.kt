@@ -35,7 +35,13 @@ data class PatientAddress(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(address: PatientAddress)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(address: List<PatientAddress>)
+
     @Query("UPDATE patientaddress SET syncPending = 0 WHERE uuid IN (:addressUuids)")
     fun markAsSynced(addressUuids: List<String>)
+
+    @Query("SELECT * FROM patientaddress WHERE uuid = :uuid LIMIT 1")
+    fun get(uuid: String): PatientAddress?
   }
 }

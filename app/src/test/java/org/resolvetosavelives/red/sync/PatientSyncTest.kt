@@ -54,7 +54,7 @@ class PatientSyncTest {
     whenever(lastSyncTimestamp.asObservable()).thenReturn(Observable.just(None))
     whenever(syncConfigProvider()).thenReturn(config)
     whenever(api.pull(isFirstSync = true, recordsToRetrieve = config.batchSize)).thenReturn(Single.just(PatientPullResponse(listOf(), Instant.now())))
-    whenever(repository.mergeWithLocalDatabase(any())).thenReturn(Completable.complete())
+    whenever(repository.mergeWithLocalData(any())).thenReturn(Completable.complete())
 
     patientSync.pull().blockingAwait()
 

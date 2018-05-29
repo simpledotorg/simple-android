@@ -43,9 +43,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
-  fun pendingSyncPatients(): Single<List<PatientWithAddress>> {
+  fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientWithAddress>> {
     return database.patientWithAddressDao()
-        .pendingSync()
+        .withSyncStatus(status)
         .firstOrError()
   }
 
@@ -59,8 +59,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
       database.beginTransaction()
 
-      database.patientDao().markAsSynced(patientUuids)
-      database.addressDao().markAsSynced(patientAddressUuids)
+      database.patientDao().updateSyncStatus(patientUuids, newStatus = SyncStatus.DONE)
+      database.addressDao().updateSyncStatus(patientAddressUuids, newStatus = SyncStatus.DONE)
 
       database.setTransactionSuccessful()
       database.endTransaction()
@@ -135,7 +135,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 state = address.state,
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
-                syncPending = true)
+                syncStatus = SyncStatus.PENDING)
           }
         }
         .flatMapCompletable { address -> saveAddress(address) }
@@ -157,7 +157,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
-                syncPending = true)
+                syncStatus = SyncStatus.PENDING)
           }
         }
         .flatMapCompletable { patient -> savePatient(patient) }

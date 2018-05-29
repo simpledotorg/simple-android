@@ -48,7 +48,7 @@ data class Patient(
 
     val updatedAt: Instant,
 
-    val syncPending: Boolean
+    val syncStatus: SyncStatus
 ) {
 
   @Dao
@@ -69,8 +69,8 @@ data class Patient(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(patient: List<Patient>)
 
-    @Query("UPDATE patient SET syncPending = 0 WHERE uuid IN (:patientUuids)")
-    fun markAsSynced(patientUuids: List<String>)
+    @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:patientUuids)")
+    fun updateSyncStatus(patientUuids: List<String>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(*) FROM patient")
     fun patientCount(): Flowable<Int>

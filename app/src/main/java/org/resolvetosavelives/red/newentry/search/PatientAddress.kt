@@ -26,7 +26,7 @@ data class PatientAddress(
 
     val updatedAt: Instant,
 
-    val syncPending: Boolean
+    val syncStatus: SyncStatus
 ) {
 
   @Dao
@@ -38,8 +38,8 @@ data class PatientAddress(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(address: List<PatientAddress>)
 
-    @Query("UPDATE patientaddress SET syncPending = 0 WHERE uuid IN (:addressUuids)")
-    fun markAsSynced(addressUuids: List<String>)
+    @Query("UPDATE patientaddress SET syncStatus = :newStatus WHERE uuid IN (:addressUuids)")
+    fun updateSyncStatus(addressUuids: List<String>, newStatus: SyncStatus)
 
     @Query("SELECT * FROM patientaddress WHERE uuid = :uuid LIMIT 1")
     fun get(uuid: String): PatientAddress?

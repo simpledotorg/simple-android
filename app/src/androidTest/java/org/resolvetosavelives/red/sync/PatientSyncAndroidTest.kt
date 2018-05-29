@@ -7,6 +7,7 @@ import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.gojuno.koptional.Optional
 import com.gojuno.koptional.Some
+import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -89,13 +90,8 @@ class PatientSyncAndroidTest {
 
     patientSync.pull().blockingAwait()
 
-    repository.patientCount()
-        .take(1)
-        .test()
-        .await()
-        .assertValue(patientsToInsert)
-        .assertComplete()
-        .assertNoErrors()
+    val patientCountAfterPull = repository.patientCount().blockingFirst()
+    assertThat(patientCountAfterPull).isAtLeast(patientsToInsert)
   }
 
   @After

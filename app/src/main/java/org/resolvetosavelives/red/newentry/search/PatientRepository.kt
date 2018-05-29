@@ -6,6 +6,10 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toCompletable
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
+import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
+import org.resolvetosavelives.red.newentry.search.SyncStatus.INVALID
+import org.resolvetosavelives.red.newentry.search.SyncStatus.IN_FLIGHT
+import org.resolvetosavelives.red.newentry.search.SyncStatus.PENDING
 import org.resolvetosavelives.red.sync.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
@@ -59,8 +63,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
       database.beginTransaction()
 
-      database.patientDao().updateSyncStatus(patientUuids, newStatus = SyncStatus.DONE)
-      database.addressDao().updateSyncStatus(patientAddressUuids, newStatus = SyncStatus.DONE)
+      database.patientDao().updateSyncStatus(patientUuids, newStatus = DONE)
+      database.addressDao().updateSyncStatus(patientAddressUuids, newStatus = DONE)
 
       database.setTransactionSuccessful()
       database.endTransaction()
@@ -71,33 +75,36 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 
-  fun mergeWithLocalDatabase(payloadsFromServer: List<PatientPayload>): Completable {
+  fun mergeWithLocalData(payloadsFromServer: List<PatientPayload>): Completable {
     val addressSave = Observable.fromIterable(payloadsFromServer)
         .map { payload -> payload.address }
-        .map { addressPayload -> addressPayload.toDatabaseModel() }
+        .map { addressPayload -> addressPayload.toDatabaseModel(updatedStatus = DONE) }
         .filter { serverCopy ->
           val localCopy = database.addressDao().get(serverCopy.uuid)
-          if (localCopy != null) {
-            serverCopy.updatedAt.isAfter(localCopy.updatedAt)
-          } else {
-            true
+          when (localCopy?.syncStatus) {
+            PENDING -> false
+            IN_FLIGHT -> false
+            INVALID -> true
+            DONE -> true
+            null -> true
           }
         }
         .toList()
         .flatMapCompletable { { database.addressDao().save(it) }.toCompletable() }
 
     val patientSave = Observable.fromIterable(payloadsFromServer)
-        .map { payload -> payload.toDatabaseModel() }
+        .map { payload -> payload.toDatabaseModel(updatedStatus = DONE) }
         .filter { serverCopy ->
           val localCopy = database.patientDao().get(serverCopy.uuid)
-          if (localCopy != null) {
-            serverCopy.updatedAt.isAfter(localCopy.updatedAt)
-          } else {
-            true
+          when (localCopy?.syncStatus) {
+            PENDING -> false
+            IN_FLIGHT -> false
+            INVALID -> true
+            DONE -> true
+            null -> true
           }
         }
         .toList()
-        .doOnSuccess { Timber.w("Actually saving ${it.size} patients")}
         .flatMapCompletable { { database.patientDao().save(it) }.toCompletable() }
 
     return addressSave.andThen(patientSave)
@@ -135,7 +142,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 state = address.state,
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
-                syncStatus = SyncStatus.PENDING)
+                syncStatus = PENDING)
           }
         }
         .flatMapCompletable { address -> saveAddress(address) }
@@ -157,7 +164,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),
-                syncStatus = SyncStatus.PENDING)
+                syncStatus = PENDING)
           }
         }
         .flatMapCompletable { patient -> savePatient(patient) }

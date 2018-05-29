@@ -115,7 +115,7 @@ class PatientRepositoryTest {
     assertThat(patientWithAddress.createdAt).isGreaterThan(patientWithAddress.address.createdAt)
     assertThat(patientWithAddress.address.colonyOrVillage).isEqualTo("Arambol")
     assertThat(patientWithAddress.address.state).isEqualTo("Goa")
-    assertThat(patientWithAddress.address.syncPending).isTrue()
+    assertThat(patientWithAddress.address.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
 
   @After

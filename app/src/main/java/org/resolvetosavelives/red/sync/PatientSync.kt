@@ -17,9 +17,6 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-/**
- * Here lies the greatest algorithm ever written for syncing patients with the server.
- */
 class PatientSync @Inject constructor(
     private val api: PatientSyncApiV1,
     private val repository: PatientRepository,
@@ -39,13 +36,11 @@ class PatientSync @Inject constructor(
     val pushResult = cachedPatients
         // Converting to an Observable because Single#filter() returns a Maybe.
         .toObservable()
-        .flatMapIterable { list -> list }
-        .map { databaseModel -> databaseModel.toPayload() }
-        .toList()
         .filter({ it.isNotEmpty() })
+        .map { patients -> patients.map { it.toPayload() } }
         .map(::PatientPushRequest)
         .flatMapSingle { request -> api.push(request) }
-        .flatMap {
+        .flatMapSingle {
           when {
             it.hasValidationErrors() -> Single.just(FailedWithValidationErrors(it.validationErrors))
             else -> cachedPatients.map(::Pushed)
@@ -66,12 +61,6 @@ class PatientSync @Inject constructor(
   }
 
   fun pull(): Completable {
-    // Plan:
-    // [x] get config values for latest timestamp, batch size etc.
-    // [x] make API call in a loop until number of patients received is less than batch size
-    // [x] save patients to database
-    // [ ] ignore stale patients
-    // [x] save last sync time
     return configProvider
         .flatMapCompletable { config ->
           lastPullTimestamp.asObservable()
@@ -83,7 +72,7 @@ class PatientSync @Inject constructor(
                 }
               }
               .flatMap { response ->
-                repository.mergeWithLocalDatabase(response.patients)
+                repository.mergeWithLocalData(response.patients)
                     .observeOn(single())
                     .andThen({ lastPullTimestamp.set(Some(response.latestRecordTimestamp)) }.toCompletable())
                     .andThen(Observable.just(response))

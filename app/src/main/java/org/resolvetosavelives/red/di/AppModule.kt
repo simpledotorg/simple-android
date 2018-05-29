@@ -21,6 +21,7 @@ class AppModule(private val appContext: Application, private val databaseName: S
     return appContext
   }
 
+  // TODO: Move to StorageModule.
   @Provides
   fun appDatabase(): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName).build()

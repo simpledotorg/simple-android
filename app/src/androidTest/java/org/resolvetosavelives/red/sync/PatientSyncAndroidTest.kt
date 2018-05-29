@@ -20,6 +20,7 @@ import org.resolvetosavelives.red.di.StorageModule
 import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
@@ -66,7 +67,7 @@ class PatientSyncAndroidTest {
 
     patientSync.push().blockingAwait()
 
-    repository.pendingSyncPatients()
+    repository.patientsWithSyncStatus(SyncStatus.PENDING)
         .test()
         .await()
         .assertValue({ patients -> patients.isEmpty() })

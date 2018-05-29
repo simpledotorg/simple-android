@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers.single
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.PatientWithAddress
+import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class PatientSync @Inject constructor(
 
   fun push(): Completable {
     val cachedPatients = repository
-        .pendingSyncPatients()
+        .patientsWithSyncStatus(SyncStatus.PENDING)
         .cache()
 
     val pushResult = cachedPatients

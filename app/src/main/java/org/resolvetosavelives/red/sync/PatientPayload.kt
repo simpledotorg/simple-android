@@ -6,6 +6,7 @@ import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.Patient
 import org.resolvetosavelives.red.newentry.search.PatientAddress
 import org.resolvetosavelives.red.newentry.search.PatientStatus
+import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
@@ -52,7 +53,7 @@ data class PatientPayload(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        syncPending = false)
+        syncStatus = SyncStatus.DONE)
   }
 }
 
@@ -89,6 +90,6 @@ data class PatientAddressPayload(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        syncPending = false)
+        syncStatus = SyncStatus.DONE)
   }
 }

@@ -14,6 +14,7 @@ import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
 
 class PatientSyncTest {
@@ -35,7 +36,7 @@ class PatientSyncTest {
 
   @Test
   fun `when pending-sync patients are empty then the server should not get called`() {
-    whenever(repository.pendingSyncPatients()).thenReturn(Single.just(listOf()))
+    whenever(repository.patientsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf()))
 
     patientSync.push().blockingAwait()
 

@@ -41,7 +41,7 @@ data class PatientPayload(
     val address: PatientAddressPayload
 ) {
 
-  fun toDatabaseModel(): Patient {
+  fun toDatabaseModel(updatedStatus: SyncStatus): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
@@ -53,7 +53,7 @@ data class PatientPayload(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        syncStatus = SyncStatus.DONE)
+        syncStatus = updatedStatus)
   }
 }
 
@@ -81,7 +81,7 @@ data class PatientAddressPayload(
     val updatedAt: Instant
 ) {
 
-  fun toDatabaseModel(): PatientAddress {
+  fun toDatabaseModel(updatedStatus: SyncStatus): PatientAddress {
     return PatientAddress(
         uuid = uuid,
         colonyOrVillage = colonyOrVillage,
@@ -90,6 +90,6 @@ data class PatientAddressPayload(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        syncStatus = SyncStatus.DONE)
+        syncStatus = updatedStatus)
   }
 }

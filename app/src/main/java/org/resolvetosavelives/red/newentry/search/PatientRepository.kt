@@ -3,11 +3,14 @@ package org.resolvetosavelives.red.newentry.search
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.toCompletable
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
+import org.resolvetosavelives.red.sync.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -25,6 +28,12 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
     return database.patientDao()
         .search(query)
+        .toObservable()
+  }
+
+  fun patientCount(): Observable<Int> {
+    return database.patientDao()
+        .patientCount()
         .toObservable()
   }
 
@@ -60,6 +69,38 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private fun savePatient(patient: Patient): Completable {
     return Completable.fromAction({ database.patientDao().save(patient) })
+  }
+
+  fun mergeWithLocalDatabase(payloadsFromServer: List<PatientPayload>): Completable {
+    val addressSave = Observable.fromIterable(payloadsFromServer)
+        .map { payload -> payload.address }
+        .map { addressPayload -> addressPayload.toDatabaseModel() }
+        .filter { serverCopy ->
+          val localCopy = database.addressDao().get(serverCopy.uuid)
+          if (localCopy != null) {
+            serverCopy.updatedAt.isAfter(localCopy.updatedAt)
+          } else {
+            true
+          }
+        }
+        .toList()
+        .flatMapCompletable { { database.addressDao().save(it) }.toCompletable() }
+
+    val patientSave = Observable.fromIterable(payloadsFromServer)
+        .map { payload -> payload.toDatabaseModel() }
+        .filter { serverCopy ->
+          val localCopy = database.patientDao().get(serverCopy.uuid)
+          if (localCopy != null) {
+            serverCopy.updatedAt.isAfter(localCopy.updatedAt)
+          } else {
+            true
+          }
+        }
+        .toList()
+        .doOnSuccess { Timber.w("Actually saving ${it.size} patients")}
+        .flatMapCompletable { { database.patientDao().save(it) }.toCompletable() }
+
+    return addressSave.andThen(patientSave)
   }
 
   fun ongoingEntry(): Single<OngoingPatientEntry> {
@@ -137,3 +178,4 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     }
   }
 }
+

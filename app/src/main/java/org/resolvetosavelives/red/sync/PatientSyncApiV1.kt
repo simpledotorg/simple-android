@@ -20,8 +20,13 @@ interface PatientSyncApiV1 {
 
   @GET("$version/patients/sync")
   fun pull(
-      @Query("processed_since") latestRecordTimestamp: Instant? = null,
-      @Query("first_time") isFirstSync: Boolean,
-      @Query("limit") recordsToRetrieve: Int
+      @Query("limit") recordsToRetrieve: Int,
+      @Query("first_time") isFirstSync: Boolean
+  ): Single<PatientPullResponse>
+
+  @GET("$version/patients/sync")
+  fun pull(
+      @Query("limit") recordsToRetrieve: Int,
+      @Query("processed_since") latestRecordTimestamp: Instant? = null
   ): Single<PatientPullResponse>
 }

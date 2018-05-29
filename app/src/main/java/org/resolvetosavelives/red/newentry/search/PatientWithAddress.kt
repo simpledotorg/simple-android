@@ -28,7 +28,7 @@ data class PatientWithAddress(
 
     val updatedAt: Instant,
 
-    val syncPending: Boolean,
+    val syncStatus: SyncStatus,
 
     @Embedded(prefix = "address_")
     val address: PatientAddress
@@ -63,8 +63,8 @@ data class PatientWithAddress(
 
     companion object {
       @Language("RoomSql")
-      const val joinQuery = "SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncPending, " +
-          "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt, PA.syncPending address_syncPending   " +
+      const val joinQuery = "SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncStatus, " +
+          "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt, PA.syncStatus address_syncStatus " +
           "FROM patient P " +
           "INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid"
     }
@@ -72,7 +72,7 @@ data class PatientWithAddress(
     @Query("$joinQuery WHERE fullName LIKE '%' || :query || '%'")
     fun search(query: String): Flowable<List<PatientWithAddress>>
 
-    @Query("$joinQuery WHERE P.syncPending == 1")
-    fun pendingSync(): Flowable<List<PatientWithAddress>>
+    @Query("$joinQuery WHERE P.syncStatus == :status")
+    fun withSyncStatus(status: SyncStatus): Flowable<List<PatientWithAddress>>
   }
 }

@@ -12,7 +12,7 @@ import org.resolvetosavelives.red.AppDatabase
 import org.threeten.bp.LocalDate
 
 @RunWith(AndroidJUnit4::class)
-class PatientRepositoryTest {
+class PatientRepositoryAndroidTest {
 
   lateinit var patientRepository: PatientRepository
   lateinit var database: AppDatabase

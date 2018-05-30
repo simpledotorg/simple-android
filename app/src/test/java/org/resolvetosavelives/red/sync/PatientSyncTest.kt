@@ -1,7 +1,7 @@
 package org.resolvetosavelives.red.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import com.gojuno.koptional.Optional
+import org.resolvetosavelives.red.util.Optional
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never

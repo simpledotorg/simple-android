@@ -1,9 +1,6 @@
 package org.resolvetosavelives.red.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import com.gojuno.koptional.None
-import com.gojuno.koptional.Optional
-import com.gojuno.koptional.Some
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -11,6 +8,9 @@ import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers.single
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.SyncStatus
+import org.resolvetosavelives.red.util.Just
+import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
@@ -75,14 +75,14 @@ class PatientSync @Inject constructor(
               .take(1)
               .flatMapSingle { lastPullTime ->
                 when (lastPullTime) {
-                  is Some -> api.pull(recordsToRetrieve = config.batchSize, latestRecordTimestamp = lastPullTime.value)
+                  is Just -> api.pull(recordsToRetrieve = config.batchSize, latestRecordTimestamp = lastPullTime.value)
                   is None -> api.pull(recordsToRetrieve = config.batchSize, isFirstSync = true)
                 }
               }
               .flatMap { response ->
                 repository.mergeWithLocalData(response.patients)
                     .observeOn(single())
-                    .andThen({ lastPullTimestamp.set(Some(response.latestRecordTimestamp)) }.toCompletable())
+                    .andThen({ lastPullTimestamp.set(Just(response.latestRecordTimestamp)) }.toCompletable())
                     .andThen(Observable.just(response))
               }
               .repeat()

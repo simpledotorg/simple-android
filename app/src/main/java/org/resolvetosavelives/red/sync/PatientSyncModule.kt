@@ -3,8 +3,8 @@ package org.resolvetosavelives.red.sync
 import android.app.Application
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.gojuno.koptional.None
-import com.gojuno.koptional.Optional
+import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.Optional
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single

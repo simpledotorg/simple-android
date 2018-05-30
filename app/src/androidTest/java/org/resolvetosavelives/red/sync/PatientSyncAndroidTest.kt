@@ -5,8 +5,8 @@ import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
-import com.gojuno.koptional.Optional
-import com.gojuno.koptional.Some
+import org.resolvetosavelives.red.util.Optional
+import org.resolvetosavelives.red.util.Just
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -79,7 +79,7 @@ class PatientSyncAndroidTest {
   @Test
   fun when_pulling_patients_then_paginate_till_the_server_does_not_have_anymore_patients() {
     // Set lastPullTimestamp to a bit in the past.
-    lastPullTimestamp.set(Some(Instant.now().minusSeconds(1)))
+    lastPullTimestamp.set(Just(Instant.now().minusSeconds(1)))
 
     val patientsToInsert = 2 * config.batchSize + 7
 

@@ -15,6 +15,9 @@ data class PatientPushResponse(
   }
 }
 
+/**
+ * Errors present in one patient.
+ */
 @JsonClass(generateAdapter = true)
 data class ValidationErrors(
 

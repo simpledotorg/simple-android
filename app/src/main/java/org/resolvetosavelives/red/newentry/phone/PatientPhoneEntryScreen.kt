@@ -72,9 +72,9 @@ class PatientPhoneEntryScreen(context: Context, attrs: AttributeSet) : RelativeL
     primaryNumberEditText.showKeyboard()
   }
 
-  fun preFill(numbers: OngoingPatientEntry.PhoneNumbers) {
-    primaryNumberEditText.setTextAndCursor(numbers.primary)
-    secondaryNumberEditText.setTextAndCursor(numbers.secondary ?: "")
+  fun preFill(phoneNumber: OngoingPatientEntry.PhoneNumber) {
+    primaryNumberEditText.setTextAndCursor(phoneNumber.number)
+    secondaryNumberEditText.setTextAndCursor(phoneNumber.number)
   }
 
   fun openBloodPressureEntryScreen() {

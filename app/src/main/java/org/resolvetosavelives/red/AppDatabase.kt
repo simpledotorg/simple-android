@@ -6,17 +6,16 @@ import android.arch.persistence.room.TypeConverters
 import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.Patient
 import org.resolvetosavelives.red.newentry.search.PatientAddress
+import org.resolvetosavelives.red.newentry.search.PatientWithAddressAndPhone
 import org.resolvetosavelives.red.newentry.search.PatientPhoneNumber
 import org.resolvetosavelives.red.newentry.search.PatientPhoneNumberType
 import org.resolvetosavelives.red.newentry.search.PatientStatus
-import org.resolvetosavelives.red.newentry.search.PatientWithAddress
-import org.resolvetosavelives.red.newentry.search.PatientWithPhoneNumber
 import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.resolvetosavelives.red.util.InstantRoomTypeConverter
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 
 @Database(
-    entities = [Patient::class, PatientAddress::class, PatientPhoneNumber::class, PatientWithPhoneNumber::class],
+    entities = [Patient::class, PatientAddress::class, PatientPhoneNumber::class],
     version = 1,
     exportSchema = false)
 @TypeConverters(
@@ -34,5 +33,5 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun phoneNumberDao(): PatientPhoneNumber.RoomDao
 
-  abstract fun patientWithAddressDao(): PatientWithAddress.RoomDao
+  abstract fun patientAddressPhoneDao(): PatientWithAddressAndPhone.RoomDao
 }

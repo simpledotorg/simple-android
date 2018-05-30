@@ -22,6 +22,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
+  @Deprecated(message = "Use searchPatientsWithAddressesAndPhoneNumbers() instead", replaceWith = ReplaceWith("searchPatientsWithAddressesAndPhoneNumbers(query)"))
   fun searchPatients(query: String): Observable<List<Patient>> {
     if (query.isEmpty()) {
       return database.patientDao()
@@ -40,14 +41,20 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
-  fun searchPatientsWithAddresses(query: String): Observable<List<PatientWithAddress>> {
-    return database.patientWithAddressDao()
+  fun searchPatientsWithAddressesAndPhoneNumbers(query: String): Observable<List<PatientWithAddressAndPhone>> {
+    if (query.isEmpty()) {
+      return database.patientAddressPhoneDao()
+          .allRecords()
+          .toObservable()
+    }
+
+    return database.patientAddressPhoneDao()
         .search(query)
         .toObservable()
   }
 
-  fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientWithAddress>> {
-    return database.patientWithAddressDao()
+  fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientWithAddressAndPhone>> {
+    return database.patientAddressPhoneDao()
         .withSyncStatus(status)
         .firstOrError()
   }
@@ -107,7 +114,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun saveOngoingEntryAsPatient(): Completable {
-    val ageValidation = ongoingEntry()
+    val cachedOngoingEntry = ongoingEntry().cache()
+
+    val ageValidation = cachedOngoingEntry
         .flatMapCompletable {
           // TODO: Should we also check that only age or date-of-birth should be present and not both?
           if (it.hasNullDateOfBirthAndAge()) {
@@ -118,8 +127,10 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
 
     val addressUuid = UUID.randomUUID().toString()
+    val phoneUuid = UUID.randomUUID().toString()
+    val patientUuid = UUID.randomUUID().toString()
 
-    val addressSave = ongoingEntry()
+    val addressSave = cachedOngoingEntry
         .map {
           with(it) {
             PatientAddress(
@@ -133,11 +144,30 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
         .flatMapCompletable { address -> saveAddress(address) }
 
-    val patientSave = ongoingEntry()
+    val phoneNumbersSave = cachedOngoingEntry
+        .flatMapCompletable { entry ->
+          if (entry.phoneNumber == null) {
+            Completable.complete()
+          } else {
+            val number = with(entry.phoneNumber) {
+              PatientPhoneNumber(
+                  uuid = phoneUuid,
+                  patientUuid = patientUuid,
+                  phoneType = type,
+                  number = number,
+                  active = active,
+                  createdAt = Instant.now(),
+                  updatedAt = Instant.now())
+            }
+            savePhoneNumber(number)
+          }
+        }
+
+    val patientSave = cachedOngoingEntry
         .map {
           with(it) {
             Patient(
-                uuid = UUID.randomUUID().toString(),
+                uuid = patientUuid,
                 fullName = personalDetails!!.fullName,
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
@@ -157,6 +187,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return ageValidation
         .andThen(addressSave)
         .andThen(patientSave)
+        .andThen(phoneNumbersSave)
   }
 
   private fun dateConverter(dateOfBirth: String?): LocalDate? {
@@ -167,6 +198,12 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   private fun saveAddress(address: PatientAddress): Completable {
     return Completable.fromAction {
       database.addressDao().save(address)
+    }
+  }
+
+  private fun savePhoneNumber(number: PatientPhoneNumber): Completable {
+    return Completable.fromAction {
+      database.phoneNumberDao().save(number)
     }
   }
 }

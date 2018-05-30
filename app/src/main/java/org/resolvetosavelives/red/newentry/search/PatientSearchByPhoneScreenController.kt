@@ -31,7 +31,7 @@ class PatientSearchByPhoneScreenController @Inject constructor(
     return events
         .ofType(PatientPhoneNumberTextChanged::class.java)
         .map(PatientPhoneNumberTextChanged::number)
-        .flatMap(repository::searchPatients)
+        .flatMap { repository.searchPatients(it) }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 
@@ -44,7 +44,7 @@ class PatientSearchByPhoneScreenController @Inject constructor(
         .ofType(PatientSearchByPhoneProceedClicked::class.java)
         .withLatestFrom(phoneNumberChanges, { _, number -> number })
         .take(1)
-        .map { number -> OngoingPatientEntry(phoneNumbers = OngoingPatientEntry.PhoneNumbers(primary = number)) }
+        .map { number -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(number)) }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
   }

@@ -3,7 +3,7 @@ package org.resolvetosavelives.red.newentry.search
 data class OngoingPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
-    val phoneNumbers: PhoneNumbers? = null,
+    val phoneNumber: PhoneNumber? = null,
     val bloodPressureMeasurements: BloodPressureMeasurement? = null
 ) {
 
@@ -17,7 +17,7 @@ data class OngoingPatientEntry(
    */
   data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val ageWhenCreated: String?, val gender: Gender?)
 
-  data class PhoneNumbers(val primary: String, val secondary: String? = null)
+  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
 
   data class Address(val colonyOrVillage: String, val district: String, val state: String)
 

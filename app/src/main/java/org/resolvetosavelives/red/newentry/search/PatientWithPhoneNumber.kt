@@ -17,8 +17,8 @@ import android.arch.persistence.room.Index
           childColumns = ["phoneNumberUuid"])
     ],
     indices = [
-      (Index("patientUuid", unique = true)),
-      (Index("phoneNumberUuid", unique = true))
+      (Index("patientUuid")),
+      (Index("phoneNumberUuid"))
     ]
 )
 data class PatientWithPhoneNumber(

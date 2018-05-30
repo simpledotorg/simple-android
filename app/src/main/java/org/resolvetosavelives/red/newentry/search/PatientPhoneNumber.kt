@@ -2,15 +2,30 @@ package org.resolvetosavelives.red.newentry.search
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
+import android.arch.persistence.room.ForeignKey
+import android.arch.persistence.room.Index
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import org.threeten.bp.Instant
 
-@Entity
+@Entity(
+    foreignKeys = [
+      ForeignKey(
+          entity = Patient::class,
+          parentColumns = ["uuid"],
+          childColumns = ["patientUuid"],
+          onDelete = ForeignKey.CASCADE,
+          onUpdate = ForeignKey.CASCADE)
+    ],
+    indices = [
+      (Index("patientUuid", unique = false))
+    ])
 data class PatientPhoneNumber(
     @PrimaryKey
     val uuid: String,
+
+    val patientUuid: String,
 
     val number: String,
 

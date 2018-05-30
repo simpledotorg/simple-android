@@ -37,8 +37,8 @@ class PatientPhoneEntryScreenController @Inject constructor(
     return events
         .ofType<ScreenCreated>()
         .flatMapSingle { repository.ongoingEntry() }
-        .filter { ongoingEntry -> ongoingEntry.phoneNumbers != null }
-        .map { ongoingEntry -> ongoingEntry.phoneNumbers }
+        .filter { ongoingEntry -> ongoingEntry.phoneNumber != null }
+        .map { ongoingEntry -> ongoingEntry.phoneNumber }
         .flatMap { phoneNumbers -> Observable.just { ui: Ui -> ui.preFill(phoneNumbers) } }
   }
 
@@ -47,6 +47,7 @@ class PatientPhoneEntryScreenController @Inject constructor(
         .ofType<PatientPrimaryPhoneTextChanged>()
         .map(PatientPrimaryPhoneTextChanged::number)
 
+    // TODO: Remove secondary number changes
     val secondaryNumberChanges = events
         .ofType<PatientSecondaryPhoneTextChanged>()
         .map(PatientSecondaryPhoneTextChanged::number)
@@ -55,9 +56,9 @@ class PatientPhoneEntryScreenController @Inject constructor(
         .ofType<PatientPhoneEntryProceedClicked>()
         .flatMapSingle { repository.ongoingEntry() }
         .withLatestFrom(primaryNumberChanges, secondaryNumberChanges,
-            { entry, primary, secondary -> entry to OngoingPatientEntry.PhoneNumbers(primary, secondary) })
+            { entry, primary, secondary -> entry to OngoingPatientEntry.PhoneNumber(primary) })
         .take(1)
-        .map { (entry, updatedPhoneNumbers) -> entry.copy(phoneNumbers = updatedPhoneNumbers) }
+        .map { (entry, updatedPhoneNumbers) -> entry.copy(phoneNumber = updatedPhoneNumbers) }
         .flatMapCompletable { updatedEntry -> repository.saveOngoingEntry(updatedEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openBloodPressureEntryScreen() })
   }

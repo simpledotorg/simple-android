@@ -19,13 +19,13 @@ data class PatientPushResponse(
 data class ValidationErrors(
 
     @Json(name = "id")
-    val id: String,
+    val uuid: String,
 
-    @Json(name = "address")
-    val addressErrors: ValidationError?,
+    @Json(name = "schema")
+    val schemaErrorMessage: String?,
 
-    @Json(name = "phone_numbers")
-    val phoneNumberErrors: ValidationError?
+    @Json(name = "age")
+    val ageErrors: List<String>?
 )
 
 @JsonClass(generateAdapter = true)

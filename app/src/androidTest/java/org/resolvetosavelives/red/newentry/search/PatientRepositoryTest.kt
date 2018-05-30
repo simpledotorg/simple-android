@@ -113,9 +113,9 @@ class PatientRepositoryTest {
     assertThat(patientWithAddress.gender).isEqualTo(Gender.FEMALE)
     assertThat(patientWithAddress.dateOfBirth).isEqualTo(LocalDate.parse("1947-08-15"))
     assertThat(patientWithAddress.createdAt).isGreaterThan(patientWithAddress.address.createdAt)
+    assertThat(patientWithAddress.syncStatus).isEqualTo(SyncStatus.PENDING)
     assertThat(patientWithAddress.address.colonyOrVillage).isEqualTo("Arambol")
     assertThat(patientWithAddress.address.state).isEqualTo("Goa")
-    assertThat(patientWithAddress.address.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
 
   @After

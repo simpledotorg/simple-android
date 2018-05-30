@@ -81,7 +81,7 @@ data class PatientAddressPayload(
     val updatedAt: Instant
 ) {
 
-  fun toDatabaseModel(updatedStatus: SyncStatus): PatientAddress {
+  fun toDatabaseModel(): PatientAddress {
     return PatientAddress(
         uuid = uuid,
         colonyOrVillage = colonyOrVillage,
@@ -89,7 +89,6 @@ data class PatientAddressPayload(
         state = state,
         country = country,
         createdAt = createdAt,
-        updatedAt = updatedAt,
-        syncStatus = updatedStatus)
+        updatedAt = updatedAt)
   }
 }

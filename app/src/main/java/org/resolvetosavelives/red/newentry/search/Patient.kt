@@ -69,8 +69,11 @@ data class Patient(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(patient: List<Patient>)
 
-    @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:patientUuids)")
-    fun updateSyncStatus(patientUuids: List<String>, newStatus: SyncStatus)
+    @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
+    fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
+
+    @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid = :uuids")
+    fun updateSyncStatus(uuids: List<String>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(*) FROM patient")
     fun patientCount(): Flowable<Int>

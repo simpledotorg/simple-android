@@ -1,21 +1,19 @@
 package org.resolvetosavelives.red.sync
 
 import com.f2prateek.rx.preferences2.Preference
-import com.gojuno.koptional.None
 import com.gojuno.koptional.Optional
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
+import java.util.Collections
 
 class PatientSyncTest {
 
@@ -36,7 +34,7 @@ class PatientSyncTest {
 
   @Test
   fun `when pending-sync patients are empty then the server should not get called`() {
-    whenever(repository.patientsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf()))
+    whenever(repository.patientsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(Collections.emptyList()))
 
     patientSync.push().blockingAwait()
 
@@ -46,34 +44,6 @@ class PatientSyncTest {
   @Test
   fun `when a push succeeds then any patients that were created after the push started should not get marked as synced`() {
     // TODO.
-  }
-
-  @Test
-  fun `when pulling patients for the time then 'first_time' query-param should be set`() {
-    val config = PatientSyncConfig(frequency = mock(), batchSize = 10)
-    whenever(lastSyncTimestamp.asObservable()).thenReturn(Observable.just(None))
-    whenever(syncConfigProvider()).thenReturn(config)
-    whenever(api.pull(isFirstSync = true, recordsToRetrieve = config.batchSize)).thenReturn(Single.just(PatientPullResponse(listOf(), Instant.now())))
-    whenever(repository.mergeWithLocalData(any())).thenReturn(Completable.complete())
-
-    patientSync.pull().blockingAwait()
-
-    verify(api).pull(isFirstSync = true, recordsToRetrieve = config.batchSize)
-  }
-
-  @Test
-  fun `when pulling patients for subsequent times then a pagination-anchor should be set`() {
-
-  }
-
-  @Test
-  fun `when pulling patients then pagination should continue if the server has more patients`() {
-
-  }
-
-  @Test
-  fun `when pulling patients then pagination should end if the server does not have anymore patients`() {
-
   }
 
   @Test

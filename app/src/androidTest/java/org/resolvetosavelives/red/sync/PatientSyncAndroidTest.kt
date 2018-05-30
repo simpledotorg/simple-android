@@ -68,10 +68,10 @@ class PatientSyncAndroidTest {
 
     patientSync.push().blockingAwait()
 
-    repository.patientsWithSyncStatus(SyncStatus.PENDING)
+    repository.patientsWithSyncStatus(SyncStatus.DONE)
         .test()
         .await()
-        .assertValue({ patients -> patients.isEmpty() })
+        .assertValue({ patients -> patients.size == 5 })
         .assertComplete()
         .assertNoErrors()
   }

@@ -10,7 +10,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers.single
 import org.resolvetosavelives.red.newentry.search.PatientRepository
-import org.resolvetosavelives.red.newentry.search.PatientWithAddress
 import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
 import timber.log.Timber
@@ -29,35 +28,44 @@ class PatientSync @Inject constructor(
   }
 
   fun push(): Completable {
-    val cachedPatients = repository
+    val cachedPendingSyncPatients = repository
         .patientsWithSyncStatus(SyncStatus.PENDING)
-        .cache()
-
-    val pushResult = cachedPatients
         // Converting to an Observable because Single#filter() returns a Maybe.
+        // And Maybe#flatMapSingle() throws a NoSuchElementException on completion.
         .toObservable()
         .filter({ it.isNotEmpty() })
+        .cache()
+
+    val pendingToInFlight = cachedPendingSyncPatients
+        .flatMapCompletable {
+          repository.updatePatientsSyncStatus(fromStatus = SyncStatus.PENDING, toStatus = SyncStatus.IN_FLIGHT)
+        }
+
+    val networkCall = cachedPendingSyncPatients
         .map { patients -> patients.map { it.toPayload() } }
         .map(::PatientPushRequest)
         .flatMapSingle { request -> api.push(request) }
-        .flatMapSingle {
-          when {
-            it.hasValidationErrors() -> Single.just(FailedWithValidationErrors(it.validationErrors))
-            else -> cachedPatients.map(::Pushed)
-          }
+        .doOnNext { response -> logValidationErrorsIfAny(response) }
+        .map { it.validationErrors }
+        .map { errors -> errors.map { it.uuid } }
+        .flatMapCompletable { patientUuidsWithErrors ->
+          repository
+              .updatePatientsSyncStatus(fromStatus = SyncStatus.IN_FLIGHT, toStatus = SyncStatus.DONE)
+              .andThen(patientUuidsWithErrors.let {
+                when {
+                  it.isEmpty() -> Completable.complete()
+                  else -> repository.updatePatientsSyncStatus(patientUuidsWithErrors, SyncStatus.INVALID)
+                }
+              })
         }
 
-    return pushResult
-        .flatMapCompletable { result ->
-          when (result) {
-            is Pushed -> repository.markPatientsAsSynced(result.syncedPatients)
-            is FailedWithValidationErrors -> logValidationErrors(result.errors)
-          }
-        }
+    return pendingToInFlight.andThen(networkCall)
   }
 
-  private fun logValidationErrors(errors: List<ValidationErrors>?): Completable? {
-    return { Timber.e("Server sent validation errors for patients: $errors") }.toCompletable()
+  private fun logValidationErrorsIfAny(response: PatientPushResponse) {
+    if (response.validationErrors.isNotEmpty()) {
+      Timber.e("Server sent validation errors for patients: ${response.validationErrors}")
+    }
   }
 
   fun pull(): Completable {
@@ -83,9 +91,3 @@ class PatientSync @Inject constructor(
         }
   }
 }
-
-sealed class PatientPullResult
-
-data class Pushed(val syncedPatients: List<PatientWithAddress>) : PatientPullResult()
-
-data class FailedWithValidationErrors(val errors: List<ValidationErrors>?) : PatientPullResult()

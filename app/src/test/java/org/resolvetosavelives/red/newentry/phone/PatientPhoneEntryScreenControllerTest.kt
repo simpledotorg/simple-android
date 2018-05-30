@@ -1,6 +1,11 @@
 package org.resolvetosavelives.red.newentry.phone
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -15,7 +20,7 @@ class PatientPhoneEntryScreenControllerTest {
 
   private val screen: PatientPhoneEntryScreen = mock()
   private val repository: PatientRepository = mock()
-  private val dummyPhoneNumbers = OngoingPatientEntry.PhoneNumbers("123", "456")
+  private val dummyPhoneNumber = OngoingPatientEntry.PhoneNumber("123")
 
   private lateinit var controller: PatientPhoneEntryScreenController
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
@@ -40,17 +45,17 @@ class PatientPhoneEntryScreenControllerTest {
 
   @Test
   fun `when screen starts and existing phone numbers are present then they should be pre-filled`() {
-    val ongoingEntry = OngoingPatientEntry(phoneNumbers = dummyPhoneNumbers)
+    val ongoingEntry = OngoingPatientEntry(phoneNumber = dummyPhoneNumber)
     whenever(repository.ongoingEntry()).thenReturn(Single.just(ongoingEntry))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).preFill(dummyPhoneNumbers)
+    verify(screen).preFill(dummyPhoneNumber)
   }
 
   @Test
   fun `when screen starts and existing phone numbers are not present then they should not be pre-filled`() {
-    whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(phoneNumbers = null)))
+    whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(phoneNumber = null)))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -62,13 +67,13 @@ class PatientPhoneEntryScreenControllerTest {
     whenever(repository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry()))
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientPrimaryPhoneTextChanged(dummyPhoneNumbers.primary))
-    uiEvents.onNext(PatientSecondaryPhoneTextChanged(dummyPhoneNumbers.secondary!!))
+    uiEvents.onNext(PatientPrimaryPhoneTextChanged(dummyPhoneNumber.number))
+    uiEvents.onNext(PatientSecondaryPhoneTextChanged(dummyPhoneNumber.number))
     uiEvents.onNext(PatientPhoneEntryProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).saveOngoingEntry(capture())
-      assert(dummyPhoneNumbers == firstValue.phoneNumbers)
+      assert(dummyPhoneNumber == firstValue.phoneNumber)
     }
     verify(screen).openBloodPressureEntryScreen()
   }

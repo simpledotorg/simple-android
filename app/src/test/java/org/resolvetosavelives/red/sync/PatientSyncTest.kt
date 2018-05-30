@@ -15,7 +15,7 @@ import org.junit.Test
 import org.mockito.Mockito.reset
 import org.resolvetosavelives.red.newentry.search.PatientAddress
 import org.resolvetosavelives.red.newentry.search.PatientRepository
-import org.resolvetosavelives.red.newentry.search.PatientWithAddress
+import org.resolvetosavelives.red.newentry.search.PatientWithAddressAndPhone
 import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
 import org.resolvetosavelives.red.newentry.search.SyncStatus.INVALID
 import org.resolvetosavelives.red.newentry.search.SyncStatus.IN_FLIGHT
@@ -94,7 +94,7 @@ class PatientSyncTest {
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
     val patientAddress = PatientAddress("uuid-address", "colony", "district", "state", "country", mock(), mock())
-    val patientWithErrors = PatientWithAddress("uuid", "name", mock(), mock(), 0, mock(), mock(), mock(), mock(), patientAddress)
+    val patientWithErrors = PatientWithAddressAndPhone("uuid", "name", mock(), mock(), 0, mock(), mock(), mock(), mock(), patientAddress)
 
     whenever(repository.patientsWithSyncStatus(PENDING)).thenReturn(Single.just(listOf(patientWithErrors)))
     whenever(repository.updatePatientsSyncStatus(fromStatus = PENDING, toStatus = IN_FLIGHT)).thenReturn(Completable.complete())

@@ -1,1 +1,1 @@
-GIT_WORK_TREE=".." ./gradlew lintDebug testDebugUnitTest connectedCheck
+GIT_WORK_TREE=".." ./gradlew lintDebug assembleDebugUnitTest assembleAndroidTest

@@ -3,6 +3,8 @@ package org.resolvetosavelives.red.newentry.search
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Query
+import android.arch.persistence.room.Relation
+import android.arch.persistence.room.Transaction
 import io.reactivex.Flowable
 import org.intellij.lang.annotations.Language
 import org.resolvetosavelives.red.sync.PatientAddressPayload
@@ -10,7 +12,7 @@ import org.resolvetosavelives.red.sync.PatientPayload
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 
-data class PatientWithAddress(
+data class PatientWithAddressAndPhone(
 
     val uuid: String,
 
@@ -33,6 +35,9 @@ data class PatientWithAddress(
     @Embedded(prefix = "address_")
     val address: PatientAddress
 ) {
+
+  @Relation(parentColumn = "uuid", entityColumn = "patientUuid")
+  lateinit var phoneNumbers: List<PatientPhoneNumber>
 
   fun toPayload(): PatientPayload {
     return PatientPayload(
@@ -63,16 +68,25 @@ data class PatientWithAddress(
 
     companion object {
       @Language("RoomSql")
-      const val joinQuery = "SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncStatus, " +
-          "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt " +
-          "FROM patient P " +
-          "INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid"
+      const val joinQuery = """
+          SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncStatus,
+          PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state,
+          PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt
+          FROM patient P
+          INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
+          """
     }
 
+    @Transaction
     @Query("$joinQuery WHERE fullName LIKE '%' || :query || '%'")
-    fun search(query: String): Flowable<List<PatientWithAddress>>
+    fun search(query: String): Flowable<List<PatientWithAddressAndPhone>>
 
+    @Transaction
+    @Query("$joinQuery")
+    fun allRecords(): Flowable<List<PatientWithAddressAndPhone>>
+
+    @Transaction
     @Query("$joinQuery WHERE P.syncStatus == :status")
-    fun withSyncStatus(status: SyncStatus): Flowable<List<PatientWithAddress>>
+    fun withSyncStatus(status: SyncStatus): Flowable<List<PatientWithAddressAndPhone>>
   }
 }

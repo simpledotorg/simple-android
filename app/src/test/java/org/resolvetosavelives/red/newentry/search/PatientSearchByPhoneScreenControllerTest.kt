@@ -1,6 +1,10 @@
 package org.resolvetosavelives.red.newentry.search
 
-import com.nhaarman.mockito_kotlin.*
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argumentCaptor
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -52,7 +56,7 @@ class PatientSearchByPhoneScreenControllerTest {
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).saveOngoingEntry(capture())
-      assertEquals(partialNumber, firstValue.phoneNumbers!!.primary)
+      assertEquals(partialNumber, firstValue.phoneNumber!!.number)
     }
     verify(screen).openPersonalDetailsEntryScreen()
   }

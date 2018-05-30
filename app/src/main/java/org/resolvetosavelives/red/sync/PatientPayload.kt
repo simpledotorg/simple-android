@@ -45,7 +45,6 @@ data class PatientPayload(
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
-        phoneNumberUuid = null,   // TODO: Insert this when we have phone numbers.
         fullName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,

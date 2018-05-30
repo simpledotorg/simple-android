@@ -28,8 +28,7 @@ class PatientSync @Inject constructor(
   }
 
   fun push(): Completable {
-    val cachedPendingSyncPatients = repository
-        .patientsWithSyncStatus(SyncStatus.PENDING)
+    val cachedPendingSyncPatients = repository.patientsWithSyncStatus(SyncStatus.PENDING)
         // Converting to an Observable because Single#filter() returns a Maybe.
         // And Maybe#flatMapSingle() throws a NoSuchElementException on completion.
         .toObservable()

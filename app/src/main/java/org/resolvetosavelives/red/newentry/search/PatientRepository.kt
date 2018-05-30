@@ -59,6 +59,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun updatePatientsSyncStatus(patientUuids: List<String>, newStatus: SyncStatus): Completable {
+    if (patientUuids.isEmpty()) {
+      throw AssertionError()
+    }
     return Completable.fromAction {
       database.patientDao().updateSyncStatus(uuids = patientUuids, newStatus = newStatus)
     }
@@ -106,6 +109,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   fun saveOngoingEntryAsPatient(): Completable {
     val ageValidation = ongoingEntry()
         .flatMapCompletable {
+          // TODO: Should we also check that only age or date-of-birth should be present and not both?
           if (it.hasNullDateOfBirthAndAge()) {
             Completable.error(AssertionError("Both ageWhenCreated and dateOfBirth cannot be null."))
           } else {

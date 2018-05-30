@@ -64,7 +64,7 @@ data class PatientWithAddress(
     companion object {
       @Language("RoomSql")
       const val joinQuery = "SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncStatus, " +
-          "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt, PA.syncStatus address_syncStatus " +
+          "PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state, PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt " +
           "FROM patient P " +
           "INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid"
     }

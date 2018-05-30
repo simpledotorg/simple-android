@@ -3,7 +3,7 @@ package org.resolvetosavelives.red.newentry.search
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.toCompletable
+import io.reactivex.rxkotlin.toObservable
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
 import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
@@ -14,7 +14,6 @@ import org.resolvetosavelives.red.sync.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -53,22 +52,16 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .firstOrError()
   }
 
-  fun markPatientsAsSynced(patients: List<PatientWithAddress>): Completable {
-    return Completable.fromAction({
-      val patientUuids = patients
-          .map { it.uuid }
+  fun updatePatientsSyncStatus(fromStatus: SyncStatus, toStatus: SyncStatus): Completable {
+    return Completable.fromAction {
+      database.patientDao().updateSyncStatus(oldStatus = fromStatus, newStatus = toStatus)
+    }
+  }
 
-      val patientAddressUuids = patients
-          .map { it.address.uuid }
-
-      database.beginTransaction()
-
-      database.patientDao().updateSyncStatus(patientUuids, newStatus = DONE)
-      database.addressDao().updateSyncStatus(patientAddressUuids, newStatus = DONE)
-
-      database.setTransactionSuccessful()
-      database.endTransaction()
-    })
+  fun updatePatientsSyncStatus(patientUuids: List<String>, newStatus: SyncStatus): Completable {
+    return Completable.fromAction {
+      database.patientDao().updateSyncStatus(uuids = patientUuids, newStatus = newStatus)
+    }
   }
 
   private fun savePatient(patient: Patient): Completable {
@@ -76,11 +69,10 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun mergeWithLocalData(payloadsFromServer: List<PatientPayload>): Completable {
-    val addressSave = Observable.fromIterable(payloadsFromServer)
-        .map { payload -> payload.address }
-        .map { addressPayload -> addressPayload.toDatabaseModel(updatedStatus = DONE) }
-        .filter { serverCopy ->
-          val localCopy = database.addressDao().get(serverCopy.uuid)
+    return payloadsFromServer
+        .toObservable()
+        .filter { payload ->
+          val localCopy = database.patientDao().get(payload.uuid)
           when (localCopy?.syncStatus) {
             PENDING -> false
             IN_FLIGHT -> false
@@ -90,24 +82,15 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
           }
         }
         .toList()
-        .flatMapCompletable { { database.addressDao().save(it) }.toCompletable() }
+        .flatMapCompletable { payloads ->
+          Completable.fromAction {
+            val newOrUpdatedAddresses = payloads.map { it.address.toDatabaseModel() }
+            database.addressDao().save(newOrUpdatedAddresses)
 
-    val patientSave = Observable.fromIterable(payloadsFromServer)
-        .map { payload -> payload.toDatabaseModel(updatedStatus = DONE) }
-        .filter { serverCopy ->
-          val localCopy = database.patientDao().get(serverCopy.uuid)
-          when (localCopy?.syncStatus) {
-            PENDING -> false
-            IN_FLIGHT -> false
-            INVALID -> true
-            DONE -> true
-            null -> true
+            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(DONE) }
+            database.patientDao().save(newOrUpdatedPatients)
           }
         }
-        .toList()
-        .flatMapCompletable { { database.patientDao().save(it) }.toCompletable() }
-
-    return addressSave.andThen(patientSave)
   }
 
   fun ongoingEntry(): Single<OngoingPatientEntry> {
@@ -141,8 +124,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 district = address.district,
                 state = address.state,
                 createdAt = Instant.now(),
-                updatedAt = Instant.now(),
-                syncStatus = PENDING)
+                updatedAt = Instant.now())
           }
         }
         .flatMapCompletable { address -> saveAddress(address) }

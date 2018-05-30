@@ -146,7 +146,6 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 ageWhenCreated = personalDetails.ageWhenCreated?.toInt(),
 
                 addressUuid = addressUuid,
-                phoneNumberUuid = null,
 
                 createdAt = Instant.now(),
                 updatedAt = Instant.now(),

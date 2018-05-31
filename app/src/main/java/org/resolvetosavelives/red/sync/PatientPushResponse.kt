@@ -20,18 +20,8 @@ data class ValidationErrors(
     val uuid: String,
 
     @Json(name = "schema")
-    val schemaErrorMessage: String?,
+    val schemaErrorMessages: List<String>?,
 
     @Json(name = "age")
     val ageErrors: List<String>?
-)
-
-@JsonClass(generateAdapter = true)
-data class ValidationError(
-
-    @Json(name = "id")
-    val id: String,
-
-    @Json(name = "field_with_error")
-    val fieldWithError: List<String>
 )

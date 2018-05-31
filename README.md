@@ -16,3 +16,11 @@ RedApp uses a [library](https://github.com/gabrielittner/lazythreetenbp) to adap
 adb shell dumpsys jobscheduler | grep org.resolvetosavelives.red
 ```
 
+#### Android tests
+
+When compiling the project using Android Studio's `Make Project` option, it may not build files or run annotation processors inside the `androidTest` package. This can cause confusion when changes are made to android tests. As a workaround, `androidTest` can be compiled from the command line manually,
+
+```
+./gradlew assembleAndroidTest
+```
+

@@ -3,13 +3,13 @@ package org.resolvetosavelives.red.sync
 import android.app.Application
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import org.resolvetosavelives.red.util.None
-import org.resolvetosavelives.red.util.Optional
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.util.InstantRxPreferencesConverter
+import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.Optional
 import org.resolvetosavelives.red.util.OptionalRxPreferencesConverter
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -17,7 +17,7 @@ import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module
-class PatientSyncModule {
+open class PatientSyncModule {
 
   @Provides
   fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): PatientSyncApiV1 {
@@ -30,7 +30,7 @@ class PatientSyncModule {
   }
 
   @Provides
-  fun patientSyncConfig(): Single<PatientSyncConfig> {
+  open fun patientSyncConfig(): Single<PatientSyncConfig> {
     // In the future, this may come from the server.
     return Single.just(PatientSyncConfig(frequency = Duration.ofHours(1), batchSize = 50))
   }

@@ -56,18 +56,6 @@ class PatientSyncTest {
   }
 
   @Test
-  fun `unexpected errors during syncing should not get swallowed`() {
-    // Because syncing can be re-scheduled for later if the error is recoverable.
-    whenever(repository.patientsWithSyncStatus(any())).thenReturn(Single.error(NullPointerException()))
-    whenever(syncConfigProvider()).thenThrow(AssertionError())
-
-    patientSync.sync()
-        .test()
-        .await()
-        .assertError(CompositeException::class.java)
-  }
-
-  @Test
   fun `errors during push should not affect pull`() {
     whenever(repository.patientsWithSyncStatus(any())).thenReturn(Single.error(NullPointerException()))
 

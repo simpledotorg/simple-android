@@ -101,7 +101,7 @@ class PatientSyncTest {
     whenever(repository.updatePatientsSyncStatus(fromStatus = IN_FLIGHT, toStatus = DONE)).thenReturn(Completable.complete())
     whenever(repository.updatePatientsSyncStatus(listOf("uuid"), INVALID)).thenReturn(Completable.complete())
 
-    val validationErrors = ValidationErrors("uuid", "some-schema-error-message", ageErrors = null)
+    val validationErrors = ValidationErrors("uuid", listOf("some-schema-error-message"), ageErrors = null)
     whenever(api.push(any())).thenReturn(Single.just(PatientPushResponse(listOf(validationErrors))))
 
     patientSync.push().blockingAwait()

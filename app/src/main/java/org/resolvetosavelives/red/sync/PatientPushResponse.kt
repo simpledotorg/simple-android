@@ -8,12 +8,7 @@ data class PatientPushResponse(
 
     @Json(name = "errors")
     val validationErrors: List<ValidationErrors>
-) {
-
-  fun hasValidationErrors(): Boolean {
-    return validationErrors.isNotEmpty()
-  }
-}
+)
 
 /**
  * Errors present in one patient.

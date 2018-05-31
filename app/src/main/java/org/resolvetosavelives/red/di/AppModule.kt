@@ -14,7 +14,7 @@ import org.resolvetosavelives.red.sync.PatientSyncModule
 // TODO: Should this class be named as AppDaggerModule, just like QrDaggerModule?
 
 @Module(includes = [QrDaggerModule::class, PatientSyncModule::class, NetworkModule::class, StorageModule::class])
-class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
+open class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides
   fun appContext(): Application {
@@ -23,7 +23,7 @@ class AppModule(private val appContext: Application, private val databaseName: S
 
   // TODO: Move to StorageModule.
   @Provides
-  fun appDatabase(): AppDatabase {
+  open fun appDatabase(appContext: Application): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName).build()
   }
 

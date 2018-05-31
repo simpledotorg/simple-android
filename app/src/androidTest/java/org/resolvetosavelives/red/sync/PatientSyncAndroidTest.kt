@@ -1,12 +1,7 @@
 package org.resolvetosavelives.red.sync
 
-import android.app.Application
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
-import org.resolvetosavelives.red.util.Optional
-import org.resolvetosavelives.red.util.Just
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -16,39 +11,39 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.di.NetworkModule
-import org.resolvetosavelives.red.di.StorageModule
+import org.resolvetosavelives.red.TestRedApp
 import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.SyncStatus
-import org.threeten.bp.Duration
+import org.resolvetosavelives.red.util.Just
+import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
+import javax.inject.Inject
+import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
 class PatientSyncAndroidTest {
 
-  private lateinit var patientSync: PatientSync
-  private lateinit var repository: PatientRepository
-  private lateinit var database: AppDatabase
-  private lateinit var lastPullTimestamp: Preference<Optional<Instant>>
-  private lateinit var api: PatientSyncApiV1
-  private val config = PatientSyncConfig(frequency = Duration.ofHours(1), batchSize = 10)
+  @Inject
+  lateinit var configProvider: Single<PatientSyncConfig>
+
+  @Inject
+  lateinit var repository: PatientRepository
+
+  @Inject
+  lateinit var database: AppDatabase
+
+  @Inject
+  @field:[Named("last_pull_timestamp")]
+  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+
+  @Inject
+  lateinit var patientSync: PatientSync
 
   @Before
   fun setUp() {
-    // TODO: Setup DI for android tests instead of manually finding dependencies.
-    val appContext = InstrumentationRegistry.getTargetContext().applicationContext as Application
-    val networkModule = NetworkModule()
-    val patientSyncModule = PatientSyncModule()
-    val moshi = networkModule.moshi()
-    val rxSharedPrefs = StorageModule().rxSharedPreferences(appContext)
-
-    api = patientSyncModule.patientSyncApi(appContext, networkModule.retrofitBuilder(moshi))
-    lastPullTimestamp = patientSyncModule.lastPullTimestamp(rxSharedPrefs)
-    database = Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
-    repository = PatientRepository(database)
-    patientSync = PatientSync(api, repository, Single.just(config), lastPullTimestamp)
+    TestRedApp.appComponent().inject(this)
   }
 
   private fun insertDummyPatients(count: Int): Completable {
@@ -81,7 +76,7 @@ class PatientSyncAndroidTest {
     // Set lastPullTimestamp to a bit in the past.
     lastPullTimestamp.set(Just(Instant.now().minusSeconds(1)))
 
-    val patientsToInsert = 2 * config.batchSize + 7
+    val patientsToInsert = 2 * configProvider.blockingGet().batchSize + 7
 
     insertDummyPatients(count = patientsToInsert)
         .andThen(patientSync.push())

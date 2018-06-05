@@ -20,6 +20,10 @@ import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
 import org.resolvetosavelives.red.newentry.search.SyncStatus.INVALID
 import org.resolvetosavelives.red.newentry.search.SyncStatus.IN_FLIGHT
 import org.resolvetosavelives.red.newentry.search.SyncStatus.PENDING
+import org.resolvetosavelives.red.sync.patient.PatientPullResponse
+import org.resolvetosavelives.red.sync.patient.PatientPushResponse
+import org.resolvetosavelives.red.sync.patient.PatientSync
+import org.resolvetosavelives.red.sync.patient.ValidationErrors
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
@@ -27,12 +31,12 @@ import java.util.Collections
 
 class PatientSyncTest {
 
-  private val api: PatientSyncApiV1 = mock()
+  private val api: SyncApiV1 = mock()
   private val repository: PatientRepository = mock()
   private val lastSyncTimestamp: Preference<Optional<Instant>> = mock()
 
   // This is a lambda just so that the config can be changed later.
-  private val syncConfigProvider: () -> PatientSyncConfig = mock()
+  private val syncConfigProvider: () -> SyncConfig = mock()
 
   private lateinit var patientSync: PatientSync
 
@@ -59,7 +63,7 @@ class PatientSyncTest {
   fun `errors during push should not affect pull`() {
     whenever(repository.patientsWithSyncStatus(any())).thenReturn(Single.error(NullPointerException()))
 
-    val config = PatientSyncConfig(mock(), batchSize = 10)
+    val config = SyncConfig(mock(), batchSize = 10)
     whenever(syncConfigProvider()).thenReturn(config)
     whenever(lastSyncTimestamp.asObservable()).thenReturn(Observable.just(None))
     whenever(api.pull(config.batchSize, isFirstSync = true)).thenReturn(Single.just(PatientPullResponse(mock(), mock())))

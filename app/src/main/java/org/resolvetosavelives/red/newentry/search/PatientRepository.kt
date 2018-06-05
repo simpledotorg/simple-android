@@ -10,7 +10,7 @@ import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
 import org.resolvetosavelives.red.newentry.search.SyncStatus.INVALID
 import org.resolvetosavelives.red.newentry.search.SyncStatus.IN_FLIGHT
 import org.resolvetosavelives.red.newentry.search.SyncStatus.PENDING
-import org.resolvetosavelives.red.sync.PatientPayload
+import org.resolvetosavelives.red.sync.patient.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate

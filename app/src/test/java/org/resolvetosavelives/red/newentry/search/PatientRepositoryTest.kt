@@ -10,8 +10,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.sync.PatientAddressPayload
-import org.resolvetosavelives.red.sync.PatientPayload
+import org.resolvetosavelives.red.sync.patient.PatientAddressPayload
+import org.resolvetosavelives.red.sync.patient.PatientPayload
 
 @RunWith(JUnitParamsRunner::class)
 class PatientRepositoryTest {

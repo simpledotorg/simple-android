@@ -16,6 +16,7 @@ import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.SyncStatus
+import org.resolvetosavelives.red.sync.patient.PatientSync
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
@@ -26,7 +27,7 @@ import javax.inject.Named
 class PatientSyncAndroidTest {
 
   @Inject
-  lateinit var configProvider: Single<PatientSyncConfig>
+  lateinit var configProvider: Single<SyncConfig>
 
   @Inject
   lateinit var repository: PatientRepository
@@ -35,7 +36,7 @@ class PatientSyncAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
-  @field:[Named("last_pull_timestamp")]
+  @field:[Named("last_patient_pull_timestamp")]
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject

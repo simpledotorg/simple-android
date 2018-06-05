@@ -1,11 +1,13 @@
 package org.resolvetosavelives.red
 
+import android.annotation.SuppressLint
 import org.resolvetosavelives.red.di.AppComponent
 import org.resolvetosavelives.red.di.AppModule
 import org.resolvetosavelives.red.di.DaggerAppComponent
 import org.resolvetosavelives.red.sync.SyncScheduler
 import javax.inject.Inject
 
+@SuppressLint("Registered")
 class ReleaseRedApp : RedApp() {
 
   @Inject

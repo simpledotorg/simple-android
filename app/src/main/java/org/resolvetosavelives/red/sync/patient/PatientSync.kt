@@ -8,7 +8,6 @@ import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers.single
 import org.resolvetosavelives.red.newentry.search.PatientRepository
 import org.resolvetosavelives.red.newentry.search.SyncStatus
-import org.resolvetosavelives.red.sync.SyncApiV1
 import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
@@ -19,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PatientSync @Inject constructor(
-    private val api: SyncApiV1,
+    private val api: PatientSyncApiV1,
     private val repository: PatientRepository,
     private val configProvider: Single<SyncConfig>,
     @Named("last_patient_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>

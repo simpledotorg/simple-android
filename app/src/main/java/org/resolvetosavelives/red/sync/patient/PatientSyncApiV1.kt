@@ -1,16 +1,13 @@
-package org.resolvetosavelives.red.sync
+package org.resolvetosavelives.red.sync.patient
 
 import io.reactivex.Single
-import org.resolvetosavelives.red.sync.patient.PatientPullResponse
-import org.resolvetosavelives.red.sync.patient.PatientPushRequest
-import org.resolvetosavelives.red.sync.patient.PatientPushResponse
 import org.threeten.bp.Instant
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface SyncApiV1 {
+interface PatientSyncApiV1 {
 
   companion object {
     const val version = "v1"

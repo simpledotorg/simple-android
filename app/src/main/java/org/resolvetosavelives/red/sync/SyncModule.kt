@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
 import org.resolvetosavelives.red.R
+import org.resolvetosavelives.red.sync.patient.PatientSyncApiV1
 import org.resolvetosavelives.red.util.InstantRxPreferencesConverter
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
@@ -20,13 +21,13 @@ import javax.inject.Named
 open class SyncModule {
 
   @Provides
-  fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): SyncApiV1 {
+  fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): PatientSyncApiV1 {
     val baseUrl = appContext.getString(R.string.redapp_endpoint)
 
     return commonRetrofitBuilder
         .baseUrl(baseUrl)
         .build()
-        .create(SyncApiV1::class.java)
+        .create(PatientSyncApiV1::class.java)
   }
 
   @Provides

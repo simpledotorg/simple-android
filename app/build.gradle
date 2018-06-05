@@ -33,9 +33,16 @@ android {
     }
 
     release {
-      minifyEnabled true
-      shrinkResources true
+      debuggable false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+      if (runProguard.equalsIgnoreCase("true")) {
+        minifyEnabled true
+        shrinkResources true
+      } else {
+        minifyEnabled false
+        shrinkResources false
+      }
     }
   }
 
@@ -43,6 +50,7 @@ android {
     lintConfig file("$project.rootDir/quality/lint.xml")
     warningsAsErrors true
     abortOnError true
+    checkReleaseBuilds false
   }
 
   compileOptions {

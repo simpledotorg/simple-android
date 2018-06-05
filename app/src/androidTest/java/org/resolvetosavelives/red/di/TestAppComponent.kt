@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red.di
 
 import dagger.Component
+import org.resolvetosavelives.red.bp.sync.BloodPressureSyncAndroidTest
 import org.resolvetosavelives.red.sync.PatientSyncAndroidTest
 
 @AppScope
@@ -8,4 +9,5 @@ import org.resolvetosavelives.red.sync.PatientSyncAndroidTest
 interface TestAppComponent : AppComponent {
 
   fun inject(target: PatientSyncAndroidTest)
+  fun inject(target: BloodPressureSyncAndroidTest)
 }

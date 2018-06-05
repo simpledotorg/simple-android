@@ -20,8 +20,8 @@ import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
 import org.resolvetosavelives.red.newentry.search.SyncStatus.INVALID
 import org.resolvetosavelives.red.newentry.search.SyncStatus.IN_FLIGHT
 import org.resolvetosavelives.red.newentry.search.SyncStatus.PENDING
+import org.resolvetosavelives.red.sync.patient.DataPushResponse
 import org.resolvetosavelives.red.sync.patient.PatientPullResponse
-import org.resolvetosavelives.red.sync.patient.PatientPushResponse
 import org.resolvetosavelives.red.sync.patient.PatientSync
 import org.resolvetosavelives.red.sync.patient.PatientSyncApiV1
 import org.resolvetosavelives.red.sync.patient.ValidationErrors
@@ -67,7 +67,7 @@ class PatientSyncTest {
     val config = SyncConfig(mock(), batchSize = 10)
     whenever(syncConfigProvider()).thenReturn(config)
     whenever(lastSyncTimestamp.asObservable()).thenReturn(Observable.just(None))
-    whenever(api.pull(config.batchSize, isFirstSync = true)).thenReturn(Single.just(PatientPullResponse(mock(), mock())))
+    whenever(api.pull(config.batchSize, isFirstPull = true)).thenReturn(Single.just(PatientPullResponse(mock(), mock())))
     whenever(repository.mergeWithLocalData(any())).thenReturn(Completable.complete())
 
     patientSync.sync().test()
@@ -75,15 +75,15 @@ class PatientSyncTest {
         .assertError(NullPointerException::class.java)
 
     verify(api, never()).push(any())
-    verify(api).pull(config.batchSize, isFirstSync = true)
+    verify(api).pull(config.batchSize, isFirstPull = true)
   }
 
   @Test
   fun `errors during pull should not affect push`() {
     whenever(repository.patientsWithSyncStatus(PENDING)).thenReturn(Single.just(listOf(mock())))
-    whenever(repository.updatePatientsSyncStatus(fromStatus = PENDING, toStatus = IN_FLIGHT)).thenReturn(Completable.complete())
-    whenever(api.push(any())).thenReturn(Single.just(PatientPushResponse(listOf())))
-    whenever(repository.updatePatientsSyncStatus(fromStatus = IN_FLIGHT, toStatus = DONE)).thenReturn(Completable.complete())
+    whenever(repository.updatePatientsSyncStatus(oldStatus = PENDING, newStatus = IN_FLIGHT)).thenReturn(Completable.complete())
+    whenever(api.push(any())).thenReturn(Single.just(DataPushResponse(listOf())))
+    whenever(repository.updatePatientsSyncStatus(oldStatus = IN_FLIGHT, newStatus = DONE)).thenReturn(Completable.complete())
 
     whenever(syncConfigProvider()).thenThrow(AssertionError())
 
@@ -92,7 +92,7 @@ class PatientSyncTest {
         .await()
         .assertError(AssertionError::class.java)
 
-    verify(api, never()).pull(recordsToRetrieve = any(), isFirstSync = any())
+    verify(api, never()).pull(recordsToPull = any(), isFirstPull = any())
     verify(api).push(any())
   }
 
@@ -102,12 +102,12 @@ class PatientSyncTest {
     val patientWithErrors = PatientWithAddressAndPhone("uuid", "name", mock(), mock(), 0, mock(), mock(), mock(), mock(), patientAddress)
 
     whenever(repository.patientsWithSyncStatus(PENDING)).thenReturn(Single.just(listOf(patientWithErrors)))
-    whenever(repository.updatePatientsSyncStatus(fromStatus = PENDING, toStatus = IN_FLIGHT)).thenReturn(Completable.complete())
-    whenever(repository.updatePatientsSyncStatus(fromStatus = IN_FLIGHT, toStatus = DONE)).thenReturn(Completable.complete())
+    whenever(repository.updatePatientsSyncStatus(oldStatus = PENDING, newStatus = IN_FLIGHT)).thenReturn(Completable.complete())
+    whenever(repository.updatePatientsSyncStatus(oldStatus = IN_FLIGHT, newStatus = DONE)).thenReturn(Completable.complete())
     whenever(repository.updatePatientsSyncStatus(listOf("uuid"), INVALID)).thenReturn(Completable.complete())
 
-    val validationErrors = ValidationErrors("uuid", listOf("some-schema-error-message"), ageErrors = null)
-    whenever(api.push(any())).thenReturn(Single.just(PatientPushResponse(listOf(validationErrors))))
+    val validationErrors = ValidationErrors("uuid", listOf("some-schema-error-message"))
+    whenever(api.push(any())).thenReturn(Single.just(DataPushResponse(listOf(validationErrors))))
 
     patientSync.push().blockingAwait()
 

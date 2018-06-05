@@ -7,8 +7,6 @@ import io.reactivex.rxkotlin.toObservable
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
 import org.resolvetosavelives.red.newentry.search.SyncStatus.DONE
-import org.resolvetosavelives.red.newentry.search.SyncStatus.INVALID
-import org.resolvetosavelives.red.newentry.search.SyncStatus.IN_FLIGHT
 import org.resolvetosavelives.red.newentry.search.SyncStatus.PENDING
 import org.resolvetosavelives.red.sync.patient.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
@@ -35,10 +33,10 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .toObservable()
   }
 
-  fun patientCount(): Observable<Int> {
+  fun patientCount(): Single<Int> {
     return database.patientDao()
         .patientCount()
-        .toObservable()
+        .firstOrError()
   }
 
   fun searchPatientsWithAddressesAndPhoneNumbers(query: String): Observable<List<PatientWithAddressAndPhone>> {
@@ -59,9 +57,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .firstOrError()
   }
 
-  fun updatePatientsSyncStatus(fromStatus: SyncStatus, toStatus: SyncStatus): Completable {
+  fun updatePatientsSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable {
     return Completable.fromAction {
-      database.patientDao().updateSyncStatus(oldStatus = fromStatus, newStatus = toStatus)
+      database.patientDao().updateSyncStatus(oldStatus = oldStatus, newStatus = newStatus)
     }
   }
 
@@ -78,18 +76,12 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 
-  fun mergeWithLocalData(payloadsFromServer: List<PatientPayload>): Completable {
-    return payloadsFromServer
+  fun mergeWithLocalData(serverPayloads: List<PatientPayload>): Completable {
+    return serverPayloads
         .toObservable()
         .filter { payload ->
           val localCopy = database.patientDao().get(payload.uuid)
-          when (localCopy?.syncStatus) {
-            PENDING -> false
-            IN_FLIGHT -> false
-            INVALID -> true
-            DONE -> true
-            null -> true
-          }
+          localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .toList()
         .flatMapCompletable { payloads ->

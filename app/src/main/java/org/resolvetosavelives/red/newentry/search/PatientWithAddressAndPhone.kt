@@ -7,8 +7,8 @@ import android.arch.persistence.room.Relation
 import android.arch.persistence.room.Transaction
 import io.reactivex.Flowable
 import org.intellij.lang.annotations.Language
-import org.resolvetosavelives.red.sync.PatientAddressPayload
-import org.resolvetosavelives.red.sync.PatientPayload
+import org.resolvetosavelives.red.sync.patient.PatientAddressPayload
+import org.resolvetosavelives.red.sync.patient.PatientPayload
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 

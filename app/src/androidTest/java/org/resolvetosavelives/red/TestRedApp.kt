@@ -8,8 +8,8 @@ import org.resolvetosavelives.red.di.AppComponent
 import org.resolvetosavelives.red.di.AppModule
 import org.resolvetosavelives.red.di.DaggerTestAppComponent
 import org.resolvetosavelives.red.di.TestAppComponent
-import org.resolvetosavelives.red.sync.PatientSyncConfig
-import org.resolvetosavelives.red.sync.PatientSyncModule
+import org.resolvetosavelives.red.sync.SyncConfig
+import org.resolvetosavelives.red.sync.SyncModule
 import org.threeten.bp.Duration
 
 /**
@@ -31,9 +31,9 @@ class TestRedApp : RedApp() {
             return Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
           }
         })
-        .patientSyncModule(object : PatientSyncModule() {
-          override fun patientSyncConfig(): Single<PatientSyncConfig> {
-            return Single.just(PatientSyncConfig(frequency = Duration.ofHours(1), batchSize = 10))
+        .patientSyncModule(object : SyncModule() {
+          override fun patientSyncConfig(): Single<SyncConfig> {
+            return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 10))
           }
         })
         .build()

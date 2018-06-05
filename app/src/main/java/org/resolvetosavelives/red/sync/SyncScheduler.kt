@@ -10,9 +10,9 @@ import io.reactivex.Single
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class PatientSyncScheduler @Inject constructor(
+class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    private val syncConfigProvider: Single<PatientSyncConfig>
+    private val syncConfigProvider: Single<SyncConfig>
 ) {
 
   fun schedule(): Completable {
@@ -23,15 +23,15 @@ class PatientSyncScheduler @Inject constructor(
               .setRequiresBatteryNotLow(true)
               .build()
 
-          PeriodicWorkRequestBuilder<PatientSyncWorker>(config.frequency.toMillis(), TimeUnit.MILLISECONDS)
+          PeriodicWorkRequestBuilder<SyncWorker>(config.frequency.toMillis(), TimeUnit.MILLISECONDS)
               .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, TimeUnit.MINUTES)
               .setConstraints(constraints)
-              .addTag(PatientSyncWorker.TAG)
+              .addTag(SyncWorker.TAG)
               .build()
         }
         .flatMapCompletable { request ->
           Completable.fromAction({
-            workManager.cancelAllWorkByTag(PatientSyncWorker.TAG)
+            workManager.cancelAllWorkByTag(SyncWorker.TAG)
             workManager.enqueue(request)
           })
         }

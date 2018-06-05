@@ -86,7 +86,7 @@ class PatientSyncAndroidTest {
 
     patientSync.pull().blockingAwait()
 
-    val patientCountAfterPull = repository.patientCount().blockingFirst()
+    val patientCountAfterPull = repository.patientCount().blockingGet()
     assertThat(patientCountAfterPull).isAtLeast(patientsToInsert)
   }
 

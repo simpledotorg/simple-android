@@ -1,14 +1,14 @@
-package org.resolvetosavelives.red.sync.patient
+package org.resolvetosavelives.red.bp.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
-data class PatientPullResponse(
+data class BloodPressurePullResponse(
 
-    @Json(name = "patients")
-    val patients: List<PatientPayload>,
+    @Json(name = "blood_pressures")
+    val measurements: List<BloodPressureMeasurementPayload>,
 
     @Json(name = "processed_since")
     val processedSinceTimestamp: Instant

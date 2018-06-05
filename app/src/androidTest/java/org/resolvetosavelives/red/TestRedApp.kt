@@ -31,12 +31,11 @@ class TestRedApp : RedApp() {
             return Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
           }
         })
-        .patientSyncModule(object : SyncModule() {
-          override fun patientSyncConfig(): Single<SyncConfig> {
+        .syncModule(object : SyncModule() {
+          override fun syncConfig(): Single<SyncConfig> {
             return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 10))
           }
         })
         .build()
   }
 }
-

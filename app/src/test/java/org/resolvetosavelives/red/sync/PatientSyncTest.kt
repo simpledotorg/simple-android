@@ -23,6 +23,7 @@ import org.resolvetosavelives.red.newentry.search.SyncStatus.PENDING
 import org.resolvetosavelives.red.sync.patient.PatientPullResponse
 import org.resolvetosavelives.red.sync.patient.PatientPushResponse
 import org.resolvetosavelives.red.sync.patient.PatientSync
+import org.resolvetosavelives.red.sync.patient.PatientSyncApiV1
 import org.resolvetosavelives.red.sync.patient.ValidationErrors
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
@@ -31,7 +32,7 @@ import java.util.Collections
 
 class PatientSyncTest {
 
-  private val api: SyncApiV1 = mock()
+  private val api: PatientSyncApiV1 = mock()
   private val repository: PatientRepository = mock()
   private val lastSyncTimestamp: Preference<Optional<Instant>> = mock()
 

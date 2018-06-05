@@ -70,7 +70,7 @@ data class Patient(
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
-    @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid = :uuids")
+    @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
     fun updateSyncStatus(uuids: List<String>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(*) FROM patient")

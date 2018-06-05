@@ -5,14 +5,15 @@ import com.squareup.moshi.JsonClass
 import org.resolvetosavelives.red.bp.BloodPressureMeasurement
 import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
+import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class BloodPressureMeasurementPayload(
     @Json(name = "id")
-    val uuid: String,
+    val uuid: UUID,
 
     @Json(name = "patient_id")
-    val patientUuid: String,
+    val patientUuid: UUID,
 
     @Json(name = "systolic")
     val systolic: Int,

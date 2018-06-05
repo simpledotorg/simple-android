@@ -8,6 +8,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import org.threeten.bp.Instant
+import java.util.UUID
 
 @Entity(
     foreignKeys = [
@@ -23,9 +24,9 @@ import org.threeten.bp.Instant
     ])
 data class PatientPhoneNumber(
     @PrimaryKey
-    val uuid: String,
+    val uuid: UUID,
 
-    val patientUuid: String,
+    val patientUuid: UUID,
 
     val number: String,
 

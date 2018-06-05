@@ -14,10 +14,10 @@ import javax.inject.Inject
 @AppScope
 class BloodPressureRepository @Inject constructor(private val dao: BloodPressureMeasurement.RoomDao) {
 
-  fun save(patientUuid: String, systolic: Int, diastolic: Int): Completable {
+  fun save(patientUuid: UUID, systolic: Int, diastolic: Int): Completable {
     return Completable.fromAction {
       val newMeasurement = BloodPressureMeasurement(
-          uuid = UUID.randomUUID().toString(),
+          uuid = UUID.randomUUID(),
           systolic = systolic,
           diastolic = diastolic,
           createdAt = Instant.now(),
@@ -40,7 +40,7 @@ class BloodPressureRepository @Inject constructor(private val dao: BloodPressure
     }
   }
 
-  fun updateMeasurementsSyncStatus(measurementUuids: List<String>, newStatus: SyncStatus): Completable {
+  fun updateMeasurementsSyncStatus(measurementUuids: List<UUID>, newStatus: SyncStatus): Completable {
     if (measurementUuids.isEmpty()) {
       throw AssertionError()
     }

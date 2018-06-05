@@ -23,6 +23,7 @@ import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
 import java.util.Collections
+import java.util.UUID
 
 class BloodPressureSyncTest {
 
@@ -92,20 +93,22 @@ class BloodPressureSyncTest {
 
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
-    val measurementWithErrors = BloodPressureMeasurement("uuid", 144, 90, mock(), mock(), mock(), "patient-uuid")
+    val measurementUuid = UUID.randomUUID()
+
+    val measurementWithErrors = BloodPressureMeasurement(measurementUuid, 144, 90, mock(), mock(), mock(), UUID.randomUUID())
 
     whenever(repository.measurementsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(measurementWithErrors)))
     whenever(repository.updateMeasurementsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)).thenReturn(Completable.complete())
     whenever(repository.updateMeasurementsSyncStatus(oldStatus = SyncStatus.IN_FLIGHT, newStatus = SyncStatus.DONE)).thenReturn(Completable.complete())
-    whenever(repository.updateMeasurementsSyncStatus(listOf("uuid"), SyncStatus.INVALID)).thenReturn(Completable.complete())
+    whenever(repository.updateMeasurementsSyncStatus(listOf(measurementUuid), SyncStatus.INVALID)).thenReturn(Completable.complete())
 
-    val validationErrors = ValidationErrors("uuid", listOf("some-schema-error-message"))
+    val validationErrors = ValidationErrors(measurementUuid, listOf("some-schema-error-message"))
     whenever(api.push(any())).thenReturn(Single.just(DataPushResponse(listOf(validationErrors))))
 
     bpSync.push().blockingAwait()
 
     verify(repository).updateMeasurementsSyncStatus(SyncStatus.PENDING, SyncStatus.IN_FLIGHT)
-    verify(repository).updateMeasurementsSyncStatus(listOf("uuid"), SyncStatus.INVALID)
+    verify(repository).updateMeasurementsSyncStatus(listOf(measurementUuid), SyncStatus.INVALID)
   }
 
   @After

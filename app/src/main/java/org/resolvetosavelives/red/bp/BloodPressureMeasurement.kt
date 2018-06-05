@@ -10,11 +10,12 @@ import io.reactivex.Flowable
 import org.resolvetosavelives.red.bp.sync.BloodPressureMeasurementPayload
 import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
+import java.util.UUID
 
 @Entity
 data class BloodPressureMeasurement(
     @PrimaryKey
-    val uuid: String,
+    val uuid: UUID,
 
     val systolic: Int,
 
@@ -26,7 +27,7 @@ data class BloodPressureMeasurement(
 
     val syncStatus: SyncStatus,
 
-    val patientUuid: String
+    val patientUuid: UUID
 ) {
 
   fun toPayload(): BloodPressureMeasurementPayload {
@@ -49,7 +50,7 @@ data class BloodPressureMeasurement(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE bloodpressuremeasurement SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<String>, newStatus: SyncStatus)
+    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newMeasurements: List<BloodPressureMeasurement>)
@@ -58,7 +59,7 @@ data class BloodPressureMeasurement(
     fun save(newMeasurement: BloodPressureMeasurement)
 
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid LIMIT 1")
-    fun get(uuid: String): BloodPressureMeasurement?
+    fun get(uuid: UUID): BloodPressureMeasurement?
 
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
     fun measurementCount(): Flowable<Int>

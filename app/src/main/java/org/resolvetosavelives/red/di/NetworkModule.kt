@@ -8,6 +8,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.resolvetosavelives.red.BuildConfig
 import org.resolvetosavelives.red.util.InstantMoshiAdapter
 import org.resolvetosavelives.red.util.LocalDateMoshiAdapter
+import org.resolvetosavelives.red.util.UuidMoshiAdapter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -21,6 +22,7 @@ class NetworkModule {
     return Moshi.Builder()
         .add(InstantMoshiAdapter())
         .add(LocalDateMoshiAdapter())
+        .add(UuidMoshiAdapter())
         .build()
   }
 

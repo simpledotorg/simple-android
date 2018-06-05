@@ -1,32 +1,33 @@
-package org.resolvetosavelives.red.sync.patient
+package org.resolvetosavelives.red.bp.sync
 
 import io.reactivex.Single
+import org.resolvetosavelives.red.sync.patient.DataPushResponse
 import org.threeten.bp.Instant
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface PatientSyncApiV1 {
+interface BloodPressureSyncApiV1 {
 
   companion object {
     const val version = "v1"
   }
 
-  @POST("$version/patients/sync")
+  @POST("$version/blood_pressures/sync")
   fun push(
-      @Body body: PatientPushRequest
+      @Body body: BloodPressurePushRequest
   ): Single<DataPushResponse>
 
-  @GET("$version/patients/sync")
+  @GET("$version/blood_pressures/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("first_time") isFirstPull: Boolean
-  ): Single<PatientPullResponse>
+  ): Single<BloodPressurePullResponse>
 
-  @GET("$version/patients/sync")
+  @GET("$version/blood_pressures/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("processed_since") lastPullTimestamp: Instant
-  ): Single<PatientPullResponse>
+  ): Single<BloodPressurePullResponse>
 }

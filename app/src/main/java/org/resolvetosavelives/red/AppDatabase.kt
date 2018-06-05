@@ -3,6 +3,7 @@ package org.resolvetosavelives.red
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
+import org.resolvetosavelives.red.bp.BloodPressureMeasurement
 import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.Patient
 import org.resolvetosavelives.red.newentry.search.PatientAddress
@@ -15,7 +16,11 @@ import org.resolvetosavelives.red.util.InstantRoomTypeConverter
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 
 @Database(
-    entities = [Patient::class, PatientAddress::class, PatientPhoneNumber::class],
+    entities = [
+      Patient::class,
+      PatientAddress::class,
+      PatientPhoneNumber::class,
+      BloodPressureMeasurement::class],
     version = 1,
     exportSchema = false)
 @TypeConverters(
@@ -33,5 +38,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun phoneNumberDao(): PatientPhoneNumber.RoomDao
 
-  abstract fun patientAddressPhoneDao(): PatientWithAddressAndPhone.RoomDao
+  abstract fun patientWithAddressDao(): PatientWithAddressAndPhone.RoomDao
+
+  abstract fun bloodPressureDao(): BloodPressureMeasurement.RoomDao
 }

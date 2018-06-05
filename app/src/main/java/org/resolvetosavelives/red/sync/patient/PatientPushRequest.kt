@@ -1,3 +1,11 @@
 package org.resolvetosavelives.red.sync.patient
 
-data class PatientPushRequest(val patients: List<PatientPayload>)
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
+@JsonClass(generateAdapter = true)
+data class PatientPushRequest(
+
+    @Json(name = "patients")
+    val patients: List<PatientPayload>
+)

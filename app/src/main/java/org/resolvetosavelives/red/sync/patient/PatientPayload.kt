@@ -9,12 +9,13 @@ import org.resolvetosavelives.red.newentry.search.PatientStatus
 import org.resolvetosavelives.red.newentry.search.SyncStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class PatientPayload(
 
     @Json(name = "id")
-    val uuid: String,
+    val uuid: UUID,
 
     @Json(name = "full_name")
     val fullName: String,
@@ -59,7 +60,7 @@ data class PatientPayload(
 @JsonClass(generateAdapter = true)
 data class PatientAddressPayload(
     @Json(name = "id")
-    val uuid: String,
+    val uuid: UUID,
 
     @Json(name = "village_or_colony")
     val colonyOrVillage: String?,

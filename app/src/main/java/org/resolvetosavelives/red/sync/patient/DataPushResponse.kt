@@ -2,6 +2,7 @@ package org.resolvetosavelives.red.sync.patient
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class DataPushResponse(
@@ -17,7 +18,7 @@ data class DataPushResponse(
 data class ValidationErrors(
 
     @Json(name = "id")
-    val uuid: String,
+    val uuid: UUID,
 
     @Json(name = "schema")
     val schemaErrorMessages: List<String>?

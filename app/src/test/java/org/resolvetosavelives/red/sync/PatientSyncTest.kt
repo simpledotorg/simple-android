@@ -29,6 +29,7 @@ import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
 import java.util.Collections
+import java.util.UUID
 
 class PatientSyncTest {
 
@@ -98,21 +99,23 @@ class PatientSyncTest {
 
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
-    val patientAddress = PatientAddress("uuid-address", "colony", "district", "state", "country", mock(), mock())
-    val patientWithErrors = PatientWithAddressAndPhone("uuid", "name", mock(), mock(), 0, mock(), mock(), mock(), mock(), patientAddress)
+    val patientUuid = UUID.randomUUID()
+    val addressUuid = UUID.randomUUID()
+    val patientAddress = PatientAddress(addressUuid, "colony", "district", "state", "country", mock(), mock())
+    val patientWithErrors = PatientWithAddressAndPhone(patientUuid, "name", mock(), mock(), 0, mock(), mock(), mock(), mock(), patientAddress)
 
     whenever(repository.patientsWithSyncStatus(PENDING)).thenReturn(Single.just(listOf(patientWithErrors)))
     whenever(repository.updatePatientsSyncStatus(oldStatus = PENDING, newStatus = IN_FLIGHT)).thenReturn(Completable.complete())
     whenever(repository.updatePatientsSyncStatus(oldStatus = IN_FLIGHT, newStatus = DONE)).thenReturn(Completable.complete())
-    whenever(repository.updatePatientsSyncStatus(listOf("uuid"), INVALID)).thenReturn(Completable.complete())
+    whenever(repository.updatePatientsSyncStatus(listOf(patientUuid), INVALID)).thenReturn(Completable.complete())
 
-    val validationErrors = ValidationErrors("uuid", listOf("some-schema-error-message"))
+    val validationErrors = ValidationErrors(patientUuid, listOf("some-schema-error-message"))
     whenever(api.push(any())).thenReturn(Single.just(DataPushResponse(listOf(validationErrors))))
 
     patientSync.push().blockingAwait()
 
     verify(repository).updatePatientsSyncStatus(PENDING, IN_FLIGHT)
-    verify(repository).updatePatientsSyncStatus(listOf("uuid"), INVALID)
+    verify(repository).updatePatientsSyncStatus(listOf(patientUuid), INVALID)
   }
 
   @After

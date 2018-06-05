@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.sync
+package org.resolvetosavelives.red.sync.patient
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

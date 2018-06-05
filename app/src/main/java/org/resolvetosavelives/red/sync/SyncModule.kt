@@ -17,27 +17,27 @@ import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module
-open class PatientSyncModule {
+open class SyncModule {
 
   @Provides
-  fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): PatientSyncApiV1 {
+  fun patientSyncApi(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): SyncApiV1 {
     val baseUrl = appContext.getString(R.string.redapp_endpoint)
 
     return commonRetrofitBuilder
         .baseUrl(baseUrl)
         .build()
-        .create(PatientSyncApiV1::class.java)
+        .create(SyncApiV1::class.java)
   }
 
   @Provides
-  open fun patientSyncConfig(): Single<PatientSyncConfig> {
+  open fun patientSyncConfig(): Single<SyncConfig> {
     // In the future, this may come from the server.
-    return Single.just(PatientSyncConfig(frequency = Duration.ofHours(1), batchSize = 50))
+    return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 50))
   }
 
   @Provides
-  @Named("last_pull_timestamp")
+  @Named("last_patient_pull_timestamp")
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
-    return rxSharedPrefs.getObject("last_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
+    return rxSharedPrefs.getObject("last_patient_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }
 }

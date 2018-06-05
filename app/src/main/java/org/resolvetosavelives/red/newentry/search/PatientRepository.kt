@@ -63,7 +63,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     }
   }
 
-  fun updatePatientsSyncStatus(patientUuids: List<String>, newStatus: SyncStatus): Completable {
+  fun updatePatientsSyncStatus(patientUuids: List<UUID>, newStatus: SyncStatus): Completable {
     if (patientUuids.isEmpty()) {
       throw AssertionError()
     }
@@ -118,9 +118,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
           }
         }
 
-    val addressUuid = UUID.randomUUID().toString()
-    val phoneUuid = UUID.randomUUID().toString()
-    val patientUuid = UUID.randomUUID().toString()
+    val addressUuid = UUID.randomUUID()
+    val phoneUuid = UUID.randomUUID()
+    val patientUuid = UUID.randomUUID()
 
     val addressSave = cachedOngoingEntry
         .map {

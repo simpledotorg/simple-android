@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.sync.patient.PatientAddressPayload
 import org.resolvetosavelives.red.sync.patient.PatientPayload
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientRepositoryTest {
@@ -40,11 +41,14 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(mockPatientDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
 
-    val localCopy = Patient("uuid", "uuid-address", "name", mock(), mock(), 0, mock(), mock(), mock(), syncStatusOfLocalCopy)
-    whenever(mockPatientDao.get("uuid")).thenReturn(localCopy)
+    val patientUuid = UUID.randomUUID()
+    val addressUuid = UUID.randomUUID()
 
-    val serverAddress = PatientAddressPayload("uuid-address", "colony", "district", "state", "country", mock(), mock())
-    val serverPatient = PatientPayload("uuid", "name", mock(), mock(), 0, mock(), mock(), mock(), serverAddress)
+    val localCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), 0, mock(), mock(), mock(), syncStatusOfLocalCopy)
+    whenever(mockPatientDao.get(patientUuid)).thenReturn(localCopy)
+
+    val serverAddress = PatientAddressPayload(addressUuid, "colony", "district", "state", "country", mock(), mock())
+    val serverPatient = PatientPayload(patientUuid, "name", mock(), mock(), 0, mock(), mock(), mock(), serverAddress)
 
     repository.mergeWithLocalData(listOf(serverPatient)).blockingAwait()
 

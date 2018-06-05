@@ -11,6 +11,7 @@ import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 // TODO: find a better package for Patient and its related classes.
 
@@ -28,9 +29,9 @@ import org.threeten.bp.LocalDate
     ])
 data class Patient(
     @PrimaryKey
-    val uuid: String,
+    val uuid: UUID,
 
-    val addressUuid: String,
+    val addressUuid: UUID,
 
     val fullName: String,
 
@@ -59,7 +60,7 @@ data class Patient(
     fun allPatients(): Flowable<List<Patient>>
 
     @Query("SELECT * FROM patient WHERE uuid = :uuid LIMIT 1")
-    fun get(uuid: String): Patient?
+    fun get(uuid: UUID): Patient?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(patient: Patient)
@@ -71,7 +72,7 @@ data class Patient(
     fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<String>, newStatus: SyncStatus)
+    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(*) FROM patient")
     fun patientCount(): Flowable<Int>

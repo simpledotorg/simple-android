@@ -11,10 +11,11 @@ import org.resolvetosavelives.red.sync.patient.PatientAddressPayload
 import org.resolvetosavelives.red.sync.patient.PatientPayload
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 data class PatientWithAddressAndPhone(
 
-    val uuid: String,
+    val uuid: UUID,
 
     val fullName: String,
 

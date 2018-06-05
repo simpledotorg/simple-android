@@ -47,7 +47,7 @@ class BloodPressureSyncAndroidTest {
   }
 
   private fun insertDummyMeasurements(count: Int): Completable {
-    val parentPatientUuid = UUID.randomUUID().toString()
+    val parentPatientUuid = UUID.randomUUID()
     return Observable.range(0, count)
         .flatMapCompletable({ index ->
           repository.save(parentPatientUuid, systolic = 100 + index, diastolic = 50 + index)

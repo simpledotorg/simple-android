@@ -15,6 +15,7 @@ data class OngoingPatientEntry(
    * [ageWhenCreated] is stored as a String instead of an Int because it's easy
    * to forget that [Int.toString] will return literal "null" for null Ints.
    */
+  // TODO: Rename to 'age'.
   data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val ageWhenCreated: String?, val gender: Gender?)
 
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)

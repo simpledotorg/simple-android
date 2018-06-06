@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red.newentry.search
 
 import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
@@ -39,7 +40,8 @@ data class Patient(
 
     val dateOfBirth: LocalDate?,
 
-    val ageWhenCreated: Int?,
+    @Embedded(prefix = "age_")
+    val age: Age?,
 
     val status: PatientStatus,
 

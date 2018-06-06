@@ -102,7 +102,17 @@ class PatientSyncTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
     val patientAddress = PatientAddress(addressUuid, "colony", "district", "state", "country", mock(), mock())
-    val patientWithErrors = PatientWithAddressAndPhone(patientUuid, "name", mock(), mock(), 0, mock(), mock(), mock(), mock(), patientAddress)
+    val patientWithErrors = PatientWithAddressAndPhone(
+        uuid = patientUuid,
+        gender = mock(),
+        dateOfBirth = mock(),
+        fullName = "name",
+        age = mock(),
+        status = mock(),
+        createdAt = mock(),
+        updatedAt = mock(),
+        syncStatus = mock(),
+        address = patientAddress)
 
     whenever(repository.patientsWithSyncStatus(PENDING)).thenReturn(Single.just(listOf(patientWithErrors)))
     whenever(repository.updatePatientsSyncStatus(oldStatus = PENDING, newStatus = IN_FLIGHT)).thenReturn(Completable.complete())

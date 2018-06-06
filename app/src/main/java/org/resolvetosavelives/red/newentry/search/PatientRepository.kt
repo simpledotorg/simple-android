@@ -165,7 +165,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 status = PatientStatus.ACTIVE,
 
                 dateOfBirth = dateConverter(personalDetails.dateOfBirth),
-                ageWhenCreated = personalDetails.ageWhenCreated?.toInt(),
+                age = personalDetails.ageWhenCreated?.let {
+                  Age(value = personalDetails.ageWhenCreated.toInt(), updatedAt = Instant.now())
+                },
 
                 addressUuid = addressUuid,
 

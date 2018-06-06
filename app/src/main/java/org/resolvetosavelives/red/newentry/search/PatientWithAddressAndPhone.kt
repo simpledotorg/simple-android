@@ -23,7 +23,8 @@ data class PatientWithAddressAndPhone(
 
     val dateOfBirth: LocalDate?,
 
-    val ageWhenCreated: Int?,
+    @Embedded(prefix = "age_")
+    val age: Age?,
 
     val status: PatientStatus,
 
@@ -46,7 +47,8 @@ data class PatientWithAddressAndPhone(
         fullName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,
-        ageWhenCreated = ageWhenCreated,
+        age = age?.value,
+        ageUpdatedAt = age?.updatedAt,
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
@@ -70,7 +72,7 @@ data class PatientWithAddressAndPhone(
     companion object {
       @Language("RoomSql")
       const val joinQuery = """
-          SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.ageWhenCreated, P.status, P.createdAt, P.updatedAt, P.syncStatus,
+          SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.status, P.createdAt, P.updatedAt, P.syncStatus,
           PA.uuid address_uuid, PA.colonyOrVillage address_colonyOrVillage, PA.district address_district, PA.state address_state,
           PA.country address_country, PA.createdAt address_createdAt, PA.updatedAt address_updatedAt
           FROM patient P

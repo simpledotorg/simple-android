@@ -2,6 +2,7 @@ package org.resolvetosavelives.red.sync.patient
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.resolvetosavelives.red.newentry.search.Age
 import org.resolvetosavelives.red.newentry.search.Gender
 import org.resolvetosavelives.red.newentry.search.Patient
 import org.resolvetosavelives.red.newentry.search.PatientAddress
@@ -27,7 +28,10 @@ data class PatientPayload(
     val dateOfBirth: LocalDate?,
 
     @Json(name = "age")
-    val ageWhenCreated: Int?,
+    val age: Int?,
+
+    @Json(name = "age_updated_at")
+    val ageUpdatedAt: Instant?,
 
     @Json(name = "status")
     val status: PatientStatus,
@@ -49,7 +53,9 @@ data class PatientPayload(
         fullName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,
-        ageWhenCreated = ageWhenCreated,
+        age = age?.let {
+          Age(value = age, updatedAt = ageUpdatedAt!!)
+        },
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,

@@ -44,11 +44,28 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val localCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), 0, mock(), mock(), mock(), syncStatusOfLocalCopy)
+    val localCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), mock(), mock(), mock(), mock(), syncStatusOfLocalCopy)
     whenever(mockPatientDao.get(patientUuid)).thenReturn(localCopy)
 
-    val serverAddress = PatientAddressPayload(addressUuid, "colony", "district", "state", "country", mock(), mock())
-    val serverPatient = PatientPayload(patientUuid, "name", mock(), mock(), 0, mock(), mock(), mock(), serverAddress)
+    val serverAddress = PatientAddressPayload(
+        uuid = addressUuid,
+        colonyOrVillage = "colony",
+        district = "district",
+        state = "state",
+        country = "country",
+        createdAt = mock(),
+        updatedAt = mock())
+    val serverPatient = PatientPayload(
+        uuid = patientUuid,
+        fullName = "name",
+        gender = mock(),
+        dateOfBirth = mock(),
+        age = 0,
+        ageUpdatedAt = mock(),
+        status = mock(),
+        createdAt = mock(),
+        updatedAt = mock(),
+        address = serverAddress)
 
     repository.mergeWithLocalData(listOf(serverPatient)).blockingAwait()
 

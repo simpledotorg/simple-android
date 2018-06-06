@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.newentry.search.PatientSearchByPhoneScreen android:id="@+id/patientsearch_root"
+<org.resolvetosavelives.red.search.PatientSearchByPhoneScreen android:id="@+id/patientsearch_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -44,4 +44,4 @@
     android:layout_alignParentEnd="true"
     android:layout_margin="@dimen/spacing_12"
     android:text="@string/patientsearch_new_patient" />
-</org.resolvetosavelives.red.newentry.search.PatientSearchByPhoneScreen>
+</org.resolvetosavelives.red.search.PatientSearchByPhoneScreen>

@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.search
+package org.resolvetosavelives.red.search
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager

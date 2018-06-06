@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.search
+package org.resolvetosavelives.red.search
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity

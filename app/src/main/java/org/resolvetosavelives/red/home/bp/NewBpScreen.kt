@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.search.PatientSearchByPhoneScreen
+import org.resolvetosavelives.red.search.PatientSearchByPhoneScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import javax.inject.Inject
 

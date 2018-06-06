@@ -12,10 +12,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.TestRedApp
-import org.resolvetosavelives.red.newentry.search.Gender
-import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
-import org.resolvetosavelives.red.newentry.search.PatientRepository
-import org.resolvetosavelives.red.newentry.search.SyncStatus
+import org.resolvetosavelives.red.search.Gender
+import org.resolvetosavelives.red.search.OngoingPatientEntry
+import org.resolvetosavelives.red.search.PatientRepository
+import org.resolvetosavelives.red.search.SyncStatus
 import org.resolvetosavelives.red.sync.patient.PatientSync
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.Optional

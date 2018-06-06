@@ -3,8 +3,7 @@ package org.resolvetosavelives.red.newentry.search
 data class OngoingPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
-    val phoneNumber: PhoneNumber? = null,
-    val bloodPressureMeasurements: BloodPressureMeasurement? = null
+    val phoneNumber: PhoneNumber? = null
 ) {
 
   fun hasNullDateOfBirthAndAge(): Boolean {
@@ -21,7 +20,4 @@ data class OngoingPatientEntry(
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
 
   data class Address(val colonyOrVillage: String, val district: String, val state: String)
-
-  // TODO: Persist to Patient
-  data class BloodPressureMeasurement(val systolic: Int, val diastolic: Int)
 }

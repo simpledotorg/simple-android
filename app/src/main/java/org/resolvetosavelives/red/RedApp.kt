@@ -2,6 +2,7 @@ package org.resolvetosavelives.red
 
 import android.app.Application
 import com.gabrielittner.threetenbp.LazyThreeTen
+import com.tspoon.traceur.Traceur
 import org.resolvetosavelives.red.di.AppComponent
 import timber.log.Timber
 
@@ -16,6 +17,7 @@ abstract class RedApp : Application() {
 
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
+      Traceur.enableLogging()
     }
     LazyThreeTen.init(this)
     appComponent = buildDaggerGraph()

@@ -6,7 +6,7 @@ import dagger.Provides
 import io.reactivex.Single
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.bp.BloodPressureModule
-import org.resolvetosavelives.red.sync.patient.PatientSyncModule
+import org.resolvetosavelives.red.patient.sync.PatientSyncModule
 import org.threeten.bp.Duration
 import retrofit2.Retrofit
 import javax.inject.Named

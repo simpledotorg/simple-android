@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.sync
+package org.resolvetosavelives.red.patient
 
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
@@ -12,11 +12,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.TestRedApp
-import org.resolvetosavelives.red.patient.Gender
-import org.resolvetosavelives.red.patient.OngoingPatientEntry
-import org.resolvetosavelives.red.patient.PatientRepository
-import org.resolvetosavelives.red.patient.SyncStatus
-import org.resolvetosavelives.red.sync.patient.PatientSync
+import org.resolvetosavelives.red.patient.sync.PatientSync
+import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant

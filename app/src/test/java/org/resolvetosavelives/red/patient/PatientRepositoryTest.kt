@@ -10,8 +10,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.sync.patient.PatientAddressPayload
-import org.resolvetosavelives.red.sync.patient.PatientPayload
+import org.resolvetosavelives.red.patient.sync.PatientAddressPayload
+import org.resolvetosavelives.red.patient.sync.PatientPayload
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

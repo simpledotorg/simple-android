@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.sync
+package org.resolvetosavelives.red.patient
 
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.any
@@ -13,18 +13,16 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.reset
-import org.resolvetosavelives.red.patient.PatientAddress
-import org.resolvetosavelives.red.patient.PatientRepository
-import org.resolvetosavelives.red.patient.PatientWithAddressAndPhone
 import org.resolvetosavelives.red.patient.SyncStatus.DONE
 import org.resolvetosavelives.red.patient.SyncStatus.INVALID
 import org.resolvetosavelives.red.patient.SyncStatus.IN_FLIGHT
 import org.resolvetosavelives.red.patient.SyncStatus.PENDING
-import org.resolvetosavelives.red.sync.patient.DataPushResponse
-import org.resolvetosavelives.red.sync.patient.PatientPullResponse
-import org.resolvetosavelives.red.sync.patient.PatientSync
-import org.resolvetosavelives.red.sync.patient.PatientSyncApiV1
-import org.resolvetosavelives.red.sync.patient.ValidationErrors
+import org.resolvetosavelives.red.patient.sync.DataPushResponse
+import org.resolvetosavelives.red.patient.sync.PatientPullResponse
+import org.resolvetosavelives.red.patient.sync.PatientSync
+import org.resolvetosavelives.red.patient.sync.PatientSyncApiV1
+import org.resolvetosavelives.red.patient.sync.ValidationErrors
+import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant

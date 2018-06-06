@@ -13,7 +13,7 @@ import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.TestRedApp
 import org.resolvetosavelives.red.bp.BloodPressureRepository
-import org.resolvetosavelives.red.newentry.search.SyncStatus
+import org.resolvetosavelives.red.search.SyncStatus
 import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.Optional

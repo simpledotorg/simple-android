@@ -5,8 +5,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.resolvetosavelives.red.bp.sync.BloodPressureMeasurementPayload
 import org.resolvetosavelives.red.di.AppScope
-import org.resolvetosavelives.red.newentry.search.SyncStatus
-import org.resolvetosavelives.red.newentry.search.canBeOverriddenByServerCopy
+import org.resolvetosavelives.red.search.SyncStatus
+import org.resolvetosavelives.red.search.canBeOverriddenByServerCopy
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject

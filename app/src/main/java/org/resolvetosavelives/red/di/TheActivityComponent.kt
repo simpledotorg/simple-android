@@ -7,7 +7,7 @@ import org.resolvetosavelives.red.home.bp.NewBpScreen
 import org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
 import org.resolvetosavelives.red.newentry.phone.PatientPhoneEntryScreen
-import org.resolvetosavelives.red.newentry.search.PatientSearchByPhoneScreen
+import org.resolvetosavelives.red.search.PatientSearchByPhoneScreen
 import org.resolvetosavelives.red.newentry.success.PatientSavedScreen
 import org.resolvetosavelives.red.qrscan.AadhaarScanScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter

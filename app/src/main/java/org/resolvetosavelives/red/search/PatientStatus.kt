@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.search
+package org.resolvetosavelives.red.search
 
 import com.squareup.moshi.Json
 import org.resolvetosavelives.red.util.RoomEnumTypeConverter

@@ -11,9 +11,9 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import org.resolvetosavelives.red.newentry.search.Gender
-import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
-import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.search.Gender
+import org.resolvetosavelives.red.search.OngoingPatientEntry
+import org.resolvetosavelives.red.search.PatientRepository
 import org.resolvetosavelives.red.util.RuntimePermissionResult
 import org.resolvetosavelives.red.util.Vibrator
 import org.resolvetosavelives.red.widgets.UiEvent

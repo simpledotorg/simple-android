@@ -15,7 +15,7 @@ import org.junit.Test
 import org.mockito.Mockito
 import org.resolvetosavelives.red.bp.BloodPressureMeasurement
 import org.resolvetosavelives.red.bp.BloodPressureRepository
-import org.resolvetosavelives.red.newentry.search.SyncStatus
+import org.resolvetosavelives.red.search.SyncStatus
 import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.sync.patient.DataPushResponse
 import org.resolvetosavelives.red.sync.patient.ValidationErrors

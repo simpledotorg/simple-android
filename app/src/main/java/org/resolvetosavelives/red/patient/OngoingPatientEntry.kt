@@ -1,5 +1,10 @@
 package org.resolvetosavelives.red.patient
 
+/**
+ * Represents user input on the UI, which is why every field is a String.
+ * Parsing of user input happens later when this data class is converted
+ * into a Patient object in [PatientRepository.saveOngoingEntryAsPatient].
+ */
 data class OngoingPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
@@ -7,15 +12,14 @@ data class OngoingPatientEntry(
 ) {
 
   fun hasNullDateOfBirthAndAge(): Boolean {
-    return personalDetails!!.dateOfBirth.isNullOrEmpty() && personalDetails.ageWhenCreated.isNullOrEmpty()
+    return personalDetails!!.dateOfBirth.isNullOrEmpty() && personalDetails.age.isNullOrEmpty()
   }
 
   /**
-   * [ageWhenCreated] is stored as a String instead of an Int because it's easy
+   * [age] is stored as a String instead of an Int because it's easy
    * to forget that [Int.toString] will return literal "null" for null Ints.
    */
-  // TODO: Rename to 'age'.
-  data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val ageWhenCreated: String?, val gender: Gender?)
+  data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?)
 
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
 

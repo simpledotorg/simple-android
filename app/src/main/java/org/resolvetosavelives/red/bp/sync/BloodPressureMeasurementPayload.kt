@@ -3,7 +3,7 @@ package org.resolvetosavelives.red.bp.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.resolvetosavelives.red.bp.BloodPressureMeasurement
-import org.resolvetosavelives.red.search.SyncStatus
+import org.resolvetosavelives.red.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 

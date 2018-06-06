@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded
@@ -13,8 +13,6 @@ import io.reactivex.Flowable
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
-
-// TODO: find a better package for Patient and its related classes.
 
 @Entity(
     foreignKeys = [

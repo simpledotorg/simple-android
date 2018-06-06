@@ -16,6 +16,7 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
+import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject

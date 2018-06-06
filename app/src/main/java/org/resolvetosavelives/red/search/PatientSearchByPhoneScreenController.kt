@@ -4,6 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.withLatestFrom
+import org.resolvetosavelives.red.patient.OngoingPatientEntry
+import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 

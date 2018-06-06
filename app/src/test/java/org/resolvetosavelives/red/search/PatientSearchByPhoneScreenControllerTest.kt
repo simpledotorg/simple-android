@@ -11,13 +11,9 @@ import io.reactivex.subjects.PublishSubject
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.resolvetosavelives.red.search.OngoingPatientEntry
-import org.resolvetosavelives.red.search.Patient
-import org.resolvetosavelives.red.search.PatientPhoneNumberTextChanged
-import org.resolvetosavelives.red.search.PatientRepository
-import org.resolvetosavelives.red.search.PatientSearchByPhoneProceedClicked
-import org.resolvetosavelives.red.search.PatientSearchByPhoneScreen
-import org.resolvetosavelives.red.search.PatientSearchByPhoneScreenController
+import org.resolvetosavelives.red.patient.OngoingPatientEntry
+import org.resolvetosavelives.red.patient.Patient
+import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.widgets.UiEvent
 
 class PatientSearchByPhoneScreenControllerTest {

@@ -45,7 +45,7 @@ class PatientRepositoryAndroidTest {
 
     val search2 = patientRepository.searchPatientsWithAddressesAndPhoneNumbers("ashok").blockingFirst()
     assertThat(search2).hasSize(1)
-    assertThat(search2.first().ageWhenCreated).isNull()
+    assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
     assertThat(search2.first().phoneNumbers).hasSize(1)
     assertThat(search2.first().phoneNumbers.first().number).isEqualTo("2277")
@@ -74,7 +74,7 @@ class PatientRepositoryAndroidTest {
     val patient = search2[0]
     assertThat(patient.fullName).isEqualTo("Ashok Kumar")
     assertThat(patient.dateOfBirth).isNull()
-    assertThat(patient.ageWhenCreated).isEqualTo(42)
+    assertThat(patient.age!!.value).isEqualTo(42)
     assertThat(search2.first().phoneNumbers).hasSize(1)
     assertThat(patient.phoneNumbers.first().number).isEqualTo("299792458")
   }

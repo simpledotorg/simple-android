@@ -19,7 +19,4 @@
   </style>
 
   <style name="RedApp.Button.Borderless" parent="Base.Widget.AppCompat.Button.Borderless" tools:ignore="UnusedResources" />
-
-  <style name="RedApp.Button.Borderless.Colored" parent="Base.Widget.AppCompat.Button.Borderless.Colored" />
-
 </resources>

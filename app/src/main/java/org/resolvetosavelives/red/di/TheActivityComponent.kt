@@ -5,7 +5,6 @@ import dagger.Subcomponent
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.home.bp.NewBpScreen
 import org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen
-import org.resolvetosavelives.red.newentry.drugs.PatientCurrentDrugsEntryScreen
 import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
 import org.resolvetosavelives.red.newentry.phone.PatientPhoneEntryScreen
 import org.resolvetosavelives.red.newentry.search.PatientSearchByPhoneScreen
@@ -20,7 +19,6 @@ interface TheActivityComponent {
   fun inject(target: TheActivity)
   fun inject(target: PatientPersonalDetailsEntryScreen)
   fun inject(target: PatientAddressEntryScreen)
-  fun inject(target: PatientCurrentDrugsEntryScreen)
   fun inject(target: PatientPhoneEntryScreen)
   fun inject(target: PatientSavedScreen)
   fun inject(target: PatientSearchByPhoneScreen)

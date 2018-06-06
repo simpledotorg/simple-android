@@ -6,8 +6,8 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers.single
-import org.resolvetosavelives.red.newentry.search.PatientRepository
-import org.resolvetosavelives.red.newentry.search.SyncStatus
+import org.resolvetosavelives.red.search.PatientRepository
+import org.resolvetosavelives.red.search.SyncStatus
 import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None

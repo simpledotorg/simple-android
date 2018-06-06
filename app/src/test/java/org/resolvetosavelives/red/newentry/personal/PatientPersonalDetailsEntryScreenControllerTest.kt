@@ -12,9 +12,9 @@ import io.reactivex.subjects.PublishSubject
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
-import org.resolvetosavelives.red.newentry.search.Gender
-import org.resolvetosavelives.red.newentry.search.OngoingPatientEntry
-import org.resolvetosavelives.red.newentry.search.PatientRepository
+import org.resolvetosavelives.red.search.Gender
+import org.resolvetosavelives.red.search.OngoingPatientEntry
+import org.resolvetosavelives.red.search.PatientRepository
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 

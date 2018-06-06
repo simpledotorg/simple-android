@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.newentry.search
+package org.resolvetosavelives.red.search
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
@@ -11,6 +11,13 @@ import io.reactivex.subjects.PublishSubject
 import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
+import org.resolvetosavelives.red.search.OngoingPatientEntry
+import org.resolvetosavelives.red.search.Patient
+import org.resolvetosavelives.red.search.PatientPhoneNumberTextChanged
+import org.resolvetosavelives.red.search.PatientRepository
+import org.resolvetosavelives.red.search.PatientSearchByPhoneProceedClicked
+import org.resolvetosavelives.red.search.PatientSearchByPhoneScreen
+import org.resolvetosavelives.red.search.PatientSearchByPhoneScreenController
 import org.resolvetosavelives.red.widgets.UiEvent
 
 class PatientSearchByPhoneScreenControllerTest {

@@ -84,7 +84,7 @@ class AadhaarScanScreenController @Inject constructor(
         personalDetails = OngoingPatientEntry.PersonalDetails(
             fullName = aadhaarQrData.fullName.orEmpty(),
             dateOfBirth = aadhaarQrData.dateOfBirth.orEmpty(),
-            ageWhenCreated = null,
+            age = null,
             gender = aadhaarQrData.gender),
         address = OngoingPatientEntry.Address(
             colonyOrVillage = aadhaarQrData.villageOrTownOrCity.orEmpty(),

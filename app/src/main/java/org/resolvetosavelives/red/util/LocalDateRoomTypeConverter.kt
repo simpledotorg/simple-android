@@ -8,8 +8,10 @@ import org.threeten.bp.format.DateTimeFormatter
 
 class LocalDateRoomTypeConverter {
 
-  // TODO: Use DateTimeFormatter.ISO_DATE
-  private val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+  companion object {
+    // TODO: Use DateTimeFormatter.ISO_DATE
+    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")!!
+  }
 
   @TypeConverter
   fun toLocalDate(value: String?): LocalDate? {

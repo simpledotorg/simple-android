@@ -19,4 +19,5 @@
   <string name="patiententry_colony_or_village">Colony or village</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
+  <string name="patiententry_save_patient">Save patient</string>
 </resources>

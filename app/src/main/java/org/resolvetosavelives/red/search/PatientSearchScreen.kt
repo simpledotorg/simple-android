@@ -21,19 +21,19 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
 
-class PatientSearchByPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = PatientSearchByPhoneScreenKey()
+    val KEY = PatientSearchScreenKey()
   }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PatientSearchByPhoneScreenController
+  lateinit var controller: PatientSearchScreenController
 
-  private val phoneNumberEditText by bindView<EditText>(R.id.patientsearch_phone_number)
+  private val searchEditText by bindView<EditText>(R.id.patientsearch_text)
   private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
   private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
   private val resultsAdapter = PatientSearchResultsAdapter()
@@ -53,15 +53,15 @@ class PatientSearchByPhoneScreen(context: Context, attrs: AttributeSet) : Relati
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun phoneNumberTextChanges() = RxTextView.textChanges(phoneNumberEditText)
+  private fun phoneNumberTextChanges() = RxTextView.textChanges(searchEditText)
       .map(CharSequence::toString)
       .map(::PatientPhoneNumberTextChanged)
 
   private fun proceedButtonClicks() = RxView.clicks(newPatientButton)
-      .map { PatientSearchByPhoneProceedClicked() }
+      .map { PatientSearchProceedClicked() }
 
   fun showKeyboardOnPhoneNumberField() {
-    phoneNumberEditText.showKeyboard()
+    searchEditText.showKeyboard()
   }
 
   fun setupSearchResultsList() {

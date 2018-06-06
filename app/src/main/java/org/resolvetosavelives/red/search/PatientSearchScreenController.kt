@@ -9,10 +9,10 @@ import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
-private typealias Ui = PatientSearchByPhoneScreen
+private typealias Ui = PatientSearchScreen
 private typealias UiChange = (Ui) -> Unit
 
-class PatientSearchByPhoneScreenController @Inject constructor(
+class PatientSearchScreenController @Inject constructor(
     private val repository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -43,7 +43,7 @@ class PatientSearchByPhoneScreenController @Inject constructor(
         .map(PatientPhoneNumberTextChanged::number)
 
     return events
-        .ofType(PatientSearchByPhoneProceedClicked::class.java)
+        .ofType(PatientSearchProceedClicked::class.java)
         .withLatestFrom(phoneNumberChanges, { _, number -> number })
         .take(1)
         .map { number -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(number)) }

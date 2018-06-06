@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.search.PatientSearchByPhoneScreen
+import org.resolvetosavelives.red.search.PatientSearchScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import javax.inject.Inject
 
@@ -45,6 +45,6 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   }
 
   fun openNewPatientScreen() {
-    screenRouter.push(PatientSearchByPhoneScreen.KEY)
+    screenRouter.push(PatientSearchScreen.KEY)
   }
 }

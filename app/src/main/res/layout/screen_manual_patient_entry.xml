@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.newentry.PatientEntryScreen android:id="@+id/patiententry_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="horizontal">
+
+  <ImageButton
+    android:id="@+id/patiententry_up"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackgroundBorderless"
+    android:contentDescription="@string/patiententry_contentdescription_up_button"
+    android:padding="@dimen/spacing_16"
+    android:src="@drawable/ic_arrow_back_24dp"
+    android:tint="@color/gray_600" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingTop="@dimen/spacing_12"
+      tools:ignore="RtlSymmetry">
+
+      <android.support.design.widget.TextInputLayout
+        android:id="@+id/patiententry_full_name_inputlayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+          android:id="@+id/patiententry_full_name"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_full_name"
+          android:inputType="textPersonName" />
+      </android.support.design.widget.TextInputLayout>
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+          android:id="@+id/patiententry_phone_number_inputlayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <EditText
+            android:id="@+id/patiententry_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_phone_number"
+            android:inputType="phone" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatCheckBox
+          android:id="@+id/patiententry_phone_number_none"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical|end"
+          android:layout_marginEnd="8dp"
+          android:text="@string/patiententry_none"
+          android:textColor="@color/gray_600"
+          app:buttonTint="@color/gray_400" />
+      </FrameLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16">
+
+        <android.support.design.widget.TextInputLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/patiententry_date_of_birth"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_date_of_birth_unfocused"
+            android:inputType="date" />
+        </android.support.design.widget.TextInputLayout>
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:layout_marginBottom="-6dp"
+          android:layout_marginEnd="@dimen/spacing_16"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:text="@string/patiententry_dateofbirth_and_age_separator"
+          android:textAllCaps="true" />
+
+        <android.support.design.widget.TextInputLayout
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content">
+
+          <EditText
+            android:id="@+id/patiententry_age"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_age"
+            android:inputType="number"
+            android:maxLength="3" />
+        </android.support.design.widget.TextInputLayout>
+      </LinearLayout>
+
+      <RadioGroup
+        android:id="@+id/patiententry_gender_radiogroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.AppCompatRadioButton
+          android:id="@+id/patiententry_gender_male"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="@string/patiententry_gender_female"
+          android:textColor="@color/gray_600"
+          android:textSize="@dimen/textsize_16" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+          android:id="@+id/patiententry_gender_female"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:text="@string/patiententry_gender_male"
+          android:textColor="@color/gray_600"
+          android:textSize="@dimen/textsize_16" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+          android:id="@+id/patiententry_gender_transgender"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:text="@string/patiententry_gender_transgender"
+          android:textColor="@color/gray_600"
+          android:textSize="@dimen/textsize_16" />
+      </RadioGroup>
+
+      <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16">
+
+        <EditText
+          android:id="@+id/patiententry_colony_or_village"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="@string/patiententry_colony_or_village"
+          android:inputType="textPostalAddress" />
+      </android.support.design.widget.TextInputLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:baselineAligned="false"
+        android:orientation="horizontal">
+
+        <android.support.design.widget.TextInputLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/patiententry_district"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_district"
+            android:inputType="textPostalAddress" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <EditText
+            android:id="@+id/patiententry_state"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_state"
+            android:inputType="textPostalAddress" />
+        </android.support.design.widget.TextInputLayout>
+      </LinearLayout>
+    </LinearLayout>
+  </ScrollView>
+</org.resolvetosavelives.red.newentry.PatientEntryScreen>

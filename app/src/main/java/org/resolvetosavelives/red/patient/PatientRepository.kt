@@ -8,7 +8,7 @@ import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
 import org.resolvetosavelives.red.patient.SyncStatus.DONE
 import org.resolvetosavelives.red.patient.SyncStatus.PENDING
-import org.resolvetosavelives.red.sync.patient.PatientPayload
+import org.resolvetosavelives.red.patient.sync.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate

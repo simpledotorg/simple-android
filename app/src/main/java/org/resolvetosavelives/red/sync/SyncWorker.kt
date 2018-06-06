@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.resolvetosavelives.red.RedApp
 import org.resolvetosavelives.red.bp.sync.BloodPressureSync
-import org.resolvetosavelives.red.sync.patient.PatientSync
+import org.resolvetosavelives.red.patient.sync.PatientSync
 import javax.inject.Inject
 
 class SyncWorker : Worker() {

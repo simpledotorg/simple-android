@@ -17,8 +17,8 @@ import org.resolvetosavelives.red.bp.BloodPressureMeasurement
 import org.resolvetosavelives.red.bp.BloodPressureRepository
 import org.resolvetosavelives.red.patient.SyncStatus
 import org.resolvetosavelives.red.sync.SyncConfig
-import org.resolvetosavelives.red.sync.patient.DataPushResponse
-import org.resolvetosavelives.red.sync.patient.ValidationErrors
+import org.resolvetosavelives.red.patient.sync.DataPushResponse
+import org.resolvetosavelives.red.patient.sync.ValidationErrors
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant

@@ -16,17 +16,17 @@ import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.widgets.UiEvent
 
-class PatientSearchByPhoneScreenControllerTest {
+class PatientSearchScreenControllerTest {
 
-  private val screen: PatientSearchByPhoneScreen = mock()
+  private val screen: PatientSearchScreen = mock()
   private val repository: PatientRepository = mock()
 
-  private lateinit var controller: PatientSearchByPhoneScreenController
+  private lateinit var controller: PatientSearchScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   @Before
   fun setUp() {
-    controller = PatientSearchByPhoneScreenController(repository)
+    controller = PatientSearchScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
@@ -55,7 +55,7 @@ class PatientSearchByPhoneScreenControllerTest {
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
-    uiEvents.onNext(PatientSearchByPhoneProceedClicked())
+    uiEvents.onNext(PatientSearchProceedClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).saveOngoingEntry(capture())

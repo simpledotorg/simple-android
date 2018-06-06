@@ -20,8 +20,6 @@
   <string name="patiententry_phone_title">Patient phone</string>
   <string name="patiententry_phone_number">Patient phone number</string>
 
-  <string name="patiententry_drugs_title">Current drugs</string>
-
   <style name="RedApp.Button.PatientEntry">
     <item name="android:textColor">@color/white</item>
     <item name="backgroundTint">@color/color_accent</item>

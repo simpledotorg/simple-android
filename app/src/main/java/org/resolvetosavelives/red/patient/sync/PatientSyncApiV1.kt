@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.sync.patient
+package org.resolvetosavelives.red.patient.sync
 
 import io.reactivex.Single
 import org.threeten.bp.Instant

@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.sync.patient
+package org.resolvetosavelives.red.patient.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable

@@ -1,7 +1,7 @@
 package org.resolvetosavelives.red.bp.sync
 
 import io.reactivex.Single
-import org.resolvetosavelives.red.sync.patient.DataPushResponse
+import org.resolvetosavelives.red.patient.sync.DataPushResponse
 import org.threeten.bp.Instant
 import retrofit2.http.Body
 import retrofit2.http.GET

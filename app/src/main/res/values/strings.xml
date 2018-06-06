@@ -1,5 +1,22 @@
 <resources>
   <string name="app_name">RedApp</string>
-  <string name="patiententry_phone_number">Patient entry phone number</string>
+
+  <!-- Lookup patients -->
   <string name="patientsearch_new_patient">New patient</string>
+  <string name="patientsearch_search_field_hint">Enter patient\'s name or phone</string>
+
+  <!-- Manual patient entry -->
+  <string name="patiententry_contentdescription_up_button">Go back to search</string>
+  <string name="patiententry_full_name">Patient\'s name</string>
+  <string name="patiententry_phone_number">Phone number</string>
+  <string name="patiententry_none">None</string>
+  <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
+  <string name="patiententry_dateofbirth_and_age_separator">Or</string>
+  <string name="patiententry_age">Age</string>
+  <string name="patiententry_gender_female">Female</string>
+  <string name="patiententry_gender_male">Male</string>
+  <string name="patiententry_gender_transgender">Transgender</string>
+  <string name="patiententry_colony_or_village">Colony or village</string>
+  <string name="patiententry_district">District</string>
+  <string name="patiententry_state">State</string>
 </resources>

@@ -4,6 +4,7 @@ import dagger.BindsInstance
 import dagger.Subcomponent
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.home.bp.NewBpScreen
+import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.newentry.success.PatientSavedScreen
 import org.resolvetosavelives.red.qrscan.AadhaarScanScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
@@ -17,6 +18,7 @@ interface TheActivityComponent {
   fun inject(target: PatientSavedScreen)
   fun inject(target: PatientSearchByPhoneScreen)
   fun inject(target: AadhaarScanScreen)
+  fun inject(target: PatientEntryScreen)
 
   @Subcomponent.Builder
   interface Builder {

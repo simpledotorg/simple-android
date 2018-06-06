@@ -13,7 +13,6 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.newentry.personal.PatientPersonalDetailsEntryScreen
 import org.resolvetosavelives.red.router.screen.ActivityPermissionResult
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.util.RuntimePermissions
@@ -93,6 +92,6 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
   }
 
   fun openNewPatientEntryScreen() {
-    screenRouter.push(PatientPersonalDetailsEntryScreen.KEY)
+    // TODO.
   }
 }

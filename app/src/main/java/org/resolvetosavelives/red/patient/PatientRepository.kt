@@ -112,7 +112,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .flatMapCompletable {
           // TODO: Should we also check that only age or date-of-birth should be present and not both?
           if (it.hasNullDateOfBirthAndAge()) {
-            Completable.error(AssertionError("Both ageWhenCreated and dateOfBirth cannot be null."))
+            Completable.error(AssertionError("Both age and dateOfBirth cannot be null."))
           } else {
             Completable.complete()
           }
@@ -165,8 +165,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 status = PatientStatus.ACTIVE,
 
                 dateOfBirth = dateConverter(personalDetails.dateOfBirth),
-                age = personalDetails.ageWhenCreated?.let {
-                  Age(value = personalDetails.ageWhenCreated.toInt(), updatedAt = Instant.now())
+                age = personalDetails.age?.let {
+                  Age(value = personalDetails.age.toInt(), updatedAt = Instant.now())
                 },
 
                 addressUuid = addressUuid,

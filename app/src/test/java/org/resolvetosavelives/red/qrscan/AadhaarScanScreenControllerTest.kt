@@ -86,7 +86,7 @@ class AadhaarScanScreenControllerTest {
           personalDetails = OngoingPatientEntry.PersonalDetails(
               fullName = aadhaarQrData.fullName!!,
               dateOfBirth = aadhaarQrData.dateOfBirth!!,
-              ageWhenCreated = null,
+              age = null,
               gender = aadhaarQrData.gender),
           address = OngoingPatientEntry.Address(
               colonyOrVillage = aadhaarQrData.villageOrTownOrCity!!,

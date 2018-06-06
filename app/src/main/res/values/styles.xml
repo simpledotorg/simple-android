@@ -19,9 +19,11 @@
   <style name="RedApp.Button" />
 
   <style name="RedApp.Button.PatientEntry">
-    <item name="android:textColor">@color/white</item>
-    <item name="backgroundTint">@color/color_accent</item>
-    <item name="android:paddingStart">@dimen/spacing_20</item>
-    <item name="android:paddingEnd">@dimen/spacing_20</item>
+    <item name="android:textColor">@color/color_accent</item>
+    <item name="android:gravity">start|center_vertical</item>
+    <item name="backgroundTint">#F2F4FB</item>
+    <item name="android:drawablePadding">@dimen/spacing_16</item>
+    <item name="android:paddingStart">@dimen/spacing_16</item>
+    <item name="android:paddingEnd">@dimen/spacing_16</item>
   </style>
 </resources>

@@ -17,8 +17,7 @@
       android:id="@+id/patientsearch_back"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_marginEnd="@dimen/spacing_16"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsearch_go_back"
       android:src="@drawable/ic_arrow_back_black_24dp" />
@@ -35,23 +34,24 @@
     </EditText>
   </android.support.v7.widget.Toolbar>
 
+  <Button
+    android:id="@+id/patientsearch_new_patient"
+    style="@style/RedApp.Button.PatientEntry"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/patientsearch_toolbar"
+    android:contentDescription="@string/patientsearch_new_patient"
+    android:drawableStart="@drawable/ic_add_circle_outline_black_24dp"
+    android:text="@string/patientsearch_new_patient" />
+
   <android.support.v7.widget.RecyclerView
     android:id="@+id/patientsearch_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@id/patientsearch_toolbar"
+    android:layout_below="@id/patientsearch_new_patient"
     android:paddingTop="@dimen/spacing_8"
     android:paddingBottom="@dimen/spacing_8"
     android:clipToPadding="false"
     tools:listitem="@layout/list_patient_search" />
 
-  <Button
-    android:id="@+id/patientsearch_new_patient"
-    style="@style/RedApp.Button.PatientEntry"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_12"
-    android:layout_alignParentBottom="true"
-    android:layout_alignParentEnd="true"
-    android:text="@string/patientsearch_new_patient" />
 </org.resolvetosavelives.red.search.PatientSearchScreen>

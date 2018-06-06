@@ -55,7 +55,7 @@ class PatientSearchScreenControllerTest {
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
-    uiEvents.onNext(PatientSearchProceedClicked())
+    uiEvents.onNext(CreateNewPatientClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).saveOngoingEntry(capture())

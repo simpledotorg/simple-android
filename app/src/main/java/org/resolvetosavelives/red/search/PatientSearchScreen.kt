@@ -43,9 +43,10 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     if (isInEditMode) {
       return
     }
+
     TheActivity.component.inject(this)
 
-    Observable.merge(phoneNumberTextChanges(), proceedButtonClicks())
+    Observable.merge(phoneNumberTextChanges(), newPatientButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -57,8 +58,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       .map(CharSequence::toString)
       .map(::PatientPhoneNumberTextChanged)
 
-  private fun proceedButtonClicks() = RxView.clicks(newPatientButton)
-      .map { PatientSearchProceedClicked() }
+  private fun newPatientButtonClicks() = RxView.clicks(newPatientButton)
+      .map { CreateNewPatientClicked() }
 
   fun showKeyboardOnPhoneNumberField() {
     searchEditText.showKeyboard()

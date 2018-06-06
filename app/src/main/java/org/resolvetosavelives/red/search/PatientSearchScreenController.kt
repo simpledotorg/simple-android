@@ -43,7 +43,7 @@ class PatientSearchScreenController @Inject constructor(
         .map(PatientPhoneNumberTextChanged::number)
 
     return events
-        .ofType(PatientSearchProceedClicked::class.java)
+        .ofType(CreateNewPatientClicked::class.java)
         .withLatestFrom(phoneNumberChanges, { _, number -> number })
         .take(1)
         .map { number -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(number)) }

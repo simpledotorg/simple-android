@@ -1,3 +1,5 @@
 <resources>
   <string name="app_name">RedApp</string>
+  <string name="patiententry_phone_number">Patient entry phone number</string>
+  <string name="patientsearch_new_patient">New patient</string>
 </resources>

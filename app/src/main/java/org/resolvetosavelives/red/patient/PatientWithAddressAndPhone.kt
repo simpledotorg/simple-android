@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded

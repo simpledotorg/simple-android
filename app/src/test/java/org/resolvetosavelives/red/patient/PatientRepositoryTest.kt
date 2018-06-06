@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
@@ -10,10 +10,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.search.Patient
-import org.resolvetosavelives.red.search.PatientAddress
-import org.resolvetosavelives.red.search.PatientRepository
-import org.resolvetosavelives.red.search.SyncStatus
 import org.resolvetosavelives.red.sync.patient.PatientAddressPayload
 import org.resolvetosavelives.red.sync.patient.PatientPayload
 import java.util.UUID

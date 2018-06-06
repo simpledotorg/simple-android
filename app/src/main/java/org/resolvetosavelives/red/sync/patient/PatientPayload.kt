@@ -2,12 +2,12 @@ package org.resolvetosavelives.red.sync.patient
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.resolvetosavelives.red.search.Age
-import org.resolvetosavelives.red.search.Gender
-import org.resolvetosavelives.red.search.Patient
-import org.resolvetosavelives.red.search.PatientAddress
-import org.resolvetosavelives.red.search.PatientStatus
-import org.resolvetosavelives.red.search.SyncStatus
+import org.resolvetosavelives.red.patient.Age
+import org.resolvetosavelives.red.patient.Gender
+import org.resolvetosavelives.red.patient.Patient
+import org.resolvetosavelives.red.patient.PatientAddress
+import org.resolvetosavelives.red.patient.PatientStatus
+import org.resolvetosavelives.red.patient.SyncStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID

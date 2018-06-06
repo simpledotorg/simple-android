@@ -8,8 +8,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import org.resolvetosavelives.red.search.OngoingPatientEntry
-import org.resolvetosavelives.red.search.PatientRepository
+import org.resolvetosavelives.red.patient.OngoingPatientEntry
+import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.RuntimePermissionResult
 import org.resolvetosavelives.red.util.Vibrator
 import org.resolvetosavelives.red.widgets.UiEvent

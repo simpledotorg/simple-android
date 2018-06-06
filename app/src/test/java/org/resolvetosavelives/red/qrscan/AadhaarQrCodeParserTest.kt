@@ -2,7 +2,7 @@ package org.resolvetosavelives.red.qrscan
 
 import org.junit.Before
 import org.junit.Test
-import org.resolvetosavelives.red.search.Gender
+import org.resolvetosavelives.red.patient.Gender
 
 class AadhaarQrCodeParserTest {
 

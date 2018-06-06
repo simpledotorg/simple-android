@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 import android.arch.persistence.room.Room
 import android.support.test.InstrumentationRegistry
@@ -9,11 +9,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.search.Gender
-import org.resolvetosavelives.red.search.OngoingPatientEntry
-import org.resolvetosavelives.red.search.PatientPhoneNumberType
-import org.resolvetosavelives.red.search.PatientRepository
-import org.resolvetosavelives.red.search.SyncStatus
 import org.threeten.bp.LocalDate
 
 @RunWith(AndroidJUnit4::class)

@@ -1,6 +1,6 @@
 package org.resolvetosavelives.red.qrscan
 
-import org.resolvetosavelives.red.search.Gender
+import org.resolvetosavelives.red.patient.Gender
 import javax.inject.Inject
 
 class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlParser.Factory) {

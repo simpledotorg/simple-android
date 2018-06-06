@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -6,8 +6,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
-import org.resolvetosavelives.red.search.SyncStatus.DONE
-import org.resolvetosavelives.red.search.SyncStatus.PENDING
+import org.resolvetosavelives.red.patient.SyncStatus.DONE
+import org.resolvetosavelives.red.patient.SyncStatus.PENDING
 import org.resolvetosavelives.red.sync.patient.PatientPayload
 import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant

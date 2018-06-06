@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 import com.squareup.moshi.Json
 import org.resolvetosavelives.red.util.RoomEnumTypeConverter

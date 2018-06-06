@@ -17,8 +17,8 @@ import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.address.PatientAddressEntryScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
-import org.resolvetosavelives.red.search.Gender
-import org.resolvetosavelives.red.search.OngoingPatientEntry
+import org.resolvetosavelives.red.patient.Gender
+import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard

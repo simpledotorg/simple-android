@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
+import org.resolvetosavelives.red.patient.Patient
 
 class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 

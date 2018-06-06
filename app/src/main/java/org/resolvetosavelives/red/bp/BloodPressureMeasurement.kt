@@ -8,7 +8,7 @@ import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.resolvetosavelives.red.bp.sync.BloodPressureMeasurementPayload
-import org.resolvetosavelives.red.search.SyncStatus
+import org.resolvetosavelives.red.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 

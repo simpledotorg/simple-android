@@ -1,4 +1,4 @@
-package org.resolvetosavelives.red.search
+package org.resolvetosavelives.red.patient
 
 data class OngoingPatientEntry(
     val personalDetails: PersonalDetails? = null,

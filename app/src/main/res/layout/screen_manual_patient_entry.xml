@@ -20,12 +20,14 @@
   <ScrollView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_toEndOf="@+id/patiententry_up"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:paddingBottom="64dp"
       android:orientation="vertical"
       android:paddingEnd="@dimen/spacing_16"
       android:paddingTop="@dimen/spacing_12"
@@ -41,7 +43,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/patiententry_full_name"
-          android:inputType="textPersonName" />
+          android:inputType="textPersonName|textCapSentences" />
       </android.support.design.widget.TextInputLayout>
 
       <FrameLayout
@@ -55,12 +57,12 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
 
-          <EditText
+          <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_phone_number"
-            android:inputType="phone" />
+            android:inputType="phone|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.v7.widget.AppCompatCheckBox
@@ -84,12 +86,12 @@
           android:layout_height="wrap_content"
           android:layout_weight="1">
 
-          <EditText
+          <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_date_of_birth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_date_of_birth_unfocused"
-            android:inputType="date" />
+            android:inputType="date|number" />
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -106,7 +108,7 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content">
 
-          <EditText
+          <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_age"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -155,18 +157,17 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
           android:id="@+id/patiententry_colony_or_village"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:hint="@string/patiententry_colony_or_village"
-          android:inputType="textPostalAddress" />
+          android:inputType="textPostalAddress|textCapSentences" />
       </android.support.design.widget.TextInputLayout>
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
         android:layout_marginTop="@dimen/spacing_16"
         android:baselineAligned="false"
         android:orientation="horizontal">
@@ -176,12 +177,12 @@
           android:layout_height="wrap_content"
           android:layout_weight="1">
 
-          <EditText
+          <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_district"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_district"
-            android:inputType="textPostalAddress" />
+            android:inputType="textPostalAddress|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
@@ -189,14 +190,37 @@
           android:layout_height="wrap_content"
           android:layout_weight="1">
 
-          <EditText
+          <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_state"
-            android:inputType="textPostalAddress" />
+            android:inputType="textPostalAddress|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
       </LinearLayout>
     </LinearLayout>
   </ScrollView>
+
+  <FrameLayout
+    android:id="@+id/patiententry_save"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#69B038"
+    android:elevation="10dp"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    tools:ignore="UnusedAttribute">
+
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:background="@null"
+      android:clickable="false"
+      android:drawablePadding="@dimen/spacing_8"
+      android:drawableStart="@drawable/ic_done_20dp"
+      android:focusable="false"
+      android:text="@string/patiententry_save_patient"
+      android:textColor="@color/white" />
+  </FrameLayout>
 </org.resolvetosavelives.red.newentry.PatientEntryScreen>

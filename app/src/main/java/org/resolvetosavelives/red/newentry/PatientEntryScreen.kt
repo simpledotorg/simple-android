@@ -1,11 +1,15 @@
 package org.resolvetosavelives.red.newentry
 
 import android.content.Context
+import android.support.v4.view.ViewCompat
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
+import android.widget.CheckBox
 import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.RadioGroup
+import android.widget.RelativeLayout
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -17,13 +21,16 @@ import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.util.Just
+import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
-class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
     val KEY = PatientEntryScreenKey()
@@ -38,12 +45,17 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(c
   private val upButton by bindView<View>(R.id.patiententry_up)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
+  private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
   private val dateOfBirthEditText by bindView<EditText>(R.id.patiententry_date_of_birth)
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
   private val districtEditText by bindView<EditText>(R.id.patiententry_district)
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
+  private val saveButton by bindView<View>(R.id.patiententry_save)
+
+  init {
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -53,12 +65,20 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(c
     TheActivity.component.inject(this)
 
     // Plan:
-    // 2. When do we enable save button?
     // 3. Save patient
     // 4. Handle 'none'.
-    // 5. Animate date-of-birth and age.
-    // 6. Show 'X' icon when a field is focused.
-    // 7. Disable phone number field when 'None' is selected.
+    // 5. Disable phone number field when 'None' is selected.
+    // 6. Animate date-of-birth and age.
+    // 7. Show 'X' icon when a field is focused.
+
+    fullNameEditText.showKeyboard()
+    upButton.setOnClickListener { screenRouter.pop() }
+    saveButton.setOnClickListener { Timber.w("TODO") }
+
+    // Save button is also disabled by the controller as soon as it starts emitting
+    // UiChanges, but by the time that happens, the save button is visible on the
+    // screen for a moment. Disabling it here solves the problem.
+    setSaveButtonEnabled(false)
 
     Observable
         .mergeArray(
@@ -68,9 +88,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(c
         .compose(controller)
         .observeOn(mainThread())
         .subscribe { uiChange -> uiChange(this) }
-
-    fullNameEditText.showKeyboard()
-    upButton.setOnClickListener { screenRouter.pop() }
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
@@ -79,6 +96,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(c
     return Observable.mergeArray(
         fullNameEditText.textChanges(::PatientFullNameTextChanged),
         phoneNumberEditText.textChanges(::PatientPhoneNumberTextChanged),
+        RxCompoundButton.checkedChanges(noPhoneNumberCheckBox).map(::PatientNoPhoneNumberToggled),
         dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
         colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
@@ -94,9 +112,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(c
         R.id.patiententry_gender_transgender to Gender.TRANSGENDER)
 
     return RxRadioGroup.checkedChanges(genderRadioGroup)
-        .filter { it != -1 }
-        .map { checkedId -> radioIdToGenders[checkedId] }
-        .map { PatientGenderChanged(it) }
+        .map { checkedId ->
+          val gender = radioIdToGenders[checkedId]
+          when (gender) {
+            null -> PatientGenderChanged(None)
+            else -> PatientGenderChanged(Just(gender))
+          }
+        }
   }
 
   fun preFillFields(details: OngoingPatientEntry) {
@@ -108,10 +130,35 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(c
     districtEditText.setTextAndCursor(details.address?.district)
     stateEditText.setTextAndCursor(details.address?.state)
   }
+
+  fun setSaveButtonEnabled(enabled: Boolean) {
+    if (!ViewCompat.isLaidOut(saveButton)) {
+      saveButton.visibility = when (enabled) {
+        true -> View.VISIBLE
+        false -> View.INVISIBLE
+      }
+
+    } else {
+      if (enabled) {
+        saveButton.translationY = saveButton.height.toFloat()
+        saveButton.animate()
+            .translationY(0f)
+            .setInterpolator(FastOutSlowInInterpolator())
+            .withStartAction { saveButton.visibility = View.VISIBLE }
+            .start()
+
+      } else {
+        saveButton.animate()
+            .translationY(saveButton.height.toFloat())
+            .setInterpolator(FastOutSlowInInterpolator())
+            .start()
+      }
+    }
+  }
 }
 
 private fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {
   return RxTextView.textChanges(this)
-      .map(CharSequence::toString)
+      .map { it.toString() }
       .map(mapper)
 }

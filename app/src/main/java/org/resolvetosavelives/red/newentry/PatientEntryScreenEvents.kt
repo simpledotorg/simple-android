@@ -1,17 +1,21 @@
 package org.resolvetosavelives.red.newentry
 
 import org.resolvetosavelives.red.patient.Gender
+import org.resolvetosavelives.red.util.Optional
 import org.resolvetosavelives.red.widgets.UiEvent
 
 data class PatientFullNameTextChanged(val fullName: String) : UiEvent
 
 data class PatientPhoneNumberTextChanged(val phoneNumber: String) : UiEvent
 
+// TODO.
+data class PatientNoPhoneNumberToggled(val noneSelected: Boolean) : UiEvent
+
 data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : UiEvent
 
 data class PatientAgeTextChanged(val age: String) : UiEvent
 
-data class PatientGenderChanged(val gender: Gender) : UiEvent
+data class PatientGenderChanged(val gender: Optional<Gender>) : UiEvent
 
 data class PatientColonyOrVillageTextChanged(val colonyOrVillage: String) : UiEvent
 

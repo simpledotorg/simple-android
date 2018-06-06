@@ -15,6 +15,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
@@ -73,6 +74,6 @@ class PatientSearchByPhoneScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openPersonalDetailsEntryScreen() {
-    // TODO.
+    screenRouter.push(PatientEntryScreen.KEY)
   }
 }

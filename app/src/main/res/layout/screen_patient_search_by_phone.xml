@@ -18,7 +18,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:background="@null"
-      android:hint="@string/patiententry_phone_number"
+      android:hint="@string/patientsearch_search_field_hint"
       android:inputType="phone">
 
       <requestFocus />

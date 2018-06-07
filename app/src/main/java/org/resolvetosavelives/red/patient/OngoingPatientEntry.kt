@@ -11,8 +11,49 @@ data class OngoingPatientEntry(
     val phoneNumber: PhoneNumber? = null
 ) {
 
-  fun hasNullDateOfBirthAndAge(): Boolean {
-    return personalDetails!!.dateOfBirth.isNullOrEmpty() && personalDetails.age.isNullOrEmpty()
+  fun validateForSaving(): ValidationResult {
+    val invalidResult: (message: String) -> ValidationResult = { message ->
+      ValidationResult.Invalid(AssertionError(message))
+    }
+
+    if (personalDetails == null) {
+      return invalidResult("Personal details is empty")
+    }
+    if (address == null) {
+      return invalidResult("Address is empty")
+    }
+
+    with(personalDetails) {
+      if (dateOfBirth.isNullOrBlank() && age.isNullOrBlank()) {
+        return invalidResult("Both age and dateOfBirth cannot be null.")
+      }
+      if (dateOfBirth.isNullOrBlank() == age.isNullOrBlank()
+          || (dateOfBirth == null) == (age == null)) {
+        return invalidResult("Both age and dateOfBirth cannot be present.")
+      }
+      if (fullName.isBlank()) {
+        return invalidResult("Full name is empty")
+      }
+      if (gender == null) {
+        return invalidResult("Gender is empty")
+      }
+    }
+
+    with(address) {
+      if (district.isBlank()) {
+        return invalidResult("Address district is empty")
+      }
+      if (state.isBlank()) {
+        return invalidResult("Address state is empty")
+      }
+    }
+
+    return ValidationResult.Valid()
+  }
+
+  sealed class ValidationResult {
+    class Valid : ValidationResult()
+    data class Invalid(val error: Throwable) : ValidationResult()
   }
 
   /**
@@ -21,7 +62,7 @@ data class OngoingPatientEntry(
    */
   data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?)
 
-  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
-
   data class Address(val colonyOrVillage: String, val district: String, val state: String)
+
+  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
 }

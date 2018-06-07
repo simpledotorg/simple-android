@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red
 
 import android.app.Application
+import com.facebook.stetho.Stetho
 import com.gabrielittner.threetenbp.LazyThreeTen
 import com.tspoon.traceur.Traceur
 import org.resolvetosavelives.red.di.AppComponent
@@ -18,8 +19,11 @@ abstract class RedApp : Application() {
     if (BuildConfig.DEBUG) {
       Timber.plant(Timber.DebugTree())
       Traceur.enableLogging()
+      Stetho.initializeWithDefaults(this)
     }
+
     LazyThreeTen.init(this)
+
     appComponent = buildDaggerGraph()
   }
 

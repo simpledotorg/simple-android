@@ -5,11 +5,15 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.INVALID
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.VALID
+import org.resolvetosavelives.red.patient.Gender
+import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.nullIfBlank
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
@@ -24,9 +28,11 @@ class PatientEntryScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
+
     return Observable.mergeArray(
         preFillOnStart(replayedEvents),
-        saveButtonToggles(replayedEvents))
+        saveButtonToggles(replayedEvents),
+        patientSaves(replayedEvents))
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -94,6 +100,11 @@ class PatientEntryScreenController @Inject constructor(
         .combineLatest(colonyOrVillageAvailabilities, districtAvailabilities, stateAvailabilities)
         .map { it.first && it.second && it.third }
 
+    val requireAllFunction: (Boolean, Boolean, Boolean, Boolean, Boolean) -> Boolean =
+        { bool1, bool2, bol3, bool4, bool5 ->
+          bool1 && bool2 && bol3 && bool4 && bool5
+        }
+
     return Observables
         .combineLatest(
             nameAvailabilities,
@@ -101,16 +112,82 @@ class PatientEntryScreenController @Inject constructor(
             dateOfBirthOrAgeAvailabilities,
             genderAvailabilities,
             addressAvailabilities,
-            requireAll())
+            requireAllFunction)
         .distinctUntilChanged()
         .map { allDetailsAvailable ->
           { ui: Ui -> ui.setSaveButtonEnabled(allDetailsAvailable) }
         }
   }
 
-  private fun requireAll(): (Boolean, Boolean, Boolean, Boolean, Boolean) -> Boolean {
-    return { bool1, bool2, bol3, bool4, bool5 ->
-      bool1 && bool2 && bol3 && bool4 && bool5
-    }
+  private fun patientSaves(events: Observable<UiEvent>): Observable<UiChange> {
+    val nameChanges = events
+        .ofType<PatientFullNameTextChanged>()
+        .map { it.fullName }
+
+    val dateOfBirthChanges = events
+        .ofType<PatientDateOfBirthTextChanged>()
+        .map { it.dateOfBirth }
+
+    val ageChanges = events
+        .ofType<PatientAgeTextChanged>()
+        .map { it.age }
+
+    val genderChanges = events
+        .ofType<PatientGenderChanged>()
+        .map { it.gender }
+        .ofType<Just<Gender>>()
+        .map { it.value }
+
+    val personDetailChanges = Observables.combineLatest(
+        nameChanges, dateOfBirthChanges, ageChanges, genderChanges,
+        { name, dateOfBirth, age, gender ->
+          OngoingPatientEntry.PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender)
+        })
+
+    val phoneNumberChanges = Observables
+        .combineLatest(
+            events
+                .ofType<PatientNoPhoneNumberToggled>()
+                .map { it.noneSelected },
+            events
+                .ofType<PatientPhoneNumberTextChanged>()
+                .map { it.phoneNumber })
+        .map { (noneSelected, phoneNumber) ->
+          when {
+            noneSelected -> None
+            else -> Just(OngoingPatientEntry.PhoneNumber(phoneNumber!!))
+          }
+        }
+
+    val colonyOrVillageChanges = events
+        .ofType<PatientColonyOrVillageTextChanged>()
+        .map { it.colonyOrVillage }
+
+    val districtChanges = events
+        .ofType<PatientDistrictTextChanged>()
+        .map { it.district }
+
+    val stateChanges = events
+        .ofType<PatientStateTextChanged>()
+        .map { it.state }
+
+    val addressChanges = Observables.combineLatest(
+        colonyOrVillageChanges, districtChanges, stateChanges,
+        { colonyOrVillage, district, state ->
+          OngoingPatientEntry.Address(colonyOrVillage, district, state)
+        })
+
+    return events
+        .ofType<PatientEntrySaveClicked>()
+        .withLatestFrom(
+            personDetailChanges,
+            phoneNumberChanges,
+            addressChanges,
+            { _, personal, phone, address -> OngoingPatientEntry(personalDetails = personal, phoneNumber = phone.toNullable(), address = address) })
+        .flatMap { entry ->
+          repository.saveOngoingEntry(entry)
+              .andThen(repository.saveOngoingEntryAsPatient())
+              .andThen(Observable.just({ ui: Ui -> ui.openSummaryScreenForBpEntry() }))
+        }
   }
 }

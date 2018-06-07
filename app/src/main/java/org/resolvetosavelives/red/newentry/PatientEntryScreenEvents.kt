@@ -8,7 +8,6 @@ data class PatientFullNameTextChanged(val fullName: String) : UiEvent
 
 data class PatientPhoneNumberTextChanged(val phoneNumber: String) : UiEvent
 
-// TODO.
 data class PatientNoPhoneNumberToggled(val noneSelected: Boolean) : UiEvent
 
 data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : UiEvent
@@ -22,3 +21,5 @@ data class PatientColonyOrVillageTextChanged(val colonyOrVillage: String) : UiEv
 data class PatientDistrictTextChanged(val district: String) : UiEvent
 
 data class PatientStateTextChanged(val state: String) : UiEvent
+
+class PatientEntrySaveClicked : UiEvent

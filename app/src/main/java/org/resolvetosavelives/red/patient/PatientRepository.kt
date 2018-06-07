@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.di.AppScope
+import org.resolvetosavelives.red.patient.OngoingPatientEntry.ValidationResult
 import org.resolvetosavelives.red.patient.SyncStatus.DONE
 import org.resolvetosavelives.red.patient.SyncStatus.PENDING
 import org.resolvetosavelives.red.patient.sync.PatientPayload
@@ -108,13 +109,12 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   fun saveOngoingEntryAsPatient(): Completable {
     val cachedOngoingEntry = ongoingEntry().cache()
 
-    val ageValidation = cachedOngoingEntry
+    val validation = cachedOngoingEntry
         .flatMapCompletable {
-          // TODO: Should we also check that only age or date-of-birth should be present and not both?
-          if (it.hasNullDateOfBirthAndAge()) {
-            Completable.error(AssertionError("Both age and dateOfBirth cannot be null."))
-          } else {
-            Completable.complete()
+          val validationResult = it.validateForSaving()
+          when (validationResult) {
+            is ValidationResult.Valid -> Completable.complete()
+            is ValidationResult.Invalid -> Completable.error(validationResult.error)
           }
         }
 
@@ -178,7 +178,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
         .flatMapCompletable { patient -> savePatient(patient) }
 
-    return ageValidation
+    return validation
         .andThen(addressSave)
         .andThen(patientSave)
         .andThen(phoneNumbersSave)

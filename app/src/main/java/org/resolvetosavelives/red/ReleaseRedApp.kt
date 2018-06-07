@@ -17,6 +17,7 @@ class ReleaseRedApp : RedApp() {
     super.onCreate()
 
     appComponent.inject(this)
+
     syncScheduler.schedule().subscribe()
   }
 

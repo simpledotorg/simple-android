@@ -67,6 +67,9 @@ dependencies {
   androidTestImplementation "com.android.support.test:rules:$versions.supportTest"
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
+  debugImplementation "com.facebook.stetho:stetho:$versions.stetho"
+  debugImplementation "com.facebook.stetho:stetho-okhttp3:$versions.stetho"
+
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 
   implementation "com.android.support:appcompat-v7:$versions.supportLib"

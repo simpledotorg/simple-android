@@ -23,7 +23,7 @@ sdk.dir=/Users/{your-username}/Library/Android/sdk
 ```
 
 1. Replace `{your-username}` in `local.properties` with your actual username.
-2. Run `~/Library/Android/sdk/tools/bin/sdkmanager —licenses` and accept licenses related to the SDK.
+2. Run `~/Library/Android/sdk/tools/bin/sdkmanager --licenses` and accept licenses related to the SDK.
 3. Build a debug variant of the binary (APK) by running `./gradlew assembleDebug` in the project directory. The generated binary will be found at `{project-directory}/app/build/outputs/apk/debug/app-debug.apk`.
 
 When building for the first time, gradle will download all dependencies so it'll take a few minutes to complete. Subsequent builds will be faster.

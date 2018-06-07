@@ -9,6 +9,7 @@ import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.patient.PatientAddress
 import org.resolvetosavelives.red.patient.PatientPhoneNumber
 import org.resolvetosavelives.red.patient.PatientPhoneNumberType
+import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.patient.PatientStatus
 import org.resolvetosavelives.red.patient.PatientWithAddressAndPhone
 import org.resolvetosavelives.red.patient.SyncStatus
@@ -41,6 +42,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun phoneNumberDao(): PatientPhoneNumber.RoomDao
 
   abstract fun patientAddressPhoneDao(): PatientWithAddressAndPhone.RoomDao
+
+  abstract fun patientSearchDao(): PatientSearchResult.RoomDao
 
   abstract fun bloodPressureDao(): BloodPressureMeasurement.RoomDao
 }

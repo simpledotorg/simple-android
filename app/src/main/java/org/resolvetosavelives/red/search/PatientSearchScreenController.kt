@@ -31,16 +31,16 @@ class PatientSearchScreenController @Inject constructor(
 
   private fun patientSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType(PatientPhoneNumberTextChanged::class.java)
-        .map(PatientPhoneNumberTextChanged::number)
-        .flatMap { repository.searchPatients(it) }
+        .ofType(SearchQueryTextChanged::class.java)
+        .map(SearchQueryTextChanged::number)
+        .flatMap { repository.searchPatientsAndPhoneNumbers(it) }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val phoneNumberChanges = events
-        .ofType(PatientPhoneNumberTextChanged::class.java)
-        .map(PatientPhoneNumberTextChanged::number)
+        .ofType(SearchQueryTextChanged::class.java)
+        .map(SearchQueryTextChanged::number)
 
     return events
         .ofType(CreateNewPatientClicked::class.java)

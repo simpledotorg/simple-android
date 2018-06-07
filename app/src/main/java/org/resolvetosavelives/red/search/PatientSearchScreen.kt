@@ -16,7 +16,7 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.PatientEntryScreen
-import org.resolvetosavelives.red.patient.Patient
+import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    Observable.merge(phoneNumberTextChanges(), newPatientButtonClicks())
+    Observable.merge(searchTextChanges(), newPatientButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -54,9 +54,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun phoneNumberTextChanges() = RxTextView.textChanges(searchEditText)
+  private fun searchTextChanges() = RxTextView.textChanges(searchEditText)
       .map(CharSequence::toString)
-      .map(::PatientPhoneNumberTextChanged)
+      .map(::SearchQueryTextChanged)
 
   private fun newPatientButtonClicks() = RxView.clicks(newPatientButton)
       .map { CreateNewPatientClicked() }
@@ -70,7 +70,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     patientRecyclerView.layoutManager = LinearLayoutManager(context)
   }
 
-  fun updatePatientSearchResults(patients: List<Patient>) {
+  fun updatePatientSearchResults(patients: List<PatientSearchResult>) {
     resultsAdapter.updateAndNotifyChanges(patients)
   }
 

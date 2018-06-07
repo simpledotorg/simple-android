@@ -8,12 +8,11 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
-import junit.framework.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
-import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.patient.PatientRepository
+import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.widgets.UiEvent
 
 class PatientSearchScreenControllerTest {
@@ -40,10 +39,10 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when phone number text changes then matching patients should be shown`() {
     val partialNumber = "999"
-    val matchingPatients = listOf<Patient>(mock(), mock(), mock())
-    whenever(repository.searchPatients(partialNumber)).thenReturn(Observable.just(matchingPatients))
+    val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
+    whenever(repository.searchPatientsAndPhoneNumbers(partialNumber)).thenReturn(Observable.just(matchingPatients))
 
-    uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
+    uiEvents.onNext(SearchQueryTextChanged(partialNumber))
 
     verify(screen).updatePatientSearchResults(matchingPatients)
   }
@@ -51,15 +50,15 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when new patient is clicked then the manual entry flow should be started`() {
     val partialNumber = "999"
-    whenever(repository.searchPatients(partialNumber)).thenReturn(Observable.never())
+    whenever(repository.searchPatientsAndPhoneNumbers(partialNumber)).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientPhoneNumberTextChanged(partialNumber))
+    uiEvents.onNext(SearchQueryTextChanged(partialNumber))
     uiEvents.onNext(CreateNewPatientClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).saveOngoingEntry(capture())
-      assertEquals(partialNumber, firstValue.phoneNumber!!.number)
+      assert(partialNumber == firstValue.phoneNumber!!.number)
     }
     verify(screen).openPersonalDetailsEntryScreen()
   }

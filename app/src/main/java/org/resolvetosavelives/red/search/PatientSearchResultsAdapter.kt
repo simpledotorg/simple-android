@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
-import org.resolvetosavelives.red.patient.Patient
+import org.resolvetosavelives.red.patient.PatientSearchResult
 
 class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
-  private var patients: List<Patient>? = null
+  private var patients: List<PatientSearchResult>? = null
 
-  fun updateAndNotifyChanges(patients: List<Patient>) {
+  fun updateAndNotifyChanges(patients: List<PatientSearchResult>) {
     this.patients = patients
     notifyDataSetChanged()
   }
@@ -28,11 +28,11 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
   }
 
   override fun getItemCount(): Int {
-    return patients?.size
-        ?: 0
+    return patients?.size ?: 0
   }
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
     private val titleTextView by bindView<TextView>(R.id.patientsearch_item_title)
     private val bylineTextView by bindView<TextView>(R.id.patientsearch_item_byline)
 
@@ -42,18 +42,14 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
       })
     }
 
-    fun render(patient: Patient) {
-      if (patient.fullName.isNotBlank()) {
-        titleTextView.text = patient.fullName
-      } else {
-        titleTextView.text = "(no name)"
-      }
+    fun render(patient: PatientSearchResult) {
+      titleTextView.text = String.format("%s • %s", patient.fullName, patient.gender.toString().substring(0, 1))
+      bylineTextView.text = String.format("%s, %s", patient.address.colonyOrVillage, patient.address.district)
 
-//      if (patient.phoneNumbers.primary.isNotBlank()) {
-//        bylineTextView.text = patient.phoneNumbers.primary
-//      } else {
-//        bylineTextView.text = "(no number)"
-//      }
+      if (patient.phoneNumber?.isNotEmpty() == true) {
+        val current = bylineTextView.text
+        bylineTextView.text = String.format("%s | $current", patient.phoneNumber)
+      }
     }
   }
 }

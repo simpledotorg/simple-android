@@ -39,9 +39,10 @@ data class PatientWithAddressAndPhone(
 ) {
 
   @Relation(parentColumn = "uuid", entityColumn = "patientUuid")
-  lateinit var phoneNumbers: List<PatientPhoneNumber>
+  var phoneNumbers: List<PatientPhoneNumber>? = null
 
   fun toPayload(): PatientPayload {
+    // TODO: Add phone numbers to this payload
     return PatientPayload(
         uuid = uuid,
         fullName = fullName,
@@ -81,11 +82,11 @@ data class PatientWithAddressAndPhone(
     }
 
     @Transaction
-    @Query("$joinQuery WHERE fullName LIKE '%' || :query || '%'")
+    @Query("$joinQuery WHERE P.fullName LIKE '%' || :query || '%'")
     fun search(query: String): Flowable<List<PatientWithAddressAndPhone>>
 
     @Transaction
-    @Query("$joinQuery")
+    @Query(joinQuery)
     fun allRecords(): Flowable<List<PatientWithAddressAndPhone>>
 
     @Transaction

@@ -21,15 +21,13 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  @Deprecated(message = "Use searchPatientsWithAddressesAndPhoneNumbers() instead", replaceWith = ReplaceWith("searchPatientsWithAddressesAndPhoneNumbers(query)"))
-  fun searchPatients(query: String): Observable<List<Patient>> {
+  fun searchPatientsAndPhoneNumbers(query: String): Observable<List<PatientSearchResult>> {
     if (query.isEmpty()) {
-      return database.patientDao()
-          .allPatients()
+      return database.patientSearchDao()
+          .allRecords()
           .toObservable()
     }
-
-    return database.patientDao()
+    return database.patientSearchDao()
         .search(query)
         .toObservable()
   }
@@ -38,18 +36,6 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return database.patientDao()
         .patientCount()
         .firstOrError()
-  }
-
-  fun searchPatientsWithAddressesAndPhoneNumbers(query: String): Observable<List<PatientWithAddressAndPhone>> {
-    if (query.isEmpty()) {
-      return database.patientAddressPhoneDao()
-          .allRecords()
-          .toObservable()
-    }
-
-    return database.patientAddressPhoneDao()
-        .search(query)
-        .toObservable()
   }
 
   fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientWithAddressAndPhone>> {

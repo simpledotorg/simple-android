@@ -9,6 +9,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -54,9 +55,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
   private val saveButton by bindView<View>(R.id.patiententry_save)
 
-  init {
-  }
-
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -65,11 +63,12 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     TheActivity.component.inject(this)
 
     // Plan:
-    // 3. Save patient
-    // 4. Handle 'none'.
-    // 5. Disable phone number field when 'None' is selected.
-    // 6. Animate date-of-birth and age.
-    // 7. Show 'X' icon when a field is focused.
+    // - Save patient
+    // - Change date format to DD/MM/YYYY from DD-MM-YYYY.
+    // - Handle 'none'.
+    // - Disable phone number field when 'None' is selected.
+    // - Animate date-of-birth and age.
+    // - Show 'X' icon when a field is focused.
 
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
@@ -83,7 +82,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     Observable
         .mergeArray(
             screenCreates(),
-            formChanges())
+            formChanges(),
+            saveClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -121,6 +121,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         }
   }
 
+  private fun saveClicks() = RxView.clicks(saveButton).map { PatientEntrySaveClicked() }
+
   fun preFillFields(details: OngoingPatientEntry) {
     fullNameEditText.setTextAndCursor(details.personalDetails?.fullName)
     phoneNumberEditText.setTextAndCursor(details.phoneNumber?.number)
@@ -154,6 +156,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
             .start()
       }
     }
+  }
+
+  fun openSummaryScreenForBpEntry() {
+    // TODO.
   }
 }
 

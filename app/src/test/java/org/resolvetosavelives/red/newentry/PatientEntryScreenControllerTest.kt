@@ -92,7 +92,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
-    uiEvents.onNext(PatientDateOfBirthTextChanged("12-04-1993"))
+    uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("colony-or-village"))
@@ -101,7 +101,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientEntrySaveClicked())
 
     verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
-        personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12-04-1993", age = null, gender = Gender.TRANSGENDER),
+        personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
         address = OngoingPatientEntry.Address("colony-or-village", "district", "state"),
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))

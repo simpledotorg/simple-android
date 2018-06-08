@@ -9,8 +9,7 @@ import org.threeten.bp.format.DateTimeFormatter
 class LocalDateRoomTypeConverter {
 
   companion object {
-    // TODO: Use DateTimeFormatter.ISO_DATE
-    val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")!!
+    private val formatter = DateTimeFormatter.ISO_DATE!!
   }
 
   @TypeConverter
@@ -28,7 +27,9 @@ class LocalDateRoomTypeConverter {
 
 class LocalDateMoshiAdapter {
 
-  private val formatter = DateTimeFormatter.ISO_DATE
+  companion object {
+    private val formatter = DateTimeFormatter.ISO_DATE!!
+  }
 
   @FromJson
   fun toLocalDate(value: String?): LocalDate? {

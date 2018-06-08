@@ -28,7 +28,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun createAnOngoingPatientEntry_withPhoneNumbers_thenSaveItToDatabase() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", "08-04-1985", null, Gender.TRANSGENDER)
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.TRANSGENDER)
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber(number = "2277", type = PatientPhoneNumberType.LANDLINE)
 
     val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
@@ -55,7 +55,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun createAnOngoingPatientEntry_withoutPhoneNumber_thenSaveItToDatabase() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08-04-1985", null, Gender.TRANSGENDER)
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08/04/1985", null, Gender.TRANSGENDER)
 
     val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
@@ -80,7 +80,7 @@ class PatientRepositoryAndroidTest {
   fun createAnOngoingPatientEntry_withPhoneNumbers_thenSaveItToDatabase_AndSearchByPhoneNumber() {
     for (i in 1..5) {
       val ongoingAddress = OngoingPatientEntry.Address("Benson Town", "Bangalore North", "Karnataka")
-      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("$i Chetan Raju", "25-02-200$i", null, Gender.FEMALE)
+      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("$i Chetan Raju", "25/02/200$i", null, Gender.FEMALE)
       val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber(number = "17121988", type = PatientPhoneNumberType.LANDLINE)
 
       val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
@@ -150,7 +150,7 @@ class PatientRepositoryAndroidTest {
   fun patientWithAddressSearch_shouldReturn_correctlyCombinedObject() {
     val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Asha Kumar", "15-08-1947", null, Gender.FEMALE)
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Asha Kumar", "15/08/1947", null, Gender.FEMALE)
 
     val ongoingPatientEntry = OngoingPatientEntry(
         personalDetails = ongoingPersonalDetails,

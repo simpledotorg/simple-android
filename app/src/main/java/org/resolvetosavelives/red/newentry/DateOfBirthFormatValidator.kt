@@ -1,6 +1,6 @@
 package org.resolvetosavelives.red.newentry
 
-import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
+import org.resolvetosavelives.red.patient.PatientRepository
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeParseException
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class DateOfBirthFormatValidator @Inject constructor() {
 
   fun validate(dateText: String): Result {
     return try {
-      LocalDateRoomTypeConverter.formatter.parse(dateText, LocalDate::from)
+      PatientRepository.dateOfTimeFormatter.parse(dateText, LocalDate::from)
       Result.VALID
 
     } catch (e: Exception) {

@@ -9,6 +9,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.ScrollView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
@@ -44,6 +45,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   lateinit var controller: PatientEntryScreenController
 
   private val upButton by bindView<View>(R.id.patiententry_up)
+  private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollable_container)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
   private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
@@ -69,6 +71,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     // - Disable phone number field when 'None' is selected.
     // - Animate date-of-birth and age.
     // - Show 'X' icon when a field is focused.
+    // - Auto-fill district and state from facility
 
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
@@ -154,6 +157,15 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
             .translationY(saveButton.height.toFloat())
             .setInterpolator(FastOutSlowInInterpolator())
             .start()
+      }
+    }
+
+    if (enabled) {
+      // The save button covers the district and state fields when it shows up.
+      // Force-scrolling to the bottom solves this problem. Not the best
+      // solution, but works for now.
+      if (districtEditText.isFocused || stateEditText.isFocused) {
+        formScrollView.smoothScrollTo(0, formScrollView.height)
       }
     }
   }

@@ -3,6 +3,7 @@ package org.resolvetosavelives.red.patient
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
+import io.bloco.faker.Faker
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -39,6 +40,9 @@ class PatientSyncAndroidTest {
   @Inject
   lateinit var patientSync: PatientSync
 
+  private val faker: Faker = Faker()
+  private val genders = listOf(Gender.MALE, Gender.FEMALE, Gender.TRANSGENDER).shuffled()
+
   @Before
   fun setUp() {
     TestRedApp.appComponent().inject(this)
@@ -46,25 +50,37 @@ class PatientSyncAndroidTest {
 
   private fun insertDummyPatients(count: Int): Completable {
     return Observable.range(0, count)
-        .flatMapCompletable({ index ->
+        .flatMapCompletable({ _ ->
           repository
               .saveOngoingEntry(OngoingPatientEntry(
-                  personalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar #$index", "12-04-1993", null, Gender.TRANSGENDER),
-                  address = OngoingPatientEntry.Address("colony-or-village", "district", "state")))
+                  personalDetails = OngoingPatientEntry.PersonalDetails(
+                      faker.name.name(),
+                      null,
+                      faker.number.number(2).toString(),
+                      genders.first()),
+                  address = OngoingPatientEntry.Address(
+                      faker.address.streetAddress(),
+                      faker.address.city(),
+                      faker.address.state()),
+                  phoneNumber = OngoingPatientEntry.PhoneNumber(
+                      faker.phoneNumber.cellPhone(),
+                      PatientPhoneNumberType.MOBILE,
+                      faker.bool.bool(0.77f)
+                  )))
               .andThen(repository.saveOngoingEntryAsPatient())
         })
   }
 
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
-    insertDummyPatients(count = 5).blockingAwait()
+    insertDummyPatients(count = 15).blockingAwait()
 
     patientSync.push().blockingAwait()
 
     repository.patientsWithSyncStatus(SyncStatus.DONE)
         .test()
         .await()
-        .assertValue({ patients -> patients.size == 5 })
+        .assertValue({ patients -> patients.size == 15 })
         .assertComplete()
         .assertNoErrors()
   }

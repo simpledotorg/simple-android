@@ -1,7 +1,5 @@
 package org.resolvetosavelives.red.patient
 
-import android.arch.persistence.room.Room
-import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
@@ -9,19 +7,22 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
+import org.resolvetosavelives.red.TestRedApp
 import org.threeten.bp.LocalDate
+import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 class PatientRepositoryAndroidTest {
 
-  lateinit var patientRepository: PatientRepository
+  @Inject
+  lateinit var repository: PatientRepository
+
+  @Inject
   lateinit var database: AppDatabase
 
   @Before
   fun setUp() {
-    val context = InstrumentationRegistry.getTargetContext()
-    database = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java).build()
-    patientRepository = PatientRepository(database)
+    TestRedApp.appComponent().inject(this)
   }
 
   @Test
@@ -32,18 +33,18 @@ class PatientRepositoryAndroidTest {
 
     val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
+    repository.saveOngoingEntry(personalDetailsOnlyEntry)
+        .andThen(repository.ongoingEntry())
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
         .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
-        .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .flatMapCompletable { withAddressAndPhoneNumbers -> repository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+        .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = patientRepository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    val search1 = repository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = patientRepository.searchPatientsAndPhoneNumbers("ashok").blockingFirst()
+    val search2 = repository.searchPatientsAndPhoneNumbers("ashok").blockingFirst()
     assertThat(search2).hasSize(1)
     assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
@@ -58,17 +59,17 @@ class PatientRepositoryAndroidTest {
 
     val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
+    repository.saveOngoingEntry(personalDetailsOnlyEntry)
+        .andThen(repository.ongoingEntry())
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
-        .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .flatMapCompletable { withAddressAndPhoneNumbers -> repository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+        .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = patientRepository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    val search1 = repository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = patientRepository.searchPatientsAndPhoneNumbers("bima").blockingFirst()
+    val search2 = repository.searchPatientsAndPhoneNumbers("bima").blockingFirst()
     assertThat(search2).hasSize(1)
     assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
@@ -84,19 +85,19 @@ class PatientRepositoryAndroidTest {
 
       val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
-      patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-          .andThen(patientRepository.ongoingEntry())
+      repository.saveOngoingEntry(personalDetailsOnlyEntry)
+          .andThen(repository.ongoingEntry())
           .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
           .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
-          .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-          .andThen(patientRepository.saveOngoingEntryAsPatient())
+          .flatMapCompletable { withAddressAndPhoneNumbers -> repository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+          .andThen(repository.saveOngoingEntryAsPatient())
           .subscribe()
     }
 
-    val search1 = patientRepository.searchPatientsAndPhoneNumbers("9999").blockingFirst()
+    val search1 = repository.searchPatientsAndPhoneNumbers("9999").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = patientRepository.searchPatientsAndPhoneNumbers("1712").blockingFirst()
+    val search2 = repository.searchPatientsAndPhoneNumbers("1712").blockingFirst()
     assertThat(search2).hasSize(5)
     assertThat(search2.first().phoneNumber).isEqualTo("17121988")
     assertThat(search2.first().phoneType).isEqualTo(PatientPhoneNumberType.LANDLINE)
@@ -110,18 +111,18 @@ class PatientRepositoryAndroidTest {
 
     val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
+    repository.saveOngoingEntry(personalDetailsOnlyEntry)
+        .andThen(repository.ongoingEntry())
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
         .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
-        .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .flatMapCompletable { withAddressAndPhoneNumbers -> repository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+        .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = patientRepository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    val search1 = repository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = patientRepository.searchPatientsAndPhoneNumbers("ashok").blockingFirst()
+    val search2 = repository.searchPatientsAndPhoneNumbers("ashok").blockingFirst()
     val patient = search2[0]
     assertThat(patient.fullName).isEqualTo("Ashok Kumar")
     assertThat(patient.dateOfBirth).isNull()
@@ -139,8 +140,8 @@ class PatientRepositoryAndroidTest {
         personalDetails = ongoingPersonalDetails,
         address = ongoingAddress)
 
-    patientRepository.saveOngoingEntry(ongoingPatientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+    repository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(repository.saveOngoingEntryAsPatient())
         .test()
         .assertError(AssertionError::class.java)
   }
@@ -156,11 +157,11 @@ class PatientRepositoryAndroidTest {
         address = ongoingAddress,
         phoneNumber = ongoingPhoneNumber)
 
-    patientRepository.saveOngoingEntry(ongoingPatientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+    repository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val combinedPatient = patientRepository.searchPatientsAndPhoneNumbers("kumar")
+    val combinedPatient = repository.searchPatientsAndPhoneNumbers("kumar")
         .blockingFirst()
         .first()
 

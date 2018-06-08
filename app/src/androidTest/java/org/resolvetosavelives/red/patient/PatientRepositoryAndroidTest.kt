@@ -52,6 +52,30 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun createAnOngoingPatientEntry_withoutPhoneNumber_thenSaveItToDatabase() {
+    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08-04-1985", null, Gender.TRANSGENDER)
+
+    val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
+
+    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
+        .andThen(patientRepository.ongoingEntry())
+        .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
+        .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .subscribe()
+
+    val search1 = patientRepository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    assertThat(search1).isEmpty()
+
+    val search2 = patientRepository.searchPatientsAndPhoneNumbers("bima").blockingFirst()
+    assertThat(search2).hasSize(1)
+    assertThat(search2.first().age).isNull()
+    assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
+    assertThat(search2.first().phoneNumber).isNull()
+  }
+
+  @Test
   fun createAnOngoingPatientEntry_withPhoneNumbers_thenSaveItToDatabase_AndSearchByPhoneNumber() {
     for (i in 1..5) {
       val ongoingAddress = OngoingPatientEntry.Address("Benson Town", "Bangalore North", "Karnataka")
@@ -69,13 +93,13 @@ class PatientRepositoryAndroidTest {
           .subscribe()
     }
 
-    val search1 = database.patientSearchDao().search("lakshman").blockingFirst()
+    val search1 = patientRepository.searchPatientsAndPhoneNumbers("9999").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2: List<PatientSearchResult> = database.patientSearchDao().search("raju").blockingFirst()
+    val search2 = patientRepository.searchPatientsAndPhoneNumbers("1712").blockingFirst()
     assertThat(search2).hasSize(5)
-    assertThat(search2.first().fullName).isEqualTo("1 Chetan Raju")
     assertThat(search2.first().phoneNumber).isEqualTo("17121988")
+    assertThat(search2.first().phoneType).isEqualTo(PatientPhoneNumberType.LANDLINE)
   }
 
   @Test
@@ -149,6 +173,7 @@ class PatientRepositoryAndroidTest {
     assertThat(combinedPatient.address.state).isEqualTo("Goa")
     assertThat(combinedPatient.phoneNumber).isNotEmpty()
     assertThat(combinedPatient.phoneNumber).isEqualTo("3.14159")
+    assertThat(combinedPatient.phoneActive).isEqualTo(true)
   }
 
   @After

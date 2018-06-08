@@ -33,7 +33,7 @@ class PatientSearchScreenController @Inject constructor(
   private fun patientSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType(SearchQueryTextChanged::class.java)
-        .map(SearchQueryTextChanged::number)
+        .map(SearchQueryTextChanged::query)
         .flatMap { repository.searchPatientsAndPhoneNumbers(it) }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
@@ -41,7 +41,7 @@ class PatientSearchScreenController @Inject constructor(
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val phoneNumberChanges = events
         .ofType(SearchQueryTextChanged::class.java)
-        .map(SearchQueryTextChanged::number)
+        .map(SearchQueryTextChanged::query)
 
     return events
         .ofType(CreateNewPatientClicked::class.java)

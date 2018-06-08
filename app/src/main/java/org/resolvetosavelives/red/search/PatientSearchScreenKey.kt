@@ -8,6 +8,6 @@ import org.resolvetosavelives.red.router.screen.FullScreenKey
 class PatientSearchScreenKey : FullScreenKey {
 
   override fun layoutRes(): Int {
-    return R.layout.screen_patient_search_by_phone
+    return R.layout.screen_patient_search
   }
 }

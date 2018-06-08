@@ -65,6 +65,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(None))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientDistrictTextChanged(""))
     uiEvents.onNext(PatientStateTextChanged(""))
 
@@ -75,7 +76,8 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("125"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony-or-village"))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
 

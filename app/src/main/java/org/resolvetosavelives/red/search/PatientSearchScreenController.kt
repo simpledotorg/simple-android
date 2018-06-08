@@ -22,7 +22,8 @@ class PatientSearchScreenController @Inject constructor(
     return Observable.merge(
         screenSetup(),
         patientSearchResults(replayedEvents),
-        saveAndProceeds(replayedEvents))
+        saveAndProceeds(replayedEvents),
+        backButtonClicks(replayedEvents))
   }
 
   private fun screenSetup(): Observable<UiChange> {
@@ -49,5 +50,10 @@ class PatientSearchScreenController @Inject constructor(
         .map { number -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(number)) }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
+  }
+
+  private fun backButtonClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType(BackButtonClicked::class.java)
+        .map { { ui: Ui -> ui.goBackToHomeScreen() } }
   }
 }

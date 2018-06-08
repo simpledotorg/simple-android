@@ -13,8 +13,8 @@ import flow.TraversalCallback
 /**
  * Base class for key-changers that change screens in a single ViewGroup.
  *
- * @param <T> Type of key that this key-changer can handle. E.g., [FullScreenKey].
-</T> */
+ * @param [T] Type of key that this key-changer can handle. E.g., [FullScreenKey].
+ */
 abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
 
   override fun changeKey(

@@ -7,9 +7,9 @@ import android.view.ViewGroup
 import flow.KeyChanger
 
 /**
- * Coordinates changes between {@link FullScreenKey FullScreenKeys}.
+ * Coordinates changes between [FullScreenKey]s.
  *
- * @param screenLayoutContainerRes ViewGroup where layouts for {@link FullScreenKey} will be inflated.
+ * @param [screenLayoutContainerRes] ViewGroup where layouts for [FullScreenKey] will be inflated.
  */
 class FullScreenKeyChanger(
     private val activity: Activity,

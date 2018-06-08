@@ -35,6 +35,8 @@ data class PatientSearchResult(
 
     val phoneNumber: String?,
 
+    val phoneType: PatientPhoneNumberType?,
+
     val phoneActive: Boolean?
 ) {
 
@@ -47,10 +49,10 @@ data class PatientSearchResult(
           SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.status, P.createdAt, P.updatedAt, P.syncStatus,
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district, PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
-          PP.number phoneNumber, PP.active phoneActive
+          PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive
           FROM Patient P
           INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
-          INNER JOIN PatientPhoneNumber PP ON P.uuid = PP.patientUuid
+          LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
     """
     }
 

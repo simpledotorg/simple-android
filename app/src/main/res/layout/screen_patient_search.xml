@@ -42,16 +42,14 @@
     android:layout_below="@id/patientsearch_toolbar"
     android:contentDescription="@string/patientsearch_new_patient"
     android:drawableStart="@drawable/ic_add_circle_outline_black_24dp"
-    android:text="@string/patientsearch_new_patient" />
+    android:text="@string/patientsearch_new_patient"
+    android:visibility="gone" />
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/patientsearch_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/patientsearch_new_patient"
-    android:paddingTop="@dimen/spacing_8"
-    android:paddingBottom="@dimen/spacing_8"
-    android:clipToPadding="false"
     tools:listitem="@layout/list_patient_search" />
 
 </org.resolvetosavelives.red.search.PatientSearchScreen>

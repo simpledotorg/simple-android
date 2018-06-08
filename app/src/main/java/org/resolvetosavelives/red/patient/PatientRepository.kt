@@ -10,14 +10,19 @@ import org.resolvetosavelives.red.patient.OngoingPatientEntry.ValidationResult
 import org.resolvetosavelives.red.patient.SyncStatus.DONE
 import org.resolvetosavelives.red.patient.SyncStatus.PENDING
 import org.resolvetosavelives.red.patient.sync.PatientPayload
-import org.resolvetosavelives.red.util.LocalDateRoomTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
 @AppScope
 class PatientRepository @Inject constructor(private val database: AppDatabase) {
+
+  companion object {
+    val dateOfTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
+  }
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
@@ -150,7 +155,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
 
-                dateOfBirth = dateConverter(personalDetails.dateOfBirth),
+                dateOfBirth = convertToDate(personalDetails.dateOfBirth),
                 age = personalDetails.age?.let {
                   Age(value = personalDetails.age.toInt(), updatedAt = Instant.now())
                 },
@@ -170,9 +175,11 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .andThen(phoneNumbersSave)
   }
 
-  private fun dateConverter(dateOfBirth: String?): LocalDate? {
-    val converter = LocalDateRoomTypeConverter()
-    return converter.toLocalDate(dateOfBirth)
+  private fun convertToDate(dateOfBirth: String?): LocalDate? {
+    return dateOfBirth?.let {
+      val formatter = dateOfTimeFormatter
+      formatter.parse(dateOfBirth, LocalDate::from)
+    }
   }
 
   private fun saveAddress(address: PatientAddress): Completable {

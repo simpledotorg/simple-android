@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -34,6 +35,7 @@ class PatientSearchScreenControllerTest {
   fun `when screen starts then the keyboard should be shown on phone number field and patient list should be setup`() {
     verify(screen).showKeyboardOnPhoneNumberField()
     verify(screen).setupSearchResultsList()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -61,5 +63,12 @@ class PatientSearchScreenControllerTest {
       assert(partialNumber == firstValue.phoneNumber!!.number)
     }
     verify(screen).openPersonalDetailsEntryScreen()
+  }
+
+  @Test
+  fun `when back button is clicked, home screen should open`() {
+    uiEvents.onNext(BackButtonClicked())
+
+    verify(screen).goBackToHomeScreen()
   }
 }

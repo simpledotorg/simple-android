@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -33,6 +34,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var controller: PatientSearchScreenController
 
+  private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
   private val searchEditText by bindView<EditText>(R.id.patientsearch_text)
   private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
   private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
@@ -46,7 +48,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    Observable.merge(searchTextChanges(), newPatientButtonClicks())
+    // TODO: Can we use sealed classes to represent events?
+    Observable.merge(searchTextChanges(), newPatientButtonClicks(), backButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -60,6 +63,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun newPatientButtonClicks() = RxView.clicks(newPatientButton)
       .map { CreateNewPatientClicked() }
+
+  private fun backButtonClicks() = RxView.clicks(backButton)
+      .map { BackButtonClicked() }
 
   fun showKeyboardOnPhoneNumberField() {
     searchEditText.showKeyboard()
@@ -76,5 +82,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun openPersonalDetailsEntryScreen() {
     screenRouter.push(PatientEntryScreen.KEY)
+  }
+
+  fun goBackToHomeScreen() {
+    screenRouter.pop()
   }
 }

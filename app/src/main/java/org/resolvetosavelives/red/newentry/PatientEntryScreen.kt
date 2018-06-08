@@ -86,6 +86,18 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     // screen for a moment. Disabling it here solves the problem.
     setSaveButtonEnabled(false)
 
+    // Not sure why, but setting android:nextFocusDown in XML isn't working,
+    // so doing this manually here.
+    dateOfBirthEditText.imeOptions = EditorInfo.IME_ACTION_NEXT
+    dateOfBirthEditText.setOnEditorActionListener({ _, actionId, event ->
+      if (actionId == EditorInfo.IME_ACTION_NEXT) {
+        colonyOrVillageEditText.requestFocus()
+        true
+      } else {
+        false
+      }
+    })
+
     Observable
         .mergeArray(
             screenCreates(),

@@ -126,9 +126,15 @@ class PatientEntryScreenController @Inject constructor(
           }
         }
 
-    val colonyOrVillageAvailabilities = events
-        .ofType<PatientColonyOrVillageTextChanged>()
-        .map { it.colonyOrVillage.isNotBlank() }
+    val colonyOrVillageAvailabilities = Observables
+        .combineLatest(
+            events
+                .ofType<PatientNoColonyOrVillageToggled>()
+                .map { it.noneSelected },
+            events
+                .ofType<PatientColonyOrVillageTextChanged>()
+                .map { it.colonyOrVillage.isNotBlank() })
+        .map { (noneSelected, colonyAvailable) -> noneSelected || colonyAvailable }
 
     val districtAvailabilities = events
         .ofType<PatientDistrictTextChanged>()

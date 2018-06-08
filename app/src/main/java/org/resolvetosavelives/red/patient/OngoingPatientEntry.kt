@@ -12,8 +12,8 @@ data class OngoingPatientEntry(
 ) {
 
   fun validateForSaving(): ValidationResult {
-    val invalidResult: (message: String) -> ValidationResult = { message ->
-      ValidationResult.Invalid(AssertionError(message))
+    val invalidResult: (message: String) -> ValidationResult = {
+      ValidationResult.Invalid(AssertionError(it))
     }
 
     if (personalDetails == null) {

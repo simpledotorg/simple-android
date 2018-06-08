@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.resolvetosavelives.red.facility.FacilityRepository
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.INVALID
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.VALID
 import org.resolvetosavelives.red.patient.Gender
@@ -22,7 +23,8 @@ typealias UiChange = (PatientEntryScreen) -> Unit
 typealias Ui = PatientEntryScreen
 
 class PatientEntryScreenController @Inject constructor(
-    private val repository: PatientRepository,
+    private val patientRepository: PatientRepository,
+    private val facilityRepository: FacilityRepository,
     private val dateOfBirthValidator: DateOfBirthFormatValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -38,7 +40,14 @@ class PatientEntryScreenController @Inject constructor(
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
-        .flatMapSingle { repository.ongoingEntry() }
+        .flatMapSingle { patientRepository.ongoingEntry() }
+        .withLatestFrom(facilityRepository.currentFacility().take(1))
+        .map { (entry, facility) ->
+          entry.copy(address = OngoingPatientEntry.Address(
+              colonyOrVillage = "",
+              district = facility.district,
+              state = facility.state))
+        }
         .map { { ui: Ui -> ui.preFillFields(it) } }
   }
 
@@ -183,10 +192,10 @@ class PatientEntryScreenController @Inject constructor(
             personDetailChanges,
             phoneNumberChanges,
             addressChanges,
-            { _, personal, phone, address -> OngoingPatientEntry(personalDetails = personal, phoneNumber = phone.toNullable(), address = address) })
+            { _, personal, phone, address -> OngoingPatientEntry(personal, address, phone.toNullable()) })
         .flatMap { entry ->
-          repository.saveOngoingEntry(entry)
-              .andThen(repository.saveOngoingEntryAsPatient())
+          patientRepository.saveOngoingEntry(entry)
+              .andThen(patientRepository.saveOngoingEntryAsPatient())
               .andThen(Observable.just({ ui: Ui -> ui.openSummaryScreenForBpEntry() }))
         }
   }

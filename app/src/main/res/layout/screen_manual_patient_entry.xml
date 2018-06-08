@@ -18,6 +18,7 @@
     android:tint="@color/gray_600" />
 
   <ScrollView
+    android:id="@+id/patiententry_form_scrollable_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_toEndOf="@+id/patiententry_up"

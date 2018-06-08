@@ -17,10 +17,10 @@ data class OngoingPatientEntry(
     }
 
     if (personalDetails == null) {
-      return invalidResult("Personal details is empty")
+      return invalidResult("Personal details cannot be empty")
     }
     if (address == null) {
-      return invalidResult("Address is empty")
+      return invalidResult("Address cannot be empty")
     }
 
     with(personalDetails) {
@@ -32,19 +32,22 @@ data class OngoingPatientEntry(
         return invalidResult("Both age and dateOfBirth cannot be present.")
       }
       if (fullName.isBlank()) {
-        return invalidResult("Full name is empty")
+        return invalidResult("Full name cannot be empty")
       }
       if (gender == null) {
-        return invalidResult("Gender is empty")
+        return invalidResult("Gender cannot be empty")
       }
     }
 
     with(address) {
+      if (colonyOrVillage != null && colonyOrVillage.isBlank()) {
+        return invalidResult("Colony/district cannot be both non-null and blank")
+      }
       if (district.isBlank()) {
-        return invalidResult("Address district is empty")
+        return invalidResult("Address district cannot be empty")
       }
       if (state.isBlank()) {
-        return invalidResult("Address state is empty")
+        return invalidResult("Address state cannot be empty")
       }
     }
 
@@ -62,7 +65,7 @@ data class OngoingPatientEntry(
    */
   data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?)
 
-  data class Address(val colonyOrVillage: String, val district: String, val state: String)
-
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
+
+  data class Address(val colonyOrVillage: String?, val district: String, val state: String)
 }

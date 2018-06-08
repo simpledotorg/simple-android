@@ -48,7 +48,7 @@ class PatientEntryScreenControllerTest {
 
     verify(screen).preFillFields(OngoingPatientEntry(
         address = OngoingPatientEntry.Address(
-            colonyOrVillage = "",
+            colonyOrVillage = null,
             district = "district",
             state = "state")))
   }
@@ -107,5 +107,28 @@ class PatientEntryScreenControllerTest {
     ))
     verify(patientRepository).saveOngoingEntryAsPatient()
     verify(screen).openSummaryScreenForBpEntry()
+  }
+
+  @Test
+  fun `when none is selected then their related fields should be reset`() {
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+
+    verify(screen).resetPhoneNumberField()
+    verify(screen).resetColonyOrVillageField()
+  }
+
+  @Test
+  fun `when the user starts typing on an optional field then its related none checkbox should get unchecked`() {
+    uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
+    uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
+    uiEvents.onNext(PatientPhoneNumberTextChanged("123"))
+
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("C"))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("Co"))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("Col"))
+
+    verify(screen, times(1)).uncheckNoPhoneNumberCheckbox()
+    verify(screen, times(1)).uncheckNoVillageOrColonyCheckbox()
   }
 }

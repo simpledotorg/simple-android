@@ -29,7 +29,6 @@ import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -53,6 +52,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
+  private val noColonyOrVillageCheckBox by bindView<CheckBox>(R.id.patiententry_colony_or_village_none)
   private val districtEditText by bindView<EditText>(R.id.patiententry_district)
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
   private val saveButton by bindView<View>(R.id.patiententry_save)
@@ -66,14 +66,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     // Plan:
     // - Change date format to DD/MM/YYYY from DD-MM-YYYY.
-    // - Handle 'none'.
-    // - Disable phone number field when 'None' is selected.
     // - Animate date-of-birth and age.
     // - Show 'X' icon when a field is focused.
 
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
-    saveButton.setOnClickListener { Timber.w("TODO") }
 
     // Save button is also disabled by the controller as soon as it starts emitting
     // UiChanges, but by the time that happens, the save button is visible on the
@@ -101,6 +98,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
         colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
+        RxCompoundButton.checkedChanges(noColonyOrVillageCheckBox).map(::PatientNoColonyOrVillageToggled),
         districtEditText.textChanges(::PatientDistrictTextChanged),
         stateEditText.textChanges(::PatientStateTextChanged),
         genderChanges())
@@ -170,6 +168,22 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   fun openSummaryScreenForBpEntry() {
     // TODO.
+  }
+
+  fun resetPhoneNumberField() {
+    phoneNumberEditText.text = null
+  }
+
+  fun resetColonyOrVillageField() {
+    colonyOrVillageEditText.text = null
+  }
+
+  fun uncheckNoPhoneNumberCheckbox() {
+    noPhoneNumberCheckBox.isChecked = false
+  }
+
+  fun uncheckNoVillageOrColonyCheckbox() {
+    noColonyOrVillageCheckBox.isChecked = false
   }
 }
 

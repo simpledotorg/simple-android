@@ -10,6 +10,8 @@ data class PatientPhoneNumberTextChanged(val phoneNumber: String) : UiEvent
 
 data class PatientNoPhoneNumberToggled(val noneSelected: Boolean) : UiEvent
 
+data class PatientNoColonyOrVillageToggled(val noneSelected: Boolean) : UiEvent
+
 data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : UiEvent
 
 data class PatientAgeTextChanged(val age: String) : UiEvent

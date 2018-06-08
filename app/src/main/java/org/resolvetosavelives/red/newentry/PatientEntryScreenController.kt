@@ -34,7 +34,40 @@ class PatientEntryScreenController @Inject constructor(
     return Observable.mergeArray(
         preFillOnStart(replayedEvents),
         saveButtonToggles(replayedEvents),
-        patientSaves(replayedEvents))
+        patientSaves(replayedEvents),
+        noneCheckBoxBehaviors(replayedEvents))
+  }
+
+  private fun noneCheckBoxBehaviors(events: Observable<UiEvent>): Observable<UiChange> {
+    val phoneNumberResets = events
+        .ofType<PatientNoPhoneNumberToggled>()
+        .filter { event -> event.noneSelected }
+        .map { { ui: Ui -> ui.resetPhoneNumberField() } }
+
+    val noPhoneNumberUnchecks = events
+        .ofType<PatientPhoneNumberTextChanged>()
+        .map { it.phoneNumber.isNotBlank() }
+        .filter { isNotBlank -> isNotBlank }
+        .distinctUntilChanged()
+        .map { { ui: Ui -> ui.uncheckNoPhoneNumberCheckbox() } }
+
+    val colonyOrVillageResets = events
+        .ofType<PatientNoColonyOrVillageToggled>()
+        .filter { event -> event.noneSelected }
+        .map { { ui: Ui -> ui.resetColonyOrVillageField() } }
+
+    val noVillageOrColonyUnchecks = events
+        .ofType<PatientColonyOrVillageTextChanged>()
+        .map { it.colonyOrVillage.isNotBlank() }
+        .filter { isNotBlank -> isNotBlank }
+        .distinctUntilChanged()
+        .map { { ui: Ui -> ui.uncheckNoVillageOrColonyCheckbox() } }
+
+    return Observable.mergeArray(
+        phoneNumberResets,
+        noPhoneNumberUnchecks,
+        colonyOrVillageResets,
+        noVillageOrColonyUnchecks)
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -44,7 +77,7 @@ class PatientEntryScreenController @Inject constructor(
         .withLatestFrom(facilityRepository.currentFacility().take(1))
         .map { (entry, facility) ->
           entry.copy(address = OngoingPatientEntry.Address(
-              colonyOrVillage = "",
+              colonyOrVillage = null,
               district = facility.district,
               state = facility.state))
         }

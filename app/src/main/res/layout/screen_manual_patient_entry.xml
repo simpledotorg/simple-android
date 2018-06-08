@@ -153,18 +153,33 @@
           android:textSize="@dimen/textsize_16" />
       </RadioGroup>
 
-      <android.support.design.widget.TextInputLayout
+      <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16">
 
-        <android.support.design.widget.TextInputEditText
-          android:id="@+id/patiententry_colony_or_village"
+        <android.support.design.widget.TextInputLayout
           android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <android.support.design.widget.TextInputEditText
+            android:id="@+id/patiententry_colony_or_village"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_colony_or_village"
+            android:inputType="textPostalAddress|textCapSentences" />
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.v7.widget.AppCompatCheckBox
+          android:id="@+id/patiententry_colony_or_village_none"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:hint="@string/patiententry_colony_or_village"
-          android:inputType="textPostalAddress|textCapSentences" />
-      </android.support.design.widget.TextInputLayout>
+          android:layout_gravity="center_vertical|end"
+          android:layout_marginEnd="8dp"
+          android:text="@string/patiententry_none"
+          android:textColor="@color/gray_600"
+          app:buttonTint="@color/gray_400" />
+      </FrameLayout>
 
       <LinearLayout
         android:layout_width="match_parent"

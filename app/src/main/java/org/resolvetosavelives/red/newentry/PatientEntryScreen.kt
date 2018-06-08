@@ -65,13 +65,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     TheActivity.component.inject(this)
 
     // Plan:
-    // - Save patient
     // - Change date format to DD/MM/YYYY from DD-MM-YYYY.
     // - Handle 'none'.
     // - Disable phone number field when 'None' is selected.
     // - Animate date-of-birth and age.
     // - Show 'X' icon when a field is focused.
-    // - Auto-fill district and state from facility
 
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
@@ -164,7 +162,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       // The save button covers the district and state fields when it shows up.
       // Force-scrolling to the bottom solves this problem. Not the best
       // solution, but works for now.
-      if (districtEditText.isFocused || stateEditText.isFocused) {
+      if (colonyOrVillageEditText.isFocused || districtEditText.isFocused || stateEditText.isFocused) {
         formScrollView.smoothScrollTo(0, formScrollView.height)
       }
     }

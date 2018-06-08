@@ -1,5 +1,6 @@
 package org.resolvetosavelives.red.newentry
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
@@ -31,13 +32,17 @@ class PatientEntryScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val controller = PatientEntryScreenController(patientRepository, facilityRepository, dateOfBirthValidator)
 
+  private lateinit var errorConsumer: (Throwable) -> Unit
+
   @Before
   fun setUp() {
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(Facility(district = "district", state = "state")))
 
+    errorConsumer = { throw it }
+
     uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
   }
 
   @Test
@@ -112,7 +117,7 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `when none is selected then their related fields should be reset`() {
+  fun `when none is selected then their associated fields should be reset`() {
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
 
@@ -121,7 +126,7 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `when the user starts typing on an optional field then its related none checkbox should get unchecked`() {
+  fun `when the user starts typing on an optional field then its associated none checkbox should get unchecked`() {
     uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
     uiEvents.onNext(PatientPhoneNumberTextChanged("123"))
@@ -132,5 +137,31 @@ class PatientEntryScreenControllerTest {
 
     verify(screen, times(1)).uncheckNoPhoneNumberCheckbox()
     verify(screen, times(1)).uncheckNoVillageOrColonyCheckbox()
+  }
+
+  @Test
+  fun `date-of-birth and age fields should only be visible while one of them is empty`() {
+    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
+
+    uiEvents.onNext(PatientAgeTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+
+    uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("1"))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+  }
+
+  @Test()
+  fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
+    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
+
+    errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
+
+    uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
+    uiEvents.onNext(PatientAgeTextChanged("1"))
   }
 }

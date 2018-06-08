@@ -7,6 +7,9 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.facility.FacilityRepository
+import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.INVALID
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.VALID
 import org.resolvetosavelives.red.patient.Gender
@@ -34,6 +37,7 @@ class PatientEntryScreenController @Inject constructor(
     return Observable.mergeArray(
         preFillOnStart(replayedEvents),
         saveButtonToggles(replayedEvents),
+        dateOfBirthAndAgeSwitches(replayedEvents),
         patientSaves(replayedEvents),
         noneCheckBoxBehaviors(replayedEvents))
   }
@@ -82,6 +86,27 @@ class PatientEntryScreenController @Inject constructor(
               state = facility.state))
         }
         .map { { ui: Ui -> ui.preFillFields(it) } }
+  }
+
+  private fun dateOfBirthAndAgeSwitches(events: Observable<UiEvent>): Observable<UiChange> {
+    val isDateOfBirthBlanks = events
+        .ofType<PatientDateOfBirthTextChanged>()
+        .map { it.dateOfBirth.isBlank() }
+
+    val isAgeBlanks = events
+        .ofType<PatientAgeTextChanged>()
+        .map { it.age.isBlank() }
+
+    return Observables.combineLatest(isDateOfBirthBlanks, isAgeBlanks)
+        .distinctUntilChanged()
+        .map<UiChange> { (dateBlank, ageBlank) ->
+          when {
+            !dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE) }
+            dateBlank && !ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE) }
+            dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE) }
+            else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
+          }
+        }
   }
 
   private fun saveButtonToggles(events: Observable<UiEvent>): Observable<UiChange> {

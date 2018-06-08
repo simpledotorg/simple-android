@@ -6,6 +6,7 @@
     <item name="colorAccent">@color/color_accent</item>
 
     <item name="toolbarStyle">@style/RedApp.ToolbarStyle</item>
+    <item name="android:windowBackground">@color/window_background</item>
   </style>
 
   <style name="RedApp" />

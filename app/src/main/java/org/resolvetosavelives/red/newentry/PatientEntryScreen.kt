@@ -1,10 +1,16 @@
 package org.resolvetosavelives.red.newentry
 
 import android.content.Context
+import android.support.design.widget.TextInputLayout
+import android.support.transition.ChangeBounds
+import android.support.transition.Fade
+import android.support.transition.TransitionManager
+import android.support.transition.TransitionSet
 import android.support.v4.view.ViewCompat
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
@@ -20,6 +26,8 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
@@ -48,7 +56,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
   private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
   private val dateOfBirthEditText by bindView<EditText>(R.id.patiententry_date_of_birth)
+  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
+  private val ageInputLayout by bindView<TextInputLayout>(R.id.patiententry_age_inputlayout)
+  private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patiententry_dateofbirth_and_age_separator)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
   private val noColonyOrVillageCheckBox by bindView<CheckBox>(R.id.patiententry_colony_or_village_none)
@@ -64,9 +75,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     TheActivity.component.inject(this)
 
     // Plan:
-    // - Change date format to DD/MM/YYYY from DD-MM-YYYY.
-    // - Animate date-of-birth and age.
     // - Show 'X' icon when a field is focused.
+    // - Switch between 'date of birth' and 'date of birth (dd/mm/yyyy)` for DOB's hint.
 
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
@@ -180,6 +190,31 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   fun uncheckNoVillageOrColonyCheckbox() {
     noColonyOrVillageCheckBox.isChecked = false
+  }
+
+  fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
+    val transition = TransitionSet()
+        .addTransition(ChangeBounds())
+        .addTransition(Fade())
+        .setOrdering(TransitionSet.ORDERING_TOGETHER)
+        .setDuration(250)
+        .setInterpolator(FastOutSlowInInterpolator())
+    TransitionManager.beginDelayedTransition(this, transition)
+
+    dateOfBirthInputLayout.visibility = when (visibility) {
+      DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
+      else -> View.GONE
+    }
+
+    dateOfBirthAndAgeSeparator.visibility = when (visibility) {
+      BOTH_VISIBLE -> View.VISIBLE
+      else -> View.GONE
+    }
+
+    ageInputLayout.visibility = when (visibility) {
+      DateOfBirthAndAgeVisibility.AGE_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
+      else -> View.GONE
+    }
   }
 }
 

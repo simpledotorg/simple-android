@@ -3,4 +3,6 @@
   <color name="color_primary">#DF4D25</color>
   <color name="color_primary_dark">#C64420</color>
   <color name="color_accent">#4F4DE7</color>
+
+  <color name="window_background">@color/white</color>
 </resources>

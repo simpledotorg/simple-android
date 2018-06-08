@@ -8,6 +8,10 @@ import android.widget.TextView
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.patient.PatientSearchResult
+import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.Period
+import org.threeten.bp.ZoneOffset
 
 class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
@@ -19,6 +23,7 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
   }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+
     val inflater = LayoutInflater.from(parent.context)
     return ViewHolder(inflater.inflate(R.layout.list_patient_search, parent, false))
   }
@@ -34,6 +39,7 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val titleTextView by bindView<TextView>(R.id.patientsearch_item_title)
+    private val ageTextView by bindView<TextView>(R.id.patientsearch_item_age)
     private val bylineTextView by bindView<TextView>(R.id.patientsearch_item_byline)
 
     init {
@@ -45,6 +51,20 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
     fun render(patient: PatientSearchResult) {
       titleTextView.text = String.format("%s • %s", patient.fullName, patient.gender.toString().substring(0, 1))
       bylineTextView.text = String.format("%s, %s", patient.address.colonyOrVillage, patient.address.district)
+
+      if (patient.age == null) {
+        val years = Period.between(patient.dateOfBirth, LocalDate.now()).years.toString()
+        ageTextView.text = itemView.context.getString(R.string.patient_age, years)
+
+      } else {
+        val ageUpdatedAt = LocalDateTime.ofInstant(patient.age.updatedAt, ZoneOffset.UTC)
+        val updatedAtLocalDate = LocalDate.of(ageUpdatedAt.year, ageUpdatedAt.month, ageUpdatedAt.dayOfMonth)
+        val yearsSinceThen = Period.between(updatedAtLocalDate, LocalDate.now()).years
+
+        val oldAge = patient.age.value
+        val currentAge = oldAge + yearsSinceThen
+        ageTextView.text = itemView.context.getString(R.string.patient_age, currentAge.toString())
+      }
 
       if (patient.phoneNumber?.isNotEmpty() == true) {
         val current = bylineTextView.text

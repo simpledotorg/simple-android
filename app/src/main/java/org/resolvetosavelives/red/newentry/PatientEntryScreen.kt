@@ -23,8 +23,7 @@ import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
-import org.resolvetosavelives.red.util.Just
-import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.toOptional
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
@@ -113,10 +112,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .map { checkedId ->
           val gender = radioIdToGenders[checkedId]
-          when (gender) {
-            null -> PatientGenderChanged(None)
-            else -> PatientGenderChanged(Just(gender))
-          }
+          PatientGenderChanged(gender.toOptional())
         }
   }
 

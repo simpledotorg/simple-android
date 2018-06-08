@@ -106,4 +106,5 @@ dependencies {
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
   implementation 'com.f2prateek.rx.preferences2:rx-preferences:2.0.0'
   implementation 'com.tspoon.traceur:traceur:1.0.1'
+  implementation 'ru.egslava:MaskedEditText:1.0.5'
 }

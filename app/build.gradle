@@ -61,10 +61,13 @@ dependencies {
   testImplementation 'com.nhaarman:mockito-kotlin:1.5.0'
   testImplementation 'pl.pragmatists:JUnitParams:1.1.1'
   testImplementation 'com.google.truth:truth:0.40'
-  androidTestImplementation 'com.google.truth:truth:0.40'
+  testImplementation 'com.github.blocoio:faker:1.2.7'
+
   androidTestImplementation 'com.android.support:support-annotations:27.1.1'
   androidTestImplementation "com.android.support.test:runner:$versions.supportTest"
   androidTestImplementation "com.android.support.test:rules:$versions.supportTest"
+  androidTestImplementation 'com.google.truth:truth:0.40'
+  androidTestImplementation 'com.github.blocoio:faker:1.2.7'
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
   debugImplementation "com.facebook.stetho:stetho:$versions.stetho"

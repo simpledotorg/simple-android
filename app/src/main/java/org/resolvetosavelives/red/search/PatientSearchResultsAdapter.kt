@@ -54,7 +54,7 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
 
       if (patient.age == null) {
         val years = Period.between(patient.dateOfBirth, LocalDate.now()).years.toString()
-        ageTextView.text = itemView.context.getString(R.string.patient_age, years)
+        ageTextView.text = itemView.context.getString(R.string.patientsearch_age, years)
 
       } else {
         val ageUpdatedAt = LocalDateTime.ofInstant(patient.age.updatedAt, ZoneOffset.UTC)
@@ -63,7 +63,7 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
 
         val oldAge = patient.age.value
         val currentAge = oldAge + yearsSinceThen
-        ageTextView.text = itemView.context.getString(R.string.patient_age, currentAge.toString())
+        ageTextView.text = itemView.context.getString(R.string.patientsearch_age, currentAge.toString())
       }
 
       if (patient.phoneNumber?.isNotEmpty() == true) {

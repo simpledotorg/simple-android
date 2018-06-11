@@ -55,7 +55,8 @@ class PatientRepositoryTest {
         country = "country",
         createdAt = mock(),
         updatedAt = mock())
-    val serverPatient = PatientPayload(
+
+    val serverPatientWithoutPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",
         gender = mock(),
@@ -65,9 +66,10 @@ class PatientRepositoryTest {
         status = mock(),
         createdAt = mock(),
         updatedAt = mock(),
-        address = serverAddress)
+        address = serverAddress,
+        phoneNumbers = null)
 
-    repository.mergeWithLocalData(listOf(serverPatient)).blockingAwait()
+    repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {
       verify(mockPatientDao).save(argThat<List<Patient>> { isNotEmpty() })

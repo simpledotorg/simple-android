@@ -38,6 +38,7 @@ class PatientEntryScreenController @Inject constructor(
         preFillOnStart(replayedEvents),
         saveButtonToggles(replayedEvents),
         dateOfBirthAndAgeSwitches(replayedEvents),
+        toggleDatePatternInDateOfBirthLabel(replayedEvents),
         patientSaves(replayedEvents),
         noneCheckBoxBehaviors(replayedEvents))
   }
@@ -107,6 +108,21 @@ class PatientEntryScreenController @Inject constructor(
             else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
           }
         }
+  }
+
+  private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {
+    val dateFocusChanges = events
+        .ofType<PatientDateOfBirthFocusChanged>()
+        .map { it.hasFocus }
+
+    val dateTextAvailabilities = events
+        .ofType<PatientDateOfBirthTextChanged>()
+        .map { it.dateOfBirth.isNotBlank() }
+
+    return Observables.combineLatest(dateFocusChanges, dateTextAvailabilities)
+        .map { (hasFocus, hasDateOfBirth) -> hasFocus || hasDateOfBirth }
+        .distinctUntilChanged()
+        .map { showPattern -> { ui: Ui -> ui.setShowDatePatternInDateOfBirthLabel(showPattern) } }
   }
 
   private fun saveButtonToggles(events: Observable<UiEvent>): Observable<UiChange> {

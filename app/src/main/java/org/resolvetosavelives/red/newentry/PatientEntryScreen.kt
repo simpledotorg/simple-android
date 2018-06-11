@@ -117,6 +117,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         phoneNumberEditText.textChanges(::PatientPhoneNumberTextChanged),
         RxCompoundButton.checkedChanges(noPhoneNumberCheckBox).map(::PatientNoPhoneNumberToggled),
         dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
+        RxView.focusChanges(dateOfBirthEditText).map(::PatientDateOfBirthFocusChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
         colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
         RxCompoundButton.checkedChanges(noColonyOrVillageCheckBox).map(::PatientNoColonyOrVillageToggled),
@@ -227,6 +228,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       DateOfBirthAndAgeVisibility.AGE_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
       else -> View.GONE
     }
+  }
+
+  fun setShowDatePatternInDateOfBirthLabel(showPattern: Boolean) {
+    val labelRes = when (showPattern) {
+      true -> R.string.patiententry_date_of_birth_focused
+      false -> R.string.patiententry_date_of_birth_unfocused
+    }
+    dateOfBirthInputLayout.hint = resources.getString(labelRes)
   }
 }
 

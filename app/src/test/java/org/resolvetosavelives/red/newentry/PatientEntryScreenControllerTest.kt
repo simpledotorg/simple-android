@@ -164,4 +164,18 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
     uiEvents.onNext(PatientAgeTextChanged("1"))
   }
+
+  @Test
+  fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
+    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
+
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
+    uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = true))
+    uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
+    uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
+
+    verify(screen, times(1)).setShowDatePatternInDateOfBirthLabel(false)
+    verify(screen).setShowDatePatternInDateOfBirthLabel(true)
+  }
 }

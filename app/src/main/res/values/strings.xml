@@ -23,5 +23,9 @@
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Save patient</string>
+  <string name="patiententry_patient_saved">Saved</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bpentry_or_enter_patients">Or, enter patient\'s:</string>
 
 </resources>

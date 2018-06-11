@@ -7,9 +7,6 @@
   </issue>
   <issue id="ParcelCreator" severity="informational" />
 
-  <!-- TODO: Remove this once we've given a build to Dan on friday. -->
-  <issue id="HardcodedText" severity="informational" />
-
   <!-- JCABI xml parser references a java package that is not bundled
        with Android. We haven't run into errors yet, but we might.  -->
   <issue id="InvalidPackage" severity="informational" />

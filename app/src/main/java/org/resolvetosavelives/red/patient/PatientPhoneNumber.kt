@@ -43,6 +43,6 @@ data class PatientPhoneNumber(
   interface RoomDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(phoneNumber: PatientPhoneNumber)
+    fun save(phoneNumbers: List<PatientPhoneNumber>)
   }
 }

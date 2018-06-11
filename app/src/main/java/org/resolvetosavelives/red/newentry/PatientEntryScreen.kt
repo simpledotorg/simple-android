@@ -10,6 +10,7 @@ import android.support.v4.view.ViewCompat
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.CheckBox
 import android.widget.EditText
@@ -57,8 +58,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
   private val dateOfBirthEditText by bindView<EditText>(R.id.patiententry_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
+  private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patiententry_date_of_birth_container)
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
-  private val ageInputLayout by bindView<TextInputLayout>(R.id.patiententry_age_inputlayout)
+  private val ageEditTextContainer by bindView<ViewGroup>(R.id.patiententry_age_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patiententry_dateofbirth_and_age_separator)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
@@ -107,6 +109,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
+        .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
 
@@ -207,7 +210,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .setInterpolator(FastOutSlowInInterpolator())
     TransitionManager.beginDelayedTransition(this, transition)
 
-    dateOfBirthInputLayout.visibility = when (visibility) {
+    dateOfBirthEditTextContainer.visibility = when (visibility) {
       DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
       else -> View.GONE
     }
@@ -217,7 +220,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       else -> View.GONE
     }
 
-    ageInputLayout.visibility = when (visibility) {
+    ageEditTextContainer.visibility = when (visibility) {
       DateOfBirthAndAgeVisibility.AGE_VISIBLE, BOTH_VISIBLE -> View.VISIBLE
       else -> View.GONE
     }
@@ -233,6 +236,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   fun setNoPhoneNumberCheckboxVisible(visible: Boolean) {
     TransitionManager.beginDelayedTransition(this, Fade()
+        .addTarget(noPhoneNumberCheckBox)
         .setDuration(100)
         .setInterpolator(FastOutSlowInInterpolator()))
 
@@ -247,6 +251,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   fun setNoVillageOrColonyCheckboxVisible(visible: Boolean) {
     TransitionManager.beginDelayedTransition(this, Fade()
+        .addTarget(noColonyOrVillageCheckBox)
         .setDuration(100)
         .setInterpolator(FastOutSlowInInterpolator()))
 

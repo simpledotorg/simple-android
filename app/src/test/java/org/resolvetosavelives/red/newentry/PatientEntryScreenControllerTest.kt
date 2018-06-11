@@ -126,17 +126,22 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `when the user starts typing on an optional field then its associated none checkbox should get unchecked`() {
+  fun `none checkboxes should only be visible while their associated fields are empty`() {
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("123"))
+    uiEvents.onNext(PatientPhoneNumberTextChanged("12"))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
 
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("C"))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("Co"))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("Col"))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
 
-    verify(screen, times(1)).uncheckNoPhoneNumberCheckbox()
-    verify(screen, times(1)).uncheckNoVillageOrColonyCheckbox()
+    verify(screen, times(2)).setNoPhoneNumberCheckboxVisible(true)
+    verify(screen, times(1)).setNoPhoneNumberCheckboxVisible(false)
+
+    verify(screen, times(2)).setNoVillageOrColonyCheckboxVisible(true)
+    verify(screen, times(1)).setNoVillageOrColonyCheckboxVisible(false)
   }
 
   @Test

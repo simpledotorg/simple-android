@@ -4,7 +4,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class QrDaggerModule {
+class QrModule {
 
   @Provides
   fun xmlParserFactory(): XmlParser.Factory {

@@ -22,8 +22,8 @@ import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
-typealias UiChange = (PatientEntryScreen) -> Unit
 typealias Ui = PatientEntryScreen
+typealias UiChange = (Ui) -> Unit
 
 class PatientEntryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,

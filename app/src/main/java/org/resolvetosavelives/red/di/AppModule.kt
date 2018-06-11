@@ -8,12 +8,10 @@ import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.qrscan.QrDaggerModule
+import org.resolvetosavelives.red.qrscan.QrModule
 import org.resolvetosavelives.red.sync.SyncModule
 
-// TODO: Should this class be named as AppDaggerModule, just like QrDaggerModule?
-
-@Module(includes = [QrDaggerModule::class, SyncModule::class, NetworkModule::class, StorageModule::class])
+@Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class])
 open class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides

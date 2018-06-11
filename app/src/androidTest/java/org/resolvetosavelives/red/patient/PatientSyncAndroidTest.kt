@@ -73,14 +73,15 @@ class PatientSyncAndroidTest {
 
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
-    insertDummyPatients(count = 15).blockingAwait()
+    val count = 15
+    insertDummyPatients(count).blockingAwait()
 
     patientSync.push().blockingAwait()
 
     repository.patientsWithSyncStatus(SyncStatus.DONE)
         .test()
         .await()
-        .assertValue({ patients -> patients.size == 15 })
+        .assertValue({ patients -> patients.size == count })
         .assertComplete()
         .assertNoErrors()
   }

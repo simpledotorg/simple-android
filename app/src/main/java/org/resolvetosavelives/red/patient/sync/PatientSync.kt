@@ -41,7 +41,6 @@ class PatientSync @Inject constructor(
           repository.updatePatientsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)
         }
 
-    // TODO: Add phone numbers here
     val networkCall = cachedPendingSyncPatients
         .map { patients -> patients.map { it.toPayload() } }
         .map(::PatientPushRequest)
@@ -70,7 +69,6 @@ class PatientSync @Inject constructor(
   }
 
   fun pull(): Completable {
-    // TODO: Add phone numbers here
     return configProvider
         .flatMapCompletable { config ->
           lastPullTimestamp.asObservable()

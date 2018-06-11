@@ -6,6 +6,8 @@ import org.resolvetosavelives.red.patient.Age
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.patient.PatientAddress
+import org.resolvetosavelives.red.patient.PatientPhoneNumber
+import org.resolvetosavelives.red.patient.PatientPhoneNumberType
 import org.resolvetosavelives.red.patient.PatientStatus
 import org.resolvetosavelives.red.patient.SyncStatus
 import org.threeten.bp.Instant
@@ -43,10 +45,13 @@ data class PatientPayload(
     val updatedAt: Instant,
 
     @Json(name = "address")
-    val address: PatientAddressPayload
+    val address: PatientAddressPayload,
+
+    @Json(name = "phone_numbers")
+    val phoneNumbers: List<PatientPhoneNumberPayload>?
 ) {
 
-  fun toDatabaseModel(updatedStatus: SyncStatus): Patient {
+  fun toDatabaseModel(newStatus: SyncStatus): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
@@ -59,7 +64,7 @@ data class PatientPayload(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        syncStatus = updatedStatus)
+        syncStatus = newStatus)
   }
 }
 
@@ -96,5 +101,39 @@ data class PatientAddressPayload(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt)
+  }
+}
+
+@JsonClass(generateAdapter = true)
+data class PatientPhoneNumberPayload(
+    @Json(name = "id")
+    val uuid: UUID,
+
+    @Json(name = "number")
+    val number: String,
+
+    @Json(name = "phone_type")
+    val type: PatientPhoneNumberType,
+
+    @Json(name = "active")
+    val active: Boolean,
+
+    @Json(name = "created_at")
+    val createdAt: Instant,
+
+    @Json(name = "updated_at")
+    val updatedAt: Instant
+) {
+
+  fun toDatabaseModel(uuidOfPatient: UUID): PatientPhoneNumber {
+    return PatientPhoneNumber(
+        uuid = uuid,
+        patientUuid = uuidOfPatient,
+        number = number,
+        phoneType = type,
+        active = active,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
   }
 }

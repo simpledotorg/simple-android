@@ -21,7 +21,7 @@ import javax.inject.Inject
 class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   companion object {
-    val dateOfTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
+    val dateOfTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
   }
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
@@ -43,8 +43,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .firstOrError()
   }
 
-  fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientWithAddressAndPhone>> {
-    return database.patientAddressPhoneDao()
+  fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientSearchResult>> {
+    return database.patientSearchDao()
         .withSyncStatus(status)
         .firstOrError()
   }
@@ -81,8 +81,17 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
             val newOrUpdatedAddresses = payloads.map { it.address.toDatabaseModel() }
             database.addressDao().save(newOrUpdatedAddresses)
 
-            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(DONE) }
+            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE) }
             database.patientDao().save(newOrUpdatedPatients)
+
+            val newOrUpdatedPhoneNumbers = payloads
+                .filter { it.phoneNumbers != null }
+                .flatMap { patientPayload ->
+                  patientPayload.phoneNumbers!!.map { it.toDatabaseModel(patientPayload.uuid) }
+                }
+            if (newOrUpdatedPhoneNumbers.isNotEmpty()) {
+              database.phoneNumberDao().save(newOrUpdatedPhoneNumbers)
+            }
           }
         }
   }
@@ -110,9 +119,6 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
 
     val addressUuid = UUID.randomUUID()
-    val phoneUuid = UUID.randomUUID()
-    val patientUuid = UUID.randomUUID()
-
     val addressSave = cachedOngoingEntry
         .map {
           with(it) {
@@ -127,25 +133,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
         .flatMapCompletable { address -> saveAddress(address) }
 
-    val phoneNumbersSave = cachedOngoingEntry
-        .flatMapCompletable { entry ->
-          if (entry.phoneNumber == null) {
-            Completable.complete()
-          } else {
-            val number = with(entry.phoneNumber) {
-              PatientPhoneNumber(
-                  uuid = phoneUuid,
-                  patientUuid = patientUuid,
-                  phoneType = type,
-                  number = number,
-                  active = active,
-                  createdAt = Instant.now(),
-                  updatedAt = Instant.now())
-            }
-            savePhoneNumber(number)
-          }
-        }
-
+    val patientUuid = UUID.randomUUID()
     val patientSave = cachedOngoingEntry
         .map {
           with(it) {
@@ -169,10 +157,29 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         }
         .flatMapCompletable { patient -> savePatient(patient) }
 
+    val phoneNumberSave = cachedOngoingEntry
+        .flatMapCompletable { entry ->
+          if (entry.phoneNumber == null) {
+            Completable.complete()
+          } else {
+            val number = with(entry.phoneNumber) {
+              PatientPhoneNumber(
+                  uuid = UUID.randomUUID(),
+                  patientUuid = patientUuid,
+                  phoneType = type,
+                  number = number,
+                  active = active,
+                  createdAt = Instant.now(),
+                  updatedAt = Instant.now())
+            }
+            savePhoneNumber(number)
+          }
+        }
+
     return validation
         .andThen(addressSave)
         .andThen(patientSave)
-        .andThen(phoneNumbersSave)
+        .andThen(phoneNumberSave)
   }
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {
@@ -190,7 +197,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
   private fun savePhoneNumber(number: PatientPhoneNumber): Completable {
     return Completable.fromAction {
-      database.phoneNumberDao().save(number)
+      database.phoneNumberDao().save(listOf(number))
     }
   }
 }

@@ -14,6 +14,8 @@ data class PatientNoColonyOrVillageToggled(val noneSelected: Boolean) : UiEvent
 
 data class PatientDateOfBirthTextChanged(val dateOfBirth: String) : UiEvent
 
+data class PatientDateOfBirthFocusChanged(val hasFocus: Boolean) : UiEvent
+
 data class PatientAgeTextChanged(val age: String) : UiEvent
 
 data class PatientGenderChanged(val gender: Optional<Gender>) : UiEvent

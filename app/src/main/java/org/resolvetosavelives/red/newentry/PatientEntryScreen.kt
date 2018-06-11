@@ -198,14 +198,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     colonyOrVillageEditText.text = null
   }
 
-  fun uncheckNoPhoneNumberCheckbox() {
-    noPhoneNumberCheckBox.isChecked = false
-  }
-
-  fun uncheckNoVillageOrColonyCheckbox() {
-    noColonyOrVillageCheckBox.isChecked = false
-  }
-
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
     val transition = TransitionSet()
         .addTransition(ChangeBounds())
@@ -237,6 +229,34 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       false -> R.string.patiententry_date_of_birth_unfocused
     }
     dateOfBirthInputLayout.hint = resources.getString(labelRes)
+  }
+
+  fun setNoPhoneNumberCheckboxVisible(visible: Boolean) {
+    TransitionManager.beginDelayedTransition(this, Fade()
+        .setDuration(100)
+        .setInterpolator(FastOutSlowInInterpolator()))
+
+    noPhoneNumberCheckBox.visibility = when (visible) {
+      true -> View.VISIBLE
+      else -> View.GONE
+    }
+    if (!visible) {
+      noPhoneNumberCheckBox.isChecked = visible
+    }
+  }
+
+  fun setNoVillageOrColonyCheckboxVisible(visible: Boolean) {
+    TransitionManager.beginDelayedTransition(this, Fade()
+        .setDuration(100)
+        .setInterpolator(FastOutSlowInInterpolator()))
+
+    noColonyOrVillageCheckBox.visibility = when (visible) {
+      true -> View.VISIBLE
+      else -> View.GONE
+    }
+    if (!visible) {
+      noColonyOrVillageCheckBox.isChecked = visible
+    }
   }
 }
 

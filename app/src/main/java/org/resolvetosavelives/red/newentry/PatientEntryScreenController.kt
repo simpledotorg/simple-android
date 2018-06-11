@@ -44,34 +44,32 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun noneCheckBoxBehaviors(events: Observable<UiEvent>): Observable<UiChange> {
+    val noPhoneNumberUnchecks = events
+        .ofType<PatientPhoneNumberTextChanged>()
+        .map { it.phoneNumber.isNotBlank() }
+        .distinctUntilChanged()
+        .map { hasPhone -> { ui: Ui -> ui.setNoPhoneNumberCheckboxVisible(!hasPhone) } }
+
+    val noVillageOrColonyUnchecks = events
+        .ofType<PatientColonyOrVillageTextChanged>()
+        .map { it.colonyOrVillage.isNotBlank() }
+        .distinctUntilChanged()
+        .map { hasVillageOrColony -> { ui: Ui -> ui.setNoVillageOrColonyCheckboxVisible(!hasVillageOrColony) } }
+
     val phoneNumberResets = events
         .ofType<PatientNoPhoneNumberToggled>()
         .filter { event -> event.noneSelected }
         .map { { ui: Ui -> ui.resetPhoneNumberField() } }
-
-    val noPhoneNumberUnchecks = events
-        .ofType<PatientPhoneNumberTextChanged>()
-        .map { it.phoneNumber.isNotBlank() }
-        .filter { isNotBlank -> isNotBlank }
-        .distinctUntilChanged()
-        .map { { ui: Ui -> ui.uncheckNoPhoneNumberCheckbox() } }
 
     val colonyOrVillageResets = events
         .ofType<PatientNoColonyOrVillageToggled>()
         .filter { event -> event.noneSelected }
         .map { { ui: Ui -> ui.resetColonyOrVillageField() } }
 
-    val noVillageOrColonyUnchecks = events
-        .ofType<PatientColonyOrVillageTextChanged>()
-        .map { it.colonyOrVillage.isNotBlank() }
-        .filter { isNotBlank -> isNotBlank }
-        .distinctUntilChanged()
-        .map { { ui: Ui -> ui.uncheckNoVillageOrColonyCheckbox() } }
-
     return Observable.mergeArray(
         phoneNumberResets,
-        noPhoneNumberUnchecks,
         colonyOrVillageResets,
+        noPhoneNumberUnchecks,
         noVillageOrColonyUnchecks)
   }
 

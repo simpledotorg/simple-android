@@ -1,3 +1,4 @@
+<!-- TODO: merge with "ic_arrow_back_24dp.xml" -->
 <vector android:height="24dp" android:tint="#757575"
     android:viewportHeight="24.0" android:viewportWidth="24.0"
     android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">

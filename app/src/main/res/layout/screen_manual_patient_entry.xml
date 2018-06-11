@@ -34,18 +34,29 @@
       android:paddingTop="@dimen/spacing_12"
       tools:ignore="RtlSymmetry">
 
-      <android.support.design.widget.TextInputLayout
-        android:id="@+id/patiententry_full_name_inputlayout"
+      <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputEditText
-          android:id="@+id/patiententry_full_name"
+        <android.support.design.widget.TextInputLayout
+          android:id="@+id/patiententry_full_name_inputlayout"
           android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+          <android.support.design.widget.TextInputEditText
+            android:id="@+id/patiententry_full_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/patiententry_full_name"
+            android:inputType="textPersonName|textCapWords" />
+        </android.support.design.widget.TextInputLayout>
+
+        <org.resolvetosavelives.red.newentry.clearbutton.ClearFieldImageButton
+          style="@style/RedApp.ClearButton"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:hint="@string/patiententry_full_name"
-          android:inputType="textPersonName|textCapWords" />
-      </android.support.design.widget.TextInputLayout>
+          app:cleareableField="@id/patiententry_full_name" />
+      </FrameLayout>
 
       <FrameLayout
         android:layout_width="match_parent"
@@ -82,23 +93,35 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16">
 
-        <!-- A background is intentionally set on these Views to avoid overlapping when they animate -->
-        <android.support.design.widget.TextInputLayout
-          android:id="@+id/patiententry_date_of_birth_inputlayout"
+        <!-- A background is intentionally set on these Views
+             to avoid overlapping when they animate -->
+        <FrameLayout
+          android:id="@+id/patiententry_date_of_birth_container"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:background="@color/window_background">
+          android:layout_weight="1">
 
-          <br.com.sapereaude.maskedEditText.MaskedEditText
-            android:id="@+id/patiententry_date_of_birth"
+          <android.support.design.widget.TextInputLayout
+            android:id="@+id/patiententry_date_of_birth_inputlayout"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <br.com.sapereaude.maskedEditText.MaskedEditText
+              android:id="@+id/patiententry_date_of_birth"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/patiententry_date_of_birth_unfocused"
+              android:inputType="number"
+              app:allowed_chars="1234567890"
+              app:mask="##/##/####" />
+          </android.support.design.widget.TextInputLayout>
+
+          <org.resolvetosavelives.red.newentry.clearbutton.ClearFieldImageButton
+            style="@style/RedApp.ClearButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/patiententry_date_of_birth_unfocused"
-            android:inputType="number"
-            app:allowed_chars="1234567890"
-            app:mask="##/##/####" />
-        </android.support.design.widget.TextInputLayout>
+            app:cleareableField="@id/patiententry_date_of_birth" />
+        </FrameLayout>
 
         <TextView
           android:id="@+id/patiententry_dateofbirth_and_age_separator"
@@ -112,21 +135,31 @@
           android:text="@string/patiententry_dateofbirth_and_age_separator"
           android:textAllCaps="true" />
 
-        <android.support.design.widget.TextInputLayout
-          android:id="@+id/patiententry_age_inputlayout"
+        <FrameLayout
+          android:id="@+id/patiententry_age_container"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_weight="0.6"
-          android:background="@color/window_background">
+          android:layout_weight="0.6">
 
-          <android.support.design.widget.TextInputEditText
-            android:id="@+id/patiententry_age"
+          <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.design.widget.TextInputEditText
+              android:id="@+id/patiententry_age"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/patiententry_age"
+              android:inputType="number"
+              android:maxLength="3" />
+          </android.support.design.widget.TextInputLayout>
+
+          <org.resolvetosavelives.red.newentry.clearbutton.ClearFieldImageButton
+            style="@style/RedApp.ClearButton"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="@string/patiententry_age"
-            android:inputType="number"
-            android:maxLength="3" />
-        </android.support.design.widget.TextInputLayout>
+            app:cleareableField="@id/patiententry_age" />
+        </FrameLayout>
       </LinearLayout>
 
       <RadioGroup

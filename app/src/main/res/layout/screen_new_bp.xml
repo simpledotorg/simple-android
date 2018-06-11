@@ -35,7 +35,7 @@
         android:paddingEnd="@dimen/spacing_12"
         android:paddingStart="@dimen/spacing_12"
         android:paddingTop="@dimen/spacing_12"
-        android:text="Or, enter patient's:"
+        android:text="@string/bpentry_or_enter_patients"
         android:textSize="@dimen/textsize_16" />
 
       <LinearLayout

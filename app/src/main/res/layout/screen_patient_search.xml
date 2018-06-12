@@ -5,36 +5,66 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <android.support.v7.widget.Toolbar
+  <LinearLayout
     android:id="@+id/patientsearch_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="?attr/actionBarSize"
     android:background="@color/white"
-    android:elevation="4dp"
+    android:elevation="@dimen/elevation_toolbar"
+    android:gravity="center_vertical"
     tools:ignore="UnusedAttribute">
 
     <ImageButton
       android:id="@+id/patientsearch_back"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_16"
+      android:padding="@dimen/spacing_12"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsearch_go_back"
       android:src="@drawable/ic_arrow_back_black_24dp" />
 
     <EditText
       android:id="@+id/patientsearch_text"
-      android:layout_width="match_parent"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_weight="1"
       android:background="@null"
       android:hint="@string/patientsearch_name_or_phone"
       android:inputType="text">
 
       <requestFocus />
     </EditText>
-  </android.support.v7.widget.Toolbar>
+
+    <RelativeLayout
+      android:layout_width="112dp"
+      android:layout_height="wrap_content"
+      android:paddingStart="@dimen/spacing_16"
+      android:paddingEnd="@dimen/spacing_16"
+      android:gravity="end">
+
+      <TextView
+        android:id="@+id/patientsearch_filter_by_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_centerHorizontal="true"
+        android:letterSpacing="0.05"
+        android:text="@string/patientsearch_filter_by"
+        android:textAllCaps="true"
+        android:textSize="12sp" />
+
+      <Button
+        android:id="@+id/patientsearch_age_filter_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:drawableEnd="@drawable/ic_filter_24dp"
+        android:drawablePadding="4dp"
+        android:text="@string/patientsearch_label_age"
+        android:textColor="@color/color_accent" />
+    </RelativeLayout>
+  </LinearLayout>
 
   <Button
     android:id="@+id/patientsearch_new_patient"

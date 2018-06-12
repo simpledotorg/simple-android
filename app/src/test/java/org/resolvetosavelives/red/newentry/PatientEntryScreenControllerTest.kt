@@ -3,6 +3,7 @@ package org.resolvetosavelives.red.newentry
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -19,7 +20,6 @@ import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
-import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 
 class PatientEntryScreenControllerTest {
@@ -49,13 +49,20 @@ class PatientEntryScreenControllerTest {
   fun `when screen is created then existing data should be pre-filled`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry()))
 
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(PatientEntryScreenCreated(wasRecreated = false))
 
     verify(screen).preFillFields(OngoingPatientEntry(
         address = OngoingPatientEntry.Address(
             colonyOrVillage = null,
             district = "district",
             state = "state")))
+  }
+
+  @Test
+  fun `when screen is restored then existing data should not be pre-filled`() {
+    uiEvents.onNext(PatientEntryScreenCreated(wasRecreated = true))
+
+    verify(screen, never()).preFillFields(any())
   }
 
   @Test

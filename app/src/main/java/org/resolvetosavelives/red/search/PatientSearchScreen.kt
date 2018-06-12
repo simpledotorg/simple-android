@@ -20,6 +20,8 @@ import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.widgets.showKeyboard
+import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -48,8 +50,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    // TODO: Can we use sealed classes to represent events?
-    Observable.merge(searchTextChanges(), newPatientButtonClicks(), backButtonClicks())
+    Observable.merge(searchTextChanges(), newPatientButtonClicks(), backButtonClicks(), searchResultClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -67,6 +68,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun backButtonClicks() = RxView.clicks(backButton)
       .map { BackButtonClicked() }
 
+  private fun searchResultClicks() = resultsAdapter.itemClicks
+
   fun showKeyboardOnPhoneNumberField() {
     searchEditText.showKeyboard()
   }
@@ -78,6 +81,11 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun updatePatientSearchResults(patients: List<PatientSearchResult>) {
     resultsAdapter.updateAndNotifyChanges(patients)
+  }
+
+  fun openPatientSummaryScreen(patientUuid: UUID?) {
+    // TODO.
+    Timber.w("TODO: Open summary screen")
   }
 
   fun openPersonalDetailsEntryScreen() {

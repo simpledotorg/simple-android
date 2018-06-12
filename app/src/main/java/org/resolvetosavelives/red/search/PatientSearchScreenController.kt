@@ -18,7 +18,7 @@ class PatientSearchScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.replay(1).refCount()
 
     return Observable.mergeArray(
         screenSetup(),
@@ -36,7 +36,7 @@ class PatientSearchScreenController @Inject constructor(
     return events
         .ofType<SearchQueryTextChanged>()
         .map(SearchQueryTextChanged::query)
-        .flatMap { repository.searchPatientsAndPhoneNumbers(it) }
+        .switchMap { repository.searchPatientsAndPhoneNumbers(it) }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 

@@ -1,6 +1,11 @@
 <resources>
   <string name="app_name">RedApp</string>
 
+  <!-- Common -->
+  <string name="gender_female">Female</string>
+  <string name="gender_male">Male</string>
+  <string name="gender_transgender">Transgender</string>
+
   <!-- Patient search -->
   <string name="patientsearch_new_patient">Create new patient</string>
   <string name="patientsearch_go_back">Go back to home screen</string>
@@ -16,15 +21,19 @@
   <string name="patiententry_date_of_birth_focused">Date of birth (DD/MM/YYYY)</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>
   <string name="patiententry_age">Age</string>
-  <string name="patiententry_gender_female">Female</string>
-  <string name="patiententry_gender_male">Male</string>
-  <string name="patiententry_gender_transgender">Transgender</string>
+  <string name="patiententry_gender_female">@string/gender_female</string>
+  <string name="patiententry_gender_male">@string/gender_male</string>
+  <string name="patiententry_gender_transgender">@string/gender_transgender</string>
   <string name="patiententry_colony_or_village">Colony or village</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Save patient</string>
 
+  <!-- Patient summary -->
+  <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->
+  <string name="patientsummary_contentdescription_up_button">Go back</string>
+  <string name="patientsummary_edit">Edit</string>
+
   <!-- Blood pressure entry -->
   <string name="bpentry_or_enter_patients">Or, enter patient\'s:</string>
-
 </resources>

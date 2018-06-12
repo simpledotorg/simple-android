@@ -19,8 +19,8 @@ import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.summary.PatientSummaryScreenKey
 import org.resolvetosavelives.red.widgets.showKeyboard
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -83,9 +83,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     resultsAdapter.updateAndNotifyChanges(patients)
   }
 
-  fun openPatientSummaryScreen(patientUuid: UUID?) {
-    // TODO.
-    Timber.w("TODO: Open summary screen")
+  fun openPatientSummaryScreen(patientUuid: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(patientUuid))
   }
 
   fun openPersonalDetailsEntryScreen() {

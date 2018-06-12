@@ -48,6 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_full_name"
+            android:imeOptions="flagNoFullscreen"
             android:inputType="textPersonName|textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
@@ -74,6 +75,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_phone_number"
+            android:imeOptions="flagNoFullscreen"
             android:inputType="phone|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
@@ -111,6 +113,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/patiententry_date_of_birth_unfocused"
+              android:imeOptions="flagNoFullscreen"
               android:inputType="number"
               app:allowed_chars="1234567890"
               app:mask="##/##/####" />
@@ -150,6 +153,7 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:hint="@string/patiententry_age"
+              android:imeOptions="flagNoFullscreen"
               android:inputType="number"
               android:maxLength="3" />
           </android.support.design.widget.TextInputLayout>
@@ -210,6 +214,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_colony_or_village"
+            android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
@@ -241,6 +246,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_district"
+            android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
@@ -254,6 +260,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patiententry_state"
+            android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
       </LinearLayout>

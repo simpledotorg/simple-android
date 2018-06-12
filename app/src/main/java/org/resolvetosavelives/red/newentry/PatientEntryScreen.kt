@@ -17,6 +17,7 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
+import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
@@ -27,6 +28,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.home.bp.NewBpScreen
 import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.resolvetosavelives.red.patient.Gender
@@ -37,6 +39,7 @@ import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -56,7 +59,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
   private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
-  private val dateOfBirthEditText by bindView<EditText>(R.id.patiententry_date_of_birth)
+  private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patiententry_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patiententry_date_of_birth_container)
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
@@ -121,7 +124,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         phoneNumberEditText.textChanges(::PatientPhoneNumberTextChanged),
         RxCompoundButton.checkedChanges(noPhoneNumberCheckBox).map(::PatientNoPhoneNumberToggled),
         dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
-        RxView.focusChanges(dateOfBirthEditText).map(::PatientDateOfBirthFocusChanged),
+        dateOfBirthEditText.focusChanges
+            .map(::PatientDateOfBirthFocusChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
         colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
         RxCompoundButton.checkedChanges(noColonyOrVillageCheckBox).map(::PatientNoColonyOrVillageToggled),
@@ -190,7 +194,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   fun openSummaryScreenForBpEntry() {
-    // TODO.
+    // TODO: Open patient summary screen for entering BP.
+    Toast.makeText(context, "Patient saved", Toast.LENGTH_SHORT).show()
+    screenRouter.push(NewBpScreen.KEY)
   }
 
   fun resetPhoneNumberField() {
@@ -231,6 +237,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       true -> R.string.patiententry_date_of_birth_focused
       false -> R.string.patiententry_date_of_birth_unfocused
     }
+    Timber.i("Setting label to ${resources.getString(labelRes)}")
     dateOfBirthInputLayout.hint = resources.getString(labelRes)
   }
 

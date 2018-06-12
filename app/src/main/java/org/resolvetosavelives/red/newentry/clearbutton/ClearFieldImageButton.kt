@@ -8,8 +8,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.Observable
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.RedApp
+import org.resolvetosavelives.red.newentry.MultipleFocusChangeListeners
 import javax.inject.Inject
 
 class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatImageButton(context, attrs) {
@@ -48,12 +50,24 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
     fieldOriginalPaddingEnd = field.paddingEnd
 
-    cleareableFieldTextChanges()
+    Observable.merge(cleareableFieldTextChanges(), cleareableFieldFocusChanges())
         .compose(controller)
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
 
     setOnClickListener { field.text = null }
+  }
+
+  private fun cleareableFieldFocusChanges(): Observable<CleareableFieldFocusChanged> {
+    return if (field is MultipleFocusChangeListeners) {
+      (field as MultipleFocusChangeListeners)
+          .focusChanges
+          .map(::CleareableFieldFocusChanged)
+    } else {
+      RxView
+          .focusChanges(field)
+          .map(::CleareableFieldFocusChanged)
+    }
   }
 
   private fun cleareableFieldTextChanges() = RxTextView.textChanges(field)

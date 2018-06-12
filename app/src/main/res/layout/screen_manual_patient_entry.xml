@@ -106,7 +106,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <br.com.sapereaude.maskedEditText.MaskedEditText
+            <org.resolvetosavelives.red.newentry.DateOfBirthEditText
               android:id="@+id/patiententry_date_of_birth"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"

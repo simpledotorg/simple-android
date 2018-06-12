@@ -261,7 +261,7 @@ class PatientEntryScreenController @Inject constructor(
     val addressChanges = Observables.combineLatest(
         colonyOrVillageChanges, districtChanges, stateChanges,
         { colonyOrVillage, district, state ->
-          OngoingPatientEntry.Address(colonyOrVillage, district, state)
+          OngoingPatientEntry.Address(colonyOrVillage.nullIfBlank(), district, state)
         })
 
     return events

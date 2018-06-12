@@ -102,14 +102,15 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony-or-village"))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
     verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
         personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingPatientEntry.Address("colony-or-village", "district", "state"),
+        address = OngoingPatientEntry.Address(colonyOrVillage = null, district = "district", state = "state"),
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
     verify(patientRepository).saveOngoingEntryAsPatient()

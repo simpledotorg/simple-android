@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.resolvetosavelives.red.summary.PatientSummaryScreen android:id="@+id/patientsummary_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary"
+    android:elevation="@dimen/elevation_toolbar"
+    tools:ignore="UnusedAttribute">
+
+    <ImageButton
+      android:id="@+id/patientsummary_up"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:contentDescription="@string/patientsummary_contentdescription_up_button"
+      android:padding="@dimen/spacing_16"
+      android:src="@drawable/ic_arrow_back_24dp"
+      android:tint="@color/white" />
+
+    <LinearLayout
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:orientation="vertical"
+      android:paddingBottom="@dimen/spacing_12"
+      android:paddingTop="@dimen/spacing_12">
+
+      <TextView
+        android:id="@+id/patientsummary_fullname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+        android:textColor="@color/white"
+        tools:text="Anish Acharya" />
+
+      <TextView
+        android:id="@+id/patientsummary_byline1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:lineSpacingExtra="4dp"
+        android:textColor="@color/white"
+        tools:text="Male, 32  •  9886619365" />
+
+      <TextView
+        android:id="@+id/patientsummary_byline2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:lineSpacingExtra="4dp"
+        android:textColor="@color/white"
+        tools:text="Colony 3, Hoshiarpur, Punjab" />
+    </LinearLayout>
+
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:backgroundTint="#BC4C27"
+      android:minHeight="0dp"
+      android:minWidth="0dp"
+      android:text="@string/patientsummary_edit"
+      android:textColor="@color/white" />
+  </LinearLayout>
+</org.resolvetosavelives.red.summary.PatientSummaryScreen>

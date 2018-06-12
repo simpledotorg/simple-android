@@ -8,6 +8,7 @@ import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.qrscan.AadhaarScanScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.search.PatientSearchScreen
+import org.resolvetosavelives.red.summary.PatientSummaryScreen
 
 @Subcomponent
 interface TheActivityComponent {
@@ -17,6 +18,7 @@ interface TheActivityComponent {
   fun inject(target: PatientSearchScreen)
   fun inject(target: AadhaarScanScreen)
   fun inject(target: PatientEntryScreen)
+  fun inject(target: PatientSummaryScreen)
 
   @Subcomponent.Builder
   interface Builder {

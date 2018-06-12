@@ -80,10 +80,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
     TheActivity.component.inject(this)
 
-    // Plan:
-    // - Show 'X' icon when a field is focused.
-    // - Switch between 'date of birth' and 'date of birth (dd/mm/yyyy)` for DOB's hint.
-
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
 

@@ -15,6 +15,7 @@ import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.widgets.UiEvent
+import java.util.UUID
 
 class PatientSearchScreenControllerTest {
 
@@ -70,5 +71,31 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(BackButtonClicked())
 
     verify(screen).goBackToHomeScreen()
+  }
+
+  @Test
+  fun `when a patient search result is clicked then the patient's summary screen should be started`() {
+    val patientUuid = UUID.randomUUID()
+    val searchResult = PatientSearchResult(
+        uuid = patientUuid,
+        fullName = "Ashok Kumar",
+        gender = mock(),
+        dateOfBirth = null,
+        age = mock(),
+        status = mock(),
+        createdAt = mock(),
+        updatedAt = mock(),
+        address = mock(),
+        syncStatus = mock(),
+        phoneNumber = "3.14159",
+        phoneType = mock(),
+        phoneUuid = mock(),
+        phoneActive = true,
+        phoneCreatedAt = mock(),
+        phoneUpdatedAt = mock())
+
+    uiEvents.onNext(PatientSearchResultClicked(searchResult))
+
+    verify(screen).openPatientSummaryScreen(patientUuid)
   }
 }

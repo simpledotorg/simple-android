@@ -38,7 +38,6 @@ import org.resolvetosavelives.red.util.toOptional
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -95,7 +94,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
     // Not sure why, but setting android:nextFocusDown in XML isn't working,
     // so doing this manually here.
-    dateOfBirthEditText.imeOptions = EditorInfo.IME_ACTION_NEXT
+    dateOfBirthEditText.imeOptions += EditorInfo.IME_ACTION_NEXT
     dateOfBirthEditText.setOnEditorActionListener({ _, actionId, _ ->
       // When date is empty, this will move focus to age field and colony field otherwise.
       if (!dateOfBirthEditText.text.isBlank() && actionId == EditorInfo.IME_ACTION_NEXT) {

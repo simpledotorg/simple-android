@@ -12,7 +12,10 @@ fun EditText.showKeyboard() {
   })
 }
 
-fun EditText.setTextAndCursor(text: CharSequence?) {
-  setText(text)
-  setSelection(text?.length ?: 0)
+fun EditText.setTextAndCursor(textToSet: CharSequence?) {
+  setText(textToSet)
+
+  // Cannot rely on textToSet. It's possible that the
+  // EditText modifies the text using InputFilters.
+  setSelection(text.length)
 }

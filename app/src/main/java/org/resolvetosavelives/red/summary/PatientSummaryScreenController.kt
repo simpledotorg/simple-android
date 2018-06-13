@@ -54,10 +54,15 @@ class PatientSummaryScreenController @Inject constructor(val repository: Patient
   }
 
   private fun openBloodPressureBottomSheet(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuid = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.patientUuid }
+
     return events
         .ofType<PatientSummaryScreenCreated>()
         .filter { it.caller == NEW_PATIENT }
-        .map { { ui: Ui -> ui.showBloodPressureEntrySheet() } }
+        .withLatestFrom(patientUuid)
+        .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
   }
 
   private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {

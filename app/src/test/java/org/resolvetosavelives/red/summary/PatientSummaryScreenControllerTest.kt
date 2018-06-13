@@ -2,6 +2,7 @@ package org.resolvetosavelives.red.summary
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -65,8 +66,10 @@ class PatientSummaryScreenControllerTest {
     whenever(repository.patient(any())).thenReturn(Observable.never())
     whenever(repository.phoneNumbers(any())).thenReturn(Observable.never())
 
+    uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
-    verify(screen).showBloodPressureEntrySheet()
+
+    verify(screen, times(1)).showBloodPressureEntrySheet(any())
   }
 
   @Test

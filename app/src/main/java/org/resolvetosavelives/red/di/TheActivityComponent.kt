@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.bp.entry.BloodPressureEntrySheetView
 import org.resolvetosavelives.red.home.bp.NewBpScreen
 import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.qrscan.AadhaarScanScreen
@@ -22,6 +23,7 @@ interface TheActivityComponent {
   fun inject(target: AadhaarScanScreen)
   fun inject(target: PatientEntryScreen)
   fun inject(target: PatientSummaryScreen)
+  fun inject(target: BloodPressureEntrySheetView)
 
   @Subcomponent.Builder
   interface Builder {

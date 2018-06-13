@@ -121,7 +121,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     })
   }
 
-  fun saveOngoingEntryAsPatient(): Completable {
+  fun saveOngoingEntryAsPatient(): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 
     val validation = cachedOngoingEntry
@@ -149,7 +149,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .flatMapCompletable { address -> saveAddress(address) }
 
     val patientUuid = UUID.randomUUID()
-    val patientSave = cachedOngoingEntry
+    val sharedPatient = cachedOngoingEntry
         .map {
           with(it) {
             Patient(
@@ -170,6 +170,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
                 syncStatus = PENDING)
           }
         }
+        .cache()
+
+    val patientSave = sharedPatient
         .flatMapCompletable { patient -> savePatient(patient) }
 
     val phoneNumberSave = cachedOngoingEntry
@@ -195,6 +198,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
         .andThen(addressSave)
         .andThen(patientSave)
         .andThen(phoneNumberSave)
+        .andThen(sharedPatient)
   }
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {

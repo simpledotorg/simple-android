@@ -8,8 +8,8 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.patient.PatientAddress
+import org.resolvetosavelives.red.patient.PatientFaker
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
@@ -38,17 +38,7 @@ class PatientSummaryScreenControllerTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val patient = Patient(
-        uuid = patientUuid,
-        addressUuid = addressUuid,
-        fullName = "name",
-        gender = mock(),
-        dateOfBirth = mock(),
-        age = mock(),
-        status = mock(),
-        createdAt = mock(),
-        updatedAt = mock(),
-        syncStatus = mock())
+    val patient = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid)
 
     val address = PatientAddress(
         uuid = addressUuid,

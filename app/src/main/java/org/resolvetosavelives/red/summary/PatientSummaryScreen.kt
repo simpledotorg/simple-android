@@ -3,20 +3,28 @@ package org.resolvetosavelives.red.summary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.home.HomeScreen
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.Patient
 import org.resolvetosavelives.red.patient.PatientAddress
 import org.resolvetosavelives.red.patient.PatientPhoneNumber
+import org.resolvetosavelives.red.router.screen.RouterDirection.BACKWARD
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.util.Just
+import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.Optional
 import org.resolvetosavelives.red.widgets.UiEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -27,6 +35,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var controller: PatientSummaryScreenController
 
+  private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
   private val byline1TextView by bindView<TextView>(R.id.patientsummary_byline1)
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
@@ -35,7 +44,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     super.onFinishInflate()
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates())
+    Observable.mergeArray(screenCreates(), backClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -44,20 +53,34 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun screenCreates(): Observable<UiEvent> {
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)!!
-    return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid))
+    return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid, screenKey.caller))
   }
 
+  private fun backClicks() = RxView.clicks(backButton).map { PatientSummaryBackClicked() }
+
   @SuppressLint("SetTextI18n")
-  fun preFill(patient: Patient, address: PatientAddress, phoneNumber: PatientPhoneNumber) {
+  fun preFill(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
     fullNameTextView.text = patient.fullName
-    byline1TextView.text = "${resources.getString(Gender.MALE.displayTextRes)} • ${phoneNumber.number}"
+    byline1TextView.text = when (phoneNumber) {
+      is Just -> "${resources.getString(Gender.MALE.displayTextRes)} • ${phoneNumber.value.number}"
+      is None -> resources.getString(Gender.MALE.displayTextRes)
+    }
     byline2TextView.text = when {
       address.colonyOrVillage.isNullOrBlank() -> "${address.district}, ${address.state}"
       else -> "${address.colonyOrVillage}, ${address.district}, ${address.state}"
     }
   }
 
-  fun openBloodPressureEntrySheet() {
+  fun showBloodPressureEntrySheet() {
     // TODO.
+    Timber.w("TODO: Show BP entry bottom-sheet")
+  }
+
+  fun goBackToPatientSearch() {
+    screenRouter.pop()
+  }
+
+  fun goBackToHome() {
+    screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
   }
 }

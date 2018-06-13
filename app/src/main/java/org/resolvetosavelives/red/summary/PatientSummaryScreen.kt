@@ -63,7 +63,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun backClicks() = RxView.clicks(backButton).map { PatientSummaryBackClicked() }
 
   @SuppressLint("SetTextI18n")
-  fun preFill(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
+  fun populate(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
     fullNameTextView.text = patient.fullName
     byline1TextView.text = when (phoneNumber) {
       is Just -> "${resources.getString(Gender.MALE.displayTextRes)} • ${phoneNumber.value.number}"

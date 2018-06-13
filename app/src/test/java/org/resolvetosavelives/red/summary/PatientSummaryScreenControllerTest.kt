@@ -58,7 +58,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
-    verify(screen).preFill(patient, address, phoneNumber)
+    verify(screen).populate(patient, address, phoneNumber)
   }
 
   @Test

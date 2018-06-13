@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red.newentry
 
 import org.resolvetosavelives.red.patient.Gender
+import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.util.Optional
 import org.resolvetosavelives.red.widgets.UiEvent
 
@@ -27,3 +28,5 @@ data class PatientDistrictTextChanged(val district: String) : UiEvent
 data class PatientStateTextChanged(val state: String) : UiEvent
 
 class PatientEntrySaveClicked : UiEvent
+
+data class OngoingPatientEntryChanged(val entry: OngoingPatientEntry) : UiEvent

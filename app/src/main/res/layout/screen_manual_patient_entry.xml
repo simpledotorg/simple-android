@@ -174,7 +174,7 @@
         android:orientation="horizontal">
 
         <android.support.v7.widget.AppCompatRadioButton
-          android:id="@+id/patiententry_gender_male"
+          android:id="@+id/patiententry_gender_female"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:text="@string/patiententry_gender_female"
@@ -182,7 +182,7 @@
           android:textSize="@dimen/textsize_16" />
 
         <android.support.v7.widget.AppCompatRadioButton
-          android:id="@+id/patiententry_gender_female"
+          android:id="@+id/patiententry_gender_male"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"

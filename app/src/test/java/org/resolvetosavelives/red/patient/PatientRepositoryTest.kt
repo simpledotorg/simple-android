@@ -1,7 +1,9 @@
 package org.resolvetosavelives.red.patient
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import junitparams.JUnitParamsRunner
@@ -12,6 +14,7 @@ import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
 import org.resolvetosavelives.red.patient.sync.PatientAddressPayload
 import org.resolvetosavelives.red.patient.sync.PatientPayload
+import org.resolvetosavelives.red.patient.sync.PatientPhoneNumberPayload
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -19,6 +22,10 @@ class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
   private lateinit var database: AppDatabase
+
+  private val mockPatientDao = mock<Patient.RoomDao>()
+  private val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
+  private val mockPatientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
 
   @Before
   fun setUp() {
@@ -36,8 +43,6 @@ class PatientRepositoryTest {
       syncStatusOfLocalCopy: SyncStatus,
       serverRecordExpectedToBeSaved: Boolean
   ) {
-    val mockPatientDao = mock<Patient.RoomDao>()
-    val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
     whenever(database.patientDao()).thenReturn(mockPatientDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
 
@@ -79,6 +84,63 @@ class PatientRepositoryTest {
     } else {
       verify(mockPatientDao).save(argThat<List<Patient>> { isEmpty() })
       verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
+    }
+  }
+
+  @Test
+  @Parameters(value = [
+    "PENDING, false",
+    "IN_FLIGHT, false",
+    "INVALID, true",
+    "DONE, true"])
+  fun `that already exist locally and are syncing or pending-sync`(
+      syncStatusOfLocalCopy: SyncStatus,
+      serverRecordExpectedToBeSaved: Boolean
+  ) {
+    whenever(database.patientDao()).thenReturn(mockPatientDao)
+    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+    whenever(database.phoneNumberDao()).thenReturn(mockPatientPhoneNumberDao)
+
+    val patientUuid = UUID.randomUUID()
+    val addressUuid = UUID.randomUUID()
+
+    val localPatientCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), mock(), mock(), mock(), mock(), syncStatusOfLocalCopy)
+    whenever(mockPatientDao.get(patientUuid)).thenReturn(localPatientCopy)
+
+    val serverAddress = PatientAddressPayload(
+        uuid = addressUuid,
+        colonyOrVillage = "colony",
+        district = "district",
+        state = "state",
+        country = "country",
+        createdAt = mock(),
+        updatedAt = mock())
+
+    val serverPatientWithPhone = PatientPayload(
+        uuid = patientUuid,
+        fullName = "name",
+        gender = mock(),
+        dateOfBirth = mock(),
+        age = 0,
+        ageUpdatedAt = mock(),
+        status = mock(),
+        createdAt = mock(),
+        updatedAt = mock(),
+
+        address = serverAddress,
+        phoneNumbers = listOf(PatientPhoneNumberPayload(UUID.randomUUID(), "1232", mock(), false, mock(), mock())))
+
+    repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
+
+    if (serverRecordExpectedToBeSaved) {
+      verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
+      verify(mockPatientDao).save(argThat<List<Patient>> { isNotEmpty() })
+      verify(mockPatientPhoneNumberDao).save(argThat { isNotEmpty() })
+
+    } else {
+      verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
+      verify(mockPatientDao).save(argThat<List<Patient>> { isEmpty() })
+      verify(mockPatientPhoneNumberDao, never()).save(any())
     }
   }
 }

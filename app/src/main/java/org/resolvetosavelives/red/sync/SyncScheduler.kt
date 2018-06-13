@@ -36,4 +36,8 @@ class SyncScheduler @Inject constructor(
           })
         }
   }
+
+  fun cancelAll() {
+    workManager.cancelAllWorkByTag(SyncWorker.TAG)
+  }
 }

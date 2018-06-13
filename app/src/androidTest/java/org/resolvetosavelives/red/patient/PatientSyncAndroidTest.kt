@@ -18,6 +18,7 @@ import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
+import java.text.SimpleDateFormat
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -40,7 +41,8 @@ class PatientSyncAndroidTest {
   @Inject
   lateinit var patientSync: PatientSync
 
-  private val faker: Faker = Faker()
+  private val faker = Faker()
+  private val oldDateFormatter = SimpleDateFormat("dd/MM/yyyy")
   private val genders = listOf(Gender.MALE, Gender.FEMALE, Gender.TRANSGENDER).shuffled()
 
   @Before
@@ -49,8 +51,29 @@ class PatientSyncAndroidTest {
   }
 
   private fun insertDummyPatients(count: Int): Completable {
-    return Observable.range(0, count)
-        .flatMapCompletable({ _ ->
+    val withDOB = Observable.range(0, count)
+        .flatMapCompletable({
+          repository.saveOngoingEntry(
+              OngoingPatientEntry(
+                  personalDetails = OngoingPatientEntry.PersonalDetails(
+                      faker.name.name(),
+                      oldDateFormatter.format(faker.date.birthday()),
+                      null,
+                      genders.first()),
+                  address = OngoingPatientEntry.Address(
+                      faker.address.streetAddress(),
+                      faker.address.city(),
+                      faker.address.state()),
+                  phoneNumber = OngoingPatientEntry.PhoneNumber(
+                      faker.phoneNumber.cellPhone(),
+                      PatientPhoneNumberType.LANDLINE,
+                      faker.bool.bool(0.77f)
+                  ))
+          ).andThen(repository.saveOngoingEntryAsPatient())
+        })
+
+    val withoutDOB = Observable.range(0, count)
+        .flatMapCompletable({
           repository
               .saveOngoingEntry(OngoingPatientEntry(
                   personalDetails = OngoingPatientEntry.PersonalDetails(
@@ -69,21 +92,19 @@ class PatientSyncAndroidTest {
                   )))
               .andThen(repository.saveOngoingEntryAsPatient().toCompletable())
         })
+
+    return withDOB.andThen(withoutDOB)
   }
 
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
-    val count = 15
+    val count = 5
     insertDummyPatients(count).blockingAwait()
 
     patientSync.push().blockingAwait()
 
-    repository.patientsWithSyncStatus(SyncStatus.DONE)
-        .test()
-        .await()
-        .assertValue({ patients -> patients.size == count })
-        .assertComplete()
-        .assertNoErrors()
+    val updatedPatients = repository.patientsWithSyncStatus(SyncStatus.DONE).blockingGet()
+    assertThat(updatedPatients).hasSize(count * 2)
   }
 
   @Test
@@ -101,7 +122,7 @@ class PatientSyncAndroidTest {
     patientSync.pull().blockingAwait()
 
     val patientCountAfterPull = repository.patientCount().blockingGet()
-    assertThat(patientCountAfterPull).isAtLeast(patientsToInsert)
+    assertThat(patientCountAfterPull).isAtLeast(patientsToInsert * 2)
   }
 
   @After

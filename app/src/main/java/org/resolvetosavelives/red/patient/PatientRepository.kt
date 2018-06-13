@@ -15,6 +15,7 @@ import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -47,8 +48,8 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     val ageUpperBound = assumedAge + ageFuzziness
     val ageLowerBound = assumedAge - ageFuzziness
 
-    val dateOfBirthUpperBound = LocalDate.now().minusYears(ageUpperBound.toLong()).toString()
-    val dateOfBirthLowerBound = LocalDate.now().minusYears(ageLowerBound.toLong()).toString()
+    val dateOfBirthUpperBound = LocalDate.now(ZoneOffset.UTC).minusYears(ageUpperBound.toLong()).toString()
+    val dateOfBirthLowerBound = LocalDate.now(ZoneOffset.UTC).minusYears(ageLowerBound.toLong()).toString()
 
     if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
@@ -181,7 +182,9 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
                 dateOfBirth = convertToDate(personalDetails.dateOfBirth),
                 age = personalDetails.age?.let {
-                  Age(value = personalDetails.age.toInt(), updatedAt = Instant.now())
+                  Age(value = personalDetails.age.toInt(),
+                      updatedAt = Instant.now(),
+                      computedDateOfBirth = LocalDate.now().minusYears(personalDetails.age.toLong()))
                 },
 
                 addressUuid = addressUuid,

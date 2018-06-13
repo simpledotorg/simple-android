@@ -67,7 +67,7 @@ class PatientSyncAndroidTest {
                       PatientPhoneNumberType.MOBILE,
                       faker.bool.bool(0.77f)
                   )))
-              .andThen(repository.saveOngoingEntryAsPatient())
+              .andThen(repository.saveOngoingEntryAsPatient().toCompletable())
         })
   }
 

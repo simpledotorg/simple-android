@@ -27,5 +27,3 @@ data class PatientDistrictTextChanged(val district: String) : UiEvent
 data class PatientStateTextChanged(val state: String) : UiEvent
 
 class PatientEntrySaveClicked : UiEvent
-
-data class PatientEntryScreenCreated(val wasRecreated: Boolean) : UiEvent

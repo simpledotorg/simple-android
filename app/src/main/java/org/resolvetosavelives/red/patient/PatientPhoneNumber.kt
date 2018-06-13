@@ -7,6 +7,8 @@ import android.arch.persistence.room.Index
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
+import android.arch.persistence.room.Query
+import io.reactivex.Flowable
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -44,5 +46,8 @@ data class PatientPhoneNumber(
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(phoneNumbers: List<PatientPhoneNumber>)
+
+    @Query("SELECT * FROM patientphonenumber WHERE patientUuid = :patientUuid")
+    fun phoneNumber(patientUuid: UUID): Flowable<List<PatientPhoneNumber>>
   }
 }

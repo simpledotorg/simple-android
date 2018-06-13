@@ -26,7 +26,7 @@ import java.util.UUID
     indices = [
       Index("addressUuid", unique = true)
     ])
-data class Patient(
+data class Patient constructor(
     @PrimaryKey
     val uuid: UUID,
 
@@ -59,8 +59,12 @@ data class Patient(
     @Query("SELECT * FROM patient")
     fun allPatients(): Flowable<List<Patient>>
 
-    @Query("SELECT * FROM patient WHERE uuid = :uuid LIMIT 1")
-    fun get(uuid: UUID): Patient?
+    @Query("SELECT * FROM patient WHERE uuid = :uuid")
+    fun getOne(uuid: UUID): Patient?
+
+    // Only if Room supported custom adapters.
+    @Query("SELECT * FROM patient WHERE uuid = :uuid")
+    fun patient(uuid: UUID): Flowable<List<Patient>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(patient: Patient)

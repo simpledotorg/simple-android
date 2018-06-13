@@ -19,6 +19,8 @@ import org.resolvetosavelives.red.TheActivity
 import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.patient.PatientSearchResult
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.summary.PatientSummaryCaller.NEW_PATIENT
+import org.resolvetosavelives.red.summary.PatientSummaryCaller.SEARCH
 import org.resolvetosavelives.red.summary.PatientSummaryScreenKey
 import org.resolvetosavelives.red.widgets.showKeyboard
 import java.util.UUID
@@ -85,7 +87,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, caller = SEARCH))
   }
 
   fun openPersonalDetailsEntryScreen() {

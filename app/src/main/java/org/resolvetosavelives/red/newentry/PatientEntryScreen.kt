@@ -55,6 +55,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var controller: PatientEntryScreenController
 
+  // TODO: Rename `up` to `back`.
   private val upButton by bindView<View>(R.id.patiententry_up)
   private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollable_container)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)

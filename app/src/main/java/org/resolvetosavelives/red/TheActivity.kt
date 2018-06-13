@@ -2,7 +2,6 @@ package org.resolvetosavelives.red
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import org.resolvetosavelives.red.di.TheActivityComponent
 import org.resolvetosavelives.red.home.HomeScreen
@@ -21,13 +20,6 @@ class TheActivity : AppCompatActivity() {
 
   lateinit var screenRouter: ScreenRouter
   private val screenResults: ScreenResultBus = ScreenResultBus()
-
-  var wasRecreated: Boolean = false
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    wasRecreated = savedInstanceState != null
-    super.onCreate(savedInstanceState)
-  }
 
   override fun attachBaseContext(baseContext: Context) {
     screenRouter = ScreenRouter.create(this, NestedKeyChanger(), screenResults)

@@ -18,6 +18,7 @@ import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.nullIfBlank
+import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
@@ -74,8 +75,7 @@ class PatientEntryScreenController @Inject constructor(
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<PatientEntryScreenCreated>()
-        .filter { !it.wasRecreated }
+        .ofType<ScreenCreated>()
         .flatMapSingle { patientRepository.ongoingEntry() }
         .withLatestFrom(facilityRepository.currentFacility().take(1))
         .map { (entry, facility) ->

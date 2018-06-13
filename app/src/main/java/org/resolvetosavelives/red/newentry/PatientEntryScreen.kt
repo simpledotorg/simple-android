@@ -35,6 +35,7 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.summary.PatientSummaryCaller
 import org.resolvetosavelives.red.summary.PatientSummaryScreenKey
 import org.resolvetosavelives.red.util.toOptional
+import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
@@ -46,9 +47,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   companion object {
     val KEY = PatientEntryScreenKey()
   }
-
-  @Inject
-  lateinit var activity: TheActivity
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -115,7 +113,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun screenCreates() = Observable.just(PatientEntryScreenCreated(activity.wasRecreated))
+  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun formChanges(): Observable<UiEvent> {
     return Observable.mergeArray(

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:paddingTop="@dimen/spacing_16">
+
+  <android.support.v7.widget.AppCompatTextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:gravity="center_horizontal"
+    android:letterSpacing="0.1"
+    android:text="@string/bloodpressureentry_sheet_title"
+    android:textAllCaps="true"
+    android:textColor="@color/gray_800"
+    tools:ignore="UnusedAttribute" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal">
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <!-- Contains an awkward bottom-padding to keep
+           the label visible even when the keyboard is up. -->
+      <EditText
+        android:id="@+id/bloodpressureentry_systolic"
+        style="@style/RedApp.BloodPressureInput"
+        android:hint="@string/bloodpressureentry_input_hint" />
+
+      <View
+        android:id="@+id/bloodpressureentry_systolic_underline"
+        style="@style/RedApp.BloodPressureInputUnderline" />
+
+      <TextView
+        android:id="@+id/bloodpressureentry_systolic_label"
+        style="@style/RedApp.BloodPressureInputLabel"
+        android:text="@string/bloodpressureentry_systolic" />
+    </LinearLayout>
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginStart="4dp"
+      android:layout_marginTop="-28dp"
+      android:scaleX="0.3"
+      android:text="/"
+      android:textColor="@color/gray_300"
+      android:textSize="88dp"
+      tools:ignore="HardcodedText,SpUsage" />
+
+    <LinearLayout
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <EditText
+        android:id="@+id/bloodpressureentry_diastolic"
+        style="@style/RedApp.BloodPressureInput"
+        android:hint="@string/bloodpressureentry_input_hint" />
+
+      <View
+        android:id="@+id/bloodpressureentry_diastolic_underline"
+        style="@style/RedApp.BloodPressureInputUnderline" />
+
+      <TextView
+        android:id="@+id/bloodpressureentry_diastolic_label"
+        style="@style/RedApp.BloodPressureInputLabel"
+        android:text="@string/bloodpressureentry_diastolic" />
+    </LinearLayout>
+  </LinearLayout>
+</LinearLayout>

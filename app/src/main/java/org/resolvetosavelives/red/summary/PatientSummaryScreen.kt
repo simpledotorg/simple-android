@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
+import org.resolvetosavelives.red.bp.entry.BloodPressureEntrySheetView
 import org.resolvetosavelives.red.home.HomeScreen
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.Patient
@@ -24,7 +25,7 @@ import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.resolvetosavelives.red.widgets.UiEvent
-import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -34,6 +35,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var controller: PatientSummaryScreenController
+
+  @Inject
+  lateinit var activity: TheActivity
 
   private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
@@ -71,9 +75,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  fun showBloodPressureEntrySheet() {
-    // TODO.
-    Timber.w("TODO: Show BP entry bottom-sheet")
+  fun showBloodPressureEntrySheet(patientUuid: UUID) {
+    BloodPressureEntrySheetView.showForPatient(patientUuid, activity.supportFragmentManager)
   }
 
   fun goBackToPatientSearch() {

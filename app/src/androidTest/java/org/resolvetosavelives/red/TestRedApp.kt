@@ -10,13 +10,24 @@ import org.resolvetosavelives.red.di.DaggerTestAppComponent
 import org.resolvetosavelives.red.di.TestAppComponent
 import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.sync.SyncModule
+import org.resolvetosavelives.red.sync.SyncScheduler
 import org.threeten.bp.Duration
+import javax.inject.Inject
 
 /**
  * This application class makes it possible to inject Android tests with their dependencies.
  * Using [appComponent] in a test's @Before function is a good place to start.
  */
 class TestRedApp : RedApp() {
+
+  @Inject
+  lateinit var syncScheduler: SyncScheduler
+
+  override fun onCreate() {
+    super.onCreate()
+    appComponent().inject(this)
+    syncScheduler.cancelAll()
+  }
 
   companion object {
     fun appComponent(): TestAppComponent {

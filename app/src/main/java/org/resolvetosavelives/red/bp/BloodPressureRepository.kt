@@ -14,7 +14,7 @@ import javax.inject.Inject
 @AppScope
 class BloodPressureRepository @Inject constructor(private val dao: BloodPressureMeasurement.RoomDao) {
 
-  fun save(patientUuid: UUID, systolic: Int, diastolic: Int): Completable {
+  fun saveMeasurement(patientUuid: UUID, systolic: Int, diastolic: Int): Completable {
     return Completable.fromAction {
       val newMeasurement = BloodPressureMeasurement(
           uuid = UUID.randomUUID(),

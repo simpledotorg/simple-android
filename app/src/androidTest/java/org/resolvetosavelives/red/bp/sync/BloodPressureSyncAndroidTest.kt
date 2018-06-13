@@ -50,7 +50,7 @@ class BloodPressureSyncAndroidTest {
     val parentPatientUuid = UUID.randomUUID()
     return Observable.range(0, count)
         .flatMapCompletable({ index ->
-          repository.save(parentPatientUuid, systolic = 100 + index, diastolic = 50 + index)
+          repository.saveMeasurement(parentPatientUuid, systolic = 100 + index, diastolic = 50 + index)
         })
   }
 

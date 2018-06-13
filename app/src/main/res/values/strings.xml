@@ -34,6 +34,12 @@
   <string name="patientsummary_contentdescription_up_button">Go back</string>
   <string name="patientsummary_edit">Edit</string>
 
-  <!-- Blood pressure entry -->
+  <!-- Home -->
   <string name="bpentry_or_enter_patients">Or, enter patient\'s:</string>
+
+  <!-- Blood pressure entry -->
+  <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
+  <string name="bloodpressureentry_systolic">Systolic</string>
+  <string name="bloodpressureentry_diastolic">Diastolic</string>
+  <string name="bloodpressureentry_input_hint">•</string>
 </resources>

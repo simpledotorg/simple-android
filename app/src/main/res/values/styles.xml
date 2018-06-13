@@ -36,4 +36,34 @@
     <item name="android:tint">@color/gray_500</item>
     <item name="android:src">@drawable/ic_clear_circular_16dp</item>
   </style>
+
+  <style name="RedApp.BloodPressureInput">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@null</item>
+    <item name="android:fontFamily">sans-serif-light</item>
+    <item name="android:gravity">center|top</item>
+    <item name="android:inputType">number</item>
+    <item name="android:maxEms">3</item>
+    <item name="android:maxLength">3</item>
+    <item name="android:minEms">3</item>
+    <item name="android:textSize">44sp</item>
+    <item name="android:paddingBottom">52dp</item>
+  </style>
+
+  <style name="RedApp.BloodPressureInputUnderline">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1.5dp</item>
+    <item name="android:layout_marginEnd">24dp</item>
+    <item name="android:layout_marginStart">24dp</item>
+    <item name="android:background">@color/gray_300</item>
+    <item name="android:layout_marginBottom">@dimen/spacing_8</item>
+    <item name="android:layout_marginTop">-50dp</item>
+  </style>
+
+  <style name="RedApp.BloodPressureInputLabel">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center_horizontal</item>
+  </style>
 </resources>

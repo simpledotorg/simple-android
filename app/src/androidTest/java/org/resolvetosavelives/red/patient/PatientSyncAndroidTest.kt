@@ -69,7 +69,7 @@ class PatientSyncAndroidTest {
                       PatientPhoneNumberType.LANDLINE,
                       faker.bool.bool(0.77f)
                   ))
-          ).andThen(repository.saveOngoingEntryAsPatient())
+          ).andThen(repository.saveOngoingEntryAsPatient().toCompletable())
         })
 
     val withoutDOB = Observable.range(0, count)

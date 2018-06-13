@@ -62,6 +62,7 @@
         android:drawableEnd="@drawable/ic_filter_24dp"
         android:drawablePadding="4dp"
         android:text="@string/patientsearch_label_age"
+        android:textAllCaps="true"
         android:textColor="@color/color_accent" />
     </RelativeLayout>
   </LinearLayout>

@@ -12,6 +12,8 @@ import org.resolvetosavelives.red.patient.PatientStatus
 import org.resolvetosavelives.red.patient.SyncStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
@@ -59,12 +61,19 @@ data class PatientPayload(
         gender = gender,
         dateOfBirth = dateOfBirth,
         age = age?.let {
-          Age(value = age, updatedAt = ageUpdatedAt!!)
+          Age(age, ageUpdatedAt!!, computedDateOfBirth(age, ageUpdatedAt))
         },
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = newStatus)
+  }
+
+  private fun computedDateOfBirth(years: Int, updatedAt: Instant): LocalDate {
+    val updatedAtLocalDateTime = LocalDateTime.ofInstant(updatedAt, ZoneOffset.UTC)
+    val updatedAtLocalDate = LocalDate.of(updatedAtLocalDateTime.year, updatedAtLocalDateTime.month, updatedAtLocalDateTime.dayOfMonth)
+
+    return updatedAtLocalDate.minusYears(years.toLong())
   }
 }
 

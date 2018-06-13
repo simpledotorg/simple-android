@@ -17,10 +17,12 @@ import org.resolvetosavelives.red.facility.Facility
 import org.resolvetosavelives.red.facility.FacilityRepository
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
+import org.resolvetosavelives.red.patient.PatientFaker
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.widgets.UiEvent
+import java.util.UUID
 
 class PatientEntryScreenControllerTest {
 
@@ -101,7 +103,8 @@ class PatientEntryScreenControllerTest {
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Completable.complete())
+    val savedPatient = PatientFaker.patient(uuid = UUID.randomUUID())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -121,7 +124,7 @@ class PatientEntryScreenControllerTest {
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
     verify(patientRepository).saveOngoingEntryAsPatient()
-    verify(screen).openSummaryScreenForBpEntry()
+    verify(screen).openSummaryScreenForBpEntry(savedPatient.uuid)
   }
 
   @Test

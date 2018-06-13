@@ -271,10 +271,10 @@ class PatientEntryScreenController @Inject constructor(
             phoneNumberChanges,
             addressChanges,
             { _, personal, phone, address -> OngoingPatientEntry(personal, address, phone.toNullable()) })
-        .flatMap { entry ->
+        .flatMapSingle { entry ->
           patientRepository.saveOngoingEntry(entry)
               .andThen(patientRepository.saveOngoingEntryAsPatient())
-              .andThen(Observable.just({ ui: Ui -> ui.openSummaryScreenForBpEntry() }))
+              .map { savedPatient -> { ui: Ui -> ui.openSummaryScreenForBpEntry(savedPatient.uuid) } }
         }
   }
 }

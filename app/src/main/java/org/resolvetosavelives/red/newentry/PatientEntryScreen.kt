@@ -17,7 +17,6 @@ import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
-import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
@@ -28,16 +27,18 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
-import org.resolvetosavelives.red.home.bp.NewBpScreen
 import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.summary.PatientSummaryCaller
+import org.resolvetosavelives.red.summary.PatientSummaryScreenKey
 import org.resolvetosavelives.red.util.toOptional
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
 import org.resolvetosavelives.red.widgets.showKeyboard
+import java.util.UUID
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -191,10 +192,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
-  fun openSummaryScreenForBpEntry() {
-    // TODO: Open patient summary screen for entering BP.
-    Toast.makeText(context, "Patient saved", Toast.LENGTH_SHORT).show()
-    screenRouter.push(NewBpScreen.KEY)
+  fun openSummaryScreenForBpEntry(savedPatientUuid: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(savedPatientUuid, PatientSummaryCaller.NEW_PATIENT))
   }
 
   fun resetPhoneNumberField() {

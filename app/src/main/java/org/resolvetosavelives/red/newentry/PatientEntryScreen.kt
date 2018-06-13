@@ -23,6 +23,7 @@ import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
@@ -35,6 +36,8 @@ import org.resolvetosavelives.red.router.screen.ScreenRouter
 import org.resolvetosavelives.red.summary.PatientSummaryCaller
 import org.resolvetosavelives.red.summary.PatientSummaryScreenKey
 import org.resolvetosavelives.red.util.toOptional
+import org.resolvetosavelives.red.widgets.ActivityLifecycle
+import org.resolvetosavelives.red.widgets.RxTheActivityLifecycle
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import org.resolvetosavelives.red.widgets.setTextAndCursor
@@ -53,6 +56,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var controller: PatientEntryScreenController
+
+  @Inject
+  lateinit var activityLifecycle: RxTheActivityLifecycle
 
   // TODO: Rename `up` to `back`.
   private val upButton by bindView<View>(R.id.patiententry_up)
@@ -104,6 +110,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     Observable
         .mergeArray(
             screenCreates(),
+            screenPauses(),
             formChanges(),
             saveClicks())
         .observeOn(io())
@@ -114,6 +121,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
+
+  private fun screenPauses() = activityLifecycle.stream().ofType<ActivityLifecycle.Paused>()
 
   private fun formChanges(): Observable<UiEvent> {
     return Observable.mergeArray(

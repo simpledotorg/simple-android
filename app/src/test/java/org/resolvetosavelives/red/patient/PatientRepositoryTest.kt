@@ -44,6 +44,7 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
+    // TODO: Use PatientFaker.
     val localCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), mock(), mock(), mock(), mock(), syncStatusOfLocalCopy)
     whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localCopy)
 

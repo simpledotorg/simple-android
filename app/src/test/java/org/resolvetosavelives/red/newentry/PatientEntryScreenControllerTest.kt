@@ -20,6 +20,7 @@ import org.resolvetosavelives.red.patient.PatientFaker
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.widgets.ActivityLifecycle
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import java.util.UUID
@@ -186,5 +187,32 @@ class PatientEntryScreenControllerTest {
 
     verify(screen, times(1)).setShowDatePatternInDateOfBirthLabel(false)
     verify(screen).setShowDatePatternInDateOfBirthLabel(true)
+  }
+
+  @Test
+  fun `when screen is paused then ongoing patient entry should be saved`() {
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
+    val savedPatient = PatientFaker.patient(uuid = UUID.randomUUID())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
+    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
+    uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
+    uiEvents.onNext(PatientAgeTextChanged(""))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientDistrictTextChanged("district"))
+    uiEvents.onNext(PatientStateTextChanged("state"))
+
+    uiEvents.onNext(ActivityLifecycle.Paused())
+
+    verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
+        personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        address = OngoingPatientEntry.Address(colonyOrVillage = null, district = "district", state = "state"),
+        phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
+    ))
   }
 }

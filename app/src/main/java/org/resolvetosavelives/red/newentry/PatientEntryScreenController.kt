@@ -12,12 +12,12 @@ import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.BOTH_VISI
 import org.resolvetosavelives.red.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.INVALID
 import org.resolvetosavelives.red.newentry.DateOfBirthFormatValidator.Result.VALID
-import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.nullIfBlank
+import org.resolvetosavelives.red.widgets.ActivityLifecycle
 import org.resolvetosavelives.red.widgets.ScreenCreated
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
@@ -34,13 +34,17 @@ class PatientEntryScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
 
+    val transformedEvents = replayedEvents
+        .mergeWith(ongoingPatientEntryUpdates(replayedEvents));
+
     return Observable.mergeArray(
-        preFillOnStart(replayedEvents),
-        saveButtonToggles(replayedEvents),
-        dateOfBirthAndAgeSwitches(replayedEvents),
-        toggleDatePatternInDateOfBirthLabel(replayedEvents),
-        patientSaves(replayedEvents),
-        noneCheckBoxBehaviors(replayedEvents))
+        preFillOnStart(transformedEvents),
+        saveButtonToggles(transformedEvents),
+        dateOfBirthAndAgeSwitches(transformedEvents),
+        toggleDatePatternInDateOfBirthLabel(transformedEvents),
+        ongoingEntrySaves(transformedEvents),
+        patientSaves(transformedEvents),
+        noneCheckBoxBehaviors(transformedEvents))
   }
 
   private fun noneCheckBoxBehaviors(events: Observable<UiEvent>): Observable<UiChange> {
@@ -123,6 +127,7 @@ class PatientEntryScreenController @Inject constructor(
         .map { showPattern -> { ui: Ui -> ui.setShowDatePatternInDateOfBirthLabel(showPattern) } }
   }
 
+  // TODO: Instead of checking each field, can we use OngoingPatientEntryChanged event and just call canBeSaved() on it?
   private fun saveButtonToggles(events: Observable<UiEvent>): Observable<UiChange> {
     val nameAvailabilities = events
         .ofType<PatientFullNameTextChanged>()
@@ -206,7 +211,7 @@ class PatientEntryScreenController @Inject constructor(
         }
   }
 
-  private fun patientSaves(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun ongoingPatientEntryUpdates(events: Observable<UiEvent>): Observable<UiEvent> {
     val nameChanges = events
         .ofType<PatientFullNameTextChanged>()
         .map { it.fullName }
@@ -222,13 +227,11 @@ class PatientEntryScreenController @Inject constructor(
     val genderChanges = events
         .ofType<PatientGenderChanged>()
         .map { it.gender }
-        .ofType<Just<Gender>>()
-        .map { it.value }
 
     val personDetailChanges = Observables.combineLatest(
         nameChanges, dateOfBirthChanges, ageChanges, genderChanges,
         { name, dateOfBirth, age, gender ->
-          OngoingPatientEntry.PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender)
+          OngoingPatientEntry.PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender.toNullable())
         })
 
     val phoneNumberChanges = Observables
@@ -264,13 +267,25 @@ class PatientEntryScreenController @Inject constructor(
           OngoingPatientEntry.Address(colonyOrVillage.nullIfBlank(), district, state)
         })
 
-    return events
-        .ofType<PatientEntrySaveClicked>()
-        .withLatestFrom(
-            personDetailChanges,
-            phoneNumberChanges,
-            addressChanges,
-            { _, personal, phone, address -> OngoingPatientEntry(personal, address, phone.toNullable()) })
+    return Observables.combineLatest(personDetailChanges,
+        phoneNumberChanges,
+        addressChanges,
+        { personal, phone, address -> OngoingPatientEntryChanged(OngoingPatientEntry(personal, address, phone.toNullable())) })
+  }
+
+  private fun ongoingEntrySaves(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<ActivityLifecycle.Paused>()
+        .withLatestFrom(events.ofType<OngoingPatientEntryChanged>())
+        .map { (_, entryUpdate) -> entryUpdate.entry }
+        .flatMap { entry ->
+          patientRepository.saveOngoingEntry(entry).toObservable<UiChange>()
+        }
+  }
+
+  private fun patientSaves(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PatientEntrySaveClicked>()
+        .withLatestFrom(events.ofType<OngoingPatientEntryChanged>())
+        .map { (_, entryUpdate) -> entryUpdate.entry }
         .flatMapSingle { entry ->
           patientRepository.saveOngoingEntry(entry)
               .andThen(patientRepository.saveOngoingEntryAsPatient())

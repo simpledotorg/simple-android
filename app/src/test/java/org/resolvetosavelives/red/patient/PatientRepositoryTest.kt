@@ -45,7 +45,7 @@ class PatientRepositoryTest {
     val addressUuid = UUID.randomUUID()
 
     val localCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), mock(), mock(), mock(), mock(), syncStatusOfLocalCopy)
-    whenever(mockPatientDao.get(patientUuid)).thenReturn(localCopy)
+    whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localCopy)
 
     val serverAddress = PatientAddressPayload(
         uuid = addressUuid,

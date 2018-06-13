@@ -7,7 +7,7 @@ import org.resolvetosavelives.red.router.screen.FullScreenKey
 import java.util.UUID
 
 @Parcelize
-data class PatientSummaryScreenKey(val patientUuid: UUID) : FullScreenKey, Parcelable {
+data class PatientSummaryScreenKey(val patientUuid: UUID, val caller: PatientSummaryCaller) : FullScreenKey, Parcelable {
 
   override fun layoutRes(): Int {
     return R.layout.screen_patient_summary

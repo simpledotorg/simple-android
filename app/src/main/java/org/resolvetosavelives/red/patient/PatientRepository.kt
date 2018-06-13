@@ -10,6 +10,9 @@ import org.resolvetosavelives.red.patient.OngoingPatientEntry.ValidationResult
 import org.resolvetosavelives.red.patient.SyncStatus.DONE
 import org.resolvetosavelives.red.patient.SyncStatus.PENDING
 import org.resolvetosavelives.red.patient.sync.PatientPayload
+import org.resolvetosavelives.red.util.Just
+import org.resolvetosavelives.red.util.None
+import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -68,11 +71,23 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     return Completable.fromAction({ database.patientDao().save(patient) })
   }
 
+  fun patient(uuid: UUID): Observable<Optional<Patient>> {
+    return database.patientDao()
+        .patient(uuid)
+        .toObservable()
+        .map { patients ->
+          when {
+            patients.isNotEmpty() -> Just(patients.first())
+            else -> None
+          }
+        }
+  }
+
   fun mergeWithLocalData(serverPayloads: List<PatientPayload>): Completable {
     return serverPayloads
         .toObservable()
         .filter { payload ->
-          val localCopy = database.patientDao().get(payload.uuid)
+          val localCopy = database.patientDao().getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .toList()
@@ -195,10 +210,34 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     }
   }
 
+  fun address(addressUuid: UUID): Observable<Optional<PatientAddress>> {
+    return database.addressDao()
+        .address(addressUuid)
+        .toObservable()
+        .map { addresses ->
+          when {
+            addresses.isNotEmpty() -> Just(addresses.first())
+            else -> None
+          }
+        }
+  }
+
   private fun savePhoneNumber(number: PatientPhoneNumber): Completable {
     return Completable.fromAction {
       database.phoneNumberDao().save(listOf(number))
     }
+  }
+
+  fun phoneNumbers(patientUuid: UUID): Observable<Optional<PatientPhoneNumber>> {
+    return database.phoneNumberDao()
+        .phoneNumber(patientUuid)
+        .toObservable()
+        .map { numbers ->
+          when {
+            numbers.isNotEmpty() -> Just(numbers.first())
+            else -> None
+          }
+        }
   }
 }
 

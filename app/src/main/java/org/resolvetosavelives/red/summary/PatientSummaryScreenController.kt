@@ -50,7 +50,7 @@ class PatientSummaryScreenController @Inject constructor(val repository: Patient
         .flatMap { repository.phoneNumbers(it) }
 
     return Observables.combineLatest(sharedPatients, addresses, phoneNumbers)
-        .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.preFill(patient, address, phoneNumber) } }
+        .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populate(patient, address, phoneNumber) } }
   }
 
   private fun openBloodPressureBottomSheet(events: Observable<UiEvent>): Observable<UiChange> {

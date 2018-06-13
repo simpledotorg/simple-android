@@ -27,16 +27,37 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
     val dateOfTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
   }
 
+  private val ageFuzziness: Int = 3
+
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun searchPatientsAndPhoneNumbers(query: String): Observable<List<PatientSearchResult>> {
-    if (query.isEmpty()) {
+  fun searchPatientsAndPhoneNumbers(query: String?): Observable<List<PatientSearchResult>> {
+    if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
           .allRecords()
           .toObservable()
     }
+
     return database.patientSearchDao()
-        .search(query)
+        .search(query!!)
+        .toObservable()
+  }
+
+  fun searchPatientsAndPhoneNumbers(query: String?, assumedAge: Int): Observable<List<PatientSearchResult>> {
+    val ageUpperBound = assumedAge + ageFuzziness
+    val ageLowerBound = assumedAge - ageFuzziness
+
+    val dateOfBirthUpperBound = LocalDate.now().minusYears(ageUpperBound.toLong()).toString()
+    val dateOfBirthLowerBound = LocalDate.now().minusYears(ageLowerBound.toLong()).toString()
+
+    if (query.isNullOrEmpty()) {
+      return database.patientSearchDao()
+          .allRecords()
+          .toObservable()
+    }
+
+    return database.patientSearchDao()
+        .search(query!!, dateOfBirthUpperBound, dateOfBirthLowerBound)
         .toObservable()
   }
 

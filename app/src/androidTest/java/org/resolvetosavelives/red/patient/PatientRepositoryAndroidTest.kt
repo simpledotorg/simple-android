@@ -177,6 +177,60 @@ class PatientRepositoryAndroidTest {
     assertThat(combinedPatient.phoneActive).isEqualTo(true)
   }
 
+  @Test
+  fun patientSearch_withAgeFilter_shouldReturnCorrectResults() {
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.TRANSGENDER)
+    val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
+    val ongoingPatientEntry = OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
+    repository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(repository.saveOngoingEntryAsPatient())
+        .subscribe()
+
+    val opd2 = OngoingPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.TRANSGENDER)
+    val opa2 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opn2 = OngoingPatientEntry.PhoneNumber("34159", PatientPhoneNumberType.MOBILE, active = true)
+    val ope2 = OngoingPatientEntry(opd2, opa2, opn2)
+    repository.saveOngoingEntry(ope2)
+        .andThen(repository.saveOngoingEntryAsPatient())
+        .subscribe()
+
+    val opd3 = OngoingPatientEntry.PersonalDetails("Abhishek Kumar", "1/01/1949", null, Gender.TRANSGENDER)
+    val opa3 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opn3 = OngoingPatientEntry.PhoneNumber("99159", PatientPhoneNumberType.MOBILE, active = true)
+    val ope3 = OngoingPatientEntry(opd3, opa3, opn3)
+    repository.saveOngoingEntry(ope3)
+        .andThen(repository.saveOngoingEntryAsPatient())
+        .subscribe()
+
+    val opd4 = OngoingPatientEntry.PersonalDetails("Abshot Kumar", "12/10/1951", null, Gender.TRANSGENDER)
+    val opa4 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opn4 = OngoingPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
+    val ope4 = OngoingPatientEntry(opd4, opa4, opn4)
+    repository.saveOngoingEntry(ope4)
+        .andThen(repository.saveOngoingEntryAsPatient())
+        .subscribe()
+
+    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 12).blockingFirst()
+    assertThat(search0).hasSize(0)
+
+    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 77).blockingFirst()
+    val person1 = search1.first()
+    assertThat(search1).hasSize(1)
+    assertThat(person1.fullName).isEqualTo("Alok Kumar")
+    assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
+    assertThat(person1.phoneNumber).isEqualTo("34159")
+
+    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 68).blockingFirst()
+    assertThat(search2).hasSize(3)
+    assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
+    assertThat(search2[0].dateOfBirth).isEqualTo(LocalDate.parse("1950-08-15"))
+    assertThat(search2[1].fullName).isEqualTo("Abhishek Kumar")
+    assertThat(search2[1].dateOfBirth).isEqualTo(LocalDate.parse("1949-01-01"))
+    assertThat(search2[2].fullName).isEqualTo("Abshot Kumar")
+    assertThat(search2[2].dateOfBirth).isEqualTo(LocalDate.parse("1951-10-12"))
+  }
+
   @After
   fun tearDown() {
     database.clearAllTables()

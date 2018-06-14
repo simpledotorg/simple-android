@@ -3,8 +3,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:paddingTop="@dimen/spacing_8"
-  android:paddingBottom="@dimen/spacing_8"
+  android:paddingTop="12dp"
+  android:paddingBottom="12dp"
   android:paddingStart="@dimen/spacing_16"
   android:paddingEnd="@dimen/spacing_16"
   android:background="?attr/selectableItemBackground"
@@ -13,6 +13,7 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <TextView
@@ -23,6 +24,7 @@
       android:ellipsize="end"
       android:maxLines="1"
       android:textColor="@color/color_accent"
+      android:textSize="16sp"
       tools:text="Anshu Acharya, 39, female" />
 
     <TextView
@@ -31,12 +33,16 @@
       android:layout_height="wrap_content"
       android:maxLines="1"
       android:textColor="@color/gray_950"
+      android:textSize="16sp"
       tools:text="Age: 42" />
   </LinearLayout>
+
   <TextView
     android:id="@+id/patientsearch_item_byline"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="2dp"
+    android:layout_marginBottom="2dp"
     android:ellipsize="end"
     android:maxLines="1"
     android:textColor="@color/gray_950"

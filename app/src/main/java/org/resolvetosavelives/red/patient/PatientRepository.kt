@@ -35,7 +35,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   fun searchPatientsAndPhoneNumbers(query: String?): Observable<List<PatientSearchResult>> {
     if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
-          .allRecords()
+          .recentlyUpdated100Records()
           .toObservable()
     }
 
@@ -53,7 +53,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
     if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
-          .allRecords()
+          .recentlyUpdated100Records()
           .toObservable()
     }
 

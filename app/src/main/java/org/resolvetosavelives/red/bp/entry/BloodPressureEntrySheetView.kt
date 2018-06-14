@@ -37,12 +37,12 @@ class BloodPressureEntrySheetView : BottomSheetDialogFragment() {
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
     val sheetView = inflater.inflate(R.layout.sheet_blood_pressure_entry, container)
     dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+    TheActivity.component.inject(this)
     return sheetView
   }
 
   override fun onStart() {
     super.onStart()
-    TheActivity.component.inject(this)
 
     Observable
         .mergeArray(

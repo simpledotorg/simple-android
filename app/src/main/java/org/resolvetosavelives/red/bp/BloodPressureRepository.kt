@@ -66,7 +66,7 @@ class BloodPressureRepository @Inject constructor(private val dao: BloodPressure
     return dao.measurementCount().firstOrError()
   }
 
-  fun measurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
+  fun recentMeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
     return dao
         .measurementForPatient(patientUuid)
         .toObservable()

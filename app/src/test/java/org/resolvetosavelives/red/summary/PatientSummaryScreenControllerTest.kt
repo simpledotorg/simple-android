@@ -1,6 +1,8 @@
 package org.resolvetosavelives.red.summary
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -9,7 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.resolvetosavelives.red.patient.PatientAddress
+import org.resolvetosavelives.red.bp.BloodPressureRepository
 import org.resolvetosavelives.red.patient.PatientFaker
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.util.Just
@@ -20,51 +22,58 @@ import java.util.UUID
 class PatientSummaryScreenControllerTest {
 
   private val screen = mock<PatientSummaryScreen>()
-  private val repository = mock<PatientRepository>()
+  private val patientRepository = mock<PatientRepository>()
+  private val bpRepository = mock<BloodPressureRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private lateinit var controller: PatientSummaryScreenController
 
   @Before
   fun setUp() {
-    controller = PatientSummaryScreenController(repository)
+    controller = PatientSummaryScreenController(patientRepository, bpRepository)
 
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(screen) })
+        .subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
-  fun `when screen is opened then patient details should be set on UI`() {
+  fun `when screen is opened then patient details should be populated`() {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
-
     val patient = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid)
-
-    val address = PatientAddress(
-        uuid = addressUuid,
-        colonyOrVillage = "colony/village",
-        district = "district",
-        state = "state",
-        country = "India",
-        createdAt = mock(),
-        updatedAt = mock())
-
+    val address = PatientFaker.address(uuid = addressUuid)
     val phoneNumber = None
 
-    whenever(repository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
-    whenever(repository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(repository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
+    whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
+    whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
+
+    val bloodPressureMeasurements = listOf(
+        PatientFaker.bp(patientUuid, systolic = 120, diastolic = 85),
+        PatientFaker.bp(patientUuid, systolic = 164, diastolic = 95),
+        PatientFaker.bp(patientUuid, systolic = 144, diastolic = 90))
+    whenever(bpRepository.measurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
-    verify(screen).populate(patient, address, phoneNumber)
+    verify(screen).populatePatientInfo(patient, address, phoneNumber)
+    verify(screen).setupSummaryList()
+    verify(screen).populateSummaryList(check {
+      it.forEachIndexed { i, item -> assertThat(item.measurement == bloodPressureMeasurements[i]) }
+    })
+  }
+
+  @Test
+  fun `when new-BP is clicked then BP entry sheet should be shown`() {
+    // TODO.
   }
 
   @Test
   fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
-    whenever(repository.patient(any())).thenReturn(Observable.never())
-    whenever(repository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
@@ -74,8 +83,9 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened from search and up button is pressed then the user should be taken back to search`() {
-    whenever(repository.patient(any())).thenReturn(Observable.never())
-    whenever(repository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
     uiEvents.onNext(PatientSummaryBackClicked())
@@ -85,12 +95,31 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened after saving a new patient and up button is pressed then the user should be taken back to home`() {
-    whenever(repository.patient(any())).thenReturn(Observable.never())
-    whenever(repository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen).goBackToPatientSearch()
+  }
+
+  @Test
+  fun `when screen is opened after saving a new patient then done button should be shown`() {
+    // TODO.
+  }
+
+  @Test
+  fun `when update medicines is clicked then BP medicines screen should be shown`() {
+    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
+
+    val patientUuid = UUID.randomUUID()
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+    uiEvents.onNext(PatientSummaryNewBpClicked())
+
+    verify(screen).showBloodPressureEntrySheet(patientUuid)
   }
 }

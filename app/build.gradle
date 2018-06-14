@@ -118,4 +118,6 @@ dependencies {
   implementation 'com.tspoon.traceur:traceur:1.0.1'
   implementation 'ru.egslava:MaskedEditText:1.0.5'
   implementation "io.sentry:sentry-android:$versions.sentry"
+  implementation "com.xwray:groupie:$versions.groupie"
+  implementation "com.xwray:groupie-kotlin-android-extensions:$versions.groupie"
 }

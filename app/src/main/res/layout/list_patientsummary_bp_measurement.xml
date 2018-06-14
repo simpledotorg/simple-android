@@ -21,6 +21,7 @@
       android:layout_gravity="center_vertical"
       android:drawablePadding="@dimen/spacing_8"
       android:drawableStart="@drawable/ic_heart_20dp"
+      android:minEms="5"
       android:textSize="@dimen/textsize_18"
       tools:text="164/95" />
 

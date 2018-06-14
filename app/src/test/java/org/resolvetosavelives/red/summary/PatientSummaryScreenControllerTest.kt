@@ -30,7 +30,10 @@ class PatientSummaryScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = PatientSummaryScreenController(patientRepository, bpRepository)
+    val timestampGenerator = mock<RelativeTimestampGenerator>()
+    whenever(timestampGenerator.generate(any())).thenReturn(Today())
+
+    controller = PatientSummaryScreenController(patientRepository, bpRepository, timestampGenerator)
 
     uiEvents
         .compose(controller)

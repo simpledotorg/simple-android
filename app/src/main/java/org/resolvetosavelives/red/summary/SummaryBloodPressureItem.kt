@@ -1,7 +1,8 @@
 package org.resolvetosavelives.red.summary
 
 import android.annotation.SuppressLint
-import android.content.Context
+import android.graphics.Typeface
+import android.text.style.StyleSpan
 import android.view.View
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
@@ -9,17 +10,12 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.bp.BloodPressureMeasurement
+import org.resolvetosavelives.red.util.Truss
 import org.resolvetosavelives.red.widgets.UiEvent
-import org.threeten.bp.Instant
-import org.threeten.bp.Period
-import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit.DAYS
-import org.threeten.bp.temporal.ChronoUnit.MONTHS
-import java.util.Locale
 
 data class SummaryBloodPressureItem(
-    val measurement: BloodPressureMeasurement
+    val measurement: BloodPressureMeasurement,
+    val timestamp: RelativeTimestamp
 ) : GroupieItemWithUiEvents<SummaryBloodPressureItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -33,30 +29,23 @@ data class SummaryBloodPressureItem(
   @SuppressLint("SetTextI18n")
   override fun bind(holder: BpViewHolder, position: Int) {
     val context = holder.itemView.context
+
+    val textStyle = when (timestamp) {
+      is Today -> StyleSpan(Typeface.BOLD)
+      else -> StyleSpan(Typeface.NORMAL)
+    }
+
     holder.readingsTextView.text = "${measurement.systolic}/${measurement.diastolic}"
     holder.categoryTextView.setText(measurement.category().displayTextRes)
-    holder.timestampTextView.text = generateTimestamp(context, measurement.updatedAt)
-  }
+    holder.timestampTextView.text = timestamp.displayText(context)
 
-  private fun generateTimestamp(context: Context, time: Instant): String {
-    val now = Instant.now()
-    return when {
-      time > now.minus(1, DAYS) -> context.getString(R.string.timestamp_today)
-      time > now.minus(2, DAYS) -> context.getString(R.string.timestamp_yesterday)
-      time > now.minus(6, MONTHS) -> {
-        val updatedAtDate = time.atZone(UTC).toLocalDate()
-        val nowDate = now.atZone(UTC).toLocalDate()
-        val period = Period.between(nowDate, updatedAtDate)
-        context.getString(R.string.timestamp_days, period.days)
-      }
-      else -> {
-        timestampFormatter.format(time)
-      }
+    for (textView in arrayOf(holder.readingsTextView, holder.categoryTextView, holder.timestampTextView)) {
+      textView.text = Truss()
+          .pushSpan(textStyle)
+          .append(textView.text)
+          .popSpan()
+          .build()
     }
-  }
-
-  companion object {
-    val timestampFormatter = DateTimeFormatter.ofPattern("d MMM, yyyy", Locale.ENGLISH)!!
   }
 
   class BpViewHolder(rootView: View) : ViewHolder(rootView) {

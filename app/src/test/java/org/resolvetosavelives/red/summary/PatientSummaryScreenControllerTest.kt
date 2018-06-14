@@ -56,7 +56,7 @@ class PatientSummaryScreenControllerTest {
         PatientFaker.bp(patientUuid, systolic = 120, diastolic = 85),
         PatientFaker.bp(patientUuid, systolic = 164, diastolic = 95),
         PatientFaker.bp(patientUuid, systolic = 144, diastolic = 90))
-    whenever(bpRepository.measurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
@@ -76,7 +76,7 @@ class PatientSummaryScreenControllerTest {
   fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
     whenever(patientRepository.patient(any())).thenReturn(Observable.never())
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
+    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
@@ -88,7 +88,7 @@ class PatientSummaryScreenControllerTest {
   fun `when screen was opened from search and up button is pressed then the user should be taken back to search`() {
     whenever(patientRepository.patient(any())).thenReturn(Observable.never())
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
+    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
     uiEvents.onNext(PatientSummaryBackClicked())
@@ -100,7 +100,7 @@ class PatientSummaryScreenControllerTest {
   fun `when screen was opened after saving a new patient and up button is pressed then the user should be taken back to home`() {
     whenever(patientRepository.patient(any())).thenReturn(Observable.never())
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
+    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryBackClicked())
@@ -117,7 +117,7 @@ class PatientSummaryScreenControllerTest {
   fun `when update medicines is clicked then BP medicines screen should be shown`() {
     whenever(patientRepository.patient(any())).thenReturn(Observable.never())
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.measurementsForPatient(any())).thenReturn(Observable.never())
+    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
 
     val patientUuid = UUID.randomUUID()
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))

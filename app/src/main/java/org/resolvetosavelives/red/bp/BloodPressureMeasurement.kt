@@ -68,7 +68,7 @@ data class BloodPressureMeasurement(
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
     fun measurementCount(): Flowable<Int>
 
-    @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid")
+    @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid ORDER BY updatedAt DESC LIMIT 100")
     fun measurementForPatient(patientUuid: UUID): Flowable<List<BloodPressureMeasurement>>
   }
 }

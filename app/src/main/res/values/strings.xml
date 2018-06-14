@@ -36,18 +36,32 @@
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Save patient</string>
 
-  <!-- Patient summary -->
-  <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->
-  <string name="patientsummary_contentdescription_up_button">Go back</string>
-  <string name="patientsummary_edit">Edit</string>
-
   <!-- Home -->
   <string name="bpentry_or_enter_patients">Or, enter patient\'s:</string>
 
-  <!-- Blood pressure entry -->
+  <!-- New blood pressure entry -->
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
   <string name="bloodpressureentry_input_hint">•</string>
 
+  <!-- Patient summary -->
+  <string name="patientsummary_contentdescription_up_button">Go back</string> <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->
+  <string name="patientsummary_edit">Edit</string>
+  <string name="patientsummary_medicines_last_updated_at">Updated %s</string>
+  <string name="patientsummary_medicines_update">Update</string>   <!-- E.g., "Updated 30 days ago" -->
+  <string name="patientsummary_bp_add_new">New BP</string>
+
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_category_normal">Normal</string>
+
+  <string name="timestamp_today">Today</string>
+  <string name="timestamp_yesterday">Yesterday</string>
+
+  <!--suppress PluralsCandidate -->
+  <string name="timestamp_days">%d days ago</string>
+  <string name="bloodpressure_category_low">Low</string>
+  <string name="bloodpressure_category_moderately_high">High</string>
+  <string name="bloodpressure_category_very_high">Very high</string>
+  <string name="bloodpressure_category_extremely_high">Extremely high</string>
 </resources>

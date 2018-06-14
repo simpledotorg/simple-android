@@ -40,6 +40,10 @@ data class BloodPressureMeasurement(
         updatedAt = updatedAt)
   }
 
+  fun category(): BloodPressureCategory {
+    return BloodPressureCategory.NORMAL
+  }
+
   @Dao
   interface RoomDao {
 
@@ -63,5 +67,8 @@ data class BloodPressureMeasurement(
 
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
     fun measurementCount(): Flowable<Int>
+
+    @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid")
+    fun measurementForPatient(patientUuid: UUID): Flowable<List<BloodPressureMeasurement>>
   }
 }

@@ -14,6 +14,11 @@
   <string name="patientsearch_filter_by">Filter by</string>
   <string name="patientsearch_label_age">Age</string>
 
+  <!-- Patient search age filter -->
+  <string name="agefilter_apply_filter">Apply filter</string>
+  <string name="agefilter_enter_age">Enter patient\'s age</string>
+  <string name="agefilter_reset_filter">Reset Filter</string>
+
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">Go back to search</string>
   <string name="patiententry_full_name">Patient\'s name</string>
@@ -44,4 +49,5 @@
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
   <string name="bloodpressureentry_input_hint">•</string>
+
 </resources>

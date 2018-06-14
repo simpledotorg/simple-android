@@ -51,7 +51,7 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
 
     fun setClickListener(itemClicks: PublishSubject<UiEvent>) {
       itemView.setOnClickListener {
-        itemClicks.onNext(PatientSearchResultClicked(searchResult))
+        itemClicks.onNext(SearchResultClicked(searchResult))
       }
     }
 

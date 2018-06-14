@@ -33,25 +33,40 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when screen starts then the keyboard should be shown on phone number field and patient list should be setup`() {
-    verify(screen).showKeyboardOnPhoneNumberField()
+  fun `when screen starts, the keyboard should be shown on phone number field and patient list should be setup`() {
+    verify(screen).showKeyboardOnSearchEditText()
     verify(screen).setupSearchResultsList()
     verifyNoMoreInteractions(screen)
   }
 
   @Test
-  fun `when phone number text changes then matching patients should be shown`() {
-    val partialNumber = "999"
+  fun `when search text changes, matching patients should be shown`() {
+    val searchQuery = "999"
     val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
-    whenever(repository.searchPatientsAndPhoneNumbers(partialNumber)).thenReturn(Observable.just(matchingPatients))
+    whenever(repository.searchPatientsAndPhoneNumbers(searchQuery)).thenReturn(Observable.just(matchingPatients))
 
-    uiEvents.onNext(SearchQueryTextChanged(partialNumber))
+    uiEvents.onNext(SearchQueryTextChanged(searchQuery))
+    uiEvents.onNext(SearchQueryAgeChanged(""))
 
     verify(screen).updatePatientSearchResults(matchingPatients)
   }
 
   @Test
-  fun `when new patient is clicked then the manual entry flow should be started`() {
+  fun `when search text changes, and age filter is set, matching patients should be shown`() {
+    val searchQuery = "foo"
+    val ageFilter = "24"
+    val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
+
+    whenever(repository.searchPatientsAndPhoneNumbers(searchQuery, ageFilter.toInt())).thenReturn(Observable.just(matchingPatients))
+
+    uiEvents.onNext(SearchQueryTextChanged(searchQuery))
+    uiEvents.onNext(SearchQueryAgeChanged(ageFilter))
+
+    verify(screen).updatePatientSearchResults(matchingPatients)
+  }
+
+  @Test
+  fun `when new patient is clicked, the manual entry flow should be started`() {
     val partialNumber = "999"
     whenever(repository.searchPatientsAndPhoneNumbers(partialNumber)).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -74,7 +89,7 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when a patient search result is clicked then the patient's summary screen should be started`() {
+  fun `when a patient search result is clicked, the patient's summary screen should be started`() {
     val patientUuid = UUID.randomUUID()
     val searchResult = PatientSearchResult(
         uuid = patientUuid,
@@ -94,7 +109,7 @@ class PatientSearchScreenControllerTest {
         phoneCreatedAt = mock(),
         phoneUpdatedAt = mock())
 
-    uiEvents.onNext(PatientSearchResultClicked(searchResult))
+    uiEvents.onNext(SearchResultClicked(searchResult))
 
     verify(screen).openPatientSummaryScreen(patientUuid)
   }

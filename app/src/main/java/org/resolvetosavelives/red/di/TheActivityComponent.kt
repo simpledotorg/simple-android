@@ -10,6 +10,7 @@ import org.resolvetosavelives.red.home.bp.NewBpScreen
 import org.resolvetosavelives.red.newentry.PatientEntryScreen
 import org.resolvetosavelives.red.qrscan.AadhaarScanScreen
 import org.resolvetosavelives.red.router.screen.ScreenRouter
+import org.resolvetosavelives.red.search.PatientSearchAgeFilterSheet
 import org.resolvetosavelives.red.search.PatientSearchScreen
 import org.resolvetosavelives.red.summary.PatientSummaryScreen
 import org.resolvetosavelives.red.widgets.RxTheActivityLifecycle
@@ -24,6 +25,7 @@ interface TheActivityComponent {
   fun inject(target: PatientEntryScreen)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: BloodPressureEntrySheetView)
+  fun inject(target: PatientSearchAgeFilterSheet)
 
   @Subcomponent.Builder
   interface Builder {

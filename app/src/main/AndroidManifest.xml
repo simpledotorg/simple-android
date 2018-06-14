@@ -27,5 +27,10 @@
       </intent-filter>
     </activity>
 
+    <activity
+      android:name=".search.PatientSearchAgeFilterSheet"
+      android:theme="@style/AppTheme.DialogLikeActivity"
+      android:windowSoftInputMode="adjustResize" />
+
   </application>
 </manifest>

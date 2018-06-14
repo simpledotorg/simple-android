@@ -3,6 +3,7 @@ package org.resolvetosavelives.red.search
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
@@ -22,29 +23,47 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable.mergeArray(
         screenSetup(),
-        patientSearchResults(replayedEvents),
+        searchResults(replayedEvents),
+        ageFilterClicks(replayedEvents),
+        searchResultClicks(replayedEvents),
         saveAndProceeds(replayedEvents),
-        backButtonClicks(replayedEvents),
-        searchResultClicks(replayedEvents))
+        backButtonClicks(replayedEvents))
   }
 
   private fun screenSetup(): Observable<UiChange> {
-    return Observable.just({ ui: Ui -> ui.showKeyboardOnPhoneNumberField() }, { ui: Ui -> ui.setupSearchResultsList() })
+    return Observable.just({ ui: Ui -> ui.showKeyboardOnSearchEditText() }, { ui: Ui -> ui.setupSearchResultsList() })
   }
 
-  private fun patientSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun searchResults(events: Observable<UiEvent>): Observable<UiChange> {
+    val queryChanges = events
         .ofType<SearchQueryTextChanged>()
-        .map(SearchQueryTextChanged::query)
-        .switchMap { repository.searchPatientsAndPhoneNumbers(it) }
+        .map { it.query }
+
+    val ageChanges = events
+        .ofType<SearchQueryAgeChanged>()
+        .map { it.ageString }
+
+    return Observables.combineLatest(queryChanges, ageChanges)
+        .switchMap { (query, age) ->
+          when {
+            age.isEmpty() -> repository.searchPatientsAndPhoneNumbers(query)
+            else -> repository.searchPatientsAndPhoneNumbers(query, age.toInt())
+          }
+        }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 
   private fun searchResultClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<PatientSearchResultClicked>()
+        .ofType<SearchResultClicked>()
         .map { it.searchResult }
         .map { clickedPatient -> { ui: Ui -> ui.openPatientSummaryScreen(clickedPatient.uuid) } }
+  }
+
+  private fun ageFilterClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<SearchQueryAgeFilterClicked>()
+        .map { { ui: Ui -> ui.openAgeFilterSheet() } }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
@@ -54,7 +73,7 @@ class PatientSearchScreenController @Inject constructor(
 
     return events
         .ofType<CreateNewPatientClicked>()
-        .withLatestFrom(phoneNumberChanges, { _, number -> number })
+        .withLatestFrom(phoneNumberChanges) { _, number -> number }
         .take(1)
         .map { number -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(number)) }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }

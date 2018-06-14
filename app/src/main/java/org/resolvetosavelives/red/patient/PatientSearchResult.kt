@@ -75,8 +75,8 @@ data class PatientSearchResult(
       """)
     fun search(query: String, dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>
 
-    @Query(mainQuery)
-    fun allRecords(): Flowable<List<PatientSearchResult>>
+    @Query("$mainQuery ORDER BY P.updatedAt DESC LIMIT 100")
+    fun recentlyUpdated100Records(): Flowable<List<PatientSearchResult>>
 
     @Transaction
     @Query("$mainQuery WHERE P.syncStatus == :status")

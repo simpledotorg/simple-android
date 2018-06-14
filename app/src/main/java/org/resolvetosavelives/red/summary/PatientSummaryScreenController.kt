@@ -19,7 +19,8 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientSummaryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
-    private val bpRepository: BloodPressureRepository
+    private val bpRepository: BloodPressureRepository,
+    private val timestampGenerator: RelativeTimestampGenerator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -67,7 +68,12 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
         .flatMap { bpRepository.measurementsForPatient(it) }
-        .map { measurements -> measurements.map { SummaryBloodPressureItem(it) } }
+        .map { measurements ->
+          measurements.map { measurement ->
+            val timestamp = timestampGenerator.generate(measurement.updatedAt)
+            SummaryBloodPressureItem(measurement, timestamp)
+          }
+        }
         .map { { ui: Ui -> ui.populateSummaryList(it) } }
 
     return setup.mergeWith(populate)

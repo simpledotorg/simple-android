@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red.bp
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.resolvetosavelives.red.bp.sync.BloodPressureMeasurementPayload
@@ -63,5 +64,11 @@ class BloodPressureRepository @Inject constructor(private val dao: BloodPressure
 
   fun measurementCount(): Single<Int> {
     return dao.measurementCount().firstOrError()
+  }
+
+  fun measurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
+    return dao
+        .measurementForPatient(patientUuid)
+        .toObservable()
   }
 }

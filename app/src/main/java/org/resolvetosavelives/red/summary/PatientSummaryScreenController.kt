@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.resolvetosavelives.red.bp.BloodPressureRepository
 import org.resolvetosavelives.red.patient.PatientRepository
 import org.resolvetosavelives.red.summary.PatientSummaryCaller.NEW_PATIENT
 import org.resolvetosavelives.red.summary.PatientSummaryCaller.SEARCH
@@ -16,24 +17,28 @@ import javax.inject.Inject
 typealias Ui = PatientSummaryScreen
 typealias UiChange = (Ui) -> Unit
 
-class PatientSummaryScreenController @Inject constructor(val repository: PatientRepository) : ObservableTransformer<UiEvent, UiChange> {
+class PatientSummaryScreenController @Inject constructor(
+    private val patientRepository: PatientRepository,
+    private val bpRepository: BloodPressureRepository
+) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay(1).refCount()
 
     return Observable.mergeArray(
-        populatePatientData(replayedEvents),
+        populatePatientProfile(replayedEvents),
+        populateBloodPressureHistory(replayedEvents),
         openBloodPressureBottomSheet(replayedEvents),
         handleBackClicks(replayedEvents))
   }
 
-  private fun populatePatientData(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuid = events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
     val sharedPatients = patientUuid
-        .flatMap { repository.patient(it) }
+        .flatMap { patientRepository.patient(it) }
         .map {
           // We do not expect the patient to get
           // deleted while this screen is already open.
@@ -43,14 +48,29 @@ class PatientSummaryScreenController @Inject constructor(val repository: Patient
         .refCount()
 
     val addresses = sharedPatients
-        .flatMap { patient -> repository.address(patient.addressUuid) }
+        .flatMap { patient -> patientRepository.address(patient.addressUuid) }
         .map { (it as Just).value }
 
     val phoneNumbers = patientUuid
-        .flatMap { repository.phoneNumbers(it) }
+        .flatMap { patientRepository.phoneNumbers(it) }
 
     return Observables.combineLatest(sharedPatients, addresses, phoneNumbers)
-        .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populate(patient, address, phoneNumber) } }
+        .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populatePatientInfo(patient, address, phoneNumber) } }
+  }
+
+  private fun populateBloodPressureHistory(events: Observable<UiEvent>): Observable<UiChange> {
+    val setup = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { { ui: Ui -> ui.setupSummaryList() } }
+
+    val populate = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.patientUuid }
+        .flatMap { bpRepository.measurementsForPatient(it) }
+        .map { measurements -> measurements.map { SummaryBloodPressureItem(it) } }
+        .map { { ui: Ui -> ui.populateSummaryList(it) } }
+
+    return setup.mergeWith(populate)
   }
 
   private fun openBloodPressureBottomSheet(events: Observable<UiEvent>): Observable<UiChange> {
@@ -58,9 +78,14 @@ class PatientSummaryScreenController @Inject constructor(val repository: Patient
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    return events
+    val screenStartFromNewPatient = events
         .ofType<PatientSummaryScreenCreated>()
         .filter { it.caller == NEW_PATIENT }
+
+    val newBpClicks = events
+        .ofType<PatientSummaryNewBpClicked>()
+
+    return Observable.merge(screenStartFromNewPatient, newBpClicks)
         .withLatestFrom(patientUuid)
         .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
   }

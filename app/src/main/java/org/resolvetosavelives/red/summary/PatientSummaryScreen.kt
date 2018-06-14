@@ -2,14 +2,20 @@ package org.resolvetosavelives.red.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
+import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.TheActivity
@@ -25,6 +31,7 @@ import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.resolvetosavelives.red.widgets.UiEvent
+import org.resolvetosavelives.red.widgets.hideKeyboard
 import java.util.UUID
 import javax.inject.Inject
 
@@ -39,16 +46,24 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var activity: TheActivity
 
+  private val rootLayout by bindView<ViewGroup>(R.id.patientsummary_root)
   private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
   private val byline1TextView by bindView<TextView>(R.id.patientsummary_byline1)
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
+  private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
+
+  private val groupieAdapter = GroupAdapter<ViewHolder>()
+  private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   override fun onFinishInflate() {
     super.onFinishInflate()
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), backClicks())
+    // Not sure why but the keyboard stays visible when coming from search.
+    rootLayout.hideKeyboard()
+
+    Observable.mergeArray(screenCreates(), backClicks(), adapterUiEvents)
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -63,7 +78,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun backClicks() = RxView.clicks(backButton).map { PatientSummaryBackClicked() }
 
   @SuppressLint("SetTextI18n")
-  fun populate(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
+  fun populatePatientInfo(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
     fullNameTextView.text = patient.fullName
     byline1TextView.text = when (phoneNumber) {
       is Just -> "${resources.getString(Gender.MALE.displayTextRes)} • ${phoneNumber.value.number}"
@@ -73,6 +88,22 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       address.colonyOrVillage.isNullOrBlank() -> "${address.district}, ${address.state}"
       else -> "${address.colonyOrVillage}, ${address.district}, ${address.state}"
     }
+  }
+
+  fun setupSummaryList() {
+    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.adapter = groupieAdapter
+  }
+
+  fun populateSummaryList(measurementItems: List<SummaryBloodPressureItem>) {
+    val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
+    adapterItems += SummaryMedicineItem()
+    adapterItems += SummaryAddNewBpItem()
+    adapterItems += measurementItems
+
+    adapterItems.forEach { it.uiEvents = adapterUiEvents }
+
+    groupieAdapter.update(adapterItems)
   }
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {

@@ -62,7 +62,7 @@ data class Patient constructor(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     fun getOne(uuid: UUID): Patient?
 
-    // Only if Room supported custom adapters.
+    // Only if Room supported custom adapters, we wouldn't need both getOne() and patient().
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     fun patient(uuid: UUID): Flowable<List<Patient>>
 

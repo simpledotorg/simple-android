@@ -12,8 +12,6 @@ import javax.inject.Inject
 @SuppressLint("Registered")
 class ReleaseRedApp : RedApp() {
 
-  private val dsn = System.getenv("SENTRY_DSN")
-
   @Inject
   lateinit var syncScheduler: SyncScheduler
 
@@ -23,8 +21,6 @@ class ReleaseRedApp : RedApp() {
     appComponent.inject(this)
 
     syncScheduler.schedule().subscribe()
-
-    Sentry.init(dsn, AndroidSentryClientFactory(this))
   }
 
   override fun buildDaggerGraph(): AppComponent {

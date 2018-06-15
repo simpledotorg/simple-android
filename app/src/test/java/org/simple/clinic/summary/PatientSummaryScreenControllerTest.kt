@@ -69,7 +69,15 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when new-BP is clicked then BP entry sheet should be shown`() {
-    // TODO.
+    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
+
+    val patientUuid = UUID.randomUUID()
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+    uiEvents.onNext(PatientSummaryNewBpClicked())
+
+    verify(screen).showBloodPressureEntrySheet(patientUuid)
   }
 
   @Test
@@ -121,8 +129,8 @@ class PatientSummaryScreenControllerTest {
 
     val patientUuid = UUID.randomUUID()
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
-    uiEvents.onNext(PatientSummaryNewBpClicked())
+    uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(screen).showBloodPressureEntrySheet(patientUuid)
+    verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 }

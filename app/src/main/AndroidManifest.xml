@@ -12,10 +12,10 @@
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
-    android:name=".ReleaseRedApp"
+    android:name=".ReleaseClinic"
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
-    android:theme="@style/AppTheme"
+    android:theme="@style/ClinicTheme"
     tools:ignore="GoogleAppIndexingWarning">
 
     <activity
@@ -29,7 +29,7 @@
 
     <activity
       android:name=".search.PatientSearchAgeFilterSheet"
-      android:theme="@style/AppTheme.DialogLikeActivity"
+      android:theme="@style/ClinicTheme.DialogLikeActivity"
       android:windowSoftInputMode="adjustResize" />
 
   </application>

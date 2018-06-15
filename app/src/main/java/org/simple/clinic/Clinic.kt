@@ -1,7 +1,5 @@
 package org.simple.clinic
 
-import android.app.Application
-import android.support.multidex.MultiDex
 import android.support.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.gabrielittner.threetenbp.LazyThreeTen
@@ -11,7 +9,7 @@ import io.sentry.android.AndroidSentryClientFactory
 import org.simple.clinic.di.AppComponent
 import timber.log.Timber
 
-abstract class RedApp : MultiDexApplication() {
+abstract class Clinic : MultiDexApplication() {
 
   companion object {
     lateinit var appComponent: AppComponent

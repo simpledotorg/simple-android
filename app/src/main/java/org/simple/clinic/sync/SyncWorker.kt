@@ -3,7 +3,7 @@ package org.simple.clinic.sync
 import androidx.work.Worker
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.RedApp
+import org.simple.clinic.Clinic
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.patient.sync.PatientSync
 import javax.inject.Inject
@@ -21,7 +21,7 @@ class SyncWorker : Worker() {
   lateinit var bloodPressureSync: BloodPressureSync
 
   override fun doWork(): WorkerResult {
-    RedApp.appComponent.inject(this)
+    Clinic.appComponent.inject(this)
 
     return Completable.mergeArrayDelayError(patientSync.sync(), bloodPressureSync.sync())
         .onErrorComplete()

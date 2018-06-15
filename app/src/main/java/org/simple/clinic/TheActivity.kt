@@ -23,7 +23,7 @@ class TheActivity : AppCompatActivity() {
 
   override fun attachBaseContext(baseContext: Context) {
     screenRouter = ScreenRouter.create(this, NestedKeyChanger(), screenResults)
-    component = RedApp.appComponent
+    component = Clinic.appComponent
         .activityComponentBuilder()
         .activity(this)
         .screenRouter(screenRouter)

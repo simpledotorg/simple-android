@@ -69,7 +69,7 @@
 
   <Button
     android:id="@+id/patientsearch_new_patient"
-    style="@style/RedApp.Button.PatientEntry"
+    style="@style/Clinic.Button.PatientEntry"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/patientsearch_toolbar"

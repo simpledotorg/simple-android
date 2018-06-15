@@ -1,12 +1,12 @@
 [![Build Status](https://www.bitrise.io/app/db9b195f645cfed7/status.svg?token=0UVLxgCzsz75d21FUnkfhg&branch=master)](https://www.bitrise.io/app/db9b195f645cfed7)
 
-# RedApp
+# Simple Clinic
 
-RedApp is a mobile app for recording blood pressure measurements
+An Android app for recording blood pressure measurements.
 
 ## Downloading a build from CI
 
-RedApp uses Bitrise for continuous integration. It is configured to build a binary every time a commit is pushed to the repository. These binaries can be found by navigating [to this page](https://www.bitrise.io/app/db9b195f645cfed7#/builds_) and opening the details of any build. The details page will contain a generated APK called `app-debug.apk` under the "Apps & Artifacts" tab.
+We use Bitrise for continuous integration. It is configured to build a binary every time a commit is pushed to the repository. These binaries can be found by navigating [to this page](https://www.bitrise.io/app/db9b195f645cfed7#/builds_) and opening the details of any build. The details page will contain a generated APK called `app-debug.apk` under the "Apps & Artifacts" tab.
 
 ## Building manually
 
@@ -15,7 +15,7 @@ RedApp uses Bitrise for continuous integration. It is configured to build a bina
 3. Create a file called `local.properties` in the root directory with the following content:
 
 ```
-## This file does *NOT* get checked into RedApp's VCS, as it
+## This file does *NOT* get checked into your VCS, as it
 ## contains information specific to your local configuration.
 
 # Location of the SDK. This is only used by Gradle.
@@ -54,7 +54,7 @@ The binary can now be installed on the phone by running:
 
 If `adb` fails with a `no devices/emulators found` error, it is possible that the device is connected to the computer in charging only mode. In this case, you should see a notification on the device to change this to debugging.
 
-## Build and Deploy RedApp-Server
+## Build and deploy RedApp-Server
 
 Follow the [redapp-server instructions](https://github.com/resolvetosavelives/redapp-server/blob/master/README.md).
 
@@ -62,7 +62,7 @@ Follow the [redapp-server instructions](https://github.com/resolvetosavelives/re
 
 #### Working with Java 8's date and time
 
-RedApp uses a [library](https://github.com/gabrielittner/lazythreetenbp) to adapt ThreeTenBP (backport of Java 8's date and time packages). Due to some limitations, the IDE does not know how to download its sources. To work around, the sources can be downloaded from [the maven repository](http://search.maven.org/#search%7Cga%7C1%7Cthreetenbp) and manually be attached to Android Studio.
+Clinic uses a [library](https://github.com/gabrielittner/lazythreetenbp) to adapt ThreeTenBP (backport of Java 8's date and time packages). Due to some limitations, the IDE does not know how to download its sources. To work around, the sources can be downloaded from [the maven repository](http://search.maven.org/#search%7Cga%7C1%7Cthreetenbp) and manually be attached to Android Studio.
 
 #### Debugging syncing of patient
 

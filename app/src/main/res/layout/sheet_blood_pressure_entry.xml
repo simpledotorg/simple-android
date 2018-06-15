@@ -31,16 +31,16 @@
            the label visible even when the keyboard is up. -->
       <EditText
         android:id="@+id/bloodpressureentry_systolic"
-        style="@style/RedApp.BloodPressureInput"
+        style="@style/Clinic.BloodPressureInput"
         android:hint="@string/bloodpressureentry_input_hint" />
 
       <View
         android:id="@+id/bloodpressureentry_systolic_underline"
-        style="@style/RedApp.BloodPressureInputUnderline" />
+        style="@style/Clinic.BloodPressureInputUnderline" />
 
       <TextView
         android:id="@+id/bloodpressureentry_systolic_label"
-        style="@style/RedApp.BloodPressureInputLabel"
+        style="@style/Clinic.BloodPressureInputLabel"
         android:text="@string/bloodpressureentry_systolic" />
     </LinearLayout>
 
@@ -62,16 +62,16 @@
 
       <EditText
         android:id="@+id/bloodpressureentry_diastolic"
-        style="@style/RedApp.BloodPressureInput"
+        style="@style/Clinic.BloodPressureInput"
         android:hint="@string/bloodpressureentry_input_hint" />
 
       <View
         android:id="@+id/bloodpressureentry_diastolic_underline"
-        style="@style/RedApp.BloodPressureInputUnderline" />
+        style="@style/Clinic.BloodPressureInputUnderline" />
 
       <TextView
         android:id="@+id/bloodpressureentry_diastolic_label"
-        style="@style/RedApp.BloodPressureInputLabel"
+        style="@style/Clinic.BloodPressureInputLabel"
         android:text="@string/bloodpressureentry_diastolic" />
     </LinearLayout>
   </LinearLayout>

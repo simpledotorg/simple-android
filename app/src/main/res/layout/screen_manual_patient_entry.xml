@@ -53,7 +53,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/RedApp.ClearButton"
+          style="@style/Clinic.ClearButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           app:cleareableField="@id/patiententry_full_name" />
@@ -120,7 +120,7 @@
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-            style="@style/RedApp.ClearButton"
+            style="@style/Clinic.ClearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cleareableField="@id/patiententry_date_of_birth" />
@@ -159,7 +159,7 @@
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-            style="@style/RedApp.ClearButton"
+            style="@style/Clinic.ClearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:cleareableField="@id/patiententry_age" />

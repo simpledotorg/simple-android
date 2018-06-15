@@ -1,6 +1,7 @@
 package org.resolvetosavelives.red.widgets
 
 import android.content.Context
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -27,4 +28,8 @@ fun ViewGroup.hideKeyboard() {
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(focusedChild.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
   }
+}
+
+fun View.setTopPadding(topPadding: Int) {
+  setPaddingRelative(paddingStart, topPadding, paddingEnd, paddingBottom)
 }

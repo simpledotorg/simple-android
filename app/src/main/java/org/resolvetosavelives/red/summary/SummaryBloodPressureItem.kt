@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.support.v4.content.ContextCompat
 import android.text.style.StyleSpan
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
@@ -15,10 +16,12 @@ import org.resolvetosavelives.red.util.Just
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Truss
 import org.resolvetosavelives.red.widgets.UiEvent
+import org.resolvetosavelives.red.widgets.setTopPadding
 
 data class SummaryBloodPressureItem(
     val measurement: BloodPressureMeasurement,
-    val timestamp: RelativeTimestamp
+    val timestamp: RelativeTimestamp,
+    val firstItem: Boolean
 ) : GroupieItemWithUiEvents<SummaryBloodPressureItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -63,12 +66,20 @@ data class SummaryBloodPressureItem(
     for (textView in arrayOf(holder.readingsTextView, holder.categoryTextView)) {
       textView.setTextColor(categoryTextColor)
     }
+
+    holder.containerViewGroup.setTopPadding(when {
+      firstItem -> 0
+      else -> holder.originalContentTopPadding
+    })
   }
 
   class BpViewHolder(rootView: View) : ViewHolder(rootView) {
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
     val categoryTextView by bindView<TextView>(R.id.patientsummary_item_bp_category)
     val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
+    val containerViewGroup by bindView<ViewGroup>(R.id.patientsummary_item_bp_content_container)
+
     val originalTextColor by lazy { readingsTextView.currentTextColor }
+    val originalContentTopPadding by lazy { containerViewGroup.paddingTop }
   }
 }

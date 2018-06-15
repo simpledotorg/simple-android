@@ -6,6 +6,8 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.resolvetosavelives.red.bp.BloodPressureRepository
+import org.resolvetosavelives.red.facility.FacilityRepository
+import org.resolvetosavelives.red.user.UserSession
 import org.resolvetosavelives.red.widgets.UiEvent
 import javax.inject.Inject
 
@@ -36,7 +38,7 @@ class BloodPressureEntrySheetController @Inject constructor(val repository: Bloo
         .map { it.diastolic }
 
     return imeDoneClicks
-        .withLatestFrom(patientUuids, systolicChanges, diastolicChanges, { _, uuid, systolic, diastolic -> Triple(uuid, systolic, diastolic) })
+        .withLatestFrom(patientUuids, systolicChanges, diastolicChanges) { _, uuid, systolic, diastolic -> Triple(uuid, systolic, diastolic) }
         .filter { (_, systolic, diastolic) -> isInputValid(systolic, diastolic) }
         .take(1)
         .flatMap { (uuid, systolic, diastolic) ->

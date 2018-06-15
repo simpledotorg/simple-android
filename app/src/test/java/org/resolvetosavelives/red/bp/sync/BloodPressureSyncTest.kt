@@ -13,12 +13,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import org.resolvetosavelives.red.bp.BloodPressureMeasurement
 import org.resolvetosavelives.red.bp.BloodPressureRepository
+import org.resolvetosavelives.red.patient.PatientFaker
 import org.resolvetosavelives.red.patient.SyncStatus
-import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.patient.sync.DataPushResponse
 import org.resolvetosavelives.red.patient.sync.ValidationErrors
+import org.resolvetosavelives.red.sync.SyncConfig
 import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Optional
 import org.threeten.bp.Instant
@@ -94,8 +94,7 @@ class BloodPressureSyncTest {
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
     val measurementUuid = UUID.randomUUID()
-
-    val measurementWithErrors = BloodPressureMeasurement(measurementUuid, 144, 90, mock(), mock(), mock(), UUID.randomUUID())
+    val measurementWithErrors = PatientFaker.bp(measurementUuid)
 
     whenever(repository.measurementsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(measurementWithErrors)))
     whenever(repository.updateMeasurementsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)).thenReturn(Completable.complete())

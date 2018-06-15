@@ -13,7 +13,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity
-data class BloodPressureMeasurement(
+data class BloodPressureMeasurement constructor(
     @PrimaryKey
     val uuid: UUID,
 
@@ -21,13 +21,17 @@ data class BloodPressureMeasurement(
 
     val diastolic: Int,
 
-    val createdAt: Instant,
-
-    val updatedAt: Instant,
-
     val syncStatus: SyncStatus,
 
-    val patientUuid: UUID
+    val userUuid: UUID,
+
+    val facilityUuid: UUID,
+
+    val patientUuid: UUID,
+
+    val createdAt: Instant,
+
+    val updatedAt: Instant
 ) {
 
   @Transient
@@ -39,6 +43,8 @@ data class BloodPressureMeasurement(
         patientUuid = patientUuid,
         systolic = systolic,
         diastolic = diastolic,
+        facilityUuid = facilityUuid,
+        userUuid = userUuid,
         createdAt = createdAt,
         updatedAt = updatedAt)
   }
@@ -58,11 +64,8 @@ data class BloodPressureMeasurement(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newMeasurements: List<BloodPressureMeasurement>)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(newMeasurement: BloodPressureMeasurement)
-
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid LIMIT 1")
-    fun get(uuid: UUID): BloodPressureMeasurement?
+    fun getOne(uuid: UUID): BloodPressureMeasurement?
 
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
     fun measurementCount(): Flowable<Int>

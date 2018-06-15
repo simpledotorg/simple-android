@@ -1,3 +1,5 @@
 package org.resolvetosavelives.red.facility
 
-data class Facility(val district: String, val state: String)
+import java.util.UUID
+
+data class Facility(val uuid: UUID, val district: String, val state: String)

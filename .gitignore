@@ -46,6 +46,3 @@ output.json
 
 # Keystore files
 *.jks
-
-# Sentry.io
-sentry.properties

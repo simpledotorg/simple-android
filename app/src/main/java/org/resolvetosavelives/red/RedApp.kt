@@ -27,6 +27,7 @@ abstract class RedApp : Application() {
     LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()
+    Sentry.init(AndroidSentryClientFactory(applicationContext))
   }
 
   abstract fun buildDaggerGraph(): AppComponent

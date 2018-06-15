@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
+import org.resolvetosavelives.red.patient.sync.PatientAddressPayload
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -28,6 +29,18 @@ data class PatientAddress(
 
     val updatedAt: Instant
 ) {
+
+  fun toPayload(): PatientAddressPayload {
+    return PatientAddressPayload(
+        uuid = uuid,
+        colonyOrVillage = colonyOrVillage,
+        district = district,
+        state = state,
+        country = country,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
+  }
 
   @Dao
   interface RoomDao {

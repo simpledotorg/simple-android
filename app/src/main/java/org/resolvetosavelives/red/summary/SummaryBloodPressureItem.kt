@@ -2,6 +2,7 @@ package org.resolvetosavelives.red.summary
 
 import android.annotation.SuppressLint
 import android.graphics.Typeface
+import android.support.v4.content.ContextCompat
 import android.text.style.StyleSpan
 import android.view.View
 import android.widget.TextView
@@ -10,6 +11,8 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.bp.BloodPressureMeasurement
+import org.resolvetosavelives.red.util.Just
+import org.resolvetosavelives.red.util.None
 import org.resolvetosavelives.red.util.Truss
 import org.resolvetosavelives.red.widgets.UiEvent
 
@@ -30,21 +33,35 @@ data class SummaryBloodPressureItem(
   override fun bind(holder: BpViewHolder, position: Int) {
     val context = holder.itemView.context
 
-    val textStyle = when (timestamp) {
+    val textStyleSpan = when (timestamp) {
       is Today -> StyleSpan(Typeface.BOLD)
       else -> StyleSpan(Typeface.NORMAL)
     }
 
+    val category = measurement.category
+
+    val categoryTextColor = when {
+      category.isUrgent() -> ContextCompat.getColor(context, R.color.patientsummary_high_or_worse_blood_pressure)
+      else -> holder.originalTextColor
+    }
+
+    holder.categoryTextView.text = when (category.displayTextRes) {
+      is Just -> context.getString(category.displayTextRes.value)
+      is None -> ""
+    }
     holder.readingsTextView.text = "${measurement.systolic}/${measurement.diastolic}"
-    holder.categoryTextView.setText(measurement.category().displayTextRes)
     holder.timestampTextView.text = timestamp.displayText(context)
 
     for (textView in arrayOf(holder.readingsTextView, holder.categoryTextView, holder.timestampTextView)) {
       textView.text = Truss()
-          .pushSpan(textStyle)
+          .pushSpan(textStyleSpan)
           .append(textView.text)
           .popSpan()
           .build()
+    }
+
+    for (textView in arrayOf(holder.readingsTextView, holder.categoryTextView)) {
+      textView.setTextColor(categoryTextColor)
     }
   }
 
@@ -52,5 +69,6 @@ data class SummaryBloodPressureItem(
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
     val categoryTextView by bindView<TextView>(R.id.patientsummary_item_bp_category)
     val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
+    val originalTextColor by lazy { readingsTextView.currentTextColor }
   }
 }

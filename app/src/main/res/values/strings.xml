@@ -52,16 +52,21 @@
   <string name="patientsummary_medicines_update">Update</string>   <!-- E.g., "Updated 30 days ago" -->
   <string name="patientsummary_bp_add_new">New BP</string>
 
+  <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
   <string name="bloodpressure_category_normal">Normal</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_category_low">Low</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_category_moderately_high">High</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_category_very_high">Very high</string>
+  <!--suppress UnusedResources -->
+  <string name="bloodpressure_category_extremely_high">Extremely high</string>
 
   <string name="timestamp_today">Today</string>
   <string name="timestamp_yesterday">Yesterday</string>
 
   <!--suppress PluralsCandidate -->
   <string name="timestamp_days">%d days ago</string>
-  <string name="bloodpressure_category_low">Low</string>
-  <string name="bloodpressure_category_moderately_high">High</string>
-  <string name="bloodpressure_category_very_high">Very high</string>
-  <string name="bloodpressure_category_extremely_high">Extremely high</string>
 </resources>

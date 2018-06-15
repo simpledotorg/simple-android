@@ -7,7 +7,7 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.widgets.UiEvent
 
-class SummaryMedicineItem : GroupieItemWithUiEvents<SummaryMedicineItem.MedicinesViewHolder>(0) {
+class SummaryMedicineItem : GroupieItemWithUiEvents<SummaryMedicineItem.MedicinesViewHolder>(adapterId = 0) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.search.PatientSearchScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.search.PatientSearchScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/patientsearch_root"
   android:layout_width="match_parent"
@@ -85,4 +85,4 @@
     android:layout_below="@id/patientsearch_new_patient"
     tools:listitem="@layout/list_patient_search" />
 
-</org.resolvetosavelives.red.search.PatientSearchScreen>
+</org.simple.clinic.search.PatientSearchScreen>

@@ -69,7 +69,7 @@ RedApp uses a [library](https://github.com/gabrielittner/lazythreetenbp) to adap
 [WorkManager](https://developer.android.com/topic/libraries/architecture/workmanager) is used for periodic scheduling syncing of patients. For debugging the state of the jobs, use this command:
 
 ```
-adb shell dumpsys jobscheduler | grep org.resolvetosavelives.red
+adb shell dumpsys jobscheduler | grep org.simple.clinic
 ```
 
 #### Android tests

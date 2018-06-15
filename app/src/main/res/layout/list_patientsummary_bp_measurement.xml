@@ -15,7 +15,7 @@
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_16">
 
-    <org.resolvetosavelives.red.widgets.TintableCompoundDrawableTextView
+    <org.simple.clinic.widgets.TintableCompoundDrawableTextView
       android:id="@+id/patientsummary_item_bp_readings"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"

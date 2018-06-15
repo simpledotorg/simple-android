@@ -3,7 +3,7 @@ package org.simple.clinic
 import android.app.Application
 import android.arch.persistence.room.Room
 import io.reactivex.Single
-import org.simple.clinic.TestClinic.Companion.appComponent
+import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerTestAppComponent
@@ -18,7 +18,7 @@ import javax.inject.Inject
  * This application class makes it possible to inject Android tests with their dependencies.
  * Using [appComponent] in a test's @Before function is a good place to start.
  */
-class TestClinic : Clinic() {
+class TestClinicApp : ClinicApp() {
 
   @Inject
   lateinit var syncScheduler: SyncScheduler
@@ -31,7 +31,7 @@ class TestClinic : Clinic() {
 
   companion object {
     fun appComponent(): TestAppComponent {
-      return Clinic.appComponent as TestAppComponent
+      return ClinicApp.appComponent as TestAppComponent
     }
   }
 

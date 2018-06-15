@@ -8,7 +8,7 @@ import org.simple.clinic.sync.SyncScheduler
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-class ReleaseClinic : Clinic() {
+class ReleaseClinicApp : ClinicApp() {
 
   @Inject
   lateinit var syncScheduler: SyncScheduler

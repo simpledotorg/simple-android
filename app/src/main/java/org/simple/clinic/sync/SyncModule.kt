@@ -15,9 +15,9 @@ import javax.inject.Named
 open class SyncModule {
 
   @Provides
-  @Named("RedApp")
+  @Named("Clinic")
   fun retrofit(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): Retrofit {
-    val baseUrl = appContext.getString(R.string.redapp_endpoint)
+    val baseUrl = appContext.getString(R.string.api_endpoint)
     return commonRetrofitBuilder
         .baseUrl(baseUrl)
         .build()

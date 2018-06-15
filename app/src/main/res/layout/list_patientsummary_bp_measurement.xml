@@ -46,7 +46,7 @@
   </LinearLayout>
 
   <View
-    style="@style/RedApp.Separator.VerticalContent"
+    style="@style/Clinic.Separator.VerticalContent"
     android:layout_gravity="bottom"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginStart="@dimen/spacing_24" />

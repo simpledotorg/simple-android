@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestRedApp
+import org.simple.clinic.TestClinic
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.Just
@@ -47,7 +47,7 @@ class PatientSyncAndroidTest {
 
   @Before
   fun setUp() {
-    TestRedApp.appComponent().inject(this)
+    TestClinic.appComponent().inject(this)
   }
 
   private fun insertDummyPatients(count: Int): Completable {

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="redapp_endpoint">http://13.126.149.25/api/</string>
+  <string name="api_endpoint">http://13.126.149.25/api/</string>
 </resources>

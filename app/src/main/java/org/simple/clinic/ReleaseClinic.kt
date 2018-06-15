@@ -1,8 +1,6 @@
 package org.simple.clinic
 
 import android.annotation.SuppressLint
-import io.sentry.Sentry
-import io.sentry.android.AndroidSentryClientFactory
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerAppComponent
@@ -10,7 +8,7 @@ import org.simple.clinic.sync.SyncScheduler
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-class ReleaseRedApp : RedApp() {
+class ReleaseClinic : Clinic() {
 
   @Inject
   lateinit var syncScheduler: SyncScheduler

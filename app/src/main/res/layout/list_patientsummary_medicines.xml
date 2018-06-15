@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_marginBottom="@dimen/spacing_8"
@@ -30,13 +31,32 @@
         android:text="@string/patientsummary_medicines_last_updated_at" />
     </LinearLayout>
 
-    <android.support.v7.widget.AppCompatButton
+    <FrameLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_24"
-      android:id="@+id/patientsummary_item_medicines_update"
-      android:text="@string/patientsummary_medicines_update"
-      android:textColor="@color/white"
-      app:backgroundTint="@color/color_accent" />
+      android:paddingTop="@dimen/spacing_24">
+
+      <android.support.v7.widget.AppCompatButton
+        android:id="@+id/patientsummary_item_medicines_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_24"
+        app:backgroundTint="@color/color_accent" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="14dp"
+        android:drawablePadding="@dimen/spacing_8"
+        android:drawableStart="@drawable/ic_local_pharmacy_20dp"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:drawableTint="@color/white"
+        android:text="@string/patientsummary_medicines_update"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="@color/white"
+        tools:ignore="UnusedAttribute" />
+    </FrameLayout>
   </LinearLayout>
 </android.support.v7.widget.CardView>

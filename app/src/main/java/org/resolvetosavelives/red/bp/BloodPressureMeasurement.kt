@@ -30,6 +30,9 @@ data class BloodPressureMeasurement(
     val patientUuid: UUID
 ) {
 
+  @Transient
+  val category = BloodPressureCategory.compute(this)
+
   fun toPayload(): BloodPressureMeasurementPayload {
     return BloodPressureMeasurementPayload(
         uuid = uuid,
@@ -38,10 +41,6 @@ data class BloodPressureMeasurement(
         diastolic = diastolic,
         createdAt = createdAt,
         updatedAt = updatedAt)
-  }
-
-  fun category(): BloodPressureCategory {
-    return BloodPressureCategory.NORMAL
   }
 
   @Dao

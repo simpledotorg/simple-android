@@ -16,6 +16,10 @@ import javax.inject.Inject
 class BloodPressureRepository @Inject constructor(private val dao: BloodPressureMeasurement.RoomDao) {
 
   fun saveMeasurement(patientUuid: UUID, systolic: Int, diastolic: Int): Completable {
+    if (systolic < 0 || diastolic < 0) {
+      throw AssertionError("Cannot have negative BP readings.")
+    }
+
     return Completable.fromAction {
       val newMeasurement = BloodPressureMeasurement(
           uuid = UUID.randomUUID(),

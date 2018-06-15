@@ -7,7 +7,7 @@ import kotterknife.bindView
 import org.resolvetosavelives.red.R
 import org.resolvetosavelives.red.widgets.UiEvent
 
-class SummaryAddNewBpItem : GroupieItemWithUiEvents<SummaryAddNewBpItem.NewBpViewHolder>(1) {
+class SummaryAddNewBpItem : GroupieItemWithUiEvents<SummaryAddNewBpItem.NewBpViewHolder>(adapterId = 1) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

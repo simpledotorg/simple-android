@@ -1,6 +1,8 @@
 package org.resolvetosavelives.red
 
 import android.app.Application
+import android.support.multidex.MultiDex
+import android.support.multidex.MultiDexApplication
 import com.facebook.stetho.Stetho
 import com.gabrielittner.threetenbp.LazyThreeTen
 import com.tspoon.traceur.Traceur
@@ -9,7 +11,7 @@ import io.sentry.android.AndroidSentryClientFactory
 import org.resolvetosavelives.red.di.AppComponent
 import timber.log.Timber
 
-abstract class RedApp : Application() {
+abstract class RedApp : MultiDexApplication() {
 
   companion object {
     lateinit var appComponent: AppComponent

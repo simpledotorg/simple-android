@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestClinic
+import org.simple.clinic.TestClinicApp
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
@@ -22,7 +22,7 @@ class PatientRepositoryAndroidTest {
 
   @Before
   fun setUp() {
-    TestClinic.appComponent().inject(this)
+    TestClinicApp.appComponent().inject(this)
   }
 
   @Test

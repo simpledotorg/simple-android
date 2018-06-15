@@ -6,7 +6,7 @@ import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import org.simple.clinic.di.AppComponent
 
-abstract class Clinic : MultiDexApplication() {
+abstract class ClinicApp : MultiDexApplication() {
 
   companion object {
     lateinit var appComponent: AppComponent
@@ -18,6 +18,7 @@ abstract class Clinic : MultiDexApplication() {
     LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()
+
     Sentry.init(AndroidSentryClientFactory(applicationContext))
   }
 

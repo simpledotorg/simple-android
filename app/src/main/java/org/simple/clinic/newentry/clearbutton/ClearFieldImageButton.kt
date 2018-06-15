@@ -10,7 +10,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import org.simple.clinic.R
-import org.simple.clinic.Clinic
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.newentry.MultipleFocusChangeListeners
 import javax.inject.Inject
 
@@ -40,7 +40,7 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    Clinic.appComponent.inject(this)
+    ClinicApp.appComponent.inject(this)
 
     try {
       field = (parent as ViewGroup).findViewById(fieldId)

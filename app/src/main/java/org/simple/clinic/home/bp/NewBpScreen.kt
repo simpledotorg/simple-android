@@ -2,7 +2,7 @@ package org.simple.clinic.home.bp
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
+import android.widget.Button
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -32,8 +32,7 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   @Inject
   lateinit var patientRepository: PatientRepository
 
-  private val phoneButton by bindView<View>(R.id.newbp_search_by_phone)
-  private val nameButton by bindView<View>(R.id.newbp_search_by_name)
+  private val phoneButton by bindView<Button>(R.id.home_search_patients)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -49,15 +48,15 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+  }
 
+  fun oldFn() {
     // TODO: This is a temporary placeholder because there is no other
     // TODO: entry-point for creating a new patient.
-    nameButton.setOnClickListener {
       patientRepository.saveOngoingEntry(OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")))
           .subscribeOn(io())
           .observeOn(mainThread())
           .subscribe { screenRouter.push(PatientEntryScreen.KEY) }
-    }
   }
 
   fun openNewPatientScreen() {

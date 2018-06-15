@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <TextView
+      android:id="@+id/protocoldrug_name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_weight="1"
+      android:paddingBottom="@dimen/spacing_16"
+      android:paddingTop="@dimen/spacing_16"
+      android:textSize="@dimen/textsize_16"
+      tools:text="Amlodipine" />
+
+    <RadioGroup
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+
+      <RadioButton
+        android:id="@+id/protocoldrug_dosage_1"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_8"
+        tools:text="5mg" />
+
+      <RadioButton
+        android:id="@+id/protocoldrug_dosage_2"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingEnd="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_8"
+        tools:text="10mg" />
+    </RadioGroup>
+  </LinearLayout>
+
+  <View
+    style="@style/Clinic.Separator.VerticalContent"
+    android:layout_gravity="bottom"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16" />
+</FrameLayout>

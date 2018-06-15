@@ -30,6 +30,7 @@ class PatientSummaryScreenController @Inject constructor(
         populatePatientProfile(replayedEvents),
         populateBloodPressureHistory(replayedEvents),
         openBloodPressureBottomSheet(replayedEvents),
+        openPrescribedDrugsScreen(replayedEvents),
         handleBackClicks(replayedEvents))
   }
 
@@ -69,7 +70,7 @@ class PatientSummaryScreenController @Inject constructor(
         .map { it.patientUuid }
         .flatMap { bpRepository.recentMeasurementsForPatient(it) }
         .map { measurements ->
-          measurements.mapIndexed{ index, measurement ->
+          measurements.mapIndexed { index, measurement ->
             val timestamp = timestampGenerator.generate(measurement.updatedAt)
             val isFirstItem = index == 0
             SummaryBloodPressureItem(measurement, timestamp, isFirstItem)
@@ -95,6 +96,17 @@ class PatientSummaryScreenController @Inject constructor(
     return Observable.merge(screenStartFromNewPatient, newBpClicks)
         .withLatestFrom(patientUuid)
         .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
+  }
+
+  private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuid = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.patientUuid }
+
+    return events
+        .ofType<PatientSummaryUpdateDrugsClicked>()
+        .withLatestFrom(patientUuid)
+        .map { (_, patientUuid) -> { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 
   private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {

@@ -1,7 +1,7 @@
 package org.simple.clinic.di
 
 import dagger.Component
-import org.simple.clinic.ReleaseClinic
+import org.simple.clinic.ReleaseClinicApp
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.sync.SyncWorker
 import javax.inject.Scope
@@ -10,7 +10,7 @@ import javax.inject.Scope
 @Component(modules = [(AppModule::class)])
 interface AppComponent {
 
-  fun inject(target: ReleaseClinic)
+  fun inject(target: ReleaseClinicApp)
   fun inject(target: SyncWorker)
   fun inject(target: ClearFieldImageButton)
 

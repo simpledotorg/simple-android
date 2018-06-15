@@ -11,7 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestClinic
+import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SyncConfig
@@ -43,7 +43,7 @@ class BloodPressureSyncAndroidTest {
 
   @Before
   fun setUp() {
-    TestClinic.appComponent().inject(this)
+    TestClinicApp.appComponent().inject(this)
   }
 
   private fun insertDummyMeasurements(count: Int): Completable {

@@ -27,7 +27,7 @@
       tools:text="164/95" />
 
     <TextView
-      android:id="@+id/patientsummary_item_bp_category"
+      android:id="@+id/patientsummary_item_bp_risk_level"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"

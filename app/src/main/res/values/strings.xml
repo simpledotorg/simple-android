@@ -54,15 +54,13 @@
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
-  <string name="bloodpressure_category_normal">Normal</string>
+  <string name="bloodpressure_risk_level_low">Low</string>
   <!--suppress UnusedResources -->
-  <string name="bloodpressure_category_low">Low</string>
+  <string name="bloodpressure_risk_level_moderately_high">High</string>
   <!--suppress UnusedResources -->
-  <string name="bloodpressure_category_moderately_high">High</string>
+  <string name="bloodpressure_risk_level_very_high">Very high</string>
   <!--suppress UnusedResources -->
-  <string name="bloodpressure_category_very_high">Very high</string>
-  <!--suppress UnusedResources -->
-  <string name="bloodpressure_category_extremely_high">Extremely high</string>
+  <string name="bloodpressure_risk_level_extremely_high">Extremely high</string>
 
   <string name="timestamp_today">Today</string>
   <string name="timestamp_yesterday">Yesterday</string>

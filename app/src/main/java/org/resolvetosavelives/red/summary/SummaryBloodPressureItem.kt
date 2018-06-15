@@ -41,21 +41,21 @@ data class SummaryBloodPressureItem(
       else -> StyleSpan(Typeface.NORMAL)
     }
 
-    val category = measurement.category
+    val riskLevel = measurement.riskLevel
 
-    val categoryTextColor = when {
-      category.isUrgent() -> ContextCompat.getColor(context, R.color.patientsummary_high_or_worse_blood_pressure)
+    val riskLevelTextColor = when {
+      riskLevel.isUrgent() -> ContextCompat.getColor(context, R.color.patientsummary_high_or_worse_blood_pressure)
       else -> holder.originalTextColor
     }
 
-    holder.categoryTextView.text = when (category.displayTextRes) {
-      is Just -> context.getString(category.displayTextRes.value)
+    holder.riskLevelTextView.text = when (riskLevel.displayTextRes) {
+      is Just -> context.getString(riskLevel.displayTextRes.value)
       is None -> ""
     }
     holder.readingsTextView.text = "${measurement.systolic}/${measurement.diastolic}"
     holder.timestampTextView.text = timestamp.displayText(context)
 
-    for (textView in arrayOf(holder.readingsTextView, holder.categoryTextView, holder.timestampTextView)) {
+    for (textView in arrayOf(holder.readingsTextView, holder.riskLevelTextView, holder.timestampTextView)) {
       textView.text = Truss()
           .pushSpan(textStyleSpan)
           .append(textView.text)
@@ -63,8 +63,8 @@ data class SummaryBloodPressureItem(
           .build()
     }
 
-    for (textView in arrayOf(holder.readingsTextView, holder.categoryTextView)) {
-      textView.setTextColor(categoryTextColor)
+    for (textView in arrayOf(holder.readingsTextView, holder.riskLevelTextView)) {
+      textView.setTextColor(riskLevelTextColor)
     }
 
     holder.containerViewGroup.setTopPadding(when {
@@ -75,7 +75,7 @@ data class SummaryBloodPressureItem(
 
   class BpViewHolder(rootView: View) : ViewHolder(rootView) {
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
-    val categoryTextView by bindView<TextView>(R.id.patientsummary_item_bp_category)
+    val riskLevelTextView by bindView<TextView>(R.id.patientsummary_item_bp_risk_level)
     val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
     val containerViewGroup by bindView<ViewGroup>(R.id.patientsummary_item_bp_content_container)
 

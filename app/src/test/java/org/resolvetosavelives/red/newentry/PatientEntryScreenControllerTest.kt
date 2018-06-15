@@ -12,7 +12,6 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.resolvetosavelives.red.facility.Facility
 import org.resolvetosavelives.red.facility.FacilityRepository
 import org.resolvetosavelives.red.patient.Gender
 import org.resolvetosavelives.red.patient.OngoingPatientEntry
@@ -39,7 +38,7 @@ class PatientEntryScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(Facility(district = "district", state = "state")))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(PatientFaker.facility()))
 
     errorConsumer = { throw it }
 

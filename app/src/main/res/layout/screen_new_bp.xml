@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.home.bp.NewBpScreen android:id="@+id/newbp_root"
+<org.simple.clinic.home.bp.NewBpScreen android:id="@+id/newbp_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -52,7 +52,7 @@
           android:paddingBottom="@dimen/spacing_8"
           android:paddingTop="@dimen/spacing_8">
 
-          <org.resolvetosavelives.red.widgets.TintableCompoundDrawableTextView
+          <org.simple.clinic.widgets.TintableCompoundDrawableTextView
             style="?attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -74,7 +74,7 @@
           android:paddingBottom="@dimen/spacing_8"
           android:paddingTop="@dimen/spacing_8">
 
-          <org.resolvetosavelives.red.widgets.TintableCompoundDrawableTextView
+          <org.simple.clinic.widgets.TintableCompoundDrawableTextView
             style="?attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -89,4 +89,4 @@
       </LinearLayout>
     </LinearLayout>
   </android.support.v7.widget.CardView>
-</org.resolvetosavelives.red.home.bp.NewBpScreen>
+</org.simple.clinic.home.bp.NewBpScreen>

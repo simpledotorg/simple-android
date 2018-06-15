@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.qrscan.AadhaarScanScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.qrscan.AadhaarScanScreen xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <org.resolvetosavelives.red.qrscan.GoogleVisionBasedQrCodeScanner
+  <org.simple.clinic.qrscan.GoogleVisionBasedQrCodeScanner
     android:id="@+id/aadhaarscanner_qr_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
@@ -14,4 +14,4 @@
     android:layout_height="240dp"
     android:layout_gravity="center"
     android:background="@drawable/aadhaar_qr_scanner_box" />
-</org.resolvetosavelives.red.qrscan.AadhaarScanScreen>
+</org.simple.clinic.qrscan.AadhaarScanScreen>

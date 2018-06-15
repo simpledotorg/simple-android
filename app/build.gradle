@@ -84,6 +84,7 @@ dependencies {
   debugImplementation "com.facebook.stetho:stetho-okhttp3:$versions.stetho"
 
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
+  testImplementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
   implementation "com.android.support:appcompat-v7:$versions.supportLib"
   implementation "com.android.support:recyclerview-v7:$versions.supportLib"

@@ -12,7 +12,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.resolvetosavelives.red.AppDatabase
-import org.resolvetosavelives.red.patient.sync.PatientAddressPayload
 import org.resolvetosavelives.red.patient.sync.PatientPayload
 import org.resolvetosavelives.red.patient.sync.PatientPhoneNumberPayload
 import java.util.UUID
@@ -49,21 +48,10 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    // TODO: Use PatientFaker.patient()
-    val localCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), mock(), mock(), mock(), mock(), syncStatusOfLocalCopy)
-    whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localCopy)
+    val localPatientCopy = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
+    whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    // TODO: Use PatientFaker.address.toPayload()
-    val serverAddress = PatientAddressPayload(
-        uuid = addressUuid,
-        colonyOrVillage = "colony",
-        district = "district",
-        state = "state",
-        country = "country",
-        createdAt = mock(),
-        updatedAt = mock())
-
-    // TODO: Use PatientFaker.patient.toPayload()
+    val serverAddress = PatientFaker.address(uuid = addressUuid).toPayload()
     val serverPatientWithoutPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",
@@ -106,18 +94,10 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val localPatientCopy = Patient(patientUuid, addressUuid, "name", mock(), mock(), mock(), mock(), mock(), mock(), syncStatusOfLocalCopy)
+    val localPatientCopy = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    val serverAddress = PatientAddressPayload(
-        uuid = addressUuid,
-        colonyOrVillage = "colony",
-        district = "district",
-        state = "state",
-        country = "country",
-        createdAt = mock(),
-        updatedAt = mock())
-
+    val serverAddress = PatientFaker.address(uuid = addressUuid).toPayload()
     val serverPatientWithPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",

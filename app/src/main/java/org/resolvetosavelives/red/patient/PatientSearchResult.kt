@@ -6,7 +6,6 @@ import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
 import io.reactivex.Flowable
 import org.intellij.lang.annotations.Language
-import org.resolvetosavelives.red.patient.sync.PatientAddressPayload
 import org.resolvetosavelives.red.patient.sync.PatientPayload
 import org.resolvetosavelives.red.patient.sync.PatientPhoneNumberPayload
 import org.threeten.bp.Instant
@@ -95,17 +94,7 @@ data class PatientSearchResult(
         createdAt = createdAt,
         updatedAt = updatedAt,
         phoneNumbers = null,
-        address = with(address) {
-          PatientAddressPayload(
-              uuid = uuid,
-              colonyOrVillage = colonyOrVillage,
-              district = district,
-              state = state,
-              country = country,
-              createdAt = createdAt,
-              updatedAt = updatedAt
-          )
-        })
+        address = address.toPayload())
 
     if (phoneUuid != null && phoneNumber != null) {
       return payload.copy(
@@ -121,5 +110,4 @@ data class PatientSearchResult(
 
     return payload
   }
-
 }

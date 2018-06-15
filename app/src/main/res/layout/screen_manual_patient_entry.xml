@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.newentry.PatientEntryScreen android:id="@+id/patiententry_root"
+<org.simple.clinic.newentry.PatientEntryScreen android:id="@+id/patiententry_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -52,7 +52,7 @@
             android:inputType="textPersonName|textCapWords" />
         </android.support.design.widget.TextInputLayout>
 
-        <org.resolvetosavelives.red.newentry.clearbutton.ClearFieldImageButton
+        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
           style="@style/RedApp.ClearButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -108,7 +108,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <org.resolvetosavelives.red.newentry.DateOfBirthEditText
+            <org.simple.clinic.newentry.DateOfBirthEditText
               android:id="@+id/patiententry_date_of_birth"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -119,7 +119,7 @@
               app:mask="##/##/####" />
           </android.support.design.widget.TextInputLayout>
 
-          <org.resolvetosavelives.red.newentry.clearbutton.ClearFieldImageButton
+          <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
             style="@style/RedApp.ClearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -158,7 +158,7 @@
               android:maxLength="3" />
           </android.support.design.widget.TextInputLayout>
 
-          <org.resolvetosavelives.red.newentry.clearbutton.ClearFieldImageButton
+          <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
             style="@style/RedApp.ClearButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -289,4 +289,4 @@
       android:text="@string/patiententry_save_patient"
       android:textColor="@color/white" />
   </FrameLayout>
-</org.resolvetosavelives.red.newentry.PatientEntryScreen>
+</org.simple.clinic.newentry.PatientEntryScreen>

@@ -1,0 +1,17 @@
+package org.simple.clinic.router.screen
+
+import android.os.Parcelable
+import android.support.annotation.LayoutRes
+
+/**
+ *
+ *  Screens can receive payloads inside their associated keys by calling [ScreenRouter.key].
+ *
+ * Note: use AutoValue or otherwise ensure equals() is overridden.
+ * Screen routing is skipped if an outgoing key and an incoming key are equal.
+ */
+interface FullScreenKey : Parcelable {
+
+  @LayoutRes
+  fun layoutRes(): Int
+}

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.resolvetosavelives.red.home.HomeScreen android:id="@+id/home_root"
+<org.simple.clinic.home.HomeScreen android:id="@+id/home_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -31,4 +31,4 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/home_viewpager_tabs" />
-</org.resolvetosavelives.red.home.HomeScreen>
+</org.simple.clinic.home.HomeScreen>

@@ -14,14 +14,14 @@ android {
   compileSdkVersion versions.compileSdk
 
   defaultConfig {
-    applicationId "org.resolvetosavelives.red"
+    applicationId "org.simple.clinic"
     minSdkVersion versions.minSdk
     targetSdkVersion versions.compileSdk
     versionCode 1
     versionName "0.1"
     multiDexEnabled true
 
-    testInstrumentationRunner "org.resolvetosavelives.red.AndroidTestJUnitRunner"
+    testInstrumentationRunner "org.simple.clinic.AndroidTestJUnitRunner"
   }
 
   buildTypes {

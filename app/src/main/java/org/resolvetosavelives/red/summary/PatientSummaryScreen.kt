@@ -2,6 +2,7 @@ package org.resolvetosavelives.red.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
@@ -10,6 +11,7 @@ import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
+import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
@@ -93,16 +95,25 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   fun setupSummaryList() {
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = groupieAdapter
+    recyclerView.itemAnimator = null
   }
 
   fun populateSummaryList(measurementItems: List<SummaryBloodPressureItem>) {
+    // Skip item animations on the first update.
+    if (groupieAdapter.itemCount != 0) {
+      val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
+      animator.supportsChangeAnimations = false
+      recyclerView.itemAnimator = animator
+    }
+
     val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
     adapterItems += SummaryMedicineItem()
     adapterItems += SummaryAddNewBpItem()
     adapterItems += measurementItems
 
+    // Not the best way for registering click listeners,
+    // but Groupie doesn't seem to have a better option.
     adapterItems.forEach { it.uiEvents = adapterUiEvents }
-
     groupieAdapter.update(adapterItems)
   }
 

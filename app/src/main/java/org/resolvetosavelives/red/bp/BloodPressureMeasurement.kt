@@ -31,7 +31,7 @@ data class BloodPressureMeasurement(
 ) {
 
   @Transient
-  val category = BloodPressureCategory.compute(this)
+  val riskLevel = BloodPressureRiskLevel.compute(this)
 
   fun toPayload(): BloodPressureMeasurementPayload {
     return BloodPressureMeasurementPayload(

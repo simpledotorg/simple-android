@@ -18,15 +18,17 @@
       android:id="@+id/patientsummary_back"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_margin="@dimen/spacing_12"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
-      android:padding="@dimen/spacing_16"
+      android:padding="@dimen/spacing_4"
       android:src="@drawable/ic_arrow_back_24dp"
       android:tint="@color/white" />
 
     <LinearLayout
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
       android:layout_weight="1"
       android:orientation="vertical"
       android:paddingBottom="@dimen/spacing_12"
@@ -72,8 +74,8 @@
   </LinearLayout>
 
   <android.support.v7.widget.RecyclerView
+    android:id="@+id/patientsummary_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/patientsummary_recyclerview"
     android:layout_below="@+id/patientsummary_header" />
 </org.simple.clinic.summary.PatientSummaryScreen>

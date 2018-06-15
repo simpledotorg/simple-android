@@ -65,8 +65,9 @@
 
   <string name="timestamp_today">Today</string>
   <string name="timestamp_yesterday">Yesterday</string>
-
   <!--suppress PluralsCandidate -->
   <string name="timestamp_days">%d days ago</string>
 
+  <!-- Prescribed drugs -->
+  <string name="patient_prescribeddrugs_screen_title">BP Medicines</string>
 </resources>

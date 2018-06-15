@@ -34,7 +34,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
-import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ActivityLifecycle
 import org.simple.clinic.widgets.RxTheActivityLifecycle
@@ -200,7 +200,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   fun openSummaryScreenForBpEntry(savedPatientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(savedPatientUuid, PatientSummaryCaller.NEW_PATIENT))
+    screenRouter.push(PatientSummaryScreen.KEY(savedPatientUuid, PatientSummaryCaller.NEW_PATIENT))
   }
 
   fun resetPhoneNumberField() {

@@ -9,4 +9,4 @@ class PatientSummaryBackClicked : UiEvent
 
 class PatientSummaryNewBpClicked : UiEvent
 
-class PatientSummaryUpdateMedicinesClicked : UiEvent
+class PatientSummaryUpdateDrugsClicked : UiEvent

@@ -23,6 +23,7 @@ import org.simple.clinic.R
 import org.simple.clinic.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetView
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.drugs.PrescribedDrugsEntryScreen
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -38,6 +39,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+
+  companion object {
+    val KEY: (patientUuid: UUID, PatientSummaryCaller) -> PatientSummaryScreenKey = ::PatientSummaryScreenKey
+  }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -69,6 +74,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
+        .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
 
@@ -107,7 +113,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
 
     val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
-    adapterItems += SummaryMedicineItem()
+    adapterItems += SummaryPrescribedDrugsItem()
     adapterItems += SummaryAddNewBpItem()
     adapterItems += measurementItems
 
@@ -119,6 +125,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
     BloodPressureEntrySheetView.showForPatient(patientUuid, activity.supportFragmentManager)
+  }
+
+  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
+    screenRouter.push(PrescribedDrugsEntryScreen.KEY(patientUuid))
   }
 
   fun goBackToPatientSearch() {

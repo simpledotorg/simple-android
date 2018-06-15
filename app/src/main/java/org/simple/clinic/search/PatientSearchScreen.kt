@@ -23,7 +23,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
-import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.widgets.showKeyboard
 import java.util.UUID
 import javax.inject.Inject
@@ -122,7 +122,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, caller = SEARCH))
+    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, SEARCH))
   }
 
   fun openPersonalDetailsEntryScreen() {

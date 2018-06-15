@@ -52,12 +52,12 @@ class PatientSyncAndroidTest {
 
   private fun insertDummyPatients(count: Int): Completable {
     val withDOB = Observable.range(0, count)
-        .flatMapCompletable({
+        .flatMapCompletable {
           repository.saveOngoingEntry(
               OngoingPatientEntry(
                   personalDetails = OngoingPatientEntry.PersonalDetails(
                       faker.name.name(),
-                      oldDateFormatter.format(faker.date.birthday()),
+                      oldDateFormatter.format(faker.date.between("1947-08-15", "2001-02-25")),
                       null,
                       genders.first()),
                   address = OngoingPatientEntry.Address(
@@ -70,10 +70,10 @@ class PatientSyncAndroidTest {
                       faker.bool.bool(0.77f)
                   ))
           ).andThen(repository.saveOngoingEntryAsPatient().toCompletable())
-        })
+        }
 
     val withoutDOB = Observable.range(0, count)
-        .flatMapCompletable({
+        .flatMapCompletable {
           repository
               .saveOngoingEntry(OngoingPatientEntry(
                   personalDetails = OngoingPatientEntry.PersonalDetails(
@@ -91,7 +91,7 @@ class PatientSyncAndroidTest {
                       faker.bool.bool(0.77f)
                   )))
               .andThen(repository.saveOngoingEntryAsPatient().toCompletable())
-        })
+        }
 
     return withDOB.andThen(withoutDOB)
   }

@@ -21,6 +21,12 @@ data class BloodPressureMeasurementPayload(
     @Json(name = "diastolic")
     val diastolic: Int,
 
+    @Json(name = "facility_id")
+    val facilityUuid: UUID,
+
+    @Json(name = "user_id")
+    val userUuid: UUID,
+
     @Json(name = "created_at")
     val createdAt: Instant,
 
@@ -33,10 +39,11 @@ data class BloodPressureMeasurementPayload(
         uuid = uuid,
         systolic = systolic,
         diastolic = diastolic,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
         syncStatus = syncStatus,
-        patientUuid = patientUuid
-    )
+        userUuid = userUuid,
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.home.bp.NewBpScreen android:id="@+id/newbp_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.home.bp.NewBpScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/newbp_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="#E9ECEE"
@@ -11,82 +11,39 @@
     layout="@layout/screen_aadhaar_scanner"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/newbp_search_option_container"
-    android:layout_marginBottom="-44dp" />
+    android:layout_marginBottom="-44dp"
+    android:layout_above="@+id/newbp_search_option_container" />
 
   <android.support.v7.widget.CardView
     android:id="@+id/newbp_search_option_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
     android:layout_marginBottom="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_8"
-    android:layout_marginStart="@dimen/spacing_8">
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_alignParentBottom="true">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
       android:orientation="vertical">
 
-      <TextView
-        android:layout_width="wrap_content"
+      <Button
+        android:id="@+id/home_scan_aadhaar"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingEnd="@dimen/spacing_12"
-        android:paddingStart="@dimen/spacing_12"
-        android:paddingTop="@dimen/spacing_12"
-        android:text="@string/bpentry_or_enter_patients"
-        android:textSize="@dimen/textsize_16" />
+        android:layout_margin="@dimen/spacing_16"
+        android:text="@string/home_scan_patient_aadhaar" />
 
-      <LinearLayout
-        android:layout_width="match_parent"
+      <Button
+        android:id="@+id/home_search_patients"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
-        android:baselineAligned="false">
-
-        <FrameLayout
-          android:id="@+id/newbp_search_by_phone"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:background="?attr/selectableItemBackground"
-          android:paddingBottom="@dimen/spacing_8"
-          android:paddingTop="@dimen/spacing_8">
-
-          <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-            style="?attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@null"
-            android:clickable="false"
-            android:drawablePadding="@dimen/spacing_8"
-            android:drawableStart="@drawable/ic_smartphone_24dp"
-            android:focusable="false"
-            android:text="@string/home_search_by_phone" />
-        </FrameLayout>
-
-        <FrameLayout
-          android:id="@+id/newbp_search_by_name"
-          android:layout_width="0dp"
-          android:layout_height="wrap_content"
-          android:layout_weight="1"
-          android:background="?attr/selectableItemBackground"
-          android:paddingBottom="@dimen/spacing_8"
-          android:paddingTop="@dimen/spacing_8">
-
-          <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-            style="?attr/buttonBarButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:background="@null"
-            android:clickable="false"
-            android:drawablePadding="@dimen/spacing_8"
-            android:drawableStart="@drawable/ic_user_24dp"
-            android:focusable="false"
-            android:text="@string/home_search_by_name" />
-        </FrameLayout>
-      </LinearLayout>
+        android:layout_marginBottom="@dimen/spacing_24"
+        android:text="@string/home_search_patient_name_phone" />
     </LinearLayout>
+
   </android.support.v7.widget.CardView>
+
 </org.simple.clinic.home.bp.NewBpScreen>

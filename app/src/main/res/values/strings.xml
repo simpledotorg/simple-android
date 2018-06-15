@@ -37,7 +37,8 @@
   <string name="patiententry_save_patient">Save patient</string>
 
   <!-- Home -->
-  <string name="bpentry_or_enter_patients">Or, enter patient\'s:</string>
+  <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>
+  <string name="home_search_patient_name_phone">Enter patient\'s name or phone</string>
 
   <!-- New blood pressure entry -->
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
@@ -67,4 +68,5 @@
 
   <!--suppress PluralsCandidate -->
   <string name="timestamp_days">%d days ago</string>
+
 </resources>

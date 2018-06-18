@@ -5,7 +5,8 @@ import com.facebook.stetho.Stetho
 import com.tspoon.traceur.Traceur
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
-import org.simple.clinic.di.DaggerAppComponent
+import org.simple.clinic.di.DaggerDebugAppComponent
+import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.sync.SyncScheduler
 import timber.log.Timber
 import javax.inject.Inject
@@ -19,7 +20,7 @@ class DebugClinicApp : ClinicApp() {
   override fun onCreate() {
     super.onCreate()
 
-    appComponent.inject(this)
+    (appComponent as DebugAppComponent).inject(this)
 
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()
@@ -29,7 +30,7 @@ class DebugClinicApp : ClinicApp() {
   }
 
   override fun buildDaggerGraph(): AppComponent {
-    return DaggerAppComponent.builder()
+    return DaggerDebugAppComponent.builder()
         .appModule(AppModule(this))
         .build()
   }

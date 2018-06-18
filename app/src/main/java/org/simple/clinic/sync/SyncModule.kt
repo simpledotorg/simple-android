@@ -4,6 +4,7 @@ import android.app.Application
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureModule
 import org.simple.clinic.drugs.PrescriptionModule
@@ -18,7 +19,7 @@ open class SyncModule {
   @Provides
   @Named("ClinicApp")
   fun retrofit(appContext: Application, commonRetrofitBuilder: Retrofit.Builder): Retrofit {
-    val baseUrl = appContext.getString(R.string.api_endpoint)
+    val baseUrl = BuildConfig.API_ENDPOINT
     return commonRetrofitBuilder
         .baseUrl(baseUrl)
         .build()

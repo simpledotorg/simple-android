@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.entry
+package org.simple.clinic.drugs.selection
 
 import android.view.View
 import android.widget.RadioButton

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+
+  <android.support.v7.widget.AppCompatButton
+    android:id="@+id/prescribeddrug_item_addnewprescription"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    app:backgroundTint="@color/color_accent" />
+
+  <org.simple.clinic.widgets.TintableCompoundDrawableTextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:drawablePadding="@dimen/spacing_8"
+    android:drawableStart="@drawable/ic_local_pharmacy_20dp"
+    android:elevation="8dp"
+    android:gravity="center_vertical"
+    android:text="@string/patient_prescribeddrugs_add_custom_prescription"
+    android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+    android:textColor="@color/white"
+    tools:ignore="UnusedAttribute" />
+</FrameLayout>

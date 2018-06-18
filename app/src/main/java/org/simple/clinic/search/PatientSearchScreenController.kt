@@ -23,11 +23,22 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable.mergeArray(
         screenSetup(),
+        searchQueryChanged(replayedEvents),
         searchResults(replayedEvents),
         ageFilterClicks(replayedEvents),
         searchResultClicks(replayedEvents),
         saveAndProceeds(replayedEvents),
         backButtonClicks(replayedEvents))
+  }
+
+  private fun searchQueryChanged(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    return events.ofType<SearchQueryTextChanged>()
+        .map {
+          when {
+            it.query.isNotBlank() -> { ui: Ui -> ui.showCreatePatientButton(true) }
+            else -> { ui: Ui -> ui.showCreatePatientButton(false) }
+          }
+        }
   }
 
   private fun screenSetup(): Observable<UiChange> {
@@ -67,15 +78,20 @@ class PatientSearchScreenController @Inject constructor(
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberChanges = events
+    val queryChanges = events
         .ofType<SearchQueryTextChanged>()
-        .map(SearchQueryTextChanged::query)
+        .map { it.query }
 
     return events
         .ofType<CreateNewPatientClicked>()
-        .withLatestFrom(phoneNumberChanges) { _, number -> number }
+        .withLatestFrom(queryChanges) { _, query -> query }
         .take(1)
-        .map { number -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(number)) }
+        .map {
+          when {
+            it.toIntOrNull() != null -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(it))
+            else -> OngoingPatientEntry(personalDetails = OngoingPatientEntry.PersonalDetails(it, null, null, null))
+          }
+        }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
   }

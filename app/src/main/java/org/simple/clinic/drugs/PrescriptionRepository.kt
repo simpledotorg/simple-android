@@ -16,7 +16,7 @@ class PrescriptionRepository @Inject constructor(
     private val facilityRepository: FacilityRepository
 ) {
 
-  fun savePrescription(patientUuid: UUID, name: String, dosage: String?, rxNormCode: String?): Completable {
+  fun savePrescription(patientUuid: UUID, name: String, dosage: String?, rxNormCode: String?, isProtocolDrug: Boolean): Completable {
     val currentFacility = facilityRepository
         .currentFacility()
         .take(1)
@@ -29,6 +29,8 @@ class PrescriptionRepository @Inject constructor(
                 name = name,
                 dosage = dosage,
                 rxNormCode = rxNormCode,
+                isProtocolDrug = isProtocolDrug,
+                isDeleted = false,
                 syncStatus = SyncStatus.PENDING,
                 patientUuid = patientUuid,
                 facilityUuid = facility.uuid,

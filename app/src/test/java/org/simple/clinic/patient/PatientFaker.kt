@@ -89,6 +89,8 @@ object PatientFaker {
         name = "drug name",
         dosage = "dosage",
         rxNormCode = "rx-norm-code",
+        isDeleted = false,
+        isProtocolDrug = false,
         patientUuid = mock(),
         facilityUuid = mock(),
         syncStatus = syncStatus,

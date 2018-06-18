@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs
+package org.simple.clinic.drugs.entry
 
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID

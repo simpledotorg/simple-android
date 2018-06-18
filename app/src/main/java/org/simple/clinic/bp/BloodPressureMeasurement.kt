@@ -68,9 +68,9 @@ data class BloodPressureMeasurement constructor(
     fun getOne(uuid: UUID): BloodPressureMeasurement?
 
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
-    fun measurementCount(): Flowable<Int>
+    fun count(): Flowable<Int>
 
     @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid ORDER BY updatedAt DESC LIMIT 100")
-    fun measurementForPatient(patientUuid: UUID): Flowable<List<BloodPressureMeasurement>>
+    fun forPatient(patientUuid: UUID): Flowable<List<BloodPressureMeasurement>>
   }
 }

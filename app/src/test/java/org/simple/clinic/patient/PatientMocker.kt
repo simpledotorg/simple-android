@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUser
 import java.util.UUID
 
@@ -80,12 +81,14 @@ object PatientMocker {
 
   fun prescription(
       uuid: UUID = mock(),
+      name: String = "drug name",
+      dosage: String? = "dosage",
       syncStatus: SyncStatus = mock()
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
-        name = "drug name",
-        dosage = "dosage",
+        name = name,
+        dosage = dosage,
         rxNormCode = "rx-norm-code",
         isDeleted = false,
         isProtocolDrug = false,
@@ -94,5 +97,17 @@ object PatientMocker {
         syncStatus = syncStatus,
         createdAt = mock(),
         updatedAt = mock())
+  }
+
+  fun protocolDrug(
+      name: String = "drug name",
+      dosages: List<String> = listOf("5mg", "10mg")
+  ): ProtocolDrug {
+    return ProtocolDrug(
+        UUID.fromString("feab6950-86fe-4b70-95c9-f21620140068"),
+        name = name,
+        rxNormCode = "rxnormcode-1",
+        dosages = dosages,
+        protocolUUID = mock())
   }
 }

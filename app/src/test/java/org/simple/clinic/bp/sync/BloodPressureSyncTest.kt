@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.patient.PatientFaker
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.DataPushResponse
 import org.simple.clinic.patient.sync.ValidationErrors
@@ -94,7 +94,7 @@ class BloodPressureSyncTest {
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
     val measurementUuid = UUID.randomUUID()
-    val measurementWithErrors = PatientFaker.bp(measurementUuid)
+    val measurementWithErrors = PatientMocker.bp(measurementUuid)
 
     whenever(repository.measurementsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(measurementWithErrors)))
     whenever(repository.updateMeasurementsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)).thenReturn(Completable.complete())

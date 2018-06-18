@@ -12,7 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.patient.PatientFaker
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -44,8 +44,8 @@ class PatientSummaryScreenControllerTest {
   fun `when screen is opened then patient details should be populated`() {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
-    val patient = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid)
-    val address = PatientFaker.address(uuid = addressUuid)
+    val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
+    val address = PatientMocker.address(uuid = addressUuid)
     val phoneNumber = None
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
@@ -53,9 +53,9 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
 
     val bloodPressureMeasurements = listOf(
-        PatientFaker.bp(patientUuid, systolic = 120, diastolic = 85),
-        PatientFaker.bp(patientUuid, systolic = 164, diastolic = 95),
-        PatientFaker.bp(patientUuid, systolic = 144, diastolic = 90))
+        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
+        PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95),
+        PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90))
     whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))

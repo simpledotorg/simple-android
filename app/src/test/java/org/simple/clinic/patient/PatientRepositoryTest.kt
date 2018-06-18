@@ -48,10 +48,10 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val localPatientCopy = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
+    val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    val serverAddress = PatientFaker.address(uuid = addressUuid).toPayload()
+    val serverAddress = PatientMocker.address(uuid = addressUuid).toPayload()
     val serverPatientWithoutPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",
@@ -94,10 +94,10 @@ class PatientRepositoryTest {
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
-    val localPatientCopy = PatientFaker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
+    val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    val serverAddress = PatientFaker.address(uuid = addressUuid).toPayload()
+    val serverAddress = PatientMocker.address(uuid = addressUuid).toPayload()
     val serverPatientWithPhone = PatientPayload(
         uuid = patientUuid,
         fullName = "name",

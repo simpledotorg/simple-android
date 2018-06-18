@@ -8,11 +8,9 @@ import org.simple.clinic.user.LoggedInUser
 import java.util.UUID
 
 /**
- * Test data generator. Name inspired from the Faker library.
- *
- * TODO: Rename this class since it now also generates test models other than [Patient].
+ * Generates test data.
  */
-object PatientFaker {
+object PatientMocker {
 
   fun patient(
       uuid: UUID = UUID.randomUUID(),

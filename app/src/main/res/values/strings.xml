@@ -70,4 +70,10 @@
 
   <!-- Prescribed drugs -->
   <string name="patient_prescribeddrugs_screen_title">BP Medicines</string>
+  <string name="patient_prescribeddrugs_add_custom_prescription">Add another medicine</string>
+
+  <string name="customprescription_enter_medicine">Enter medicine</string>
+  <string name="customprescription_save_drug">Save</string>
+  <string name="customprescription_drug_dosage_hint">Dosage</string>
+  <string name="customprescription_drug_name_hint">Medicine name</string>
 </resources>

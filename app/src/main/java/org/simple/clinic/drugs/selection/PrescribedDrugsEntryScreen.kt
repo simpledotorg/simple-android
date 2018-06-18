@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.entry
+package org.simple.clinic.drugs.selection
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -16,6 +16,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
+import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
@@ -33,6 +34,9 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
 
   @Inject
   lateinit var controller: PrescribedDrugsEntryController
+
+  @Inject
+  lateinit var activity: TheActivity
 
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
@@ -64,6 +68,7 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
     adapterItems += protocolDrugItems
+    adapterItems += AddNewPrescriptionItem()
     // TODO: New prescription button.
 
     // Not the best way for registering click listeners,
@@ -74,6 +79,6 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
   }
 
   fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    // TODO.
+    activity.startActivity(CustomPrescriptionEntrySheet.intent(context, patientUuid))
   }
 }

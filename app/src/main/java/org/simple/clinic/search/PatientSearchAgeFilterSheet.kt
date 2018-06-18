@@ -50,7 +50,7 @@ class PatientSearchAgeFilterSheet : AppCompatActivity() {
   companion object {
     private const val EXTRA_AGE = "age"
 
-    fun extract(data: Intent): SearchQueryAgeChanged {
+    fun extractResult(data: Intent): SearchQueryAgeChanged {
       return data.getParcelableExtra(EXTRA_AGE)
     }
 

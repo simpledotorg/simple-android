@@ -5,6 +5,6 @@
 
   <application
     tools:replace="android:name"
-    android:name=".DebugClinic">
+    android:name=".DebugClinicApp">
   </application>
 </manifest>

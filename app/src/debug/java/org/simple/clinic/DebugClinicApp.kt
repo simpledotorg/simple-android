@@ -11,7 +11,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 @SuppressLint("Registered")
-class DebugClinic : Clinic() {
+class DebugClinicApp : ClinicApp() {
 
   @Inject
   lateinit var syncScheduler: SyncScheduler

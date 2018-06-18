@@ -72,4 +72,8 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
 
     groupieAdapter.update(protocolDrugItems)
   }
+
+  fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
+    // TODO.
+  }
 }

@@ -8,7 +8,9 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
+import org.simple.clinic.protocol.ProtocolDrug
 import org.threeten.bp.Instant
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -16,6 +18,10 @@ class PrescriptionRepository @Inject constructor(
     private val dao: PrescribedDrug.RoomDao,
     private val facilityRepository: FacilityRepository
 ) {
+
+  fun savePrescription(patientUuid: UUID, drug: ProtocolDrug, dosage: String?): Completable {
+    return savePrescription(patientUuid, drug.name, dosage, drug.rxNormCode, isProtocolDrug = true)
+  }
 
   fun savePrescription(patientUuid: UUID, name: String, dosage: String?, rxNormCode: String?, isProtocolDrug: Boolean): Completable {
     val currentFacility = facilityRepository
@@ -25,6 +31,8 @@ class PrescriptionRepository @Inject constructor(
     return currentFacility
         .flatMapCompletable { facility ->
           Completable.fromAction {
+            Timber.i("Saving prescribed drug: $name $dosage")
+
             val newMeasurement = PrescribedDrug(
                 uuid = UUID.randomUUID(),
                 name = name,
@@ -40,6 +48,12 @@ class PrescriptionRepository @Inject constructor(
             dao.save(listOf(newMeasurement))
           }
         }
+  }
+
+  fun softDeletePrescription(prescriptionUuid: UUID): Completable {
+    return Completable.fromAction {
+      dao.softDelete(prescriptionUuid, deleted = true)
+    }
   }
 
   fun prescriptionsWithSyncStatus(status: SyncStatus): Single<List<PrescribedDrug>> {

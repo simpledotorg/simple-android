@@ -85,7 +85,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun ageFilterTextChanges() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_AGE && it.succeeded() }
-      .map { PatientSearchAgeFilterSheet.extract(it.data!!) }
+      .map { PatientSearchAgeFilterSheet.extractResult(it.data!!) }
       .startWith(SearchQueryAgeChanged(""))
 
   private fun newPatientButtonClicks() = RxView.clicks(newPatientButton)

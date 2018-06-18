@@ -24,6 +24,10 @@ class PrescriptionRepository @Inject constructor(
   }
 
   fun savePrescription(patientUuid: UUID, name: String, dosage: String?, rxNormCode: String?, isProtocolDrug: Boolean): Completable {
+    if (dosage != null && dosage.isBlank()) {
+      throw AssertionError("Dosage cannot be both blank and non-null")
+    }
+
     val currentFacility = facilityRepository
         .currentFacility()
         .take(1)

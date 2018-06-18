@@ -6,9 +6,10 @@ import dagger.Provides
 import dagger.Subcomponent
 import org.simple.clinic.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetView
+import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
+import org.simple.clinic.drugs.selection.PrescribedDrugsEntryScreen
 import org.simple.clinic.home.bp.NewBpScreen
 import org.simple.clinic.newentry.PatientEntryScreen
-import org.simple.clinic.drugs.entry.PrescribedDrugsEntryScreen
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchAgeFilterSheet
@@ -28,6 +29,7 @@ interface TheActivityComponent {
   fun inject(target: BloodPressureEntrySheetView)
   fun inject(target: PrescribedDrugsEntryScreen)
   fun inject(target: PatientSearchAgeFilterSheet)
+  fun inject(target: CustomPrescriptionEntrySheet)
 
   @Subcomponent.Builder
   interface Builder {

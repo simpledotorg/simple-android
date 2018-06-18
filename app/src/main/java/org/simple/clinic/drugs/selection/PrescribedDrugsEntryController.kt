@@ -1,13 +1,14 @@
-package org.simple.clinic.drugs.entry
+package org.simple.clinic.drugs.selection
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.entry.ProtocolDrugSelectionItem.DosageOption
+import org.simple.clinic.drugs.selection.ProtocolDrugSelectionItem.DosageOption
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -28,7 +29,8 @@ class PrescribedDrugsEntryController @Inject constructor(
     return Observable.mergeArray(
         populateDrugsList(replayedEvents),
         savePrescriptions(replayedEvents),
-        deletePrescriptions(replayedEvents))
+        deletePrescriptions(replayedEvents),
+        addNewPrescription(replayedEvents))
   }
 
   private fun populateDrugsList(events: Observable<UiEvent>): Observable<UiChange> {
@@ -93,13 +95,14 @@ class PrescribedDrugsEntryController @Inject constructor(
   }
 
   private fun savePrescriptions(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuid = events
+    val patientUuids = events
         .ofType<PrescribedDrugsEntryScreenCreated>()
         .map { it.patientUuid }
         .take(1)
 
-    return Observables.combineLatest(patientUuid, events.ofType<ProtocolDrugDosageSelected>())
-        .flatMap { (patientUuid, selectedEvent) ->
+    return events.ofType<ProtocolDrugDosageSelected>()
+        .withLatestFrom(patientUuids)
+        .flatMap { (selectedEvent, patientUuid) ->
           prescriptionRepository
               .savePrescription(patientUuid, selectedEvent.drug, selectedEvent.dosage)
               .andThen(Observable.never<UiChange>())
@@ -115,5 +118,16 @@ class PrescribedDrugsEntryController @Inject constructor(
               .softDeletePrescription(it.uuid)
               .andThen(Observable.never<UiChange>())
         }
+  }
+
+  private fun addNewPrescription(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuids = events
+        .ofType<PrescribedDrugsEntryScreenCreated>()
+        .map { it.patientUuid }
+        .take(1)
+
+    return events.ofType<AddNewPrescriptionClicked>()
+        .withLatestFrom(patientUuids) { _, patientUuid -> patientUuid }
+        .map { patientUuid -> { ui: Ui -> ui.showNewPrescriptionEntrySheet(patientUuid) } }
   }
 }

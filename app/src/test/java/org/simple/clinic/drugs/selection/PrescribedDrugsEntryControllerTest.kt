@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.entry
+package org.simple.clinic.drugs.selection
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock

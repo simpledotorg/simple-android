@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.user.LoggedInUser
 import java.util.UUID
@@ -73,6 +74,25 @@ object PatientFaker {
       district: String = "district",
       state: String = "state"
   ): Facility {
-    return Facility(uuid, district, state)
+    return Facility(
+        uuid = uuid,
+        district = district,
+        state = state)
+  }
+
+  fun prescription(
+      uuid: UUID = mock(),
+      syncStatus: SyncStatus = mock()
+  ): PrescribedDrug {
+    return PrescribedDrug(
+        uuid = uuid,
+        name = "drug name",
+        dosage = "dosage",
+        rxNormCode = "rx-norm-code",
+        patientUuid = mock(),
+        facilityUuid = mock(),
+        syncStatus = syncStatus,
+        createdAt = mock(),
+        updatedAt = mock())
   }
 }

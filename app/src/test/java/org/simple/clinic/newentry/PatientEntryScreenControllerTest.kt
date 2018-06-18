@@ -15,7 +15,7 @@ import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.PatientFaker
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -38,7 +38,7 @@ class PatientEntryScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(PatientFaker.facility()))
+    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(PatientMocker.facility()))
 
     errorConsumer = { throw it }
 
@@ -96,7 +96,7 @@ class PatientEntryScreenControllerTest {
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-    val savedPatient = PatientFaker.patient(uuid = UUID.randomUUID())
+    val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
@@ -192,7 +192,7 @@ class PatientEntryScreenControllerTest {
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-    val savedPatient = PatientFaker.patient(uuid = UUID.randomUUID())
+    val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))

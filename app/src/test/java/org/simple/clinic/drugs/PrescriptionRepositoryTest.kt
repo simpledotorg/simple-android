@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientFaker
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import java.util.UUID
 
@@ -32,7 +32,7 @@ class PrescriptionRepositoryTest {
 
   @Test
   fun `when saving a prescription, correctly get the current facility ID`() {
-    val facility = PatientFaker.facility()
+    val facility = PatientMocker.facility()
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
@@ -61,10 +61,10 @@ class PrescriptionRepositoryTest {
   ) {
     val prescriptionUuid = UUID.randomUUID()
 
-    val localCopy = PatientFaker.prescription(prescriptionUuid, syncStatus = syncStatusOfLocalCopy)
+    val localCopy = PatientMocker.prescription(prescriptionUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(dao.getOne(prescriptionUuid)).thenReturn(localCopy)
 
-    val serverBp = PatientFaker.prescription(prescriptionUuid, syncStatus = SyncStatus.DONE).toPayload()
+    val serverBp = PatientMocker.prescription(prescriptionUuid, syncStatus = SyncStatus.DONE).toPayload()
     repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {

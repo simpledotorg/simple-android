@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-  <!-- TODO: We don't a production endpoint yet. -->
-  <string name="api_endpoint">https://google.com/</string>
-</resources>

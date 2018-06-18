@@ -30,10 +30,10 @@ class SyncScheduler @Inject constructor(
               .build()
         }
         .flatMapCompletable { request ->
-          Completable.fromAction({
+          Completable.fromAction {
             workManager.cancelAllWorkByTag(SyncWorker.TAG)
             workManager.enqueue(request)
-          })
+          }
         }
   }
 

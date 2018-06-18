@@ -5,13 +5,12 @@ import android.util.AttributeSet
 import android.widget.Button
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
-import org.simple.clinic.newentry.PatientEntryScreen
-import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
@@ -32,17 +31,18 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   @Inject
   lateinit var patientRepository: PatientRepository
 
-  private val phoneButton by bindView<Button>(R.id.home_search_patients)
+  private val searchButton by bindView<Button>(R.id.home_search_patients)
+  private val aadhaarScanButton by bindView<Button>(R.id.home_scan_aadhaar)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
+
     TheActivity.component.inject(this)
 
-    RxView.clicks(phoneButton)
-        .map { NewPatientClicked() }
+    Observable.merge(aadhaarScanButtonClicks(), searchButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -50,13 +50,14 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  fun oldFn() {
-    // TODO: This is a temporary placeholder because there is no other
-    // TODO: entry-point for creating a new patient.
-      patientRepository.saveOngoingEntry(OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")))
-          .subscribeOn(io())
-          .observeOn(mainThread())
-          .subscribe { screenRouter.push(PatientEntryScreen.KEY) }
+  private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton)
+      .map { ScanAadhaarClicked() }
+
+  private fun searchButtonClicks() = RxView.clicks(searchButton)
+      .map { NewPatientClicked() }
+
+  fun openAadhaarScanScreen() {
+    // TODO
   }
 
   fun openNewPatientScreen() {

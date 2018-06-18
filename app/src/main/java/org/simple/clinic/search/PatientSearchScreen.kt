@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
@@ -97,6 +98,14 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun showKeyboardOnSearchEditText() {
     searchEditText.showKeyboard()
+  }
+
+  fun showCreatePatientButton(shouldBeShown: Boolean) {
+    if (shouldBeShown) {
+      newPatientButton.visibility = View.VISIBLE
+    } else {
+      newPatientButton.visibility = View.GONE
+    }
   }
 
   fun setupSearchResultsList() {

@@ -66,7 +66,7 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when new patient is clicked, the manual entry flow should be started`() {
+  fun `if search query is numbers, and create patient is clicked, the patient create form should open with same text in phone number field`() {
     val partialNumber = "999"
     whenever(repository.searchPatientsAndPhoneNumbers(partialNumber)).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
@@ -77,6 +77,22 @@ class PatientSearchScreenControllerTest {
     argumentCaptor<OngoingPatientEntry>().apply {
       verify(repository).saveOngoingEntry(capture())
       assert(partialNumber == firstValue.phoneNumber!!.number)
+    }
+    verify(screen).openPersonalDetailsEntryScreen()
+  }
+
+  @Test
+  fun `if search query is alphanumeric, and create patient is clicked, the patient create form should open with same text in full name field`() {
+    val partialName = "foo"
+    whenever(repository.searchPatientsAndPhoneNumbers(partialName)).thenReturn(Observable.never())
+    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(SearchQueryTextChanged(partialName))
+    uiEvents.onNext(CreateNewPatientClicked())
+
+    argumentCaptor<OngoingPatientEntry>().apply {
+      verify(repository).saveOngoingEntry(capture())
+      assert(partialName == firstValue.personalDetails!!.fullName)
     }
     verify(screen).openPersonalDetailsEntryScreen()
   }

@@ -36,7 +36,9 @@ class PrescriptionRepositoryTest {
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
-    repository.savePrescription(patientUuid, name = "Drug name", dosage = "dosage", rxNormCode = "rx-norm-code").subscribe()
+    repository
+        .savePrescription(patientUuid, name = "Drug name", dosage = "dosage", rxNormCode = "rx-norm-code", isProtocolDrug = true)
+        .subscribe()
 
     verify(dao).save(check {
       assertThat(it.first().name).isEqualTo("Drug name")

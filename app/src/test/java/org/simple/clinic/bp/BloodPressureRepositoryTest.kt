@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientFaker
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import java.util.UUID
@@ -34,10 +34,10 @@ class BloodPressureRepositoryTest {
 
   @Test
   fun `when saving a measurement, correctly get IDs for the current user and facility`() {
-    val loggedInUser = PatientFaker.user(UUID.randomUUID())
+    val loggedInUser = PatientMocker.user(UUID.randomUUID())
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser))
 
-    val facility = PatientFaker.facility()
+    val facility = PatientMocker.facility()
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
@@ -64,10 +64,10 @@ class BloodPressureRepositoryTest {
   ) {
     val bpUuid = UUID.randomUUID()
 
-    val localCopy = PatientFaker.bp(bpUuid, syncStatus = syncStatusOfLocalCopy)
+    val localCopy = PatientMocker.bp(bpUuid, syncStatus = syncStatusOfLocalCopy)
     whenever(dao.getOne(bpUuid)).thenReturn(localCopy)
 
-    val serverBp = PatientFaker.bp(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
+    val serverBp = PatientMocker.bp(bpUuid, syncStatus = SyncStatus.DONE).toPayload()
     repository.mergeWithLocalData(listOf(serverBp)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {

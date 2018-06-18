@@ -1,8 +1,10 @@
 package org.simple.clinic.drugs.entry
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
@@ -19,6 +21,7 @@ class PrescribedDrugsEntryControllerTest {
   private val screen = mock<PrescribedDrugsEntryScreen>()
   private val protocolRepository = mock<ProtocolRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private lateinit var controller: PrescribedDrugsEntryController
@@ -44,15 +47,14 @@ class PrescribedDrugsEntryControllerTest {
         drugs = listOf(amlodipine, telmisartan, chlorthalidone))
     whenever(protocolRepository.currentProtocol()).thenReturn(Observable.just(protocol))
 
-    val patientUuid = UUID.randomUUID()
-
     val prescriptionUuid1 = UUID.randomUUID()
     val prescriptionUuid2 = UUID.randomUUID()
     val prescriptionUuid3 = UUID.randomUUID()
     val prescriptionUuid4 = UUID.randomUUID()
 
+    val amlodipinePrescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg")
     val prescriptions = listOf(
-        PatientMocker.prescription(name = "Amlodipine", dosage = "10mg"),
+        amlodipinePrescription,
         PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets"),
         PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills"),
@@ -64,19 +66,19 @@ class PrescribedDrugsEntryControllerTest {
     val expectedProtocolDrugUiModels = listOf(
         ProtocolDrugSelectionItem(
             0,
-            name = amlodipine.name,
-            option1 = ProtocolDrugSelectionItem.DosageOption(amlodipine.dosages[0], isSelected = false),
-            option2 = ProtocolDrugSelectionItem.DosageOption(amlodipine.dosages[1], isSelected = true)),
+            drug = amlodipine,
+            option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(amlodipine.dosages[0]),
+            option2 = ProtocolDrugSelectionItem.DosageOption.Selected(amlodipine.dosages[1], prescription = amlodipinePrescription)),
         ProtocolDrugSelectionItem(
             1,
-            name = telmisartan.name,
-            option1 = ProtocolDrugSelectionItem.DosageOption(telmisartan.dosages[0], isSelected = false),
-            option2 = ProtocolDrugSelectionItem.DosageOption(telmisartan.dosages[1], isSelected = false)),
+            drug = telmisartan,
+            option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(telmisartan.dosages[0]),
+            option2 = ProtocolDrugSelectionItem.DosageOption.Unselected(telmisartan.dosages[1])),
         ProtocolDrugSelectionItem(
             2,
-            name = chlorthalidone.name,
-            option1 = ProtocolDrugSelectionItem.DosageOption(chlorthalidone.dosages[0], isSelected = false),
-            option2 = ProtocolDrugSelectionItem.DosageOption(chlorthalidone.dosages[1], isSelected = false)),
+            drug = chlorthalidone,
+            option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(chlorthalidone.dosages[0]),
+            option2 = ProtocolDrugSelectionItem.DosageOption.Unselected(chlorthalidone.dosages[1])),
         CustomPrescribedDrugItem(
             prescriptionUuid1,
             name = "Telmisartan",
@@ -98,16 +100,51 @@ class PrescribedDrugsEntryControllerTest {
 
   @Test
   fun `when a protocol drug is selected then a prescription should be saved for it`() {
-    // TODO.
+    whenever(prescriptionRepository.savePrescription(any(), any(), any())).thenReturn(Completable.complete())
+    whenever(protocolRepository.currentProtocol()).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
+    val amlodipine = PatientMocker.protocolDrug(name = "Amlodipine", dosages = listOf("5mg", "10mg"))
+
+    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(ProtocolDrugDosageSelected(amlodipine, "10mg"))
+
+    verify(prescriptionRepository).savePrescription(patientUuid, drug = amlodipine, dosage = "10mg")
+  }
+
+  @Test
+  fun `when a protocol drug is unselected then its prescription should be soft deleted`() {
+    val amlodipine = PatientMocker.protocolDrug(name = "Amlodipine", dosages = listOf("5mg", "10mg"))
+    val unselectedPrescriptionId = UUID.randomUUID()
+
+    whenever(prescriptionRepository.savePrescription(any(), any(), any())).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.softDeletePrescription(unselectedPrescriptionId)).thenReturn(Completable.complete())
+
+    whenever(protocolRepository.currentProtocol()).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
+    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(ProtocolDrugDosageSelected(amlodipine, "10mg"))
+    uiEvents.onNext(ProtocolDrugDosageSelected(amlodipine, "5mg"))
+    uiEvents.onNext(ProtocolDrugDosageUnselected(
+        drug = amlodipine,
+        prescription = PatientMocker.prescription(unselectedPrescriptionId, amlodipine.name, "10mg")))
+
+    verify(prescriptionRepository).savePrescription(patientUuid, drug = amlodipine, dosage = "10mg")
+    verify(prescriptionRepository).savePrescription(patientUuid, drug = amlodipine, dosage = "5mg")
+    verify(prescriptionRepository).softDeletePrescription(unselectedPrescriptionId)
   }
 
   @Test
   fun `when new prescription button is clicked then prescription entry sheet should be shown`() {
-    // TODO.
+    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(AddNewPrescriptionClicked())
+
+    verify(screen).showNewPrescriptionEntrySheet(patientUuid)
   }
 
   @Test
   fun `when delete prescription is clicked then the prescription should be marked as soft-deleted`() {
-    // TODO.
+
   }
 }

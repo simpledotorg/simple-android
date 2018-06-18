@@ -71,6 +71,12 @@ data class PrescribedDrug(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newDrugs: List<PrescribedDrug>)
 
+    /**
+     * [deleted] exists only to trigger Room's Boolean type converter.
+     * */
+    @Query("UPDATE prescribeddrug SET isDeleted = :deleted WHERE uuid = :prescriptionId")
+    fun softDelete(prescriptionId: UUID, deleted: Boolean)
+
     @Query("SELECT * FROM prescribeddrug WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): PrescribedDrug?
 

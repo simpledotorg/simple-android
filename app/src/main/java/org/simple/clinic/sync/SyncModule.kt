@@ -6,12 +6,13 @@ import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureModule
+import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.threeten.bp.Duration
 import retrofit2.Retrofit
 import javax.inject.Named
 
-@Module(includes = [PatientSyncModule::class, BloodPressureModule::class])
+@Module(includes = [PatientSyncModule::class, BloodPressureModule::class, PrescriptionModule::class])
 open class SyncModule {
 
   @Provides

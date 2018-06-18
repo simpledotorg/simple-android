@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.sync
+package org.simple.clinic.drugs.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
@@ -6,10 +6,10 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers
-import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.patient.sync.DataPushResponse
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -18,11 +18,11 @@ import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
-class BloodPressureSync @Inject constructor(
-    private val api: BloodPressureSyncApiV1,
-    private val repository: BloodPressureRepository,
+class PrescriptionSync @Inject constructor(
+    private val api: PrescriptionSyncApiV1,
+    private val repository: PrescriptionRepository,
     private val configProvider: Single<SyncConfig>,
-    @Named("last_bp_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_prescription_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable {
@@ -30,32 +30,32 @@ class BloodPressureSync @Inject constructor(
   }
 
   fun push(): Completable {
-    val cachedPendingSyncMeasurements = repository.measurementsWithSyncStatus(SyncStatus.PENDING)
+    val cachedPendingSyncPrescriptions = repository.prescriptionsWithSyncStatus(SyncStatus.PENDING)
         // Converting to an Observable because Single#filter() returns a Maybe.
         // And Maybe#flatMapSingle() throws a NoSuchElementException on completion.
         .toObservable()
         .filter { it.isNotEmpty() }
         .cache()
 
-    val pendingToInFlight = cachedPendingSyncMeasurements
+    val pendingToInFlight = cachedPendingSyncPrescriptions
         .flatMapCompletable {
-          repository.updateMeasurementsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)
+          repository.updatePrescriptionsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)
         }
 
-    val networkCall = cachedPendingSyncMeasurements
+    val networkCall = cachedPendingSyncPrescriptions
         .map { patients -> patients.map { it.toPayload() } }
-        .map(::BloodPressurePushRequest)
+        .map(::PrescriptionPushRequest)
         .flatMapSingle { request -> api.push(request) }
         .doOnNext { response -> logValidationErrorsIfAny(response) }
         .map { it.validationErrors }
         .map { errors -> errors.map { it.uuid } }
-        .flatMapCompletable { patientUuidsWithErrors ->
+        .flatMapCompletable { prescriptionUuidsWithErrors ->
           repository
-              .updateMeasurementsSyncStatus(oldStatus = SyncStatus.IN_FLIGHT, newStatus = SyncStatus.DONE)
-              .andThen(patientUuidsWithErrors.let {
+              .updatePrescriptionsSyncStatus(oldStatus = SyncStatus.IN_FLIGHT, newStatus = SyncStatus.DONE)
+              .andThen(prescriptionUuidsWithErrors.let {
                 when {
                   it.isEmpty() -> Completable.complete()
-                  else -> repository.updateMeasurementsSyncStatus(patientUuidsWithErrors, SyncStatus.INVALID)
+                  else -> repository.updatePrescriptionsSyncStatus(prescriptionUuidsWithErrors, SyncStatus.INVALID)
                 }
               })
         }
@@ -81,13 +81,13 @@ class BloodPressureSync @Inject constructor(
                 }
               }
               .flatMap { response ->
-                repository.mergeWithLocalData(response.measurements)
+                repository.mergeWithLocalData(response.prescriptions)
                     .observeOn(Schedulers.single())
                     .andThen({ lastPullTimestamp.set(Just(response.processedSinceTimestamp)) }.toCompletable())
                     .andThen(Observable.just(response))
               }
               .repeat()
-              .takeWhile { response -> response.measurements.size >= config.batchSize }
+              .takeWhile { response -> response.prescriptions.size >= config.batchSize }
               .ignoreElements()
         }
   }

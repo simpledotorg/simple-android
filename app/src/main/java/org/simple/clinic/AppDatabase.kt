@@ -4,6 +4,7 @@ import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -21,8 +22,9 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Patient::class,
       PatientAddress::class,
       PatientPhoneNumber::class,
-      BloodPressureMeasurement::class],
-    version = 1,
+      BloodPressureMeasurement::class,
+      PrescribedDrug::class],
+    version = 2,
     exportSchema = false)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -43,4 +45,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun patientSearchDao(): PatientSearchResult.RoomDao
 
   abstract fun bloodPressureDao(): BloodPressureMeasurement.RoomDao
+
+  abstract fun prescriptionDao(): PrescribedDrug.RoomDao
 }

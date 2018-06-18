@@ -31,7 +31,7 @@ class NetworkModule {
     val okHttpClient = OkHttpClient.Builder()
         .apply {
           if (BuildConfig.DEBUG) {
-            val loggingInterceptor = HttpLoggingInterceptor({ message -> Timber.tag("OkHttp").d(message) })
+            val loggingInterceptor = HttpLoggingInterceptor { message -> Timber.tag("OkHttp").d(message) }
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             addNetworkInterceptor(loggingInterceptor)
           }

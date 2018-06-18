@@ -50,7 +50,12 @@ class PrescriptionSyncAndroidTest {
     val parentPatientUuid = UUID.randomUUID()
     return Observable.range(0, count)
         .flatMapCompletable { index ->
-          repository.savePrescription(parentPatientUuid, name = "Drug #$index", dosage = "1${index}mg", rxNormCode = "rx-norm-code-$index")
+          repository.savePrescription(
+              parentPatientUuid,
+              name = "Drug #$index",
+              dosage = "1${index}mg",
+              rxNormCode = "rx-norm-code-$index",
+              isProtocolDrug = false)
         }
   }
 

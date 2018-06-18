@@ -27,6 +27,10 @@ data class PrescribedDrug(
 
     val rxNormCode: String?,
 
+    val isDeleted: Boolean,
+
+    val isProtocolDrug: Boolean,
+
     val patientUuid: UUID,
 
     val facilityUuid: UUID,
@@ -44,6 +48,8 @@ data class PrescribedDrug(
         name = name,
         dosage = dosage,
         rxNormCode = rxNormCode,
+        isDeleted = isDeleted,
+        isProtocolDrug = isProtocolDrug,
         patientId = patientUuid,
         facilityId = facilityUuid,
         createdAt = createdAt,

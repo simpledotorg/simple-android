@@ -22,6 +22,12 @@ data class PrescribedDrugPayload(
     @Json(name = "rxnorm_code")
     val rxNormCode: String?,
 
+    @Json(name = "is_deleted")
+    val isDeleted: Boolean,
+
+    @Json(name = "is_protocol_drug")
+    val isProtocolDrug: Boolean,
+
     @Json(name = "patient_id")
     val patientId: UUID,
 
@@ -41,6 +47,8 @@ data class PrescribedDrugPayload(
         name = name,
         dosage = dosage,
         rxNormCode = rxNormCode,
+        isDeleted = isDeleted,
+        isProtocolDrug = isProtocolDrug,
         patientUuid = patientId,
         facilityUuid = facilityId,
         syncStatus = syncStatus,

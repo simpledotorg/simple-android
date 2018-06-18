@@ -8,7 +8,7 @@ import java.util.UUID
 data class ProtocolDrug(
     val uuid: UUID,
     val name: String,
-    val rxNormCode: String,
-    val dosage: String,
+    val rxNormCode: String?,
+    val dosages: List<String>,
     val protocolUUID: UUID
-    )
+)

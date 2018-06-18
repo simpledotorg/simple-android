@@ -87,12 +87,12 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun measurementCount(): Single<Int> {
-    return dao.measurementCount().firstOrError()
+    return dao.count().firstOrError()
   }
 
   fun recentMeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
     return dao
-        .measurementForPatient(patientUuid)
+        .forPatient(patientUuid)
         .toObservable()
   }
 }

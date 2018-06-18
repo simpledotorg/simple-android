@@ -29,7 +29,7 @@ class BloodPressureEntrySheetControllerTest {
 
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(sheet) })
+        .subscribe { uiChange -> uiChange(sheet) }
   }
 
   @Test

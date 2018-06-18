@@ -8,7 +8,7 @@ import org.simple.clinic.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetView
 import org.simple.clinic.home.bp.NewBpScreen
 import org.simple.clinic.newentry.PatientEntryScreen
-import org.simple.clinic.drugs.PrescribedDrugsEntryScreen
+import org.simple.clinic.drugs.entry.PrescribedDrugsEntryScreen
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchAgeFilterSheet

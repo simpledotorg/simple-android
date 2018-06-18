@@ -13,8 +13,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito
-import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.INVALID
@@ -96,18 +96,7 @@ class PrescriptionSyncTest {
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
     val prescriptionUuid = UUID.randomUUID()
-    val prescriptionWithErrors = PrescribedDrug(
-        uuid = prescriptionUuid,
-        name = "drug-name",
-        dosage = "drug-dosage",
-        rxNormCode = "rx-norm-code",
-        isDeleted = false,
-        isProtocolDrug = false,
-        patientUuid = mock(),
-        facilityUuid = mock(),
-        syncStatus = mock(),
-        createdAt = mock(),
-        updatedAt = mock())
+    val prescriptionWithErrors = PatientMocker.prescription(uuid = prescriptionUuid, name = "drug-name", dosage = "drug-dosage")
 
     whenever(repository.prescriptionsWithSyncStatus(SyncStatus.PENDING)).thenReturn(Single.just(listOf(prescriptionWithErrors)))
     whenever(repository.updatePrescriptionsSyncStatus(oldStatus = SyncStatus.PENDING, newStatus = SyncStatus.IN_FLIGHT)).thenReturn(Completable.complete())

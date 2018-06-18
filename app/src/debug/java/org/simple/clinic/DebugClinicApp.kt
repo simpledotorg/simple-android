@@ -19,9 +19,12 @@ class DebugClinicApp : ClinicApp() {
   override fun onCreate() {
     super.onCreate()
 
+    appComponent.inject(this)
+
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()
     Stetho.initializeWithDefaults(this)
+
     syncScheduler.schedule().subscribe()
   }
 

@@ -6,11 +6,19 @@ import io.reactivex.ObservableTransformer
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class NewBpScreenController @Inject constructor() : ObservableTransformer<UiEvent, (NewBpScreen) -> Unit> {
+typealias Ui = NewBpScreen
+typealias UiChange = (Ui) -> Unit
 
-  override fun apply(events: Observable<UiEvent>): ObservableSource<(NewBpScreen) -> Unit> {
-    val function = { ui: NewBpScreen -> ui.openNewPatientScreen() }
+class NewBpScreenController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {
+
+  override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    val replayedEvents = events.replay(1).refCount()
+
+    return newPatientClicks(replayedEvents)
+  }
+
+  private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events.ofType(NewPatientClicked::class.java)
-        .map { function }
+        .map { { ui: NewBpScreen -> ui.openNewPatientScreen() } }
   }
 }

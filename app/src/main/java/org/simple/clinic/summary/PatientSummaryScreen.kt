@@ -23,7 +23,7 @@ import org.simple.clinic.R
 import org.simple.clinic.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetView
 import org.simple.clinic.home.HomeScreen
-import org.simple.clinic.drugs.PrescribedDrugsEntryScreen
+import org.simple.clinic.drugs.entry.PrescribedDrugsEntryScreen
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress

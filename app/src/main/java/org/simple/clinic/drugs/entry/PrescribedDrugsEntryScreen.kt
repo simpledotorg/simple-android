@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs
+package org.simple.clinic.drugs.entry
 
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
@@ -19,7 +19,6 @@ import org.simple.clinic.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -62,11 +61,10 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
     return Observable.just(PrescribedDrugsEntryScreenCreated(screenKey.patientUuid))
   }
 
-  fun populateDrugsList(protocolDrugItems: List<ProtocolDrugSelectionItem>) {
-    Timber.i("Sending drugs: $protocolDrugItems")
-
+  fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
     adapterItems += protocolDrugItems
+    // TODO: New prescription button.
 
     // Not the best way for registering click listeners,
     // but Groupie doesn't seem to have a better option.

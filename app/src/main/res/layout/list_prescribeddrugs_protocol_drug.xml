@@ -11,7 +11,7 @@
     android:orientation="horizontal">
 
     <TextView
-      android:id="@+id/protocoldrug_name"
+      android:id="@+id/prescribeddrug_item_protocoldrug_name"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
@@ -29,7 +29,7 @@
       android:orientation="horizontal">
 
       <RadioButton
-        android:id="@+id/protocoldrug_dosage_1"
+        android:id="@+id/prescribeddrug_item_protocoldrug_dosage_1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingEnd="@dimen/spacing_8"
@@ -37,7 +37,7 @@
         tools:text="5mg" />
 
       <RadioButton
-        android:id="@+id/protocoldrug_dosage_2"
+        android:id="@+id/prescribeddrug_item_protocoldrug_dosage_2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:paddingEnd="@dimen/spacing_16"

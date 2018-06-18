@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs
+package org.simple.clinic.drugs.entry
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

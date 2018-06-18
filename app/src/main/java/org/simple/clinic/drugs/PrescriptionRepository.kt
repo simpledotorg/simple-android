@@ -1,6 +1,7 @@
 package org.simple.clinic.drugs
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
@@ -75,6 +76,14 @@ class PrescriptionRepository @Inject constructor(
   }
 
   fun prescriptionCount(): Single<Int> {
-    return dao.drugCount().firstOrError()
+    return dao
+        .count()
+        .firstOrError()
+  }
+
+  fun newestPrescriptionsForPatient(patientUuid: UUID): Observable<List<PrescribedDrug>> {
+    return dao
+        .forPatient(patientUuid)
+        .toObservable()
   }
 }

@@ -52,19 +52,19 @@ android {
       dimension 'track'
       applicationIdSuffix ".qa"
       versionNameSuffix "-qa"
-      buildConfigField "String", "API_ENDPOINT", "\"http://13.126.149.25/api/\""
+      buildConfigField "String", "API_ENDPOINT", "\"" + System.getenv("QA_API_ENDPOINT") + "\""
     }
 
     staging {
       dimension 'track'
       applicationIdSuffix ".staging"
       versionNameSuffix "-staging"
-      buildConfigField "String", "API_ENDPOINT", "\"http://13.127.130.247/api/\""
+      buildConfigField "String", "API_ENDPOINT", "\"" + System.getenv("STAGING_API_ENDPOINT") + "\""
     }
 
     production {
       dimension 'track'
-      buildConfigField "String", "API_ENDPOINT", "\"http://google.com/\""
+      buildConfigField "String", "API_ENDPOINT", "\"" + System.getenv("PRODUCTION_API_ENDPOINT") + "\""
     }
   }
 

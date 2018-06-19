@@ -5,10 +5,12 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-data class ProtocolDrugDosageSelected constructor(val drug: ProtocolDrug, val dosage: String) : UiEvent
+data class ProtocolDrugDosageSelected(val drug: ProtocolDrug, val dosage: String) : UiEvent
 
 data class ProtocolDrugDosageUnselected constructor(val drug: ProtocolDrug, val prescription: PrescribedDrug) : UiEvent
 
 data class PrescribedDrugsScreenCreated(val patientUuid: UUID) : UiEvent
 
 class AddNewPrescriptionClicked : UiEvent
+
+data class DeleteCustomPrescriptionClicked(val prescription: PrescribedDrug) : UiEvent

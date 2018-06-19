@@ -7,6 +7,7 @@ import android.text.style.StyleSpan
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
@@ -71,6 +72,10 @@ data class SummaryBloodPressureItem(
       firstItem -> 0
       else -> holder.originalContentTopPadding
     })
+  }
+
+  override fun isSameAs(other: Item<*>?): Boolean {
+    return this == other
   }
 
   class BpViewHolder(rootView: View) : ViewHolder(rootView) {

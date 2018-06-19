@@ -3,8 +3,8 @@ package org.simple.clinic.drugs.selection.entry
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.UiEvent
@@ -18,7 +18,7 @@ class CustomPrescriptionEntryController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay(1).refCount()
+    val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
         toggleSaveButton(replayedEvents),
@@ -47,9 +47,11 @@ class CustomPrescriptionEntryController @Inject constructor(
         .ofType<CustomPrescriptionDrugDosageTextChanged>()
         .map { it.dosage }
 
-    return events
+    val saveClicks = events
         .ofType<SaveCustomPrescriptionClicked>()
-        .withLatestFrom(patientUuids, nameChanges, dosageChanges) { _, patientUuid, name, dosage -> Triple(patientUuid, name, dosage) }
+
+    return Observables
+        .combineLatest(saveClicks, patientUuids, nameChanges, dosageChanges) { _, uuid, name, dosage -> Triple(uuid, name, dosage) }
         .flatMap { (patientUuid, name, dosage) ->
           prescriptionRepository
               .savePrescription(patientUuid, name, dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)

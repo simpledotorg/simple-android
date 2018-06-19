@@ -28,6 +28,7 @@
     <LinearLayout
       android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginStart="@dimen/spacing_16"
       android:layout_weight="1"
       android:orientation="vertical"
@@ -60,17 +61,6 @@
         android:textColor="@color/white"
         tools:text="Colony 3, Hoshiarpur, Punjab" />
     </LinearLayout>
-
-    <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_8"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:backgroundTint="#BC4C27"
-      android:minHeight="0dp"
-      android:minWidth="0dp"
-      android:text="@string/patientsummary_edit"
-      android:textColor="@color/white" />
   </LinearLayout>
 
   <android.support.v7.widget.RecyclerView

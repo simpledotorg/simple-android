@@ -31,12 +31,18 @@ fun ViewGroup.hideKeyboard() {
   post {
     this.requestFocus()
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-    inputMethodManager.hideSoftInputFromWindow(focusedChild.windowToken, InputMethodManager.HIDE_IMPLICIT_ONLY)
+    inputMethodManager.hideSoftInputFromWindow(focusedChild.windowToken, 0)
   }
 }
 
 fun View.setTopPadding(topPadding: Int) {
   setPaddingRelative(paddingStart, topPadding, paddingEnd, paddingBottom)
+}
+
+fun View.setTopMargin(@DimenRes topMarginRes: Int) {
+  val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+  marginLayoutParams.topMargin = resources.getDimensionPixelSize(topMarginRes)
+  layoutParams = marginLayoutParams
 }
 
 fun TextView.setCompoundDrawableStart(@DrawableRes drawableRes: Int) {

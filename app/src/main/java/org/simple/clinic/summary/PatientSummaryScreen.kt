@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -60,7 +61,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
 
-  private val groupieAdapter = GroupAdapter<ViewHolder>()
+  private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
+  private val prescriptionSection: Section = Section()
+  private val bloodPressureSection: Section = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   override fun onFinishInflate() {
@@ -69,6 +72,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
+
+    setupSummaryList()
 
     Observable.mergeArray(screenCreates(), backClicks(), adapterUiEvents)
         .observeOn(io())
@@ -86,7 +91,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun backClicks() = RxView.clicks(backButton).map { PatientSummaryBackClicked() }
 
   @SuppressLint("SetTextI18n")
-  fun populatePatientInfo(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
+  fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
     fullNameTextView.text = patient.fullName
     byline1TextView.text = when (phoneNumber) {
       is Just -> "${resources.getString(Gender.MALE.displayTextRes)} • ${phoneNumber.value.number}"
@@ -98,28 +103,37 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
   }
 
-  fun setupSummaryList() {
+  private fun setupSummaryList() {
     recyclerView.layoutManager = LinearLayoutManager(context)
-    recyclerView.adapter = groupieAdapter
+    recyclerView.adapter = recyclerViewAdapter
+
+    val emptySummaryItem = SummaryPrescribedDrugsItem(listOf())
+    recyclerViewAdapter.add(prescriptionSection)
+    populatePrescribedDrugsSummary(emptySummaryItem)
+
+    val newBpItem = SummaryAddNewBpItem()
+    newBpItem.uiEvents = adapterUiEvents
+    bloodPressureSection.setHeader(newBpItem)
+    recyclerViewAdapter.add(bloodPressureSection)
   }
 
-  fun populateSummaryList(measurementItems: List<SummaryBloodPressureItem>) {
+  fun populatePrescribedDrugsSummary(prescribedDrugsItem: SummaryPrescribedDrugsItem) {
+    // Not the best way for registering click listeners,
+    // but Groupie doesn't seem to have a better option.
+    prescribedDrugsItem.uiEvents = adapterUiEvents
+    prescriptionSection.update(listOf(prescribedDrugsItem))
+  }
+
+  fun populateBloodPressureHistory(measurementItems: List<SummaryBloodPressureItem>) {
     // Skip item animations on the first update.
-    if (groupieAdapter.itemCount != 0) {
+    if (recyclerViewAdapter.itemCount != 0) {
       val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
       animator.supportsChangeAnimations = false
       recyclerView.itemAnimator = animator
     }
 
-    val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
-    adapterItems += SummaryPrescribedDrugsItem()
-    adapterItems += SummaryAddNewBpItem()
-    adapterItems += measurementItems
-
-    // Not the best way for registering click listeners,
-    // but Groupie doesn't seem to have a better option.
-    adapterItems.forEach { it.uiEvents = adapterUiEvents }
-    groupieAdapter.update(adapterItems)
+    measurementItems.forEach { it.uiEvents = adapterUiEvents }
+    bloodPressureSection.update(measurementItems)
   }
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {

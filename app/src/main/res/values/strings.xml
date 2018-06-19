@@ -49,8 +49,8 @@
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string> <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->
   <string name="patientsummary_edit">Edit</string>
-  <string name="patientsummary_medicines_last_updated_at">Updated %s</string>
-  <string name="patientsummary_medicines_update">Update</string>   <!-- E.g., "Updated 30 days ago" -->
+  <string name="patientsummary_prescriptions_last_updated">Updated</string>
+  <string name="patientsummary_prescriptions_update">Update</string>   <!-- E.g., "Updated 30 days ago" -->
   <string name="patientsummary_bp_add_new">New BP</string>
 
   <!-- Lint fails to find usages for these strings. -->

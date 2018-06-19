@@ -18,7 +18,7 @@ import java.util.UUID
 
 class PrescribedDrugsEntryControllerTest {
 
-  private val screen = mock<PrescribedDrugsEntryScreen>()
+  private val screen = mock<PrescribedDrugsScreen>()
   private val protocolRepository = mock<ProtocolRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.randomUUID()
@@ -61,7 +61,7 @@ class PrescribedDrugsEntryControllerTest {
         PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
 
-    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
 
     val expectedProtocolDrugUiModels = listOf(
         ProtocolDrugSelectionItem(
@@ -106,7 +106,7 @@ class PrescribedDrugsEntryControllerTest {
 
     val amlodipine = PatientMocker.protocolDrug(name = "Amlodipine", dosages = listOf("5mg", "10mg"))
 
-    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(ProtocolDrugDosageSelected(amlodipine, "10mg"))
 
     verify(prescriptionRepository).savePrescription(patientUuid, drug = amlodipine, dosage = "10mg")
@@ -123,7 +123,7 @@ class PrescribedDrugsEntryControllerTest {
     whenever(protocolRepository.currentProtocol()).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
-    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(ProtocolDrugDosageSelected(amlodipine, "10mg"))
     uiEvents.onNext(ProtocolDrugDosageSelected(amlodipine, "5mg"))
     uiEvents.onNext(ProtocolDrugDosageUnselected(
@@ -137,7 +137,7 @@ class PrescribedDrugsEntryControllerTest {
 
   @Test
   fun `when new prescription button is clicked then prescription entry sheet should be shown`() {
-    uiEvents.onNext(PrescribedDrugsEntryScreenCreated(patientUuid))
+    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(AddNewPrescriptionClicked())
 
     verify(screen).showNewPrescriptionEntrySheet(patientUuid)

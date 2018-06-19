@@ -25,10 +25,10 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
   companion object {
-    val KEY: (UUID) -> PrescribedDrugsEntryScreenKey = ::PrescribedDrugsEntryScreenKey
+    val KEY: (UUID) -> PrescribedDrugsScreenKey = ::PrescribedDrugsScreenKey
   }
 
   @Inject
@@ -63,8 +63,8 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PrescribedDrugsEntryScreenKey>(this)!!
-    return Observable.just(PrescribedDrugsEntryScreenCreated(screenKey.patientUuid))
+    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)!!
+    return Observable.just(PrescribedDrugsScreenCreated(screenKey.patientUuid))
   }
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {

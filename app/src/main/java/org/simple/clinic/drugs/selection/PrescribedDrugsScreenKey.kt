@@ -7,7 +7,7 @@ import org.simple.clinic.router.screen.FullScreenKey
 import java.util.UUID
 
 @Parcelize
-data class PrescribedDrugsEntryScreenKey(val patientUuid: UUID) : FullScreenKey, Parcelable {
+data class PrescribedDrugsScreenKey(val patientUuid: UUID) : FullScreenKey, Parcelable {
 
   override fun layoutRes(): Int {
     return R.layout.screen_patient_prescribed_drugs_entry

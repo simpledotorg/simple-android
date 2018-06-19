@@ -13,7 +13,7 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = PrescribedDrugsEntryScreen
+typealias Ui = PrescribedDrugsScreen
 typealias UiChange = (Ui) -> Unit
 typealias DrugName = String
 typealias DrugDosage = String
@@ -35,13 +35,13 @@ class PrescribedDrugsEntryController @Inject constructor(
 
   private fun populateDrugsList(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuid = events
-        .ofType<PrescribedDrugsEntryScreenCreated>()
+        .ofType<PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
         .take(1)
 
     // Flat-mapping with patientUuid is not required, but is helpful in
     // tests to block execution until an event is emitted. In this case,
-    // PrescribedDrugsEntryScreenCreated is that event.
+    // PrescribedDrugsScreenCreated is that event.
     val protocolDrugs = patientUuid
         .flatMap { protocolRepository.currentProtocol() }
         .map { it.drugs }
@@ -90,7 +90,7 @@ class PrescribedDrugsEntryController @Inject constructor(
 
   private fun savePrescriptions(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
-        .ofType<PrescribedDrugsEntryScreenCreated>()
+        .ofType<PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
         .take(1)
 
@@ -116,7 +116,7 @@ class PrescribedDrugsEntryController @Inject constructor(
 
   private fun addNewPrescription(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
-        .ofType<PrescribedDrugsEntryScreenCreated>()
+        .ofType<PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
         .take(1)
 

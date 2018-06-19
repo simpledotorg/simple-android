@@ -10,7 +10,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
 import org.threeten.bp.Instant
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -19,7 +18,11 @@ class PrescriptionRepository @Inject constructor(
     private val facilityRepository: FacilityRepository
 ) {
 
-  fun savePrescription(patientUuid: UUID, drug: ProtocolDrug, dosage: String?): Completable {
+  fun savePrescription(patientUuid: UUID, drug: ProtocolDrug, dosage: String): Completable {
+    if (drug.dosages.contains(dosage).not()) {
+      throw AssertionError("$drug does not contain this selected dosage")
+    }
+
     return savePrescription(patientUuid, drug.name, dosage, drug.rxNormCode, isProtocolDrug = true)
   }
 
@@ -35,8 +38,6 @@ class PrescriptionRepository @Inject constructor(
     return currentFacility
         .flatMapCompletable { facility ->
           Completable.fromAction {
-            Timber.i("Saving prescribed drug: $name $dosage")
-
             val newMeasurement = PrescribedDrug(
                 uuid = UUID.randomUUID(),
                 name = name,

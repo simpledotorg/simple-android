@@ -22,8 +22,8 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetView
-import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.drugs.selection.PrescribedDrugsEntryScreen
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -101,7 +101,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   fun setupSummaryList() {
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = groupieAdapter
-    recyclerView.itemAnimator = null
   }
 
   fun populateSummaryList(measurementItems: List<SummaryBloodPressureItem>) {

@@ -19,7 +19,7 @@ class PatientSearchScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay(1).refCount()
+    val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
         screenSetup(),

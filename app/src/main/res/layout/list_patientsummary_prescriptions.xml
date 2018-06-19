@@ -19,6 +19,7 @@
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_4"
       android:layout_marginStart="@dimen/spacing_4"
+      android:baselineAligned="false"
       android:orientation="horizontal"
       android:paddingTop="@dimen/spacing_24">
 

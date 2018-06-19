@@ -6,6 +6,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -37,7 +38,9 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.setBottomPadding
 import java.util.UUID
 import javax.inject.Inject
 
@@ -62,6 +65,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val byline1TextView by bindView<TextView>(R.id.patientsummary_byline1)
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
+  private val doneButton by bindView<ViewGroup>(R.id.patientsummary_done)
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val prescriptionSection: Section = Section()
@@ -159,6 +163,18 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
+  }
+
+  fun setDoneButtonVisible(visible: Boolean) {
+    if (visible) {
+      doneButton.executeOnNextMeasure {
+        recyclerView.setBottomPadding(doneButton.height)
+      }
+    }
+    doneButton.visibility = when {
+      visible -> View.VISIBLE
+      else -> View.GONE
+    }
   }
 
   fun goBackToPatientSearch() {

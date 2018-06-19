@@ -9,8 +9,11 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientMocker
@@ -20,6 +23,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class PatientSummaryScreenControllerTest {
 
   private val screen = mock<PatientSummaryScreen>()
@@ -126,15 +130,18 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen is opened after saving a new patient then done button should be shown`() {
-    // TODO.
-  }
-
-  @Test
   fun `when update medicines is clicked then BP medicines screen should be shown`() {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
+  }
+
+  @Test
+  @Parameters(value = ["SEARCH", "NEW_PATIENT"])
+  fun `done button should only be shown when summary was opened after saving a new patient`(caller: PatientSummaryCaller) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller))
+
+    verify(screen).setDoneButtonVisible(caller == PatientSummaryCaller.NEW_PATIENT)
   }
 }

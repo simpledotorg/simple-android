@@ -16,5 +16,5 @@
   <dimen name="prescribeddrugs_protocol_drug_unselected_padding">0dp</dimen>
 
   <dimen name="summary_prescriptions_update_when_empty">@dimen/spacing_24</dimen>
-  <dimen name="summary_prescriptions_update_when_non_empty">0dp</dimen>
+  <dimen name="summary_prescriptions_update_when_non_empty">@dimen/spacing_8</dimen>
 </resources>

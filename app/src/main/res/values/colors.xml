@@ -7,4 +7,7 @@
   <color name="window_background">#FAFAFA</color>
 
   <color name="patientsummary_high_or_worse_blood_pressure">#c70000</color>
+
+  <color name="prescribeddrugs_protocol_drug_selected">@color/white</color>
+  <color name="prescribeddrugs_protocol_drug_unselected">@color/color_accent</color>
 </resources>

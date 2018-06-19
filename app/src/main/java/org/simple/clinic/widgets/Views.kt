@@ -1,10 +1,15 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
+import android.graphics.drawable.Drawable
+import android.support.annotation.DimenRes
+import android.support.annotation.DrawableRes
+import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.TextView
 
 fun EditText.showKeyboard() {
   post {
@@ -32,4 +37,26 @@ fun ViewGroup.hideKeyboard() {
 
 fun View.setTopPadding(topPadding: Int) {
   setPaddingRelative(paddingStart, topPadding, paddingEnd, paddingBottom)
+}
+
+fun TextView.setCompoundDrawableStart(@DrawableRes drawableRes: Int) {
+  val drawable = ContextCompat.getDrawable(context, drawableRes)
+  setCompoundDrawablesRelativeWithIntrinsicBounds(
+      drawable,
+      compoundDrawablesRelative[1],
+      compoundDrawablesRelative[2],
+      compoundDrawablesRelative[3])
+}
+
+fun TextView.setCompoundDrawableStart(drawable: Drawable?) {
+  setCompoundDrawablesRelativeWithIntrinsicBounds(
+      drawable,
+      compoundDrawablesRelative[1],
+      compoundDrawablesRelative[2],
+      compoundDrawablesRelative[3])
+}
+
+fun View.setPadding(@DimenRes paddingRes: Int) {
+  val padding = resources.getDimensionPixelSize(paddingRes)
+  setPaddingRelative(padding, padding, padding, padding)
 }

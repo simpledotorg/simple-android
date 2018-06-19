@@ -168,7 +168,7 @@ class PatientRepositoryAndroidTest {
     assertThat(combinedPatient.fullName).isEqualTo("Asha Kumar")
     assertThat(combinedPatient.gender).isEqualTo(Gender.FEMALE)
     assertThat(combinedPatient.dateOfBirth).isEqualTo(LocalDate.parse("1947-08-15"))
-    assertThat(combinedPatient.createdAt).isGreaterThan(combinedPatient.address.createdAt)
+    assertThat(combinedPatient.createdAt).isAtLeast(combinedPatient.address.createdAt)
     assertThat(combinedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
     assertThat(combinedPatient.address.colonyOrVillage).isEqualTo("Arambol")
     assertThat(combinedPatient.address.state).isEqualTo("Goa")

@@ -15,10 +15,6 @@ android {
     release {
       minifyEnabled false
     }
-
-    staging {
-      initWith release
-    }
   }
   compileOptions {
     targetCompatibility 1.8

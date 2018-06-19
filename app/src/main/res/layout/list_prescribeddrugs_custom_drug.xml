@@ -21,7 +21,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
       android:layout_marginEnd="@dimen/spacing_8"
-      android:layout_weight="0.6"
+      android:layout_weight="1"
       android:textSize="@dimen/textsize_16"
       tools:text="Reese's" />
 
@@ -30,16 +30,17 @@
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      android:layout_weight="0.4"
-      android:textSize="@dimen/textsize_16"
+      android:layout_weight="0.8"
+      android:textAllCaps="false"
+      android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
       tools:text="10 packets" />
 
     <ImageButton
       android:id="@+id/prescribeddrug_item_customdrug_delete"
-      android:contentDescription="@string/prescribeddrug_delete_custom_drug"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:background="?attr/selectableItemBackgroundBorderless"
+      android:contentDescription="@string/prescribeddrug_delete_custom_drug"
       android:padding="@dimen/spacing_4"
       android:src="@drawable/ic_delete_20dp"
       android:tint="@color/gray_500" />

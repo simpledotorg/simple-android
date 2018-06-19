@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.selection
 
 import android.content.Context
 import android.support.v4.view.animation.FastOutSlowInInterpolator
+import android.support.v7.widget.DefaultItemAnimator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -55,6 +56,10 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = groupieAdapter
 
+    val fadeAnimator = DefaultItemAnimator()
+    fadeAnimator.supportsChangeAnimations = false
+    recyclerView.itemAnimator = fadeAnimator
+
     Observable.mergeArray(screenCreates(), adapterUiEvents)
         .observeOn(Schedulers.io())
         .compose(controller)
@@ -69,7 +74,8 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
   }
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
-    // Skip item animations on the first update.
+    // Replace the default fade animator with another animator that
+    // plays change animations together instead of sequentially.
     if (groupieAdapter.itemCount != 0) {
       val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
       animator.supportsChangeAnimations = false

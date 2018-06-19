@@ -3,7 +3,6 @@ package org.simple.clinic.drugs.selection
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.CompoundButton
-import android.widget.RadioButton
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
@@ -25,18 +24,35 @@ data class ProtocolDrugSelectionItem constructor(
 
   override lateinit var uiEvents: Subject<UiEvent>
 
+  // TODO.
+  // Warning: very ugly way of saving and deleting prescriptions.
+  // We should find out a better of doing this post-MVP launch.
   private val dosage1CheckedChangeListener: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-    uiEvents.onNext(when {
-      isChecked -> ProtocolDrugDosageSelected(drug, option1.dosage)
-      else -> ProtocolDrugDosageUnselected(drug, (option1 as DosageOption.Selected).prescription)
-    })
+    when {
+      isChecked -> {
+        uiEvents.onNext(ProtocolDrugDosageSelected(drug, option1.dosage))
+        if (option2 is DosageOption.Selected) {
+          uiEvents.onNext(ProtocolDrugDosageUnselected(drug, option2.prescription))
+        }
+      }
+      else -> {
+        uiEvents.onNext(ProtocolDrugDosageUnselected(drug, (option1 as DosageOption.Selected).prescription))
+      }
+    }
   }
 
   private val dosage2CheckedChangeListener: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-    uiEvents.onNext(when {
-      isChecked -> ProtocolDrugDosageSelected(drug, option2.dosage)
-      else -> ProtocolDrugDosageUnselected(drug, (option2 as DosageOption.Selected).prescription)
-    })
+    when {
+      isChecked -> {
+        uiEvents.onNext(ProtocolDrugDosageSelected(drug, option2.dosage))
+        if (option1 is DosageOption.Selected) {
+          uiEvents.onNext(ProtocolDrugDosageUnselected(drug, option1.prescription))
+        }
+      }
+      else -> {
+        uiEvents.onNext(ProtocolDrugDosageUnselected(drug, (option2 as DosageOption.Selected).prescription))
+      }
+    }
   }
 
   override fun getLayout() = R.layout.list_prescribeddrugs_protocol_drug
@@ -47,20 +63,20 @@ data class ProtocolDrugSelectionItem constructor(
 
   override fun bind(holder: DrugViewHolder, position: Int) {
     holder.nameTextView.text = drug.name
-    holder.dosage1RadioButton.text = option1.dosage
-    holder.dosage2RadioButton.text = option2.dosage
+    holder.dosage1Button.text = option1.dosage
+    holder.dosage2Button.text = option2.dosage
 
-    holder.dosage1RadioButton.setOnCheckedChangeListener(null)
-    holder.dosage2RadioButton.setOnCheckedChangeListener(null)
+    holder.dosage1Button.setOnCheckedChangeListener(null)
+    holder.dosage2Button.setOnCheckedChangeListener(null)
 
-    holder.dosage1RadioButton.isChecked = option1 is DosageOption.Selected
-    holder.dosage2RadioButton.isChecked = option2 is DosageOption.Selected
+    holder.dosage1Button.isChecked = option1 is DosageOption.Selected
+    holder.dosage2Button.isChecked = option2 is DosageOption.Selected
 
-    holder.dosage1RadioButton.setOnCheckedChangeListener(dosage1CheckedChangeListener)
-    holder.dosage2RadioButton.setOnCheckedChangeListener(dosage2CheckedChangeListener)
+    holder.dosage1Button.setOnCheckedChangeListener(dosage1CheckedChangeListener)
+    holder.dosage2Button.setOnCheckedChangeListener(dosage2CheckedChangeListener)
 
     val color: (Int) -> Int = { colorRes -> ContextCompat.getColor(holder.itemView.context, colorRes) }
-    val setCheckedState: (RadioButton) -> Unit = {
+    val setCheckedState: (CompoundButton) -> Unit = {
       it.apply {
         when {
           isChecked -> {
@@ -76,8 +92,8 @@ data class ProtocolDrugSelectionItem constructor(
         }
       }
     }
-    setCheckedState(holder.dosage1RadioButton)
-    setCheckedState(holder.dosage2RadioButton)
+    setCheckedState(holder.dosage1Button)
+    setCheckedState(holder.dosage2Button)
   }
 
   sealed class DosageOption {
@@ -93,7 +109,7 @@ data class ProtocolDrugSelectionItem constructor(
 
   class DrugViewHolder(rootView: View) : ViewHolder(rootView) {
     val nameTextView by bindView<TextView>(R.id.prescribeddrug_item_protocoldrug_name)
-    val dosage1RadioButton by bindView<RadioButton>(R.id.prescribeddrug_item_protocoldrug_dosage_1)
-    val dosage2RadioButton by bindView<RadioButton>(R.id.prescribeddrug_item_protocoldrug_dosage_2)
+    val dosage1Button by bindView<CompoundButton>(R.id.prescribeddrug_item_protocoldrug_dosage_1)
+    val dosage2Button by bindView<CompoundButton>(R.id.prescribeddrug_item_protocoldrug_dosage_2)
   }
 }

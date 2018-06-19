@@ -52,41 +52,35 @@ class PrescribedDrugsEntryController @Inject constructor(
     return Observables
         .combineLatest(protocolDrugs, prescribedDrugs)
         .map { (protocolDrugs, prescribedDrugs) ->
-          val prescribedDrugsMap = HashMap<Pair<DrugName, DrugDosage>, PrescribedDrug>(prescribedDrugs.size)
+          val protocolPrescribedDrugsMap = HashMap<Pair<DrugName, DrugDosage>, PrescribedDrug>(prescribedDrugs.size)
           prescribedDrugs
-              .filter { it.dosage.isNullOrBlank().not() }
-              .forEach { prescribedDrugsMap[it.name to it.dosage!!] = it }
+              .filter { it.isProtocolDrug }
+              .forEach { protocolPrescribedDrugsMap[it.name to it.dosage!!] = it }
 
+          // Select protocol drugs if prescriptions exist for them.
           val protocolDrugSelectionItems = protocolDrugs
               .mapIndexed { index, drug ->
                 val dosage1 = drug.dosages[0]
                 val dosage2 = drug.dosages[1]
-                val isDosage1Selected = prescribedDrugsMap.contains(drug.name to dosage1)
-                val isDosage2Selected = prescribedDrugsMap.contains(drug.name to dosage2)
+                val isDosage1Selected = protocolPrescribedDrugsMap.contains(drug.name to dosage1)
+                val isDosage2Selected = protocolPrescribedDrugsMap.contains(drug.name to dosage2)
 
                 ProtocolDrugSelectionItem(
                     id = index,
                     drug = drug,
                     option1 = when {
-                      isDosage1Selected -> DosageOption.Selected(dosage = dosage1, prescription = prescribedDrugsMap[drug.name to dosage1]!!)
+                      isDosage1Selected -> DosageOption.Selected(dosage = dosage1, prescription = protocolPrescribedDrugsMap[drug.name to dosage1]!!)
                       else -> DosageOption.Unselected(dosage = dosage1)
                     },
                     option2 = when {
-                      isDosage2Selected -> DosageOption.Selected(dosage = dosage2, prescription = prescribedDrugsMap[drug.name to dosage2]!!)
+                      isDosage2Selected -> DosageOption.Selected(dosage = dosage2, prescription = protocolPrescribedDrugsMap[drug.name to dosage2]!!)
                       else -> DosageOption.Unselected(dosage = dosage2)
                     })
               }
 
-          val protocolDrugsNamesAndDosages: HashSet<Pair<String, String>> = protocolDrugs
-              .flatMap { drug ->
-                drug.dosages.map { dosage ->
-                  drug.name to dosage
-                }
-              }
-              .toHashSet()
-
           val customPrescribedDrugItems = prescribedDrugs
-              .filter { !protocolDrugsNamesAndDosages.contains(it.name to it.dosage) }
+              .filter { it.isProtocolDrug.not() }
+              .sortedBy { it.updatedAt.toEpochMilli() }
               .map { CustomPrescribedDrugItem(adapterId = it.uuid, name = it.name, dosage = it.dosage) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems

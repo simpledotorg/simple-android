@@ -83,7 +83,7 @@ data class PrescribedDrug(
     @Query("SELECT COUNT(*) FROM prescribeddrug")
     fun count(): Flowable<Int>
 
-    @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid ORDER BY updatedAt DESC")
+    @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
     fun forPatient(patientUuid: UUID): Flowable<List<PrescribedDrug>>
   }
 }

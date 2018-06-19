@@ -9,11 +9,11 @@ import org.simple.clinic.R
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 
-class AddNewPrescriptionItem() : GroupieItemWithUiEvents<AddNewPrescriptionItem.AddNewViewHolder>(-99) {
+class AddNewPrescriptionItem : GroupieItemWithUiEvents<AddNewPrescriptionItem.AddNewViewHolder>(adapterId = -99) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 
-  override fun getLayout() = R.layout.list_prescribeddrugs_add_custom_drug
+  override fun getLayout() = R.layout.list_prescribeddrugs_new_custom_drug
 
   override fun createViewHolder(itemView: View): AddNewViewHolder {
     val holder = AddNewViewHolder(itemView)

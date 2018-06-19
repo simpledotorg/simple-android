@@ -83,6 +83,7 @@ object PatientMocker {
       uuid: UUID = mock(),
       name: String = "drug name",
       dosage: String? = "dosage",
+      isProtocolDrug: Boolean = false,
       syncStatus: SyncStatus = mock()
   ): PrescribedDrug {
     return PrescribedDrug(
@@ -91,7 +92,7 @@ object PatientMocker {
         dosage = dosage,
         rxNormCode = "rx-norm-code",
         isDeleted = false,
-        isProtocolDrug = false,
+        isProtocolDrug = isProtocolDrug,
         patientUuid = mock(),
         facilityUuid = mock(),
         syncStatus = syncStatus,

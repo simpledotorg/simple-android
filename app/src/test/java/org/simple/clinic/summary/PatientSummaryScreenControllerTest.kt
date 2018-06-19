@@ -12,6 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
@@ -24,6 +25,8 @@ class PatientSummaryScreenControllerTest {
   private val screen = mock<PatientSummaryScreen>()
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private lateinit var controller: PatientSummaryScreenController
@@ -33,16 +36,20 @@ class PatientSummaryScreenControllerTest {
     val timestampGenerator = mock<RelativeTimestampGenerator>()
     whenever(timestampGenerator.generate(any())).thenReturn(Today())
 
-    controller = PatientSummaryScreenController(patientRepository, bpRepository, timestampGenerator)
+    controller = PatientSummaryScreenController(patientRepository, bpRepository, prescriptionRepository, timestampGenerator)
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.never())
+    whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
   }
 
   @Test
-  fun `when screen is opened then patient details should be populated`() {
-    val patientUuid = UUID.randomUUID()
+  fun `patient's profile should be populated`() {
     val addressUuid = UUID.randomUUID()
     val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
     val address = PatientMocker.address(uuid = addressUuid)
@@ -51,7 +58,28 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
 
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
+
+    verify(screen).populatePatientProfile(patient, address, phoneNumber)
+  }
+
+  @Test
+  fun `patient's prescription summary should be populated`() {
+    val prescriptions = listOf(
+        PatientMocker.prescription(name = "Amlodipine", dosage = "10mg"),
+        PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
+        PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+
+    verify(screen).populatePrescribedDrugsSummary(SummaryPrescribedDrugsItem(prescriptions))
+  }
+
+  @Test
+  fun `patient's blood pressure history should be populated`() {
     val bloodPressureMeasurements = listOf(
         PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95),
@@ -60,20 +88,13 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
-    verify(screen).populatePatientInfo(patient, address, phoneNumber)
-    verify(screen).setupSummaryList()
-    verify(screen).populateSummaryList(check {
+    verify(screen).populateBloodPressureHistory(check {
       it.forEachIndexed { i, item -> assertThat(item.measurement == bloodPressureMeasurements[i]) }
     })
   }
 
   @Test
   fun `when new-BP is clicked then BP entry sheet should be shown`() {
-    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
-
-    val patientUuid = UUID.randomUUID()
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
@@ -82,23 +103,15 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
-    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
-    uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
     verify(screen, times(1)).showBloodPressureEntrySheet(any())
   }
 
   @Test
   fun `when screen was opened from search and up button is pressed then the user should be taken back to search`() {
-    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.NEW_PATIENT))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen).goBackToHome()
@@ -106,11 +119,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened after saving a new patient and up button is pressed then the user should be taken back to home`() {
-    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(PatientSummaryScreenCreated(UUID.randomUUID(), caller = PatientSummaryCaller.SEARCH))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen).goBackToPatientSearch()
@@ -123,11 +132,6 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when update medicines is clicked then BP medicines screen should be shown`() {
-    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
-    whenever(bpRepository.recentMeasurementsForPatient(any())).thenReturn(Observable.never())
-
-    val patientUuid = UUID.randomUUID()
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 

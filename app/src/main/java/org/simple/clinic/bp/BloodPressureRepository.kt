@@ -90,6 +90,7 @@ class BloodPressureRepository @Inject constructor(
     return dao.count().firstOrError()
   }
 
+  // TODO: rename to newest100MeasurementsForPatient()
   fun recentMeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
     return dao
         .forPatient(patientUuid)

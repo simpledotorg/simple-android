@@ -10,10 +10,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_12"
     android:paddingEnd="@dimen/spacing_16"
     android:paddingStart="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_16">
+    android:paddingTop="@dimen/spacing_12">
 
     <TextView
       android:id="@+id/prescribeddrug_item_customdrug_name"
@@ -33,6 +33,16 @@
       android:layout_weight="0.4"
       android:textSize="@dimen/textsize_16"
       tools:text="10 packets" />
+
+    <ImageButton
+      android:id="@+id/prescribeddrug_item_customdrug_delete"
+      android:contentDescription="@string/prescribeddrug_delete_custom_drug"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_4"
+      android:src="@drawable/ic_delete_20dp"
+      android:tint="@color/gray_500" />
   </LinearLayout>
 
   <View

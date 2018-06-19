@@ -53,12 +53,17 @@ class PrescribedDrugsEntryControllerTest {
     val prescriptionUuid4 = UUID.randomUUID()
 
     val amlodipinePrescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg", isProtocolDrug = true)
+    val telmisartanPrescription = PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false)
+    val ReesesPrescription = PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false)
+    val fooPrescription = PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false)
+    val barPrescription = PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false)
+
     val prescriptions = listOf(
         amlodipinePrescription,
-        PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false),
-        PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false),
-        PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false),
-        PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false))
+        telmisartanPrescription,
+        ReesesPrescription,
+        fooPrescription,
+        barPrescription)
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
 
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
@@ -79,22 +84,10 @@ class PrescribedDrugsEntryControllerTest {
             drug = chlorthalidone,
             option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(chlorthalidone.dosages[0]),
             option2 = ProtocolDrugSelectionItem.DosageOption.Unselected(chlorthalidone.dosages[1])),
-        CustomPrescribedDrugItem(
-            prescriptionUuid1,
-            name = "Telmisartan",
-            dosage = "9000mg"),
-        CustomPrescribedDrugItem(
-            prescriptionUuid2,
-            name = "Reese's",
-            dosage = "5 packets"),
-        CustomPrescribedDrugItem(
-            prescriptionUuid3,
-            name = "Foo",
-            dosage = "2 pills"),
-        CustomPrescribedDrugItem(
-            prescriptionUuid4,
-            name = "Bar",
-            dosage = null))
+        CustomPrescribedDrugItem(telmisartanPrescription),
+        CustomPrescribedDrugItem(ReesesPrescription),
+        CustomPrescribedDrugItem(fooPrescription),
+        CustomPrescribedDrugItem(barPrescription))
     verify(screen).populateDrugsList(expectedProtocolDrugUiModels)
   }
 
@@ -147,7 +140,10 @@ class PrescribedDrugsEntryControllerTest {
   }
 
   @Test
-  fun `when delete prescription is clicked then the prescription should be marked as soft-deleted`() {
+  fun `when a custom prescription delete is clicked then delete confirmation dialog should be shown`() {
+    val prescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg")
+    uiEvents.onNext(DeleteCustomPrescriptionClicked(prescription))
 
+    verify(screen).showDeleteConfirmationDialog(prescription)
   }
 }

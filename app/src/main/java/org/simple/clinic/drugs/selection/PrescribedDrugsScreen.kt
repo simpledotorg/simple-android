@@ -18,6 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
@@ -96,5 +97,9 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
 
   fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
     activity.startActivity(CustomPrescriptionEntrySheet.intent(context, patientUuid))
+  }
+
+  fun showDeleteConfirmationDialog(prescription: PrescribedDrug) {
+    ConfirmDeletePrescriptionDialog.showForPrescription(prescription.uuid, activity.supportFragmentManager)
   }
 }

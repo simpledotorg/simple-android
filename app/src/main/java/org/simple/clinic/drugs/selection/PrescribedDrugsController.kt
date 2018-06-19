@@ -29,8 +29,9 @@ class PrescribedDrugsEntryController @Inject constructor(
     return Observable.mergeArray(
         populateDrugsList(replayedEvents),
         savePrescriptions(replayedEvents),
-        deletePrescriptions(replayedEvents),
-        addNewPrescription(replayedEvents))
+        selectPrescription(replayedEvents),
+        unselectPrescriptions(replayedEvents),
+        showConfirmDeletePrescriptionDialog(replayedEvents))
   }
 
   private fun populateDrugsList(events: Observable<UiEvent>): Observable<UiChange> {
@@ -81,7 +82,7 @@ class PrescribedDrugsEntryController @Inject constructor(
           val customPrescribedDrugItems = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .map { CustomPrescribedDrugItem(adapterId = it.uuid, name = it.name, dosage = it.dosage) }
+              .map { CustomPrescribedDrugItem(it) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }
@@ -103,7 +104,7 @@ class PrescribedDrugsEntryController @Inject constructor(
         }
   }
 
-  private fun deletePrescriptions(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun unselectPrescriptions(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ProtocolDrugDosageUnselected>()
         .map { it.prescription }
@@ -114,7 +115,7 @@ class PrescribedDrugsEntryController @Inject constructor(
         }
   }
 
-  private fun addNewPrescription(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun selectPrescription(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
@@ -123,5 +124,12 @@ class PrescribedDrugsEntryController @Inject constructor(
     return events.ofType<AddNewPrescriptionClicked>()
         .withLatestFrom(patientUuids) { _, patientUuid -> patientUuid }
         .map { patientUuid -> { ui: Ui -> ui.showNewPrescriptionEntrySheet(patientUuid) } }
+  }
+
+  private fun showConfirmDeletePrescriptionDialog(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<DeleteCustomPrescriptionClicked>()
+        .map { it.prescription }
+        .map { { ui: Ui -> ui.showDeleteConfirmationDialog(prescription = it) } }
   }
 }

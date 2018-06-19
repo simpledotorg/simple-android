@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginBottom="@dimen/spacing_8">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingStart="@dimen/spacing_24">
+
+    <LinearLayout
+      android:id="@+id/patientsummary_prescriptions_summary_container"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_4"
+      android:layout_marginStart="@dimen/spacing_4"
+      android:orientation="horizontal"
+      android:paddingTop="@dimen/spacing_24">
+
+      <LinearLayout
+        android:id="@+id/patientsummary_prescriptions_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1"
+        android:orientation="vertical" />
+
+      <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:gravity="end"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="8dp"
+          android:text="@string/patientsummary_prescriptions_last_updated"
+          android:textColor="@color/gray_500" />
+
+        <TextView
+          android:id="@+id/patientsummary_prescriptions_last_updated_timestamp"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/spacing_16"
+          android:textSize="@dimen/textsize_16"
+          tools:text="30 days ago" />
+      </LinearLayout>
+    </LinearLayout>
+
+    <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+
+      <android.support.v7.widget.AppCompatButton
+        android:id="@+id/patientsummary_prescriptions_update"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_24"
+        android:layout_marginTop="@dimen/summary_prescriptions_update_when_empty"
+        app:backgroundTint="@color/color_accent" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/patientsummary_prescriptions_update"
+        android:layout_alignTop="@+id/patientsummary_prescriptions_update"
+        android:layout_centerInParent="true"
+        android:drawablePadding="@dimen/spacing_8"
+        android:drawableStart="@drawable/ic_local_pharmacy_20dp"
+        android:drawableTint="@color/white"
+        android:elevation="8dp"
+        android:gravity="center_vertical"
+        android:text="@string/patientsummary_prescriptions_update"
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
+        android:textColor="@color/white"
+        tools:ignore="UnusedAttribute" />
+    </RelativeLayout>
+  </LinearLayout>
+</android.support.v7.widget.CardView>

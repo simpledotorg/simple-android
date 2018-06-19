@@ -54,7 +54,7 @@
           android:layout_marginStart="@dimen/spacing_16"
           android:layout_weight="0.4"
           android:hint="@string/customprescription_drug_dosage_hint"
-          android:inputType="textCapWords"
+          android:inputType="textCapSentences"
           android:textSize="20sp" />
       </LinearLayout>
 

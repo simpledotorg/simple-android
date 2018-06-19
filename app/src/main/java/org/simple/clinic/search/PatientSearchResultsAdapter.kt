@@ -18,7 +18,8 @@ import org.threeten.bp.ZoneOffset
 class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   private var patients: List<PatientSearchResult> = listOf()
-  val itemClicks = PublishSubject.create<UiEvent>()
+
+  val itemClicks: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
   fun updateAndNotifyChanges(patients: List<PatientSearchResult>) {
     this.patients = patients

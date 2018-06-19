@@ -42,8 +42,7 @@ class PatientSummaryScreenController @Inject constructor(
     val sharedPatients = patientUuid
         .flatMap { patientRepository.patient(it) }
         .map {
-          // We do not expect the patient to get
-          // deleted while this screen is already open.
+          // We do not expect the patient to get deleted while this screen is already open.
           (it as Just).value
         }
         .replay(1)

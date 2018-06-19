@@ -84,7 +84,7 @@ data class SummaryPrescribedDrugsItem(
             .append(drug.dosage!!)
             .popSpan()
       }
-      summaryBuilder.append(" ${drug.name}")
+      summaryBuilder.append("   ${drug.name}")
       drugTextView.text = summaryBuilder.build()
     }
 

@@ -67,5 +67,30 @@
     android:id="@+id/patientsummary_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/patientsummary_header" />
+    android:layout_below="@+id/patientsummary_header"
+    android:clipToPadding="false" />
+
+  <FrameLayout
+    android:id="@+id/patientsummary_done"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="#69B038"
+    android:elevation="10dp"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    tools:ignore="UnusedAttribute">
+
+    <Button
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:background="@null"
+      android:clickable="false"
+      android:drawablePadding="@dimen/spacing_8"
+      android:drawableStart="@drawable/ic_done_20dp"
+      android:focusable="false"
+      android:minWidth="0dp"
+      android:text="@string/patientsummary_finish_saving_patient"
+      android:textColor="@color/white" />
+  </FrameLayout>
 </org.simple.clinic.summary.PatientSummaryScreen>

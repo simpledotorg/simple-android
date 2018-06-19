@@ -24,7 +24,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
 
   private val backgroundContainer by bindView<View>(R.id.customprescription_root)
   private val drugNameEditText by bindView<EditText>(R.id.customprescription_drug_name)
-  private val drugDosageEditText by bindView<EditText>(R.id.customprescription_drug_name)
+  private val drugDosageEditText by bindView<EditText>(R.id.customprescription_drug_dosage)
   private val saveButton by bindView<Button>(R.id.customprescription_save)
 
   @Inject

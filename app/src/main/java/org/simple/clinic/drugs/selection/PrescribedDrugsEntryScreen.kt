@@ -1,12 +1,14 @@
 package org.simple.clinic.drugs.selection
 
 import android.content.Context
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import com.jakewharton.rxbinding2.view.RxView
+import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
@@ -66,16 +68,30 @@ class PrescribedDrugsEntryScreen(context: Context, attrs: AttributeSet) : Linear
   }
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
-    val adapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
-    adapterItems += protocolDrugItems
-    adapterItems += AddNewPrescriptionItem()
-    // TODO: New prescription button.
+    // Skip item animations on the first update.
+    if (groupieAdapter.itemCount != 0) {
+      val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
+      animator.supportsChangeAnimations = false
+      recyclerView.itemAnimator = animator
+    }
+
+    val newAdapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
+    newAdapterItems += protocolDrugItems
+    newAdapterItems += AddNewPrescriptionItem()
 
     // Not the best way for registering click listeners,
     // but Groupie doesn't seem to have a better option.
-    adapterItems.forEach { it.uiEvents = adapterUiEvents }
+    newAdapterItems.forEach { it.uiEvents = adapterUiEvents }
 
-    groupieAdapter.update(protocolDrugItems)
+    val hasNewItems = groupieAdapter.itemCount < newAdapterItems.size
+    groupieAdapter.update(newAdapterItems)
+
+    // Scroll to end to show newly added prescriptions.
+    if (hasNewItems) {
+      recyclerView.postDelayed(
+          { recyclerView.smoothScrollToPosition(recyclerView.adapter.itemCount - 1) },
+          300)
+    }
   }
 
   fun showNewPrescriptionEntrySheet(patientUuid: UUID) {

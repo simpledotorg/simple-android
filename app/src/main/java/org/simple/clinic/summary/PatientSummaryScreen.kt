@@ -29,6 +29,8 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.router.screen.BackPressInterceptCallback
+import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.Just
@@ -88,7 +90,22 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid, screenKey.caller))
   }
 
-  private fun backClicks() = RxView.clicks(backButton).map { PatientSummaryBackClicked() }
+  private fun backClicks(): Observable<UiEvent> {
+    val hardwareBackKeyClicks = Observable.create<Any> { emitter ->
+      val interceptor = object : BackPressInterceptor {
+        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
+          emitter.onNext(Any())
+          callback.markBackPressIntercepted()
+        }
+      }
+      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
+      screenRouter.registerBackPressInterceptor(interceptor)
+    }
+
+    return RxView.clicks(backButton)
+        .mergeWith(hardwareBackKeyClicks)
+        .map { PatientSummaryBackClicked() }
+  }
 
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {

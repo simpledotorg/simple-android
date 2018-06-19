@@ -52,13 +52,13 @@ class PrescribedDrugsEntryControllerTest {
     val prescriptionUuid3 = UUID.randomUUID()
     val prescriptionUuid4 = UUID.randomUUID()
 
-    val amlodipinePrescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg")
+    val amlodipinePrescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg", isProtocolDrug = true)
     val prescriptions = listOf(
         amlodipinePrescription,
-        PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg"),
-        PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets"),
-        PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills"),
-        PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null))
+        PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false),
+        PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false),
+        PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false),
+        PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
 
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
@@ -137,6 +137,9 @@ class PrescribedDrugsEntryControllerTest {
 
   @Test
   fun `when new prescription button is clicked then prescription entry sheet should be shown`() {
+    whenever(protocolRepository.currentProtocol()).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
     uiEvents.onNext(AddNewPrescriptionClicked())
 

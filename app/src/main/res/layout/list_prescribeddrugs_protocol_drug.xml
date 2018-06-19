@@ -30,7 +30,7 @@
       android:layout_height="match_parent"
       android:orientation="horizontal">
 
-      <RadioButton
+      <CheckBox
         android:id="@+id/prescribeddrug_item_protocoldrug_dosage_1"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -45,7 +45,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
         tools:text="5mg" />
 
-      <RadioButton
+      <CheckBox
         android:id="@+id/prescribeddrug_item_protocoldrug_dosage_2"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

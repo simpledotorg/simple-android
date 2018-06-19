@@ -9,6 +9,6 @@ data class ProtocolDrugDosageSelected constructor(val drug: ProtocolDrug, val do
 
 data class ProtocolDrugDosageUnselected constructor(val drug: ProtocolDrug, val prescription: PrescribedDrug) : UiEvent
 
-data class PrescribedDrugsEntryScreenCreated(val patientUuid: UUID) : UiEvent
+data class PrescribedDrugsScreenCreated(val patientUuid: UUID) : UiEvent
 
 class AddNewPrescriptionClicked : UiEvent

@@ -23,7 +23,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetView
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.patient.Gender
@@ -160,7 +160,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
-    BloodPressureEntrySheetView.showForPatient(patientUuid, activity.supportFragmentManager)
+    activity.startActivity(BloodPressureEntrySheet.intent(context, patientUuid))
   }
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {

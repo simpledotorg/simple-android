@@ -36,5 +36,10 @@
       android:name=".drugs.selection.entry.CustomPrescriptionEntrySheet"
       android:theme="@style/ClinicTheme.DialogLikeActivity"
       android:windowSoftInputMode="adjustResize" />
+
+    <activity
+      android:name=".bp.entry.BloodPressureEntrySheet"
+      android:theme="@style/ClinicTheme.DialogLikeActivity"
+      android:windowSoftInputMode="adjustResize" />
   </application>
 </manifest>

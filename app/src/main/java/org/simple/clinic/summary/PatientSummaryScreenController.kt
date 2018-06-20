@@ -94,16 +94,18 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    val screenStartFromNewPatient = events
+    val autoShows = events
         .ofType<PatientSummaryScreenCreated>()
         .filter { it.caller == NEW_PATIENT }
+        .withLatestFrom(patientUuid)
+        .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheetIfNotShownAlready(patientUuid) } }
 
     val newBpClicks = events
         .ofType<PatientSummaryNewBpClicked>()
-
-    return Observable.merge(screenStartFromNewPatient, newBpClicks)
         .withLatestFrom(patientUuid)
         .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheet(patientUuid) } }
+
+    return autoShows.mergeWith(newBpClicks)
   }
 
   private fun openPrescribedDrugsScreen(events: Observable<UiEvent>): Observable<UiChange> {

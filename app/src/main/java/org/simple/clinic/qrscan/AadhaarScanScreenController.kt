@@ -37,10 +37,12 @@ class AadhaarScanScreenController @Inject constructor(
   private fun cameraPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {
     val cameraPermissionChanges = events
         .ofType<CameraPermissionChanged>()
+        .doOnNext { Timber.i("camera permission changed: $it") }
         .map(CameraPermissionChanged::result)
 
     return events
         .ofType<AadhaarScanClicked>()
+        .doOnNext { Timber.i("aadhaar clicked") }
         .withLatestFrom(cameraPermissionChanges)
         .filter({ (_, permissionResult) -> permissionResult == RuntimePermissionResult.DENIED })
         .flatMap { Observable.just { ui: Ui -> ui.requestCameraPermission() } }
@@ -72,14 +74,35 @@ class AadhaarScanScreenController @Inject constructor(
 
     val newPatientFlows = successfulAadhaarScans
         .take(1)
-        .map { aadhaarData -> patientEntry(aadhaarData) }
-        .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
-        .andThen(Observable.just({ ui: Ui -> ui.openNewPatientEntryScreen() }))
+        .flatMap { aadhaarData ->
+          // TODO: Can we get phone numbers from aadhaar data?
+          // TODO: Parse age from date of birth.
+          // TODO: Write tests.
+          val patientNameOrEmpty = aadhaarData.fullName.orEmpty()
+
+          repository.searchPatientsAndPhoneNumbers(patientNameOrEmpty)
+              .take(1)
+              .flatMap { potentiallyMatchingPatients ->
+                Timber.i("Aadhaar data: $aadhaarData")
+                Timber.i("Found ${potentiallyMatchingPatients.size} existing patients with this aadhaar data")
+
+                when {
+                  potentiallyMatchingPatients.isNotEmpty() -> {
+                    Observable.just({ ui: Ui -> ui.openPatientSearchScreen(patientNameOrEmpty, preFilledAge = null) })
+                  }
+                  else -> {
+                    repository
+                        .saveOngoingEntry(newPatientEntry(aadhaarData))
+                        .andThen(Observable.just({ ui: Ui -> ui.openNewPatientEntryScreen() }))
+                  }
+                }
+              }
+        }
 
     return vibrations.mergeWith(newPatientFlows)
   }
 
-  private fun patientEntry(aadhaarQrData: AadhaarQrData): OngoingPatientEntry {
+  private fun newPatientEntry(aadhaarQrData: AadhaarQrData): OngoingPatientEntry {
     return OngoingPatientEntry(
         personalDetails = OngoingPatientEntry.PersonalDetails(
             fullName = aadhaarQrData.fullName.orEmpty(),

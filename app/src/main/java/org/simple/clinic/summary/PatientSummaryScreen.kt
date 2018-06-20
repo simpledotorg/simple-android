@@ -81,7 +81,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     setupSummaryList()
 
-    Observable.mergeArray(screenCreates(), backClicks(), adapterUiEvents)
+    Observable.mergeArray(screenCreates(), backClicks(), doneClicks(), adapterUiEvents)
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -93,6 +93,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)!!
     return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid, screenKey.caller))
   }
+
+  private fun doneClicks() = RxView.clicks(doneButton).map { PatientSummaryDoneClicked() }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Any> { emitter ->

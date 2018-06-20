@@ -6,6 +6,7 @@
     <ignore path="src/main/res/values/colors_material.xml" />
   </issue>
   <issue id="ParcelCreator" severity="informational" />
+  <issue id="GradleDependency" severity="informational" />
 
   <!-- JCABI xml parser references a java package that is not bundled
        with Android. We haven't run into errors yet, but we might.  -->

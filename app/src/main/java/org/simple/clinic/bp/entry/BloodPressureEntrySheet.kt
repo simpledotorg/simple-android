@@ -1,14 +1,11 @@
 package org.simple.clinic.bp.entry
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.BottomSheetDialogFragment
-import android.support.v4.app.FragmentManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.FrameLayout
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,32 +14,32 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
+import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * TODO: get rid of fragments completely.
- */
-class BloodPressureEntrySheetView : BottomSheetDialogFragment() {
+class BloodPressureEntrySheet : BottomSheetActivity() {
 
   @Inject
   lateinit var controller: BloodPressureEntrySheetController
 
+  private val backgroundContainer by bindView<FrameLayout>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditText>(R.id.bloodpressureentry_diastolic)
 
-  private val onStops = PublishSubject.create<Any>()
+  private val onDestroys = PublishSubject.create<Any>()
 
-  override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-    val sheetView = inflater.inflate(R.layout.sheet_blood_pressure_entry, container)
-    dialog.window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
-    return sheetView
-  }
 
-  override fun onStart() {
-    super.onStart()
+    backgroundContainer.setOnClickListener {
+      if (systolicEditText.text.isBlank() && diastolicEditText.text.isBlank()) {
+        finish()
+      }
+    }
 
     Observable
         .mergeArray(
@@ -53,17 +50,17 @@ class BloodPressureEntrySheetView : BottomSheetDialogFragment() {
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(onStops)
+        .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  override fun onStop() {
-    super.onStop()
-    onStops.onNext(Any())
+  override fun onDestroy() {
+    onDestroys.onNext(Any())
+    super.onDestroy()
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as UUID
+    val patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
     return Observable.just(BloodPressureEntrySheetCreated(patientUuid))
   }
 
@@ -84,28 +81,12 @@ class BloodPressureEntrySheetView : BottomSheetDialogFragment() {
   }
 
   companion object {
-    private const val TAG = "BloodPressureEntrySheetFragment"
     private const val KEY_PATIENT_UUID = "patientUuid"
 
-    fun showForPatient(patientUuid: UUID, fragmentManager: FragmentManager) {
-      val existingFragment = fragmentManager.findFragmentByTag(TAG)
-
-      if (existingFragment != null) {
-        fragmentManager
-            .beginTransaction()
-            .remove(existingFragment)
-            .commitNowAllowingStateLoss()
-      }
-
-      val fragment = BloodPressureEntrySheetView()
-      val args = Bundle(1)
-      args.putSerializable(KEY_PATIENT_UUID, patientUuid)
-      fragment.arguments = args
-
-      fragmentManager
-          .beginTransaction()
-          .add(fragment, TAG)
-          .commitNowAllowingStateLoss()
+    fun intent(context: Context, patientUuid: UUID): Intent {
+      val intent = Intent(context, BloodPressureEntrySheet::class.java)
+      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
+      return intent
     }
   }
 }

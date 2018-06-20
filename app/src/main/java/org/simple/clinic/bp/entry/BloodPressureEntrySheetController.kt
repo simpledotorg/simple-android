@@ -9,7 +9,7 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = BloodPressureEntrySheetView
+typealias Ui = BloodPressureEntrySheet
 typealias UiChange = (Ui) -> Unit
 
 class BloodPressureEntrySheetController @Inject constructor(val repository: BloodPressureRepository) : ObservableTransformer<UiEvent, UiChange> {
@@ -42,7 +42,7 @@ class BloodPressureEntrySheetController @Inject constructor(val repository: Bloo
         .flatMap { (uuid, systolic, diastolic) ->
           repository
               .saveMeasurement(uuid, systolic.toInt(), diastolic.toInt())
-              .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
+              .andThen(Observable.just({ ui: Ui -> ui.finish() }))
         }
   }
 

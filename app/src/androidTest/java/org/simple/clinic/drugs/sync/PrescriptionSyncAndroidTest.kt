@@ -39,7 +39,7 @@ class PrescriptionSyncAndroidTest {
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject
-  lateinit var bpSync: PrescriptionSync
+  lateinit var prescriptionSync: PrescriptionSync
 
   @Before
   fun setUp() {
@@ -63,7 +63,7 @@ class PrescriptionSyncAndroidTest {
   fun when_pending_sync_prescriptions_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
     insertDummyPrescriptions(count = 5).blockingAwait()
 
-    bpSync.push().blockingAwait()
+    prescriptionSync.push().blockingAwait()
 
     repository.prescriptionsWithSyncStatus(SyncStatus.DONE)
         .test()
@@ -80,11 +80,11 @@ class PrescriptionSyncAndroidTest {
     val prescriptionsToInsert = 2 * configProvider.blockingGet().batchSize + 7
 
     insertDummyPrescriptions(count = prescriptionsToInsert)
-        .andThen(bpSync.push())
+        .andThen(prescriptionSync.push())
         .andThen(Completable.fromAction { database.clearAllTables() })
         .blockingAwait()
 
-    bpSync.pull().blockingAwait()
+    prescriptionSync.pull().blockingAwait()
 
     val prescriptionCountAfterPull = repository.prescriptionCount().blockingGet()
     assertThat(prescriptionCountAfterPull).isAtLeast(prescriptionsToInsert)

@@ -94,4 +94,8 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
   fun openNewPatientEntryScreen() {
     // TODO.
   }
+
+  fun openPatientSearchScreen(preFilledSearchQuery: String, preFilledAge: String?) {
+    // TODO
+  }
 }

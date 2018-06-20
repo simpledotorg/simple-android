@@ -16,7 +16,7 @@ import java.util.UUID
 
 class BloodPressureEntrySheetControllerTest {
 
-  private val sheet = mock<BloodPressureEntrySheetView>()
+  private val sheet = mock<BloodPressureEntrySheet>()
   private val repository = mock<BloodPressureRepository>()
   private val patientUuid = UUID.randomUUID()
 
@@ -40,7 +40,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked())
 
     verify(repository, never()).saveMeasurement(any(), any(), any())
-    verify(sheet, never()).dismiss()
+    verify(sheet, never()).finish()
   }
 
   @Test
@@ -54,6 +54,6 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked())
 
     verify(repository, times(1)).saveMeasurement(patientUuid, 142, 80)
-    verify(sheet).dismiss()
+    verify(sheet).finish()
   }
 }

@@ -5,10 +5,6 @@ import javax.inject.Inject
 
 class AadhaarQrCodeParser @Inject constructor(private val xmlParserFactory: XmlParser.Factory) {
 
-  /**
-   * FIXME: This class does not expect non-aadhaar QR codes.
-   * TODO: Handle both non-xml and non-aadhaar-xml codes.
-   */
   fun parse(qrCode: String): ParseResult {
     val xmlParser: XmlParser
 

@@ -15,6 +15,11 @@ abstract class ClinicApp : MultiDexApplication() {
   override fun onCreate() {
     super.onCreate()
 
+    @Suppress("ConstantConditionIf")
+    if (BuildConfig.API_ENDPOINT == "null") {
+      throw AssertionError("API endpoint cannot be null!")
+    }
+
     LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()

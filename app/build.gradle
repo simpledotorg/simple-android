@@ -68,6 +68,15 @@ android {
     }
   }
 
+  variantFilter { variant ->
+    if (variant.name == "qaRelease" ||
+        variant.name == "stagingDebug" ||
+        variant.name == "productionDebug"
+    ) {
+      setIgnore(true)
+    }
+  }
+
   lintOptions {
     lintConfig file("$project.rootDir/quality/lint.xml")
     warningsAsErrors true

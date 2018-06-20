@@ -7,6 +7,8 @@ data class PatientSummaryScreenCreated(val patientUuid: UUID, val caller: Patien
 
 class PatientSummaryBackClicked : UiEvent
 
+class PatientSummaryDoneClicked : UiEvent
+
 class PatientSummaryNewBpClicked : UiEvent
 
 class PatientSummaryUpdateDrugsClicked : UiEvent

@@ -144,4 +144,16 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen).setDoneButtonVisible(caller == PatientSummaryCaller.NEW_PATIENT)
   }
+
+  @Test
+  @Parameters(value = ["SEARCH", "NEW_PATIENT"])
+  fun `done button clicks should be handled in the same way as back clicks`(caller: PatientSummaryCaller) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    when (caller) {
+      PatientSummaryCaller.NEW_PATIENT -> verify(screen).goBackToHome()
+      else -> verify(screen).goBackToPatientSearch()
+    }
+  }
 }

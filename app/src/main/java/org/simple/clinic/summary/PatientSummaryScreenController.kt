@@ -28,14 +28,17 @@ class PatientSummaryScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay(1).refCount()
 
+    val transformedEvents = replayedEvents
+        .mergeWith(handleDoneClicks(replayedEvents))
+
     return Observable.mergeArray(
-        populatePatientProfile(replayedEvents),
-        constructPrescribedDrugsHistory(replayedEvents),
-        constructBloodPressureHistory(replayedEvents),
-        openBloodPressureBottomSheet(replayedEvents),
-        openPrescribedDrugsScreen(replayedEvents),
-        handleBackClicks(replayedEvents),
-        showDoneButton(replayedEvents))
+        populatePatientProfile(transformedEvents),
+        constructPrescribedDrugsHistory(transformedEvents),
+        constructBloodPressureHistory(transformedEvents),
+        openBloodPressureBottomSheet(transformedEvents),
+        openPrescribedDrugsScreen(transformedEvents),
+        handleBackClicks(transformedEvents),
+        showDoneButton(transformedEvents))
   }
 
   private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {
@@ -129,6 +132,12 @@ class PatientSummaryScreenController @Inject constructor(
             NEW_PATIENT -> { ui: Ui -> ui.goBackToHome() }
           }
         }
+  }
+
+  private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiEvent> {
+    return events
+        .ofType<PatientSummaryDoneClicked>()
+        .map { PatientSummaryBackClicked() }
   }
 
   private fun showDoneButton(events: Observable<UiEvent>): Observable<UiChange> {

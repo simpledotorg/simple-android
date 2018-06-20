@@ -81,10 +81,9 @@ class PatientSummaryScreenController @Inject constructor(
         .map { it.patientUuid }
         .flatMap { bpRepository.recentMeasurementsForPatient(it) }
         .map { measurements ->
-          measurements.mapIndexed { index, measurement ->
+          measurements.map { measurement ->
             val timestamp = timestampGenerator.generate(measurement.updatedAt)
-            val isFirstItem = index == 0
-            SummaryBloodPressureItem(measurement, timestamp, isFirstItem)
+            SummaryBloodPressureItem(measurement, timestamp)
           }
         }
         .map { { ui: Ui -> ui.populateBloodPressureHistory(it) } }

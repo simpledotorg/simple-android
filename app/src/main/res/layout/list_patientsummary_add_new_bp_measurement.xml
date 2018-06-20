@@ -7,7 +7,7 @@
   android:layout_marginTop="@dimen/spacing_8"
   android:background="@color/white">
 
-  <FrameLayout
+  <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingEnd="@dimen/spacing_24"
@@ -24,8 +24,10 @@
     <org.simple.clinic.widgets.TintableCompoundDrawableTextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_alignBottom="@+id/patientsummary_item_newbp"
+      android:layout_alignTop="@+id/patientsummary_item_newbp"
+      android:layout_centerHorizontal="true"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="14dp"
       android:drawablePadding="@dimen/spacing_8"
       android:drawableStart="@drawable/ic_new_bp_17dp"
       android:elevation="8dp"
@@ -34,5 +36,5 @@
       android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
       android:textColor="@color/white"
       tools:ignore="UnusedAttribute" />
-  </FrameLayout>
+  </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -58,7 +58,13 @@ class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAda
 
     fun render() {
       titleTextView.text = String.format("%s • %s", searchResult.fullName, searchResult.gender.toString().substring(0, 1))
-      bylineTextView.text = String.format("%s, %s", searchResult.address.colonyOrVillage, searchResult.address.district)
+
+      val storedAddress = searchResult.address
+      if (storedAddress.colonyOrVillage.isNullOrEmpty()) {
+        bylineTextView.text = String.format("%s", searchResult.address.district)
+      } else {
+        bylineTextView.text = String.format("%s, %s", searchResult.address.colonyOrVillage, searchResult.address.district)
+      }
 
       if (searchResult.age == null) {
         val years = Period.between(searchResult.dateOfBirth, LocalDate.now()).years.toString()

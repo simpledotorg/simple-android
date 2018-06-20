@@ -4,7 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -110,7 +110,8 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
-    verify(screen, times(1)).showBloodPressureEntrySheet(any())
+    verify(screen).showBloodPressureEntrySheetIfNotShownAlready(any())
+    verify(screen, never()).showBloodPressureEntrySheet(any())
   }
 
   @Test

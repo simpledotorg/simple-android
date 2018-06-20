@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -71,6 +72,20 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val prescriptionSection: Section = Section()
   private val bloodPressureSection: Section = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
+
+  private var bpEntrySheetAlreadyShownOnStart: Boolean = false
+
+  override fun onSaveInstanceState(): Parcelable {
+    return PatientSummaryScreenSavedState(
+        super.onSaveInstanceState(),
+        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart)
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable) {
+    val (superSavedState, bpEntryShownOnStart) = state as PatientSummaryScreenSavedState
+    bpEntrySheetAlreadyShownOnStart = bpEntryShownOnStart
+    super.onRestoreInstanceState(superSavedState)
+  }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -157,6 +172,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     measurementItems.forEach { it.uiEvents = adapterUiEvents }
     bloodPressureSection.update(measurementItems)
+  }
+
+  fun showBloodPressureEntrySheetIfNotShownAlready(patientUuid: UUID) {
+    // FIXME: This is a really ugly workaround. Shouldn't be managing state like this.
+    if (!bpEntrySheetAlreadyShownOnStart) {
+      bpEntrySheetAlreadyShownOnStart = true
+      activity.startActivity(BloodPressureEntrySheet.intent(context, patientUuid))
+    }
   }
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {

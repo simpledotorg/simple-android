@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="org.simple.clinic"
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  package="org.simple.clinic">
 
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.VIBRATE" />
@@ -9,13 +9,13 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
   <application
-    android:name=".ReleaseClinicApp"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
+    android:name=".ReleaseClinicApp"
     android:supportsRtl="true"
     android:theme="@style/ClinicTheme"
-    tools:ignore="GoogleAppIndexingWarning">
+    tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
     <activity
       android:name=".TheActivity"

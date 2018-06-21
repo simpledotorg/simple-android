@@ -62,7 +62,7 @@ Follow the [redapp-server instructions](https://github.com/resolvetosavelives/re
 
 #### Working with Java 8's date and time
 
-Clinic uses a [library](https://github.com/gabrielittner/lazythreetenbp) to adapt ThreeTenBP (backport of Java 8's date and time packages). Due to some limitations, the IDE does not know how to download its sources. To work around, the sources can be downloaded from [the maven repository](http://search.maven.org/#search%7Cga%7C1%7Cthreetenbp) and manually be attached to Android Studio.
+Clinic uses [lazythreetenbp](https://github.com/gabrielittner/lazythreetenbp) for working with date and time. Due to some limitations, the IDE does not know how to download its sources. As a work around, the sources can be downloaded from [the maven repository](http://search.maven.org/#search%7Cga%7C1%7Cthreetenbp) and manually attached to Android Studio.
 
 #### Debugging syncing of patient
 

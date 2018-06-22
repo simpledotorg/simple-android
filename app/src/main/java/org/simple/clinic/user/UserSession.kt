@@ -32,6 +32,6 @@ class UserSession @Inject constructor() {
   }
 
   fun login(): Single<LoginResult> {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    TODO()
   }
 }

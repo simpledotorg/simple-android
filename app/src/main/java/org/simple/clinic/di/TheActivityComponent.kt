@@ -10,6 +10,7 @@ import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.home.bp.NewBpScreen
+import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.router.screen.ScreenRouter
@@ -23,6 +24,7 @@ interface TheActivityComponent {
 
   fun inject(target: NewBpScreen)
   fun inject(target: TheActivity)
+  fun inject(target: LoginPhoneScreen)
   fun inject(target: PatientSearchScreen)
   fun inject(target: AadhaarScanScreen)
   fun inject(target: PatientEntryScreen)

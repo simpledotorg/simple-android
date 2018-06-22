@@ -13,8 +13,8 @@ class UserSession @Inject constructor() {
 
   private lateinit var ongoingLoginEntry: OngoingLoginEntry
 
-  fun loggedInUser(): Observable<LoggedInUser> {
-    return Observable.just(DUMMY_USER)
+  companion object {
+    private val DUMMY_USER = LoggedInUser(uuid = UUID.randomUUID())
   }
 
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
@@ -27,11 +27,11 @@ class UserSession @Inject constructor() {
     return Single.fromCallable { ongoingLoginEntry }
   }
 
-  fun login(): Single<LoginResult> {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  fun loggedInUser(): Observable<LoggedInUser> {
+    return Observable.just(DUMMY_USER)
   }
 
-  companion object {
-    private val DUMMY_USER = LoggedInUser(uuid = UUID.randomUUID())
+  fun login(): Single<LoginResult> {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 }

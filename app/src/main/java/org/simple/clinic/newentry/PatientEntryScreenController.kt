@@ -35,7 +35,7 @@ class PatientEntryScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     val transformedEvents = replayedEvents
-        .mergeWith(ongoingPatientEntryUpdates(replayedEvents));
+        .mergeWith(ongoingPatientEntryUpdates(replayedEvents))
 
     return Observable.mergeArray(
         preFillOnStart(transformedEvents),
@@ -228,11 +228,10 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<PatientGenderChanged>()
         .map { it.gender }
 
-    val personDetailChanges = Observables.combineLatest(
-        nameChanges, dateOfBirthChanges, ageChanges, genderChanges,
-        { name, dateOfBirth, age, gender ->
-          OngoingPatientEntry.PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender.toNullable())
-        })
+    val personDetailChanges = Observables.combineLatest(nameChanges, dateOfBirthChanges, ageChanges, genderChanges)
+    { name, dateOfBirth, age, gender ->
+      OngoingPatientEntry.PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender.toNullable())
+    }
 
     val phoneNumberChanges = Observables
         .combineLatest(
@@ -261,16 +260,15 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<PatientStateTextChanged>()
         .map { it.state }
 
-    val addressChanges = Observables.combineLatest(
-        colonyOrVillageChanges, districtChanges, stateChanges,
-        { colonyOrVillage, district, state ->
-          OngoingPatientEntry.Address(colonyOrVillage.nullIfBlank(), district, state)
-        })
+    val addressChanges = Observables.combineLatest(colonyOrVillageChanges, districtChanges, stateChanges)
+    { colonyOrVillage, district, state ->
+      OngoingPatientEntry.Address(colonyOrVillage.nullIfBlank(), district, state)
+    }
 
-    return Observables.combineLatest(personDetailChanges,
-        phoneNumberChanges,
-        addressChanges,
-        { personal, phone, address -> OngoingPatientEntryChanged(OngoingPatientEntry(personal, address, phone.toNullable())) })
+    return Observables.combineLatest(personDetailChanges, phoneNumberChanges, addressChanges)
+    { personal, phone, address ->
+      OngoingPatientEntryChanged(OngoingPatientEntry(personal, address, phone.toNullable()))
+    }
   }
 
   private fun ongoingEntrySaves(events: Observable<UiEvent>): Observable<UiChange> {

@@ -31,6 +31,8 @@ class LoginPhoneScreenControllerTest {
 
   @Test
   fun `when screen starts, get OTP from intent, and create an OngoingLoginEntry`() {
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+
     uiEvents.onNext(PhoneNumberScreenCreated("123"))
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(otp = "123"))

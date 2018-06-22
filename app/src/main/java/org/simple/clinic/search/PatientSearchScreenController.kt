@@ -31,7 +31,7 @@ class PatientSearchScreenController @Inject constructor(
         backButtonClicks(replayedEvents))
   }
 
-  private fun searchQueryChanged(events: Observable<UiEvent>): ObservableSource<UiChange> {
+  private fun searchQueryChanged(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<SearchQueryTextChanged>()
         .map {
           when {

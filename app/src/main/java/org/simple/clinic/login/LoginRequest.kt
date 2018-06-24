@@ -6,7 +6,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class LoginRequest(
 
-    @Json(name = "user")
+    @Json(name = "loggedInUser")
     val user: UserPayload
 )
 
@@ -17,7 +17,7 @@ data class UserPayload(
     val phoneNumber: String,
 
     @Json(name = "password")
-    val password: String,
+    val pin: String,
 
     @Json(name = "otp")
     val otp: String

@@ -5,7 +5,6 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.protocol.ProtocolDrug
-import org.simple.clinic.user.LoggedInUser
 import java.util.UUID
 
 /**
@@ -62,10 +61,6 @@ object PatientMocker {
         userUuid = mock(),
         facilityUuid = mock(),
         patientUuid = patientUuid)
-  }
-
-  fun user(uuid: UUID = mock()): LoggedInUser {
-    return LoggedInUser(uuid)
   }
 
   fun facility(

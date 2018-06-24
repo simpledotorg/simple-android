@@ -23,7 +23,7 @@ class PrescriptionModule {
   }
 
   @Provides
-  fun syncApi(@Named("ClinicApp") retrofit: Retrofit): PrescriptionSyncApiV1 {
+  fun syncApi(retrofit: Retrofit): PrescriptionSyncApiV1 {
     return retrofit.create(PrescriptionSyncApiV1::class.java)
   }
 

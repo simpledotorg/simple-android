@@ -9,13 +9,11 @@ import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.threeten.bp.Duration
 import retrofit2.Retrofit
-import javax.inject.Named
 
 @Module(includes = [PatientSyncModule::class, BloodPressureModule::class, PrescriptionModule::class])
 open class SyncModule {
 
   @Provides
-  @Named("ClinicApp")
   fun retrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
     val baseUrl = BuildConfig.API_ENDPOINT
     return commonRetrofitBuilder

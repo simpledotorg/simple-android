@@ -23,7 +23,7 @@ open class BloodPressureModule {
   }
 
   @Provides
-  fun syncApi(@Named("ClinicApp") retrofit: Retrofit): BloodPressureSyncApiV1 {
+  fun syncApi(retrofit: Retrofit): BloodPressureSyncApiV1 {
     return retrofit.create(BloodPressureSyncApiV1::class.java)
   }
 

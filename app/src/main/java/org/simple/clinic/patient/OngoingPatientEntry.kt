@@ -1,8 +1,8 @@
 package org.simple.clinic.patient
 
 /**
- * Represents user input on the UI, which is why every field is a String.
- * Parsing of user input happens later when this data class is converted
+ * Represents loggedInUser input on the UI, which is why every field is a String.
+ * Parsing of loggedInUser input happens later when this data class is converted
  * into a Patient object in [PatientRepository.saveOngoingEntryAsPatient].
  */
 data class OngoingPatientEntry(

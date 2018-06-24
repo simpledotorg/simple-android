@@ -107,7 +107,7 @@ class PatientEntryScreenController @Inject constructor(
             !dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE) }
             dateBlank && !ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE) }
             dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE) }
-            else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
+            else -> throw AssertionError("Both date-of-birth and age cannot have loggedInUser input at the same time")
           }
         }
   }

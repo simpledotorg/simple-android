@@ -76,7 +76,7 @@ class PatientSync @Inject constructor(
               .flatMapSingle { lastPullTime ->
                 when (lastPullTime) {
                   is Just -> api.pull(recordsToPull = config.batchSize, lastPullTimestamp = lastPullTime.value)
-                  is None -> api.pull(recordsToPull = config.batchSize, isFirstPull = true)
+                  is None -> api.pull(recordsToPull = config.batchSize)
                 }
               }
               .flatMap { response ->

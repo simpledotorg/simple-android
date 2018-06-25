@@ -21,8 +21,7 @@ interface BloodPressureSyncApiV1 {
 
   @GET("$version/blood_pressures/sync")
   fun pull(
-      @Query("limit") recordsToPull: Int,
-      @Query("first_time") isFirstPull: Boolean
+      @Query("limit") recordsToPull: Int
   ): Single<BloodPressurePullResponse>
 
   @GET("$version/blood_pressures/sync")

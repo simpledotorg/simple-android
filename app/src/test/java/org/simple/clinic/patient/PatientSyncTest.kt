@@ -66,7 +66,7 @@ class PatientSyncTest {
     val config = SyncConfig(mock(), batchSize = 10)
     whenever(syncConfigProvider()).thenReturn(config)
     whenever(lastSyncTimestamp.asObservable()).thenReturn(Observable.just(None))
-    whenever(api.pull(config.batchSize, isFirstPull = true)).thenReturn(Single.just(PatientPullResponse(mock(), mock())))
+    whenever(api.pull(config.batchSize)).thenReturn(Single.just(PatientPullResponse(mock(), mock())))
     whenever(repository.mergeWithLocalData(any())).thenReturn(Completable.complete())
 
     patientSync.sync().test()
@@ -74,7 +74,7 @@ class PatientSyncTest {
         .assertError(NullPointerException::class.java)
 
     verify(api, never()).push(any())
-    verify(api).pull(config.batchSize, isFirstPull = true)
+    verify(api).pull(config.batchSize)
   }
 
   @Test
@@ -91,7 +91,7 @@ class PatientSyncTest {
         .await()
         .assertError(AssertionError::class.java)
 
-    verify(api, never()).pull(recordsToPull = any(), isFirstPull = any())
+    verify(api, never()).pull(recordsToPull = any())
     verify(api).push(any())
   }
 

@@ -21,8 +21,7 @@ interface PrescriptionSyncApiV1 {
 
   @GET("$version/prescription_drugs/sync")
   fun pull(
-      @Query("limit") recordsToPull: Int,
-      @Query("first_time") isFirstPull: Boolean
+      @Query("limit") recordsToPull: Int
   ): Single<PrescriptionPullResponse>
 
   @GET("$version/prescription_drugs/sync")

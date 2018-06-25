@@ -20,8 +20,7 @@ interface PatientSyncApiV1 {
 
   @GET("$version/patients/sync")
   fun pull(
-      @Query("limit") recordsToPull: Int,
-      @Query("first_time") isFirstPull: Boolean
+      @Query("limit") recordsToPull: Int
   ): Single<PatientPullResponse>
 
   @GET("$version/patients/sync")

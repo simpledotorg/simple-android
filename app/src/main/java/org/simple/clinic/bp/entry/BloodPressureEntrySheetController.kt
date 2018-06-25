@@ -17,7 +17,23 @@ class BloodPressureEntrySheetController @Inject constructor(val repository: Bloo
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay(1).refCount()
 
-    return Observable.mergeArray(handleImeOptionClicks(replayedEvents))
+    return Observable.merge(
+        handleImeOptionClicks(replayedEvents),
+        systolicTextChanges(replayedEvents))
+  }
+
+  private fun systolicTextChanges(events: Observable<UiEvent>): Observable<UiChange> {
+    // TODO: This needs unit tests
+    return events
+        .ofType<BloodPressureSystolicTextChanged>()
+        .distinctUntilChanged()
+        .filter { shouldFocusDiastolic(it.systolic) }
+        .map { { ui: Ui -> ui.changeFocusToDiastolic() } }
+  }
+
+  private fun shouldFocusDiastolic(systolicText: String): Boolean {
+    return (systolicText.length == 3 && systolicText.matches("^[12].*$".toRegex()))
+        || (systolicText.length == 2 && systolicText.matches("^[3-9].*$".toRegex()))
   }
 
   private fun handleImeOptionClicks(events: Observable<UiEvent>): Observable<UiChange> {

@@ -30,6 +30,16 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<Any>()
 
+  companion object {
+    private const val KEY_PATIENT_UUID = "patientUuid"
+
+    fun intent(context: Context, patientUuid: UUID): Intent {
+      val intent = Intent(context, BloodPressureEntrySheet::class.java)
+      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
+      return intent
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_blood_pressure_entry)
@@ -41,12 +51,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       }
     }
 
-    Observable
-        .mergeArray(
-            sheetCreates(),
-            systolicTextChanges(),
-            diastolicTextChanges(),
-            diastolicImeOptionClicks())
+    Observable.merge(
+        sheetCreates(),
+        systolicTextChanges(),
+        diastolicTextChanges(),
+        diastolicImeOptionClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -80,13 +89,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .map { BloodPressureSaveClicked() }
   }
 
-  companion object {
-    private const val KEY_PATIENT_UUID = "patientUuid"
-
-    fun intent(context: Context, patientUuid: UUID): Intent {
-      val intent = Intent(context, BloodPressureEntrySheet::class.java)
-      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
-      return intent
-    }
+  fun changeFocusToDiastolic() {
+    diastolicEditText.requestFocus()
   }
 }

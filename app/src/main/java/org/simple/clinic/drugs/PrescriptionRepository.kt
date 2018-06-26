@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
@@ -13,6 +14,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
+@AppScope
 class PrescriptionRepository @Inject constructor(
     private val dao: PrescribedDrug.RoomDao,
     private val facilityRepository: FacilityRepository

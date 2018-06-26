@@ -27,6 +27,7 @@ class UserSessionAndroidTest {
         .andThen(userSession.login())
         .blockingGet()
 
+    // verify shared prefs object
     assertThat(lawgon is LoginResult.Success)
   }
 

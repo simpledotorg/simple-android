@@ -43,7 +43,7 @@ class PrescriptionSync @Inject constructor(
         }
 
     val networkCall = cachedPendingSyncPrescriptions
-        .map { patients -> patients.map { it.toPayload() } }
+        .map { prescriptions -> prescriptions.map { it.toPayload() } }
         .map(::PrescriptionPushRequest)
         .flatMapSingle { request -> api.push(request) }
         .doOnNext { response -> logValidationErrorsIfAny(response) }

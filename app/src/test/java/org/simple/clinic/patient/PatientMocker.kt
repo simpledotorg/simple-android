@@ -65,13 +65,23 @@ object PatientMocker {
 
   fun facility(
       uuid: UUID = mock(),
+      name: String = "some facility",
       district: String = "district",
       state: String = "state"
   ): Facility {
     return Facility(
         uuid = uuid,
+        name = name,
         district = district,
-        state = state)
+        state = state,
+        facilityType = null,
+        streetAddress = null,
+        villageOrColony = null,
+        country = "India",
+        pinCode = null,
+        createdAt = mock(),
+        updatedAt = mock(),
+        syncStatus = mock())
   }
 
   fun prescription(

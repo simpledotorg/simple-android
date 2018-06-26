@@ -1,9 +1,11 @@
 package org.simple.clinic.protocol
 
 import io.reactivex.Observable
+import org.simple.clinic.di.AppScope
 import java.util.UUID
 import javax.inject.Inject
 
+@AppScope
 class ProtocolRepository @Inject constructor() {
 
   fun currentProtocol(): Observable<Protocol> {

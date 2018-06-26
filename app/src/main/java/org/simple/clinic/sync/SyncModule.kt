@@ -6,11 +6,12 @@ import io.reactivex.Single
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.bp.BloodPressureModule
 import org.simple.clinic.drugs.PrescriptionModule
+import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.threeten.bp.Duration
 import retrofit2.Retrofit
 
-@Module(includes = [PatientSyncModule::class, BloodPressureModule::class, PrescriptionModule::class])
+@Module(includes = [PatientSyncModule::class, BloodPressureModule::class, PrescriptionModule::class, FacilityModule::class])
 open class SyncModule {
 
   @Provides

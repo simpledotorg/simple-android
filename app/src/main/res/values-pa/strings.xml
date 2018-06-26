@@ -57,4 +57,5 @@
     <string name="customprescription_delete_message">ਕੀ ਤੁਸੀਂ ਸੁਨਿਸ਼ਚਿਤ ਹੋ ਕਿ ਤੁਸੀਂ ਦਵਾਈ ਕੱਟਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
     <string name="customprescription_delete_confirm">ਹਾਂ</string>
     <string name="customprescription_delete_cancel">ਨਹੀਂ</string>
+    <string name="patientsummary_prescriptions_add">"ਨਵੀਂ ਦਵਾਈ "</string>
 </resources>

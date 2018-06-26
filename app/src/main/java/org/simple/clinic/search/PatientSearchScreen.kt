@@ -117,8 +117,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     resultsAdapter.updateAndNotifyChanges(patients)
   }
 
-  fun openAgeFilterSheet() {
-    activity.startActivityForResult(PatientSearchAgeFilterSheet.intent(context), REQCODE_AGE)
+  fun openAgeFilterSheet(ageText: String) {
+    activity.startActivityForResult(PatientSearchAgeFilterSheet.intent(context, ageText), REQCODE_AGE)
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

@@ -11,6 +11,7 @@ import android.widget.EditText
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
+import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
 class PatientSearchAgeFilterSheet : AppCompatActivity() {
@@ -27,6 +28,9 @@ class PatientSearchAgeFilterSheet : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_search_age_filter)
     TheActivity.component.inject(this)
+
+    val ageText = intent.extras.getString(EXTRA_AGE)
+    ageEditText.setTextAndCursor(ageText)
 
     applyButton.setOnClickListener {
       val intent = Intent()
@@ -54,8 +58,9 @@ class PatientSearchAgeFilterSheet : AppCompatActivity() {
       return data.getParcelableExtra(EXTRA_AGE)
     }
 
-    fun intent(context: Context): Intent {
+    fun intent(context: Context, ageText: String): Intent {
       return Intent(context, PatientSearchAgeFilterSheet::class.java)
+        .putExtra(EXTRA_AGE, ageText)
     }
   }
 }

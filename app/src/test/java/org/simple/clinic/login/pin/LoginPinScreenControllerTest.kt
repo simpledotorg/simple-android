@@ -77,16 +77,13 @@ class LoginPinScreenControllerTest {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login())
         .thenReturn(Single.just(LoginResult.NetworkError()))
-        .thenReturn(Single.just(LoginResult.ServerError("Earth dead")))
-        .thenReturn(Single.just(LoginResult.UnexpectedError()))
+        .thenReturn(Single.just(LoginResult.ServerError()))
 
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(PinSubmitClicked())
     uiEvents.onNext(PinSubmitClicked())
-    uiEvents.onNext(PinSubmitClicked())
 
     verify(screen).showNetworkError()
-    verify(screen).showServerError("Earth dead")
-    verify(screen).showUnexpectedError()
+    verify(screen).showServerError()
   }
 }

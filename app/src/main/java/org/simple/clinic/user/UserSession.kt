@@ -14,11 +14,13 @@ import org.simple.clinic.util.Optional
 import retrofit2.Response
 import java.io.IOException
 import javax.inject.Inject
+import javax.inject.Named
 
 @AppScope
 class UserSession @Inject constructor(
     private val api: LoginApiV1,
-    private val loggedInUserPreference: Preference<Optional<LoggedInUser>>
+    private val loggedInUserPreference: Preference<Optional<LoggedInUser>>,
+    @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
   private lateinit var ongoingLoginEntry: OngoingLoginEntry
@@ -44,11 +46,12 @@ class UserSession @Inject constructor(
     return when {
       response.isSuccessful -> storeUserAndReturnSuccess(response)
       response is IOException -> LoginResult.NetworkError()
-      else -> LoginResult.UnexpectedError()
+      else -> LoginResult.ServerError()
     }
   }
 
   private fun storeUserAndReturnSuccess(response: Response<LoginResponse>): LoginResult {
+    accessTokenPreference.set(Just(response.body()!!.accessToken))
     loggedInUserPreference.set(Just(response.body()!!.loggedInUser))
     return LoginResult.Success()
   }

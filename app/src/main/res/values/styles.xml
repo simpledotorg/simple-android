@@ -80,8 +80,8 @@
     <item name="android:layout_height">2dp</item>
   </style>
 
-  <style name="Clinic.BloodPressureSheet">
+  <style name="Clinic.BottomSheet">
     <item name="android:backgroundDimEnabled">true</item>
-    <item name="android:background">#80000000</item>
+    <item name="android:background">#1e000000</item>
   </style>
 </resources>

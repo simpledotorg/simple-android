@@ -53,7 +53,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
     if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
-          .recentlyUpdated100Records()
+          .search(dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
     }
 

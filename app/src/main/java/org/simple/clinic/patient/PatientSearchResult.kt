@@ -74,6 +74,12 @@ data class PatientSearchResult(
       """)
     fun search(query: String, dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>
 
+    @Query("""$mainQuery
+      WHERE ((P.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound)
+             OR (P.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
+      """)
+    fun search(dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>
+
     @Query("$mainQuery ORDER BY P.updatedAt DESC LIMIT 100")
     fun recentlyUpdated100Records(): Flowable<List<PatientSearchResult>>
 

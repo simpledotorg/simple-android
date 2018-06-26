@@ -28,6 +28,20 @@ class LoginModule {
   }
 
   @Provides
+  @Named("preference_access_token")
+  fun accessTokenForLoggedInUser(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
+    return rxSharedPrefs.getObject("access_token", None, OptionalRxPreferencesConverter(object : Preference.Converter<String> {
+      override fun deserialize(serialized: String): String {
+        return serialized
+      }
+
+      override fun serialize(value: String): String {
+        return value
+      }
+    }))
+  }
+
+  @Provides
   @Named("jsonadapter_loggedinuser")
   fun loggedInUserJsonAdapter(moshi: Moshi): JsonAdapter<LoggedInUser> {
     return moshi.adapter(LoggedInUser::class.java)

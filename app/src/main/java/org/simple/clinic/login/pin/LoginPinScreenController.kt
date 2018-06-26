@@ -57,8 +57,7 @@ class LoginPinScreenController @Inject constructor(
                 when (it) {
                   is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
                   is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-                  is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.errorMessage) }
-                  is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
+                  is LoginResult.ServerError -> { ui: Ui -> ui.showServerError() }
                 }
               }
 

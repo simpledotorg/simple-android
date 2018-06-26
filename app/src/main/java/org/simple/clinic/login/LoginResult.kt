@@ -6,7 +6,5 @@ sealed class LoginResult {
 
   class NetworkError : LoginResult()
 
-  data class ServerError(val errorMessage: String) : LoginResult()
-
-  class UnexpectedError : LoginResult()
+  class ServerError : LoginResult()
 }

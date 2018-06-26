@@ -57,4 +57,5 @@
     <string name="customprescription_delete_cancel">नहीं</string>
     <string name="customprescription_delete_confirm">हाँ</string>
     <string name="patientsearch_go_back">होम स्क्रीन पर वापस जाओ</string>
+    <string name="patientsummary_prescriptions_add">"नई दवा "</string>
 </resources>

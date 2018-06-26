@@ -36,11 +36,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
-  fun showServerError(errorMessage: String) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
-
-  fun showUnexpectedError() {
+  fun showServerError() {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 

@@ -38,6 +38,8 @@ data class SummaryPrescribedDrugsItem(
       else -> View.VISIBLE
     }
 
+    holder.setButtonText(prescriptions)
+
     if (prescriptions.isNotEmpty()) {
       prescriptions.forEach { drug ->
         val drugViewHolder = holder.inflateRowForDrug()
@@ -65,11 +67,22 @@ data class SummaryPrescribedDrugsItem(
     val drugsSummaryContainer by bindView<ViewGroup>(R.id.patientsummary_prescriptions_container)
     val lastUpdatedTimestampTextView by bindView<TextView>(R.id.patientsummary_prescriptions_last_updated_timestamp)
     val updateButton by bindView<Button>(R.id.patientsummary_prescriptions_update)
+    val addOrUpdatePrescriptionButtonTextView by bindView<TextView>(R.id.patientsummary_prescriptions_update_text_view)
 
     fun inflateRowForDrug(): DrugViewHolder {
       val drugViewHolder = DrugViewHolder.create(drugsSummaryContainer)
       drugsSummaryContainer.addView(drugViewHolder.itemView, drugsSummaryContainer.childCount - 1)
       return drugViewHolder
+    }
+
+    fun setButtonText(prescriptions: List<PrescribedDrug>): Unit {
+      addOrUpdatePrescriptionButtonTextView.text =
+        if ( prescriptions.isEmpty() ) {
+          itemView.context.getString(R.string.patientsummary_prescriptions_add)
+        }
+        else {
+          itemView.context.getString(R.string.patientsummary_prescriptions_update)
+        }
     }
   }
 

@@ -30,6 +30,6 @@ open class BloodPressureModule {
   @Provides
   @Named("last_bp_pull_timestamp")
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
-    return rxSharedPrefs.getObject("last_patient_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
+    return rxSharedPrefs.getObject("last_bp_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }
 }

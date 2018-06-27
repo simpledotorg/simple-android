@@ -35,11 +35,11 @@ class UserSessionAndroidTest {
   @Test
   fun whenCorrectLoginParametersAreGiven_LoginShouldHappen_AndSessionDataShouldBePersisted() {
     val lawgon = userSession
-        .saveOngoingLoginEntry(OngoingLoginEntry(otp = "0000", phoneNumber = "0000", pin = "0000"))
+        .saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
         .andThen(userSession.login())
         .blockingGet()
 
-    assertThat(lawgon is LoginResult.Success)
+    assertThat(lawgon).isInstanceOf(LoginResult.Success::class.java)
     assertThat(loggedInUser.isSet).isTrue()
     assertThat(accessToken.isSet).isTrue()
     assertThat(loggedInUser.get().toNullable()!!.facilityUuid).isEqualTo(UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977"))
@@ -49,18 +49,17 @@ class UserSessionAndroidTest {
   @Test
   fun whenIncorrectLoginParamteresAreGiven_LoginShouldFail() {
     val lawgon = userSession
-        .saveOngoingLoginEntry(OngoingLoginEntry(otp = "123", phoneNumber = "9999", pin = "0000"))
+        .saveOngoingLoginEntry(OngoingLoginEntry("8721", "9919299", "0102"))
         .andThen(userSession.login())
         .blockingGet()
 
-    assertThat(lawgon is LoginResult.ServerError)
+    assertThat(lawgon).isInstanceOf(LoginResult.ServerError::class.java)
     assertThat(loggedInUser.isSet).isFalse()
     assertThat(accessToken.isSet).isFalse()
   }
 
   @After
   fun tearDown() {
-    loggedInUser.delete()
-    accessToken.delete()
+    userSession.logout()
   }
 }

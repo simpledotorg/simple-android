@@ -5,7 +5,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toCompletable
-import io.reactivex.schedulers.Schedulers.single
+import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SyncConfig
@@ -81,7 +81,7 @@ class PatientSync @Inject constructor(
               }
               .flatMap { response ->
                 repository.mergeWithLocalData(response.patients)
-                    .observeOn(single())
+                    .observeOn(Schedulers.single())
                     .andThen({ lastPullTimestamp.set(Just(response.processedSinceTimestamp)) }.toCompletable())
                     .andThen(Observable.just(response))
               }

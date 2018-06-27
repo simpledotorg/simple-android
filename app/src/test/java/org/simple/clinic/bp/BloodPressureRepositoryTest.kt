@@ -37,12 +37,10 @@ class BloodPressureRepositoryTest {
 
   @Test
   fun `when saving a measurement, correctly get IDs for the current user and facility`() {
+    val aUuid = UUID.randomUUID()
+    val loggedInUser = Just(LoggedInUser(aUuid, "a name", "a phone", "a hash", mock(), mock(), mock()))
 
-    // TODO: Uncomment this once user login works for real! Make user login call before running tests!
-//    val aUuid = UUID.randomUUID()
-//    val loggedInUser = Just(LoggedInUser(aUuid, "a name", "a phone", "a hash", mock(), mock(), mock()))
-
-    whenever(loggedInUserRxPref.asObservable()).thenReturn(Observable.just(Just(dummyUserForBpTests())))
+    whenever(loggedInUserRxPref.asObservable()).thenReturn(Observable.just(loggedInUser))
 
     val facility = PatientMocker.facility()
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
@@ -56,9 +54,7 @@ class BloodPressureRepositoryTest {
       assertThat(it.first().facilityUuid).isEqualTo(facility.uuid)
       assertThat(it.first().patientUuid).isEqualTo(patientUuid)
 
-      // TODO: Uncomment this once user login works for real! Make user login call before running tests!
-//      assertThat(it.first().userUuid).isEqualTo(aUuid)
-      assertThat(it.first().userUuid).isEqualTo(dummyUserForBpTests().uuid)
+      assertThat(it.first().userUuid).isEqualTo(aUuid)
     })
   }
 

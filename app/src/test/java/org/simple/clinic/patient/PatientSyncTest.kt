@@ -91,7 +91,7 @@ class PatientSyncTest {
         .await()
         .assertError(AssertionError::class.java)
 
-    verify(api, never()).pull(recordsToPull = any())
+    verify(api, never()).pull(any(), any())
     verify(api).push(any())
   }
 

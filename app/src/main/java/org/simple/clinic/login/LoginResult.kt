@@ -7,4 +7,6 @@ sealed class LoginResult {
   class NetworkError : LoginResult()
 
   class ServerError : LoginResult()
+
+  class UnexpectedError : LoginResult()
 }

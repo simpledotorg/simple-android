@@ -13,8 +13,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -35,6 +37,9 @@ class PatientSyncAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
   @field:[Named("last_patient_pull_timestamp")]
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
@@ -48,6 +53,11 @@ class PatientSyncAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+
+    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+        .andThen(userSession.login())
+        .blockingGet()
+    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyPatients(count: Int): Completable {
@@ -109,8 +119,7 @@ class PatientSyncAndroidTest {
 
   @Test
   fun when_pulling_patients_then_paginate_till_the_server_does_not_have_anymore_patients() {
-    // Set lastPullTimestamp to a bit in the past.
-    lastPullTimestamp.set(Just(Instant.now().minusSeconds(1)))
+    lastPullTimestamp.set(Just(Instant.now().minusMillis(100)))
 
     val patientsToInsert = 2 * configProvider.blockingGet().batchSize + 7
 
@@ -128,5 +137,7 @@ class PatientSyncAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
+    lastPullTimestamp.delete()
+    userSession.logout()
   }
 }

@@ -78,12 +78,15 @@ class LoginPinScreenControllerTest {
     whenever(userSession.login())
         .thenReturn(Single.just(LoginResult.NetworkError()))
         .thenReturn(Single.just(LoginResult.ServerError()))
+        .thenReturn(Single.just(LoginResult.UnexpectedError()))
 
     uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(PinSubmitClicked())
     uiEvents.onNext(PinSubmitClicked())
     uiEvents.onNext(PinSubmitClicked())
 
     verify(screen).showNetworkError()
     verify(screen).showServerError()
+    verify(screen).showUnexpectedError()
   }
 }

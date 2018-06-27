@@ -19,15 +19,9 @@ interface BloodPressureSyncApiV1 {
       @Body body: BloodPressurePushRequest
   ): Single<DataPushResponse>
 
-  // TODO: Remove this function, and reuse other pull function with nullable lastPullTimestamp
-  @GET("$version/blood_pressures/sync")
-  fun pull(
-      @Query("limit") recordsToPull: Int
-  ): Single<BloodPressurePullResponse>
-
   @GET("$version/blood_pressures/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullTimestamp: Instant
+      @Query("processed_since") lastPullTimestamp: Instant? = null
   ): Single<BloodPressurePullResponse>
 }

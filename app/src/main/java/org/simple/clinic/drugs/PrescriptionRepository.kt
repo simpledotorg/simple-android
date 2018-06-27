@@ -97,9 +97,7 @@ class PrescriptionRepository @Inject constructor(
   }
 
   fun prescriptionCount(): Single<Int> {
-    return dao
-        .count()
-        .firstOrError()
+    return dao.count().firstOrError()
   }
 
   fun newestPrescriptionsForPatient(patientUuid: UUID): Observable<List<PrescribedDrug>> {

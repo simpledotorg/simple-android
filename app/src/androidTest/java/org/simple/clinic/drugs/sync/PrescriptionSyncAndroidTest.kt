@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.sync
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
+import io.bloco.faker.Faker
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -13,11 +14,19 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.login.LoginResult
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,26 +41,81 @@ class PrescriptionSyncAndroidTest {
   lateinit var repository: PrescriptionRepository
 
   @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
   lateinit var database: AppDatabase
 
   @Inject
-  @field:[Named("last_bp_pull_timestamp")]
+  @field:[Named("last_prescription_pull_timestamp")]
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject
   lateinit var prescriptionSync: PrescriptionSync
 
+  private val faker = Faker()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+
+    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+        .andThen(userSession.login())
+        .blockingGet()
+    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyPrescriptions(count: Int): Completable {
-    val parentPatientUuid = UUID.randomUUID()
+    val facilityUUID = TestClinicApp.qaUserFacilityUUID()
+    database.facilityDao().save(listOf(
+        Facility(
+            facilityUUID,
+            faker.company.name(),
+            null,
+            null,
+            null,
+            faker.address.city(),
+            faker.address.state(),
+            "India",
+            null,
+            Instant.now(),
+            Instant.now(),
+            SyncStatus.DONE
+        )
+    ))
+
+    val addressUuid = UUID.randomUUID()
+    database.addressDao().save(
+        PatientAddress(
+            addressUuid,
+            null,
+            faker.address.city(),
+            faker.address.state(),
+            "India",
+            Instant.now(),
+            Instant.now()
+        )
+    )
+
+    val patientUuid = UUID.randomUUID()
+    database.patientDao().save(
+        Patient(
+            patientUuid,
+            addressUuid,
+            faker.name.name(),
+            Gender.FEMALE,
+            LocalDate.parse("1947-08-15"),
+            null,
+            PatientStatus.ACTIVE,
+            Instant.now(),
+            Instant.now(),
+            SyncStatus.DONE
+        ))
+
     return Observable.range(0, count)
         .flatMapCompletable { index ->
           repository.savePrescription(
-              parentPatientUuid,
+              patientUuid,
               name = "Drug #$index",
               dosage = "1${index}mg",
               rxNormCode = "rx-norm-code-$index",
@@ -75,13 +139,13 @@ class PrescriptionSyncAndroidTest {
 
   @Test
   fun when_pulling_prescriptions_then_paginate_till_the_server_does_not_have_anymore_prescriptions() {
-    lastPullTimestamp.set(Just(Instant.now().minusSeconds(1)))
+    lastPullTimestamp.set(Just(Instant.now().minusMillis(100)))
 
     val prescriptionsToInsert = 2 * configProvider.blockingGet().batchSize + 7
+    insertDummyPrescriptions(count = prescriptionsToInsert).blockingAwait()
 
-    insertDummyPrescriptions(count = prescriptionsToInsert)
-        .andThen(prescriptionSync.push())
-        .andThen(Completable.fromAction { database.clearAllTables() })
+    prescriptionSync.push()
+        .andThen(Completable.fromAction { database.prescriptionDao().clearData() })
         .blockingAwait()
 
     prescriptionSync.pull().blockingAwait()
@@ -93,5 +157,7 @@ class PrescriptionSyncAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
+    lastPullTimestamp.delete()
+    userSession.logout()
   }
 }

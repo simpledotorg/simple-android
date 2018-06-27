@@ -90,7 +90,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   private fun savePatient(patient: Patient): Completable {
-    return Completable.fromAction({ database.patientDao().save(patient) })
+    return Completable.fromAction { database.patientDao().save(patient) }
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

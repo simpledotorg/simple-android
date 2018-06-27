@@ -17,16 +17,6 @@ import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
-fun dummyUserForBpTests() = LoggedInUser(
-    // TODO: Uncomment this once user login works for real! Make user login call before running tests!
-    UUID.fromString("e814c463-3ad7-4e9c-868c-1bbb66cd6bff"),
-    "abc",
-    "231",
-    "24c4z;",
-    UUID.randomUUID(),
-    Instant.now(),
-    Instant.now())
-
 @AppScope
 class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
@@ -39,13 +29,10 @@ class BloodPressureRepository @Inject constructor(
       throw AssertionError("Cannot have negative BP readings.")
     }
 
-    // TODO: Remove this once user login works fine! BP Android tests will fail without this!
-    val loggedInUser = Observable.just(dummyUserForBpTests())
-
-    // TODO: Uncomment this once user login works for real! Make user login call before running BP Android tests!
-//    val loggedInUser = loggedInUserPref
-//        .asObservable()
-//        .map { it.toNullable() }
+    val loggedInUser = loggedInUserPref
+        .asObservable()
+        .map { it.toNullable() }
+        .take(1)
 
     val currentFacility = facilityRepository
         .currentFacility()
@@ -106,10 +93,9 @@ class BloodPressureRepository @Inject constructor(
     return dao.count().firstOrError()
   }
 
-  // TODO: rename to newest100MeasurementsForPatient()
-  fun recentMeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
+  fun newest100MeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
     return dao
-        .forPatient(patientUuid)
+        .newest100ForPatient(patientUuid)
         .toObservable()
   }
 }

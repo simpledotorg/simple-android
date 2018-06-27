@@ -19,15 +19,9 @@ interface PrescriptionSyncApiV1 {
       @Body body: PrescriptionPushRequest
   ): Single<DataPushResponse>
 
-  // TODO: Remove this function, and reuse other pull function with nullable lastPullTimestamp
-  @GET("$version/prescription_drugs/sync")
-  fun pull(
-      @Query("limit") recordsToPull: Int
-  ): Single<PrescriptionPullResponse>
-
   @GET("$version/prescription_drugs/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullTimestamp: Instant
+      @Query("processed_since") lastPullTimestamp: Instant? = null
   ): Single<PrescriptionPullResponse>
 }

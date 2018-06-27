@@ -9,6 +9,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.login.LoginResult
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -25,6 +27,9 @@ class FacilitySyncAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
   @field:[Named("last_facility_pull_timestamp")]
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
@@ -34,6 +39,11 @@ class FacilitySyncAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+
+    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+        .andThen(userSession.login())
+        .blockingGet()
+    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   @Test
@@ -45,12 +55,13 @@ class FacilitySyncAndroidTest {
         .assertNoErrors()
 
     val count = database.facilityDao().count().blockingFirst()
-    assertThat(count == 7)
+    assertThat(count).isEqualTo(7)
   }
 
   @After
   fun tearDown() {
     database.clearAllTables()
+    lastPullTimestamp.delete()
+    userSession.logout()
   }
-
 }

@@ -11,4 +11,5 @@
   <!-- JCABI xml parser references a java package that is not bundled
        with Android. We haven't run into errors yet, but we might.  -->
   <issue id="InvalidPackage" severity="informational" />
+  <issue id="MissingTranslation" severity="informational" />
 </lint>

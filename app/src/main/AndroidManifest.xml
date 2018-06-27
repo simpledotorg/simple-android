@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="org.simple.clinic">
+<manifest package="org.simple.clinic"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
 
   <uses-permission android:name="android.permission.CAMERA" />
   <uses-permission android:name="android.permission.VIBRATE" />
@@ -9,10 +9,10 @@
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
   <application
+    android:name=".ReleaseClinicApp"
     android:allowBackup="true"
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
-    android:name=".ReleaseClinicApp"
     android:supportsRtl="true"
     android:theme="@style/ClinicTheme"
     tools:ignore="AllowBackup,GoogleAppIndexingWarning">
@@ -41,5 +41,21 @@
       android:name=".bp.entry.BloodPressureEntrySheet"
       android:theme="@style/ClinicTheme.DialogLikeActivity"
       android:windowSoftInputMode="adjustResize" />
+
+    <activity
+      android:name=".deeplink.DeepLinkActivity"
+      android:theme="@android:style/Theme.NoDisplay">
+      <intent-filter>
+        <action android:name="android.intent.action.VIEW" />
+
+        <category android:name="android.intent.category.DEFAULT" />
+        <category android:name="android.intent.category.BROWSABLE" />
+
+        <data
+          android:host="simple.org"
+          android:pathPattern="/register"
+          android:scheme="https" />
+      </intent-filter>
+    </activity>
   </application>
 </manifest>

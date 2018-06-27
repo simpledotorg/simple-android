@@ -7,6 +7,10 @@ import org.simple.clinic.TheActivity
 
 class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
+  companion object {
+    val KEY: (otp: String) -> LoginPhoneScreenKey = ::LoginPhoneScreenKey
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {

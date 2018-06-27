@@ -8,14 +8,14 @@
     <string name="patientsearch_name_or_phone">रोगी का नाम या फोन नंबर</string>
     <string name="patientsearch_age">आयु %s</string>
     <string name="patientsearch_label_age">आयु</string>
-    <string name="patientsearch_filter_by">"द्वारा चयनित करें "</string>
-    <string name="agefilter_apply_filter">चयन करें</string>
+    <string name="patientsearch_filter_by">द्वारा चुनें</string>
+    <string name="agefilter_apply_filter">चुनें</string>
     <string name="agefilter_enter_age">रोगी की आयु  भरें</string>
-    <string name="agefilter_reset_filter">चयन प्रक्रिया दुबारा सैट करें</string>
+    <string name="agefilter_reset_filter">चयन हटाएं</string>
     <string name="patiententry_contentdescription_up_button">खोज पर वापस जाओ</string>
     <string name="patiententry_full_name">रोगी का नाम</string>
     <string name="patiententry_phone_number">रोगी का फोन नंबर</string>
-    <string name="patiententry_none">कोई नहीं</string>
+    <string name="patiententry_none">कुछ नहीं</string>
     <string name="patiententry_date_of_birth_unfocused">जन्म-तिथि</string>
     <string name="patiententry_date_of_birth_focused">दिनांक / महीना / वर्ष</string>
     <string name="patiententry_dateofbirth_and_age_separator">या</string>
@@ -26,10 +26,10 @@
     <string name="patiententry_colony_or_village">कॉलोनी या गांव</string>
     <string name="patiententry_district">जिला</string>
     <string name="patiententry_state">राज्य</string>
-    <string name="patiententry_save_patient">रोगी की जानकारी संरक्षित करें</string>
+    <string name="patiententry_save_patient">रोगी की जानकारी सहेजें</string>
     <string name="home_scan_patient_aadhaar">रोगी के आधार को स्कैन करें</string>
     <string name="home_search_patient_name_phone">रोगी का नाम या फोन नंबर भरें</string>
-    <string name="bloodpressureentry_sheet_title">बी. पी.  दर्ज करें</string>
+    <string name="bloodpressureentry_sheet_title">बी. पी. दर्ज करें</string>
     <string name="bloodpressureentry_systolic">सिस्टोलिक</string>
     <string name="bloodpressureentry_diastolic">डायस्टोलिक</string>
     <string name="bloodpressureentry_input_hint">•••</string>
@@ -49,7 +49,7 @@
     <string name="patient_prescribeddrugs_add_custom_prescription">अन्य दवा जोड़ें</string>
     <string name="prescribeddrug_delete_custom_drug">दवा हटाएं</string>
     <string name="customprescription_enter_medicine">दवा दर्ज करें</string>
-    <string name="customprescription_save_drug">संरक्षित करें</string>
+    <string name="customprescription_save_drug">दवा सहेजें</string>
     <string name="customprescription_drug_dosage_hint">मात्रा</string>
     <string name="customprescription_drug_name_hint">दवा का नाम</string>
     <string name="customprescription_delete_title">दवा हटाएं</string>
@@ -57,5 +57,5 @@
     <string name="customprescription_delete_cancel">नहीं</string>
     <string name="customprescription_delete_confirm">हाँ</string>
     <string name="patientsearch_go_back">होम स्क्रीन पर वापस जाओ</string>
-    <string name="patientsummary_prescriptions_add">"नई दवा "</string>
+    <string name="patientsummary_prescriptions_add">नई दवा</string>
 </resources>

@@ -145,7 +145,7 @@ class PatientSummaryScreenController @Inject constructor(
     return events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.caller }
-        .map { caller -> caller == NEW_PATIENT }
+        .map { caller -> caller == NEW_PATIENT || caller == SEARCH }
         .map { showDone -> { ui: Ui -> ui.setDoneButtonVisible(showDone) } }
   }
 }

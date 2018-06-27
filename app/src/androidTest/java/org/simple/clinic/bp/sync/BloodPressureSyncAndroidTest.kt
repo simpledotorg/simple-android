@@ -3,6 +3,7 @@ package org.simple.clinic.bp.sync
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
+import io.bloco.faker.Faker
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -13,11 +14,19 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.login.LoginResult
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -32,6 +41,9 @@ class BloodPressureSyncAndroidTest {
   lateinit var repository: BloodPressureRepository
 
   @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
   lateinit var database: AppDatabase
 
   @Inject
@@ -41,24 +53,76 @@ class BloodPressureSyncAndroidTest {
   @Inject
   lateinit var bpSync: BloodPressureSync
 
+  private val faker = Faker()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+
+    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+        .andThen(userSession.login())
+        .blockingGet()
+    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyMeasurements(count: Int): Completable {
-    val parentPatientUuid = UUID.randomUUID()
+    val facilityUUID = TestClinicApp.qaUserFacilityUUID()
+    database.facilityDao().save(listOf(
+        Facility(
+            facilityUUID,
+            faker.company.name(),
+            null,
+            null,
+            null,
+            faker.address.city(),
+            faker.address.state(),
+            "India",
+            null,
+            Instant.now(),
+            Instant.now(),
+            SyncStatus.DONE
+        )
+    ))
+
+    val addressUuid = UUID.randomUUID()
+    database.addressDao().save(
+        PatientAddress(
+            addressUuid,
+            null,
+            faker.address.city(),
+            faker.address.state(),
+            "India",
+            Instant.now(),
+            Instant.now()
+        )
+    )
+
+    val patientUuid = UUID.randomUUID()
+    database.patientDao().save(
+        Patient(
+            patientUuid,
+            addressUuid,
+            faker.name.name(),
+            Gender.FEMALE,
+            LocalDate.parse("1947-08-15"),
+            null,
+            PatientStatus.ACTIVE,
+            Instant.now(),
+            Instant.now(),
+            SyncStatus.DONE
+        ))
+
     return Observable.range(0, count)
         .flatMapCompletable { index ->
-          repository.saveMeasurement(parentPatientUuid, systolic = 100 + index, diastolic = 50 + index)
+          repository.saveMeasurement(patientUuid, systolic = 100 + index, diastolic = 50 + index)
         }
   }
 
   @Test
   fun when_pending_sync_measurements_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
-    insertDummyMeasurements(count = 5).blockingAwait()
-
-    bpSync.push().blockingAwait()
+    insertDummyMeasurements(count = 5)
+        .andThen(bpSync.push())
+        .blockingAwait()
 
     repository.measurementsWithSyncStatus(SyncStatus.DONE)
         .test()
@@ -70,13 +134,13 @@ class BloodPressureSyncAndroidTest {
 
   @Test
   fun when_pulling_measurements_then_paginate_till_the_server_does_not_have_anymore_measurements() {
-    lastPullTimestamp.set(Just(Instant.now().minusSeconds(1)))
+    lastPullTimestamp.set(Just(Instant.now().minusMillis(100)))
 
     val measurementsToInsert = 2 * configProvider.blockingGet().batchSize + 7
 
     insertDummyMeasurements(count = measurementsToInsert)
         .andThen(bpSync.push())
-        .andThen(Completable.fromAction { database.clearAllTables() })
+        .andThen(Completable.fromAction { database.bloodPressureDao().clearData() })
         .blockingAwait()
 
     bpSync.pull().blockingAwait()
@@ -88,5 +152,7 @@ class BloodPressureSyncAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
+    lastPullTimestamp.delete()
+    userSession.logout()
   }
 }

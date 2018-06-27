@@ -40,6 +40,10 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }
 
+  fun showUnexpectedError() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
   fun openHomeScreen() {
     TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
   }

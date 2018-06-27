@@ -2,6 +2,7 @@ package org.simple.clinic
 
 import android.app.Application
 import android.arch.persistence.room.Room
+import com.tspoon.traceur.Traceur
 import io.reactivex.Single
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.AppComponent
@@ -11,7 +12,10 @@ import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.OngoingLoginEntry
 import org.threeten.bp.Duration
+import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -23,16 +27,28 @@ class TestClinicApp : ClinicApp() {
   @Inject
   lateinit var syncScheduler: SyncScheduler
 
-  override fun onCreate() {
-    super.onCreate()
-    appComponent().inject(this)
-    syncScheduler.cancelAll()
-  }
-
   companion object {
     fun appComponent(): TestAppComponent {
       return ClinicApp.appComponent as TestAppComponent
     }
+
+    fun qaOngoingLoginEntry(): OngoingLoginEntry {
+      return OngoingLoginEntry("0000", "0000", "0000")
+    }
+
+    fun qaUserFacilityUUID(): UUID {
+      return UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
+    }
+  }
+
+  override fun onCreate() {
+    super.onCreate()
+
+    Timber.plant(Timber.DebugTree())
+    Traceur.enableLogging()
+
+    appComponent().inject(this)
+    syncScheduler.cancelAll()
   }
 
   override fun buildDaggerGraph(): AppComponent {

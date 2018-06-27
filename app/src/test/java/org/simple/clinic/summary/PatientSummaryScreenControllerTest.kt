@@ -48,7 +48,7 @@ class PatientSummaryScreenControllerTest {
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.never())
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.never())
-    whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
   }
 
@@ -62,7 +62,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
-    whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
@@ -88,12 +88,12 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95),
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90))
-    whenever(bpRepository.recentMeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
     verify(screen).populateBloodPressureHistory(check {
-      it.forEachIndexed { i, item -> assertThat(item.measurement == bloodPressureMeasurements[i]) }
+      it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
     })
   }
 

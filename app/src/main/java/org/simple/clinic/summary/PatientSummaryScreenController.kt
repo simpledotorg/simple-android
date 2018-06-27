@@ -79,7 +79,7 @@ class PatientSummaryScreenController @Inject constructor(
     return events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
-        .flatMap { bpRepository.recentMeasurementsForPatient(it) }
+        .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
         .map { measurements ->
           measurements.map { measurement ->
             val timestamp = timestampGenerator.generate(measurement.updatedAt)

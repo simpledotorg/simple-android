@@ -18,15 +18,9 @@ interface PatientSyncApiV1 {
       @Body body: PatientPushRequest
   ): Single<DataPushResponse>
 
-  // TODO: Remove this function, and reuse other pull function with nullable lastPullTimestamp
-  @GET("$version/patients/sync")
-  fun pull(
-      @Query("limit") recordsToPull: Int
-  ): Single<PatientPullResponse>
-
   @GET("$version/patients/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullTimestamp: Instant
+      @Query("processed_since") lastPullTimestamp: Instant? = null
   ): Single<PatientPullResponse>
 }

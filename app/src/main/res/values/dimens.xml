@@ -7,6 +7,8 @@
   <dimen name="spacing_12">12dp</dimen>
   <dimen name="spacing_16">16dp</dimen>
   <dimen name="spacing_24">24dp</dimen>
+  <dimen name="spacing_32">32dp</dimen>
+  <dimen name="spacing_48">48dp</dimen>
 
   <dimen name="textsize_12">12sp</dimen>
   <dimen name="textsize_16">16sp</dimen>

@@ -2,11 +2,12 @@ package org.simple.clinic.home
 
 import android.content.Context
 import android.support.design.widget.TabLayout
-import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.widget.RelativeLayout
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.widgets.hideKeyboard
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -14,6 +15,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     val KEY = HomeScreenKey()
   }
 
+  private val rootLayout by bindView<ViewGroup>(R.id.home_root)
   private val viewPagerTabs by bindView<TabLayout>(R.id.home_viewpager_tabs)
 
   override fun onFinishInflate() {
@@ -27,5 +29,8 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       tab.text = tabTitle
       viewPagerTabs.addTab(tab)
     }
+
+    // Keyboard stays open after login finishes, not sure why.
+    rootLayout.hideKeyboard()
   }
 }

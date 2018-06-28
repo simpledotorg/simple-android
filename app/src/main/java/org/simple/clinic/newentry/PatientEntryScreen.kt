@@ -6,7 +6,6 @@ import android.support.transition.ChangeBounds
 import android.support.transition.Fade
 import android.support.transition.TransitionManager
 import android.support.transition.TransitionSet
-import android.support.v4.view.ViewCompat
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
@@ -16,7 +15,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
-import android.widget.ScrollView
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
@@ -62,9 +61,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   // TODO: Rename `up` to `back`.
   private val upButton by bindView<View>(R.id.patiententry_up)
-  private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollable_container)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
+  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patiententry_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
+  private val phoneNumberInputLayout by bindView<TextInputLayout>(R.id.patiententry_phone_number_inputlayout)
   private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patiententry_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
@@ -73,10 +73,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val ageEditTextContainer by bindView<ViewGroup>(R.id.patiententry_age_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patiententry_dateofbirth_and_age_separator)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
+  private val genderErrorTextView by bindView<TextView>(R.id.patiententry_gender_validation_error)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
+  private val colonyOrVillageInputLayout by bindView<TextInputLayout>(R.id.patiententry_colony_or_village_inputlayout)
   private val noColonyOrVillageCheckBox by bindView<CheckBox>(R.id.patiententry_colony_or_village_none)
   private val districtEditText by bindView<EditText>(R.id.patiententry_district)
+  private val districtInputLayout by bindView<TextInputLayout>(R.id.patiententry_district_inputlayout)
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
+  private val stateInputLayout by bindView<TextInputLayout>(R.id.patiententry_state_inputlayout)
   private val saveButton by bindView<View>(R.id.patiententry_save)
 
   override fun onFinishInflate() {
@@ -89,15 +93,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     fullNameEditText.showKeyboard()
     upButton.setOnClickListener { screenRouter.pop() }
 
-    // Save button is also disabled by the controller as soon as it starts emitting
-    // UiChanges, but by the time that happens, the save button is visible on the
-    // screen for a moment. Disabling it here solves the problem.
-    setSaveButtonEnabled(false)
-
     // Not sure why, but setting android:nextFocusDown in XML isn't working,
     // so doing this manually here.
     dateOfBirthEditText.imeOptions += EditorInfo.IME_ACTION_NEXT
-    dateOfBirthEditText.setOnEditorActionListener({ _, actionId, _ ->
+    dateOfBirthEditText.setOnEditorActionListener { _, actionId, _ ->
       // When date is empty, this will move focus to age field and colony field otherwise.
       if (!dateOfBirthEditText.text.isBlank() && actionId == EditorInfo.IME_ACTION_NEXT) {
         colonyOrVillageEditText.requestFocus()
@@ -105,7 +104,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       } else {
         false
       }
-    })
+    }
 
     Observable
         .mergeArray(
@@ -166,37 +165,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   fun setSaveButtonEnabled(enabled: Boolean) {
-    if (!ViewCompat.isLaidOut(saveButton)) {
-      saveButton.visibility = when (enabled) {
-        true -> View.VISIBLE
-        false -> View.INVISIBLE
-      }
-
-    } else {
-      if (enabled) {
-        saveButton.translationY = saveButton.height.toFloat()
-        saveButton.animate()
-            .translationY(0f)
-            .setInterpolator(FastOutSlowInInterpolator())
-            .withStartAction { saveButton.visibility = View.VISIBLE }
-            .start()
-
-      } else {
-        saveButton.animate()
-            .translationY(saveButton.height.toFloat())
-            .setInterpolator(FastOutSlowInInterpolator())
-            .start()
-      }
-    }
-
-    if (enabled) {
-      // The save button covers the district and state fields when it shows up.
-      // Force-scrolling to the bottom solves this problem. Not the best
-      // solution, but works for now.
-      if (colonyOrVillageEditText.isFocused || districtEditText.isFocused || stateEditText.isFocused) {
-        formScrollView.smoothScrollTo(0, formScrollView.height)
-      }
-    }
+    saveButton.isEnabled = enabled
   }
 
   fun openSummaryScreenForBpEntry(savedPatientUuid: UUID) {
@@ -271,6 +240,65 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
     if (!visible) {
       noColonyOrVillageCheckBox.isChecked = visible
+    }
+  }
+
+  fun showEmptyFullNameError(show: Boolean) {
+    if (show) {
+      fullNameInputLayout.error = resources.getString(R.string.patiententry_error_empty_fullname)
+    } else {
+      fullNameInputLayout.error = null
+    }
+  }
+
+  fun showEmptyPhoneNumberError(show: Boolean) {
+    if (show) {
+      phoneNumberInputLayout.error = resources.getString(R.string.patiententry_error_empty_phonenumber)
+    } else {
+      phoneNumberInputLayout.error = null
+    }
+  }
+
+  fun showMissingGenderError(show: Boolean) {
+    if (show) {
+      genderErrorTextView.visibility = View.VISIBLE
+    } else {
+      genderErrorTextView.visibility = View.GONE
+    }
+  }
+
+  fun showEmptyColonyOrVillageError(show: Boolean) {
+    colonyOrVillageInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_error_empty_colony_or_village)
+      else -> null
+    }
+  }
+
+  fun showEmptyDistrictError(show: Boolean) {
+    districtInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_error_empty_district)
+      else -> null
+    }
+  }
+
+  fun showEmptyStateError(show: Boolean) {
+    stateInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_error_state_empty)
+      else -> null
+    }
+  }
+
+  fun showEmptyDateOfBirthAndAgeError(show: Boolean) {
+    dateOfBirthInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_error_both_dateofbirth_and_age_empty)
+      else -> null
+    }
+  }
+
+  fun showInvalidDateOfBirthError(show: Boolean) {
+    dateOfBirthInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_error_invalid_dateofbirth)
+      else -> null
     }
   }
 }

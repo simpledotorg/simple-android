@@ -1,5 +1,8 @@
 package org.simple.clinic.patient
 
+import org.simple.clinic.newentry.DateOfBirthFormatValidator
+import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID
+
 /**
  * Represents loggedInUser input on the UI, which is why every field is a String.
  * Parsing of loggedInUser input happens later when this data class is converted
@@ -11,47 +14,68 @@ data class OngoingPatientEntry(
     val phoneNumber: PhoneNumber? = null
 ) {
 
-  fun validateForSaving(): ValidationResult {
-    val invalidResult: (message: String) -> ValidationResult = {
-      ValidationResult.Invalid(AssertionError(it))
-    }
+  enum class ValidationError {
+    PERSONAL_DETAILS_EMPTY,
+    FULL_NAME_EMPTY,
+    BOTH_DATEOFBIRTH_AND_AGE_ABSENT,
+    BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
+    INVALID_DATE_OF_BIRTH,
+    MISSING_GENDER,
+
+    PHONE_NUMBER_NON_NULL_BUT_BLANK,
+
+    EMPTY_ADDRESS_DETAILS,
+    COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK,
+    DISTRICT_EMPTY,
+    STATE_EMPTY
+  }
+
+  fun validationErrors(): ArrayList<ValidationError> {
+    val errors = ArrayList<ValidationError>()
 
     if (personalDetails == null) {
-      return invalidResult("Personal details cannot be empty")
-    }
-    if (address == null) {
-      return invalidResult("Address cannot be empty")
+      errors += ValidationError.PERSONAL_DETAILS_EMPTY
     }
 
-    with(personalDetails) {
+    personalDetails?.apply {
       if (dateOfBirth.isNullOrBlank() && age.isNullOrBlank()) {
-        return invalidResult("Both age and dateOfBirth cannot be null.")
-      }
-      if (dateOfBirth.isNullOrBlank() == age.isNullOrBlank()
-          || (dateOfBirth == null) == (age == null)) {
-        return invalidResult("Both age and dateOfBirth cannot be present.")
+        errors += ValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+
+      } else if (dateOfBirth?.isNotBlank() == true && age?.isNotBlank() == true) {
+        errors += ValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+
+      } else if (dateOfBirth != null && DateOfBirthFormatValidator.validate(dateOfBirth) == INVALID) {
+        errors += ValidationError.INVALID_DATE_OF_BIRTH
       }
       if (fullName.isBlank()) {
-        return invalidResult("Full name cannot be empty")
+        errors += ValidationError.FULL_NAME_EMPTY
       }
       if (gender == null) {
-        return invalidResult("Gender cannot be empty")
+        errors += ValidationError.MISSING_GENDER
       }
     }
 
-    with(address) {
+    if (phoneNumber != null && phoneNumber.number.isBlank()) {
+      errors += ValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
+    }
+
+    if (address == null) {
+      errors += ValidationError.EMPTY_ADDRESS_DETAILS
+    }
+
+    address?.apply {
       if (colonyOrVillage != null && colonyOrVillage.isBlank()) {
-        return invalidResult("Colony/district cannot be both non-null and blank")
+        errors += ValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
       }
       if (district.isBlank()) {
-        return invalidResult("Address district cannot be empty")
+        errors += ValidationError.DISTRICT_EMPTY
       }
       if (state.isBlank()) {
-        return invalidResult("Address state cannot be empty")
+        errors += ValidationError.STATE_EMPTY
       }
     }
 
-    return ValidationResult.Valid()
+    return errors
   }
 
   sealed class ValidationResult {

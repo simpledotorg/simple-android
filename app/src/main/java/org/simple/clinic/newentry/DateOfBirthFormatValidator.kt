@@ -3,9 +3,8 @@ package org.simple.clinic.newentry
 import org.simple.clinic.patient.PatientRepository
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeParseException
-import javax.inject.Inject
 
-class DateOfBirthFormatValidator @Inject constructor() {
+object DateOfBirthFormatValidator {
 
   enum class Result {
     VALID,

@@ -4,8 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.di.TheActivityComponent
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -13,6 +15,9 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.util.Optional
+import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {
 
@@ -26,7 +31,11 @@ class TheActivity : AppCompatActivity() {
     }
   }
 
+  @Inject
+  lateinit var loggedInUserPref: Preference<Optional<LoggedInUser>>
+
   lateinit var screenRouter: ScreenRouter
+
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
   override fun onPostCreate(savedInstanceState: Bundle?) {
@@ -54,7 +63,11 @@ class TheActivity : AppCompatActivity() {
   }
 
   private fun initialScreenKey(): FullScreenKey {
-    return HomeScreen.KEY
+    return if (loggedInUserPref.isSet) {
+      HomeScreen.KEY
+    } else {
+      LoginPhoneScreen.KEY("")
+    }
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

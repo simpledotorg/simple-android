@@ -7,3 +7,5 @@ data class PinTextChanged(val pin: String) : UiEvent
 class PinSubmitClicked : UiEvent
 
 class PinScreenCreated : UiEvent
+
+class PinBackClicked : UiEvent

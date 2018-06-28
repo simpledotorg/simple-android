@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.search.PatientSearchScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.search.PatientSearchScreen android:id="@+id/patientsearch_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/patientsearch_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
   <LinearLayout
     android:id="@+id/patientsearch_toolbar"
     android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:elevation="@dimen/elevation_toolbar"
     android:gravity="center_vertical"
@@ -18,9 +18,9 @@
       android:id="@+id/patientsearch_back"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:padding="@dimen/spacing_12"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsearch_go_back"
+      android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_arrow_back_black_24dp" />
 
     <EditText
@@ -36,19 +36,22 @@
     </EditText>
 
     <RelativeLayout
-      android:layout_width="112dp"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:paddingStart="@dimen/spacing_16"
-      android:paddingEnd="@dimen/spacing_16"
-      android:gravity="end">
+      android:layout_marginStart="@dimen/spacing_16"
+      android:gravity="end"
+      android:paddingBottom="@dimen/spacing_4"
+      android:paddingEnd="@dimen/spacing_8"
+      android:paddingStart="@dimen/spacing_8"
+      android:paddingTop="@dimen/spacing_4">
 
       <TextView
         android:id="@+id/patientsearch_filter_by_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginTop="2dp"
         android:letterSpacing="0.05"
         android:text="@string/patientsearch_filter_by"
         android:textAllCaps="true"
@@ -59,11 +62,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:drawableEnd="@drawable/ic_filter_24dp"
+        android:backgroundTint="#F3F4FB"
+        android:drawableEnd="@drawable/ic_filter_20dp"
         android:drawablePadding="4dp"
+        android:elevation="0dp"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:paddingBottom="@dimen/spacing_8"
+        android:paddingEnd="@dimen/spacing_12"
+        android:paddingStart="@dimen/spacing_12"
+        android:paddingTop="@dimen/spacing_8"
         android:text="@string/patientsearch_label_age"
         android:textAllCaps="true"
-        android:textColor="@color/color_accent" />
+        android:textColor="@color/color_accent"
+        android:textSize="12sp"
+        android:translationZ="0dp" />
     </RelativeLayout>
   </LinearLayout>
 

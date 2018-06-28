@@ -29,8 +29,8 @@
     <item name="android:textColor">@color/color_accent</item>
     <item name="android:gravity">start|center_vertical</item>
     <item name="backgroundTint">#F2F4FB</item>
-    <item name="android:drawablePadding">@dimen/spacing_16</item>
-    <item name="android:paddingStart">@dimen/spacing_16</item>
+    <item name="android:drawablePadding">@dimen/spacing_8</item>
+    <item name="android:paddingStart">14dp</item>
     <item name="android:paddingEnd">@dimen/spacing_16</item>
   </style>
 

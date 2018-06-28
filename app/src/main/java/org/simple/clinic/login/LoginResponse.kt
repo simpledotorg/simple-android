@@ -11,14 +11,21 @@ data class LoginResponse(
     val accessToken: String,
 
     @Json(name = "user")
-    val loggedInUser: LoggedInUser,
-
-    @Json(name = "errors")
-    val errors: LoginError?
+    val loggedInUser: LoggedInUser
 )
 
 @JsonClass(generateAdapter = true)
-data class LoginError(
+data class LoginErrorResponse(
+
+    @Json(name = "errors")
+    val errors: LoginErrors
+) {
+
+  fun firstError() = errors.errorStrings.first()
+}
+
+@JsonClass(generateAdapter = true)
+data class LoginErrors(
 
     @Json(name = "user")
     val errorStrings: List<String>

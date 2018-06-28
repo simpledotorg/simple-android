@@ -1,6 +1,7 @@
 package org.simple.clinic.login.pin
 
 import android.content.Context
+import android.support.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -81,11 +82,15 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   fun showProgressBar() {
+    TransitionManager.beginDelayedTransition(this)
+
     progressBar.visibility = View.VISIBLE
     loginFormLayout.visibility = View.INVISIBLE
   }
 
   fun hideProgressBar() {
+    TransitionManager.beginDelayedTransition(this)
+
     progressBar.visibility = View.INVISIBLE
     loginFormLayout.visibility = View.VISIBLE
   }
@@ -95,9 +100,8 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     errorTextView.visibility = View.VISIBLE
   }
 
-  fun showServerError() {
-    // TODO: Change this to error string from the API response
-    errorTextView.text = "You entered an incorrect phone number or pin. Please try again."
+  fun showServerError(errorToShow: String) {
+    errorTextView.text = errorToShow
     errorTextView.visibility = View.VISIBLE
   }
 

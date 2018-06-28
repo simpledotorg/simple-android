@@ -30,7 +30,7 @@
       android:layout_marginEnd="@dimen/spacing_24"
       android:layout_gravity="center"
       android:paddingTop="44dp"
-      android:paddingBottom="24dp"
+      android:paddingBottom="26dp"
       android:ellipsize="end"
       android:maxLines="1"
       android:text="@string/app_name"
@@ -65,8 +65,8 @@
       android:layout_height="wrap_content"
       android:paddingTop="@dimen/spacing_32"
       android:paddingBottom="@dimen/spacing_32"
-      android:paddingStart="@dimen/spacing_32"
-      android:paddingEnd="@dimen/spacing_32"
+      android:paddingStart="@dimen/spacing_48"
+      android:paddingEnd="@dimen/spacing_48"
       android:gravity="center_horizontal"
       android:orientation="vertical">
 
@@ -81,13 +81,13 @@
 
       <EditText
         android:id="@+id/loginpin_pin"
-        android:layout_width="160dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
         android:inputType="numberPassword"
         android:maxLength="4"
-        android:textSize="32sp" />
+        android:textSize="@dimen/textsize_18" />
 
       <TextView
         android:id="@+id/loginpin_error"

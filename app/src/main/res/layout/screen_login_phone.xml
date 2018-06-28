@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.login.phone.LoginPhoneScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.login.phone.LoginPhoneScreen android:id="@+id/loginphone_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/loginphone_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
@@ -9,22 +9,22 @@
     android:id="@+id/loginphone_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="44dp"
+    android:background="@color/color_primary"
     android:paddingBottom="24dp"
-    android:background="@color/color_primary">
+    android:paddingTop="44dp">
 
     <TextView
-      android:textStyle="bold"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_24"
-      android:layout_marginEnd="@dimen/spacing_24"
       android:layout_gravity="center"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_24"
       android:ellipsize="end"
       android:maxLines="1"
       android:text="@string/app_name"
       android:textColor="#692209"
-      android:textSize="34sp" />
+      android:textSize="34sp"
+      android:textStyle="bold" />
   </FrameLayout>
 
   <View
@@ -37,18 +37,18 @@
     android:id="@+id/loginphone_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_below="@+id/loginphone_logo_container"
     android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_below="@+id/loginphone_logo_container">
+    android:layout_marginStart="@dimen/spacing_24">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingTop="@dimen/spacing_32"
+      android:orientation="vertical"
       android:paddingBottom="@dimen/spacing_32"
-      android:paddingStart="@dimen/spacing_48"
       android:paddingEnd="@dimen/spacing_48"
-      android:orientation="vertical">
+      android:paddingStart="@dimen/spacing_48"
+      android:paddingTop="@dimen/spacing_32">
 
       <TextView
         android:layout_width="match_parent"
@@ -63,6 +63,7 @@
         android:id="@+id/loginphone_phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
         android:inputType="phone"
         android:textSize="@dimen/textsize_18"

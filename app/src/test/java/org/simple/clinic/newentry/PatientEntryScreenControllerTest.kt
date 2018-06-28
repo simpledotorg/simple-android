@@ -3,6 +3,7 @@ package org.simple.clinic.newentry
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -29,12 +30,11 @@ class PatientEntryScreenControllerTest {
 
   private val screen = mock<PatientEntryScreen>()
   private val patientRepository = mock<PatientRepository>()
-  private val dateOfBirthValidator = mock<DateOfBirthFormatValidator>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dateOfBirthValidator)
+  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -63,41 +63,8 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `save button should remain disabled until the form has sufficient input`() {
-    whenever(dateOfBirthValidator.validate("")).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-
-    // Default, empty values when the screen starts.
-    uiEvents.onNext(PatientFullNameTextChanged(""))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(None))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
-    uiEvents.onNext(PatientDistrictTextChanged(""))
-    uiEvents.onNext(PatientStateTextChanged(""))
-
-    // Valid values entered later.
-    uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
-    uiEvents.onNext(PatientAgeTextChanged("125"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
-    uiEvents.onNext(PatientDistrictTextChanged("district"))
-    uiEvents.onNext(PatientStateTextChanged("state"))
-
-    verify(screen, times(1)).setSaveButtonEnabled(false)
-    verify(screen, times(1)).setSaveButtonEnabled(true)
-  }
-
-  @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
@@ -108,7 +75,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
     uiEvents.onNext(PatientEntrySaveClicked())
@@ -152,8 +119,6 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
-    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
@@ -168,8 +133,6 @@ class PatientEntryScreenControllerTest {
 
   @Test()
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
-    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
 
     uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
@@ -178,8 +141,6 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
-    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
-
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
     uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = true))
@@ -193,7 +154,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dateOfBirthValidator.validate(any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
@@ -215,5 +175,155 @@ class PatientEntryScreenControllerTest {
         address = OngoingPatientEntry.Address(colonyOrVillage = null, district = "district", state = "state"),
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
+  }
+
+  @Test
+  fun `when save is clicked then user input should be validated`() {
+    uiEvents.onNext(PatientFullNameTextChanged(""))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged(""))
+    uiEvents.onNext(PatientGenderChanged(None))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientDistrictTextChanged(""))
+    uiEvents.onNext(PatientStateTextChanged(""))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    uiEvents.onNext(PatientAgeTextChanged(" "))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen, times(3)).showEmptyFullNameError(true)
+    verify(screen, times(3)).showEmptyPhoneNumberError(true)
+    verify(screen, times(2)).showEmptyDateOfBirthAndAgeError(true)
+    verify(screen).showInvalidDateOfBirthError(true)
+    verify(screen, times(3)).showMissingGenderError(true)
+    verify(screen, times(3)).showEmptyColonyOrVillageError(true)
+    verify(screen, times(3)).showEmptyDistrictError(true)
+    verify(screen, times(3)).showEmptyStateError(true)
+  }
+
+  @Test
+  fun `validation errors should be cleared on every input change`() {
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
+    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
+    uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
+    uiEvents.onNext(PatientDistrictTextChanged("district"))
+    uiEvents.onNext(PatientStateTextChanged("state"))
+
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+
+    verify(screen).showEmptyFullNameError(false)
+    verify(screen, times(4)).showEmptyPhoneNumberError(false)
+    verify(screen, times(3)).showEmptyDateOfBirthAndAgeError(false)
+    verify(screen, times(2)).showInvalidDateOfBirthError(false)
+    verify(screen).showMissingGenderError(false)
+    verify(screen, times(4)).showEmptyColonyOrVillageError(false)
+    verify(screen).showEmptyDistrictError(false)
+    verify(screen).showEmptyStateError(false)
+  }
+
+  // TODO: Write these similarly structured regression tests in a smarter way.
+
+  @Test
+  fun `regression test`() {
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.MALE)))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientDistrictTextChanged("District"))
+    uiEvents.onNext(PatientStateTextChanged("State"))
+
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen, never()).openSummaryScreenForBpEntry(any())
+    verify(patientRepository, never()).saveOngoingEntry(any())
+  }
+
+  @Test
+  fun `regression test 2`() {
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.MALE)))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientDistrictTextChanged("District"))
+    uiEvents.onNext(PatientStateTextChanged("State"))
+
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen, never()).openSummaryScreenForBpEntry(any())
+    verify(patientRepository, never()).saveOngoingEntry(any())
+  }
+
+  @Test
+  fun `regression test 3`() {
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientGenderChanged(None))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+    uiEvents.onNext(PatientDistrictTextChanged("District"))
+    uiEvents.onNext(PatientStateTextChanged("State"))
+
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen, never()).openSummaryScreenForBpEntry(any())
+    verify(patientRepository, never()).saveOngoingEntry(any())
+  }
+
+  @Test
+  fun `regression test 4`() {
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(PatientMocker.patient()))
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.FEMALE)))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+    uiEvents.onNext(PatientDistrictTextChanged("District"))
+    uiEvents.onNext(PatientStateTextChanged("State"))
+
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen).openSummaryScreenForBpEntry(any())
+    verify(patientRepository).saveOngoingEntry(any())
   }
 }

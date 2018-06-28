@@ -6,7 +6,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationResult
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.sync.PatientPayload
@@ -17,6 +16,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.Arrays
 import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
@@ -134,13 +134,13 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
   }
 
   fun ongoingEntry(): Single<OngoingPatientEntry> {
-    return Single.fromCallable({ ongoingPatientEntry })
+    return Single.fromCallable { ongoingPatientEntry }
   }
 
   fun saveOngoingEntry(ongoingEntry: OngoingPatientEntry): Completable {
-    return Completable.fromAction({
+    return Completable.fromAction {
       this.ongoingPatientEntry = ongoingEntry
-    })
+    }
   }
 
   fun saveOngoingEntryAsPatient(): Single<Patient> {
@@ -148,10 +148,12 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
     val validation = cachedOngoingEntry
         .flatMapCompletable {
-          val validationResult = it.validateForSaving()
-          when (validationResult) {
-            is ValidationResult.Valid -> Completable.complete()
-            is ValidationResult.Invalid -> Completable.error(validationResult.error)
+          val validationErrors = it.validationErrors()
+          if (validationErrors.isEmpty()) {
+            Completable.complete()
+          } else {
+            val errorNames = validationErrors.map { it.name }.toTypedArray()
+            Completable.error(AssertionError("Patient entry has errors: ${Arrays.toString(errorNames)}"))
           }
         }
 

@@ -5,7 +5,6 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationResult
 
 @RunWith(JUnitParamsRunner::class)
 class OngoingPatientEntryTest {
@@ -13,7 +12,7 @@ class OngoingPatientEntryTest {
   @Test
   @Parameters(method = "values")
   fun `validation should fail for invalid values`(
-      expectedResultClass: Class<out ValidationResult>,
+      isValid: Boolean,
       fullname: String,
       dateOfBirth: String?,
       age: String?,
@@ -27,16 +26,21 @@ class OngoingPatientEntryTest {
         address = OngoingPatientEntry.Address(colonyOrVillage, district, state),
         phoneNumber = OngoingPatientEntry.PhoneNumber(phoneNumber))
 
-    val validationResult = entry.validateForSaving()
-    assertThat(validationResult).isInstanceOf(expectedResultClass)
+    assertThat(entry.validationErrors()).apply {
+      if (isValid) {
+        isEmpty()
+      } else {
+        isNotEmpty()
+      }
+    }
   }
 
   fun values(): Array<Any> {
     return arrayOf(
-        arrayOf(ValidationResult.Invalid::class.java, " ", " ", " ", " ", " ", " ", " "),
-        arrayOf(ValidationResult.Invalid::class.java, " ", null, null, " ", " ", " ", " "),
-        arrayOf(ValidationResult.Invalid::class.java, "Ashok Kumar", "01-01-1971", "47", "colony", "state", "district", "phone-number"),
-        arrayOf(ValidationResult.Valid::class.java, "Ashok Kumar", "01-01-1971", null, "colony", "state", "district", "phone-number")
+        arrayOf(false, " ", " ", " ", " ", " ", " ", " "),
+        arrayOf(false, " ", null, null, " ", " ", " ", " "),
+        arrayOf(false, "Ashok Kumar", "01-01-1971", "47", "colony", "state", "district", "phone-number"),
+        arrayOf(true, "Ashok Kumar", "01/01/1971", null, "colony", "state", "district", "phone-number")
     )
   }
 }

@@ -35,9 +35,9 @@
   </style>
 
   <style name="Clinic.ClearButton">
-    <item name="android:layout_gravity">end|center_vertical</item>
-    <item name="android:layout_marginBottom">-6dp</item>
+    <item name="android:layout_gravity">end</item>
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    <item name="android:layout_marginTop">14dp</item>
     <item name="android:padding">@dimen/spacing_12</item>
     <item name="android:tint">@color/gray_500</item>
     <item name="android:src">@drawable/ic_clear_circular_16dp</item>

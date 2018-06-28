@@ -37,6 +37,15 @@
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Save patient</string>
 
+  <string name="patiententry_error_empty_fullname">Name cannot be empty</string>
+  <string name="patiententry_error_empty_phonenumber">Phone number cannot be empty</string>
+  <string name="patiententry_error_empty_gender">Gender cannot be empty</string>
+  <string name="patiententry_error_empty_colony_or_village">Colony or village cannot be empty</string>
+  <string name="patiententry_error_empty_district">District cannot be empty</string>
+  <string name="patiententry_error_state_empty">State cannot be empty</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Date-of-birth or age cannot be empty</string>
+  <string name="patiententry_error_invalid_dateofbirth">That date does not look correct</string>
+
   <!-- Home -->
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>
   <string name="home_search_patient_name_phone">Enter patient\'s name or phone</string>

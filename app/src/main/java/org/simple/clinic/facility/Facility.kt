@@ -62,5 +62,4 @@ data class Facility(
     @Query("SELECT COUNT(*) FROM facility")
     fun count(): Flowable<Int>
   }
-
 }

@@ -140,14 +140,6 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   @Parameters(value = ["SEARCH", "NEW_PATIENT"])
-  fun `done button should only be shown when summary was opened after saving a new patient`(caller: PatientSummaryCaller) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller))
-
-    verify(screen).setDoneButtonVisible(caller == PatientSummaryCaller.NEW_PATIENT)
-  }
-
-  @Test
-  @Parameters(value = ["SEARCH", "NEW_PATIENT"])
   fun `done button clicks should be handled in the same way as back clicks`(caller: PatientSummaryCaller) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller))
     uiEvents.onNext(PatientSummaryDoneClicked())

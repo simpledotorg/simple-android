@@ -93,10 +93,9 @@
         android:id="@+id/loginpin_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
         android:textColor="@color/red_700"
-        android:textSize="@dimen/textsize_18"
+        android:textSize="@dimen/textsize_12"
         android:visibility="gone" />
     </LinearLayout>
 

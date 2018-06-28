@@ -66,7 +66,7 @@ class LoginPinScreenControllerTest {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login())
         .thenReturn(Single.just(LoginResult.NetworkError()))
-        .thenReturn(Single.just(LoginResult.ServerError()))
+        .thenReturn(Single.just(LoginResult.ServerError("Server error")))
         .thenReturn(Single.just(LoginResult.UnexpectedError()))
 
     uiEvents.onNext(PinTextChanged("0000"))
@@ -75,7 +75,7 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(PinSubmitClicked())
 
     verify(screen).showNetworkError()
-    verify(screen).showServerError()
+    verify(screen).showServerError("Server error")
     verify(screen).showUnexpectedError()
   }
 }

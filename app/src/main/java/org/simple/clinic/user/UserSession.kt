@@ -3,6 +3,7 @@ package org.simple.clinic.user
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.simple.clinic.di.AppScope
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
@@ -16,6 +17,7 @@ import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
+@AppScope
 class UserSession @Inject constructor(
     private val api: LoginApiV1,
     private val loggedInUserPreference: Preference<Optional<LoggedInUser>>,

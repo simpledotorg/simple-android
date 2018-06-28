@@ -3,7 +3,6 @@ package org.simple.clinic.login.pin
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -42,16 +41,6 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `if pin is empty, disable the submit button, and vice versa`() {
-    uiEvents.onNext(PinTextChanged(""))
-    uiEvents.onNext(PinTextChanged("123"))
-    uiEvents.onNext(PinTextChanged("1234"))
-
-    verify(screen).enableSubmitButton(false)
-    verify(screen, times(1)).enableSubmitButton(true)
-  }
-
-  @Test
   fun `if pin is not empty, and submit is clicked, make login api call, and open home screen`() {
     val ongoingEntry = OngoingLoginEntry(otp = "123", phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
@@ -65,9 +54,9 @@ class LoginPinScreenControllerTest {
     inOrder.verify(userSession).login()
     inOrder.verify(userSession).ongoingLoginEntry()
     inOrder.verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(otp = "123", phoneNumber = "99999", pin = "0000"))
-    inOrder.verify(screen).openHomeScreen()
     inOrder.verify(screen).showProgressBar()
     inOrder.verify(screen).hideProgressBar()
+    inOrder.verify(screen).openHomeScreen()
   }
 
   @Test

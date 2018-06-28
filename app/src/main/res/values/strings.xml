@@ -5,6 +5,7 @@
   <string name="gender_female">Female</string>
   <string name="gender_male">Male</string>
   <string name="gender_transgender">Transgender</string>
+  <string name="api_unexpected_error">Something went wrong. Please try again later.</string>
 
   <!-- Patient search -->
   <string name="patientsearch_new_patient">Create new patient</string>
@@ -87,4 +88,8 @@
   <!-- Login -->
   <string name="loginphone_phone_number_hint">Your phone number</string>
   <string name="loginphone_next">Next</string>
+  <string name="loginpin_pin_number_hint">Your security pin</string>
+  <string name="loginpin_go_back">Go back to phone number screen</string>
+  <string name="loginpin_check_internet_connection">Please check your internet connection.</string>
+
 </resources>

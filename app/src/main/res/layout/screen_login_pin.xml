@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.login.pin.LoginPinScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/loginpin_root"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <FrameLayout
+    android:id="@+id/loginpin_logo_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_primary">
+
+    <ImageButton
+      android:id="@+id/loginpin_back"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginStart="@dimen/spacing_24"
+      android:padding="@dimen/spacing_4"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:contentDescription="@string/loginpin_go_back"
+      android:src="@drawable/ic_arrow_back_24dp"
+      android:tint="@color/white" />
+
+    <TextView
+      android:id="@+id/loginpin_phone_number"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_gravity="center"
+      android:paddingTop="44dp"
+      android:paddingBottom="24dp"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:text="@string/app_name"
+      android:textColor="@color/white_opacity_90"
+      android:textSize="32sp" />
+  </FrameLayout>
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:layout_alignTop="@+id/loginpin_card"
+    android:background="@color/color_primary" />
+
+  <android.support.v7.widget.CardView
+    android:id="@+id/loginpin_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_below="@+id/loginpin_logo_container">
+
+    <ProgressBar
+      android:id="@+id/loginpin_progress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="invisible" />
+
+    <LinearLayout
+      android:id="@+id/loginpin_form"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:paddingTop="@dimen/spacing_32"
+      android:paddingBottom="@dimen/spacing_32"
+      android:paddingStart="@dimen/spacing_32"
+      android:paddingEnd="@dimen/spacing_32"
+      android:gravity="center_horizontal"
+      android:orientation="vertical">
+
+      <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:labelFor="@+id/loginpin_pin"
+        android:text="@string/loginpin_pin_number_hint"
+        android:textColor="@color/black_opacity_80"
+        android:textSize="@dimen/textsize_18" />
+
+      <EditText
+        android:id="@+id/loginpin_pin"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center"
+        android:inputType="numberPassword"
+        android:maxLength="4"
+        android:textSize="32sp" />
+
+      <TextView
+        android:id="@+id/loginpin_error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center"
+        android:textColor="@color/red_700"
+        android:textSize="@dimen/textsize_18"
+        android:visibility="gone" />
+    </LinearLayout>
+
+  </android.support.v7.widget.CardView>
+
+</org.simple.clinic.login.pin.LoginPinScreen>

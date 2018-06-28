@@ -47,8 +47,8 @@ class LoginPhoneScreenController @Inject constructor(
         .map { it.phoneNumber }
 
     return events.ofType<PhoneNumberSubmitClicked>()
-        .withLatestFrom(phoneNumberChanges) { _, phoneNumber -> phoneNumber }
-        .flatMap { enteredPhoneNumber ->
+        .withLatestFrom(phoneNumberChanges)
+        .flatMap { (_, enteredPhoneNumber) ->
           userSession.ongoingLoginEntry()
               .map { it.copy(phoneNumber = enteredPhoneNumber) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }

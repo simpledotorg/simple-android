@@ -22,8 +22,8 @@ class LoginPinScreenController @Inject constructor(
 
     return Observable.merge(
         screenSetups(replayedEvents),
-        pinChanges(replayedEvents),
-        submitClicks(replayedEvents))
+        submitClicks(replayedEvents),
+        backClicks(replayedEvents))
   }
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
@@ -32,13 +32,6 @@ class LoginPinScreenController @Inject constructor(
           userSession.ongoingLoginEntry()
               .map { { ui: Ui -> ui.showPhoneNumber(it.phoneNumber!!) } }
         }
-  }
-
-  private fun pinChanges(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PinTextChanged>()
-        .map { it.pin.isNotBlank() }
-        .distinctUntilChanged()
-        .map { { ui: Ui -> ui.enableSubmitButton(it) } }
   }
 
   private fun submitClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -69,7 +62,12 @@ class LoginPinScreenController @Inject constructor(
           userSession.ongoingLoginEntry()
               .map { entry -> entry.copy(pin = enteredPin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
-              .andThen(loginResultUiChange.mergeWith(loginProgressUiChanges))
+              .andThen(loginProgressUiChanges.mergeWith(loginResultUiChange))
         }
+  }
+
+  private fun backClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PinBackClicked>()
+        .map { { ui: Ui -> ui.goBackToLoginPhoneScreen() } }
   }
 }

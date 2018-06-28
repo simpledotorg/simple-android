@@ -30,7 +30,7 @@
       android:layout_weight="1"
       android:background="@null"
       android:hint="@string/patientsearch_name_or_phone"
-      android:inputType="text">
+      android:inputType="text|textCapWords">
 
       <requestFocus />
     </EditText>

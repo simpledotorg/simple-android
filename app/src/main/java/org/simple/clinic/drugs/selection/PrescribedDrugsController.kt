@@ -27,6 +27,7 @@ class PrescribedDrugsEntryController @Inject constructor(
     val replayedEvents = events.replay(1).refCount()
 
     return Observable.mergeArray(
+        handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents),
         savePrescriptions(replayedEvents),
         selectPrescription(replayedEvents),
@@ -131,5 +132,11 @@ class PrescribedDrugsEntryController @Inject constructor(
         .ofType<DeleteCustomPrescriptionClicked>()
         .map { it.prescription }
         .map { { ui: Ui -> ui.showDeleteConfirmationDialog(prescription = it) } }
+  }
+
+  private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PrescribedDrugsDoneClicked>()
+        .map { { ui: Ui -> ui.goBackToPatientSummary() } }
   }
 }

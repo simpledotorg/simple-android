@@ -37,8 +37,7 @@ class PatientSummaryScreenController @Inject constructor(
         constructBloodPressureHistory(transformedEvents),
         openBloodPressureBottomSheet(transformedEvents),
         openPrescribedDrugsScreen(transformedEvents),
-        handleBackClicks(transformedEvents),
-        showDoneButton(transformedEvents))
+        handleBackClicks(transformedEvents))
   }
 
   private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {
@@ -139,13 +138,5 @@ class PatientSummaryScreenController @Inject constructor(
     return events
         .ofType<PatientSummaryDoneClicked>()
         .map { PatientSummaryBackClicked() }
-  }
-
-  private fun showDoneButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.caller }
-        .map { caller -> caller == NEW_PATIENT || caller == SEARCH }
-        .map { showDone -> { ui: Ui -> ui.setDoneButtonVisible(showDone) } }
   }
 }

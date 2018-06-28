@@ -67,6 +67,7 @@
     android:id="@+id/patientsummary_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/patientsummary_done"
     android:layout_below="@+id/patientsummary_header"
     android:clipToPadding="false" />
 

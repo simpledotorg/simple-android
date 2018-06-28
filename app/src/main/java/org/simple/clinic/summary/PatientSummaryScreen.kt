@@ -7,7 +7,6 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -39,9 +38,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.executeOnNextMeasure
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.setBottomPadding
 import java.util.UUID
 import javax.inject.Inject
 
@@ -188,18 +185,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
-  }
-
-  fun setDoneButtonVisible(visible: Boolean) {
-    if (visible) {
-      doneButton.executeOnNextMeasure {
-        recyclerView.setBottomPadding(doneButton.height)
-      }
-    }
-    doneButton.visibility = when {
-      visible -> View.VISIBLE
-      else -> View.GONE
-    }
   }
 
   fun goBackToPatientSearch() {

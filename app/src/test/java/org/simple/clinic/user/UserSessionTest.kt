@@ -5,7 +5,10 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
+import com.squareup.moshi.Moshi
 import io.reactivex.Single
+import okhttp3.MediaType
+import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.login.LoginApiV1
@@ -13,6 +16,7 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
+import retrofit2.Response
 import java.net.SocketTimeoutException
 
 class UserSessionTest {
@@ -20,12 +24,23 @@ class UserSessionTest {
   private val api = mock<LoginApiV1>()
   private val loggedInUserPref = mock<Preference<Optional<LoggedInUser>>>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
+  private val moshi = Moshi.Builder().build()
 
   private lateinit var userSession: UserSession
 
+  companion object {
+    const val UNAUTHORIZED_ERROR_RESPONSE_JSON = """{
+        "errors": {
+          "user": [
+            "user is not present"
+          ]
+        }
+      }"""
+  }
+
   @Before
   fun setUp() {
-    userSession = UserSession(api, loggedInUserPref, accessTokenPref)
+    userSession = UserSession(api, loggedInUserPref, moshi, accessTokenPref)
   }
 
   @Test
@@ -41,10 +56,13 @@ class UserSessionTest {
         createdAt = mock(),
         updatedAt = mock())
 
+    val error = Response.error<LoginResponse>(401, ResponseBody.create(MediaType.parse("text"), UNAUTHORIZED_ERROR_RESPONSE_JSON))
+    val unauthorizedHttpError = HttpException(error)
+
     whenever(api.login(any()))
-        .thenReturn(Single.just(LoginResponse("accessToken", loggedInUser, errors = null)))
+        .thenReturn(Single.just(LoginResponse("accessToken", loggedInUser)))
         .thenReturn(Single.error(NullPointerException()))
-        .thenReturn(Single.error(mock<HttpException>()))
+        .thenReturn(Single.error(unauthorizedHttpError))
         .thenReturn(Single.error(SocketTimeoutException()))
 
     val result1 = userSession.login().blockingGet()

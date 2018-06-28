@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
@@ -44,6 +45,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
 
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
+  private val doneButton by bindView<ViewGroup>(R.id.prescribeddrugs_done)
 
   private val groupieAdapter = GroupAdapter<ViewHolder>()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -60,7 +62,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
     fadeAnimator.supportsChangeAnimations = false
     recyclerView.itemAnimator = fadeAnimator
 
-    Observable.mergeArray(screenCreates(), adapterUiEvents)
+    Observable.mergeArray(screenCreates(), adapterUiEvents, doneClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -72,6 +74,8 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
     val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)!!
     return Observable.just(PrescribedDrugsScreenCreated(screenKey.patientUuid))
   }
+
+  private fun doneClicks() = RxView.clicks(doneButton).map { PrescribedDrugsDoneClicked() }
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     // Replace the default fade animator with another animator that
@@ -107,5 +111,9 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
 
   fun showDeleteConfirmationDialog(prescription: PrescribedDrug) {
     ConfirmDeletePrescriptionDialog.showForPrescription(prescription.uuid, activity.supportFragmentManager)
+  }
+
+  fun goBackToPatientSummary() {
+    screenRouter.pop()
   }
 }

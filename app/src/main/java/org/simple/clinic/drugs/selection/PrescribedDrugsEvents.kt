@@ -13,4 +13,6 @@ data class PrescribedDrugsScreenCreated(val patientUuid: UUID) : UiEvent
 
 class AddNewPrescriptionClicked : UiEvent
 
+class PrescribedDrugsDoneClicked : UiEvent
+
 data class DeleteCustomPrescriptionClicked(val prescription: PrescribedDrug) : UiEvent

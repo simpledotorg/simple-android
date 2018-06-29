@@ -14,6 +14,7 @@ import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.VALID
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.nullIfBlank
@@ -28,6 +29,7 @@ typealias UiChange = (Ui) -> Unit
 class PatientEntryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
+    private val userSession: UserSession,
     private val dateOfBirthValidator: DateOfBirthFormatValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -81,7 +83,7 @@ class PatientEntryScreenController @Inject constructor(
     return events
         .ofType<ScreenCreated>()
         .flatMapSingle { patientRepository.ongoingEntry() }
-        .withLatestFrom(facilityRepository.currentFacility().take(1))
+        .withLatestFrom(facilityRepository.currentFacility(userSession).take(1))
         .map { (entry, facility) ->
           entry.copy(address = OngoingPatientEntry.Address(
               colonyOrVillage = null,

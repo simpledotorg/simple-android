@@ -6,6 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginRequest
@@ -27,6 +28,7 @@ class UserSession @Inject constructor(
     private val api: LoginApiV1,
     private val loggedInUserPreference: Preference<Optional<LoggedInUser>>,
     private val moshi: Moshi,
+    private val facilitySync: FacilitySync,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
@@ -46,7 +48,13 @@ class UserSession @Inject constructor(
     return ongoingLoginEntry()
         .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
         .flatMap { api.login(it) }
-        .map { storeUserAndReturnSuccess(it) }
+        .doOnSuccess { storeUser(it) }
+        .flatMap {
+          facilitySync
+              .sync()
+              .andThen(Single.just(it))
+        }
+        .map<LoginResult> { LoginResult.Success() }
         .onErrorReturn { error ->
           when {
             error is IOException -> LoginResult.NetworkError()
@@ -62,10 +70,9 @@ class UserSession @Inject constructor(
         }
   }
 
-  private fun storeUserAndReturnSuccess(response: LoginResponse): LoginResult {
+  private fun storeUser(response: LoginResponse) {
     accessTokenPreference.set(Just(response.accessToken))
     loggedInUserPreference.set(Just(response.loggedInUser))
-    return LoginResult.Success()
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {

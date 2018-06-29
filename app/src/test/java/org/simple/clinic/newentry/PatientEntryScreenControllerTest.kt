@@ -17,6 +17,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.widgets.ActivityLifecycle
@@ -30,15 +31,16 @@ class PatientEntryScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val dateOfBirthValidator = mock<DateOfBirthFormatValidator>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, dateOfBirthValidator)
+  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dateOfBirthValidator)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
   @Before
   fun setUp() {
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(PatientMocker.facility()))
+    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
 
     errorConsumer = { throw it }
 

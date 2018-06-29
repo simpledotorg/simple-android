@@ -5,7 +5,9 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -14,7 +16,8 @@ typealias Ui = LoginPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class LoginPinScreenController @Inject constructor(
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val syncScheduler: SyncScheduler
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -59,10 +62,23 @@ class LoginPinScreenController @Inject constructor(
               .map { { ui: Ui -> ui.hideProgressBar() } }
               .startWith { ui: Ui -> ui.showProgressBar() }
 
+          val syncRemainingData = cachedLogin
+              .filter { it is LoginResult.Success }
+              .doOnNext {
+                syncScheduler.syncImmediately()
+                    .subscribeOn(io())
+                    .subscribe()
+              }
+              .flatMap { Observable.empty<UiChange>() }
+
           userSession.ongoingLoginEntry()
               .map { entry -> entry.copy(pin = enteredPin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
-              .andThen(loginProgressUiChanges.mergeWith(loginResultUiChange))
+              .andThen(Observable.merge(
+                  loginProgressUiChanges,
+                  loginResultUiChange,
+                  syncRemainingData
+              ))
         }
   }
 

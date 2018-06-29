@@ -74,8 +74,6 @@ class TheActivity : AppCompatActivity() {
     return if (userSession.isUserLoggedIn()) {
       HomeScreen.KEY
     } else {
-      // TODO Avoid showing login. Without OTP, the user will see an
-      // TODO error at the end of the login flow, which will not be nice.
       LoginPhoneScreen.KEY("")
     }
   }

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.f2prateek.rx.preferences2.Preference
 import org.simple.clinic.di.TheActivityComponent
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
@@ -15,8 +14,7 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.LoggedInUser
-import org.simple.clinic.util.Optional
+import org.simple.clinic.user.UserSession
 import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {
@@ -32,7 +30,7 @@ class TheActivity : AppCompatActivity() {
   }
 
   @Inject
-  lateinit var loggedInUserPref: Preference<Optional<LoggedInUser>>
+  lateinit var userSession: UserSession
 
   lateinit var screenRouter: ScreenRouter
 
@@ -73,9 +71,11 @@ class TheActivity : AppCompatActivity() {
   }
 
   private fun initialScreenKey(): FullScreenKey {
-    return if (loggedInUserPref.isSet) {
+    return if (userSession.isUserLoggedIn()) {
       HomeScreen.KEY
     } else {
+      // TODO Avoid showing login. Without OTP, the user will see an
+      // TODO error at the end of the login flow, which will not be nice.
       LoginPhoneScreen.KEY("")
     }
   }

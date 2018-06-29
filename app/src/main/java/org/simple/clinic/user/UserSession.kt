@@ -3,6 +3,7 @@ package org.simple.clinic.user
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.login.LoginApiV1
@@ -12,6 +13,7 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
@@ -60,19 +62,31 @@ class UserSession @Inject constructor(
         }
   }
 
-  private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {
-    val jsonAdapter = moshi.adapter(clazz.java)
-    return jsonAdapter.fromJson(error.response().errorBody()!!.source())!!
-  }
-
   private fun storeUserAndReturnSuccess(response: LoginResponse): LoginResult {
     accessTokenPreference.set(Just(response.accessToken))
     loggedInUserPreference.set(Just(response.loggedInUser))
     return LoginResult.Success()
   }
 
+  private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {
+    val jsonAdapter = moshi.adapter(clazz.java)
+    return jsonAdapter.fromJson(error.response().errorBody()!!.source())!!
+  }
+
   fun logout() {
-    loggedInUserPreference.delete()
-    accessTokenPreference.delete()
+    loggedInUserPreference.set(None)
+    accessTokenPreference.set(None)
+  }
+
+  fun loggedInUser(): Observable<Optional<LoggedInUser>> {
+    return loggedInUserPreference.asObservable()
+  }
+
+  fun isUserLoggedIn(): Boolean {
+    return loggedInUserPreference.get() is Just
+  }
+
+  fun accessToken(): Optional<String> {
+    return accessTokenPreference.get()
   }
 }

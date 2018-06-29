@@ -1,7 +1,7 @@
 package org.simple.clinic.util
 
 /**
- * Modified to use [Just] instead of Some.
+ * Modified to use [Just] instead of Just.
  *
  * Source: KOptional (https://github.com/gojuno/koptional).
  * Copyright 2017 Juno, Inc.
@@ -20,15 +20,62 @@ package org.simple.clinic.util
  */
 sealed class Optional<out T : Any> {
 
-  fun toNullable(): T? = when (this) {
-    is Just -> value
-    is None -> null
+  /**
+   * Converts [Optional] to either its non-null value if it's [Just] or `null` if it's [None].
+   */
+  abstract fun toNullable(): T?
+
+  /**
+   * Unwraps this optional into the value it holds or null if there is no value held.
+   */
+  abstract operator fun component1(): T?
+
+  companion object {
+
+    /**
+     * Wraps an instance of T (or null) into an [Optional]:
+     *
+     * ```java
+     * String a = "str";
+     * String b = null;
+     *
+     * Optional<String> optionalA = Optional.toOptional(a); // Just("str")
+     * Optional<String> optionalB = Optional.toOptional(b); // None
+     * ```
+     *
+     * This is the preferred method of obtaining an instance of [Optional] in Java. In Kotlin,
+     * prefer using the [toOptional][com.gojuno.koptional.toOptional] extension function.
+     */
+    @JvmStatic
+    fun <T : Any> toOptional(value: T?): Optional<T> = if (value == null) None else Just(value)
   }
 }
 
-data class Just<out T : Any>(val value: T) : Optional<T>()
+data class Just<out T : Any>(val value: T) : Optional<T>() {
+  override fun toString() = "Just($value)"
+  override fun toNullable(): T = value
+}
 
-object None : Optional<Nothing>()
+object None : Optional<Nothing>() {
+  override fun toString() = "None"
 
-@Suppress("unused")
+  override fun component1(): Nothing? = null
+
+  override fun toNullable(): Nothing? = null
+}
+
+/**
+ * Wraps an instance of T (or null) into an [Optional]:
+ *
+ * ```kotlin
+ * val a: String? = "str"
+ * val b: String? = null
+ *
+ * val optionalA = a.toOptional() // Just("str")
+ * val optionalB = b.toOptional() // None
+ * ```
+ *
+ * This is the preferred method of obtaining an instance of [Optional] in Kotlin. In Java, prefer
+ * using the static [Optional.toOptional] method.
+ */
 fun <T : Any> T?.toOptional(): Optional<T> = if (this == null) None else Just(this)

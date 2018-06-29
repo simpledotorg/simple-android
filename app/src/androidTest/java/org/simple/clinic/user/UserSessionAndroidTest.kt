@@ -54,6 +54,6 @@ class UserSessionAndroidTest {
 
   @After
   fun tearDown() {
-    userSession.logout()
+    userSession.logout().blockingAwait()
   }
 }

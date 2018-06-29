@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
@@ -23,6 +24,7 @@ import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
 class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -37,6 +39,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   @Inject
   lateinit var controller: LoginPinScreenController
 
+  private val rootLayout by bindView<ViewGroup>(R.id.loginpin_root)
   private val phoneNumberTextView by bindView<TextView>(R.id.loginpin_phone_number)
   private val pinEditText by bindView<EditText>(R.id.loginpin_pin)
   private val progressBar by bindView<ProgressBar>(R.id.loginpin_progress)
@@ -83,6 +86,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   fun showProgressBar() {
     TransitionManager.beginDelayedTransition(this)
+    rootLayout.hideKeyboard()
 
     progressBar.visibility = View.VISIBLE
     loginFormLayout.visibility = View.INVISIBLE

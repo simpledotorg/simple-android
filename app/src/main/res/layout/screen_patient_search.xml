@@ -41,7 +41,7 @@
       android:layout_marginStart="@dimen/spacing_16"
       android:gravity="end"
       android:paddingBottom="@dimen/spacing_4"
-      android:paddingEnd="@dimen/spacing_8"
+      android:paddingEnd="6dp"
       android:paddingStart="@dimen/spacing_8"
       android:paddingTop="@dimen/spacing_4">
 

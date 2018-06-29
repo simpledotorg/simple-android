@@ -6,5 +6,8 @@
   <application
     android:icon="@mipmap/ic_launcher_debug"
     android:name=".DebugClinicApp"
-    tools:replace="android:name,android:icon" />
+    tools:replace="android:name,android:icon">
+
+    <receiver android:name=".DebugNotificationActionReceiver" />
+  </application>
 </manifest>

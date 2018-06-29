@@ -40,6 +40,8 @@ data class SummaryPrescribedDrugsItem(
 
     holder.setButtonText(prescriptions)
 
+    holder.removeAllDrugViews()
+
     if (prescriptions.isNotEmpty()) {
       prescriptions.forEach { drug ->
         val drugViewHolder = holder.inflateRowForDrug()
@@ -75,7 +77,11 @@ data class SummaryPrescribedDrugsItem(
       return drugViewHolder
     }
 
-    fun setButtonText(prescriptions: List<PrescribedDrug>): Unit {
+    fun removeAllDrugViews() {
+      drugsSummaryContainer.removeAllViews()
+    }
+
+    fun setButtonText(prescriptions: List<PrescribedDrug>) {
       addOrUpdatePrescriptionButtonTextView.text =
         if ( prescriptions.isEmpty() ) {
           itemView.context.getString(R.string.patientsummary_prescriptions_add)

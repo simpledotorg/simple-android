@@ -11,11 +11,10 @@ import javax.inject.Inject
 
 @AppScope
 class FacilityRepository @Inject constructor(
-    private val dao: Facility.RoomDao,
-    private val userSession: UserSession
+    private val dao: Facility.RoomDao
 ) {
 
-  fun currentFacility(): Observable<Facility> {
+  fun currentFacility(userSession: UserSession): Observable<Facility> {
     return userSession.loggedInUser()
         .take(1)
         .map { it.toNullable()!!.facilityUuid }

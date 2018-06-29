@@ -32,7 +32,7 @@ class BloodPressureRepository @Inject constructor(
         .take(1)
 
     val currentFacility = facilityRepository
-        .currentFacility()
+        .currentFacility(userSession)
         .take(1)
 
     return Observables.combineLatest(loggedInUser, currentFacility)

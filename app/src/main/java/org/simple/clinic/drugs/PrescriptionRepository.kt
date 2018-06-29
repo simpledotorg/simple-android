@@ -10,6 +10,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @AppScope
 class PrescriptionRepository @Inject constructor(
     private val dao: PrescribedDrug.RoomDao,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val userSession: UserSession
 ) {
 
   fun savePrescription(patientUuid: UUID, drug: ProtocolDrug, dosage: String): Completable {
@@ -34,7 +36,7 @@ class PrescriptionRepository @Inject constructor(
     }
 
     val currentFacility = facilityRepository
-        .currentFacility()
+        .currentFacility(userSession)
         .take(1)
 
     return currentFacility

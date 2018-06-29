@@ -128,9 +128,16 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
     fullNameTextView.text = patient.fullName
+
+    byline1TextView.text = when (patient.gender) {
+      Gender.MALE -> resources.getString(Gender.MALE.displayTextRes)
+      Gender.FEMALE -> resources.getString(Gender.FEMALE.displayTextRes)
+      Gender.TRANSGENDER -> resources.getString(Gender.TRANSGENDER.displayTextRes)
+    }
+
     byline1TextView.text = when (phoneNumber) {
-      is Just -> "${resources.getString(Gender.MALE.displayTextRes)} • ${phoneNumber.value.number}"
-      is None -> resources.getString(Gender.MALE.displayTextRes)
+      is Just -> "${byline1TextView.text} • ${phoneNumber.value.number}"
+      is None -> byline1TextView.text
     }
     byline2TextView.text = when {
       address.colonyOrVillage.isNullOrBlank() -> "${address.district}, ${address.state}"

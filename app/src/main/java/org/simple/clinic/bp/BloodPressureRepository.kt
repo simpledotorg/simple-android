@@ -1,6 +1,5 @@
 package org.simple.clinic.bp
 
-import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -11,8 +10,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.user.LoggedInUser
-import org.simple.clinic.util.Optional
+import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -20,7 +18,7 @@ import javax.inject.Inject
 @AppScope
 class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
-    private val loggedInUserPref: Preference<Optional<LoggedInUser>>,
+    private val userSession: UserSession,
     private val facilityRepository: FacilityRepository
 ) {
 
@@ -29,8 +27,7 @@ class BloodPressureRepository @Inject constructor(
       throw AssertionError("Cannot have negative BP readings.")
     }
 
-    val loggedInUser = loggedInUserPref
-        .asObservable()
+    val loggedInUser = userSession.loggedInUser()
         .map { it.toNullable() }
         .take(1)
 

@@ -1,16 +1,13 @@
 package org.simple.clinic.sync
 
 import androidx.work.Worker
-import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.patient.sync.PatientSync
-import org.simple.clinic.user.LoggedInUser
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
+import org.simple.clinic.user.UserSession
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -30,12 +27,12 @@ class SyncWorker : Worker() {
   lateinit var prescriptionSync: PrescriptionSync
 
   @Inject
-  lateinit var loggedInUserPref: Preference<Optional<LoggedInUser>>
+  lateinit var userSession: UserSession
 
   override fun doWork(): WorkerResult {
     ClinicApp.appComponent.inject(this)
 
-    if (loggedInUserPref.get() === None) {
+    if (userSession.isUserLoggedIn().not()) {
       Timber.i("User isn't logged in yet. Skipping sync.")
       return WorkerResult.SUCCESS
     }

@@ -4,6 +4,7 @@ import dagger.Component
 import org.simple.clinic.ReleaseClinicApp
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.sync.SyncWorker
+import org.simple.clinic.user.UserSession
 import javax.inject.Scope
 
 @AppScope
@@ -15,6 +16,8 @@ interface AppComponent {
   fun inject(target: ClearFieldImageButton)
 
   fun activityComponentBuilder(): TheActivityComponent.Builder
+
+  fun userSession(): UserSession
 }
 
 @Scope

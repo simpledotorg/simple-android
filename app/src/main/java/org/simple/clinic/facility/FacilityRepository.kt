@@ -1,25 +1,25 @@
 package org.simple.clinic.facility
 
-import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.user.LoggedInUser
-import org.simple.clinic.util.Optional
+import org.simple.clinic.user.UserSession
 import javax.inject.Inject
 
 @AppScope
 class FacilityRepository @Inject constructor(
     private val dao: Facility.RoomDao,
-    private val loggedInUser: Preference<Optional<LoggedInUser>>
+    private val userSession: UserSession
 ) {
 
   fun currentFacility(): Observable<Facility> {
-    val currentUserFacilityUuid = loggedInUser.get().toNullable()!!.facilityUuid
-    return Observable.just(dao.getOne(currentUserFacilityUuid))
+    return userSession.loggedInUser()
+        .take(1)
+        .map { it.toNullable()!!.facilityUuid }
+        .map { dao.getOne(it) }
   }
 
   fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {

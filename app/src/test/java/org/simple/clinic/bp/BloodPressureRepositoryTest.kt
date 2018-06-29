@@ -1,6 +1,5 @@
 package org.simple.clinic.bp
 
-import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.check
@@ -17,22 +16,22 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class BloodPressureRepositoryTest {
 
   private val dao = mock<BloodPressureMeasurement.RoomDao>()
-  private val loggedInUserRxPref = mock<Preference<Optional<LoggedInUser>>>()
+  private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
 
   private lateinit var repository: BloodPressureRepository
 
   @Before
   fun setUp() {
-    repository = BloodPressureRepository(dao, loggedInUserRxPref, facilityRepository)
+    repository = BloodPressureRepository(dao, userSession, facilityRepository)
   }
 
   @Test
@@ -40,7 +39,7 @@ class BloodPressureRepositoryTest {
     val aUuid = UUID.randomUUID()
     val loggedInUser = Just(LoggedInUser(aUuid, "a name", "a phone", "a hash", mock(), mock(), mock()))
 
-    whenever(loggedInUserRxPref.asObservable()).thenReturn(Observable.just(loggedInUser))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser))
 
     val facility = PatientMocker.facility()
     whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))

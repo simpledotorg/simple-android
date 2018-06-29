@@ -3,31 +3,40 @@ package org.simple.clinic.login.pin
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 
+@RunWith(JUnitParamsRunner::class)
 class LoginPinScreenControllerTest {
 
   private val screen = mock<LoginPinScreen>()
-  private val uiEvents = PublishSubject.create<UiEvent>()
   private val userSession = mock<UserSession>()
+  private val syncScheduler = mock<SyncScheduler>()
 
+  private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: LoginPinScreenController
 
   @Before
   fun setUp() {
-    controller = LoginPinScreenController(userSession)
+    controller = LoginPinScreenController(userSession, syncScheduler)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
   }
 
   @Test
@@ -77,5 +86,34 @@ class LoginPinScreenControllerTest {
     verify(screen).showNetworkError()
     verify(screen).showServerError("Server error")
     verify(screen).showUnexpectedError()
+  }
+
+  @Test
+  @Parameters(method = "values for data sync")
+  fun `data should only be synced when login succeeds`(loginResult: LoginResult, shouldSync: Boolean) {
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    val ongoingEntry = OngoingLoginEntry(otp = "123", phoneNumber = "99999")
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.login()).thenReturn(Single.just(loginResult))
+
+    uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(PinSubmitClicked())
+
+    if (shouldSync) {
+      verify(syncScheduler).syncImmediately()
+    } else {
+      verify(syncScheduler, never()).syncImmediately()
+    }
+  }
+
+  fun `values for data sync`(): Array<Any> {
+    return arrayOf(
+        arrayOf(LoginResult.Success(), true),
+        arrayOf(LoginResult.ServerError("some error"), false),
+        arrayOf(LoginResult.UnexpectedError(), false),
+        arrayOf(LoginResult.NetworkError(), false)
+    )
   }
 }

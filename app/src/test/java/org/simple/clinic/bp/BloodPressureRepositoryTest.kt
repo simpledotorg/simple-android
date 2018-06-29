@@ -42,7 +42,7 @@ class BloodPressureRepositoryTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser))
 
     val facility = PatientMocker.facility()
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
     repository.saveMeasurement(patientUuid, systolic = 120, diastolic = 65).subscribe()

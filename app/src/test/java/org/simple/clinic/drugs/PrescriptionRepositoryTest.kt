@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.user.UserSession
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -22,18 +23,19 @@ class PrescriptionRepositoryTest {
 
   private val dao = mock<PrescribedDrug.RoomDao>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val userSession = mock<UserSession>()
 
   private lateinit var repository: PrescriptionRepository
 
   @Before
   fun setUp() {
-    repository = PrescriptionRepository(dao, facilityRepository)
+    repository = PrescriptionRepository(dao, facilityRepository, userSession)
   }
 
   @Test
   fun `when saving a prescription, correctly get the current facility ID`() {
     val facility = PatientMocker.facility()
-    whenever(facilityRepository.currentFacility()).thenReturn(Observable.just(facility))
+    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
     repository

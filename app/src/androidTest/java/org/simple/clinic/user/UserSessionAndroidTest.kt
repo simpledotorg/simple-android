@@ -8,6 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.util.Just
 import java.util.UUID
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class UserSessionAndroidTest {
         .blockingGet()
 
     assertThat(lawgon).isInstanceOf(LoginResult.Success::class.java)
-    assertThat(userSession.accessToken()).isEqualTo("7d728cc7e54aa148e84befda6d6d570f67ac60b3410445a1fb0e8d2216fcde44")
+    assertThat(userSession.accessToken()).isEqualTo(Just("7d728cc7e54aa148e84befda6d6d570f67ac60b3410445a1fb0e8d2216fcde44"))
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()

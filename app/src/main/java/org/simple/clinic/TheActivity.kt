@@ -44,6 +44,16 @@ class TheActivity : AppCompatActivity() {
     // getIntent() returns null from attachBaseContext(), so Flow cannot
     // be initialized with the screen key requested by the caller.
     // It can only be overriden here.
+    openInitialScreenSetByCaller()
+  }
+
+  override fun onNewIntent(newIntent: Intent) {
+    super.onNewIntent(newIntent)
+    intent = newIntent
+    openInitialScreenSetByCaller()
+  }
+
+  private fun openInitialScreenSetByCaller() {
     if (intent.hasExtra(KEY_INITIAL_SCREEN)) {
       screenRouter.clearHistoryAndPush(intent.getParcelableExtra(KEY_INITIAL_SCREEN), RouterDirection.REPLACE)
     }

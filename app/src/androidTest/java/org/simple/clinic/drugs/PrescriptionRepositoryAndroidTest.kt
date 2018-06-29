@@ -114,6 +114,6 @@ class PrescriptionRepositoryAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
-    userSession.logout()
+    userSession.logout().blockingAwait()
   }
 }

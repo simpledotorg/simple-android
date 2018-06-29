@@ -1,7 +1,6 @@
 package org.simple.clinic.di
 
 import dagger.Component
-import org.simple.clinic.DebugNotificationActionReceiver
 import org.simple.clinic.ReleaseClinicApp
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton

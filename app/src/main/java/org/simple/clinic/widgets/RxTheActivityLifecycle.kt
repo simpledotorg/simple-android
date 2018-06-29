@@ -46,8 +46,8 @@ class RxTheActivityLifecycle internal constructor(private val events: Observable
   }
 }
 
-private abstract class SimpleActivityLifecycleCallbacks : ActivityLifecycleCallbacks {
-  override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle) {}
+abstract class SimpleActivityLifecycleCallbacks : ActivityLifecycleCallbacks {
+  override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
 
   override fun onActivityStarted(activity: Activity) {}
 

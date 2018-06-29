@@ -1,10 +1,12 @@
 package org.simple.clinic.user
 
+import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
@@ -14,7 +16,6 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
@@ -29,6 +30,8 @@ class UserSession @Inject constructor(
     private val loggedInUserPreference: Preference<Optional<LoggedInUser>>,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
+    private val sharedPreferences: SharedPreferences,
+    private val appDatabase: AppDatabase,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
@@ -80,9 +83,11 @@ class UserSession @Inject constructor(
     return jsonAdapter.fromJson(error.response().errorBody()!!.source())!!
   }
 
-  fun logout() {
-    loggedInUserPreference.set(None)
-    accessTokenPreference.set(None)
+  fun logout(): Completable {
+    return Completable.fromAction {
+      sharedPreferences.edit().clear().apply()
+      appDatabase.clearAllTables()
+    }
   }
 
   fun loggedInUser(): Observable<Optional<LoggedInUser>> {

@@ -1,5 +1,6 @@
 package org.simple.clinic.user
 
+import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
@@ -14,6 +15,7 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginResponse
@@ -29,6 +31,8 @@ class UserSessionTest {
   private val loggedInUserPref = mock<Preference<Optional<LoggedInUser>>>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
+  private val sharedPrefs = mock<SharedPreferences>()
+  private val appDatabase = mock<AppDatabase>()
   private val moshi = Moshi.Builder().build()
 
   private lateinit var userSession: UserSession
@@ -54,7 +58,7 @@ class UserSessionTest {
 
   @Before
   fun setUp() {
-    userSession = UserSession(api, loggedInUserPref, moshi, facilitySync, accessTokenPref)
+    userSession = UserSession(api, loggedInUserPref, moshi, facilitySync, sharedPrefs, appDatabase, accessTokenPref)
     userSession.saveOngoingLoginEntry(OngoingLoginEntry("otp", "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
   }

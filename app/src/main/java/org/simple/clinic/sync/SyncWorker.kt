@@ -9,6 +9,7 @@ import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.user.UserSession
 import timber.log.Timber
+import java.io.IOException
 import javax.inject.Inject
 
 class SyncWorker : Worker() {
@@ -37,7 +38,13 @@ class SyncWorker : Worker() {
       return WorkerResult.SUCCESS
     }
 
-    return Completable.mergeArrayDelayError(patientSync.sync(), bloodPressureSync.sync(), prescriptionSync.sync())
+    return patientSync.sync()
+        .andThen(Completable.mergeArrayDelayError(bloodPressureSync.sync(), prescriptionSync.sync()))
+        .doOnError {
+          if (it !is IOException) {
+            Timber.e(it)
+          }
+        }
         .onErrorComplete()
         .andThen(Single.just(WorkerResult.SUCCESS))
         .blockingGet()

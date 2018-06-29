@@ -137,7 +137,6 @@ class PatientSyncAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
-    lastPullTimestamp.delete()
-    userSession.logout()
+    userSession.logout().blockingAwait()
   }
 }

@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.facility.FacilityRepository
@@ -82,8 +83,11 @@ class PatientEntryScreenController @Inject constructor(
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
-        .flatMapSingle { patientRepository.ongoingEntry() }
-        .withLatestFrom(facilityRepository.currentFacility(userSession).take(1))
+        .flatMapSingle {
+          Singles.zip(
+              patientRepository.ongoingEntry(),
+              facilityRepository.currentFacility(userSession).firstOrError())
+        }
         .map { (entry, facility) ->
           entry.copy(address = OngoingPatientEntry.Address(
               colonyOrVillage = null,

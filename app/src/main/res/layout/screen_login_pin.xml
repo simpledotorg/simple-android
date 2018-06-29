@@ -95,7 +95,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:textColor="@color/red_700"
-        android:textSize="@dimen/textsize_12"
+        android:textSize="@dimen/textsize_18"
         android:visibility="gone" />
     </LinearLayout>
 

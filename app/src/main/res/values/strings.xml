@@ -54,7 +54,7 @@
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
-  <string name="bloodpressureentry_input_hint">•••</string>
+  <string name="bloodpressureentry_input_hint" translatable="false">•••</string>
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string> <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->
@@ -99,6 +99,6 @@
   <string name="loginphone_next">Next</string>
   <string name="loginpin_pin_number_hint">Your security pin</string>
   <string name="loginpin_go_back">Go back to phone number screen</string>
-  <string name="loginpin_check_internet_connection">Please check your internet connection.</string>
+  <string name="loginpin_error_check_internet_connection">Couldn\'t connect to Simple. Please check your connection.</string>
 
 </resources>

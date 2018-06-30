@@ -100,7 +100,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   fun showNetworkError() {
-    errorTextView.text = context.getString(R.string.loginpin_check_internet_connection)
+    errorTextView.text = context.getString(R.string.loginpin_error_check_internet_connection)
     errorTextView.visibility = View.VISIBLE
   }
 

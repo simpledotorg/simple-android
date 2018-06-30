@@ -74,6 +74,6 @@ data class SummaryBloodPressureItem constructor(
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
     val riskLevelTextView by bindView<TextView>(R.id.patientsummary_item_bp_risk_level)
     val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
-    val originalTextColor by lazy { readingsTextView.currentTextColor }
+    val originalTextColor = readingsTextView.currentTextColor
   }
 }

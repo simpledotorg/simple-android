@@ -23,9 +23,21 @@ class RxTheActivityLifecycle internal constructor(private val events: Observable
             }
           }
 
+          override fun onActivityStarted(activity: Activity) {
+            if (activity === theActivity) {
+              emitter.onNext(ActivityLifecycle.Started())
+            }
+          }
+
           override fun onActivityPaused(activity: Activity) {
             if (activity === theActivity) {
               emitter.onNext(ActivityLifecycle.Paused())
+            }
+          }
+
+          override fun onActivityStopped(activity: Activity) {
+            if (activity === theActivity) {
+              emitter.onNext(ActivityLifecycle.Stopped())
             }
           }
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.login.applock
 
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -10,14 +11,17 @@ import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = AppLockScreen
 typealias UiChange = (Ui) -> Unit
 
 class AppLockScreenController @Inject constructor(
-    val userSession: UserSession,
-    val passwordHasher: PasswordHasher
+    private val userSession: UserSession,
+    private val passwordHasher: PasswordHasher,
+    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -44,7 +48,12 @@ class AppLockScreenController @Inject constructor(
   private fun resetValidationError(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenPinTextChanged>()
-        .map { { ui: Ui -> ui.hideIncorrectPinError() } }
+        .map {
+          { ui: Ui ->
+            ui.setIncorrectPinErrorVisible(false)
+            Unit
+          }
+        }
   }
 
   private fun pinValidations(events: Observable<UiEvent>): Observable<UiChange> {
@@ -55,18 +64,38 @@ class AppLockScreenController @Inject constructor(
     return events
         .ofType<AppLockScreenSubmitClicked>()
         .withLatestFrom(pinTextChanges)
-        .flatMapSingle { (_, enteredPin) ->
-          userSession.loggedInUser()
+        .flatMap { (_, enteredPin) ->
+          val cachedPinValidation = userSession.loggedInUser()
               .map { (it as Just).value }
               .map { it.pinDigest }
               .firstOrError()
               .flatMap { pinDigest -> passwordHasher.compare(pinDigest, enteredPin) }
-        }
-        .map {
-          when (it) {
-            SAME -> { ui: Ui -> ui.restorePreviousScreen() }
-            DIFFERENT -> { ui: Ui -> ui.showIncorrectPinError() }
-          }
+
+          val validationResultUiChange = cachedPinValidation
+              .map {
+                when (it) {
+                  SAME -> { ui: Ui -> ui.restorePreviousScreen() }
+                  DIFFERENT -> { ui: Ui ->
+                    ui.setIncorrectPinErrorVisible(true)
+                  }
+                }
+              }
+              .toObservable()
+
+          val progressUiChanges = cachedPinValidation
+              .filter { it == DIFFERENT }
+              .map { { ui: Ui -> ui.setProgressVisible(false) } }
+              .toObservable()
+              .startWith { ui: Ui -> ui.setProgressVisible(true) }
+
+          val recordLastLock = cachedPinValidation
+              .filter { it == SAME }
+              .flatMapObservable {
+                lockAfterTimestamp.delete()
+                Observable.empty<UiChange>()
+              }
+
+          Observable.mergeArray(progressUiChanges, recordLastLock, validationResultUiChange)
         }
   }
 

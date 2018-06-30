@@ -5,6 +5,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.user.LoggedInUser
 import java.util.UUID
 
 /**
@@ -115,5 +116,21 @@ object PatientMocker {
         rxNormCode = "rxnormcode-1",
         dosages = dosages,
         protocolUUID = mock())
+  }
+
+  fun loggedInUser(
+      uuid: UUID = mock(),
+      name: String = "a name",
+      phone: String = "a phone",
+      pinDigest: String = "a hash"
+  ): LoggedInUser {
+    return LoggedInUser(
+        uuid = uuid,
+        fullName = name,
+        phoneNumber = phone,
+        pinDigest = pinDigest,
+        facilityUuid = mock(),
+        createdAt = mock(),
+        updatedAt = mock())
   }
 }

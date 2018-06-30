@@ -121,5 +121,4 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   fun goBackToLoginPhoneScreen() {
     screenRouter.pop()
   }
-
 }

@@ -74,13 +74,13 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
         .map(::CameraPermissionChanged)
   }
 
-  fun requestCameraPermission() {
-    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), REQUESTCODE_CAMERA_PERMISSION)
-  }
-
-  fun qrCodeScans(): Observable<QrScanned> {
+  private fun qrCodeScans(): Observable<QrScanned> {
     return qrReaderView.scans()
         .map { qrCode -> QrScanned(qrCode) }
+  }
+
+  fun requestCameraPermission() {
+    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), REQUESTCODE_CAMERA_PERMISSION)
   }
 
   fun setAadhaarScannerEnabled(enabled: Boolean) {

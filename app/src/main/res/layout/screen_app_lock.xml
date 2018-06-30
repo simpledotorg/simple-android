@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.login.pin.LoginPinScreen android:id="@+id/loginpin_root"
+<org.simple.clinic.login.applock.AppLockScreen android:id="@+id/applock_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
   <FrameLayout
-    android:id="@+id/loginpin_logo_container"
+    android:id="@+id/applock_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_primary">
 
-    <ImageButton
-      android:id="@+id/loginpin_back"
-      style="@style/Clinic.LoginPinBackButton"
-      android:contentDescription="@string/loginpin_go_back"
-      android:src="@drawable/ic_arrow_back_24dp" />
-
     <TextView
-      android:id="@+id/loginpin_phone_number"
+      android:id="@+id/applock_phone_number"
       style="@style/Clinic.LoginPinPhoneNumber"
       tools:text="1234567890" />
   </FrameLayout>
@@ -26,39 +20,33 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_alignTop="@+id/loginpin_card"
+    android:layout_alignTop="@+id/applock_card"
     android:background="@color/color_primary" />
 
   <android.support.v7.widget.CardView
-    android:id="@+id/loginpin_card"
+    android:id="@+id/applock_card"
     style="@style/Clinic.LoginPinCard"
-    android:layout_below="@+id/loginpin_logo_container">
-
-    <ProgressBar
-      android:id="@+id/loginpin_progress"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:visibility="invisible" />
+    android:layout_below="@+id/applock_logo_container">
 
     <LinearLayout
-      android:id="@+id/loginpin_form"
+      android:id="@+id/applock_form"
       style="@style/Clinic.LoginPinCardContentContainer">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"
-        android:labelFor="@+id/loginpin_pin"
+        android:labelFor="@+id/applock_pin"
         android:text="@string/loginpin_pin_number_hint" />
 
       <EditText
-        android:id="@+id/loginpin_pin"
+        android:id="@+id/applock_pin"
         style="@style/Clinic.LoginPinEditText" />
 
       <TextView
-        android:id="@+id/loginpin_error"
-        style="@style/Clinic.LoginPinErrorText" />
+        android:id="@+id/applock_error"
+        style="@style/Clinic.LoginPinErrorText"
+        android:text="@string/applock_error_incorrect_pin"
+        android:textSize="@dimen/textsize_16"
+        android:visibility="visible" />
     </LinearLayout>
-
   </android.support.v7.widget.CardView>
-
-</org.simple.clinic.login.pin.LoginPinScreen>
+</org.simple.clinic.login.applock.AppLockScreen>

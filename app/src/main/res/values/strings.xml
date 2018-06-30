@@ -44,7 +44,7 @@
   <string name="patiententry_error_empty_district">District cannot be empty</string>
   <string name="patiententry_error_state_empty">State cannot be empty</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Date-of-birth or age cannot be empty</string>
-  <string name="patiententry_error_invalid_dateofbirth">That date does not look correct</string>
+  <string name="patiententry_error_invalid_dateofbirth">Date-of-birth entered is incorrect</string>
 
   <!-- Home -->
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>

@@ -4,6 +4,7 @@
     <string name="gender_female">महिला</string>
     <string name="gender_male">पुरुष</string>
     <string name="gender_transgender">ट्रांसजेंडर</string>
+    <string name="api_unexpected_error">कुछ गलत हो गया। बाद में पुन: प्रयास करें।</string>
     <string name="patientsearch_new_patient">नया रोगी दर्ज करें</string>
     <string name="patientsearch_name_or_phone">रोगी का नाम या फोन नंबर</string>
     <string name="patientsearch_age">आयु %s</string>
@@ -27,6 +28,14 @@
     <string name="patiententry_district">जिला</string>
     <string name="patiententry_state">राज्य</string>
     <string name="patiententry_save_patient">रोगी की जानकारी सहेजें</string>
+    <string name="patiententry_error_empty_fullname">नाम खाली नहीं हो सकता है</string>
+    <string name="patiententry_error_empty_phonenumber">फोन नंबर खाली नहीं हो सकता है</string>
+    <string name="patiententry_error_empty_gender">लिंग खाली नहीं हो सकता है</string>
+    <string name="patiententry_error_empty_colony_or_village">कॉलोनी या गांव खाली नहीं हो सकता है</string>
+    <string name="patiententry_error_empty_district">जिला खाली नहीं हो सकता है</string>
+    <string name="patiententry_error_state_empty">राज्य खाली नहीं हो सकता है</string>
+    <string name="patiententry_error_both_dateofbirth_and_age_empty">जन्मतिथि या उम्र खाली नहीं हो सकती है</string>
+    <string name="patiententry_error_invalid_dateofbirth">जन्मतिथि गलत है</string>
     <string name="home_scan_patient_aadhaar">रोगी के आधार को स्कैन करें</string>
     <string name="home_search_patient_name_phone">रोगी का नाम या फोन नंबर भरें</string>
     <string name="bloodpressureentry_sheet_title">बी. पी. दर्ज करें</string>
@@ -36,7 +45,7 @@
     <string name="patientsummary_contentdescription_up_button">वापस जाओ</string>
     <string name="patientsummary_prescriptions_last_updated">संशोधित हो गया</string>
     <string name="patientsummary_prescriptions_update">संशोधित करें</string>
-    <string name="patientsummary_bp_add_new">"नया बी. पी.  "</string>
+    <string name="patientsummary_bp_add_new">नया बी. पी.</string>
     <string name="patientsummary_finish_saving_patient">सम्पन्न</string>
     <string name="bloodpressure_risk_level_low">कम</string>
     <string name="bloodpressure_risk_level_moderately_high">अधिक</string>
@@ -58,4 +67,9 @@
     <string name="customprescription_delete_confirm">हाँ</string>
     <string name="patientsearch_go_back">होम स्क्रीन पर वापस जाओ</string>
     <string name="patientsummary_prescriptions_add">नई दवा</string>
+    <string name="loginphone_phone_number_hint">आपकी फोन नंबर</string>
+    <string name="loginphone_next">अगला</string>
+    <string name="loginpin_pin_number_hint">आपका सुरक्षा पिन</string>
+    <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>
+    <string name="loginpin_check_internet_connection">कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
 </resources>

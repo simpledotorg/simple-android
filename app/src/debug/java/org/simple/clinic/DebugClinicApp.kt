@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
 import com.tspoon.traceur.Traceur
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent

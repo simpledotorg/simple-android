@@ -12,7 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions

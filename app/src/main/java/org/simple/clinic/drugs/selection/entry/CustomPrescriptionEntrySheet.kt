@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID

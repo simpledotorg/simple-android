@@ -2,7 +2,7 @@ package org.simple.clinic.deeplink
 
 import android.app.Activity
 import android.os.Bundle
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.login.phone.LoginPhoneScreen
 
 class DeepLinkActivity : Activity() {

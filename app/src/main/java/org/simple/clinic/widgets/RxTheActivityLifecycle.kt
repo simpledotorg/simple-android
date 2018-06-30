@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.Application.ActivityLifecycleCallbacks
 import android.os.Bundle
 import io.reactivex.Observable
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 
 class RxTheActivityLifecycle internal constructor(private val events: Observable<ActivityLifecycle>) {
 

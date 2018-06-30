@@ -12,6 +12,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import javax.inject.Inject
@@ -57,7 +58,7 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
       .map { NewPatientClicked() }
 
   fun openAadhaarScanScreen() {
-    // TODO
+    screenRouter.push(AadhaarScanScreen.KEY)
   }
 
   fun openNewPatientScreen() {

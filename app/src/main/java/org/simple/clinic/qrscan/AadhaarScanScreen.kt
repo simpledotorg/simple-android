@@ -24,6 +24,7 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
 
   companion object {
     const val REQUESTCODE_CAMERA_PERMISSION = 99
+    val KEY = AadhaarScanScreenKey()
   }
 
   @Inject

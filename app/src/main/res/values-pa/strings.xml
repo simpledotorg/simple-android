@@ -4,6 +4,7 @@
     <string name="gender_female">ਇਸਤਰੀ</string>
     <string name="gender_male">ਪੁਰਖ਼</string>
     <string name="gender_transgender">ਟਰਾਂਸਜੈਂਡਰ</string>
+    <string name="api_unexpected_error">ਕੁਝ ਗਲਤ ਹੋ ਗਿਆ ਬਾਅਦ ਵਿੱਚ ਦੁਬਾਰਾ ਕੋਸ਼ਿਸ਼ ਕਰੋ.</string>
     <string name="patientsearch_new_patient">ਨਵਾਂ ਮਰੀਜ਼ ਤਿਆਰ ਕਰੋ</string>
     <string name="patientsearch_go_back">ਹੋਮ ਸਕ੍ਰੀਨ ਤੇ ਵਾਪਸ ਜਾਓ</string>
     <string name="patientsearch_name_or_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਤੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ</string>
@@ -27,6 +28,14 @@
     <string name="patiententry_colony_or_village">ਕਲੋਨੀ ਜਾਂ ਪਿੰਡ</string>
     <string name="patiententry_district">ਜਿਲ੍ਹਾ</string>
     <string name="patiententry_save_patient">ਮਰੀਜ਼ ਦੀ ਜਾਣਕਾਰੀ ਨੂੰ ਸੰਭਾਲੋ</string>
+    <string name="patiententry_error_empty_fullname">ਨਾਮ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+    <string name="patiententry_error_empty_phonenumber">ਫੋਨ ਨੰਬਰ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+    <string name="patiententry_error_empty_gender">ਲਿੰਗ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+    <string name="patiententry_error_empty_colony_or_village">ਕਲੋਨੀ ਜਾਂ ਪਿੰਡ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+    <string name="patiententry_error_empty_district">ਜਿਲ੍ਹਾ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+    <string name="patiententry_error_state_empty">ਰਾਜ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
+    <string name="patiententry_error_both_dateofbirth_and_age_empty">ਜਨਮ ਦੀ ਤਾਰੀਖ਼ ਜਾਂ ਉਮਰ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
+    <string name="patiententry_error_invalid_dateofbirth">ਜਨਮ ਮਿਤੀ ਗਲਤ ਹੈ</string>
     <string name="patiententry_state">ਰਾਜ</string>
     <string name="home_scan_patient_aadhaar">ਮਰੀਜ਼ ਦਾ ਅਧਾਰ ਸਕੈਨ ਕਰੋ</string>
     <string name="home_search_patient_name_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਤੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ</string>
@@ -58,4 +67,9 @@
     <string name="customprescription_delete_confirm">ਹਾਂ</string>
     <string name="customprescription_delete_cancel">ਨਹੀਂ</string>
     <string name="patientsummary_prescriptions_add">ਨਵੀਂ ਦਵਾਈ</string>
+    <string name="loginphone_phone_number_hint">ਤੁਹਾਡਾ ਫੋਨ ਨੰਬਰ</string>
+    <string name="loginphone_next">ਅਗਲਾ</string>
+    <string name="loginpin_pin_number_hint">ਤੁਹਾਡੀ ਸੁਰੱਖਿਆ ਪਿੰਨ</string>
+    <string name="loginpin_go_back">ਵਾਪਸ ਫੋਨ ਨੰਬਰ ਦੇ ਪਰਦੇ ਤੇ ਜਾਓ</string>
+    <string name="loginpin_check_internet_connection">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ.</string>
 </resources>

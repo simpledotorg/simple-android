@@ -56,6 +56,11 @@
           android:host="simple.org"
           android:pathPattern="/register"
           android:scheme="https" />
+
+        <data
+          android:host="www.simple.org"
+          android:pathPattern="/register"
+          android:scheme="https" />
       </intent-filter>
     </activity>
   </application>

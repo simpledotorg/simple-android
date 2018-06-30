@@ -4,14 +4,18 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
 import com.tspoon.traceur.Traceur
+import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
+import org.simple.clinic.login.LoginModule
+import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @SuppressLint("Registered")
@@ -54,6 +58,11 @@ class DebugClinicApp : ClinicApp() {
   override fun buildDaggerGraph(): AppComponent {
     return DaggerDebugAppComponent.builder()
         .appModule(AppModule(this))
+        .loginModule(object : LoginModule() {
+          override fun appLockConfig(): Single<AppLockConfig> {
+            return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(4)))
+          }
+        })
         .build()
   }
 }

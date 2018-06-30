@@ -1,10 +1,15 @@
 package org.simple.clinic.login.applock
 
 import android.content.Context
+import android.support.transition.Fade
+import android.support.transition.TransitionManager
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
-import android.view.inputmethod.EditorInfo
+import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
@@ -15,10 +20,10 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.login.pin.PinSubmitClicked
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
 class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -36,8 +41,11 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var activity: TheActivity
 
+  private val rootLayout by bindView<ViewGroup>(R.id.applock_root)
+  private val progressView by bindView<ProgressBar>(R.id.applock_progress)
   private val phoneNumberTextView by bindView<TextView>(R.id.applock_phone_number)
   private val pinEditText by bindView<EditText>(R.id.applock_pin)
+  private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
 
   override fun onFinishInflate() {
@@ -63,8 +71,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
           .map(::AppLockScreenPinTextChanged)
 
   private fun submitClicks() =
-      RxTextView.editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
-          .map { PinSubmitClicked() }
+      RxTextView.textChanges(pinEditText)
+          .filter { it.length == 4 }
+          .map { AppLockScreenSubmitClicked() }
 
   private fun backClicks(): Observable<AppLockScreenBackClicked> {
     return Observable.create { emitter ->
@@ -91,11 +100,29 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     activity.finish()
   }
 
-  fun showIncorrectPinError() {
-    errorTextView.visibility = View.VISIBLE
+  fun setIncorrectPinErrorVisible(show: Boolean) {
+    when (show) {
+      true -> errorTextView.visibility = View.VISIBLE
+      else -> errorTextView.visibility = View.GONE
+    }
   }
 
-  fun hideIncorrectPinError() {
-    errorTextView.visibility = View.GONE
+  fun setProgressVisible(show: Boolean) {
+    if (show) {
+      rootLayout.hideKeyboard()
+    }
+
+    TransitionManager.beginDelayedTransition(this, Fade()
+        .setDuration(100)
+        .setInterpolator(FastOutSlowInInterpolator()))
+
+    progressView.visibility = when (show) {
+      true -> View.VISIBLE
+      else -> View.GONE
+    }
+    pinFormLayout.visibility = when (show) {
+      true -> View.INVISIBLE
+      else -> View.VISIBLE
+    }
   }
 }

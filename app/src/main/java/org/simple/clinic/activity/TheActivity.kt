@@ -4,9 +4,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ClinicApp
-import org.simple.clinic.di.TheActivityComponent
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -16,6 +17,8 @@ import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.widgets.ActivityLifecycle
+import org.simple.clinic.widgets.RxTheActivityLifecycle
 import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {
@@ -33,6 +36,12 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var userSession: UserSession
 
+  @Inject
+  lateinit var controller: TheActivityController
+
+  @Inject
+  lateinit var lifecycle: RxTheActivityLifecycle
+
   lateinit var screenRouter: ScreenRouter
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
@@ -44,6 +53,12 @@ class TheActivity : AppCompatActivity() {
     // be initialized with the screen key requested by the caller.
     // It can only be overriden here.
     openInitialScreenSetByCaller()
+
+    lifecycle.stream()
+        .startWith(ActivityLifecycle.Started())
+        .compose(controller)
+        .takeUntil(lifecycle.stream().ofType<ActivityLifecycle.Destroyed>())
+        .subscribe { uiChange -> uiChange(this) }
   }
 
   override fun onNewIntent(newIntent: Intent) {
@@ -99,5 +114,9 @@ class TheActivity : AppCompatActivity() {
       return
     }
     super.onBackPressed()
+  }
+
+  fun showAppLockScreen() {
+    screenRouter.push(AppLockScreen.KEY)
   }
 }

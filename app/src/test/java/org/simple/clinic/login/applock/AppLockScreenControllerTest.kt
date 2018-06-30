@@ -1,6 +1,10 @@
 package org.simple.clinic.login.applock
 
+import com.f2prateek.rx.preferences2.Preference
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -14,6 +18,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 
 class AppLockScreenControllerTest {
 
@@ -21,13 +26,14 @@ class AppLockScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val passwordHashser = mock<PasswordHasher>()
   private val loggedInUser = PatientMocker.loggedInUser(pinDigest = "actual-hash")
+  private val lastUnlockTimestamp = mock<Preference<Instant>>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: AppLockScreenController
 
   @Before
   fun setUp() {
-    controller = AppLockScreenController(userSession, passwordHashser)
+    controller = AppLockScreenController(userSession, passwordHashser, lastUnlockTimestamp)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
 
     uiEvents
@@ -42,7 +48,20 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
     uiEvents.onNext(AppLockScreenSubmitClicked())
 
-    verify(screen).restorePreviousScreen()
+    val inOrder = inOrder(screen)
+    inOrder.verify(screen).setProgressVisible(true)
+    inOrder.verify(screen).restorePreviousScreen()
+    verify(screen, never()).setProgressVisible(false)
+  }
+
+  @Test
+  fun `when app is unlocked then the last-unlock-timestamp should be updated`() {
+    whenever(passwordHashser.compare(any(), any())).thenReturn(Single.just(SAME))
+
+    uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
+    uiEvents.onNext(AppLockScreenSubmitClicked())
+
+    verify(lastUnlockTimestamp).delete()
   }
 
   @Test
@@ -52,7 +71,10 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
     uiEvents.onNext(AppLockScreenSubmitClicked())
 
-    verify(screen).showIncorrectPinError()
+    val inOrder = inOrder(screen)
+    inOrder.verify(screen).setProgressVisible(true)
+    inOrder.verify(screen).setProgressVisible(false)
+    inOrder.verify(screen).setIncorrectPinErrorVisible(true)
   }
 
   @Test
@@ -64,6 +86,6 @@ class AppLockScreenControllerTest {
   @Test
   fun `any existing errors should be reset when the user starts typing again`() {
     uiEvents.onNext(AppLockScreenPinTextChanged("0"))
-    verify(screen).hideIncorrectPinError()
+    verify(screen).setIncorrectPinErrorVisible(false)
   }
 }

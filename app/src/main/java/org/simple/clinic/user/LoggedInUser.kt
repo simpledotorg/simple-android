@@ -18,7 +18,7 @@ data class LoggedInUser(
     val phoneNumber: String,
 
     @Json(name = "password_digest")
-    val passwordDigest: String,
+    val pinDigest: String,
 
     @Json(name = "facility_id")
     val facilityUuid: UUID,

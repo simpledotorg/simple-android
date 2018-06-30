@@ -14,7 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.login.pin.PinSubmitClicked
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor

@@ -1,9 +1,10 @@
-package org.simple.clinic
+package org.simple.clinic.activity
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import org.simple.clinic.ClinicApp
 import org.simple.clinic.di.TheActivityComponent
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen

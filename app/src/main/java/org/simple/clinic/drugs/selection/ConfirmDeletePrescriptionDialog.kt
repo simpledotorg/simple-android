@@ -8,7 +8,7 @@ import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.drugs.PrescriptionRepository
 import java.util.UUID
 import javax.inject.Inject

@@ -18,7 +18,7 @@
     tools:ignore="AllowBackup,GoogleAppIndexingWarning">
 
     <activity
-      android:name=".TheActivity"
+      android:name=".activity.TheActivity"
       android:launchMode="singleTask"
       android:screenOrientation="portrait"
       android:windowSoftInputMode="adjustResize">

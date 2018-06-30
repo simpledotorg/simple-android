@@ -4,7 +4,7 @@ import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen

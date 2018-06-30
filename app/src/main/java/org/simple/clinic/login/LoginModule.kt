@@ -5,6 +5,8 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
+import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.BCryptPasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.user.LoggedInUser
@@ -13,10 +15,11 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
 @Module
-class LoginModule {
+open class LoginModule {
 
   @Provides
   fun loginApi(retrofit: Retrofit): LoginApiV1 {
@@ -47,5 +50,10 @@ class LoginModule {
   @Provides
   fun passwordHasher(): PasswordHasher {
     return BCryptPasswordHasher()
+  }
+
+  @Provides
+  open fun appLockConfig(): Single<AppLockConfig> {
+    return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(15)))
   }
 }

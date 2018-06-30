@@ -28,8 +28,15 @@
     style="@style/Clinic.LoginPinCard"
     android:layout_below="@+id/applock_logo_container">
 
+    <ProgressBar
+      android:id="@+id/applock_progress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="invisible" />
+
     <LinearLayout
-      android:id="@+id/applock_form"
+      android:id="@+id/applock_pin_container"
       style="@style/Clinic.LoginPinCardContentContainer">
 
       <TextView

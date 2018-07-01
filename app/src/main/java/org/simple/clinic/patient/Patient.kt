@@ -66,10 +66,10 @@ data class Patient constructor(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     fun patient(uuid: UUID): Flowable<List<Patient>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(patient: Patient)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(patient: List<Patient>)
 
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")

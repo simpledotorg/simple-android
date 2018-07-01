@@ -2,20 +2,24 @@ package org.simple.clinic.login
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
+import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.login.applock.BCryptPasswordHasher
+import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.user.LoggedInUserRxPreferencesConverter
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
 import retrofit2.Retrofit
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 
 @Module
-class LoginModule {
+open class LoginModule {
 
   @Provides
   fun loginApi(retrofit: Retrofit): LoginApiV1 {
@@ -23,8 +27,10 @@ class LoginModule {
   }
 
   @Provides
-  fun loggedInUser(rxSharedPrefs: RxSharedPreferences, rxPrefsConverter: LoggedInUserRxPreferencesConverter): Preference<Optional<LoggedInUser>> {
-    return rxSharedPrefs.getObject("logged_in_user", None, OptionalRxPreferencesConverter(rxPrefsConverter))
+  fun loggedInUser(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<Optional<LoggedInUser>> {
+    val userAdapter = moshi.adapter(LoggedInUser::class.java)
+    val userPrefsConverter = LoggedInUserRxPreferencesConverter(userAdapter)
+    return rxSharedPrefs.getObject("logged_in_user", None, OptionalRxPreferencesConverter(userPrefsConverter))
   }
 
   @Provides
@@ -42,13 +48,12 @@ class LoginModule {
   }
 
   @Provides
-  @Named("jsonadapter_loggedinuser")
-  fun loggedInUserJsonAdapter(moshi: Moshi): JsonAdapter<LoggedInUser> {
-    return moshi.adapter(LoggedInUser::class.java)
+  fun passwordHasher(): PasswordHasher {
+    return BCryptPasswordHasher()
   }
 
   @Provides
-  fun loggedInUserRxPrefsConverter(@Named("jsonadapter_loggedinuser") adapter: JsonAdapter<LoggedInUser>): LoggedInUserRxPreferencesConverter {
-    return LoggedInUserRxPreferencesConverter(adapter)
+  open fun appLockConfig(): Single<AppLockConfig> {
+    return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(15)))
   }
 }

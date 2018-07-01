@@ -19,7 +19,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -100,7 +100,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   fun showNetworkError() {
-    errorTextView.text = context.getString(R.string.loginpin_check_internet_connection)
+    errorTextView.text = context.getString(R.string.loginpin_error_check_internet_connection)
     errorTextView.visibility = View.VISIBLE
   }
 
@@ -121,5 +121,4 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   fun goBackToLoginPhoneScreen() {
     screenRouter.pop()
   }
-
 }

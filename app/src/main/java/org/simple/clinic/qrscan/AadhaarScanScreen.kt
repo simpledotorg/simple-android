@@ -12,7 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.home.bp.NewBpScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -81,13 +81,13 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
         .map(::CameraPermissionChanged)
   }
 
-  fun requestCameraPermission() {
-    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), REQUESTCODE_CAMERA_PERMISSION)
-  }
-
-  fun qrCodeScans(): Observable<QrScanned> {
+  private fun qrCodeScans(): Observable<QrScanned> {
     return qrReaderView.scans()
         .map { qrCode -> QrScanned(qrCode) }
+  }
+
+  fun requestCameraPermission() {
+    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), REQUESTCODE_CAMERA_PERMISSION)
   }
 
   fun setAadhaarScannerEnabled(enabled: Boolean) {

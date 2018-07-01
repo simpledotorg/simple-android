@@ -10,7 +10,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.router.screen.ScreenRouter

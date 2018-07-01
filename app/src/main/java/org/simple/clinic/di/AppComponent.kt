@@ -2,6 +2,7 @@ package org.simple.clinic.di
 
 import dagger.Component
 import org.simple.clinic.ReleaseClinicApp
+import org.simple.clinic.activity.TheActivityComponent
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.sync.SyncWorker

@@ -10,7 +10,7 @@ import android.widget.Button
 import android.widget.EditText
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.TheActivity
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 

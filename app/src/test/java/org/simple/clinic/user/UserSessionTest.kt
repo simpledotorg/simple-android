@@ -20,6 +20,7 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
@@ -46,14 +47,7 @@ class UserSessionTest {
         }
       }"""
 
-    val LOGGED_IN_USER = LoggedInUser(
-        uuid = mock(),
-        fullName = "a name",
-        phoneNumber = "a phone",
-        passwordDigest = "a hash",
-        facilityUuid = mock(),
-        createdAt = mock(),
-        updatedAt = mock())
+    val LOGGED_IN_USER = PatientMocker.loggedInUser()
   }
 
   @Before

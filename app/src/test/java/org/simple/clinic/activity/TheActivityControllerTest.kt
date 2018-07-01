@@ -49,11 +49,11 @@ class TheActivityControllerTest {
   }
 
   @Test
-  fun `when activity is started, user is logged in user was inactive then app lock should be shown`() {
+  fun `when activity is started, user is logged and in user was inactive then app lock should be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
 
-    val lastStopTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(lockInMinutes + 1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lastStopTime)
+    val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(1))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     uiEvents.onNext(ActivityLifecycle.Started())
 
@@ -86,14 +86,26 @@ class TheActivityControllerTest {
   }
 
   @Test
-  fun `when app is started and lock timer hasn't expired yet then the timer should be unset`() {
+  fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
 
-    val lastStopTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(lockInMinutes - 1))
-    whenever(lockAfterTimestamp.get()).thenReturn(lastStopTime)
+    val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     uiEvents.onNext(ActivityLifecycle.Started())
 
     verify(lockAfterTimestamp).delete()
+  }
+
+  @Test
+  fun `when app is started locked and lock timer hasn't expired yet then the timer should not be unset`() {
+    whenever(userSession.isUserLoggedIn()).thenReturn(true)
+
+    val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
+    whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
+
+    uiEvents.onNext(ActivityLifecycle.Started())
+
+    verify(lockAfterTimestamp, never()).delete()
   }
 }

@@ -11,19 +11,12 @@ import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity(
     foreignKeys = [
-      ForeignKey(
-          entity = Patient::class,
-          parentColumns = ["uuid"],
-          childColumns = ["patientUuid"],
-          onDelete = ForeignKey.CASCADE,
-          onUpdate = ForeignKey.CASCADE),
       ForeignKey(
           entity = Facility::class,
           parentColumns = ["uuid"],
@@ -83,7 +76,7 @@ data class BloodPressureMeasurement constructor(
     @Query("UPDATE bloodpressuremeasurement SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
     fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(newMeasurements: List<BloodPressureMeasurement>)
 
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid LIMIT 1")

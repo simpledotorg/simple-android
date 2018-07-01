@@ -11,7 +11,6 @@ import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -22,12 +21,6 @@ import java.util.UUID
  */
 @Entity(
     foreignKeys = [
-      ForeignKey(
-          entity = Patient::class,
-          parentColumns = ["uuid"],
-          childColumns = ["patientUuid"],
-          onDelete = ForeignKey.CASCADE,
-          onUpdate = ForeignKey.CASCADE),
       ForeignKey(
           entity = Facility::class,
           parentColumns = ["uuid"],
@@ -90,7 +83,7 @@ data class PrescribedDrug(
     @Query("UPDATE prescribeddrug SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
     fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(newDrugs: List<PrescribedDrug>)
 
     /**

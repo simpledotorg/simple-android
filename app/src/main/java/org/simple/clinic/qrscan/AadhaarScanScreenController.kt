@@ -83,18 +83,17 @@ class AadhaarScanScreenController @Inject constructor(
           repository.searchPatientsAndPhoneNumbers(patientNameOrEmpty)
               .take(1)
               .flatMap { potentiallyMatchingPatients ->
-                Timber.i("Aadhaar data: $aadhaarData")
-                Timber.i("Found ${potentiallyMatchingPatients.size} existing patients with this aadhaar data")
+                Timber.e("Aadhaar data: $aadhaarData")
+                Timber.e("Found ${potentiallyMatchingPatients.size} existing patients with this aadhaar data")
 
-                when {
-                  potentiallyMatchingPatients.isNotEmpty() -> {
-                    Observable.just({ ui: Ui -> ui.openPatientSearchScreen(patientNameOrEmpty, preFilledAge = null) })
-                  }
-                  else -> {
+                if(potentiallyMatchingPatients.size == 1) {
+                  Observable.just({ ui: Ui -> ui.openPatientSummaryScreen(potentiallyMatchingPatients[0].uuid) })
+                } else if (potentiallyMatchingPatients.isNotEmpty()) {
+                  Observable.just({ ui: Ui -> ui.openPatientSearchScreen(patientNameOrEmpty, preFilledAge = null) })
+                } else {
                     repository
                         .saveOngoingEntry(newPatientEntry(aadhaarData))
                         .andThen(Observable.just({ ui: Ui -> ui.openNewPatientEntryScreen() }))
-                  }
                 }
               }
         }

@@ -17,9 +17,13 @@ import org.simple.clinic.home.bp.NewBpScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.search.PatientSearchScreen
+import org.simple.clinic.summary.PatientSummaryCaller
+import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import java.util.*
 import javax.inject.Inject
 
 class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -98,7 +102,11 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
     screenRouter.push(PatientEntryScreen.KEY)
   }
 
+  fun openPatientSummaryScreen(patientUuid: UUID) {
+    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.SEARCH))
+  }
+
   fun openPatientSearchScreen(preFilledSearchQuery: String, preFilledAge: String?) {
-    // TODO
+    screenRouter.push(PatientSearchScreen.KEY)
   }
 }

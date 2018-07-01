@@ -13,6 +13,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.R
 import org.simple.clinic.TheActivity
+import org.simple.clinic.home.bp.NewBpScreen
+import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
@@ -93,7 +95,7 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
   }
 
   fun openNewPatientEntryScreen() {
-    // TODO.
+    screenRouter.push(PatientEntryScreen.KEY)
   }
 
   fun openPatientSearchScreen(preFilledSearchQuery: String, preFilledAge: String?) {

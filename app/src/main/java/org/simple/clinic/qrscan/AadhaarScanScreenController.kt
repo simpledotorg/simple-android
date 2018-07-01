@@ -83,8 +83,8 @@ class AadhaarScanScreenController @Inject constructor(
           repository.searchPatientsAndPhoneNumbers(patientNameOrEmpty)
               .take(1)
               .flatMap { potentiallyMatchingPatients ->
-                Timber.i("Aadhaar data: $aadhaarData")
-                Timber.i("Found ${potentiallyMatchingPatients.size} existing patients with this aadhaar data")
+                Timber.e("Aadhaar data: $aadhaarData")
+                Timber.e("Found ${potentiallyMatchingPatients.size} existing patients with this aadhaar data")
 
                 when {
                   potentiallyMatchingPatients.isNotEmpty() -> {

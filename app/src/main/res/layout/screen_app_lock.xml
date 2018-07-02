@@ -12,7 +12,7 @@
     android:background="@color/color_primary">
 
     <TextView
-      android:id="@+id/applock_phone_number"
+      android:id="@+id/applock_user_fullname"
       style="@style/Clinic.LoginPinPhoneNumber"
       tools:text="1234567890" />
   </FrameLayout>

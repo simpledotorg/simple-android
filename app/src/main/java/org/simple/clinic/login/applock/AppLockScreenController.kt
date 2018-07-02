@@ -28,21 +28,21 @@ class AppLockScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.mergeArray(
-        populatePhoneNumber(replayedEvents),
+        populateFullName(replayedEvents),
         resetValidationError(replayedEvents),
         pinValidations(replayedEvents),
         backClicks(replayedEvents))
   }
 
-  private fun populatePhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenCreated>()
         .flatMap {
           userSession.loggedInUser()
               .map { (it as Just).value }
-              .map { it.phoneNumber }
+              .map { it.fullName }
         }
-        .map { { ui: Ui -> ui.showPhoneNumber(it) } }
+        .map { { ui: Ui -> ui.showFullName(it) } }
   }
 
   private fun resetValidationError(events: Observable<UiEvent>): Observable<UiChange> {

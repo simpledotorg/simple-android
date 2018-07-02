@@ -43,7 +43,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   private val rootLayout by bindView<ViewGroup>(R.id.applock_root)
   private val progressView by bindView<ProgressBar>(R.id.applock_progress)
-  private val phoneNumberTextView by bindView<TextView>(R.id.applock_phone_number)
+  private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
   private val pinEditText by bindView<EditText>(R.id.applock_pin)
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
@@ -88,8 +88,8 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
   }
 
-  fun showPhoneNumber(phoneNumber: String) {
-    phoneNumberTextView.text = phoneNumber
+  fun showFullName(fullName: String) {
+    fullNameTextView.text = fullName
   }
 
   fun restorePreviousScreen() {

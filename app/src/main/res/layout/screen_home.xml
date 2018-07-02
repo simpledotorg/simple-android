@@ -21,7 +21,6 @@
     android:layout_below="@id/home_toolbar"
     android:background="@color/color_primary"
     android:elevation="@dimen/elevation_toolbar"
-    android:visibility="gone"
     app:tabIndicatorColor="@color/white"
     app:tabSelectedTextColor="@color/white"
     app:tabTextColor="@color/white_opacity_60"

@@ -78,9 +78,9 @@ class AppLockScreenControllerTest {
   }
 
   @Test
-  fun `On start, the logged in user's phone-number should be shown`() {
+  fun `On start, the logged in user's full name should be shown`() {
     uiEvents.onNext(AppLockScreenCreated())
-    verify(screen).showPhoneNumber(loggedInUser.phoneNumber)
+    verify(screen).showFullName(loggedInUser.fullName)
   }
 
   @Test

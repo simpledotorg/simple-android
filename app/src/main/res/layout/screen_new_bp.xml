@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.home.bp.NewBpScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/newbp_root"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="#E9ECEE"
-  tools:ignore="Overdraw">
+  android:layout_height="match_parent">
 
-  <include
-    layout="@layout/screen_aadhaar_scanner"
+  <View
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginBottom="-44dp"
-    android:layout_above="@+id/newbp_search_option_container" />
+    android:layout_marginTop="112dp"
+    android:background="#05000000" />
 
-  <android.support.v7.widget.CardView
-    android:id="@+id/newbp_search_option_container"
+  <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_alignParentBottom="true">
+    android:paddingTop="@dimen/spacing_24"
+    android:paddingStart="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_16"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <Button
+      android:id="@+id/home_search_patients"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:gravity="center_horizontal"
-      android:orientation="vertical">
+      android:layout_height="64dp"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:paddingStart="20dp"
+      android:drawableStart="@drawable/ic_search_black_24dp"
+      android:text="@string/home_search_patient_name_phone"
+      android:textAllCaps="false"
+      android:textColor="@color/black_opacity_30"
+      android:textSize="@dimen/textsize_18"
+      app:backgroundTint="@color/white"
+      tools:ignore="MissingPrefix,RtlSymmetry" />
 
-      <Button
-        android:id="@+id/home_scan_aadhaar"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/spacing_16"
-        android:text="@string/home_scan_patient_aadhaar" />
+    <Button
+      android:id="@+id/home_scan_aadhaar"
+      android:layout_width="match_parent"
+      android:layout_height="64dp"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:paddingStart="32dp"
+      android:drawableStart="@drawable/qr_code"
+      android:text="@string/home_scan_patient_aadhaar"
+      android:textAllCaps="false"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_18"
+      app:backgroundTint="@color/color_accent"
+      tools:ignore="MissingPrefix,RtlSymmetry" />
+  </LinearLayout>
 
-      <Button
-        android:id="@+id/home_search_patients"
-        android:layout_width="280dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_24"
-        android:text="@string/home_search_patient_name_phone" />
-    </LinearLayout>
-
-  </android.support.v7.widget.CardView>
+  <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:layout_centerHorizontal="true"
+    android:src="@drawable/scan_illustration"
+    tools:ignore="ContentDescription" />
 
 </org.simple.clinic.home.bp.NewBpScreen>

@@ -26,7 +26,7 @@
   <string name="patiententry_phone_number">Phone number</string>
   <string name="patiententry_none">None</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
-  <string name="patiententry_date_of_birth_focused">DD/MM/YYYY</string>
+  <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>
   <string name="patiententry_age">Age</string>
   <string name="patiententry_gender_female">@string/gender_female</string>

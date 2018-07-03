@@ -49,6 +49,9 @@
   <!-- Home -->
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>
   <string name="home_search_patient_name_phone">Enter patient\'s name or phone</string>
+  <string name="tab_new_bp">New BP</string>
+  <string name="tab_call_list">Change Done</string>
+  <string name="tab_reports">Reports</string>
 
   <!-- New blood pressure entry -->
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>

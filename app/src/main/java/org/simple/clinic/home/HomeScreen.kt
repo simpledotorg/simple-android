@@ -24,9 +24,14 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
       return
     }
 
-    for (tabTitle in arrayOf("New BP", "Call list", "Reports")) {
+    val tabTitles = arrayOf(
+        context.getString(R.string.tab_new_bp),
+        context.getString(R.string.tab_call_list),
+        context.getString(R.string.tab_reports))
+
+    for (title in tabTitles) {
       val tab = viewPagerTabs.newTab()
-      tab.text = tabTitle
+      tab.text = title
       viewPagerTabs.addTab(tab)
     }
 

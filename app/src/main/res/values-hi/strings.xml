@@ -72,4 +72,7 @@
     <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>
     <string name="loginpin_error_check_internet_connection">कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
     <string name="applock_error_incorrect_pin">पिन मूल पिन से मेल नहीं खाता</string>
+  <string name="tab_new_bp">नया बी. पी.</string>
+    <string name="tab_call_list">कॉल सूची</string>
+    <string name="tab_reports">रिपोर्ट</string>
 </resources>

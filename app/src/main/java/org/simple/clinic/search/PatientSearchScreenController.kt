@@ -84,7 +84,7 @@ class PatientSearchScreenController @Inject constructor(
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val queryChanges = events
         .ofType<SearchQueryTextChanged>()
-        .map { it.query }
+        .map { it.query.trim() }
 
     return events
         .ofType<CreateNewPatientClicked>()

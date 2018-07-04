@@ -38,7 +38,7 @@
   <string name="patiententry_save_patient">Save patient</string>
 
   <string name="patiententry_error_empty_fullname">Name cannot be empty</string>
-  <string name="patiententry_error_empty_phonenumber">Phone number cannot be empty</string>
+  <string name="patiententry_error_empty_phonenumber">Enter phone number or select \"None\"</string>
   <string name="patiententry_error_empty_gender">Gender cannot be empty</string>
   <string name="patiententry_error_empty_colony_or_village">Colony or village cannot be empty</string>
   <string name="patiententry_error_empty_district">District cannot be empty</string>
@@ -65,7 +65,7 @@
   <string name="patientsummary_prescriptions_add">Add medicines</string>
   <string name="patientsummary_prescriptions_update">Update medicines</string>
   <string name="patientsummary_bp_add_new">New BP</string>
-  <string name="patientsummary_finish_saving_patient">Done</string>
+  <string name="patientsummary_finish_saving_patient">Save</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->

@@ -10,7 +10,6 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -115,19 +114,17 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen was opened from search and up button is pressed then the user should be taken back to search`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    verify(screen).goBackToHome()
-  }
-
-  @Test
-  fun `when screen was opened after saving a new patient and up button is pressed then the user should be taken back to home`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+  fun `when the up button is pressed then the user should be taken back to search`() {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen).goBackToPatientSearch()
+  }
+
+  @Test
+  fun `when the save button is pressed then the user should be taken back to the home screen`() {
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    verify(screen).goBackToHome()
   }
 
   @Test
@@ -136,17 +133,5 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
-  }
-
-  @Test
-  @Parameters(value = ["SEARCH", "NEW_PATIENT"])
-  fun `done button clicks should be handled in the same way as back clicks`(caller: PatientSummaryCaller) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    when (caller) {
-      PatientSummaryCaller.NEW_PATIENT -> verify(screen).goBackToHome()
-      else -> verify(screen).goBackToPatientSearch()
-    }
   }
 }

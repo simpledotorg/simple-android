@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.drugs.selection.PrescribedDrugsScreen android:id="@+id/prescribeddrugs_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.drugs.selection.PrescribedDrugsScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/prescribeddrugs_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -18,33 +17,19 @@
     android:id="@+id/prescribeddrugs_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="0dp"
+    android:layout_weight="1"
     android:layout_above="@+id/prescribeddrugs_done"
     android:layout_below="@+id/prescribeddrugs_toolbar"
-    android:layout_weight="1"
-    android:clipToPadding="false"
-    android:paddingBottom="@dimen/textsize_18" />
+    android:paddingBottom="@dimen/textsize_18"
+    android:clipToPadding="false" />
 
   <FrameLayout
     android:id="@+id/prescribeddrugs_done"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="#69B038"
-    android:elevation="10dp"
-    android:foreground="?attr/selectableItemBackgroundBorderless"
-    tools:ignore="UnusedAttribute">
+    style="@style/Clinic.DoneFrame"
+    android:layout_alignParentBottom="true">
 
     <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:background="@null"
-      android:clickable="false"
-      android:drawablePadding="@dimen/spacing_8"
-      android:drawableStart="@drawable/ic_done_20dp"
-      android:focusable="false"
-      android:minWidth="0dp"
-      android:text="@string/patientsummary_finish_saving_patient"
-      android:textColor="@color/white" />
+      style="@style/Clinic.DoneButton"
+      android:text="@string/patientsummary_finish_saving_patient" />
   </FrameLayout>
 </org.simple.clinic.drugs.selection.PrescribedDrugsScreen>

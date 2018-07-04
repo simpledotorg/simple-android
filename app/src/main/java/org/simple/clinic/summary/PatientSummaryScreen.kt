@@ -39,6 +39,8 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 import java.util.UUID
 import javax.inject.Inject
 
@@ -129,16 +131,27 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
     fullNameTextView.text = patient.fullName
 
+    if (patient.dateOfBirth == null) {
+      val computedDob = patient.age!!.computedDateOfBirth
+      val years = Period.between(computedDob, LocalDate.now()).years.toString()
+      byline1TextView.text = years
+
+    } else {
+      val years = Period.between(patient.dateOfBirth, LocalDate.now()).years.toString()
+      byline1TextView.text = years
+    }
+
     byline1TextView.text = when (patient.gender) {
-      Gender.MALE -> resources.getString(Gender.MALE.displayTextRes)
-      Gender.FEMALE -> resources.getString(Gender.FEMALE.displayTextRes)
-      Gender.TRANSGENDER -> resources.getString(Gender.TRANSGENDER.displayTextRes)
+      Gender.MALE -> "${byline1TextView.text}, ${resources.getString(Gender.MALE.displayTextRes)}"
+      Gender.FEMALE -> "${byline1TextView.text}, ${resources.getString(Gender.FEMALE.displayTextRes)}"
+      Gender.TRANSGENDER -> "${byline1TextView.text}, ${resources.getString(Gender.TRANSGENDER.displayTextRes)}"
     }
 
     byline1TextView.text = when (phoneNumber) {
       is Just -> "${byline1TextView.text} • ${phoneNumber.value.number}"
       is None -> byline1TextView.text
     }
+
     byline2TextView.text = when {
       address.colonyOrVillage.isNullOrBlank() -> "${address.district}, ${address.state}"
       else -> "${address.colonyOrVillage}, ${address.district}, ${address.state}"

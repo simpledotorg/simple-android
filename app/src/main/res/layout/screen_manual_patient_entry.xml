@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.newentry.PatientEntryScreen android:id="@+id/patiententry_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.newentry.PatientEntryScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/patiententry_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="horizontal">
@@ -11,27 +11,27 @@
     android:id="@+id/patiententry_up"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:padding="@dimen/spacing_16"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:contentDescription="@string/patiententry_contentdescription_up_button"
-    android:padding="@dimen/spacing_16"
     android:src="@drawable/ic_arrow_back_24dp"
     android:tint="@color/gray_600" />
 
   <ScrollView
+    android:scrollbarStyle="insideOverlay"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_above="@+id/patiententry_save"
     android:layout_toEndOf="@+id/patiententry_up"
-    android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical">
 
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
+      android:paddingTop="@dimen/spacing_12"
       android:paddingBottom="64dp"
       android:paddingEnd="@dimen/spacing_16"
-      android:paddingTop="@dimen/spacing_12"
+      android:orientation="vertical"
       tools:ignore="RtlSymmetry">
 
       <FrameLayout
@@ -83,9 +83,9 @@
           android:id="@+id/patiententry_phone_number_none"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="end"
-          android:layout_marginEnd="8dp"
           android:layout_marginTop="@dimen/spacing_16"
+          android:layout_marginEnd="8dp"
+          android:layout_gravity="end"
           android:text="@string/patiententry_none"
           android:textColor="@color/gray_600" />
       </FrameLayout>
@@ -130,9 +130,9 @@
           android:id="@+id/patiententry_dateofbirth_and_age_separator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/spacing_16"
-          android:layout_marginStart="@dimen/spacing_16"
           android:layout_marginTop="@dimen/spacing_24"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:layout_marginEnd="@dimen/spacing_16"
           android:background="@color/window_background"
           android:text="@string/patiententry_dateofbirth_and_age_separator"
           android:textAllCaps="true" />
@@ -206,8 +206,8 @@
         android:id="@+id/patiententry_gender_validation_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_4"
         android:layout_marginTop="@dimen/spacing_4"
+        android:layout_marginStart="@dimen/spacing_4"
         android:text="@string/patiententry_error_empty_gender"
         android:textColor="#FF0100"
         android:textSize="@dimen/textsize_12"
@@ -236,9 +236,9 @@
           android:id="@+id/patiententry_colony_or_village_none"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="end"
-          android:layout_marginEnd="8dp"
           android:layout_marginTop="@dimen/spacing_16"
+          android:layout_marginEnd="8dp"
+          android:layout_gravity="end"
           android:text="@string/patiententry_none"
           android:textColor="@color/gray_600" />
       </FrameLayout>
@@ -254,8 +254,8 @@
           android:id="@+id/patiententry_district_inputlayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/spacing_4"
-          android:layout_weight="1">
+          android:layout_weight="1"
+          android:layout_marginEnd="@dimen/spacing_4">
 
           <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_district"
@@ -270,8 +270,8 @@
           android:id="@+id/patiententry_state_inputlayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_4"
-          android:layout_weight="1">
+          android:layout_weight="1"
+          android:layout_marginStart="@dimen/spacing_4">
 
           <android.support.design.widget.TextInputEditText
             android:id="@+id/patiententry_state"
@@ -287,25 +287,11 @@
 
   <FrameLayout
     android:id="@+id/patiententry_save"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="#69B038"
-    android:elevation="10dp"
-    android:foreground="?attr/selectableItemBackgroundBorderless"
-    tools:ignore="UnusedAttribute">
+    style="@style/Clinic.DoneFrame"
+    android:layout_alignParentBottom="true">
 
     <Button
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:background="@null"
-      android:clickable="false"
-      android:drawablePadding="@dimen/spacing_8"
-      android:drawableStart="@drawable/ic_done_20dp"
-      android:focusable="false"
-      android:minWidth="0dp"
-      android:text="@string/patiententry_save_patient"
-      android:textColor="@color/white" />
+      style="@style/Clinic.DoneButton"
+      android:text="@string/patiententry_save_patient" />
   </FrameLayout>
 </org.simple.clinic.newentry.PatientEntryScreen>

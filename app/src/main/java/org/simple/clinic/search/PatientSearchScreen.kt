@@ -59,7 +59,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    // TODO: Can we use sealed classes to represent events?
     Observable
         .mergeArray(
             searchQueryChanges(),

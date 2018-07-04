@@ -10,7 +10,6 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
-import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -28,16 +27,14 @@ class PatientSummaryScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay(1).refCount()
 
-    val transformedEvents = replayedEvents
-        .mergeWith(handleDoneClicks(replayedEvents))
-
     return Observable.mergeArray(
-        populatePatientProfile(transformedEvents),
-        constructPrescribedDrugsHistory(transformedEvents),
-        constructBloodPressureHistory(transformedEvents),
-        openBloodPressureBottomSheet(transformedEvents),
-        openPrescribedDrugsScreen(transformedEvents),
-        handleBackClicks(transformedEvents))
+        populatePatientProfile(replayedEvents),
+        constructPrescribedDrugsHistory(replayedEvents),
+        constructBloodPressureHistory(replayedEvents),
+        openBloodPressureBottomSheet(replayedEvents),
+        openPrescribedDrugsScreen(replayedEvents),
+        handleDoneClicks(replayedEvents),
+        handleBackClicks(replayedEvents))
   }
 
   private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {
@@ -119,24 +116,14 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCallers = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.caller }
-
     return events
         .ofType<PatientSummaryBackClicked>()
-        .withLatestFrom(screenCallers)
-        .map { (_, caller) ->
-          when (caller!!) {
-            SEARCH -> { ui: Ui -> ui.goBackToPatientSearch() }
-            NEW_PATIENT -> { ui: Ui -> ui.goBackToHome() }
-          }
-        }
+        .map { { ui: Ui -> ui.goBackToPatientSearch() } }
   }
 
-  private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiEvent> {
+  private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientSummaryDoneClicked>()
-        .map { PatientSummaryBackClicked() }
+        .map { { ui: Ui -> ui.goBackToHome() } }
   }
 }

@@ -51,7 +51,7 @@ class PatientSearchScreenController @Inject constructor(
   private fun searchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val queryChanges = events
         .ofType<SearchQueryTextChanged>()
-        .map { it.query }
+        .map { it.query.trim() }
 
     val ageChanges = events
         .ofType<SearchQueryAgeChanged>()

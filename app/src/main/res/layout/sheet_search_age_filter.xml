@@ -40,6 +40,7 @@
         android:imeOptions="actionDone"
         android:inputType="number"
         android:maxEms="2"
+        android:maxLength="3"
         android:minEms="2"
         android:textSize="32sp" />
 

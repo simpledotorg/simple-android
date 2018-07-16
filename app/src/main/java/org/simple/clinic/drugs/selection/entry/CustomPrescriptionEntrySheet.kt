@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import com.jakewharton.rxbinding2.view.RxView
@@ -69,7 +70,13 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
       .map(CharSequence::toString)
       .map(::CustomPrescriptionDrugDosageTextChanged)
 
-  private fun saveClicks() = RxView.clicks(saveButton).map { SaveCustomPrescriptionClicked() }
+  private fun saveClicks(): Observable<UiEvent> {
+    val dosageImeClicks = RxTextView.editorActions(drugDosageEditText) { it == EditorInfo.IME_ACTION_DONE }
+
+    return RxView.clicks(saveButton)
+        .mergeWith(dosageImeClicks)
+        .map { SaveCustomPrescriptionClicked() }
+  }
 
   fun setSaveButtonEnabled(enabled: Boolean) {
     saveButton.isEnabled = enabled

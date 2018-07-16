@@ -39,6 +39,7 @@
         android:layout_height="wrap_content">
 
         <android.support.design.widget.TextInputLayout
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
           android:id="@+id/patiententry_full_name_inputlayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
@@ -66,6 +67,7 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.TextInputLayout
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
           android:id="@+id/patiententry_phone_number_inputlayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
@@ -104,6 +106,7 @@
           android:layout_weight="0.6">
 
           <android.support.design.widget.TextInputLayout
+            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -142,6 +145,7 @@
           android:layout_weight="1">
 
           <android.support.design.widget.TextInputLayout
+            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
             android:id="@+id/patiententry_date_of_birth_inputlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -209,7 +213,7 @@
         android:layout_marginTop="@dimen/spacing_4"
         android:layout_marginStart="@dimen/spacing_4"
         android:text="@string/patiententry_error_empty_gender"
-        android:textColor="#FF0100"
+        android:textColor="@color/textinputlayout_error"
         android:textSize="@dimen/textsize_12"
         android:visibility="gone" />
 
@@ -219,6 +223,7 @@
         android:layout_marginTop="@dimen/spacing_16">
 
         <android.support.design.widget.TextInputLayout
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
           android:id="@+id/patiententry_colony_or_village_inputlayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content">
@@ -251,6 +256,7 @@
         android:orientation="horizontal">
 
         <android.support.design.widget.TextInputLayout
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
           android:id="@+id/patiententry_district_inputlayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -267,6 +273,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout
+          app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
           android:id="@+id/patiententry_state_inputlayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"

@@ -37,6 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
+        android:imeOptions="actionDone"
         android:inputType="number"
         android:maxEms="2"
         android:minEms="2"

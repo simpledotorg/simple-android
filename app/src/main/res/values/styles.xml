@@ -175,4 +175,9 @@
     <item name="android:textSize">@dimen/textsize_16</item>
   </style>
 
+  <style name="Clinic.TextAppearance" />
+
+  <style name="Clinic.TextAppearance.TextInputLayoutError">
+    <item name="android:textColor">@color/textinputlayout_error</item>
+  </style>
 </resources>

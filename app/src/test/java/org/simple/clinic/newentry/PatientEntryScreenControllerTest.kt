@@ -14,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientMocker
@@ -32,9 +33,10 @@ class PatientEntryScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
+  private val dobValidator = mock<DateOfBirthFormatValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession)
+  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -67,6 +69,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
+    whenever(dobValidator.validate(any())).thenReturn(Result.VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -156,6 +159,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
+    whenever(dobValidator.validate(any())).thenReturn(Result.VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -191,21 +195,27 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientStateTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
 
+    whenever(dobValidator.validate("33/33/3333")).thenReturn(Result.DATE_IS_IN_FUTURE)
     uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
+    whenever(dobValidator.validate(" ")).thenReturn(Result.INVALID_PATTERN)
     uiEvents.onNext(PatientAgeTextChanged(" "))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, times(3)).showEmptyFullNameError(true)
-    verify(screen, times(3)).showEmptyPhoneNumberError(true)
+    whenever(dobValidator.validate("16/07/2018")).thenReturn(Result.INVALID_PATTERN)
+    uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen, times(4)).showEmptyFullNameError(true)
+    verify(screen, times(4)).showEmptyPhoneNumberError(true)
     verify(screen, times(2)).showEmptyDateOfBirthAndAgeError(true)
     verify(screen).showInvalidDateOfBirthError(true)
-    verify(screen, times(3)).showMissingGenderError(true)
-    verify(screen, times(3)).showEmptyColonyOrVillageError(true)
-    verify(screen, times(3)).showEmptyDistrictError(true)
-    verify(screen, times(3)).showEmptyStateError(true)
+    verify(screen, times(4)).showMissingGenderError(true)
+    verify(screen, times(4)).showEmptyColonyOrVillageError(true)
+    verify(screen, times(4)).showEmptyDistrictError(true)
+    verify(screen, times(4)).showEmptyStateError(true)
   }
 
   @Test
@@ -231,6 +241,7 @@ class PatientEntryScreenControllerTest {
     verify(screen, times(4)).showEmptyPhoneNumberError(false)
     verify(screen, times(3)).showEmptyDateOfBirthAndAgeError(false)
     verify(screen, times(2)).showInvalidDateOfBirthError(false)
+    verify(screen, times(2)).showDateOfBirthIsInFutureError(false)
     verify(screen).showMissingGenderError(false)
     verify(screen, times(4)).showEmptyColonyOrVillageError(false)
     verify(screen).showEmptyDistrictError(false)

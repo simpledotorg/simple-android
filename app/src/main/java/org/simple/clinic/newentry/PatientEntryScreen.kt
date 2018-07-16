@@ -305,6 +305,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       else -> null
     }
   }
+
+  fun showDateOfBirthIsInFutureError(show: Boolean) {
+    dateOfBirthInputLayout.error = when {
+      show -> resources.getString(R.string.patiententry_error_dateofbirth_is_in_future)
+      else -> null
+    }
+  }
 }
 
 private fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {

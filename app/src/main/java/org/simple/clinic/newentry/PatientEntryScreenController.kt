@@ -13,10 +13,13 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.DATE_OF_BIRTH_IS_IN_FUTURE
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.MISSING_GENDER
 import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.PERSONAL_DETAILS_EMPTY
@@ -38,7 +41,8 @@ typealias UiChange = (Ui) -> Unit
 class PatientEntryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val dobValidator: DateOfBirthFormatValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -227,12 +231,13 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
         .map { (_, ongoingEntry) ->
-          ongoingEntry.validationErrors()
+          ongoingEntry.validationErrors(dobValidator)
               .map {
                 val change: UiChange = when (it) {
-                  OngoingPatientEntry.ValidationError.FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }
-                  OngoingPatientEntry.ValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(true) }
+                  FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }
+                  BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(true) }
                   INVALID_DATE_OF_BIRTH -> { ui: Ui -> ui.showInvalidDateOfBirthError(true) }
+                  DATE_OF_BIRTH_IS_IN_FUTURE -> { ui: Ui -> ui.showDateOfBirthIsInFutureError(true) }
                   MISSING_GENDER -> { ui: Ui -> ui.showMissingGenderError(true) }
                   DISTRICT_EMPTY -> { ui: Ui -> ui.showEmptyDistrictError(true) }
                   STATE_EMPTY -> { ui: Ui -> ui.showEmptyStateError(true) }
@@ -283,7 +288,8 @@ class PatientEntryScreenController @Inject constructor(
         .flatMap {
           Observable.just(
               { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(false) },
-              { ui: Ui -> ui.showInvalidDateOfBirthError(false) })
+              { ui: Ui -> ui.showInvalidDateOfBirthError(false) },
+              { ui: Ui -> ui.showDateOfBirthIsInFutureError(false) })
         }
 
     val ageErrorResets = events
@@ -343,7 +349,7 @@ class PatientEntryScreenController @Inject constructor(
 
     val canPatientBeSaved = Observables
         .combineLatest(
-            ongoingEntryChanges.map { it.validationErrors().isEmpty() },
+            ongoingEntryChanges.map { it.validationErrors(dobValidator).isEmpty() },
             isPhoneNumberValid,
             isColonyValid)
         .map { it.first.and(it.second).and(it.third) }

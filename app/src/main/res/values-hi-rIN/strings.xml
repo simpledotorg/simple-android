@@ -36,6 +36,7 @@
     <string name="patiententry_error_state_empty">राज्य खाली नहीं हो सकता है</string>
     <string name="patiententry_error_both_dateofbirth_and_age_empty">जन्मतिथि या उम्र खाली नहीं हो सकती है</string>
     <string name="patiententry_error_invalid_dateofbirth">जन्मतिथि गलत है</string>
+    <string name="patiententry_error_dateofbirth_is_in_future">जन्मतिथि भविष्य में नहीं हो सकती है</string>
     <string name="home_scan_patient_aadhaar">रोगी के आधार को स्कैन करें</string>
     <string name="home_search_patient_name_phone">रोगी का नाम या फोन नंबर भरें</string>
     <string name="bloodpressureentry_sheet_title">बी. पी. दर्ज करें</string>

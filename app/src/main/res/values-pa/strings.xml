@@ -36,6 +36,7 @@
     <string name="patiententry_error_state_empty">ਰਾਜ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
     <string name="patiententry_error_both_dateofbirth_and_age_empty">ਜਨਮ ਦੀ ਤਾਰੀਖ਼ ਜਾਂ ਉਮਰ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦੀ</string>
     <string name="patiententry_error_invalid_dateofbirth">ਜਨਮ ਮਿਤੀ ਗਲਤ ਹੈ</string>
+    <string name="patiententry_error_dateofbirth_is_in_future">ਦਰਜ ਕੀਤਾ ਜਨਮ ਮਿਤੀ ਗਲਤ ਹੈ</string>
     <string name="patiententry_state">ਰਾਜ</string>
     <string name="home_scan_patient_aadhaar">ਮਰੀਜ਼ ਦਾ ਅਧਾਰ ਸਕੈਨ ਕਰੋ</string>
     <string name="home_search_patient_name_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਤੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ</string>

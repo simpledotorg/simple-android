@@ -7,12 +7,9 @@ import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import timber.log.Timber
-
 
 fun EditText.showKeyboard() {
   post {
@@ -22,10 +19,8 @@ fun EditText.showKeyboard() {
   }
 }
 
-@Suppress("CAST_NEVER_SUCCEEDS")
 fun ViewGroup.hideKeyboard() {
   post {
-    this.requestFocus()
     val inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(windowToken, 0)
   }
@@ -37,14 +32,6 @@ fun EditText.setTextAndCursor(textToSet: CharSequence?) {
   // Cannot rely on textToSet. It's possible that the
   // EditText modifies the text using InputFilters.
   setSelection(text.length)
-}
-
-fun View.setTopPadding(topPadding: Int) {
-  setPaddingRelative(paddingStart, topPadding, paddingEnd, paddingBottom)
-}
-
-fun View.setBottomPadding(bottomPadding: Int) {
-  setPaddingRelative(paddingStart, paddingTop, paddingEnd, bottomPadding)
 }
 
 fun View.setPadding(@DimenRes paddingRes: Int) {
@@ -73,28 +60,4 @@ fun TextView.setCompoundDrawableStart(drawable: Drawable?) {
       compoundDrawablesRelative[1],
       compoundDrawablesRelative[2],
       compoundDrawablesRelative[3])
-}
-
-/**
- * Run a function when a View gets measured and laid out on the screen.
- */
-fun View.executeOnNextMeasure(runnable: () -> Unit) {
-  if (isInEditMode || isLaidOut) {
-    runnable()
-    return
-  }
-
-  viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
-    override fun onPreDraw(): Boolean {
-      if (isLaidOut) {
-        viewTreeObserver.removeOnPreDrawListener(this)
-        runnable()
-
-      } else if (visibility == View.GONE) {
-        Timber.w("View's visibility is set to Gone. It'll never be measured: %s", resources.getResourceEntryName(id))
-        viewTreeObserver.removeOnPreDrawListener(this)
-      }
-      return true
-    }
-  })
 }

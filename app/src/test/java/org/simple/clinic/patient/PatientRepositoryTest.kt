@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import java.util.UUID
@@ -25,11 +26,12 @@ class PatientRepositoryTest {
   private val mockPatientDao = mock<Patient.RoomDao>()
   private val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
   private val mockPatientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
+  private val dobValidator = mock<DateOfBirthFormatValidator>()
 
   @Before
   fun setUp() {
     database = mock()
-    repository = PatientRepository(database)
+    repository = PatientRepository(database, dobValidator)
   }
 
   @Test

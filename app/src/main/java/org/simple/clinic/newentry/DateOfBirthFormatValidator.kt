@@ -2,24 +2,35 @@ package org.simple.clinic.newentry
 
 import org.simple.clinic.patient.PatientRepository
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeParseException
+import javax.inject.Inject
 
-object DateOfBirthFormatValidator {
+// TODO: Test that patient-entry-controller detects future-date-error and correctly updates the UI.
+
+class DateOfBirthFormatValidator @Inject constructor() {
 
   enum class Result {
     VALID,
-    INVALID
+    INVALID_PATTERN,
+    DATE_IS_IN_FUTURE,
   }
 
-  fun validate(dateText: String): Result {
+  fun validate(dateText: String, nowDate: LocalDate = LocalDate.now(ZoneOffset.UTC)): Result {
     return try {
-      PatientRepository.dateOfTimeFormatter.parse(dateText, LocalDate::from)
-      Result.VALID
+      if (dateText.isBlank()) {
+        Result.INVALID_PATTERN
+      }
+
+      val parsedDate = PatientRepository.dateOfTimeFormatter.parse(dateText, LocalDate::from)
+      when {
+        parsedDate > nowDate -> Result.DATE_IS_IN_FUTURE
+        else -> Result.VALID
+      }
 
     } catch (e: Exception) {
       when (e) {
-        is NullPointerException -> Result.INVALID
-        is DateTimeParseException -> Result.INVALID
+        is DateTimeParseException -> Result.INVALID_PATTERN
         else -> throw e
       }
     }

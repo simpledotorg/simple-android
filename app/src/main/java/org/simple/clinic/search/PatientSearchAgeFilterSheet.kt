@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import kotterknife.bindView
@@ -31,6 +32,16 @@ class PatientSearchAgeFilterSheet : AppCompatActivity() {
 
     val ageText = intent.extras.getString(EXTRA_AGE)
     ageEditText.setTextAndCursor(ageText)
+
+    ageEditText.setOnEditorActionListener { _, actionId, _ ->
+      when (actionId) {
+        EditorInfo.IME_ACTION_DONE -> {
+          applyButton.performClick()
+          true
+        }
+        else -> false
+      }
+    }
 
     applyButton.setOnClickListener {
       val intent = Intent()

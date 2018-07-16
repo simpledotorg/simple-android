@@ -1,7 +1,9 @@
 package org.simple.clinic.patient
 
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID
+import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
+import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID_PATTERN
+import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.VALID
 
 /**
  * Represents loggedInUser input on the UI, which is why every field is a String.
@@ -20,6 +22,7 @@ data class OngoingPatientEntry(
     BOTH_DATEOFBIRTH_AND_AGE_ABSENT,
     BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
     INVALID_DATE_OF_BIRTH,
+    DATE_OF_BIRTH_IS_IN_FUTURE,
     MISSING_GENDER,
 
     PHONE_NUMBER_NON_NULL_BUT_BLANK,
@@ -30,7 +33,7 @@ data class OngoingPatientEntry(
     STATE_EMPTY
   }
 
-  fun validationErrors(): ArrayList<ValidationError> {
+  fun validationErrors(dobValidator: DateOfBirthFormatValidator): ArrayList<ValidationError> {
     val errors = ArrayList<ValidationError>()
 
     if (personalDetails == null) {
@@ -44,8 +47,13 @@ data class OngoingPatientEntry(
       } else if (dateOfBirth?.isNotBlank() == true && age?.isNotBlank() == true) {
         errors += ValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
-      } else if (dateOfBirth != null && DateOfBirthFormatValidator.validate(dateOfBirth) == INVALID) {
-        errors += ValidationError.INVALID_DATE_OF_BIRTH
+      } else if (dateOfBirth != null) {
+        val dobValidationResult = dobValidator.validate(dateOfBirth)
+        errors += when (dobValidationResult) {
+          INVALID_PATTERN -> listOf(ValidationError.INVALID_DATE_OF_BIRTH)
+          DATE_IS_IN_FUTURE -> listOf(ValidationError.DATE_OF_BIRTH_IS_IN_FUTURE)
+          VALID -> listOf()
+        }
       }
       if (fullName.isBlank()) {
         errors += ValidationError.FULL_NAME_EMPTY

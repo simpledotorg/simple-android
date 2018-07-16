@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.sync.PatientPayload
@@ -22,7 +23,10 @@ import java.util.UUID
 import javax.inject.Inject
 
 @AppScope
-class PatientRepository @Inject constructor(private val database: AppDatabase) {
+class PatientRepository @Inject constructor(
+    private val database: AppDatabase,
+    private val dobValidator: DateOfBirthFormatValidator
+) {
 
   companion object {
     val dateOfTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
@@ -148,7 +152,7 @@ class PatientRepository @Inject constructor(private val database: AppDatabase) {
 
     val validation = cachedOngoingEntry
         .flatMapCompletable {
-          val validationErrors = it.validationErrors()
+          val validationErrors = it.validationErrors(dobValidator)
           if (validationErrors.isEmpty()) {
             Completable.complete()
           } else {

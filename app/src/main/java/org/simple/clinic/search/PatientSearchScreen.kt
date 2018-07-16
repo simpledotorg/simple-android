@@ -59,6 +59,12 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
+    searchEditText.setOnEditorActionListener { _, _, _ ->
+      // Swallow IME key presses because a search is triggered on every text change automatically.
+      // Without this, the keyboard gets dismissed
+      true
+    }
+
     Observable
         .mergeArray(
             searchQueryChanges(),

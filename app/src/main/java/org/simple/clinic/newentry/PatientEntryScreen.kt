@@ -59,8 +59,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var activityLifecycle: RxTheActivityLifecycle
 
-  // TODO: Rename `up` to `back`.
-  private val upButton by bindView<View>(R.id.patiententry_up)
+  private val backButton by bindView<View>(R.id.patiententry_back)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
   private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patiententry_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
@@ -91,7 +90,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     TheActivity.component.inject(this)
 
     fullNameEditText.showKeyboard()
-    upButton.setOnClickListener { screenRouter.pop() }
+    backButton.setOnClickListener { screenRouter.pop() }
 
     // Not sure why, but setting android:nextFocusDown in XML isn't working,
     // so doing this manually here.

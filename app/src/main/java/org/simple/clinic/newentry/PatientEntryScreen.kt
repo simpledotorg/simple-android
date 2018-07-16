@@ -128,8 +128,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         phoneNumberEditText.textChanges(::PatientPhoneNumberTextChanged),
         RxCompoundButton.checkedChanges(noPhoneNumberCheckBox).map(::PatientNoPhoneNumberToggled),
         dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
-        dateOfBirthEditText.focusChanges
-            .map(::PatientDateOfBirthFocusChanged),
+        dateOfBirthEditText.focusChanges.map(::PatientDateOfBirthFocusChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
         colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
         RxCompoundButton.checkedChanges(noColonyOrVillageCheckBox).map(::PatientNoColonyOrVillageToggled),
@@ -151,7 +150,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         }
   }
 
-  private fun saveClicks() = RxView.clicks(saveButton).map { PatientEntrySaveClicked() }
+  private fun saveClicks(): Observable<UiEvent> {
+    val stateImeClicks = RxTextView.editorActions(stateEditText) { it == EditorInfo.IME_ACTION_DONE }
+
+    return RxView.clicks(saveButton)
+        .mergeWith(stateImeClicks)
+        .map { PatientEntrySaveClicked() }
+  }
 
   fun preFillFields(details: OngoingPatientEntry) {
     fullNameEditText.setTextAndCursor(details.personalDetails?.fullName)

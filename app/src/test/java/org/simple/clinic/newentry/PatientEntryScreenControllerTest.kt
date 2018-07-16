@@ -240,7 +240,7 @@ class PatientEntryScreenControllerTest {
   // TODO: Write these similarly structured regression tests in a smarter way.
 
   @Test
-  fun `regression test`() {
+  fun `regression test for validations 1`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
@@ -262,7 +262,7 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `regression test 2`() {
+  fun `regression test for validations 2`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
@@ -284,7 +284,7 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `regression test 3`() {
+  fun `regression test for validations 3`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
@@ -306,7 +306,7 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  fun `regression test 4`() {
+  fun `regression test for validations 4`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(PatientMocker.patient()))
 

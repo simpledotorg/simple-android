@@ -10,6 +10,12 @@ repositories {
   maven { url 'https://jitpack.io' }
 }
 
+sentry {
+  autoProguardConfig true
+  // We can disable auto upload we use -dontobfuscate when running proguard
+  autoUpload false
+}
+
 android {
   compileSdkVersion versions.compileSdk
 
@@ -22,6 +28,7 @@ android {
     multiDexEnabled true
 
     testInstrumentationRunner "org.simple.clinic.AndroidTestJUnitRunner"
+    proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
   }
 
   buildTypes {
@@ -29,18 +36,20 @@ android {
       applicationIdSuffix ".debug"
       minifyEnabled false
       useProguard false
+      shrinkResources false
     }
 
     release {
       debuggable false
-      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
 
       if (runProguard.equalsIgnoreCase("true")) {
         minifyEnabled true
         shrinkResources true
+        useProguard true
       } else {
         minifyEnabled false
         shrinkResources false
+        useProguard false
       }
     }
   }

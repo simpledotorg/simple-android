@@ -50,6 +50,17 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
         .observeOn(mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
+
+    // The dosage field shows a default text as "mg". When it is focused, the cursor will
+    // by default be moved to the end. This will force the user to either move the cursor
+    // to the end manually or delete everything and essentially making the placeholder
+    // useless. As a workaround, we move the cursor to the starting again.
+    drugDosageEditText.setOnFocusChangeListener { _, hasFocus ->
+      if (hasFocus && drugDosageEditText.text.toString() == getText(R.string.customprescription_dosage_placeholder)) {
+        // Posting to EditText's handler is intentional. The cursor gets overridden otherwise.
+        drugDosageEditText.post { drugDosageEditText.setSelection(0) }
+      }
+    }
   }
 
   override fun onDestroy() {

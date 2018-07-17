@@ -55,9 +55,10 @@
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_16"
           android:layout_weight="0.4"
-          android:hint="@string/customprescription_drug_dosage_hint"
           android:imeOptions="actionDone"
           android:inputType="textCapSentences"
+          android:text="@string/customprescription_dosage_placeholder"
+          android:hint="@string/customprescription_drug_dosage_hint"
           android:textSize="20sp" />
       </LinearLayout>
 
@@ -70,6 +71,5 @@
         android:text="@string/customprescription_save_drug"
         android:textColor="@color/white" />
     </LinearLayout>
-
   </android.support.v7.widget.CardView>
 </FrameLayout>

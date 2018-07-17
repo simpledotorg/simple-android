@@ -2,6 +2,7 @@ package org.simple.clinic.login.phone
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.RelativeLayout
@@ -57,7 +58,13 @@ class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
       .map(CharSequence::toString)
       .map(::PhoneNumberTextChanged)
 
-  private fun nextClicks() = RxView.clicks(submitButton).map { PhoneNumberSubmitClicked() }
+  private fun nextClicks(): Observable<UiEvent> {
+    val phoneImeClicks = RxTextView.editorActions(phoneNumberEditText) { it == EditorInfo.IME_ACTION_DONE }
+
+    return RxView.clicks(submitButton)
+        .mergeWith(phoneImeClicks)
+        .map { PhoneNumberSubmitClicked() }
+  }
 
   fun enableSubmitButton(enabled: Boolean) {
     submitButton.isEnabled = enabled

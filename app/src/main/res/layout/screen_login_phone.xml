@@ -65,6 +65,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
+        android:imeOptions="actionDone"
         android:inputType="phone"
         android:textSize="@dimen/textsize_18"
         tools:ignore="HardcodedText" />

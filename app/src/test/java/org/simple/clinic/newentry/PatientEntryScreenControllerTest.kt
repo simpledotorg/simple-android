@@ -69,7 +69,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
-    whenever(dobValidator.validate(any())).thenReturn(Result.VALID)
+    whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -159,7 +159,7 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
-    whenever(dobValidator.validate(any())).thenReturn(Result.VALID)
+    whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))

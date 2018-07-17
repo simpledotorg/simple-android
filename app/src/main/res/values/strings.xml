@@ -8,7 +8,7 @@
   <string name="api_unexpected_error">Something went wrong. Please try again later.</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_new_patient">Create new patient</string>
+  <string name="patientsearch_new_patient">Register new patient</string>
   <string name="patientsearch_go_back">Go back to home screen</string>
   <string name="patientsearch_name_or_phone">Patient\'s name or phone</string>
   <string name="patientsearch_age">Age: %s</string>
@@ -37,21 +37,21 @@
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Save patient</string>
 
-  <string name="patiententry_error_empty_fullname">Name cannot be empty</string>
-  <string name="patiententry_error_empty_phonenumber">Enter phone number or select \"None\"</string>
-  <string name="patiententry_error_empty_gender">Gender cannot be empty</string>
-  <string name="patiententry_error_empty_colony_or_village">Colony or village cannot be empty</string>
-  <string name="patiententry_error_empty_district">District cannot be empty</string>
-  <string name="patiententry_error_state_empty">State cannot be empty</string>
-  <string name="patiententry_error_both_dateofbirth_and_age_empty">Date-of-birth or age cannot be empty</string>
-  <string name="patiententry_error_invalid_dateofbirth">Date-of-birth entered is incorrect</string>
-  <string name="patiententry_error_dateofbirth_is_in_future">Date-of-birth cannot be in the future</string>
+  <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
+  <string name="patiententry_error_empty_phonenumber">Enter patient’s phone number or choose ‘None’</string>
+  <string name="patiententry_error_empty_gender">Choose patient’s gender</string>
+  <string name="patiententry_error_empty_colony_or_village">Enter patient’s village or colony or choose ‘None’</string>
+  <string name="patiententry_error_empty_district">Enter patient’s home district</string>
+  <string name="patiententry_error_state_empty">Enter patient’s home state</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s birth date</string>
+  <string name="patiententry_error_invalid_dateofbirth">Fix patient’s date of birth</string>
+  <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
 
   <!-- Home -->
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>
   <string name="home_search_patient_name_phone">Enter patient\'s name or phone</string>
   <string name="tab_new_bp">New BP</string>
-  <string name="tab_call_list">Call List</string>
+  <string name="tab_call_list">Follow up</string>
   <string name="tab_reports">Reports</string>
 
   <!-- New blood pressure entry -->
@@ -91,7 +91,7 @@
   <string name="customprescription_enter_medicine">Enter medicine</string>
   <string name="customprescription_save_drug">Save</string>
   <string name="customprescription_drug_name_hint">Medicine name</string>
-  <string name="customprescription_dosage_placeholder">mg</string>
+  <string name="customprescription_dosage_placeholder" translatable="false">mg</string>
   <string name="customprescription_drug_dosage_hint">Dosage</string>
 
   <string name="customprescription_delete_title">Delete medicine</string>

@@ -61,7 +61,11 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   }
 
   override fun onBackgroundClick() {
-    if (drugNameEditText.text.isBlank() && drugDosageEditText.text.isBlank()) {
+    val drugNameEmpty = drugNameEditText.text.isEmpty()
+    val dosageEmpty = drugDosageEditText.text.isEmpty()
+        || drugDosageEditText.text.toString().trim() == getString(R.string.customprescription_dosage_placeholder)
+
+    if (drugNameEmpty && dosageEmpty) {
       super.onBackgroundClick()
     }
   }

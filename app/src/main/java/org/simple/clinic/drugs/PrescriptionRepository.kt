@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.FacilityRepository
@@ -17,6 +18,7 @@ import javax.inject.Inject
 
 @AppScope
 class PrescriptionRepository @Inject constructor(
+    private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession
@@ -61,7 +63,10 @@ class PrescriptionRepository @Inject constructor(
 
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {
     return Completable.fromAction {
-      dao.softDelete(prescriptionUuid, deleted = true)
+      database.runInTransaction {
+        dao.softDelete(prescriptionUuid, deleted = true, updatedAt = Instant.now())
+        dao.updateSyncStatus(listOf(prescriptionUuid), SyncStatus.PENDING)
+      }
     }
   }
 

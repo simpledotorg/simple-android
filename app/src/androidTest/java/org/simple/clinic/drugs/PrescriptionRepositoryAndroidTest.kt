@@ -111,6 +111,29 @@ class PrescriptionRepositoryAndroidTest {
     assertThat(savedPrescriptions2).hasSize(1)
   }
 
+  @Test
+  fun soft_delete_prescription_should_update_timestamp_and_sync_status() {
+    val protocolUUID = UUID.randomUUID()
+    val patientUUID = UUID.randomUUID()
+
+    val drug = ProtocolDrug(UUID.randomUUID(), name = "Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"), protocolUUID = protocolUUID)
+
+    repository.savePrescription(patientUUID, drug, "5mg").blockingAwait()
+
+    val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUUID).blockingFirst()
+    assertThat(savedPrescriptions).hasSize(1)
+
+    val prescription = savedPrescriptions[0]
+
+    repository.softDeletePrescription(prescription.uuid).blockingAwait()
+
+    val softDeletedPrescription = database.prescriptionDao().getOne(prescription.uuid)!!
+
+    assertThat(softDeletedPrescription.updatedAt).isGreaterThan(prescription.updatedAt)
+    assertThat(softDeletedPrescription.createdAt).isEqualTo(prescription.createdAt)
+    assertThat(softDeletedPrescription.syncStatus).isEqualTo(SyncStatus.PENDING)
+  }
+
   @After
   fun tearDown() {
     database.clearAllTables()

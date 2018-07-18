@@ -1,8 +1,10 @@
 package org.simple.clinic.drugs
 
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -12,6 +14,7 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
@@ -21,6 +24,7 @@ import java.util.UUID
 @RunWith(JUnitParamsRunner::class)
 class PrescriptionRepositoryTest {
 
+  private val database = mock<AppDatabase>()
   private val dao = mock<PrescribedDrug.RoomDao>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
@@ -29,7 +33,7 @@ class PrescriptionRepositoryTest {
 
   @Before
   fun setUp() {
-    repository = PrescriptionRepository(dao, facilityRepository, userSession)
+    repository = PrescriptionRepository(database, dao, facilityRepository, userSession)
   }
 
   @Test

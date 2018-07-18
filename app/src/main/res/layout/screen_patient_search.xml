@@ -31,7 +31,8 @@
       android:background="@null"
       android:hint="@string/patientsearch_name_or_phone"
       android:imeOptions="actionSearch"
-      android:inputType="text|textCapWords">
+      android:privateImeOptions="nm"
+      android:inputType="text|textCapWords|textFilter">
 
       <requestFocus />
     </EditText>
@@ -98,5 +99,4 @@
     android:layout_height="match_parent"
     android:layout_below="@id/patientsearch_new_patient"
     tools:listitem="@layout/list_patient_search" />
-
 </org.simple.clinic.search.PatientSearchScreen>

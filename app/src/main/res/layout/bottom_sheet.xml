@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge android:id="@+id/bottomsheet_root"
-  xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/black_opacity_50"
   android:orientation="vertical">
+
+  <View
+    android:id="@+id/bottomsheet_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black_opacity_50" />
 
   <android.support.v7.widget.CardView
     android:id="@+id/bottomsheet_content_container"

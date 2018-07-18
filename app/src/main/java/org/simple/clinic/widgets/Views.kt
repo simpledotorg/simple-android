@@ -7,9 +7,11 @@ import android.support.annotation.DrawableRes
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import timber.log.Timber
 
 fun EditText.showKeyboard() {
   post {
@@ -60,4 +62,28 @@ fun TextView.setCompoundDrawableStart(drawable: Drawable?) {
       compoundDrawablesRelative[1],
       compoundDrawablesRelative[2],
       compoundDrawablesRelative[3])
+}
+
+/**
+ * Run a function when a View gets measured and laid out on the screen.
+ */
+fun View.executeOnNextMeasure(runnable: () -> Unit) {
+  if (isInEditMode || isLaidOut) {
+    runnable()
+    return
+  }
+
+  viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+    override fun onPreDraw(): Boolean {
+      if (isLaidOut) {
+        viewTreeObserver.removeOnPreDrawListener(this)
+        runnable()
+
+      } else if (visibility == View.GONE) {
+        Timber.w("View's visibility is set to Gone. It'll never be measured: %s", resources.getResourceEntryName(id))
+        viewTreeObserver.removeOnPreDrawListener(this)
+      }
+      return true
+    }
+  })
 }

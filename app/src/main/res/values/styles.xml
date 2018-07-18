@@ -11,7 +11,7 @@
 
   <style name="Clinic" />
 
-  <style name="ClinicTheme.DialogLikeActivity">
+  <style name="ClinicTheme.BottomSheetActivity">
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:colorBackgroundCacheHint">@null</item>

@@ -1,6 +1,7 @@
 package org.simple.clinic.widgets
 
 import android.os.Bundle
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +15,11 @@ import org.simple.clinic.R
  * keyboard otherwise aligns itself just below text fields, overlapping everything else
  * present below them.
  *
- * TODO: Add background dimming
- * TODO: Dismiss on background tap
- * TODO: Entry and exit animations.
+ * TODO: BottomSheet behavior.
  */
 abstract class BottomSheetActivity : AppCompatActivity() {
 
-  private val rootLayout by bindView<ViewGroup>(R.id.bottomsheet_root)
+  private val backgroundView by bindView<View>(R.id.bottomsheet_background)
   private val contentContainer by bindView<ViewGroup>(R.id.bottomsheet_content_container)
 
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,14 +27,44 @@ abstract class BottomSheetActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     super.setContentView(R.layout.bottom_sheet)
 
-    rootLayout.setOnClickListener {
+    backgroundView.setOnClickListener {
       onBackgroundClick()
+    }
+
+    backgroundView.alpha = 0f
+    backgroundView.animate()
+        .alpha(1f)
+        .setDuration(200)
+        .setInterpolator(FastOutSlowInInterpolator())
+        .start()
+
+    contentContainer.executeOnNextMeasure {
+      contentContainer.translationY = contentContainer.height.toFloat()
+
+      contentContainer.animate()
+          .translationY(0f)
+          .setDuration(250)
+          .setInterpolator(FastOutSlowInInterpolator())
+          .start()
     }
   }
 
   override fun finish() {
-    super.finish()
-    overridePendingTransition(0, 0)
+    contentContainer.animate()
+        .translationY(contentContainer.height.toFloat())
+        .setDuration(250)
+        .setInterpolator(FastOutSlowInInterpolator())
+        .start()
+
+    backgroundView.animate()
+        .alpha(0f)
+        .setDuration(100)
+        .setInterpolator(FastOutSlowInInterpolator())
+        .withEndAction {
+          super.finish()
+          overridePendingTransition(0, 0)
+        }
+        .start()
   }
 
   override fun setContentView(layoutResId: Int) {
@@ -52,5 +81,10 @@ abstract class BottomSheetActivity : AppCompatActivity() {
 
   open fun onBackgroundClick() {
     onBackPressed()
+  }
+
+  override fun onBackPressed() {
+    // Routing to finish() just so that the exit animation can be played.
+    finish()
   }
 }

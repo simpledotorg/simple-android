@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.FrameLayout
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -24,7 +23,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: BloodPressureEntrySheetController
 
-  private val backgroundContainer by bindView<FrameLayout>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditText>(R.id.bloodpressureentry_diastolic)
 
@@ -45,12 +43,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    backgroundContainer.setOnClickListener {
-      if (systolicEditText.text.isBlank() && diastolicEditText.text.isBlank()) {
-        finish()
-      }
-    }
-
     Observable.merge(
         sheetCreates(),
         systolicTextChanges(),
@@ -66,6 +58,12 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   override fun onDestroy() {
     onDestroys.onNext(Any())
     super.onDestroy()
+  }
+
+  override fun onBackgroundClick() {
+    if (systolicEditText.text.isBlank() && diastolicEditText.text.isBlank()) {
+      super.onBackgroundClick()
+    }
   }
 
   private fun sheetCreates(): Observable<UiEvent> {

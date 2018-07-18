@@ -3,7 +3,6 @@ package org.simple.clinic.drugs.selection.entry
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
@@ -23,7 +22,6 @@ import javax.inject.Inject
 
 class CustomPrescriptionEntrySheet : BottomSheetActivity() {
 
-  private val backgroundContainer by bindView<View>(R.id.customprescription_root)
   private val drugNameEditText by bindView<EditText>(R.id.customprescription_drug_name)
   private val drugDosageEditText by bindView<EditText>(R.id.customprescription_drug_dosage)
   private val saveButton by bindView<Button>(R.id.customprescription_save)
@@ -37,12 +35,6 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_custom_prescription_entry)
     TheActivity.component.inject(this)
-
-    backgroundContainer.setOnClickListener {
-      if (drugNameEditText.text.isBlank() && drugDosageEditText.text.isBlank()) {
-        finish()
-      }
-    }
 
     Observable.merge(sheetCreates(), drugNameChanges(), drugDosageChanges(), saveClicks())
         .observeOn(io())
@@ -66,6 +58,12 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   override fun onDestroy() {
     onDestroys.onNext(Any())
     super.onDestroy()
+  }
+
+  override fun onBackgroundClick() {
+    if (drugNameEditText.text.isBlank() && drugDosageEditText.text.isBlank()) {
+      super.onBackgroundClick()
+    }
   }
 
   private fun sheetCreates(): Observable<UiEvent> {

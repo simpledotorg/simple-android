@@ -44,13 +44,13 @@
   <string name="patiententry_error_empty_district">Enter patient’s home district</string>
   <string name="patiententry_error_state_empty">Enter patient’s home state</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s birth date</string>
-  <string name="patiententry_error_invalid_dateofbirth">Fix patient’s date of birth</string>
+  <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in dd/mm/yyyy</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
 
   <!-- Home -->
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>
   <string name="home_search_patient_name_phone">Enter patient\'s name or phone</string>
-  <string name="tab_new_bp">New BP</string>
+  <string name="tab_new_bp">Patient</string>
   <string name="tab_call_list">Follow up</string>
   <string name="tab_reports">Reports</string>
 

@@ -15,6 +15,7 @@
     <item name="android:windowIsTranslucent">true</item>
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:colorBackgroundCacheHint">@null</item>
+    <item name="android:windowTranslucentStatus">true</item>
   </style>
 
   <style name="Clinic.ToolbarStyle" parent="Widget.AppCompat.Toolbar">

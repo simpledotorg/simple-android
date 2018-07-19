@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:fitsSystemWindows="true"
+  android:orientation="vertical"
+  tools:ignore="MergeRootFrame">
+  <!-- MergeRootFrame lint is suppressed because android:fitsSystemWindows is
+       ignored when this root layout is merged with its parent. -->
 
   <View
     android:id="@+id/bottomsheet_background"
@@ -19,4 +23,4 @@
     android:background="@color/white"
     android:elevation="20dp"
     tools:ignore="UnusedAttribute" />
-</merge>
+</FrameLayout>

@@ -16,6 +16,7 @@ buildscript {
       stetho     : '1.5.0',
       sentry     : '1.7.4',
       groupie    : '2.1.0',
+      flow       : '1.0.0-alpha3'
   ]
 
   repositories {

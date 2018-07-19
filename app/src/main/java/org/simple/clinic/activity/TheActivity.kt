@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.R
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
@@ -13,6 +14,7 @@ import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.FullScreenKey
+import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -82,7 +84,8 @@ class TheActivity : AppCompatActivity() {
         .build()
     component.inject(this)
 
-    val contextWithRouter = screenRouter.installInContext(baseContext, android.R.id.content, initialScreenKey())
+    screenRouter.registerKeyChanger(FullScreenKeyChanger(this, android.R.id.content, R.color.window_background))
+    val contextWithRouter = screenRouter.installInContext(baseContext, initialScreenKey())
     super.attachBaseContext(contextWithRouter)
   }
 

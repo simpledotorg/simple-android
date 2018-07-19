@@ -24,9 +24,11 @@ android {
 
 dependencies {
   testImplementation 'junit:junit:4.12'
+  implementation "com.android.support:appcompat-v7:$versions.supportLib"
   implementation 'com.squareup.flow:flow:1.0.0-alpha3'
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
   implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+  implementation "com.jakewharton.timber:timber:$versions.timber"
 }
 repositories {
   mavenCentral()

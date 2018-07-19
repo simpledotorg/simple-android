@@ -9,4 +9,6 @@ data class CustomPrescriptionDrugNameTextChanged(val name: String) : UiEvent
 
 data class CustomPrescriptionDrugDosageTextChanged(val dosage: String) : UiEvent
 
-class SaveCustomPrescriptionClicked() : UiEvent
+data class CustomPrescriptionDrugDosageFocusChanged(val hasFocus: Boolean) : UiEvent
+
+class SaveCustomPrescriptionClicked : UiEvent

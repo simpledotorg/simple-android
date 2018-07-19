@@ -36,23 +36,12 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_custom_prescription_entry)
     TheActivity.component.inject(this)
 
-    Observable.merge(sheetCreates(), drugNameChanges(), drugDosageChanges(), saveClicks())
+    Observable.mergeArray(sheetCreates(), drugNameChanges(), drugDosageChanges(), drugDosageFocusChanges(), saveClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
-
-    // The dosage field shows a default text as "mg". When it is focused, the cursor will
-    // by default be moved to the end. This will force the user to either move the cursor
-    // to the end manually or delete everything and essentially making the placeholder
-    // useless. As a workaround, we move the cursor to the starting again.
-    drugDosageEditText.setOnFocusChangeListener { _, hasFocus ->
-      if (hasFocus && drugDosageEditText.text.toString() == getText(R.string.customprescription_dosage_placeholder)) {
-        // Posting to EditText's handler is intentional. The cursor gets overridden otherwise.
-        drugDosageEditText.post { drugDosageEditText.setSelection(0) }
-      }
-    }
   }
 
   override fun onDestroy() {
@@ -83,6 +72,9 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
       .map(CharSequence::toString)
       .map(::CustomPrescriptionDrugDosageTextChanged)
 
+  private fun drugDosageFocusChanges() = RxView.focusChanges(drugDosageEditText)
+      .map(::CustomPrescriptionDrugDosageFocusChanged)
+
   private fun saveClicks(): Observable<UiEvent> {
     val dosageImeClicks = RxTextView.editorActions(drugDosageEditText) { it == EditorInfo.IME_ACTION_DONE }
 
@@ -93,6 +85,15 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
 
   fun setSaveButtonEnabled(enabled: Boolean) {
     saveButton.isEnabled = enabled
+  }
+
+  fun setDrugDosageText(text: String) {
+    drugDosageEditText.setText(text)
+  }
+
+  fun moveDrugDosageCursorToBeginning() {
+    // Posting to EditText's handler is intentional. The cursor gets overridden otherwise.
+    drugDosageEditText.post { drugDosageEditText.setSelection(0) }
   }
 
   companion object {

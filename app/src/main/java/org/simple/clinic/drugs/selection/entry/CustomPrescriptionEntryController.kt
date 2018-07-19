@@ -22,7 +22,8 @@ class CustomPrescriptionEntryController @Inject constructor(
 
     return Observable.mergeArray(
         toggleSaveButton(replayedEvents),
-        savePrescriptionsAndDismiss(replayedEvents))
+        savePrescriptionsAndDismiss(replayedEvents),
+        showDefaultDosagePlaceholder(replayedEvents))
   }
 
   private fun toggleSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
@@ -57,5 +58,39 @@ class CustomPrescriptionEntryController @Inject constructor(
               .savePrescription(patientUuid, name, dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
               .andThen(Observable.just({ ui: Ui -> ui.finish() }))
         }
+  }
+
+  /**
+   * The dosage field shows a default text as "mg". When it is focused, the cursor will
+   * by default be moved to the end. This will force the user to either move the cursor
+   * to the end manually or delete everything and essentially making the placeholder
+   * useless. As a workaround, we move the cursor to the starting again.
+   */
+  private fun showDefaultDosagePlaceholder(events: Observable<UiEvent>): Observable<UiChange> {
+    val dosageTextChanges = events
+        .ofType<CustomPrescriptionDrugDosageTextChanged>()
+        .map { it.dosage }
+
+    val dosageFocusChanges = events
+        .ofType<CustomPrescriptionDrugDosageFocusChanged>()
+        .map { it.hasFocus }
+
+    val setPlaceholder = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
+        .filter { (hasFocus, text) -> hasFocus && text.isBlank() }
+        .map { { ui: Ui -> ui.setDrugDosageText(DOSAGE_PLACEHOLDER) } }
+
+    val resetPlaceholder = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
+        .filter { (hasFocus, text) -> !hasFocus && text.trim() == DOSAGE_PLACEHOLDER }
+        .map { { ui: Ui -> ui.setDrugDosageText("") } }
+
+    val moveCursorToStart = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
+        .filter { (hasFocus, text) -> hasFocus && text.trim() == DOSAGE_PLACEHOLDER }
+        .map { { ui: Ui -> ui.moveDrugDosageCursorToBeginning() } }
+
+    return Observable.merge(setPlaceholder, resetPlaceholder, moveCursorToStart)
+  }
+
+  companion object {
+    const val DOSAGE_PLACEHOLDER = "mg"
   }
 }

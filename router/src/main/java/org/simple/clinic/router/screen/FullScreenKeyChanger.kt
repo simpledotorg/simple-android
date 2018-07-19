@@ -1,10 +1,14 @@
 package org.simple.clinic.router.screen
 
 import android.app.Activity
+import android.content.Context
+import android.support.annotation.ColorRes
 import android.support.annotation.IdRes
+import android.support.v4.content.ContextCompat
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import flow.Direction
 import flow.KeyChanger
 
@@ -15,7 +19,8 @@ import flow.KeyChanger
  */
 class FullScreenKeyChanger(
     private val activity: Activity,
-    @IdRes private val screenLayoutContainerRes: Int
+    @IdRes private val screenLayoutContainerRes: Int,
+    @ColorRes private val screenBackgroundRes: Int
 ) : BaseViewGroupKeyChanger<FullScreenKey>(), KeyChanger {
 
   override fun layoutResForKey(screenKey: FullScreenKey): Int {
@@ -28,6 +33,26 @@ class FullScreenKeyChanger(
 
   override fun screenLayoutContainer(): ViewGroup {
     return activity.findViewById(screenLayoutContainerRes)
+  }
+
+  override fun inflateIncomingView(incomingContext: Context, incomingKey: FullScreenKey, frame: ViewGroup): View {
+    // If the backstack is changed while a screen change animation was ongoing, the screens
+    // end up overlapping with each other. It's difficult to debug if it's a problem with Flow
+    // or in our code. As a workaround, the window background is applied on every screen.
+    val container = FrameLayout(incomingContext)
+    container.id = View.generateViewId()
+
+    val contentView = super.inflateIncomingView(incomingContext, incomingKey, container)
+    container.addView(contentView)
+
+    if (contentView.background == null) {
+      container.setBackgroundColor(ContextCompat.getColor(incomingContext, screenBackgroundRes))
+    } else {
+      container.background = contentView.background
+      contentView.background = null
+    }
+
+    return container
   }
 
   override fun animate(

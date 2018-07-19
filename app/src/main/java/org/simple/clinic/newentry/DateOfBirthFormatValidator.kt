@@ -6,8 +6,6 @@ import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeParseException
 import javax.inject.Inject
 
-// TODO: Test that patient-entry-controller detects future-date-error and correctly updates the UI.
-
 class DateOfBirthFormatValidator @Inject constructor() {
 
   enum class Result {

@@ -49,9 +49,9 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
       null
     }
 
-    val incomingContext = incomingContexts[incomingKey]
+    val incomingContext = incomingContexts[incomingKey]!!
 
-    val incomingView = LayoutInflater.from(incomingContext).inflate(layoutResForKey(incomingKey), frame, false)
+    val incomingView = inflateIncomingView(incomingContext, incomingKey, frame)
     throwIfIdIsMissing(incomingView, incomingKey)
 
     frame.addView(incomingView)
@@ -74,6 +74,10 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
           }
       )
     }
+  }
+
+  open fun inflateIncomingView(incomingContext: Context, incomingKey: T, frame: ViewGroup): View {
+    return LayoutInflater.from(incomingContext).inflate(layoutResForKey(incomingKey), frame, false)
   }
 
   private fun throwIfIdIsMissing(incomingView: View, incomingKey: T) {

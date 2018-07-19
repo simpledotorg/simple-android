@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.os.Parcelable
 import android.support.annotation.CheckResult
-import android.support.annotation.IdRes
 import android.view.View
 import flow.Flow
 import flow.History
@@ -40,10 +39,9 @@ class ScreenRouter(
     }
   }
 
-  fun installInContext(baseContext: Context, @IdRes screensFrameResId: Int, initialScreen: FullScreenKey): Context {
+  fun installInContext(baseContext: Context, initialScreen: FullScreenKey): Context {
     flowInstalled = true
 
-    nestedKeyChanger.add(FullScreenKeyChanger(activity, screensFrameResId))
     val keyDispatcher = KeyDispatcher.configure(activity, nestedKeyChanger).build()
 
     return Flow.configure(baseContext, activity)

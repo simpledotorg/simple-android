@@ -1,5 +1,7 @@
 package org.simple.clinic.drugs.selection.entry
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -12,6 +14,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryController.Companion.DOSAGE_PLACEHOLDER
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -58,5 +61,32 @@ class CustomPrescriptionEntryControllerTest {
 
     verify(prescriptionRepository).savePrescription(patientUuid, "Amlodipine", dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
     verify(sheet).finish()
+  }
+
+  @Test
+  fun `placeholder value for dosage should only be shown when dosage field is focused and empty`() {
+    whenever(sheet.setDrugDosageText(any())).then {
+      val text = it.arguments[0] as String
+      uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(text))
+    }
+
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(""))
+    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
+    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
+    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
+    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("10$DOSAGE_PLACEHOLDER"))
+    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
+
+    verify(sheet, times(1)).setDrugDosageText(eq(""))
+    verify(sheet, times(2)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+  }
+
+  @Test
+  fun `when dosage field is focused and the placeholder value is set then the cursor should be moved to the beginning`() {
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("mg"))
+    uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
+
+    verify(sheet).moveDrugDosageCursorToBeginning()
   }
 }

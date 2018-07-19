@@ -61,19 +61,19 @@ android {
       dimension 'track'
       applicationIdSuffix ".qa"
       versionNameSuffix "-qa"
-      buildConfigField "String", "API_ENDPOINT", "\"" + System.getenv("QA_API_ENDPOINT") + "\""
+      buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
     }
 
     staging {
       dimension 'track'
       applicationIdSuffix ".staging"
       versionNameSuffix "-staging"
-      buildConfigField "String", "API_ENDPOINT", "\"" + System.getenv("STAGING_API_ENDPOINT") + "\""
+      buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
     }
 
     production {
       dimension 'track'
-      buildConfigField "String", "API_ENDPOINT", "\"" + System.getenv("PRODUCTION_API_ENDPOINT") + "\""
+      buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
     }
   }
 

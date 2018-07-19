@@ -5,10 +5,12 @@ import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import flow.Flow
 import flow.KeyChanger
 import flow.State
 import flow.TraversalCallback
+import timber.log.Timber
 
 /**
  * Base class for key-changers that change screens in a single ViewGroup.
@@ -55,12 +57,23 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
     frame.addView(incomingView)
     incomingState.restore(incomingView)
 
-    if (outgoingView != null) {
-      outgoingState?.save(outgoingView)
-      frame.removeView(outgoingView)
-    }
-
     callback.onTraversalCompleted()
+
+    incomingView.executeOnMeasure {
+      animate(
+          outgoingState?.getKey(),
+          outgoingView,
+          incomingKey,
+          incomingView,
+          direction,
+          onCompleteListener = {
+            if (outgoingView != null) {
+              outgoingState?.save(outgoingView)
+              frame.removeView(outgoingView)
+            }
+          }
+      )
+    }
   }
 
   private fun throwIfIdIsMissing(incomingView: View, incomingKey: T) {
@@ -79,6 +92,31 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
   }
 
   /**
+   * Run a function when a View gets measured and laid out on the screen.
+   * Duplicate of Views.kt in app module. Should use android-ktx in the future instead.
+   */
+  private fun View.executeOnMeasure(runnable: () -> Unit) {
+    if (isInEditMode || isLaidOut) {
+      runnable()
+      return
+    }
+
+    viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+      override fun onPreDraw(): Boolean {
+        if (isLaidOut) {
+          viewTreeObserver.removeOnPreDrawListener(this)
+          runnable()
+
+        } else if (visibility == View.GONE) {
+          Timber.w("View's visibility is set to Gone. It'll never be measured: " + resources.getResourceEntryName(id))
+          viewTreeObserver.removeOnPreDrawListener(this)
+        }
+        return true
+      }
+    })
+  }
+
+  /**
    * True if this key-changer recognizes <var>incomingKey</var>.
    */
   abstract fun canHandleKey(incomingKey: Any): Boolean
@@ -93,4 +131,13 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
    */
   @LayoutRes
   abstract fun layoutResForKey(screenKey: T): Int
+
+  abstract fun animate(
+      outgoingKey: T?,
+      outgoingView: View?,
+      incomingKey: T,
+      incomingView: View,
+      direction: flow.Direction,
+      onCompleteListener: () -> Unit
+  )
 }

@@ -11,8 +11,11 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
@@ -27,6 +30,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenControllerTest {
 
   private val screen = mock<PatientEntryScreen>()
@@ -336,5 +340,15 @@ class PatientEntryScreenControllerTest {
 
     verify(screen).openSummaryScreenForBpEntry(any())
     verify(patientRepository).saveOngoingEntry(any())
+  }
+
+  @Test
+  @Parameters(value = ["FEMALE", "MALE", "TRANSGENDER"])
+  fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
+    uiEvents.onNext(PatientGenderChanged(None))
+    uiEvents.onNext(PatientGenderChanged(Just(gender)))
+    uiEvents.onNext(PatientGenderChanged(Just(gender)))
+
+    verify(screen, times(1)).scrollFormToBottom()
   }
 }

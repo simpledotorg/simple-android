@@ -59,7 +59,8 @@ class PatientEntryScreenController @Inject constructor(
         patientSaves(transformedEvents),
         validationOnSaveClicks(transformedEvents),
         validationErrorResets(transformedEvents),
-        noneCheckBoxBehaviors(transformedEvents))
+        noneCheckBoxBehaviors(transformedEvents),
+        scrollToBottomOnGenderSelection(transformedEvents))
   }
 
   private fun noneCheckBoxBehaviors(events: Observable<UiEvent>): Observable<UiChange> {
@@ -365,5 +366,13 @@ class PatientEntryScreenController @Inject constructor(
             else -> Single.never()
           }
         }
+  }
+
+  private fun scrollToBottomOnGenderSelection(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientGenderChanged>()
+        .filter { it.gender.isNotEmpty() }
+        .take(1)
+        .map { { ui: Ui -> ui.scrollFormToBottom() } }
   }
 }

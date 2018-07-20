@@ -2,6 +2,7 @@ package org.simple.clinic.newentry
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -350,5 +351,30 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientGenderChanged(Just(gender)))
 
     verify(screen, times(1)).scrollFormToBottom()
+  }
+
+  @Test
+  fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+    uiEvents.onNext(PatientDistrictTextChanged(""))
+    uiEvents.onNext(PatientStateTextChanged(""))
+
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    // This is order dependent because finding the first field
+    // with error is only possible once the errors are set.
+    val inOrder = inOrder(screen)
+    inOrder.verify(screen).showEmptyDistrictError(true)
+    inOrder.verify(screen).scrollToFirstFieldWithError()
   }
 }

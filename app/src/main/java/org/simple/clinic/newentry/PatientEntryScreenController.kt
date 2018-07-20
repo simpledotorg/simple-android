@@ -13,6 +13,7 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.PatientEntryValidationError
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -128,7 +129,7 @@ class PatientEntryScreenController @Inject constructor(
             !dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE) }
             dateBlank && !ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE) }
             dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE) }
-            else -> throw AssertionError("Both date-of-birth and age cannot have loggedInUser input at the same time")
+            else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
           }
         }
   }
@@ -233,11 +234,15 @@ class PatientEntryScreenController @Inject constructor(
     val phoneNumberChanges = events.ofType<PatientPhoneNumberTextChanged>().map { it.phoneNumber }
     val noPhoneToggles = events.ofType<PatientNoPhoneNumberToggled>().map { it.noneSelected }
 
-    val phoneNumberErrors = events
+    val phoneNumberErrors: Observable<List<PatientEntryValidationError>> = events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(phoneNumberChanges, noPhoneToggles)
-        .filter { (_, phoneNumber, isNoneSelected) -> phoneNumber.isBlank() && !isNoneSelected }
-        .map { PHONE_NUMBER_EMPTY }
+        .map { (_, phoneNumber, isNoneSelected) ->
+          when {
+            (phoneNumber.isBlank() && !isNoneSelected) -> listOf(PHONE_NUMBER_EMPTY)
+            else -> listOf()
+          }
+        }
 
     val colonyChanges = events.ofType<PatientColonyOrVillageTextChanged>().map { it.colonyOrVillage }
     val noColonyToggles = events.ofType<PatientNoColonyOrVillageToggled>().map { it.noneSelected }
@@ -245,18 +250,24 @@ class PatientEntryScreenController @Inject constructor(
     val colonyErrors = events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(colonyChanges, noColonyToggles)
-        .filter { (_, colony, isNoneSelected) -> colony.isBlank() && !isNoneSelected }
-        .map { COLONY_OR_VILLAGE_EMPTY }
-
-    val errorsFromUi = phoneNumberErrors.mergeWith(colonyErrors)
+        .map { (_, colony, isNoneSelected) ->
+          when {
+            (colony.isBlank() && !isNoneSelected) -> listOf(COLONY_OR_VILLAGE_EMPTY)
+            else -> listOf()
+          }
+        }
 
     val errorsFromDataValidation = events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
         .map { (_, ongoingEntry) -> ongoingEntry.validationErrors(dobValidator) }
-        .flatMapIterable { it }
 
-    return errorsFromUi.mergeWith(errorsFromDataValidation)
+    val errors = Observables.zip(phoneNumberErrors, colonyErrors, errorsFromDataValidation) { phoneError, colonyError, otherErrors ->
+      phoneError + colonyError + otherErrors
+    }
+
+    val showErrors = errors
+        .flatMapIterable { it }
         .map {
           val change: UiChange = when (it) {
             FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }
@@ -279,6 +290,12 @@ class PatientEntryScreenController @Inject constructor(
           }
           change
         }
+
+    val scrollToFirstError = errors
+        .filter { it.isNotEmpty() }
+        .map { { ui: Ui -> ui.scrollToFirstFieldWithError() } }
+
+    return showErrors.mergeWith(scrollToFirstError)
   }
 
   private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {

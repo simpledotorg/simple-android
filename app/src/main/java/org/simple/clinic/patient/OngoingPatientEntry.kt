@@ -4,6 +4,18 @@ import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID_PATTERN
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.VALID
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
+import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 
 /**
  * Represents loggedInUser input on the UI, which is why every field is a String.
@@ -16,79 +28,57 @@ data class OngoingPatientEntry(
     val phoneNumber: PhoneNumber? = null
 ) {
 
-  enum class ValidationError {
-    PERSONAL_DETAILS_EMPTY,
-    FULL_NAME_EMPTY,
-    BOTH_DATEOFBIRTH_AND_AGE_ABSENT,
-    BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
-    INVALID_DATE_OF_BIRTH,
-    DATE_OF_BIRTH_IS_IN_FUTURE,
-    MISSING_GENDER,
-
-    PHONE_NUMBER_NON_NULL_BUT_BLANK,
-
-    EMPTY_ADDRESS_DETAILS,
-    COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK,
-    DISTRICT_EMPTY,
-    STATE_EMPTY
-  }
-
-  fun validationErrors(dobValidator: DateOfBirthFormatValidator): ArrayList<ValidationError> {
-    val errors = ArrayList<ValidationError>()
+  fun validationErrors(dobValidator: DateOfBirthFormatValidator): ArrayList<PatientEntryValidationError> {
+    val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {
-      errors += ValidationError.PERSONAL_DETAILS_EMPTY
+      errors += PERSONAL_DETAILS_EMPTY
     }
 
     personalDetails?.apply {
       if (dateOfBirth.isNullOrBlank() && age.isNullOrBlank()) {
-        errors += ValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+        errors += BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 
       } else if (dateOfBirth?.isNotBlank() == true && age?.isNotBlank() == true) {
-        errors += ValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+        errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
       } else if (dateOfBirth != null) {
         val dobValidationResult = dobValidator.validate(dateOfBirth)
         errors += when (dobValidationResult) {
-          INVALID_PATTERN -> listOf(ValidationError.INVALID_DATE_OF_BIRTH)
-          DATE_IS_IN_FUTURE -> listOf(ValidationError.DATE_OF_BIRTH_IS_IN_FUTURE)
+          INVALID_PATTERN -> listOf(INVALID_DATE_OF_BIRTH)
+          DATE_IS_IN_FUTURE -> listOf(DATE_OF_BIRTH_IN_FUTURE)
           VALID -> listOf()
         }
       }
       if (fullName.isBlank()) {
-        errors += ValidationError.FULL_NAME_EMPTY
+        errors += FULL_NAME_EMPTY
       }
       if (gender == null) {
-        errors += ValidationError.MISSING_GENDER
+        errors += MISSING_GENDER
       }
     }
 
     if (phoneNumber != null && phoneNumber.number.isBlank()) {
-      errors += ValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
+      errors += PHONE_NUMBER_NON_NULL_BUT_BLANK
     }
 
     if (address == null) {
-      errors += ValidationError.EMPTY_ADDRESS_DETAILS
+      errors += EMPTY_ADDRESS_DETAILS
     }
 
     address?.apply {
       if (colonyOrVillage != null && colonyOrVillage.isBlank()) {
-        errors += ValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
+        errors += COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
       }
       if (district.isBlank()) {
-        errors += ValidationError.DISTRICT_EMPTY
+        errors += DISTRICT_EMPTY
       }
       if (state.isBlank()) {
-        errors += ValidationError.STATE_EMPTY
+        errors += STATE_EMPTY
       }
     }
 
     return errors
-  }
-
-  sealed class ValidationResult {
-    class Valid : ValidationResult()
-    data class Invalid(val error: Throwable) : ValidationResult()
   }
 
   /**

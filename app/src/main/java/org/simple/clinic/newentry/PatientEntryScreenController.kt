@@ -13,18 +13,20 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.DATE_OF_BIRTH_IS_IN_FUTURE
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.DISTRICT_EMPTY
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.EMPTY_ADDRESS_DETAILS
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.INVALID_DATE_OF_BIRTH
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.MISSING_GENDER
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.PERSONAL_DETAILS_EMPTY
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError.STATE_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
+import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
+import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
+import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
+import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -228,55 +230,55 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun validationOnSaveClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    val showDataErrors = events
-        .ofType<PatientEntrySaveClicked>()
-        .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
-        .map { (_, ongoingEntry) ->
-          ongoingEntry.validationErrors(dobValidator)
-              .map {
-                val change: UiChange = when (it) {
-                  FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }
-                  BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(true) }
-                  INVALID_DATE_OF_BIRTH -> { ui: Ui -> ui.showInvalidDateOfBirthError(true) }
-                  DATE_OF_BIRTH_IS_IN_FUTURE -> { ui: Ui -> ui.showDateOfBirthIsInFutureError(true) }
-                  MISSING_GENDER -> { ui: Ui -> ui.showMissingGenderError(true) }
-                  DISTRICT_EMPTY -> { ui: Ui -> ui.showEmptyDistrictError(true) }
-                  STATE_EMPTY -> { ui: Ui -> ui.showEmptyStateError(true) }
-
-                  EMPTY_ADDRESS_DETAILS,
-                  PHONE_NUMBER_NON_NULL_BUT_BLANK,
-                  BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
-                  COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK,
-                  PERSONAL_DETAILS_EMPTY -> {
-                    throw AssertionError("Should never receive this error: $it")
-                  }
-                }
-                change
-              }
-        }
-        .flatMapIterable { it }
-
     val phoneNumberChanges = events.ofType<PatientPhoneNumberTextChanged>().map { it.phoneNumber }
     val noPhoneToggles = events.ofType<PatientNoPhoneNumberToggled>().map { it.noneSelected }
 
-    val showPhoneNumberErrors = events
+    val phoneNumberErrors = events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(phoneNumberChanges, noPhoneToggles)
         .filter { (_, phoneNumber, isNoneSelected) -> phoneNumber.isBlank() && !isNoneSelected }
-        .map { { ui: Ui -> ui.showEmptyPhoneNumberError(true) } }
+        .map { PHONE_NUMBER_EMPTY }
 
     val colonyChanges = events.ofType<PatientColonyOrVillageTextChanged>().map { it.colonyOrVillage }
     val noColonyToggles = events.ofType<PatientNoColonyOrVillageToggled>().map { it.noneSelected }
 
-    val colonyValidations = events
+    val colonyErrors = events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(colonyChanges, noColonyToggles)
         .filter { (_, colony, isNoneSelected) -> colony.isBlank() && !isNoneSelected }
-        .map { { ui: Ui -> ui.showEmptyColonyOrVillageError(true) } }
+        .map { COLONY_OR_VILLAGE_EMPTY }
 
-    return showDataErrors
-        .mergeWith(showPhoneNumberErrors)
-        .mergeWith(colonyValidations)
+    val errorsFromUi = phoneNumberErrors.mergeWith(colonyErrors)
+
+    val errorsFromDataValidation = events
+        .ofType<PatientEntrySaveClicked>()
+        .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
+        .map { (_, ongoingEntry) -> ongoingEntry.validationErrors(dobValidator) }
+        .flatMapIterable { it }
+
+    return errorsFromUi.mergeWith(errorsFromDataValidation)
+        .map {
+          val change: UiChange = when (it) {
+            FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }
+            PHONE_NUMBER_EMPTY -> { ui: Ui -> ui.showEmptyPhoneNumberError(true) }
+            BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(true) }
+            INVALID_DATE_OF_BIRTH -> { ui: Ui -> ui.showInvalidDateOfBirthError(true) }
+            DATE_OF_BIRTH_IN_FUTURE -> { ui: Ui -> ui.showDateOfBirthIsInFutureError(true) }
+            MISSING_GENDER -> { ui: Ui -> ui.showMissingGenderError(true) }
+            COLONY_OR_VILLAGE_EMPTY -> { ui: Ui -> ui.showEmptyColonyOrVillageError(true) }
+            DISTRICT_EMPTY -> { ui: Ui -> ui.showEmptyDistrictError(true) }
+            STATE_EMPTY -> { ui: Ui -> ui.showEmptyStateError(true) }
+
+            EMPTY_ADDRESS_DETAILS,
+            PHONE_NUMBER_NON_NULL_BUT_BLANK,
+            BOTH_DATEOFBIRTH_AND_AGE_PRESENT,
+            COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK,
+            PERSONAL_DETAILS_EMPTY -> {
+              throw AssertionError("Should never receive this error: $it")
+            }
+          }
+          change
+        }
   }
 
   private fun validationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {

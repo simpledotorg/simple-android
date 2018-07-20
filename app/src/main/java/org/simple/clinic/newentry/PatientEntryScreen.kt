@@ -15,6 +15,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
@@ -60,6 +61,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   lateinit var activityLifecycle: RxTheActivityLifecycle
 
   private val backButton by bindView<View>(R.id.patiententry_back)
+  private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
   private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patiententry_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
@@ -310,6 +312,12 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     dateOfBirthInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_dateofbirth_is_in_future)
       else -> null
+    }
+  }
+
+  fun scrollFormToBottom() {
+    formScrollView.post {
+      formScrollView.smoothScrollTo(0, formScrollView.height)
     }
   }
 }

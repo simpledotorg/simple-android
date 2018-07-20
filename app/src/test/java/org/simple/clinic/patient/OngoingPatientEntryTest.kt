@@ -12,7 +12,6 @@ import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.OngoingPatientEntry.Address
 import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingPatientEntry.PhoneNumber
-import org.simple.clinic.patient.OngoingPatientEntry.ValidationError
 
 @RunWith(JUnitParamsRunner::class)
 class OngoingPatientEntryTest {
@@ -66,6 +65,6 @@ class OngoingPatientEntryTest {
     val validationErrors = entry.validationErrors(mockDobValidator)
 
     assertThat(validationErrors).hasSize(1)
-    assertThat(validationErrors).contains(ValidationError.DATE_OF_BIRTH_IS_IN_FUTURE)
+    assertThat(validationErrors).contains(PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE)
   }
 }

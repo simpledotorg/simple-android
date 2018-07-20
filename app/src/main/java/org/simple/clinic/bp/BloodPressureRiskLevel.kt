@@ -5,6 +5,10 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 
+/**
+ * TODO: "Risk level" isn't the best term. For e.g., a "low" risk-level BP measurement
+ * TODO: should be urgently treated, but the name suggests otherwise.
+ */
 enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
 
   EXTREMELY_HIGH
@@ -26,9 +30,12 @@ enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: 
       (-1, Just(R.string.bloodpressure_risk_level_low));
 
   fun isUrgent(): Boolean {
+    // TODO: the chart shared by Daniel shows 90-139 as normal level. There is an
+    // overlap between Normal and Mildly high levels. Since we aren't labeling
+    // these on the UI, it's okay for now but we should resolve this.
     return when (this) {
-      LOW, NORMAL, MILDLY_HIGH -> false
-      MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
+      NORMAL, MILDLY_HIGH -> false
+      LOW, MODERATELY_HIGH, VERY_HIGH, EXTREMELY_HIGH -> true
     }
   }
 
@@ -46,7 +53,6 @@ enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: 
     }
 
     private fun computeSystolic(measurement: BloodPressureMeasurement): BloodPressureRiskLevel {
-      // TODO: Chart shows 90-139 for normal.
       return measurement.systolic.let {
         when {
           it <= 89 -> LOW

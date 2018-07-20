@@ -19,7 +19,7 @@ import org.simple.clinic.widgets.UiEvent
 
 data class SummaryBloodPressureItem constructor(
     val measurement: BloodPressureMeasurement,
-    val timestamp: RelativeTimestamp
+    private val timestamp: RelativeTimestamp
 ) : GroupieItemWithUiEvents<SummaryBloodPressureItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>

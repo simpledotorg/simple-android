@@ -50,7 +50,7 @@ data class BloodPressureMeasurement constructor(
 ) {
 
   @Transient
-  val riskLevel = BloodPressureRiskLevel.compute(this)
+  val level = BloodPressureLevel.compute(this)
 
   fun toPayload(): BloodPressureMeasurementPayload {
     return BloodPressureMeasurementPayload(

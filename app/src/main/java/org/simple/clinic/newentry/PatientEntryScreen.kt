@@ -170,10 +170,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     stateEditText.setTextAndCursor(details.address?.state)
   }
 
-  fun setSaveButtonEnabled(enabled: Boolean) {
-    saveButton.isEnabled = enabled
-  }
-
   fun openSummaryScreenForBpEntry(savedPatientUuid: UUID) {
     screenRouter.push(PatientSummaryScreen.KEY(savedPatientUuid, PatientSummaryCaller.NEW_PATIENT))
   }

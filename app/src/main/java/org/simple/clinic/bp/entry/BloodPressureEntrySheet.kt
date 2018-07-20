@@ -23,6 +23,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: BloodPressureEntrySheetController
 
+  private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditText>(R.id.bloodpressureentry_diastolic)
 
@@ -53,6 +54,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
+
+    // Dismiss this sheet when the keyboard is dismissed.
+    rootLayout.backKeyPressInterceptor = { super.onBackgroundClick() }
   }
 
   override fun onDestroy() {

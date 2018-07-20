@@ -87,3 +87,25 @@ fun View.executeOnNextMeasure(runnable: () -> Unit) {
     }
   })
 }
+
+/**
+ * Like [View.getTop], but works even when a View is not the immediate child of [superParent].
+ */
+fun View.topRelativeTo(superParent: ViewGroup): Int {
+  var totalDistance = 0
+  var nextView = this
+
+  while (true) {
+    totalDistance += nextView.top
+    if (nextView.parent == superParent) {
+      break
+    }
+    nextView = nextView.parent as View
+
+    if ((nextView.parent as ViewGroup).id == android.R.id.content) {
+      throw AssertionError("${resources.getResourceEntryName(superParent.id)} isn't the parent of ${resources.getResourceEntryName(id)}")
+    }
+  }
+
+  return totalDistance
+}

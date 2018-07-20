@@ -42,6 +42,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.topRelativeTo
 import java.util.UUID
 import javax.inject.Inject
 
@@ -308,6 +309,53 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     dateOfBirthInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_dateofbirth_is_in_future)
       else -> null
+    }
+  }
+
+  fun scrollToFirstFieldWithError() {
+    val views = arrayOf(
+        fullNameInputLayout,
+        phoneNumberInputLayout,
+        ageEditTextInputLayout,
+        dateOfBirthInputLayout,
+        genderErrorTextView,
+        colonyOrVillageInputLayout,
+        districtInputLayout,
+        stateInputLayout)
+
+    val isGenderErrorView: (View) -> Boolean = {
+      it.id == R.id.patiententry_gender_validation_error
+    }
+
+    val firstFieldWithError = views
+        .filter {
+          when {
+            isGenderErrorView(it) -> it.visibility == View.VISIBLE
+            it is TextInputLayout -> it.error.isNullOrBlank().not()
+            else -> throw AssertionError()
+          }
+        }
+        .map {
+          when {
+            isGenderErrorView(it) -> genderRadioGroup
+            else -> it
+          }
+        }
+        .first()
+
+    scrollFormTo(firstFieldWithError)
+  }
+
+  private fun scrollFormTo(view: View) {
+    val distanceToScrollFromTop = view.topRelativeTo(formScrollView)
+    formScrollView.post {
+      formScrollView.smoothScrollTo(0, distanceToScrollFromTop)
+
+      // Request focus only *after* the form has scrolled.
+      view.postDelayed(
+          { view.requestFocus() },
+          400
+      )
     }
   }
 

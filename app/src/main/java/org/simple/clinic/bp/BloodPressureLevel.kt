@@ -5,20 +5,16 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 
-/**
- * TODO: "Risk level" isn't the best term. For e.g., a "low" risk-level BP measurement
- * TODO: should be urgently treated, but the name suggests otherwise.
- */
-enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
+enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
 
   EXTREMELY_HIGH
-      (4, Just(R.string.bloodpressure_risk_level_extremely_high)),
+      (4, Just(R.string.bloodpressure_level_extremely_high)),
 
   VERY_HIGH
-      (3, Just(R.string.bloodpressure_risk_level_very_high)),
+      (3, Just(R.string.bloodpressure_level_very_high)),
 
   MODERATELY_HIGH
-      (2, Just(R.string.bloodpressure_risk_level_moderately_high)),
+      (2, Just(R.string.bloodpressure_level_moderately_high)),
 
   MILDLY_HIGH
       (1, None),
@@ -27,7 +23,7 @@ enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: 
       (0, None),
 
   LOW
-      (-1, Just(R.string.bloodpressure_risk_level_low));
+      (-1, Just(R.string.bloodpressure_level_low));
 
   fun isUrgent(): Boolean {
     // TODO: the chart shared by Daniel shows 90-139 as normal level. There is an
@@ -41,18 +37,18 @@ enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: 
 
   companion object {
 
-    fun compute(measurement: BloodPressureMeasurement): BloodPressureRiskLevel {
-      val systolicRiskLevel = computeSystolic(measurement)
-      val diastolicRiskLevel = computeDiastolic(measurement)
+    fun compute(measurement: BloodPressureMeasurement): BloodPressureLevel {
+      val systolicLevel = computeSystolic(measurement)
+      val diastolicLevel = computeDiastolic(measurement)
 
-      return if (systolicRiskLevel.urgency > diastolicRiskLevel.urgency) {
-        systolicRiskLevel
+      return if (systolicLevel.urgency > diastolicLevel.urgency) {
+        systolicLevel
       } else {
-        diastolicRiskLevel
+        diastolicLevel
       }
     }
 
-    private fun computeSystolic(measurement: BloodPressureMeasurement): BloodPressureRiskLevel {
+    private fun computeSystolic(measurement: BloodPressureMeasurement): BloodPressureLevel {
       return measurement.systolic.let {
         when {
           it <= 89 -> LOW
@@ -66,7 +62,7 @@ enum class BloodPressureRiskLevel(private val urgency: Int, val displayTextRes: 
       }
     }
 
-    private fun computeDiastolic(measurement: BloodPressureMeasurement): BloodPressureRiskLevel {
+    private fun computeDiastolic(measurement: BloodPressureMeasurement): BloodPressureLevel {
       return measurement.diastolic.let {
         when {
           it <= 59 -> LOW

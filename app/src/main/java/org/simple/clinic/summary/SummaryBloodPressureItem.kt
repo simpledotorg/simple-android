@@ -39,21 +39,21 @@ data class SummaryBloodPressureItem constructor(
       else -> StyleSpan(Typeface.NORMAL)
     }
 
-    val riskLevel = measurement.riskLevel
+    val level = measurement.level
 
-    val riskLevelTextColor = when {
-      riskLevel.isUrgent() -> ContextCompat.getColor(context, R.color.patientsummary_high_or_worse_blood_pressure)
+    val levelTextColor = when {
+      level.isUrgent() -> ContextCompat.getColor(context, R.color.patientsummary_high_or_worse_blood_pressure)
       else -> holder.originalTextColor
     }
 
-    holder.riskLevelTextView.text = when (riskLevel.displayTextRes) {
-      is Just -> context.getString(riskLevel.displayTextRes.value)
+    holder.levelTextView.text = when (level.displayTextRes) {
+      is Just -> context.getString(level.displayTextRes.value)
       is None -> ""
     }
     holder.readingsTextView.text = "${measurement.systolic}/${measurement.diastolic}"
     holder.timestampTextView.text = timestamp.displayText(context)
 
-    for (textView in arrayOf(holder.readingsTextView, holder.riskLevelTextView, holder.timestampTextView)) {
+    for (textView in arrayOf(holder.readingsTextView, holder.levelTextView, holder.timestampTextView)) {
       textView.text = Truss()
           .pushSpan(textStyleSpan)
           .append(textView.text)
@@ -61,8 +61,8 @@ data class SummaryBloodPressureItem constructor(
           .build()
     }
 
-    for (textView in arrayOf(holder.readingsTextView, holder.riskLevelTextView)) {
-      textView.setTextColor(riskLevelTextColor)
+    for (textView in arrayOf(holder.readingsTextView, holder.levelTextView)) {
+      textView.setTextColor(levelTextColor)
     }
   }
 
@@ -72,7 +72,7 @@ data class SummaryBloodPressureItem constructor(
 
   class BpViewHolder(rootView: View) : ViewHolder(rootView) {
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
-    val riskLevelTextView by bindView<TextView>(R.id.patientsummary_item_bp_risk_level)
+    val levelTextView by bindView<TextView>(R.id.patientsummary_item_bp_level)
     val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
     val originalTextColor = readingsTextView.currentTextColor
   }

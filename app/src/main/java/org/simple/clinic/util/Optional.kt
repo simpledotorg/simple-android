@@ -30,6 +30,10 @@ sealed class Optional<out T : Any> {
    */
   abstract operator fun component1(): T?
 
+  fun isNotEmpty(): Boolean {
+    return this is Just
+  }
+
   companion object {
 
     /**

@@ -20,6 +20,7 @@
   <ScrollView
     android:scrollbarStyle="insideOverlay"
     android:layout_width="match_parent"
+    android:id="@+id/patiententry_form_scrollview"
     android:layout_height="match_parent"
     android:layout_above="@+id/patiententry_save"
     android:layout_toEndOf="@+id/patiententry_back"

@@ -109,6 +109,7 @@
           <android.support.design.widget.TextInputLayout
             app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError"
             android:layout_width="match_parent"
+            android:id="@+id/patiententry_age_inputlayout"
             android:layout_height="wrap_content">
 
             <android.support.design.widget.TextInputEditText

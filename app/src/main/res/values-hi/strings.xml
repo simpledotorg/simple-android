@@ -34,7 +34,6 @@
     <string name="patiententry_error_empty_colony_or_village">कॉलोनी या गांव खाली नहीं हो सकता है</string>
     <string name="patiententry_error_empty_district">जिला खाली नहीं हो सकता है</string>
     <string name="patiententry_error_state_empty">राज्य खाली नहीं हो सकता है</string>
-    <string name="patiententry_error_both_dateofbirth_and_age_empty">जन्मतिथि या उम्र खाली नहीं हो सकती है</string>
     <string name="patiententry_error_invalid_dateofbirth">जन्मतिथि गलत है</string>
     <string name="patiententry_error_dateofbirth_is_in_future">जन्मतिथि भविष्य में नहीं हो सकती है</string>
     <string name="home_scan_patient_aadhaar">रोगी के आधार को स्कैन करें</string>

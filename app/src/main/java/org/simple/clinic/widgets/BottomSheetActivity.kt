@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import kotterknife.bindView
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 
 /**
@@ -25,6 +27,10 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     overridePendingTransition(0, 0)
     super.onCreate(savedInstanceState)
+    @Suppress("ConstantConditionIf")
+    if (BuildConfig.DISABLE_SCREENSHOT) {
+      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
     super.setContentView(R.layout.bottom_sheet)
 
     backgroundView.setOnClickListener {

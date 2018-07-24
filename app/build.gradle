@@ -37,6 +37,7 @@ android {
       minifyEnabled false
       useProguard false
       shrinkResources false
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
     release {
@@ -51,6 +52,7 @@ android {
         shrinkResources false
         useProguard false
       }
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
   }
 

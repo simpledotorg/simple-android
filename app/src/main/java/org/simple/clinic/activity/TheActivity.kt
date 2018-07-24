@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.home.HomeScreen
@@ -50,6 +52,10 @@ class TheActivity : AppCompatActivity() {
 
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
+    @Suppress("ConstantConditionIf")
+    if (BuildConfig.DISABLE_SCREENSHOT) {
+      window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+    }
 
     // getIntent() returns null from attachBaseContext(), so Flow cannot
     // be initialized with the screen key requested by the caller.

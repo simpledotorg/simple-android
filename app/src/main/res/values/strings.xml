@@ -43,7 +43,7 @@
   <string name="patiententry_error_empty_colony_or_village">Enter patient’s village or colony or choose ‘None’</string>
   <string name="patiententry_error_empty_district">Enter patient’s home district</string>
   <string name="patiententry_error_state_empty">Enter patient’s home state</string>
-  <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s birth date</string>
+  <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>
   <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in dd/mm/yyyy</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
 

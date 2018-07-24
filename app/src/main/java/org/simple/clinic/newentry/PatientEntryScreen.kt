@@ -72,6 +72,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patiententry_date_of_birth_container)
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
+  private val ageEditTextInputLayout by bindView<TextInputLayout>(R.id.patiententry_age_inputlayout)
   private val ageEditTextContainer by bindView<ViewGroup>(R.id.patiententry_age_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patiententry_dateofbirth_and_age_separator)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
@@ -292,7 +293,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   fun showEmptyDateOfBirthAndAgeError(show: Boolean) {
-    dateOfBirthInputLayout.error = when {
+    ageEditTextInputLayout.error = when {
       show -> resources.getString(R.string.patiententry_error_both_dateofbirth_and_age_empty)
       else -> null
     }

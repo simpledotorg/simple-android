@@ -26,7 +26,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       BloodPressureMeasurement::class,
       PrescribedDrug::class,
       Facility::class],
-    version = 2,
+    version = 3,
     exportSchema = false)
 @TypeConverters(
     Gender.RoomTypeConverter::class,

@@ -86,6 +86,7 @@ class PrescriptionRepositoryAndroidTest {
             patientUuid,
             addressUuid,
             faker.name.name(),
+            faker.name.name(),
             Gender.FEMALE,
             LocalDate.parse("1947-08-15"),
             null,

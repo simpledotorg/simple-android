@@ -34,6 +34,8 @@ data class Patient constructor(
 
     val fullName: String,
 
+    val searchableName: String,
+
     val gender: Gender,
 
     val dateOfBirth: LocalDate?,

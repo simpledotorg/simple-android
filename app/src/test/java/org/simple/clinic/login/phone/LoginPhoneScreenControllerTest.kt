@@ -33,16 +33,16 @@ class LoginPhoneScreenControllerTest {
   fun `when screen starts, get OTP from intent, and create an OngoingLoginEntry`() {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PhoneNumberScreenCreated("123"))
+    uiEvents.onNext(LoginPhoneNumberScreenCreated("123"))
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(otp = "123"))
   }
 
   @Test
   fun `if phone number is empty, disable the submit button, and vice versa`() {
-    uiEvents.onNext(PhoneNumberTextChanged(""))
-    uiEvents.onNext(PhoneNumberTextChanged("123"))
-    uiEvents.onNext(PhoneNumberTextChanged("123444"))
+    uiEvents.onNext(LoginPhoneNumberTextChanged(""))
+    uiEvents.onNext(LoginPhoneNumberTextChanged("123"))
+    uiEvents.onNext(LoginPhoneNumberTextChanged("123444"))
 
     verify(screen).enableSubmitButton(false)
     verify(screen, times(1)).enableSubmitButton(true)
@@ -53,8 +53,8 @@ class LoginPhoneScreenControllerTest {
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(otp = "123")))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PhoneNumberTextChanged("9999"))
-    uiEvents.onNext(PhoneNumberSubmitClicked())
+    uiEvents.onNext(LoginPhoneNumberTextChanged("9999"))
+    uiEvents.onNext(LoginPhoneNumberSubmitClicked())
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry("123", "9999"))
     verify(screen).openLoginPinScreen()

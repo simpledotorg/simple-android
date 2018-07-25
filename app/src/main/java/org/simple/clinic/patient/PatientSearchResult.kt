@@ -65,11 +65,11 @@ data class PatientSearchResult(
     """
     }
 
-    @Query("$mainQuery WHERE P.fullname LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%'")
+    @Query("$mainQuery WHERE P.searchableName LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%'")
     fun search(query: String): Flowable<List<PatientSearchResult>>
 
     @Query("""$mainQuery
-      WHERE (P.fullname LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%')
+      WHERE (P.searchableName LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%')
       AND ((P.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound) OR (P.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
       """)
     fun search(query: String, dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>

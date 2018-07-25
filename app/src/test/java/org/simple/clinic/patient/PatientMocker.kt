@@ -23,6 +23,7 @@ object PatientMocker {
         uuid = uuid,
         addressUuid = addressUuid,
         fullName = fullName,
+        searchableName = fullName,
         gender = mock(),
         dateOfBirth = mock(),
         age = mock(),

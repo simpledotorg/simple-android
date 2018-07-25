@@ -53,9 +53,6 @@ data class Patient constructor(
   @Dao
   interface RoomDao {
 
-    @Query("SELECT * FROM patient WHERE fullName LIKE '%' || :query || '%'")
-    fun search(query: String): Flowable<List<Patient>>
-
     @Query("SELECT * FROM patient")
     fun allPatients(): Flowable<List<Patient>>
 

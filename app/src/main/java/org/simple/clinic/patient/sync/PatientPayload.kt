@@ -57,6 +57,7 @@ data class PatientPayload(
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
+        searchableName = "",
         fullName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,

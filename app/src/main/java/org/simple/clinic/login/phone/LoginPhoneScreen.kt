@@ -51,19 +51,19 @@ class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
 
   private fun screenCreates(): Observable<UiEvent> {
     val screenKey = screenRouter.key<LoginPhoneScreenKey>(this)!!
-    return Observable.just(PhoneNumberScreenCreated(screenKey.otp))
+    return Observable.just(LoginPhoneNumberScreenCreated(screenKey.otp))
   }
 
   private fun phoneNumberTextChanges() = RxTextView.textChanges(phoneNumberEditText)
       .map(CharSequence::toString)
-      .map(::PhoneNumberTextChanged)
+      .map(::LoginPhoneNumberTextChanged)
 
   private fun nextClicks(): Observable<UiEvent> {
     val phoneImeClicks = RxTextView.editorActions(phoneNumberEditText) { it == EditorInfo.IME_ACTION_DONE }
 
     return RxView.clicks(submitButton)
         .mergeWith(phoneImeClicks)
-        .map { PhoneNumberSubmitClicked() }
+        .map { LoginPhoneNumberSubmitClicked() }
   }
 
   fun enableSubmitButton(enabled: Boolean) {

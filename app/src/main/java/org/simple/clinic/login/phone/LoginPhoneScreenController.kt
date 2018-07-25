@@ -26,7 +26,7 @@ class LoginPhoneScreenController @Inject constructor(
   }
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PhoneNumberScreenCreated>()
+    return events.ofType<LoginPhoneNumberScreenCreated>()
         .map { OngoingLoginEntry(it.otp) }
         .flatMap {
           userSession
@@ -36,17 +36,17 @@ class LoginPhoneScreenController @Inject constructor(
   }
 
   private fun phoneNumberChanges(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PhoneNumberTextChanged>()
+    return events.ofType<LoginPhoneNumberTextChanged>()
         .map { it.phoneNumber.isNotBlank() }
         .distinctUntilChanged()
         .map { { ui: Ui -> ui.enableSubmitButton(it) } }
   }
 
   private fun submitClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberChanges = events.ofType<PhoneNumberTextChanged>()
+    val phoneNumberChanges = events.ofType<LoginPhoneNumberTextChanged>()
         .map { it.phoneNumber }
 
-    return events.ofType<PhoneNumberSubmitClicked>()
+    return events.ofType<LoginPhoneNumberSubmitClicked>()
         .withLatestFrom(phoneNumberChanges)
         .flatMap { (_, enteredPhoneNumber) ->
           userSession.ongoingLoginEntry()

@@ -13,7 +13,7 @@
 
     <ImageButton
       android:id="@+id/loginpin_back"
-      style="@style/Clinic.LoginPinBackButton"
+      style="@style/Clinic.LoginBackButton"
       android:contentDescription="@string/loginpin_go_back"
       android:src="@drawable/ic_arrow_back_24dp" />
 
@@ -31,7 +31,7 @@
 
   <android.support.v7.widget.CardView
     android:id="@+id/loginpin_card"
-    style="@style/Clinic.LoginPinCard"
+    style="@style/Clinic.LoginCard"
     android:layout_below="@+id/loginpin_logo_container">
 
     <ProgressBar
@@ -43,7 +43,7 @@
 
     <LinearLayout
       android:id="@+id/loginpin_form"
-      style="@style/Clinic.LoginPinCardContentContainer">
+      style="@style/Clinic.LoginCardContentContainer">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"

@@ -11,7 +11,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockScreen
-import org.simple.clinic.login.phone.LoginPhoneScreen
+import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -99,7 +99,7 @@ class TheActivity : AppCompatActivity() {
     return if (userSession.isUserLoggedIn()) {
       HomeScreen.KEY
     } else {
-      LoginPhoneScreen.KEY("")
+      RegistrationPhoneScreen.KEY
     }
   }
 

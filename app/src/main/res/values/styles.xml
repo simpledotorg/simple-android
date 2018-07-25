@@ -81,7 +81,7 @@
     <item name="android:layout_height">2dp</item>
   </style>
 
-  <style name="Clinic.LoginPinBackButton">
+  <style name="Clinic.LoginBackButton">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginTop">@dimen/spacing_16</item>
@@ -91,14 +91,7 @@
     <item name="android:tint">@color/white</item>
   </style>
 
-  <style name="Clinic.LoginPinPhoneNumber">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_gravity">center</item>
-    <item name="android:layout_marginEnd">@dimen/spacing_24</item>
-    <item name="android:layout_marginStart">@dimen/spacing_24</item>
-    <item name="android:ellipsize">end</item>
-    <item name="android:maxLines">1</item>
+  <style name="Clinic.LoginPinPhoneNumber" parent="Clinic.LoginLogo">
     <item name="android:paddingBottom">26dp</item>
     <item name="android:paddingTop">44dp</item>
     <item name="android:textColor">@color/white_opacity_90</item>
@@ -132,7 +125,7 @@
     <item name="android:textSize">@dimen/textsize_18</item>
   </style>
 
-  <style name="Clinic.LoginPinCardContentContainer">
+  <style name="Clinic.LoginCardContentContainer">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:gravity">center_horizontal</item>
@@ -143,7 +136,7 @@
     <item name="android:paddingTop">@dimen/spacing_32</item>
   </style>
 
-  <style name="Clinic.LoginPinCard">
+  <style name="Clinic.LoginCard">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginEnd">@dimen/spacing_24</item>
@@ -176,5 +169,42 @@
   <style name="Clinic.TextAppearance.TextInputLayoutError">
     <item name="android:textColor">@color/textinputlayout_error</item>
     <item name="android:textSize">@dimen/textsize_12</item>
+  </style>
+
+  <style name="Clinic.LoginLogoContainer">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@color/color_primary</item>
+    <item name="android:paddingBottom">24dp</item>
+    <item name="android:paddingTop">44dp</item>
+  </style>
+
+  <style name="Clinic.LoginLogo">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:layout_marginEnd">@dimen/spacing_24</item>
+    <item name="android:layout_marginStart">@dimen/spacing_24</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColor">#692209</item>
+    <item name="android:textSize">34sp</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.LoginLogoContainerOverflow">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">48dp</item>
+    <item name="android:layout_alignTop">@+id/loginphone_card</item>
+    <item name="android:background">@color/color_primary</item>
+  </style>
+
+  <style name="Clinic.LoginProceedButton">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_alignParentBottom">true</item>
+    <item name="android:background">@drawable/background_login_submit_button</item>
+    <item name="android:foreground">?attr/selectableItemBackground</item>
+    <item name="android:textColor">@color/white</item>
   </style>
 </resources>

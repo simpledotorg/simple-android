@@ -53,6 +53,27 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun createAnOngoingPatientEntry_thenSaveItToDatabase_withSearchableName() {
+    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
+    val names = arrayOf("Riya Puri" to "RiyaPuri", "Manabi    Mehra" to "ManabiMehra", "Amit:Sodhi" to "AmitSodhi")
+
+    names.forEach { (fullName, expectedSearchableName) ->
+      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, "08/04/1985", null, Gender.TRANSGENDER)
+
+      val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
+
+      val patient = repository.saveOngoingEntry(personalDetailsOnlyEntry)
+          .andThen(repository.ongoingEntry())
+          .map { it.copy(address = ongoingAddress) }
+          .flatMapCompletable { repository.saveOngoingEntry(it) }
+          .andThen(repository.saveOngoingEntryAsPatient())
+          .blockingGet()
+
+      assertThat(patient.searchableName).isEqualTo(expectedSearchableName)
+    }
+  }
+
+  @Test
   fun createAnOngoingPatientEntry_withoutPhoneNumber_thenSaveItToDatabase() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08/04/1985", null, Gender.TRANSGENDER)
@@ -144,6 +165,35 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .test()
         .assertError(AssertionError::class.java)
+  }
+
+  @Test
+  fun patientSearch_shouldIgnore_SpacesAndWhitespaceCharacters() {
+    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
+    val names = arrayOf("Riya Puri", "Manabi    Mehra", "Amit:Sodhi")
+    val searches = arrayOf("ya p" to true, "bime" to true, "ito" to false)
+
+    names.forEachIndexed { index, fullName ->
+      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, "08/04/1985", null, Gender.TRANSGENDER)
+
+      val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
+
+      repository.saveOngoingEntry(personalDetailsOnlyEntry)
+          .andThen(repository.ongoingEntry())
+          .map { it.copy(address = ongoingAddress) }
+          .flatMapCompletable { repository.saveOngoingEntry(it) }
+          .andThen(repository.saveOngoingEntryAsPatient())
+          .blockingGet()
+
+      val (query, shouldFindInDb) = searches[index]
+      val search = repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
+      if (shouldFindInDb) {
+        assertThat(search).hasSize(1)
+        assertThat(search.first().fullName).isEqualTo(fullName)
+      } else {
+        assertThat(search).isEmpty()
+      }
+    }
   }
 
   @Test

@@ -53,11 +53,11 @@ data class PatientPayload(
     val phoneNumbers: List<PatientPhoneNumberPayload>?
 ) {
 
-  fun toDatabaseModel(newStatus: SyncStatus): Patient {
+  fun toDatabaseModel(newStatus: SyncStatus, convertToSearchable: (String) -> String): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
-        searchableName = "",
+        searchableName = convertToSearchable(fullName),
         fullName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,

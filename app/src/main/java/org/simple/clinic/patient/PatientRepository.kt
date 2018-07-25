@@ -22,6 +22,15 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
+/**
+ * [Regex] for stripping patient names and search queries of white spaces and punctuation
+ *
+ * Currently matches the following characters
+ * - Any whitespace
+ * - Comma, Hyphen, SemiColon, Colon, Underscore
+ * */
+private val spacePunctuationRegex = Regex("[\\s;_\\-:,]")
+
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
@@ -44,7 +53,7 @@ class PatientRepository @Inject constructor(
     }
 
     return database.patientSearchDao()
-        .search(query!!)
+        .search(toSearchable(query!!))
         .toObservable()
   }
 
@@ -62,7 +71,7 @@ class PatientRepository @Inject constructor(
     }
 
     return database.patientSearchDao()
-        .search(query!!, dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .search(toSearchable(query!!), dateOfBirthUpperBound, dateOfBirthLowerBound)
         .toObservable()
   }
 
@@ -122,7 +131,8 @@ class PatientRepository @Inject constructor(
             val newOrUpdatedAddresses = payloads.map { it.address.toDatabaseModel() }
             database.addressDao().save(newOrUpdatedAddresses)
 
-            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE) }
+            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE, convertToSearchable = this::toSearchable) }
+
             database.patientDao().save(newOrUpdatedPatients)
 
             val newOrUpdatedPhoneNumbers = payloads
@@ -183,6 +193,7 @@ class PatientRepository @Inject constructor(
             Patient(
                 uuid = patientUuid,
                 fullName = personalDetails!!.fullName,
+                searchableName = toSearchable(personalDetails.fullName),
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
 
@@ -261,6 +272,8 @@ class PatientRepository @Inject constructor(
       database.phoneNumberDao().save(listOf(number))
     }
   }
+
+  private fun toSearchable(string: String) = string.replace(spacePunctuationRegex, "")
 
   fun phoneNumbers(patientUuid: UUID): Observable<Optional<PatientPhoneNumber>> {
     return database.phoneNumberDao()

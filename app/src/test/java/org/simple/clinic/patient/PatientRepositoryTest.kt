@@ -2,10 +2,12 @@ package org.simple.clinic.patient
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Flowable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
@@ -22,6 +24,7 @@ class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
   private lateinit var database: AppDatabase
+  private lateinit var mockPatientSearchResultDao: PatientSearchResult.RoomDao
 
   private val mockPatientDao = mock<Patient.RoomDao>()
   private val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
@@ -31,7 +34,99 @@ class PatientRepositoryTest {
   @Before
   fun setUp() {
     database = mock()
+    mockPatientSearchResultDao = mock()
     repository = PatientRepository(database, dobValidator)
+  }
+
+  @Test
+  @Parameters(value = [
+    "Name, Name, Name",
+    "Name Surname, Name Surname, NameSurname",
+    "Name Surname, Name   Surname , NameSurname",
+    "Old Name, Name-Surname, NameSurname",
+    "Name, Name Middle-Surname, NameMiddleSurname"
+  ])
+  fun `when merging patients with server records, update the searchable name of the patient to the full name stripped of all spaces and punctuation`(
+      localFullName: String,
+      remoteFullName: String,
+      expectedSearchableName: String
+  ) {
+    whenever(database.patientDao()).thenReturn(mockPatientDao)
+    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+
+    val patientUUID = UUID.randomUUID()
+    val addressUUID = UUID.randomUUID()
+
+    val localPatientCopy = PatientMocker.patient(uuid = patientUUID, fullName = localFullName, addressUuid = addressUUID, syncStatus = SyncStatus.DONE)
+    whenever(mockPatientDao.getOne(patientUUID)).thenReturn(localPatientCopy)
+
+    val serverAddress = PatientMocker.address(addressUUID).toPayload()
+    val serverPatientWithoutPhone = PatientPayload(
+        uuid = patientUUID,
+        fullName = remoteFullName,
+        gender = mock(),
+        dateOfBirth = mock(),
+        age = 0,
+        ageUpdatedAt = mock(),
+        status = mock(),
+        createdAt = mock(),
+        updatedAt = mock(),
+        address = serverAddress,
+        phoneNumbers = null)
+
+    repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
+
+    verify(mockPatientDao).save(argThat<List<Patient>> { first().searchableName == expectedSearchableName })
+  }
+
+  @Test
+  @Parameters(value = [
+    "Name, Name",
+    "Name   Surname, NameSurname",
+    "Name Middle Surname, NameMiddleSurname",
+    "Name \tSurname, NameSurname"
+  ])
+  fun `when searching for patients without age bound, strip the search query of any whitespace or punctuation`(
+      query: String,
+      expectedSearchQuery: String
+  ) {
+    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+
+    repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
+
+    verify(mockPatientSearchResultDao).search(eq(expectedSearchQuery))
+  }
+
+  @Test
+  fun `when searching for patients with age bound, strip the search query of any whitespace or punctuation`() {
+    whenever(mockPatientSearchResultDao.search(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+
+    repository.searchPatientsAndPhoneNumbers("Name   Surname", 40).blockingFirst()
+
+    verify(mockPatientSearchResultDao).search(eq("NameSurname"), any(), any())
+  }
+
+  @Test
+  @Parameters(value = [
+    "123, 123",
+    "123 456, 123456",
+    "234 \t1, 2341"
+  ])
+  fun `when searching for query with phone number, do not remove any of the digits`(
+      query: String,
+      expectedSearchQuery: String
+  ) {
+    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+
+    repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
+
+    verify(mockPatientSearchResultDao).search(eq(expectedSearchQuery))
   }
 
   @Test

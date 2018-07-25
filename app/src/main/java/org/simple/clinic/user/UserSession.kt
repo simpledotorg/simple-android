@@ -36,6 +36,7 @@ class UserSession @Inject constructor(
 ) {
 
   private lateinit var ongoingLoginEntry: OngoingLoginEntry
+  private lateinit var ongoingRegistrationEntry: OngoingRegistrationEntry
 
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
     return Completable.fromAction {
@@ -71,6 +72,16 @@ class UserSession @Inject constructor(
             }
           }
         }
+  }
+
+  fun saveOngoingRegistrationEntry(entry: OngoingRegistrationEntry): Completable {
+    return Completable.fromAction {
+      this.ongoingRegistrationEntry = entry
+    }
+  }
+
+  fun ongoingRegistrationEntry(): Single<OngoingRegistrationEntry> {
+    return Single.fromCallable { ongoingRegistrationEntry }
   }
 
   private fun storeUser(response: LoginResponse) {

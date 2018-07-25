@@ -109,4 +109,8 @@
   <!-- App lock -->
   <string name="applock_error_incorrect_pin">Pin doesn\'t match the original pin</string>
 
+  <!-- Registration -->
+  <string name="registrationphone_next">Next</string>
+  <string name="registrationphone_phone_number_label">Your phone number</string>
+  <string name="registrationphone_cd_go_back">Go back to onboarding</string>
 </resources>

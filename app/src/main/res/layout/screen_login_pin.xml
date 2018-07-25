@@ -52,7 +52,8 @@
 
       <EditText
         android:id="@+id/loginpin_pin"
-        style="@style/Clinic.LoginPinEditText" />
+        style="@style/Clinic.LoginPinEditText"
+        android:imeOptions="actionDone" />
 
       <TextView
         android:id="@+id/loginpin_error"

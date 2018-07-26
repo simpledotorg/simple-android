@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  tools:ignore="UnusedResources">
+
+  <View
+    android:id="@+id/onboarding_header"
+    android:layout_width="match_parent"
+    android:layout_height="159dp"
+    android:layout_alignParentTop="true"
+    android:background="?colorPrimary" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentTop="true">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:orientation="vertical"
+      android:paddingBottom="24dp"
+      android:paddingEnd="24dp"
+      android:paddingLeft="24dp"
+      android:paddingRight="24dp"
+      android:paddingStart="24dp"
+      android:paddingTop="128dp">
+
+      <ImageView
+        style="@style/Clinic.OnboardingImage"
+        android:src="@drawable/ic_onboarding_01_take_bp"
+        tools:ignore="ContentDescription" />
+
+      <ImageView
+        style="@style/Clinic.OnboardingImage"
+        android:src="@drawable/ic_onboarding_02_patient_summary"
+        tools:ignore="ContentDescription" />
+
+      <ImageView
+        style="@style/Clinic.OnboardingImage"
+        android:src="@drawable/ic_onboarding_03_call_list"
+        tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+
+  </ScrollView>
+
+  <Button
+    android:id="@+id/onboarding_get_started"
+    style="@style/Clinic.BorderlessBottomButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:elevation="16dp"
+    android:text="@string/onboarding_get_started"
+    tools:ignore="UnusedAttribute" />
+
+</RelativeLayout>

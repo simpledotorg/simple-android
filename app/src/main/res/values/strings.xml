@@ -113,4 +113,8 @@
   <string name="registrationphone_next">Next</string>
   <string name="registrationphone_phone_number_label">Your phone number</string>
   <string name="registrationphone_cd_go_back">Go back to onboarding</string>
+
+  <string name="registrationname_next">Next</string>
+  <string name="registrationname_name_label">Your full name</string>
+  <string name="registrationname_cd_go_back">Go back to phone number</string>
 </resources>

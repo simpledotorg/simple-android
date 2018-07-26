@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.phone
+package org.simple.clinic.registration.name
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -10,10 +10,10 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RegistrationPhoneScreen
+typealias Ui = RegistrationFullNameScreen
 typealias UiChange = (Ui) -> Unit
 
-class RegistrationPhoneScreenController @Inject constructor(
+class RegistrationFullNameScreenController @Inject constructor(
     val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -29,7 +29,7 @@ class RegistrationPhoneScreenController @Inject constructor(
 
   private fun createEmptyOngoingEntry(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<RegistrationPhoneScreenCreated>()
+        .ofType<RegistrationFullNameScreenCreated>()
         .flatMap {
           userSession
               .saveOngoingRegistrationEntry(OngoingRegistrationEntry())
@@ -38,14 +38,14 @@ class RegistrationPhoneScreenController @Inject constructor(
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberTextChanges = events.ofType<RegistrationPhoneNumberTextChanged>()
-    val nextClicks = events.ofType<RegistrationPhoneNextClicked>()
+    val fullNameTextChanges = events.ofType<RegistrationFullNameTextChanged>()
+    val nextClicks = events.ofType<RegistrationFullNameNextClicked>()
 
     return nextClicks
-        .withLatestFrom(phoneNumberTextChanges.map { it.phoneNumber })
-        .flatMap { (_, phoneNumber) ->
+        .withLatestFrom(fullNameTextChanges.map { it.fullName })
+        .flatMap { (_, fullName) ->
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(phoneNumber = phoneNumber) }
+              .map { it.copy(fullName = fullName) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
         }
@@ -61,8 +61,8 @@ class RegistrationPhoneScreenController @Inject constructor(
 
   private fun setNextButtonEnabled(events: Observable<UiEvent>, enabled: Boolean): Observable<UiChange> {
     return events
-        .ofType<RegistrationPhoneNumberTextChanged>()
-        .map { it.phoneNumber.isBlank() }
+        .ofType<RegistrationFullNameTextChanged>()
+        .map { it.fullName.isBlank() }
         .distinctUntilChanged()
         .filter { isBlank -> isBlank != enabled }
         .map { { ui: Ui -> ui.setNextButtonEnabled(enabled) } }

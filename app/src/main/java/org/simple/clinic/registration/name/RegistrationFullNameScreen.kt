@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.phone
+package org.simple.clinic.registration.name
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,21 +14,21 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import timber.log.Timber
 import javax.inject.Inject
 
-class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: RegistrationPhoneScreenController
+  lateinit var controller: RegistrationFullNameScreenController
 
-  private val backButton by bindView<ImageButton>(R.id.registrationphone_back)
-  private val phoneNumberEditText by bindView<EditText>(R.id.registrationphone_phone)
-  private val nextButton by bindView<Button>(R.id.registrationphone_next)
+  private val backButton by bindView<ImageButton>(R.id.registrationname_back)
+  private val nameEditText by bindView<EditText>(R.id.registrationname_name)
+  private val nextButton by bindView<Button>(R.id.registrationname_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -41,7 +41,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), phoneNumberTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), nameTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -49,19 +49,19 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun screenCreates() = Observable.just(RegistrationPhoneScreenCreated())
+  private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())
 
-  private fun phoneNumberTextChanges() =
-      RxTextView.textChanges(phoneNumberEditText)
+  private fun nameTextChanges() =
+      RxTextView.textChanges(nameEditText)
           .map(CharSequence::toString)
-          .map(::RegistrationPhoneNumberTextChanged)
+          .map(::RegistrationFullNameTextChanged)
 
   private fun nextClicks() =
       RxView.clicks(nextButton)
-          .map { RegistrationPhoneNextClicked() }
+          .map { RegistrationFullNameNextClicked() }
 
   fun openRegistrationNameEntryScreen() {
-    screenRouter.push(RegistrationFullNameScreen.KEY)
+    Timber.w("TODO")
   }
 
   fun setNextButtonEnabled(enabled: Boolean) {
@@ -69,6 +69,6 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   companion object {
-    val KEY = RegistrationPhoneScreenKey()
+    val KEY = RegistrationNameScreenKey()
   }
 }

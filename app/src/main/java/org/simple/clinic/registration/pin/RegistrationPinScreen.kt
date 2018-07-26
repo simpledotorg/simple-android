@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.name
+package org.simple.clinic.registration.pin
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,21 +14,21 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import timber.log.Timber
 import javax.inject.Inject
 
-class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: RegistrationFullNameScreenController
+  lateinit var controller: RegistrationPinScreenController
 
-  private val backButton by bindView<ImageButton>(R.id.registrationname_back)
-  private val nameEditText by bindView<EditText>(R.id.registrationname_name)
-  private val nextButton by bindView<Button>(R.id.registrationname_next)
+  private val backButton by bindView<ImageButton>(R.id.registrationpin_back)
+  private val pinEditText by bindView<EditText>(R.id.registrationpin_name)
+  private val nextButton by bindView<Button>(R.id.registrationpin_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -41,7 +41,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), nameTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), pinTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -49,19 +49,19 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())
+  private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())
 
-  private fun nameTextChanges() =
-      RxTextView.textChanges(nameEditText)
+  private fun pinTextChanges() =
+      RxTextView.textChanges(pinEditText)
           .map(CharSequence::toString)
-          .map(::RegistrationFullNameTextChanged)
+          .map(::RegistrationPinTextChanged)
 
   private fun nextClicks() =
       RxView.clicks(nextButton)
-          .map { RegistrationFullNameNextClicked() }
+          .map { RegistrationPinNextClicked() }
 
-  fun openRegistrationNameEntryScreen() {
-    screenRouter.push(RegistrationPinScreen.KEY)
+  fun openRegistrationConfirmPinScreen() {
+    Timber.w("TODO")
   }
 
   fun setNextButtonEnabled(enabled: Boolean) {
@@ -69,6 +69,6 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   companion object {
-    val KEY = RegistrationNameScreenKey()
+    val KEY = RegistrationPinScreenKey()
   }
 }

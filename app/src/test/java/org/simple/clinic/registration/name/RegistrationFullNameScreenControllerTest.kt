@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.phone
+package org.simple.clinic.registration.name
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
@@ -13,17 +13,17 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 
-class RegistrationPhoneScreenControllerTest {
+class RegistrationFullNameScreenControllerTest {
 
   val uiEvents = PublishSubject.create<UiEvent>()!!
-  val screen = mock<RegistrationPhoneScreen>()
+  val screen = mock<RegistrationFullNameScreen>()
   val userSession = mock<UserSession>()
 
-  private lateinit var controller: RegistrationPhoneScreenController
+  private lateinit var controller: RegistrationFullNameScreenController
 
   @Before
   fun setUp() {
-    controller = RegistrationPhoneScreenController(userSession)
+    controller = RegistrationFullNameScreenController(userSession)
 
     uiEvents
         .compose(controller)
@@ -34,31 +34,31 @@ class RegistrationPhoneScreenControllerTest {
   fun `when screen is created then an empty ongoing entry should be created`() {
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(RegistrationPhoneScreenCreated())
+    uiEvents.onNext(RegistrationFullNameScreenCreated())
 
     verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry())
   }
 
   @Test
-  fun `when next button is clicked then the ongoing entry should be updated with the input phone number and the next screen should be opened`() {
-    val input = "999999"
+  fun `when next button is clicked then ongoing entry should be updated with the input full name and the next screen should be opened`() {
+    val input = "Ashok Kumar"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = input))).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))).thenReturn(Completable.complete())
 
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged(input))
-    uiEvents.onNext(RegistrationPhoneNextClicked())
+    uiEvents.onNext(RegistrationFullNameTextChanged(input))
+    uiEvents.onNext(RegistrationFullNameNextClicked())
 
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = input))
+    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))
     verify(screen).openRegistrationNameEntryScreen()
   }
 
   @Test
-  fun `while phone number field is empty then the next button should remain disabled`() {
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged("7"))
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged("78"))
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
+  fun `while full name field is empty then the next button should remain disabled`() {
+    uiEvents.onNext(RegistrationFullNameTextChanged(""))
+    uiEvents.onNext(RegistrationFullNameTextChanged("A"))
+    uiEvents.onNext(RegistrationFullNameTextChanged("As"))
+    uiEvents.onNext(RegistrationFullNameTextChanged(""))
 
     verify(screen, times(2)).setNextButtonEnabled(false)
     verify(screen, times(1)).setNextButtonEnabled(true)

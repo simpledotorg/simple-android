@@ -59,7 +59,5 @@
         android:id="@+id/loginpin_error"
         style="@style/Clinic.LoginPinErrorText" />
     </LinearLayout>
-
   </android.support.v7.widget.CardView>
-
 </org.simple.clinic.login.pin.LoginPinScreen>

@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.pin
+package org.simple.clinic.registration.confirmpin
 
 import android.content.Context
 import android.util.AttributeSet
@@ -14,21 +14,21 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import timber.log.Timber
 import javax.inject.Inject
 
-class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: RegistrationPinScreenController
+  lateinit var controller: RegistrationConfirmPinScreenController
 
-  private val backButton by bindView<ImageButton>(R.id.registrationpin_back)
-  private val pinEditText by bindView<EditText>(R.id.registrationpin_pin)
-  private val nextButton by bindView<Button>(R.id.registrationpin_next)
+  private val backButton by bindView<ImageButton>(R.id.registrationconfirmpin_back)
+  private val pinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
+  private val nextButton by bindView<Button>(R.id.registrationconfirmpin_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -41,7 +41,7 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), pinTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), confirmPinTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -49,19 +49,19 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())
+  private fun screenCreates() = Observable.just(RegistrationConfirmPinScreenCreated())
 
-  private fun pinTextChanges() =
+  private fun confirmPinTextChanges() =
       RxTextView.textChanges(pinEditText)
           .map(CharSequence::toString)
-          .map(::RegistrationPinTextChanged)
+          .map(::RegistrationConfirmPinTextChanged)
 
   private fun nextClicks() =
       RxView.clicks(nextButton)
-          .map { RegistrationPinNextClicked() }
+          .map { RegistrationConfirmPinNextClicked() }
 
-  fun openRegistrationConfirmPinScreen() {
-    screenRouter.push(RegistrationConfirmPinScreen.KEY)
+  fun openFacilitySelectionScreen() {
+    Timber.w("TODO")
   }
 
   fun setNextButtonEnabled(enabled: Boolean) {
@@ -69,6 +69,6 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   }
 
   companion object {
-    val KEY = RegistrationPinScreenKey()
+    val KEY = RegistrationConfirmPinScreenKey()
   }
 }

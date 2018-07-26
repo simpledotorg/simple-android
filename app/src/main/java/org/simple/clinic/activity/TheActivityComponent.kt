@@ -20,6 +20,7 @@ import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
+import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchAgeFilterSheet
 import org.simple.clinic.search.PatientSearchScreen
@@ -48,8 +49,8 @@ interface TheActivityComponent {
   fun inject(target: ConfirmDeletePrescriptionDialog)
   fun inject(target: RegistrationPhoneScreen)
   fun inject(target: RegistrationFullNameScreen)
+  fun inject(target: RegistrationPinScreen)
   fun inject(target: OnboardingScreen)
-
 
   @Subcomponent.Builder
   interface Builder {

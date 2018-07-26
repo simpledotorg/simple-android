@@ -117,4 +117,8 @@
   <string name="registrationname_next">Next</string>
   <string name="registrationname_name_label">Your full name</string>
   <string name="registrationname_cd_go_back">Go back to phone number</string>
+
+  <!-- Onboarding -->
+  <string name="onboarding_get_started">Get Started</string>
+
 </resources>

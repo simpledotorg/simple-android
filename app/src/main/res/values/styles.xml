@@ -207,4 +207,15 @@
     <item name="android:foreground">?attr/selectableItemBackground</item>
     <item name="android:textColor">@color/white</item>
   </style>
+
+  <style name="Clinic.BorderlessBottomButton" parent="Widget.AppCompat.Button.Borderless">
+    <item name="android:background">@color/color_accent</item>
+    <item name="android:textColor">?android:textColorPrimaryInverse</item>
+  </style>
+
+  <style name="Clinic.OnboardingImage">
+    <item name="android:layout_width">312dp</item>
+    <item name="android:layout_height">418dp</item>
+    <item name="android:scaleType">center</item>
+  </style>
 </resources>

@@ -118,7 +118,10 @@
   <string name="registrationname_name_label">Your full name</string>
   <string name="registrationname_cd_go_back">Go back to phone number</string>
 
+  <string name="registrationpin_cd_go_back">Go back to name entry</string>
+  <string name="registrationpin_name_label">Create your security pin</string>
+  <string name="registrationpin_next">Next</string>
+
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>
-
 </resources>

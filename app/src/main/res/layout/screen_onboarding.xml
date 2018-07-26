@@ -5,12 +5,14 @@
   android:layout_height="match_parent"
   tools:ignore="UnusedResources">
 
-  <View
-    android:id="@+id/onboarding_header"
-    android:layout_width="match_parent"
-    android:layout_height="159dp"
-    android:layout_alignParentTop="true"
-    android:background="?colorPrimary" />
+  <FrameLayout
+    android:id="@+id/onboarding_logo_container"
+    style="@style/Clinic.LoginLogoContainer">
+
+    <TextView
+      style="@style/Clinic.LoginLogo"
+      android:text="@string/app_name" />
+  </FrameLayout>
 
   <ScrollView
     android:layout_width="match_parent"

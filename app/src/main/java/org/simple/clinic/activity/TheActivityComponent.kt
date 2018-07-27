@@ -15,6 +15,7 @@ import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.newentry.PatientEntryScreen
+import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
@@ -60,7 +61,7 @@ interface TheActivityComponent {
   }
 }
 
-@Module
+@Module(includes = [OnboardingModule::class])
 class TheActivityModule {
 
   @Provides

@@ -15,6 +15,10 @@ import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
+import org.simple.clinic.registration.RegisterUserPayload
+import org.simple.clinic.registration.RegistrationApiV1
+import org.simple.clinic.registration.RegistrationRequest
+import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
@@ -26,7 +30,8 @@ import kotlin.reflect.KClass
 
 @AppScope
 class UserSession @Inject constructor(
-    private val api: LoginApiV1,
+    private val loginApi: LoginApiV1,
+    private val registrationApi: RegistrationApiV1,
     private val loggedInUserPreference: Preference<Optional<LoggedInUser>>,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
@@ -51,8 +56,8 @@ class UserSession @Inject constructor(
   fun login(): Single<LoginResult> {
     return ongoingLoginEntry()
         .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
-        .flatMap { api.login(it) }
-        .doOnSuccess { storeUser(it) }
+        .flatMap { loginApi.login(it) }
+        .doOnSuccess { storeUserAndAccessToken(it) }
         .flatMap {
           facilitySync
               .sync()
@@ -74,6 +79,26 @@ class UserSession @Inject constructor(
         }
   }
 
+  fun register(): Single<RegistrationResult> {
+    return ongoingRegistrationEntry()
+        .map { entry ->
+          RegisterUserPayload(
+              fullName = entry.fullName!!,
+              phoneNumber = entry.phoneNumber!!,
+              pin = entry.pin!!,
+              pinConfirmation = entry.pinConfirmation!!,
+              createdAt = entry.createdAt!!,
+              updatedAt = entry.createdAt
+          )
+        }
+        .flatMap { payload -> registrationApi.createUser(RegistrationRequest(user = payload)) }
+        .map<RegistrationResult> { response ->
+          storeUser(response.loggedInUser)
+          RegistrationResult.Success()
+        }
+        .onErrorReturn { RegistrationResult.Error() }
+  }
+
   fun saveOngoingRegistrationEntry(entry: OngoingRegistrationEntry): Completable {
     return Completable.fromAction {
       this.ongoingRegistrationEntry = entry
@@ -84,9 +109,13 @@ class UserSession @Inject constructor(
     return Single.fromCallable { ongoingRegistrationEntry }
   }
 
-  private fun storeUser(response: LoginResponse) {
+  private fun storeUserAndAccessToken(response: LoginResponse) {
     accessTokenPreference.set(Just(response.accessToken))
-    loggedInUserPreference.set(Just(response.loggedInUser))
+    storeUser(response.loggedInUser)
+  }
+
+  private fun storeUser(loggedInUser: LoggedInUser) {
+    loggedInUserPreference.set(Just(loggedInUser))
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {

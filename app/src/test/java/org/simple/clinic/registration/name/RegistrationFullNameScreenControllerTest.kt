@@ -31,15 +31,6 @@ class RegistrationFullNameScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created then an empty ongoing entry should be created`() {
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())).thenReturn(Completable.complete())
-
-    uiEvents.onNext(RegistrationFullNameScreenCreated())
-
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry())
-  }
-
-  @Test
   fun `when next button is clicked then ongoing entry should be updated with the input full name and the next screen should be opened`() {
     val input = "Ashok Kumar"
 

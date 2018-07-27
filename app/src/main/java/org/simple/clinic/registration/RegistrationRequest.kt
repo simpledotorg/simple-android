@@ -2,7 +2,7 @@ package org.simple.clinic.registration
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.threeten.bp.LocalDate
+import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
 data class RegistrationRequest(
@@ -26,9 +26,12 @@ data class RegisterUserPayload(
     @Json(name = "password_confirmation")
     val pinConfirmation: String,
 
+    @Json(name = "facility_id")
+    val facilityId: String,
+
     @Json(name = "created_at")
-    val createdAt: LocalDate,
+    val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: LocalDate
+    val updatedAt: Instant
 )

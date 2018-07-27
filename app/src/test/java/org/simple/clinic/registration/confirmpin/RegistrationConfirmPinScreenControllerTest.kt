@@ -9,6 +9,7 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -18,25 +19,17 @@ class RegistrationConfirmPinScreenControllerTest {
   val uiEvents = PublishSubject.create<UiEvent>()!!
   val screen = mock<RegistrationConfirmPinScreen>()
   val userSession = mock<UserSession>()
+  val scheduler = mock<RegistrationScheduler>()
 
   private lateinit var controller: RegistrationConfirmPinScreenController
 
   @Before
   fun setUp() {
-    controller = RegistrationConfirmPinScreenController(userSession)
+    controller = RegistrationConfirmPinScreenController(userSession, scheduler)
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
-  }
-
-  @Test
-  fun `when screen is created then an empty ongoing entry should be created`() {
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())).thenReturn(Completable.complete())
-
-    uiEvents.onNext(RegistrationConfirmPinScreenCreated())
-
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry())
   }
 
   @Test

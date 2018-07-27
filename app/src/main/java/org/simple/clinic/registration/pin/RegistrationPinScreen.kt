@@ -41,15 +41,13 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), pinTextChanges(), nextClicks())
+    Observable.merge(pinTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
-
-  private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())
 
   private fun pinTextChanges() =
       RxTextView.textChanges(pinEditText)

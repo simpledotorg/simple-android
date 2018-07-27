@@ -21,20 +21,9 @@ class RegistrationFullNameScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.merge(
-        createEmptyOngoingEntry(replayedEvents),
         enableNextButton(replayedEvents),
         disableNextButton(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
-  }
-
-  private fun createEmptyOngoingEntry(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationFullNameScreenCreated>()
-        .flatMap {
-          userSession
-              .saveOngoingRegistrationEntry(OngoingRegistrationEntry())
-              .andThen(Observable.empty<UiChange>())
-        }
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

@@ -49,7 +49,8 @@ class TheActivity : AppCompatActivity() {
   @Inject
   lateinit var lifecycle: RxTheActivityLifecycle
 
-  @field:[Inject Named("onboarding_complete")]
+  @Inject
+  @field:Named("onboarding_complete")
   lateinit var hasUserCompletedOnboarding: Preference<Boolean>
 
   lateinit var screenRouter: ScreenRouter
@@ -103,8 +104,8 @@ class TheActivity : AppCompatActivity() {
 
   private fun initialScreenKey(): FullScreenKey {
     return when {
-      hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
       userSession.isUserLoggedIn() -> HomeScreen.KEY
+      hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
       else -> LoginPhoneScreen.KEY("")
     }
   }

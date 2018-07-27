@@ -13,7 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
-import org.simple.clinic.onboarding.OnboardingScreenKey
+import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -103,7 +103,7 @@ class TheActivity : AppCompatActivity() {
 
   private fun initialScreenKey(): FullScreenKey {
     return when {
-      hasUserCompletedOnboarding.get().not() -> OnboardingScreenKey()
+      hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
       userSession.isUserLoggedIn() -> HomeScreen.KEY
       else -> LoginPhoneScreen.KEY("")
     }

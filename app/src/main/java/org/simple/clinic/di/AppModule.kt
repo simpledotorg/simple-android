@@ -10,9 +10,10 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.qrscan.QrModule
+import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.sync.SyncModule
 
-@Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class, LoginModule::class])
+@Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class, LoginModule::class, RegistrationModule::class])
 open class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides

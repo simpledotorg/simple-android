@@ -31,15 +31,6 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created then an empty ongoing entry should be created`() {
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())).thenReturn(Completable.complete())
-
-    uiEvents.onNext(RegistrationPinScreenCreated())
-
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry())
-  }
-
-  @Test
   fun `when next button is clicked then ongoing entry should be updated with the input pin and the next screen should be opened`() {
     val input = "1234"
 

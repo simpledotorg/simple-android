@@ -41,15 +41,13 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), nameTextChanges(), nextClicks())
+    Observable.merge(nameTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
-
-  private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())
 
   private fun nameTextChanges() =
       RxTextView.textChanges(nameEditText)

@@ -87,6 +87,7 @@ class UserSession @Inject constructor(
               phoneNumber = entry.phoneNumber!!,
               pin = entry.pin!!,
               pinConfirmation = entry.pinConfirmation!!,
+              facilityId = "1bb26c0b-e0cb-4d5e-8582-47095a3e18bc",
               createdAt = entry.createdAt!!,
               updatedAt = entry.createdAt
           )

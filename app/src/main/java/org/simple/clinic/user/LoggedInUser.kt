@@ -23,9 +23,17 @@ data class LoggedInUser(
     @Json(name = "facility_id")
     val facilityUuid: UUID,
 
+    @Json(name = "status")
+    val status: Status,
+
     @Json(name = "created_at")
     val createdAt: Instant,
 
     @Json(name = "updated_at")
     val updatedAt: Instant
-)
+) {
+    enum class Status {
+        @Json(name = "waiting_for_approval")
+        WAITING_FOR_APPROVAL
+    }
+}

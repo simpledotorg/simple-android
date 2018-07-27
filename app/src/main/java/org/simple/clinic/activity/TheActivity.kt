@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
@@ -12,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
+import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -24,6 +26,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ActivityLifecycle
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import javax.inject.Inject
+import javax.inject.Named
 
 class TheActivity : AppCompatActivity() {
 
@@ -45,6 +48,9 @@ class TheActivity : AppCompatActivity() {
 
   @Inject
   lateinit var lifecycle: RxTheActivityLifecycle
+
+  @field:[Inject Named("onboarding_complete")]
+  lateinit var hasUserCompletedOnboarding: Preference<Boolean>
 
   lateinit var screenRouter: ScreenRouter
 
@@ -96,10 +102,10 @@ class TheActivity : AppCompatActivity() {
   }
 
   private fun initialScreenKey(): FullScreenKey {
-    return if (userSession.isUserLoggedIn()) {
-      HomeScreen.KEY
-    } else {
-      LoginPhoneScreen.KEY("")
+    return when {
+      hasUserCompletedOnboarding.get().not() -> OnboardingScreenKey()
+      userSession.isUserLoggedIn() -> HomeScreen.KEY
+      else -> LoginPhoneScreen.KEY("")
     }
   }
 

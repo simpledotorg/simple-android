@@ -15,7 +15,7 @@ import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
-import org.simple.clinic.registration.RegisterUserPayload
+import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResult
@@ -24,6 +24,7 @@ import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
@@ -37,6 +38,7 @@ class UserSession @Inject constructor(
     private val facilitySync: FacilitySync,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
+    private val passwordHasher: PasswordHasher,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
@@ -53,6 +55,7 @@ class UserSession @Inject constructor(
     return Single.fromCallable { ongoingLoginEntry }
   }
 
+  // TODO: rename to loginFromOngoingLoginEntry()
   fun login(): Single<LoginResult> {
     return ongoingLoginEntry()
         .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
@@ -79,20 +82,32 @@ class UserSession @Inject constructor(
         }
   }
 
-  fun register(): Single<RegistrationResult> {
+  fun loginFromOngoingRegistrationEntry(): Completable {
     return ongoingRegistrationEntry()
-        .map { entry ->
-          RegisterUserPayload(
-              fullName = entry.fullName!!,
-              phoneNumber = entry.phoneNumber!!,
-              pin = entry.pin!!,
-              pinConfirmation = entry.pinConfirmation!!,
-              facilityId = "1bb26c0b-e0cb-4d5e-8582-47095a3e18bc",
-              createdAt = entry.createdAt!!,
-              updatedAt = entry.createdAt
-          )
+        .flatMap { entry ->
+          passwordHasher.hash(entry.pin!!)
+              .map { passwordDigest ->
+                LoggedInUser(
+                    uuid = entry.uuid!!,
+                    fullName = entry.fullName!!,
+                    phoneNumber = entry.phoneNumber!!,
+                    pinDigest = passwordDigest,
+                    facilityUuid = UUID.fromString("61022c40-af97-4f96-b923-202b57f1dc91"),
+                    createdAt = entry.createdAt!!,
+                    updatedAt = entry.createdAt,
+                    status = LoggedInUser.Status.WAITING_FOR_APPROVAL
+                )
+              }
         }
-        .flatMap { payload -> registrationApi.createUser(RegistrationRequest(user = payload)) }
+        .flatMapCompletable { Completable.fromAction { storeUser(it) } }
+  }
+
+  fun register(): Single<RegistrationResult> {
+    return loggedInUser()
+        .map { (user) -> user }
+        .firstOrError()
+        .map(::RegistrationRequest)
+        .flatMap { registrationApi.createUser(it) }
         .map<RegistrationResult> { response ->
           storeUser(response.loggedInUser)
           RegistrationResult.Success()

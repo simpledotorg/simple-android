@@ -44,6 +44,12 @@
     <item name="android:src">@drawable/ic_clear_circular_16dp</item>
   </style>
 
+  <style name="Clinic.Button.TextButton" parent="Widget.AppCompat.Button.Borderless">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">?colorAccent</item>
+  </style>
+
   <style name="Clinic.BloodPressureInput">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
@@ -96,6 +102,33 @@
     <item name="android:paddingTop">44dp</item>
     <item name="android:textColor">@color/white_opacity_90</item>
     <item name="android:textSize">32sp</item>
+  </style>
+
+  <style name="Clinic.AppLockHeaderFullName">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/white_opacity_90</item>
+    <item name="android:textSize">@dimen/textsize_20</item>
+  </style>
+
+  <style name="Clinic.AppLockHeaderLogout">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@color/black_opacity_20</item>
+    <item name="android:textColor">@color/white_opacity_90</item>
+    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:textAllCaps">true</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
+    <item name="android:foreground">?selectableItemBackgroundBorderless</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.AppLockHeaderContainer">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@color/color_primary</item>
+    <item name="android:paddingBottom">@dimen/spacing_16</item>
+    <item name="android:paddingTop">48dp</item>
   </style>
 
   <style name="Clinic.LoginPinEditText">

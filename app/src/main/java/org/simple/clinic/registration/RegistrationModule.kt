@@ -6,7 +6,7 @@ import io.reactivex.Single
 import retrofit2.Retrofit
 
 @Module
-class RegistrationModule {
+open class RegistrationModule {
 
   @Provides
   fun registrationApi(retrofit: Retrofit): RegistrationApiV1 {
@@ -14,8 +14,9 @@ class RegistrationModule {
   }
 
   @Provides
-  fun registrationConfig(): Single<RegistrationConfig> {
+  open fun registrationConfig(): Single<RegistrationConfig> {
     return Single.just(RegistrationConfig(
+        isRegistrationEnabled = false,
         retryBackOffDelayInMinutes = 1
     ))
   }

@@ -88,4 +88,18 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockScreenPinTextChanged("0"))
     verify(screen).setIncorrectPinErrorVisible(false)
   }
+
+  @Test
+  fun `when logout is clicked, the ui action should be triggered`() {
+    // Temporary test that will be changed later after the logout feature is implemented
+    uiEvents.onNext(LogoutClicked())
+    verify(screen).logoutDone()
+  }
+
+  @Test
+  fun `when forgot pin is clicked, the ui action should be triggered`() {
+    // Temporary test that will be changed later when the forgot PIN feature is implemented
+    uiEvents.onNext(ForgotPinClicked())
+    verify(screen).showCurrentPinResetRequestStatus()
+  }
 }

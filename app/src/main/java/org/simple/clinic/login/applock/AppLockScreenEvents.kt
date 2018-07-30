@@ -9,3 +9,7 @@ data class AppLockScreenPinTextChanged(val pin: String) : UiEvent
 class AppLockScreenSubmitClicked : UiEvent
 
 class AppLockScreenBackClicked : UiEvent
+
+class LogoutClicked: UiEvent
+
+class ForgotPinClicked: UiEvent

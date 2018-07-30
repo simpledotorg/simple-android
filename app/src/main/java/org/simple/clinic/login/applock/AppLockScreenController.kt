@@ -31,7 +31,9 @@ class AppLockScreenController @Inject constructor(
         populateFullName(replayedEvents),
         resetValidationError(replayedEvents),
         pinValidations(replayedEvents),
-        backClicks(replayedEvents))
+        backClicks(replayedEvents),
+        logoutClicks(replayedEvents),
+        forgotPinClicks(replayedEvents))
   }
 
   private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
@@ -103,5 +105,17 @@ class AppLockScreenController @Inject constructor(
     return events
         .ofType<AppLockScreenBackClicked>()
         .map { { ui: Ui -> ui.exitApp() } }
+  }
+
+  private fun logoutClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<LogoutClicked>()
+        .map { { ui: Ui -> ui.logoutDone() } }
+  }
+
+  private fun forgotPinClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ForgotPinClicked>()
+        .map { { ui: Ui -> ui.showCurrentPinResetRequestStatus() } }
   }
 }

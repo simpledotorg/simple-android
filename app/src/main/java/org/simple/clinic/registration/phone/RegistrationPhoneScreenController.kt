@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = RegistrationPhoneScreen
@@ -32,7 +33,7 @@ class RegistrationPhoneScreenController @Inject constructor(
         .ofType<RegistrationPhoneScreenCreated>()
         .flatMap {
           userSession
-              .saveOngoingRegistrationEntry(OngoingRegistrationEntry())
+              .saveOngoingRegistrationEntry(OngoingRegistrationEntry(uuid = UUID.randomUUID()))
               .andThen(Observable.empty<UiChange>())
         }
   }

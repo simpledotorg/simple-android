@@ -1,6 +1,7 @@
 package org.simple.clinic.user
 
 import okhttp3.Interceptor
+import okhttp3.Request
 import okhttp3.Response
 import org.simple.clinic.ClinicApp
 import javax.inject.Inject
@@ -12,16 +13,20 @@ class LoggedInUserHttpInterceptor @Inject constructor() : Interceptor {
 
   override fun intercept(chain: Interceptor.Chain?): Response {
     val originalRequest = chain!!.request()
-    val updatedRequest = originalRequest.newBuilder()
 
-    if (userSession.isUserLoggedIn()) {
-      val (loggedInUser) = userSession.loggedInUser().blockingFirst()
-      val (accessToken) = userSession.accessToken()
+    val (user) = userSession.loggedInUser().blockingFirst()
+    val (accessToken) = userSession.accessToken()
 
-      updatedRequest.addHeader("Authorization", "Bearer ${accessToken!!}")
-      updatedRequest.addHeader("X-USER-ID", loggedInUser!!.uuid.toString())
+    return when (user?.isApprovedForSyncing() == true) {
+      true -> chain.proceed(addHeaders(originalRequest, accessToken!!, user!!))
+      false -> chain.proceed(originalRequest)
     }
+  }
 
-    return chain.proceed(updatedRequest.build())
+  private fun addHeaders(originalRequest: Request, accessToken: String, user: LoggedInUser): Request {
+    return originalRequest.newBuilder()
+        .addHeader("Authorization", "Bearer $accessToken")
+        .addHeader("X-USER-ID", user.uuid.toString())
+        .build()
   }
 }

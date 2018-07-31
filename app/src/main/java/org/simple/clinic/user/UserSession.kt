@@ -20,6 +20,7 @@ import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
@@ -33,7 +34,6 @@ import kotlin.reflect.KClass
 class UserSession @Inject constructor(
     private val loginApi: LoginApiV1,
     private val registrationApi: RegistrationApiV1,
-    private val loggedInUserPreference: Preference<Optional<LoggedInUser>>,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
     private val sharedPreferences: SharedPreferences,
@@ -60,10 +60,12 @@ class UserSession @Inject constructor(
     return ongoingLoginEntry()
         .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
         .flatMap { loginApi.login(it) }
-        .doOnSuccess { storeUserAndAccessToken(it) }
         .flatMap {
-          facilitySync
-              .sync()
+          storeUserAndAccessToken(it)
+              .andThen(Single.just(it))
+        }
+        .flatMap {
+          facilitySync.sync()
               .andThen(Single.just(it))
         }
         .map<LoginResult> { LoginResult.Success() }
@@ -99,7 +101,7 @@ class UserSession @Inject constructor(
                 )
               }
         }
-        .flatMapCompletable { Completable.fromAction { storeUser(it) } }
+        .flatMapCompletable { storeUser(it) }
   }
 
   fun register(): Single<RegistrationResult> {
@@ -108,9 +110,9 @@ class UserSession @Inject constructor(
         .firstOrError()
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
-        .map<RegistrationResult> { response ->
-          storeUser(response.loggedInUser)
-          RegistrationResult.Success()
+        .flatMap<RegistrationResult> {
+          storeUser(it.loggedInUser)
+              .andThen(Single.just(RegistrationResult.Success()))
         }
         .onErrorReturn { RegistrationResult.Error() }
   }
@@ -125,13 +127,15 @@ class UserSession @Inject constructor(
     return Single.fromCallable { ongoingRegistrationEntry }
   }
 
-  private fun storeUserAndAccessToken(response: LoginResponse) {
+  private fun storeUserAndAccessToken(response: LoginResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))
-    storeUser(response.loggedInUser)
+    return storeUser(response.loggedInUser)
   }
 
-  private fun storeUser(loggedInUser: LoggedInUser) {
-    loggedInUserPreference.set(Just(loggedInUser))
+  private fun storeUser(loggedInUser: LoggedInUser): Completable {
+    return Completable.fromAction {
+      appDatabase.userDao().create(loggedInUser)
+    }
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {
@@ -147,11 +151,20 @@ class UserSession @Inject constructor(
   }
 
   fun loggedInUser(): Observable<Optional<LoggedInUser>> {
-    return loggedInUserPreference.asObservable()
+    return appDatabase.userDao().user()
+        .toObservable()
+        .map {
+          when {
+            it.isEmpty() -> None
+            else -> Just(it.first())
+          }
+        }
   }
 
   fun isUserLoggedIn(): Boolean {
-    return loggedInUserPreference.get() is Just
+    // TODO: This is bad. Make this function return Single<Boolean> instead.
+    val user = loggedInUser().blockingFirst()
+    return user is Just
   }
 
   fun accessToken(): Optional<String> {

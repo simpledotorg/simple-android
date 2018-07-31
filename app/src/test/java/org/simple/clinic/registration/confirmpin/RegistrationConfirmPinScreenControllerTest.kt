@@ -1,5 +1,8 @@
 package org.simple.clinic.registration.confirmpin
 
+import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -16,16 +19,19 @@ import org.simple.clinic.widgets.UiEvent
 
 class RegistrationConfirmPinScreenControllerTest {
 
-  val uiEvents = PublishSubject.create<UiEvent>()!!
-  val screen = mock<RegistrationConfirmPinScreen>()
-  val userSession = mock<UserSession>()
-  val scheduler = mock<RegistrationScheduler>()
+  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val screen = mock<RegistrationConfirmPinScreen>()
+  private val userSession = mock<UserSession>()
+  private val registrationScheduler = mock<RegistrationScheduler>()
 
   private lateinit var controller: RegistrationConfirmPinScreenController
 
   @Before
   fun setUp() {
-    controller = RegistrationConfirmPinScreenController(userSession, scheduler)
+    controller = RegistrationConfirmPinScreenController(userSession, registrationScheduler)
+
+    whenever(userSession.loginFromOngoingRegistrationEntry()).thenReturn(Completable.complete())
+    whenever(registrationScheduler.schedule()).thenReturn(Completable.complete())
 
     uiEvents
         .compose(controller)
@@ -37,12 +43,15 @@ class RegistrationConfirmPinScreenControllerTest {
     val input = "1234"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pinConfirmation = input))).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
     uiEvents.onNext(RegistrationConfirmPinNextClicked())
 
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(pinConfirmation = input))
+    verify(userSession).saveOngoingRegistrationEntry(check {
+      assertThat(it.pinConfirmation).isEqualTo(input)
+      assertThat(it.createdAt).isNotNull()
+    })
     verify(screen).openFacilitySelectionScreen()
   }
 

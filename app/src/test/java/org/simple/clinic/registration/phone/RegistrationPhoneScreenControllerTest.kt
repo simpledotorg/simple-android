@@ -1,5 +1,7 @@
 package org.simple.clinic.registration.phone
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
@@ -32,11 +34,11 @@ class RegistrationPhoneScreenControllerTest {
 
   @Test
   fun `when screen is created then an empty ongoing entry should be created`() {
-    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
-    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry())
+    verify(userSession).saveOngoingRegistrationEntry(argThat { uuid != null })
   }
 
   @Test

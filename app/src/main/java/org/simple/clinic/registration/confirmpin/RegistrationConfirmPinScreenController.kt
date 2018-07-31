@@ -1,18 +1,14 @@
 package org.simple.clinic.registration.confirmpin
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.registration.RegistrationScheduler
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
 import javax.inject.Inject
 
 typealias Ui = RegistrationConfirmPinScreen
@@ -44,9 +40,9 @@ class RegistrationConfirmPinScreenController @Inject constructor(
           }
 
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(pinConfirmation = pinConfirmation, createdAt = Instant.now() ) }
+              .map { it.copy(pinConfirmation = pinConfirmation, createdAt = Instant.now()) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen( userSession.loginFromOngoingRegistrationEntry())
+              .andThen(userSession.loginFromOngoingRegistrationEntry())
               .andThen(registrationScheduler.schedule())
               .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
         }

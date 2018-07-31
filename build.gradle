@@ -4,7 +4,7 @@ buildscript {
   ext.versions = [
       minSdk              : 19,
       compileSdk          : 27,
-      kotlin              : '1.2.50',
+      kotlin              : '1.2.51',
       supportLib          : '27.1.1',
       supportTest         : '1.0.2',
       timber              : '4.7.0',

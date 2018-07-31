@@ -49,7 +49,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val pinEditText by bindView<EditText>(R.id.applock_pin)
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
-  private val userLogoutTextView by bindView<TextView>(R.id.applock_user_logouut)
+  private val userLogoutTextView by bindView<Button>(R.id.applock_user_logouut)
   private val forgotPinButton by bindView<Button>(R.id.applock_forgotpin)
 
   override fun onFinishInflate() {
@@ -121,7 +121,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   fun setIncorrectPinErrorVisible(show: Boolean) {
     when (show) {
       true -> errorTextView.visibility = View.VISIBLE
-      else -> errorTextView.visibility = View.GONE
+      else -> errorTextView.visibility = View.INVISIBLE
     }
   }
 

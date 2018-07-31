@@ -16,7 +16,7 @@
       android:layout_marginStart="@dimen/spacing_24"
       tools:text="Full Name" />
 
-    <TextView
+    <Button
       android:id="@+id/applock_user_logouut"
       style="@style/Clinic.AppLockHeaderLogout"
       android:layout_alignParentEnd="true"
@@ -64,7 +64,7 @@
 
       <Button
         android:id="@+id/applock_forgotpin"
-        style="@style/Clinic.Button.TextButton"
+        style="@style/Clinic.Button.Login.ResetPin"
         android:text="@string/applock_forgot_pin" />
     </LinearLayout>
   </android.support.v7.widget.CardView>

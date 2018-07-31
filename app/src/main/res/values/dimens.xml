@@ -7,13 +7,11 @@
   <dimen name="spacing_12">12dp</dimen>
   <dimen name="spacing_16">16dp</dimen>
   <dimen name="spacing_24">24dp</dimen>
-  <dimen name="spacing_32">32dp</dimen>
   <dimen name="spacing_48">48dp</dimen>
   <dimen name="spacing_96">96dp</dimen>
   <dimen name="spacing_128">128dp</dimen>
 
   <dimen name="textsize_12">12sp</dimen>
-  <dimen name="textsize_14">14sp</dimen>
   <dimen name="textsize_16">16sp</dimen>
   <dimen name="textsize_18">18sp</dimen>
   <dimen name="textsize_20">20sp</dimen>

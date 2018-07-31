@@ -94,7 +94,7 @@ class UserSession @Inject constructor(
                     fullName = entry.fullName!!,
                     phoneNumber = entry.phoneNumber!!,
                     pinDigest = passwordDigest,
-                    facilityUuid = UUID.fromString("61022c40-af97-4f96-b923-202b57f1dc91"),
+                    facilityUuid = UUID.fromString("38b16571-4105-41ae-b8dd-8e3312cdb96c"),
                     createdAt = entry.createdAt!!,
                     updatedAt = entry.createdAt,
                     status = LoggedInUser.Status.WAITING_FOR_APPROVAL

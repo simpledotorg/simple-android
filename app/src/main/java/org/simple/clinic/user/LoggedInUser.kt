@@ -8,6 +8,9 @@ import android.arch.persistence.room.Query
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import io.reactivex.Flowable
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RoomEnumTypeConverter
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -44,7 +47,13 @@ data class LoggedInUser(
 
   enum class Status {
     @Json(name = "waiting_for_approval")
-    WAITING_FOR_APPROVAL;
+    WAITING_FOR_APPROVAL,
+
+    @Json(name = "approved_for_syncing")
+    APPROVED_FOR_SYNCING,
+
+    @Json(name = "disapproved_for_syncing")
+    DISAPPROVED_FOR_SYNCING;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Status>(Status::class.java)
   }
@@ -58,4 +67,16 @@ data class LoggedInUser(
     @Insert
     fun create(user: LoggedInUser)
   }
+
+  fun isApprovedForSyncing(): Boolean {
+    return status == LoggedInUser.Status.APPROVED_FOR_SYNCING
+  }
 }
+
+fun Optional<LoggedInUser>.isApprovedForSyncing(): Boolean {
+  return when (this) {
+    is Just -> value.isApprovedForSyncing()
+    is None -> false
+  }
+}
+

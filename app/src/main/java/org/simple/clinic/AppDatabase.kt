@@ -1,8 +1,10 @@
 package org.simple.clinic
 
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
+import android.arch.persistence.room.migration.Migration
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
@@ -14,6 +16,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
 import org.simple.clinic.util.UuidRoomTypeConverter
@@ -25,14 +28,16 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       PatientPhoneNumber::class,
       BloodPressureMeasurement::class,
       PrescribedDrug::class,
-      Facility::class],
-    version = 3,
+      Facility::class,
+      LoggedInUser::class],
+    version = 4,
     exportSchema = false)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
     PatientPhoneNumberType.RoomTypeConverter::class,
     PatientStatus.RoomTypeConverter::class,
-    SyncStatus.RoomTypeConvert::class,
+    SyncStatus.RoomTypeConverter::class,
+    LoggedInUser.Status.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class)
@@ -51,4 +56,25 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun prescriptionDao(): PrescribedDrug.RoomDao
 
   abstract fun facilityDao(): Facility.RoomDao
+
+  abstract fun userDao(): LoggedInUser.RoomDao
+
+  class Migration_3_4 : Migration(3, 4) {
+
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.execSQL("""
+        CREATE TABLE IF NOT EXISTS `LoggedInUser` (
+          `uuid` TEXT NOT NULL,
+          `fullName` TEXT NOT NULL,
+          `phoneNumber` TEXT NOT NULL,
+          `pinDigest` TEXT NOT NULL,
+          `facilityUuid` TEXT NOT NULL,
+          `status` TEXT NOT NULL,
+          `createdAt` TEXT NOT NULL,
+          `updatedAt` TEXT NOT NULL,
+          PRIMARY KEY(`uuid`)
+        )
+        """)
+    }
+  }
 }

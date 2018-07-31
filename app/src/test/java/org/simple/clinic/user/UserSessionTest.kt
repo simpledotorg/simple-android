@@ -20,7 +20,9 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
@@ -28,12 +30,15 @@ import java.net.SocketTimeoutException
 
 class UserSessionTest {
 
-  private val api = mock<LoginApiV1>()
+  private val loginApi = mock<LoginApiV1>()
+  private val registrationApi = mock<RegistrationApiV1>()
   private val loggedInUserPref = mock<Preference<Optional<LoggedInUser>>>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
   private val sharedPrefs = mock<SharedPreferences>()
   private val appDatabase = mock<AppDatabase>()
+  private val passwordHasher = mock<PasswordHasher>()
+
   private val moshi = Moshi.Builder().build()
 
   private lateinit var userSession: UserSession
@@ -52,7 +57,17 @@ class UserSessionTest {
 
   @Before
   fun setUp() {
-    userSession = UserSession(api, loggedInUserPref, moshi, facilitySync, sharedPrefs, appDatabase, accessTokenPref)
+    userSession = UserSession(
+        loginApi,
+        registrationApi,
+        loggedInUserPref,
+        moshi,
+        facilitySync,
+        sharedPrefs,
+        appDatabase,
+        passwordHasher,
+        accessTokenPref
+    )
     userSession.saveOngoingLoginEntry(OngoingLoginEntry("otp", "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
   }
@@ -61,7 +76,7 @@ class UserSessionTest {
   fun `login should correctly map network response to result`() {
     val unauthorizedHttpError = unauthorizedHttpError()
 
-    whenever(api.login(any()))
+    whenever(loginApi.login(any()))
         .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER)))
         .thenReturn(Single.error(NullPointerException()))
         .thenReturn(Single.error(unauthorizedHttpError))
@@ -87,7 +102,7 @@ class UserSessionTest {
 
   @Test
   fun `facilities should only be synced when login succeeds`() {
-    whenever(api.login(any()))
+    whenever(loginApi.login(any()))
         .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER)))
         .thenReturn(Single.error(NullPointerException()))
         .thenReturn(Single.error(unauthorizedHttpError()))

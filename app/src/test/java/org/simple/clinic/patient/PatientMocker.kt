@@ -123,7 +123,8 @@ object PatientMocker {
       uuid: UUID = mock(),
       name: String = "a name",
       phone: String = "a phone",
-      pinDigest: String = "a hash"
+      pinDigest: String = "a hash",
+      status: LoggedInUser.Status = LoggedInUser.Status.WAITING_FOR_APPROVAL
   ): LoggedInUser {
     return LoggedInUser(
         uuid = uuid,
@@ -132,6 +133,7 @@ object PatientMocker {
         pinDigest = pinDigest,
         facilityUuid = mock(),
         createdAt = mock(),
+        status = status,
         updatedAt = mock())
   }
 }

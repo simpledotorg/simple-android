@@ -2,15 +2,12 @@ package org.simple.clinic.login
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
-import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.BCryptPasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher
-import org.simple.clinic.user.LoggedInUser
-import org.simple.clinic.user.LoggedInUserRxPreferencesConverter
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -24,13 +21,6 @@ open class LoginModule {
   @Provides
   fun loginApi(retrofit: Retrofit): LoginApiV1 {
     return retrofit.create(LoginApiV1::class.java)
-  }
-
-  @Provides
-  fun loggedInUser(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<Optional<LoggedInUser>> {
-    val userAdapter = moshi.adapter(LoggedInUser::class.java)
-    val userPrefsConverter = LoggedInUserRxPreferencesConverter(userAdapter)
-    return rxSharedPrefs.getObject("logged_in_user", None, OptionalRxPreferencesConverter(userPrefsConverter))
   }
 
   @Provides

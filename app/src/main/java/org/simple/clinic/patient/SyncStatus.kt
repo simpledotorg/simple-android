@@ -8,7 +8,7 @@ enum class SyncStatus {
   DONE,
   INVALID;
 
-  class RoomTypeConvert : RoomEnumTypeConverter<SyncStatus>(SyncStatus::class.java)
+  class RoomTypeConverter : RoomEnumTypeConverter<SyncStatus>(SyncStatus::class.java)
 }
 
 /**

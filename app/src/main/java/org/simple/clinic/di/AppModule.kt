@@ -25,7 +25,9 @@ open class AppModule(private val appContext: Application, private val databaseNa
   @Provides
   @AppScope
   open fun appDatabase(appContext: Application): AppDatabase {
-    return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName).build()
+    return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
+        .addMigrations(AppDatabase.Migration_3_4())
+        .build()
   }
 
   @Provides

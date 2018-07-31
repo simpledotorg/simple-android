@@ -32,7 +32,6 @@ class UserSessionTest {
 
   private val loginApi = mock<LoginApiV1>()
   private val registrationApi = mock<RegistrationApiV1>()
-  private val loggedInUserPref = mock<Preference<Optional<LoggedInUser>>>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
   private val sharedPrefs = mock<SharedPreferences>()
@@ -60,7 +59,6 @@ class UserSessionTest {
     userSession = UserSession(
         loginApi,
         registrationApi,
-        loggedInUserPref,
         moshi,
         facilitySync,
         sharedPrefs,
@@ -70,6 +68,9 @@ class UserSessionTest {
     )
     userSession.saveOngoingLoginEntry(OngoingLoginEntry("otp", "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
+
+    val mockUserDao = mock<LoggedInUser.RoomDao>()
+    whenever(appDatabase.userDao()).thenReturn(mockUserDao)
   }
 
   @Test
@@ -110,9 +111,9 @@ class UserSessionTest {
 
     userSession.login().blockingGet()
 
-    val inOrder = inOrder(loggedInUserPref, accessTokenPref, facilitySync)
+    val inOrder = inOrder(appDatabase.userDao(), accessTokenPref, facilitySync)
     inOrder.verify(accessTokenPref).set(any())
-    inOrder.verify(loggedInUserPref).set(any())
+    inOrder.verify(appDatabase.userDao()).create(any())
     inOrder.verify(facilitySync, times(1)).sync()
   }
 }

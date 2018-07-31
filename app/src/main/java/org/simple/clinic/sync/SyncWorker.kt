@@ -8,6 +8,7 @@ import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.isApprovedForSyncing
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -33,11 +34,19 @@ class SyncWorker : Worker() {
   override fun doWork(): WorkerResult {
     ClinicApp.appComponent.inject(this)
 
-    if (userSession.isUserLoggedIn().not()) {
-      Timber.i("User isn't logged in yet. Skipping sync.")
-      return WorkerResult.SUCCESS
-    }
+    return userSession.loggedInUser()
+        .firstOrError()
+        .map { it.isApprovedForSyncing() }
+        .flatMap { isApproved ->
+          when {
+            isApproved -> sync()
+            else -> Single.just(WorkerResult.SUCCESS)
+          }
+        }
+        .blockingGet()
+  }
 
+  private fun sync(): Single<WorkerResult> {
     return patientSync.sync()
         .andThen(Completable.mergeArrayDelayError(bloodPressureSync.sync(), prescriptionSync.sync()))
         .doOnError {
@@ -47,6 +56,5 @@ class SyncWorker : Worker() {
         }
         .onErrorComplete()
         .andThen(Single.just(WorkerResult.SUCCESS))
-        .blockingGet()
   }
 }

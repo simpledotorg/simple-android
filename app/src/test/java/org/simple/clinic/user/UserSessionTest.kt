@@ -101,6 +101,7 @@ class UserSessionTest {
     return HttpException(error)
   }
 
+  // TODO: Could be an Android test.
   @Test
   fun `facilities should only be synced when login succeeds`() {
     whenever(loginApi.login(any()))

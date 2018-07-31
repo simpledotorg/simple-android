@@ -23,11 +23,11 @@ android {
 }
 
 dependencies {
-  testImplementation 'junit:junit:4.12'
+  testImplementation "junit:junit:$versions.junit"
   implementation "com.android.support:appcompat-v7:$versions.supportLib"
   implementation "com.squareup.flow:flow:$versions.flow"
   implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
-  implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+  implementation "io.reactivex.rxjava2:rxjava:$versions.rxJava"
   implementation "com.jakewharton.timber:timber:$versions.timber"
 }
 repositories {

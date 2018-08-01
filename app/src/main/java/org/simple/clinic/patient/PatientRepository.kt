@@ -22,15 +22,6 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
-/**
- * [Regex] for stripping patient names and search queries of white spaces and punctuation
- *
- * Currently matches the following characters
- * - Any whitespace
- * - Comma, Hyphen, SemiColon, Colon, Underscore
- * */
-private val spacePunctuationRegex = Regex("[\\s;_\\-:,]")
-
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,

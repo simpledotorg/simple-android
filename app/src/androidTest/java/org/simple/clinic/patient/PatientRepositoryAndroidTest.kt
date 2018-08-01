@@ -55,7 +55,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun createAnOngoingPatientEntry_thenSaveItToDatabase_withSearchableName() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
-    val names = arrayOf("Riya Puri" to "RiyaPuri", "Manabi    Mehra" to "ManabiMehra", "Amit:Sodhi" to "AmitSodhi")
+    val names = arrayOf("Riya Puri" to "RiyaPuri", "Manabi    Mehra" to "ManabiMehra", "Amit:Sodhi" to "AmitSodhi", "Riya.Puri" to "RiyaPuri", "Riya,Puri" to "RiyaPuri")
 
     names.forEach { (fullName, expectedSearchableName) ->
       val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, "08/04/1985", null, Gender.TRANSGENDER)

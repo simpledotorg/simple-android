@@ -44,7 +44,7 @@ class PatientRepositoryTest {
     "Name Surname, Name Surname, NameSurname",
     "Name Surname, Name   Surname , NameSurname",
     "Old Name, Name-Surname, NameSurname",
-    "Name, Name Middle-Surname, NameMiddleSurname"
+    "Name, Name.Middle-Surname, NameMiddleSurname"
   ])
   fun `when merging patients with server records, update the searchable name of the patient to the full name stripped of all spaces and punctuation`(
       localFullName: String,
@@ -83,7 +83,7 @@ class PatientRepositoryTest {
   @Parameters(value = [
     "Name, Name",
     "Name   Surname, NameSurname",
-    "Name Middle Surname, NameMiddleSurname",
+    "Name Middle.Surname, NameMiddleSurname",
     "Name \tSurname, NameSurname"
   ])
   fun `when searching for patients without age bound, strip the search query of any whitespace or punctuation`(

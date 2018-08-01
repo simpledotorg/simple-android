@@ -10,6 +10,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.convertNameToSearchableForm
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
@@ -53,11 +54,11 @@ data class PatientPayload(
     val phoneNumbers: List<PatientPhoneNumberPayload>?
 ) {
 
-  fun toDatabaseModel(newStatus: SyncStatus, convertToSearchable: (String) -> String): Patient {
+  fun toDatabaseModel(newStatus: SyncStatus): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
-        searchableName = convertToSearchable(fullName),
+        searchableName = convertNameToSearchableForm(fullName),
         fullName = fullName,
         gender = gender,
         dateOfBirth = dateOfBirth,

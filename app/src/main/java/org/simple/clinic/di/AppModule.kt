@@ -8,7 +8,6 @@ import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.Migration_4_5
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
@@ -27,7 +26,10 @@ open class AppModule(private val appContext: Application, private val databaseNa
   @AppScope
   open fun appDatabase(appContext: Application): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
-        .addMigrations(AppDatabase.Migration_3_4(), Migration_4_5())
+        .addMigrations(
+            AppDatabase.Migration_3_4(),
+            AppDatabase.Migration_4_5()
+        )
         .build()
   }
 

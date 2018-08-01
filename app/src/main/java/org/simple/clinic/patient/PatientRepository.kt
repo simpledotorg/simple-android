@@ -44,7 +44,7 @@ class PatientRepository @Inject constructor(
     }
 
     return database.patientSearchDao()
-        .search(toSearchable(query!!))
+        .search(convertNameToSearchableForm(query!!))
         .toObservable()
   }
 
@@ -62,7 +62,7 @@ class PatientRepository @Inject constructor(
     }
 
     return database.patientSearchDao()
-        .search(toSearchable(query!!), dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .search(convertNameToSearchableForm(query!!), dateOfBirthUpperBound, dateOfBirthLowerBound)
         .toObservable()
   }
 
@@ -122,7 +122,7 @@ class PatientRepository @Inject constructor(
             val newOrUpdatedAddresses = payloads.map { it.address.toDatabaseModel() }
             database.addressDao().save(newOrUpdatedAddresses)
 
-            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE, convertToSearchable = this::toSearchable) }
+            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE) }
 
             database.patientDao().save(newOrUpdatedPatients)
 
@@ -184,7 +184,7 @@ class PatientRepository @Inject constructor(
             Patient(
                 uuid = patientUuid,
                 fullName = personalDetails!!.fullName,
-                searchableName = toSearchable(personalDetails.fullName),
+                searchableName = convertNameToSearchableForm(personalDetails.fullName),
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
 
@@ -263,8 +263,6 @@ class PatientRepository @Inject constructor(
       database.phoneNumberDao().save(listOf(number))
     }
   }
-
-  private fun toSearchable(string: String) = string.replace(spacePunctuationRegex, "")
 
   fun phoneNumbers(patientUuid: UUID): Observable<Optional<PatientPhoneNumber>> {
     return database.phoneNumberDao()

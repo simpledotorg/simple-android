@@ -62,11 +62,11 @@ class UserSession @Inject constructor(
         .flatMap { loginApi.login(it) }
         .flatMap {
           storeUserAndAccessToken(it)
-              .andThen(Single.just(it))
+              .toSingleDefault(it)
         }
         .flatMap {
           facilitySync.sync()
-              .andThen(Single.just(it))
+              .toSingleDefault(it)
         }
         .map<LoginResult> { LoginResult.Success() }
         .onErrorReturn { error ->
@@ -153,12 +153,7 @@ class UserSession @Inject constructor(
   fun loggedInUser(): Observable<Optional<LoggedInUser>> {
     return appDatabase.userDao().user()
         .toObservable()
-        .map {
-          when {
-            it.isEmpty() -> None
-            else -> Just(it.first())
-          }
-        }
+        .map { if (it.isEmpty()) None else Just(it.first()) }
   }
 
   fun isUserLoggedIn(): Boolean {

@@ -8,7 +8,6 @@ import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.isApprovedForSyncing
 import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
@@ -36,7 +35,7 @@ class SyncWorker : Worker() {
 
     return userSession.loggedInUser()
         .firstOrError()
-        .map { it.isApprovedForSyncing() }
+        .map { (user) -> user?.isApprovedForSyncing() ?: false }
         .flatMap { isApproved ->
           when {
             isApproved -> sync()

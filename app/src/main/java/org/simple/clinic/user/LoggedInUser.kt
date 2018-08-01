@@ -8,9 +8,6 @@ import android.arch.persistence.room.Query
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import io.reactivex.Flowable
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RoomEnumTypeConverter
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -35,7 +32,7 @@ data class LoggedInUser(
     @Json(name = "facility_id")
     val facilityUuid: UUID,
 
-    @Json(name = "status")
+    @Json(name = "sync_approval_status")
     val status: Status,
 
     @Json(name = "created_at")
@@ -72,11 +69,3 @@ data class LoggedInUser(
     return status == LoggedInUser.Status.APPROVED_FOR_SYNCING
   }
 }
-
-fun Optional<LoggedInUser>.isApprovedForSyncing(): Boolean {
-  return when (this) {
-    is Just -> value.isApprovedForSyncing()
-    is None -> false
-  }
-}
-

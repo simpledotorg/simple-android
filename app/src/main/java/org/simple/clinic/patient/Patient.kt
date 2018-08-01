@@ -14,16 +14,6 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-
-/**
- * [Regex] for stripping patient names and search queries of white spaces and punctuation
- *
- * Currently matches the following characters
- * - Any whitespace
- * - Comma, Hyphen, SemiColon, Colon, Underscore, Apostrophe, Period
- * */
-val spacePunctuationRegex = Regex("[\\s;_\\-:,'\\\\.]")
-
 @Entity(
     foreignKeys = [
       ForeignKey(

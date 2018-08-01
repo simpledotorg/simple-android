@@ -16,8 +16,8 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.convertNameToSearchableForm
 import org.simple.clinic.user.LoggedInUser
-import org.simple.clinic.patient.spacePunctuationRegex
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
 import org.simple.clinic.util.UuidRoomTypeConverter
@@ -78,28 +78,28 @@ abstract class AppDatabase : RoomDatabase() {
         """)
     }
   }
-}
 
-class Migration_4_5 : Migration(4, 5) {
+  class Migration_4_5 : Migration(4, 5) {
 
-  override fun migrate(database: SupportSQLiteDatabase) {
-    // Update local searchable name in the Patient table to strip out the newly added characters
-    database.compileStatement("""update "Patient" set "searchableName"=? where "uuid"=?""")
-        .use { statement ->
-          database.query("""select "uuid","fullName" from "Patient"""")
-              .use {
-                val uuidIndex = it.getColumnIndex("uuid")
-                val fullNameIndex = it.getColumnIndex("fullName")
+    override fun migrate(database: SupportSQLiteDatabase) {
+      // Update local searchable name in the Patient table to strip out the newly added characters
+      database.compileStatement("""update "Patient" set "searchableName"=? where "uuid"=?""")
+          .use { statement ->
+            database.query("""select "uuid","fullName" from "Patient"""")
+                .use { cursor ->
+                  val uuidIndex = cursor.getColumnIndex("uuid")
+                  val fullNameIndex = cursor.getColumnIndex("fullName")
 
-                generateSequence { if (it.moveToNext()) it else null }
-                    .map { it.getString(uuidIndex) to it.getString(fullNameIndex) }
-                    .map { (uuid, fullName) -> uuid to fullName.replace(spacePunctuationRegex, "") }
-                    .forEach { (uuid, searchableName) ->
-                      statement.bindString(1, searchableName)
-                      statement.bindString(2, uuid)
-                      statement.executeUpdateDelete()
-                    }
-              }
-        }
+                  generateSequence { if (cursor.moveToNext()) cursor else null }
+                      .map { it.getString(uuidIndex) to it.getString(fullNameIndex) }
+                      .map { (uuid, fullName) -> uuid to convertNameToSearchableForm(fullName) }
+                      .forEach { (uuid, searchableName) ->
+                        statement.bindString(1, searchableName)
+                        statement.bindString(2, uuid)
+                        statement.executeUpdateDelete()
+                      }
+                }
+          }
+    }
   }
 }

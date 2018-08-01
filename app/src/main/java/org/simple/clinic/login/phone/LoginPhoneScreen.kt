@@ -23,6 +23,8 @@ class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
 
   companion object {
     val KEY: (otp: String) -> LoginPhoneScreenKey = ::LoginPhoneScreenKey
+
+    val KEY_WITHOUT_OTP = KEY("")
   }
 
   @Inject

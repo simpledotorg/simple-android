@@ -117,7 +117,7 @@ class TheActivity : AppCompatActivity() {
             .map {
               when (it.isRegistrationEnabled) {
                 true -> RegistrationPhoneScreen.KEY
-                false -> LoginPhoneScreen.KEY("")
+                false -> LoginPhoneScreen.KEY_WITHOUT_OTP
               }
             }
             .blockingGet()

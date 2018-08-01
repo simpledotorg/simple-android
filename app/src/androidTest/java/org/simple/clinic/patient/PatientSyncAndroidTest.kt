@@ -12,9 +12,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.PatientFaker
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
+import org.simple.clinic.patient.sync.PatientSyncApiV1
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -45,6 +48,9 @@ class PatientSyncAndroidTest {
 
   @Inject
   lateinit var patientSync: PatientSync
+
+  @Inject
+  lateinit var patientSyncApiV1: PatientSyncApiV1
 
   private val faker = Faker()
   private val oldDateFormatter = SimpleDateFormat("dd/MM/yyyy")
@@ -106,6 +112,8 @@ class PatientSyncAndroidTest {
     return withDOB.andThen(withoutDOB)
   }
 
+  private fun dummyPatientPayloads(count: Int) = (0..count).map { PatientFaker.patientPayload() }
+
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
     val count = 5
@@ -119,19 +127,17 @@ class PatientSyncAndroidTest {
 
   @Test
   fun when_pulling_patients_then_paginate_till_the_server_does_not_have_anymore_patients() {
-    lastPullTimestamp.set(Just(Instant.now().minusMillis(100)))
+    lastPullTimestamp.set(Just(Instant.EPOCH))
 
     val patientsToInsert = 2 * configProvider.blockingGet().batchSize + 7
 
-    insertDummyPatients(count = patientsToInsert)
-        .andThen(patientSync.push())
-        .andThen(Completable.fromAction({ database.clearAllTables() }))
-        .blockingAwait()
+    val patientCountAfterPull = patientSyncApiV1.push(PatientPushRequest(dummyPatientPayloads(patientsToInsert)))
+        .toCompletable()
+        .andThen(patientSync.pull())
+        .andThen(repository.patientCount())
+        .blockingGet()
 
-    patientSync.pull().blockingAwait()
-
-    val patientCountAfterPull = repository.patientCount().blockingGet()
-    assertThat(patientCountAfterPull).isAtLeast(patientsToInsert * 2)
+    assertThat(patientCountAfterPull).isAtLeast(patientsToInsert)
   }
 
   @After

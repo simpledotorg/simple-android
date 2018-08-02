@@ -243,4 +243,29 @@
     <item name="android:scaleType">center</item>
     <item name="android:elevation" tools:ignore="NewApi">@dimen/spacing_16</item>
   </style>
+
+  <style name="Clinic.RegistrationUserFullName">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_marginTop">@dimen/spacing_12</item>
+    <item name="android:textColor">@color/white_opacity_90</item>
+    <item name="android:textSize">@dimen/textsize_20</item>
+  </style>
+
+  <style name="Clinic.RegistrationUserPhone">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_centerHorizontal">true</item>
+    <item name="android:layout_marginBottom">@dimen/spacing_8</item>
+    <item name="android:layout_marginTop">2dp</item>
+    <item name="android:textColor">@color/white_opacity_90</item>
+  </style>
+
+  <style name="Clinic.RegistrationPinHint">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">@dimen/spacing_8</item>
+    <item name="android:textColor">@color/black_opacity_50</item>
+  </style>
 </resources>

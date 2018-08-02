@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <dimen name="elevation_toolbar">6dp</dimen>
+  <dimen name="elevation_cardview">4dp</dimen>
 
   <dimen name="spacing_4">4dp</dimen>
   <dimen name="spacing_8">8dp</dimen>

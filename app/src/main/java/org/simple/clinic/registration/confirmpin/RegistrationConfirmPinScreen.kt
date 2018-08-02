@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -17,6 +18,8 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
 class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -28,7 +31,9 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   lateinit var controller: RegistrationConfirmPinScreenController
 
   private val backButton by bindView<ImageButton>(R.id.registrationconfirmpin_back)
-  private val pinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
+  private val fullNameTextView by bindView<TextView>(R.id.registrationconfirmpin_user_fullname)
+  private val phoneNumberTextView by bindView<TextView>(R.id.registrationconfirmpin_user_phone)
+  private val confirmPinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
   private val nextButton by bindView<Button>(R.id.registrationconfirmpin_next)
 
   override fun onFinishInflate() {
@@ -42,7 +47,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
       screenRouter.pop()
     }
 
-    Observable.merge(confirmPinTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), confirmPinTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -50,8 +55,10 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
         .subscribe { uiChange -> uiChange(this) }
   }
 
+  private fun screenCreates() = Observable.just(RegistrationConfirmPinScreenCreated())
+
   private fun confirmPinTextChanges() =
-      RxTextView.textChanges(pinEditText)
+      RxTextView.textChanges(confirmPinEditText)
           .map(CharSequence::toString)
           .map(::RegistrationConfirmPinTextChanged)
 
@@ -66,6 +73,12 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
 
   fun setNextButtonEnabled(enabled: Boolean) {
     nextButton.isEnabled = enabled
+  }
+
+  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+    fullNameTextView.text = ongoingEntry.fullName
+    phoneNumberTextView.text = ongoingEntry.phoneNumber
+    confirmPinEditText.setTextAndCursor(ongoingEntry.pinConfirmation)
   }
 
   companion object {

@@ -19,8 +19,9 @@ class RegistrationWorker : Worker() {
     return userSession.register()
         .map { result ->
           when (result) {
+          // TODO: Avoid retrying for 4xx errors?
             is RegistrationResult.Success -> WorkerResult.SUCCESS
-            is RegistrationResult.Error -> WorkerResult.FAILURE
+            is RegistrationResult.Error -> WorkerResult.RETRY
           }
         }
         .blockingGet()

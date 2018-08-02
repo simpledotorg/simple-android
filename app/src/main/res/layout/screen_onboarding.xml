@@ -11,7 +11,7 @@
 
     <TextView
       android:id="@+id/onboarding_logo"
-      style="@style/Clinic.LoginLogo"
+      style="@style/Clinic.LoginLogo.Large"
       android:text="@string/app_name" />
   </FrameLayout>
 

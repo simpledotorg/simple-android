@@ -54,4 +54,17 @@ class RegistrationPinScreenControllerTest {
     verify(screen, times(2)).setNextButtonEnabled(false)
     verify(screen, times(1)).setNextButtonEnabled(true)
   }
+
+  @Test
+  fun `when screen is created then user's existing details should be pre-filled`() {
+    val ongoingEntry = OngoingRegistrationEntry(
+        fullName = "Ashok Kumar",
+        phoneNumber = "1234567890",
+        pin = "1234")
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+
+    uiEvents.onNext(RegistrationPinScreenCreated())
+
+    verify(screen).preFillUserDetails(ongoingEntry)
+  }
 }

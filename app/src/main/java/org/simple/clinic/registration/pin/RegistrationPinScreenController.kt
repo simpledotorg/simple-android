@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -21,9 +20,19 @@ class RegistrationPinScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.merge(
+        preFillExistingDetails(replayedEvents),
         enableNextButton(replayedEvents),
         disableNextButton(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
+  }
+
+  private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationPinScreenCreated>()
+        .flatMapSingle {
+          userSession.ongoingRegistrationEntry()
+              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
+        }
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

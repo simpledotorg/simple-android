@@ -120,7 +120,8 @@
   <string name="registrationname_cd_go_back">Go back to phone number</string> <!-- TODO: Get reviewed by Daniel -->
 
   <string name="registrationpin_cd_go_back">Go back to name entry</string>
-  <string name="registrationpin_pin_label">Create your security pin</string>
+  <string name="registrationpin_pin_label">Create your security PIN</string>
+  <string name="registrationpin_pin_hint">Remember your PIN, you’ll need it later</string>
   <string name="registrationpin_next">Next</string>
 
   <string name="registrationconfirmpin_cd_go_back">Go back to pin</string>

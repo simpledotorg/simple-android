@@ -16,7 +16,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.convertNameToSearchableForm
+import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
@@ -92,7 +92,7 @@ abstract class AppDatabase : RoomDatabase() {
                     val fullNameIndex = cursor.getColumnIndex("fullName")
 
                     generateSequence { if (cursor.moveToNext()) cursor else null }
-                        .map { it.getString(uuidIndex) to convertNameToSearchableForm(it.getString(fullNameIndex)) }
+                        .map { it.getString(uuidIndex) to nameToSearchableForm(it.getString(fullNameIndex)) }
                         .forEach { (uuid, searchableName) ->
                           statement.bindString(1, searchableName)
                           statement.bindString(2, uuid)

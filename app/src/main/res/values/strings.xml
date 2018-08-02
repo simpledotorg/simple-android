@@ -116,7 +116,7 @@
   <string name="registrationphone_phone_number_label">Your phone number</string>
 
   <string name="registrationname_next">Next</string>
-  <string name="registrationname_name_label">Your full name</string>
+  <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_cd_go_back">Go back to phone number</string> <!-- TODO: Get reviewed by Daniel -->
 
   <string name="registrationpin_cd_go_back">Go back to name entry</string>

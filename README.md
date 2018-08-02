@@ -87,3 +87,14 @@ The OTP deeplink can be manually triggered by running,
 ```
 adb shell am start -W -a android.intent.action.VIEW -d "https://simple.org/register?otp=123456"
 ```
+
+#### SQLite Spellfix
+We use [sqlite-android](https://github.com/requery/sqlite-android) because it gives us the ability to load SQLite extensions, which we use specifically for loading [spellfix1](https://www.sqlite.org/spellfix1.html).
+
+We don't expect to change the SQLite version (we are currently using 3.24.0) often, but whenever we do, we need to recompile the version of `spellfix1` for that SQLite version. The steps for doing so are described below:
+
+- In the [SQLite download page](https://sqlite.org/download.html), there is a section at the bottom which lists the source code mirrors. Navigate to any one of them, click on 'Tags', and select the **SAME** version of `sqlite-android` that we are upgrading to, and download a zip of the source code.
+- Unzip the source code, navigate to `ext/misc` and copy the `spellfix.c` file to the `libspellfix/src/main/jni` directory.
+- On the `sqlite-android` repo, in the `build.gradle` file of the [library module](https://github.com/requery/sqlite-android/blob/master/sqlite-android/build.gradle), there is an extension property that indicates the download link of the SQLite source code which it is built from. Download it, and unzip the file.
+- Copy the `sqlite3.h` and `sqlite3ext.h` header files from the unzipped source directory to the `libspellfix1/src/main/jni` directory.
+- Run the command `./gradlew compileSpellfix` which will compile `spellfix1` and copy the built native libs to the `jniLibs` directory in the main app src directory.

@@ -7,6 +7,8 @@
   <string name="gender_transgender">Transgender</string>
   <string name="api_unexpected_error">Something went wrong. Please try again.</string>
 
+  <string name="country_dialing_code" translatable="false">+91</string>
+
   <!-- Patient search -->
   <string name="patientsearch_new_patient">Register new patient</string>
   <string name="patientsearch_go_back">Go back to home screen</string>
@@ -112,7 +114,6 @@
   <!-- Registration -->
   <string name="registrationphone_next">Next</string>
   <string name="registrationphone_phone_number_label">Your phone number</string>
-  <string name="registrationphone_cd_go_back">Go back to onboarding</string>
 
   <string name="registrationname_next">Next</string>
   <string name="registrationname_name_label">Your full name</string>

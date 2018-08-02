@@ -17,6 +17,7 @@ import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -35,6 +36,8 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
       return
     }
     TheActivity.component.inject(this)
+
+    phoneNumberEditText.showKeyboard()
 
     Observable.merge(screenCreates(), phoneNumberTextChanges(), doneClicks())
         .observeOn(io())

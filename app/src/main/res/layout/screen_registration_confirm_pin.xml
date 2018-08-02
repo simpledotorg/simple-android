@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen android:id="@+id/registrationconfirmpin_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/window_background_registration">
+  android:background="@color/window_background_registration"
+  tools:ignore="Overdraw">
 
-  <FrameLayout
+  <RelativeLayout
     android:id="@+id/registrationconfirmpin_logo_container"
     style="@style/Clinic.LoginLogoContainer">
 
@@ -16,11 +18,28 @@
       android:src="@drawable/ic_arrow_back_24dp" />
 
     <TextView
-      style="@style/Clinic.LoginLogo.Large"
+      android:id="@+id/registrationconfirmpin_applogo"
+      style="@style/Clinic.LoginLogo.Compact"
+      android:layout_alignTop="@+id/registrationconfirmpin_back"
+      android:layout_centerHorizontal="true"
       android:text="@string/app_name" />
-  </FrameLayout>
 
-  <View style="@style/Clinic.LoginLogoContainerOverflow" />
+    <TextView
+      android:id="@+id/registrationconfirmpin_user_fullname"
+      style="@style/Clinic.RegistrationUserFullName"
+      android:layout_below="@+id/registrationconfirmpin_applogo"
+      tools:text="(User name)" />
+
+    <TextView
+      android:id="@+id/registrationconfirmpin_user_phone"
+      style="@style/Clinic.RegistrationUserPhone"
+      android:layout_below="@+id/registrationconfirmpin_user_fullname"
+      tools:text="(User phone)" />
+  </RelativeLayout>
+
+  <View
+    style="@style/Clinic.LoginLogoContainerOverflow"
+    android:layout_below="@+id/registrationconfirmpin_logo_container" />
 
   <android.support.v7.widget.CardView
     android:id="@+id/registrationconfirmpin_card"
@@ -30,24 +49,25 @@
     <LinearLayout style="@style/Clinic.LoginCardContentContainer">
 
       <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        style="@style/Clinic.LoginCardTitle"
         android:labelFor="@+id/registrationconfirmpin_pin"
-        android:text="@string/registrationconfirmpin_confirm_pin_label"
-        android:textColor="@color/black_opacity_80"
-        android:textSize="@dimen/textsize_18" />
+        android:text="@string/registrationconfirmpin_confirm_pin_label" />
 
       <EditText
         android:id="@+id/registrationconfirmpin_pin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberPassword"
         android:maxLength="4"
-        android:textSize="@dimen/textsize_18" />
+        android:minEms="3"
+        android:textAppearance="@style/Clinic.LoginInputTextAppearance" />
+
+      <TextView
+        style="@style/Clinic.RegistrationPinHint"
+        android:text="@string/registrationpin_pin_hint" />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 

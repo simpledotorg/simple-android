@@ -15,17 +15,27 @@ typealias Ui = RegistrationConfirmPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationConfirmPinScreenController @Inject constructor(
-    val userSession: UserSession,
-    val registrationScheduler: RegistrationScheduler
+    private val userSession: UserSession,
+    private val registrationScheduler: RegistrationScheduler
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
 
     return Observable.merge(
+        preFillExistingDetails(replayedEvents),
         enableNextButton(replayedEvents),
         disableNextButton(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
+  }
+
+  private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationConfirmPinScreenCreated>()
+        .flatMapSingle {
+          userSession.ongoingRegistrationEntry()
+              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
+        }
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

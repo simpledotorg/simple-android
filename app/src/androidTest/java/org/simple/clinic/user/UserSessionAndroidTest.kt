@@ -2,7 +2,6 @@ package org.simple.clinic.user
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,6 +20,7 @@ class UserSessionAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+    userSession.logout().blockingAwait()
   }
 
   @Test
@@ -51,10 +51,5 @@ class UserSessionAndroidTest {
 
     val (accessToken) = userSession.accessToken()
     assertThat(accessToken).isNull()
-  }
-
-  @After
-  fun tearDown() {
-    userSession.logout().blockingAwait()
   }
 }

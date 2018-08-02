@@ -84,9 +84,9 @@ abstract class AppDatabase : RoomDatabase() {
     override fun migrate(database: SupportSQLiteDatabase) {
       // Update local searchable name in the Patient table to strip out the newly added characters
       database.inTransaction {
-        compileStatement("""update "Patient" set "searchableName"=? where "uuid"=?""")
+        compileStatement("""UPDATE "Patient" SET "searchableName"=? WHERE "uuid"=?""")
             .use { statement ->
-              query("""select "uuid","fullName" from "Patient"""")
+              query("""SELECT "uuid","fullName" FROM "Patient"""")
                   .use { cursor ->
                     val uuidIndex = cursor.getColumnIndex("uuid")
                     val fullNameIndex = cursor.getColumnIndex("fullName")

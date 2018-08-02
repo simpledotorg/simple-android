@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="Clinic.LoginInputTextAppearance">
+    <item name="android:textSize">@dimen/textsize_20</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+  </style>
+</resources>

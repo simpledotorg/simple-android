@@ -2,7 +2,7 @@ package org.simple.clinic.registration.phone
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
@@ -26,7 +26,6 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   lateinit var controller: RegistrationPhoneScreenController
 
   private val phoneNumberEditText by bindView<EditText>(R.id.registrationphone_phone)
-  private val nextButton by bindView<Button>(R.id.registrationphone_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -35,7 +34,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
     }
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), phoneNumberTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), phoneNumberTextChanges(), doneClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -50,16 +49,13 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
           .map(CharSequence::toString)
           .map(::RegistrationPhoneNumberTextChanged)
 
-  private fun nextClicks() =
-      RxView.clicks(nextButton)
-          .map { RegistrationPhoneNextClicked() }
+  private fun doneClicks() =
+      RxTextView
+          .editorActions(phoneNumberEditText) { it == EditorInfo.IME_ACTION_DONE }
+          .map { RegistrationPhoneDoneClicked() }
 
   fun openRegistrationNameEntryScreen() {
     screenRouter.push(RegistrationFullNameScreen.KEY)
-  }
-
-  fun setNextButtonEnabled(enabled: Boolean) {
-    nextButton.isEnabled = enabled
   }
 
   companion object {

@@ -21,8 +21,6 @@ class RegistrationPinScreenController @Inject constructor(
 
     return Observable.merge(
         preFillExistingDetails(replayedEvents),
-        enableNextButton(replayedEvents),
-        disableNextButton(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
@@ -37,9 +35,9 @@ class RegistrationPinScreenController @Inject constructor(
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     val pinTextChanges = events.ofType<RegistrationPinTextChanged>()
-    val nextClicks = events.ofType<RegistrationPinNextClicked>()
+    val doneClicks = events.ofType<RegistrationPinDoneClicked>()
 
-    return nextClicks
+    return doneClicks
         .withLatestFrom(pinTextChanges.map { it.pin })
         .flatMap { (_, pin) ->
           if (pin.length > 4) {
@@ -51,22 +49,5 @@ class RegistrationPinScreenController @Inject constructor(
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(Observable.just({ ui: Ui -> ui.openRegistrationConfirmPinScreen() }))
         }
-  }
-
-  private fun enableNextButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return setNextButtonEnabled(events, true)
-  }
-
-  private fun disableNextButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return setNextButtonEnabled(events, false)
-  }
-
-  private fun setNextButtonEnabled(events: Observable<UiEvent>, enabled: Boolean): Observable<UiChange> {
-    return events
-        .ofType<RegistrationPinTextChanged>()
-        .map { it.pin.isBlank() }
-        .distinctUntilChanged()
-        .filter { isBlank -> isBlank != enabled }
-        .map { { ui: Ui -> ui.setNextButtonEnabled(enabled) } }
   }
 }

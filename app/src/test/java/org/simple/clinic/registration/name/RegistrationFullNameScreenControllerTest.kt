@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.name
 
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -38,20 +37,9 @@ class RegistrationFullNameScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationFullNameTextChanged(input))
-    uiEvents.onNext(RegistrationFullNameNextClicked())
+    uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))
     verify(screen).openRegistrationNameEntryScreen()
-  }
-
-  @Test
-  fun `while full name field is empty then the next button should remain disabled`() {
-    uiEvents.onNext(RegistrationFullNameTextChanged(""))
-    uiEvents.onNext(RegistrationFullNameTextChanged("A"))
-    uiEvents.onNext(RegistrationFullNameTextChanged("As"))
-    uiEvents.onNext(RegistrationFullNameTextChanged(""))
-
-    verify(screen, times(2)).setNextButtonEnabled(false)
-    verify(screen, times(1)).setNextButtonEnabled(true)
   }
 }

@@ -112,21 +112,17 @@
   <string name="applock_error_incorrect_pin">Pin doesn\'t match the original pin</string>
 
   <!-- Registration -->
-  <string name="registrationphone_next">Next</string>
   <string name="registrationphone_phone_number_label">Your phone number</string>
 
-  <string name="registrationname_next">Next</string>
   <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_cd_go_back">Go back to phone number</string> <!-- TODO: Get reviewed by Daniel -->
 
   <string name="registrationpin_cd_go_back">Go back to name entry</string>
   <string name="registrationpin_pin_label">Create your security PIN</string>
   <string name="registrationpin_pin_hint">Remember your PIN, you’ll need it later</string>
-  <string name="registrationpin_next">Next</string>
 
-  <string name="registrationconfirmpin_cd_go_back">Go back to pin</string>
+  <string name="registrationconfirmpin_cd_go_back">Go back to PIN</string>
   <string name="registrationconfirmpin_confirm_pin_label">Enter security pin again</string>
-  <string name="registrationconfirmpin_next">Next</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>

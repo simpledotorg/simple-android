@@ -92,8 +92,7 @@ abstract class AppDatabase : RoomDatabase() {
                     val fullNameIndex = cursor.getColumnIndex("fullName")
 
                     generateSequence { if (cursor.moveToNext()) cursor else null }
-                        .map { it.getString(uuidIndex) to it.getString(fullNameIndex) }
-                        .map { (uuid, fullName) -> uuid to convertNameToSearchableForm(fullName) }
+                        .map { it.getString(uuidIndex) to convertNameToSearchableForm(it.getString(fullNameIndex)) }
                         .forEach { (uuid, searchableName) ->
                           statement.bindString(1, searchableName)
                           statement.bindString(2, uuid)

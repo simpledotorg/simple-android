@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.pin
 
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -38,21 +37,10 @@ class RegistrationPinScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = input))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPinTextChanged(input))
-    uiEvents.onNext(RegistrationPinNextClicked())
+    uiEvents.onNext(RegistrationPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = input))
     verify(screen).openRegistrationConfirmPinScreen()
-  }
-
-  @Test
-  fun `while pin field is empty then the next button should remain disabled`() {
-    uiEvents.onNext(RegistrationPinTextChanged(""))
-    uiEvents.onNext(RegistrationPinTextChanged("1"))
-    uiEvents.onNext(RegistrationPinTextChanged("12"))
-    uiEvents.onNext(RegistrationPinTextChanged(""))
-
-    verify(screen, times(2)).setNextButtonEnabled(false)
-    verify(screen, times(1)).setNextButtonEnabled(true)
   }
 
   @Test

@@ -23,8 +23,6 @@ class RegistrationPhoneScreenController @Inject constructor(
 
     return Observable.merge(
         createEmptyOngoingEntry(replayedEvents),
-        enableNextButton(replayedEvents),
-        disableNextButton(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
@@ -40,9 +38,9 @@ class RegistrationPhoneScreenController @Inject constructor(
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     val phoneNumberTextChanges = events.ofType<RegistrationPhoneNumberTextChanged>()
-    val nextClicks = events.ofType<RegistrationPhoneNextClicked>()
+    val doneClicks = events.ofType<RegistrationPhoneDoneClicked>()
 
-    return nextClicks
+    return doneClicks
         .withLatestFrom(phoneNumberTextChanges.map { it.phoneNumber })
         .flatMap { (_, phoneNumber) ->
           userSession.ongoingRegistrationEntry()
@@ -50,22 +48,5 @@ class RegistrationPhoneScreenController @Inject constructor(
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
         }
-  }
-
-  private fun enableNextButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return setNextButtonEnabled(events, true)
-  }
-
-  private fun disableNextButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return setNextButtonEnabled(events, false)
-  }
-
-  private fun setNextButtonEnabled(events: Observable<UiEvent>, enabled: Boolean): Observable<UiChange> {
-    return events
-        .ofType<RegistrationPhoneNumberTextChanged>()
-        .map { it.phoneNumber.isBlank() }
-        .distinctUntilChanged()
-        .filter { isBlank -> isBlank != enabled }
-        .map { { ui: Ui -> ui.setNextButtonEnabled(enabled) } }
   }
 }

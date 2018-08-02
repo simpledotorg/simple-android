@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -19,18 +18,14 @@ class RegistrationFullNameScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
-
-    return Observable.merge(
-        enableNextButton(replayedEvents),
-        disableNextButton(replayedEvents),
-        updateOngoingEntryAndProceed(replayedEvents))
+    return updateOngoingEntryAndProceed(replayedEvents)
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     val fullNameTextChanges = events.ofType<RegistrationFullNameTextChanged>()
-    val nextClicks = events.ofType<RegistrationFullNameNextClicked>()
+    val doneClicks = events.ofType<RegistrationFullNameDoneClicked>()
 
-    return nextClicks
+    return doneClicks
         .withLatestFrom(fullNameTextChanges.map { it.fullName })
         .flatMap { (_, fullName) ->
           userSession.ongoingRegistrationEntry()
@@ -38,22 +33,5 @@ class RegistrationFullNameScreenController @Inject constructor(
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
         }
-  }
-
-  private fun enableNextButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return setNextButtonEnabled(events, true)
-  }
-
-  private fun disableNextButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return setNextButtonEnabled(events, false)
-  }
-
-  private fun setNextButtonEnabled(events: Observable<UiEvent>, enabled: Boolean): Observable<UiChange> {
-    return events
-        .ofType<RegistrationFullNameTextChanged>()
-        .map { it.fullName.isBlank() }
-        .distinctUntilChanged()
-        .filter { isBlank -> isBlank != enabled }
-        .map { { ui: Ui -> ui.setNextButtonEnabled(enabled) } }
   }
 }

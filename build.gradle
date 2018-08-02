@@ -11,7 +11,7 @@ buildscript {
       dagger              : '2.16',
       butterKnife         : '8.8.1',
       kotterKnife         : 'e157638df1',
-      room                : '1.1.0',
+      room                : '1.1.1',
       moshi               : '1.6.0',
       retrofit            : '2.4.0',
       stetho              : '1.5.0',

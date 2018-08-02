@@ -14,8 +14,9 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
-import timber.log.Timber
 import javax.inject.Inject
 
 class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -59,7 +60,8 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
           .map { RegistrationConfirmPinNextClicked() }
 
   fun openFacilitySelectionScreen() {
-    Timber.w("TODO")
+    // TODO: Open facility selection instead.
+    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
   }
 
   fun setNextButtonEnabled(enabled: Boolean) {

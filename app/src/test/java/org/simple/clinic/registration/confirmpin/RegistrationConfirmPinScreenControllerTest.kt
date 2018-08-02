@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -46,24 +45,13 @@ class RegistrationConfirmPinScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
-    uiEvents.onNext(RegistrationConfirmPinNextClicked())
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(check {
       assertThat(it.pinConfirmation).isEqualTo(input)
       assertThat(it.createdAt).isNotNull()
     })
     verify(screen).openFacilitySelectionScreen()
-  }
-
-  @Test
-  fun `while pin field is empty then the next button should remain disabled`() {
-    uiEvents.onNext(RegistrationConfirmPinTextChanged(""))
-    uiEvents.onNext(RegistrationConfirmPinTextChanged("1"))
-    uiEvents.onNext(RegistrationConfirmPinTextChanged("12"))
-    uiEvents.onNext(RegistrationConfirmPinTextChanged(""))
-
-    verify(screen, times(2)).setNextButtonEnabled(false)
-    verify(screen, times(1)).setNextButtonEnabled(true)
   }
 
   @Test

@@ -2,7 +2,7 @@ package org.simple.clinic.registration.confirmpin
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -34,7 +34,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   private val fullNameTextView by bindView<TextView>(R.id.registrationconfirmpin_user_fullname)
   private val phoneNumberTextView by bindView<TextView>(R.id.registrationconfirmpin_user_phone)
   private val confirmPinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
-  private val nextButton by bindView<Button>(R.id.registrationconfirmpin_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -47,7 +46,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), confirmPinTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), confirmPinTextChanges(), doneClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -62,17 +61,14 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
           .map(CharSequence::toString)
           .map(::RegistrationConfirmPinTextChanged)
 
-  private fun nextClicks() =
-      RxView.clicks(nextButton)
-          .map { RegistrationConfirmPinNextClicked() }
+  private fun doneClicks() =
+      RxTextView
+          .editorActions(confirmPinEditText) { it == EditorInfo.IME_ACTION_DONE }
+          .map { RegistrationConfirmPinDoneClicked() }
 
   fun openFacilitySelectionScreen() {
     // TODO: Open facility selection instead.
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
-  }
-
-  fun setNextButtonEnabled(enabled: Boolean) {
-    nextButton.isEnabled = enabled
   }
 
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {

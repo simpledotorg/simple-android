@@ -4,6 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 
 data class RegistrationPhoneNumberTextChanged(val phoneNumber: String) : UiEvent
 
-class RegistrationPhoneNextClicked : UiEvent
+class RegistrationPhoneDoneClicked : UiEvent
 
 class RegistrationPhoneScreenCreated : UiEvent

@@ -6,4 +6,4 @@ class RegistrationConfirmPinScreenCreated : UiEvent
 
 data class RegistrationConfirmPinTextChanged(val confirmPin: String) : UiEvent
 
-class RegistrationConfirmPinNextClicked : UiEvent
+class RegistrationConfirmPinDoneClicked : UiEvent

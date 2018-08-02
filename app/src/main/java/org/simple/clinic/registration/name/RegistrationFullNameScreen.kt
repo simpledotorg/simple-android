@@ -2,7 +2,7 @@ package org.simple.clinic.registration.name
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -28,7 +28,6 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
 
   private val backButton by bindView<ImageButton>(R.id.registrationname_back)
   private val nameEditText by bindView<EditText>(R.id.registrationname_name)
-  private val nextButton by bindView<Button>(R.id.registrationname_next)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -41,7 +40,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    Observable.merge(nameTextChanges(), nextClicks())
+    Observable.merge(nameTextChanges(), doneClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -54,16 +53,13 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
           .map(CharSequence::toString)
           .map(::RegistrationFullNameTextChanged)
 
-  private fun nextClicks() =
-      RxView.clicks(nextButton)
-          .map { RegistrationFullNameNextClicked() }
+  private fun doneClicks() =
+      RxTextView
+          .editorActions(nameEditText) { it == EditorInfo.IME_ACTION_DONE }
+          .map { RegistrationFullNameDoneClicked() }
 
   fun openRegistrationNameEntryScreen() {
     screenRouter.push(RegistrationPinScreen.KEY)
-  }
-
-  fun setNextButtonEnabled(enabled: Boolean) {
-    nextButton.isEnabled = enabled
   }
 
   companion object {

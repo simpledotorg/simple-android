@@ -46,12 +46,10 @@
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="textPersonName|textCapWords"
-        android:textAppearance="@style/Clinic.LoginInputTextAppearance" />
+        android:textAppearance="@style/Clinic.LoginInputTextAppearance">
+
+        <requestFocus />
+      </EditText>
     </LinearLayout>
   </android.support.v7.widget.CardView>
-
-  <Button
-    android:id="@+id/registrationname_next"
-    style="@style/Clinic.LoginProceedButton"
-    android:text="@string/registrationname_next" />
 </org.simple.clinic.registration.name.RegistrationFullNameScreen>

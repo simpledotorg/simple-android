@@ -3,7 +3,6 @@ package org.simple.clinic.registration.phone
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -42,27 +41,16 @@ class RegistrationPhoneScreenControllerTest {
   }
 
   @Test
-  fun `when next button is clicked then the ongoing entry should be updated with the input phone number and the next screen should be opened`() {
+  fun `when proceed button is clicked then the ongoing entry should be updated with the input phone number and the next screen should be opened`() {
     val input = "999999"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = input))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(input))
-    uiEvents.onNext(RegistrationPhoneNextClicked())
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = input))
     verify(screen).openRegistrationNameEntryScreen()
-  }
-
-  @Test
-  fun `while phone number field is empty then the next button should remain disabled`() {
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged("7"))
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged("78"))
-    uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
-
-    verify(screen, times(2)).setNextButtonEnabled(false)
-    verify(screen, times(1)).setNextButtonEnabled(true)
   }
 }

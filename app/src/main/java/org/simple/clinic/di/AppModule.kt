@@ -7,6 +7,7 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
+import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.qrscan.QrModule
@@ -26,6 +27,7 @@ open class AppModule(private val appContext: Application, private val databaseNa
   @AppScope
   open fun appDatabase(appContext: Application): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
+        .openHelperFactory(RequerySQLiteOpenHelperFactory())
         .addMigrations(
             AppDatabase.Migration_3_4(),
             AppDatabase.Migration_4_5()

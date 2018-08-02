@@ -39,7 +39,8 @@ buildscript {
       junit               : '4.12',
       mockito             : '2.18.3',
       mockitoKotlin       : '1.5.0',
-      junitParams         : '1.1.1'
+      junitParams         : '1.1.1',
+      sqliteAndroid       : '3.24.0'
   ]
 
   repositories {

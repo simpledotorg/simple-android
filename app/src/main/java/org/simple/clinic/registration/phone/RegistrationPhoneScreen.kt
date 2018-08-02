@@ -15,6 +15,8 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
 class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -53,6 +55,10 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
       RxTextView
           .editorActions(phoneNumberEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationPhoneDoneClicked() }
+
+  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+    phoneNumberEditText.setTextAndCursor(ongoingEntry.phoneNumber)
+  }
 
   fun openRegistrationNameEntryScreen() {
     screenRouter.push(RegistrationFullNameScreen.KEY)

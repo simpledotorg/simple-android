@@ -106,8 +106,8 @@ abstract class AppDatabase : RoomDatabase() {
 }
 
 private fun SupportSQLiteDatabase.inTransaction(block: SupportSQLiteDatabase.() -> Unit) {
+  beginTransaction()
   try {
-    beginTransaction()
     block.invoke(this)
     setTransactionSuccessful()
   } finally {

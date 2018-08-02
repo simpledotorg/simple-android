@@ -3,6 +3,7 @@ package org.simple.clinic.registration.phone
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -32,12 +33,36 @@ class RegistrationPhoneScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created then an empty ongoing entry should be created`() {
+  fun `when screen is created and an existing ongoing entry is absent then an empty ongoing entry should be created`() {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(false))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
     verify(userSession).saveOngoingRegistrationEntry(argThat { uuid != null })
+  }
+
+  @Test
+  fun `when screen is created and an existing ongoing entry is present then an empty ongoing entry should not be created`() {
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(true))
+
+    uiEvents.onNext(RegistrationPhoneScreenCreated())
+
+    verify(userSession, never()).saveOngoingRegistrationEntry(any())
+  }
+
+  @Test
+  fun `when screen is created then existing details should be pre-filled`() {
+    val ongoingEntry = OngoingRegistrationEntry(phoneNumber = "123")
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(true))
+
+    uiEvents.onNext(RegistrationPhoneScreenCreated())
+
+    verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen).preFillUserDetails(argThat { phoneNumber == ongoingEntry.phoneNumber })
   }
 
   @Test

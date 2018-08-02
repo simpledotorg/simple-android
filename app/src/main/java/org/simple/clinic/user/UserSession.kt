@@ -43,7 +43,7 @@ class UserSession @Inject constructor(
 ) {
 
   private lateinit var ongoingLoginEntry: OngoingLoginEntry
-  private lateinit var ongoingRegistrationEntry: OngoingRegistrationEntry
+  private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
 
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
     return Completable.fromAction {
@@ -126,6 +126,9 @@ class UserSession @Inject constructor(
   fun ongoingRegistrationEntry(): Single<OngoingRegistrationEntry> {
     return Single.fromCallable { ongoingRegistrationEntry }
   }
+
+  fun isOngoingRegistrationEntryPresent(): Single<Boolean> =
+      Single.fromCallable { ongoingRegistrationEntry != null }
 
   private fun storeUserAndAccessToken(response: LoginResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))

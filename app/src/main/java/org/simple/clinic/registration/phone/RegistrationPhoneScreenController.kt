@@ -22,18 +22,35 @@ class RegistrationPhoneScreenController @Inject constructor(
     val replayedEvents = events.replay().refCount()
 
     return Observable.merge(
-        createEmptyOngoingEntry(replayedEvents),
+        createEmptyOngoingEntryAndPreFill(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
-  private fun createEmptyOngoingEntry(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
+    val createEmptyEntry = events
         .ofType<RegistrationPhoneScreenCreated>()
         .flatMap {
-          userSession
-              .saveOngoingRegistrationEntry(OngoingRegistrationEntry(uuid = UUID.randomUUID()))
+          userSession.isOngoingRegistrationEntryPresent()
+              .filter { present -> present.not() }
+              .flatMapCompletable {
+                userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(uuid = UUID.randomUUID()))
+              }
               .andThen(Observable.empty<UiChange>())
         }
+
+    val preFill = events
+        .ofType<RegistrationPhoneScreenCreated>()
+        .flatMap {
+          userSession.isOngoingRegistrationEntryPresent()
+              // Because Single.filter() returns a Maybe and
+              // Maybe.flatMapSingle() errors on completion.
+              .toObservable()
+              .filter { present -> present }
+              .flatMapSingle { userSession.ongoingRegistrationEntry() }
+              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
+        }
+
+    return createEmptyEntry.mergeWith(preFill)
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

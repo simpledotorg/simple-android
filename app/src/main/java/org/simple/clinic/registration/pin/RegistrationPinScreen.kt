@@ -6,6 +6,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -16,6 +17,8 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
 class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -27,6 +30,8 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   lateinit var controller: RegistrationPinScreenController
 
   private val backButton by bindView<ImageButton>(R.id.registrationpin_back)
+  private val fullNameTextView by bindView<TextView>(R.id.registrationpin_user_fullname)
+  private val phoneNumberTextView by bindView<TextView>(R.id.registrationpin_user_phone)
   private val pinEditText by bindView<EditText>(R.id.registrationpin_pin)
   private val nextButton by bindView<Button>(R.id.registrationpin_next)
 
@@ -41,13 +46,15 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
       screenRouter.pop()
     }
 
-    Observable.merge(pinTextChanges(), nextClicks())
+    Observable.merge(screenCreates(), pinTextChanges(), nextClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
+
+  private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())
 
   private fun pinTextChanges() =
       RxTextView.textChanges(pinEditText)
@@ -64,6 +71,12 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
 
   fun setNextButtonEnabled(enabled: Boolean) {
     nextButton.isEnabled = enabled
+  }
+
+  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+    fullNameTextView.text = ongoingEntry.fullName
+    phoneNumberTextView.text = ongoingEntry.phoneNumber
+    pinEditText.setTextAndCursor(ongoingEntry.pin)
   }
 
   companion object {

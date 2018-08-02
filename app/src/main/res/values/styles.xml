@@ -91,7 +91,7 @@
     <item name="android:tint">@color/white</item>
   </style>
 
-  <style name="Clinic.LoginPinPhoneNumber" parent="Clinic.LoginLogo">
+  <style name="Clinic.LoginPinPhoneNumber" parent="Clinic.LoginLogo.Large">
     <item name="android:paddingBottom">26dp</item>
     <item name="android:paddingTop">44dp</item>
     <item name="android:textColor">@color/white_opacity_90</item>
@@ -183,15 +183,22 @@
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_gravity">center_horizontal</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColor">#692209</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.LoginLogo.Compact">
+    <item name="android:textSize">@dimen/textsize_20</item>
+  </style>
+
+  <style name="Clinic.LoginLogo.Large">
     <item name="android:layout_marginEnd">@dimen/spacing_24</item>
     <item name="android:layout_marginStart">@dimen/spacing_24</item>
     <item name="android:layout_marginTop">44dp</item>
     <item name="android:layout_marginBottom">@dimen/spacing_24</item>
-    <item name="android:ellipsize">end</item>
-    <item name="android:maxLines">1</item>
-    <item name="android:textColor">#692209</item>
     <item name="android:textSize">34sp</item>
-    <item name="android:textStyle">bold</item>
   </style>
 
   <style name="Clinic.LoginCardTitle">

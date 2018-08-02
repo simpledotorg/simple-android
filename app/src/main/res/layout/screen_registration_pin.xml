@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.registration.pin.RegistrationPinScreen android:id="@+id/registrationpin_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:background="@color/window_background_registration">
 
-  <FrameLayout
+  <RelativeLayout
     android:id="@+id/registrationpin_logo_container"
     style="@style/Clinic.LoginLogoContainer">
 
@@ -16,11 +17,39 @@
       android:src="@drawable/ic_arrow_back_24dp" />
 
     <TextView
-      style="@style/Clinic.LoginLogo"
-      android:text="@string/app_name" />
-  </FrameLayout>
+      android:id="@+id/registrationpin_applogo"
+      style="@style/Clinic.LoginLogo.Compact"
+      android:layout_alignTop="@+id/registrationpin_back"
+      android:layout_centerHorizontal="true"
+      android:text="@string/app_name"
+      android:textSize="@dimen/textsize_20" />
 
-  <View style="@style/Clinic.LoginLogoContainerOverflow" />
+    <TextView
+      android:id="@+id/registrationpin_user_fullname"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/registrationpin_applogo"
+      android:layout_centerHorizontal="true"
+      android:layout_marginTop="@dimen/spacing_12"
+      android:textColor="@color/white_opacity_90"
+      android:textSize="@dimen/textsize_20"
+      tools:text="(User name)" />
+
+    <TextView
+      android:id="@+id/registrationpin_user_phone"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@+id/registrationpin_user_fullname"
+      android:layout_centerHorizontal="true"
+      android:layout_marginBottom="@dimen/spacing_8"
+      android:layout_marginTop="2dp"
+      android:textColor="@color/white_opacity_90"
+      tools:text="(User phone)" />
+  </RelativeLayout>
+
+  <View
+    style="@style/Clinic.LoginLogoContainerOverflow"
+    android:layout_below="@+id/registrationpin_logo_container" />
 
   <android.support.v7.widget.CardView
     android:id="@+id/registrationpin_card"
@@ -30,24 +59,29 @@
     <LinearLayout style="@style/Clinic.LoginCardContentContainer">
 
       <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
+        style="@style/Clinic.LoginCardTitle"
         android:labelFor="@+id/registrationpin_pin"
-        android:text="@string/registrationpin_pin_label"
-        android:textColor="@color/black_opacity_80"
-        android:textSize="@dimen/textsize_18" />
+        android:text="@string/registrationpin_pin_label" />
 
       <EditText
         android:id="@+id/registrationpin_pin"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center"
         android:imeOptions="actionDone"
         android:inputType="numberPassword"
         android:maxLength="4"
+        android:minEms="3"
+        android:textAppearance="@style/Clinic.LoginInputTextAppearance"
         android:textSize="@dimen/textsize_18" />
+
+      <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:text="@string/registrationpin_pin_hint"
+        android:textColor="@color/black_opacity_50" />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 

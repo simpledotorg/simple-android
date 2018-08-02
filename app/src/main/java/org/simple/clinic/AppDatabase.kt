@@ -106,9 +106,6 @@ abstract class AppDatabase : RoomDatabase() {
   }
 }
 
-/**
- * Execute the given block in a transaction. Will call [SupportSQLiteDatabase.setTransactionSuccessful] only if no errors were thrown within the block
- **/
 private fun SupportSQLiteDatabase.inTransaction(block: SupportSQLiteDatabase.() -> Unit) {
   try {
     beginTransaction()

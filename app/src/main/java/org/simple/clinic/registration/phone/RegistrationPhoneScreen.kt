@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -26,7 +25,6 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   @Inject
   lateinit var controller: RegistrationPhoneScreenController
 
-  private val backButton by bindView<ImageButton>(R.id.registrationphone_back)
   private val phoneNumberEditText by bindView<EditText>(R.id.registrationphone_phone)
   private val nextButton by bindView<Button>(R.id.registrationphone_next)
 
@@ -36,10 +34,6 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
       return
     }
     TheActivity.component.inject(this)
-
-    backButton.setOnClickListener {
-      screenRouter.pop()
-    }
 
     Observable.merge(screenCreates(), phoneNumberTextChanges(), nextClicks())
         .observeOn(io())

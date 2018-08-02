@@ -18,7 +18,19 @@ class RegistrationFullNameScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
-    return updateOngoingEntryAndProceed(replayedEvents)
+
+    return Observable.merge(
+        preFillExistingDetails(replayedEvents),
+        updateOngoingEntryAndProceed(replayedEvents))
+  }
+
+  private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationFullNameScreenCreated>()
+        .flatMapSingle {
+          userSession.ongoingRegistrationEntry()
+              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
+        }
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

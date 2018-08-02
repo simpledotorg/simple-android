@@ -44,7 +44,7 @@ class PatientRepository @Inject constructor(
     }
 
     return database.patientSearchDao()
-        .search(convertNameToSearchableForm(query!!))
+        .search(nameToSearchableForm(query!!))
         .toObservable()
   }
 
@@ -62,7 +62,7 @@ class PatientRepository @Inject constructor(
     }
 
     return database.patientSearchDao()
-        .search(convertNameToSearchableForm(query!!), dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .search(nameToSearchableForm(query!!), dateOfBirthUpperBound, dateOfBirthLowerBound)
         .toObservable()
   }
 
@@ -184,7 +184,7 @@ class PatientRepository @Inject constructor(
             Patient(
                 uuid = patientUuid,
                 fullName = personalDetails!!.fullName,
-                searchableName = convertNameToSearchableForm(personalDetails.fullName),
+                searchableName = nameToSearchableForm(personalDetails.fullName),
                 gender = personalDetails.gender!!,
                 status = PatientStatus.ACTIVE,
 

@@ -4,6 +4,7 @@ import android.app.Application
 import android.arch.persistence.room.Room
 import com.tspoon.traceur.Traceur
 import io.reactivex.Single
+import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
@@ -55,7 +56,9 @@ class TestClinicApp : ClinicApp() {
     return DaggerTestAppComponent.builder()
         .appModule(object : AppModule(this) {
           override fun appDatabase(appContext: Application): AppDatabase {
-            return Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java).build()
+            return Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java)
+                .openHelperFactory(RequerySQLiteOpenHelperFactory())
+                .build()
           }
         })
         .syncModule(object : SyncModule() {

@@ -113,6 +113,13 @@ android {
   sourceSets {
     androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
   }
+
+  packagingOptions {
+    // Deprecated ABIs. See https://developer.android.com/ndk/guides/abis
+    exclude 'lib/mips/libsqlite3x.so'
+    exclude 'lib/mips64/libsqlite3x.so'
+    exclude 'lib/armeabi/libsqlite3x.so'
+  }
 }
 
 dependencies {
@@ -177,4 +184,5 @@ dependencies {
   implementation "com.mikepenz:itemanimators:$versions.itemAnimators@aar"
   implementation "org.mindrot:jbcrypt:$versions.jbcrypt"
   implementation "com.squareup.flow:flow:$versions.flow"
+  implementation "io.requery:sqlite-android:$versions.sqliteAndroid"
 }

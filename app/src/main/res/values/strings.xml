@@ -6,6 +6,7 @@
   <string name="gender_male">Male</string>
   <string name="gender_transgender">Transgender</string>
   <string name="api_unexpected_error">Something went wrong. Please try again.</string>
+  <string name="not_yet_implemented">Under construction!</string>
 
   <!-- Patient search -->
   <string name="patientsearch_new_patient">Register new patient</string>
@@ -108,6 +109,8 @@
 
   <!-- App lock -->
   <string name="applock_error_incorrect_pin">Pin doesn\'t match the original pin</string>
+  <string name="applock_not_you">Not You?</string>
+  <string name="applock_forgot_pin">Forgot PIN?</string>
 
   <!-- Registration -->
   <string name="registrationphone_next">Next</string>

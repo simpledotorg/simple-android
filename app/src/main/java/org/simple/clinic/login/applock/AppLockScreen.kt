@@ -7,11 +7,13 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -47,6 +49,8 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val pinEditText by bindView<EditText>(R.id.applock_pin)
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
+  private val userLogoutTextView by bindView<Button>(R.id.applock_user_logouut)
+  private val forgotPinButton by bindView<Button>(R.id.applock_forgotpin)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -55,7 +59,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks())
+    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks(), logoutClicks(), forgotPinClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -88,6 +92,20 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
   }
 
+  private fun logoutClicks() =
+      RxView.clicks(userLogoutTextView).map { LogoutClicked() }
+
+  private fun forgotPinClicks() =
+      RxView.clicks(forgotPinButton).map { ForgotPinClicked() }
+
+  fun logoutDone() {
+    Toast.makeText(context, R.string.not_yet_implemented, Toast.LENGTH_SHORT).show()
+  }
+
+  fun showCurrentPinResetRequestStatus() {
+    Toast.makeText(context, R.string.not_yet_implemented, Toast.LENGTH_SHORT).show()
+  }
+
   fun showFullName(fullName: String) {
     fullNameTextView.text = fullName
   }
@@ -103,7 +121,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   fun setIncorrectPinErrorVisible(show: Boolean) {
     when (show) {
       true -> errorTextView.visibility = View.VISIBLE
-      else -> errorTextView.visibility = View.GONE
+      else -> errorTextView.visibility = View.INVISIBLE
     }
   }
 

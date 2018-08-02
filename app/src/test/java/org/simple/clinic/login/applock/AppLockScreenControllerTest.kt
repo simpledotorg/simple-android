@@ -24,7 +24,7 @@ class AppLockScreenControllerTest {
 
   private val screen = mock<AppLockScreen>()
   private val userSession = mock<UserSession>()
-  private val passwordHashser = mock<PasswordHasher>()
+  private val passwordHasher = mock<PasswordHasher>()
   private val loggedInUser = PatientMocker.loggedInUser(pinDigest = "actual-hash")
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
 
@@ -33,7 +33,7 @@ class AppLockScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = AppLockScreenController(userSession, passwordHashser, lastUnlockTimestamp)
+    controller = AppLockScreenController(userSession, passwordHasher, lastUnlockTimestamp)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
 
     uiEvents
@@ -43,7 +43,7 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when submit is clicked with a correct pin, the app should be unlocked`() {
-    whenever(passwordHashser.compare(loggedInUser.pinDigest, "0000")).thenReturn(Single.just(SAME))
+    whenever(passwordHasher.compare(loggedInUser.pinDigest, "0000")).thenReturn(Single.just(SAME))
 
     uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
     uiEvents.onNext(AppLockScreenSubmitClicked())
@@ -56,7 +56,7 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when app is unlocked then the last-unlock-timestamp should be updated`() {
-    whenever(passwordHashser.compare(any(), any())).thenReturn(Single.just(SAME))
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(SAME))
 
     uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
     uiEvents.onNext(AppLockScreenSubmitClicked())
@@ -66,7 +66,7 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `when an incorrect pin is entered, an error should be shown`() {
-    whenever(passwordHashser.compare(loggedInUser.pinDigest, "0000")).thenReturn(Single.just(DIFFERENT))
+    whenever(passwordHasher.compare(loggedInUser.pinDigest, "0000")).thenReturn(Single.just(DIFFERENT))
 
     uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
     uiEvents.onNext(AppLockScreenSubmitClicked())
@@ -87,5 +87,19 @@ class AppLockScreenControllerTest {
   fun `any existing errors should be reset when the user starts typing again`() {
     uiEvents.onNext(AppLockScreenPinTextChanged("0"))
     verify(screen).setIncorrectPinErrorVisible(false)
+  }
+
+  @Test
+  fun `when logout is clicked, the ui action should be triggered`() {
+    // Temporary test that will be changed later after the logout feature is implemented
+    uiEvents.onNext(LogoutClicked())
+    verify(screen).logoutDone()
+  }
+
+  @Test
+  fun `when forgot pin is clicked, the ui action should be triggered`() {
+    // Temporary test that will be changed later when the forgot PIN feature is implemented
+    uiEvents.onNext(ForgotPinClicked())
+    verify(screen).showCurrentPinResetRequestStatus()
   }
 }

@@ -83,23 +83,38 @@ abstract class AppDatabase : RoomDatabase() {
 
     override fun migrate(database: SupportSQLiteDatabase) {
       // Update local searchable name in the Patient table to strip out the newly added characters
-      database.compileStatement("""update "Patient" set "searchableName"=? where "uuid"=?""")
-          .use { statement ->
-            database.query("""select "uuid","fullName" from "Patient"""")
-                .use { cursor ->
-                  val uuidIndex = cursor.getColumnIndex("uuid")
-                  val fullNameIndex = cursor.getColumnIndex("fullName")
+      database.inTransaction {
+        compileStatement("""update "Patient" set "searchableName"=? where "uuid"=?""")
+            .use { statement ->
+              query("""select "uuid","fullName" from "Patient"""")
+                  .use { cursor ->
+                    val uuidIndex = cursor.getColumnIndex("uuid")
+                    val fullNameIndex = cursor.getColumnIndex("fullName")
 
-                  generateSequence { if (cursor.moveToNext()) cursor else null }
-                      .map { it.getString(uuidIndex) to it.getString(fullNameIndex) }
-                      .map { (uuid, fullName) -> uuid to convertNameToSearchableForm(fullName) }
-                      .forEach { (uuid, searchableName) ->
-                        statement.bindString(1, searchableName)
-                        statement.bindString(2, uuid)
-                        statement.executeUpdateDelete()
-                      }
-                }
-          }
+                    generateSequence { if (cursor.moveToNext()) cursor else null }
+                        .map { it.getString(uuidIndex) to it.getString(fullNameIndex) }
+                        .map { (uuid, fullName) -> uuid to convertNameToSearchableForm(fullName) }
+                        .forEach { (uuid, searchableName) ->
+                          statement.bindString(1, searchableName)
+                          statement.bindString(2, uuid)
+                          statement.executeUpdateDelete()
+                        }
+                  }
+            }
+      }
     }
+  }
+}
+
+/**
+ * Execute the given block in a transaction. Will call [SupportSQLiteDatabase.setTransactionSuccessful] only if no errors were thrown within the block
+ **/
+private fun SupportSQLiteDatabase.inTransaction(block: SupportSQLiteDatabase.() -> Unit) {
+  try {
+    beginTransaction()
+    block.invoke(this)
+    setTransactionSuccessful()
+  } finally {
+    endTransaction()
   }
 }

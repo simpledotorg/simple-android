@@ -16,6 +16,8 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
 class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -27,7 +29,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var controller: RegistrationFullNameScreenController
 
   private val backButton by bindView<ImageButton>(R.id.registrationname_back)
-  private val nameEditText by bindView<EditText>(R.id.registrationname_name)
+  private val fullNameEditText by bindView<EditText>(R.id.registrationname_name)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -40,7 +42,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    Observable.merge(nameTextChanges(), doneClicks())
+    Observable.merge(screenCreates(), nameTextChanges(), doneClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -48,15 +50,21 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
         .subscribe { uiChange -> uiChange(this) }
   }
 
+  private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())
+
   private fun nameTextChanges() =
-      RxTextView.textChanges(nameEditText)
+      RxTextView.textChanges(fullNameEditText)
           .map(CharSequence::toString)
           .map(::RegistrationFullNameTextChanged)
 
   private fun doneClicks() =
       RxTextView
-          .editorActions(nameEditText) { it == EditorInfo.IME_ACTION_DONE }
+          .editorActions(fullNameEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationFullNameDoneClicked() }
+
+  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
+    fullNameEditText.setTextAndCursor(ongoingEntry.fullName)
+  }
 
   fun openRegistrationNameEntryScreen() {
     screenRouter.push(RegistrationPinScreen.KEY)

@@ -131,8 +131,8 @@
     <item name="android:gravity">center_horizontal</item>
     <item name="android:orientation">vertical</item>
     <item name="android:paddingBottom">@dimen/spacing_24</item>
-    <item name="android:paddingEnd">@dimen/spacing_48</item>
-    <item name="android:paddingStart">@dimen/spacing_48</item>
+    <item name="android:paddingEnd">@dimen/spacing_24</item>
+    <item name="android:paddingStart">@dimen/spacing_24</item>
     <item name="android:paddingTop">@dimen/spacing_24</item>
   </style>
 
@@ -191,6 +191,19 @@
     <item name="android:maxLines">1</item>
     <item name="android:textColor">#692209</item>
     <item name="android:textSize">34sp</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.LoginCardTitle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:gravity">center</item>
+    <item name="android:textColor">@color/black_opacity_80</item>
+    <item name="android:textSize">@dimen/textsize_20</item>
+  </style>
+
+  <style name="Clinic.LoginInputTextAppearance">
+    <item name="android:textSize">@dimen/textsize_20</item>
     <item name="android:textStyle">bold</item>
   </style>
 

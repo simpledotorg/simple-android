@@ -25,7 +25,7 @@ class RegistrationPhoneScreenController @Inject constructor(
     return Observable.merge(
         createEmptyOngoingEntryAndPreFill(replayedEvents),
         validateInputAndProceed(replayedEvents),
-        resetValidationError(replayedEvents))
+        hideValidationError(replayedEvents))
   }
 
   private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
@@ -79,7 +79,7 @@ class RegistrationPhoneScreenController @Inject constructor(
     return validations.mergeWith(proceeds)
   }
 
-  private fun resetValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationPhoneNumberTextChanged>()
         .map { { ui: Ui -> ui.hideInvalidNumberError() } }

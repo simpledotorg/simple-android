@@ -74,6 +74,27 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun createAnOngoingPatientEntry_thenSaveItToDatabase_shouldUpdateFuzzySearchTable() {
+    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
+
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Riya Puri", "08/04/1985", null, Gender.TRANSGENDER)
+
+    val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
+
+    repository.saveOngoingEntry(personalDetailsOnlyEntry)
+        .andThen(repository.ongoingEntry())
+        .map { it.copy(address = ongoingAddress) }
+        .flatMapCompletable { repository.saveOngoingEntry(it) }
+        .andThen(repository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    val savedEntries = database.fuzzyPatientSearchDao().savedEntries().blockingGet()
+    assertThat(savedEntries.size).isEqualTo(1)
+    assertThat(savedEntries.first().first).isEqualTo(1)
+    assertThat(savedEntries.first().second).isEqualTo("RiyaPuri")
+  }
+
+  @Test
   fun createAnOngoingPatientEntry_withoutPhoneNumber_thenSaveItToDatabase() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08/04/1985", null, Gender.TRANSGENDER)

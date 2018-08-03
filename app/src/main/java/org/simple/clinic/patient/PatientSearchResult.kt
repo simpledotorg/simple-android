@@ -103,6 +103,9 @@ data class PatientSearchResult(
 
   interface FuzzyPatientSearchDao {
 
+    // Used for testing
+    fun savedEntries(): Single<List<Pair<Long, String>>>
+
     fun updateFuzzySearchTableForPatients(uuids: List<UUID>): Completable
 
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
@@ -115,11 +118,25 @@ data class PatientSearchResult(
       private val patientSearchDao: PatientSearchResult.RoomDao
   ) : FuzzyPatientSearchDao {
 
+    // Used for testing
+    override fun savedEntries() = Single.fromCallable {
+      sqLiteOpenHelper.writableDatabase.query("""
+          SELECT "rowid","word" from "PatientFuzzySearch"
+        """.trimIndent())
+          .use {
+            val rowIdIndex = it.getColumnIndex("rowid")
+            val wordIndex = it.getColumnIndex("word")
+            generateSequence { it.takeIf { it.moveToNext() } }
+                .map { it.getLong(rowIdIndex) to it.getString(wordIndex) }
+                .toList()
+          }
+    }!!
+
     override fun updateFuzzySearchTableForPatients(uuids: List<UUID>) =
         Completable.fromAction {
           sqLiteOpenHelper.writableDatabase.execSQL("""
             INSERT OR REPLACE INTO "PatientFuzzySearch" ("rowid","word")
-            SELECT "rowid","searchableName" FROM "Patient" WHERE "uuid" in (${uuids.joinToString(",")})
+            SELECT "rowid","searchableName" FROM "Patient" WHERE "uuid" in (${uuids.joinToString(",", transform = { "'$it'"})})
             """.trimIndent())
         }!!
 

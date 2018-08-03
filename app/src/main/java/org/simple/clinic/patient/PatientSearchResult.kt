@@ -107,7 +107,7 @@ data class PatientSearchResult(
 
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
 
-    fun searchForPatientsWithLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
+    fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
   }
 
   class FuzzyPatientSearchDaoImpl(
@@ -144,7 +144,7 @@ data class PatientSearchResult(
     override fun searchForPatientsWithNameLike(query: String) =
         patientUuidsMatching(query).flatMap { patientSearchDao.searchByIds(it) }!!
 
-    override fun searchForPatientsWithLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String) =
+    override fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String) =
         patientUuidsMatching(query).flatMap { patientSearchDao.searchByIds(it, dobUpperBound, dobLowerBound) }!!
   }
 

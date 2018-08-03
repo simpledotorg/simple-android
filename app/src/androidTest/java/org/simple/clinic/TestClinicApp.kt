@@ -1,15 +1,13 @@
 package org.simple.clinic
 
-import android.app.Application
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.room.Room
 import com.tspoon.traceur.Traceur
 import io.reactivex.Single
-import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerTestAppComponent
+import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.di.StorageModule
 import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
@@ -54,13 +52,12 @@ class TestClinicApp : ClinicApp() {
   }
 
   override fun buildDaggerGraph(): AppComponent {
+     // We have moved the in-memory database configuration to the sqlite openhelper factory
+     // but we still have to provide a non-empty name for Room, otherwise it complains.
     return DaggerTestAppComponent.builder()
-        .appModule(object : AppModule(this) {
-          override fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
-            return Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java)
-                .openHelperFactory(RequerySQLiteOpenHelperFactory())
-                .build()
-          }
+        .appModule(AppModule(this, "ignored-db-name"))
+        .storageModule(object : StorageModule() {
+          override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
         })
         .syncModule(object : SyncModule() {
           override fun syncConfig(): Single<SyncConfig> {

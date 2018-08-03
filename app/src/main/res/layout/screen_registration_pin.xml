@@ -46,7 +46,9 @@
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/registrationpin_logo_container">
 
-    <LinearLayout style="@style/Clinic.LoginCardContentContainer">
+    <LinearLayout
+      android:id="@+id/registrationpin_card_content"
+      style="@style/Clinic.LoginCardContentContainer">
 
       <TextView
         style="@style/Clinic.LoginCardTitle"

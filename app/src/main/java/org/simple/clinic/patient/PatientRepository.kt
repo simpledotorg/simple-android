@@ -46,12 +46,18 @@ class PatientRepository @Inject constructor(
 
     val actualQuery = nameToSearchableForm(query!!)
 
-    return database.patientSearchDao()
-        .search(actualQuery)
-        .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithNameLike(actualQuery).toFlowable()) { searchResults, fuzzySearchResults ->
-          (fuzzySearchResults + searchResults).distinctBy { it.uuid }
-        }
-        .toObservable()
+    return if (actualQuery.all { it.isDigit() }) {
+      database.patientSearchDao()
+          .search(actualQuery)
+          .toObservable()
+    } else {
+      database.patientSearchDao()
+          .search(actualQuery)
+          .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithNameLike(actualQuery).toFlowable()) { searchResults, fuzzySearchResults ->
+            (fuzzySearchResults + searchResults).distinctBy { it.uuid }
+          }
+          .toObservable()
+    }
   }
 
   fun searchPatientsAndPhoneNumbers(query: String?, assumedAge: Int): Observable<List<PatientSearchResult>> {
@@ -69,12 +75,18 @@ class PatientRepository @Inject constructor(
 
     val actualQuery = nameToSearchableForm(query!!)
 
-    return database.patientSearchDao()
-        .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
-        .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound).toFlowable()) { searchResults, fuzzySearchResults ->
-          (fuzzySearchResults + searchResults).distinctBy { it.uuid }
-        }
-        .toObservable()
+    return if (actualQuery.all { it.isDigit() }) {
+      database.patientSearchDao()
+          .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+          .toObservable()
+    } else {
+      database.patientSearchDao()
+          .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+          .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithNameLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound).toFlowable()) { searchResults, fuzzySearchResults ->
+            (fuzzySearchResults + searchResults).distinctBy { it.uuid }
+          }
+          .toObservable()
+    }
   }
 
   fun patientCount(): Single<Int> {
@@ -287,4 +299,3 @@ class PatientRepository @Inject constructor(
         }
   }
 }
-

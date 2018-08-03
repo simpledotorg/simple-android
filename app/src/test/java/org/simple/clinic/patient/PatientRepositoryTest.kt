@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Flowable
+import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
@@ -17,6 +18,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -29,6 +31,7 @@ class PatientRepositoryTest {
   private val mockPatientDao = mock<Patient.RoomDao>()
   private val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
   private val mockPatientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
+  private val mockFuzzyPatientSearchDao = mock<PatientSearchResult.FuzzyPatientSearchDao>()
   private val dobValidator = mock<DateOfBirthFormatValidator>()
 
   @Before
@@ -90,8 +93,10 @@ class PatientRepositoryTest {
       query: String,
       expectedSearchQuery: String
   ) {
+    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
     whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
     whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
 
     repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
@@ -102,7 +107,9 @@ class PatientRepositoryTest {
   @Test
   fun `when searching for patients with age bound, strip the search query of any whitespace or punctuation`() {
     whenever(mockPatientSearchResultDao.search(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
     whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
 
     repository.searchPatientsAndPhoneNumbers("Name   Surname", 40).blockingFirst()
@@ -121,12 +128,96 @@ class PatientRepositoryTest {
       expectedSearchQuery: String
   ) {
     whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
 
     repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
 
     verify(mockPatientSearchResultDao).search(eq(expectedSearchQuery))
+  }
+
+  @Test
+  fun `when searching for query with phone number, do not query the fuzzy search dao`() {
+    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
+    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
+    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+
+    repository.searchPatientsAndPhoneNumbers("123").blockingFirst()
+
+    verify(mockFuzzyPatientSearchDao, never()).searchForPatientsWithNameLike(any())
+    verify(mockFuzzyPatientSearchDao, never()).searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())
+  }
+
+  @Test
+  fun `when the fuzzy patient search returns results, they must be at the head of the final results list`() {
+    val patientSearchResultTemplate = PatientSearchResult(
+        uuid = UUID.randomUUID(),
+        fullName = "",
+        gender = Gender.FEMALE,
+        dateOfBirth = null,
+        age = null,
+        status = PatientStatus.ACTIVE,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now(),
+        syncStatus = SyncStatus.DONE,
+        address = PatientAddress(UUID.randomUUID(), null, "", "", null, createdAt = Instant.now(), updatedAt = Instant.now()),
+        phoneUuid = null,
+        phoneNumber = null,
+        phoneType = null,
+        phoneActive = null,
+        phoneCreatedAt = null,
+        phoneUpdatedAt = null
+    )
+
+    val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
+    val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()))
+    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(actualResults))
+    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+
+    repository.searchPatientsAndPhoneNumbers("test")
+        .firstOrError()
+        .test()
+        .assertValue(fuzzyResults + actualResults)
+  }
+
+  @Test
+  fun `when the fuzzy patient search returns results, they must not contain any duplicates`() {
+    val patientSearchResultTemplate = PatientSearchResult(
+        uuid = UUID.randomUUID(),
+        fullName = "",
+        gender = Gender.FEMALE,
+        dateOfBirth = null,
+        age = null,
+        status = PatientStatus.ACTIVE,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now(),
+        syncStatus = SyncStatus.DONE,
+        address = PatientAddress(UUID.randomUUID(), null, "", "", null, createdAt = Instant.now(), updatedAt = Instant.now()),
+        phoneUuid = null,
+        phoneNumber = null,
+        phoneType = null,
+        phoneActive = null,
+        phoneCreatedAt = null,
+        phoneUpdatedAt = null
+    )
+
+    val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
+    val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), actualResults[0])
+
+    val expected = listOf(fuzzyResults[0], fuzzyResults[1], actualResults[1])
+    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(actualResults))
+    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
+    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+
+    repository.searchPatientsAndPhoneNumbers("test")
+        .firstOrError()
+        .test()
+        .assertValue(expected)
   }
 
   @Test

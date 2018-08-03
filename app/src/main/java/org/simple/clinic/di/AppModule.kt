@@ -1,8 +1,10 @@
 package org.simple.clinic.di
 
 import android.app.Application
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.arch.persistence.room.Room
+import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import android.os.Vibrator
 import androidx.work.WorkManager
@@ -28,9 +30,18 @@ class AppModule(private val appContext: Application, private val databaseName: S
   fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
         .openHelperFactory(factory)
+        .addCallback(object : RoomDatabase.Callback() {
+
+          // We need to create it here on a fresh install because we can't define an Entity for a virtual
+          // table and Room will never create it
+          override fun onCreate(db: SupportSQLiteDatabase) {
+            AppDatabase.createPatientFuzzySearchTable(db)
+          }
+        })
         .addMigrations(
             AppDatabase.Migration_3_4(),
-            AppDatabase.Migration_4_5()
+            AppDatabase.Migration_4_5(),
+            AppDatabase.Migration_5_6()
         )
         .build()
   }

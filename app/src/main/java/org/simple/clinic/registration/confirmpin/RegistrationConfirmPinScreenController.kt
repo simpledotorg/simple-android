@@ -22,10 +22,11 @@ class RegistrationConfirmPinScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.replay().refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         preFillExistingDetails(replayedEvents),
         showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
+        resetPins(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
@@ -77,4 +78,15 @@ class RegistrationConfirmPinScreenController @Inject constructor(
       userSession
           .ongoingRegistrationEntry()
           .map { ongoingEntry -> ongoingEntry.pin == confirmPin }
+
+  private fun resetPins(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationResetPinClicked>()
+        .flatMap {
+          userSession.ongoingRegistrationEntry()
+              .map { it.copy(pin = null, pinConfirmation = null) }
+              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
+              .andThen(Observable.just({ ui: Ui -> ui.goBackToPinScreen() }))
+        }
+  }
 }

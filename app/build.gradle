@@ -16,6 +16,12 @@ sentry {
   autoUpload false
 }
 
+kapt {
+  arguments {
+    arg("room.schemaLocation", "$projectDir/schemas".toString())
+  }
+}
+
 android {
   compileSdkVersion versions.compileSdk
 
@@ -103,6 +109,10 @@ android {
   androidExtensions {
     experimental = true
   }
+
+  sourceSets {
+    androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+  }
 }
 
 dependencies {
@@ -120,6 +130,7 @@ dependencies {
   androidTestImplementation "com.android.support.test:rules:$versions.supportTest"
   androidTestImplementation "com.google.truth:truth:$versions.truth"
   androidTestImplementation "com.github.blocoio:faker:$versions.faker"
+  androidTestImplementation "android.arch.persistence.room:testing:$versions.room"
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
   debugImplementation "com.facebook.stetho:stetho:$versions.stetho"

@@ -1,6 +1,9 @@
 package org.simple.clinic.registration.pin
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -54,5 +57,39 @@ class RegistrationPinScreenControllerTest {
     uiEvents.onNext(RegistrationPinScreenCreated())
 
     verify(screen).preFillUserDetails(ongoingEntry)
+  }
+
+  @Test
+  fun `proceed button clicks should only be accepted if the input pin is of 4 digits`() {
+    val validPin = "1234"
+    val invalidPin = "1"
+
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = validPin))).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
+    uiEvents.onNext(RegistrationPinDoneClicked())
+
+    uiEvents.onNext(RegistrationPinTextChanged(validPin))
+    uiEvents.onNext(RegistrationPinDoneClicked())
+
+    verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
+    verify(screen, times(1)).openRegistrationConfirmPinScreen()
+  }
+
+  @Test
+  fun `when proceed is clicked with a pin of length less than 4 digits then an error should be shown`() {
+    uiEvents.onNext(RegistrationPinTextChanged("123"))
+    uiEvents.onNext(RegistrationPinDoneClicked())
+
+    verify(screen).showIncompletePinError()
+    verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen, never()).openRegistrationConfirmPinScreen()
+  }
+
+  @Test
+  fun `when input pin is changed then any visible errors should be removed`() {
+    uiEvents.onNext(RegistrationPinTextChanged(""))
+    verify(screen).hideIncompletePinError()
   }
 }

@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.toObservable
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
@@ -43,8 +44,13 @@ class PatientRepository @Inject constructor(
           .toObservable()
     }
 
+    val actualQuery = nameToSearchableForm(query!!)
+
     return database.patientSearchDao()
-        .search(nameToSearchableForm(query!!))
+        .search(actualQuery)
+        .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithNameLike(actualQuery).toFlowable()) { searchResults, fuzzySearchResults ->
+          (fuzzySearchResults + searchResults).distinctBy { it.uuid }
+        }
         .toObservable()
   }
 
@@ -61,8 +67,13 @@ class PatientRepository @Inject constructor(
           .toObservable()
     }
 
+    val actualQuery = nameToSearchableForm(query!!)
+
     return database.patientSearchDao()
-        .search(nameToSearchableForm(query!!), dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound).toFlowable()) { searchResults, fuzzySearchResults ->
+          (fuzzySearchResults + searchResults).distinctBy { it.uuid }
+        }
         .toObservable()
   }
 

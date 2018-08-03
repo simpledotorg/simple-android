@@ -72,6 +72,12 @@ data class PatientSearchResult(
     @Query("""$mainQuery WHERE P.uuid IN (:uuids)""")
     fun searchByIds(uuids: List<UUID>): Single<List<PatientSearchResult>>
 
+    @Query("""$mainQuery
+      WHERE (P.uuid IN (:uuids))
+      AND ((P.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound) OR (P.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
+      """)
+    fun searchByIds(uuids: List<UUID>, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
+
     @Query("$mainQuery WHERE P.searchableName LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%'")
     fun search(query: String): Flowable<List<PatientSearchResult>>
 
@@ -100,6 +106,8 @@ data class PatientSearchResult(
     fun updateFuzzySearchTableForPatients(uuids: List<UUID>): Completable
 
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
+
+    fun searchForPatientsWithLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
   }
 
   class FuzzyPatientSearchDaoImpl(
@@ -115,12 +123,12 @@ data class PatientSearchResult(
             """.trimIndent())
         }!!
 
-    override fun searchForPatientsWithNameLike(query: String) =
+    private fun patientUuidsMatching(query: String) =
         Single.fromCallable {
           val searchQuery = SimpleSQLiteQuery("""
             SELECT "P"."uuid" "uuid"
             FROM "Patient" "P" INNER JOIN "PatientFuzzySearch" "PFS"
-              ON "P"."rowid"="PFS"."rowid" WHERE "PFS"."word" MATCH '$query*' AND "score" < 1000 AND "top"=5
+              ON "P"."rowid"="PFS"."rowid" WHERE "PFS"."word" MATCH '$query*' AND "score" < 500 AND "top"=5 ORDER BY "score" ASC
             """.trimIndent())
 
           sqLiteOpenHelper.readableDatabase.query(searchQuery)
@@ -131,8 +139,13 @@ data class PatientSearchResult(
                     .map { UUID.fromString(it.getString(uuidColumnIndex)) }
                     .toList()
               }
+        }
 
-        }.flatMap { patientSearchDao.searchByIds(it) }!!
+    override fun searchForPatientsWithNameLike(query: String) =
+        patientUuidsMatching(query).flatMap { patientSearchDao.searchByIds(it) }!!
+
+    override fun searchForPatientsWithLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String) =
+        patientUuidsMatching(query).flatMap { patientSearchDao.searchByIds(it, dobUpperBound, dobLowerBound) }!!
   }
 
   fun toPayload(): PatientPayload {

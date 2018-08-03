@@ -1,11 +1,15 @@
 package org.simple.clinic.registration.name
 
+import android.animation.LayoutTransition
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -29,7 +33,9 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var controller: RegistrationFullNameScreenController
 
   private val backButton by bindView<ImageButton>(R.id.registrationname_back)
+  private val cardViewContentLayout by bindView<ViewGroup>(R.id.registrationname_card_content)
   private val fullNameEditText by bindView<EditText>(R.id.registrationname_name)
+  private val validationErrorTextView by bindView<TextView>(R.id.registrationname_error)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -48,6 +54,11 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+
+    cardViewContentLayout.layoutTransition.setDuration(200)
+    cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGE_APPEARING, 0)
+    cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGE_DISAPPEARING, 0)
+    cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGING, 0)
   }
 
   private fun screenCreates() = Observable.just(RegistrationFullNameScreenCreated())
@@ -55,6 +66,7 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   private fun nameTextChanges() =
       RxTextView.textChanges(fullNameEditText)
           .map(CharSequence::toString)
+          .map { it.trim() }
           .map(::RegistrationFullNameTextChanged)
 
   private fun doneClicks() =
@@ -66,7 +78,16 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
     fullNameEditText.setTextAndCursor(ongoingEntry.fullName)
   }
 
-  fun openRegistrationNameEntryScreen() {
+  fun showEmptyNameValidationError() {
+    validationErrorTextView.visibility = View.VISIBLE
+    validationErrorTextView.text = resources.getString(R.string.registrationname_error_empty_name)
+  }
+
+  fun hideValidationError() {
+    validationErrorTextView.visibility = View.GONE
+  }
+
+  fun openRegistrationPinEntryScreen() {
     screenRouter.push(RegistrationPinScreen.KEY)
   }
 

@@ -21,6 +21,8 @@ class RegistrationFullNameScreenController @Inject constructor(
 
     return Observable.merge(
         preFillExistingDetails(replayedEvents),
+        showValidationError(replayedEvents),
+        hideValidationError(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
@@ -33,17 +35,34 @@ class RegistrationFullNameScreenController @Inject constructor(
         }
   }
 
+  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    val fullNameTextChanges = events.ofType<RegistrationFullNameTextChanged>().map { it.fullName }
+
+    return events
+        .ofType<RegistrationFullNameDoneClicked>()
+        .withLatestFrom(fullNameTextChanges)
+        .filter { (_, name) -> name.isBlank() }
+        .map { { ui: Ui -> ui.showEmptyNameValidationError() } }
+  }
+
+  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationFullNameTextChanged>()
+        .map { { ui: Ui -> ui.hideValidationError() } }
+  }
+
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val fullNameTextChanges = events.ofType<RegistrationFullNameTextChanged>()
+    val fullNameTextChanges = events.ofType<RegistrationFullNameTextChanged>().map { it.fullName }
     val doneClicks = events.ofType<RegistrationFullNameDoneClicked>()
 
     return doneClicks
-        .withLatestFrom(fullNameTextChanges.map { it.fullName })
-        .flatMap { (_, fullName) ->
+        .withLatestFrom(fullNameTextChanges)
+        .filter { (_, name) -> name.isNotBlank() }
+        .flatMap { (_, name) ->
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(fullName = fullName) }
+              .map { it.copy(fullName = name) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
+              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationPinEntryScreen() }))
         }
   }
 }

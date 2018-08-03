@@ -1,6 +1,9 @@
 package org.simple.clinic.registration.name
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -30,7 +33,7 @@ class RegistrationFullNameScreenControllerTest {
   }
 
   @Test
-  fun `when next button is clicked then ongoing entry should be updated with the input full name and the next screen should be opened`() {
+  fun `when next is clicked with a valid name then the ongoing entry should be updated with the name and the next screen should be opened`() {
     val input = "Ashok Kumar"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
@@ -40,7 +43,7 @@ class RegistrationFullNameScreenControllerTest {
     uiEvents.onNext(RegistrationFullNameDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = input))
-    verify(screen).openRegistrationNameEntryScreen()
+    verify(screen).openRegistrationPinEntryScreen()
   }
 
   @Test
@@ -53,5 +56,39 @@ class RegistrationFullNameScreenControllerTest {
     uiEvents.onNext(RegistrationFullNameScreenCreated())
 
     verify(screen).preFillUserDetails(ongoingEntry)
+  }
+
+  @Test
+  fun `proceed button clicks should only be accepted if the input name is valid`() {
+    val validName = "Ashok"
+    val invalidName = "  "
+
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(fullName = validName))).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationFullNameTextChanged(invalidName))
+    uiEvents.onNext(RegistrationFullNameDoneClicked())
+
+    uiEvents.onNext(RegistrationFullNameTextChanged(validName))
+    uiEvents.onNext(RegistrationFullNameDoneClicked())
+
+    verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
+    verify(screen, times(1)).openRegistrationPinEntryScreen()
+  }
+
+  @Test
+  fun `when proceed is clicked with an empty name then an error should be shown`() {
+    uiEvents.onNext(RegistrationFullNameTextChanged(""))
+    uiEvents.onNext(RegistrationFullNameDoneClicked())
+
+    verify(screen).showEmptyNameValidationError()
+    verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen, never()).openRegistrationPinEntryScreen()
+  }
+
+  @Test
+  fun `when input text is changed then any visible errors should be removed`() {
+    uiEvents.onNext(RegistrationFullNameTextChanged(""))
+    verify(screen).hideValidationError()
   }
 }

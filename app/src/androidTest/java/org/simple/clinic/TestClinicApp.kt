@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import android.app.Application
+import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.arch.persistence.room.Room
 import com.tspoon.traceur.Traceur
 import io.reactivex.Single
@@ -55,7 +56,7 @@ class TestClinicApp : ClinicApp() {
   override fun buildDaggerGraph(): AppComponent {
     return DaggerTestAppComponent.builder()
         .appModule(object : AppModule(this) {
-          override fun appDatabase(appContext: Application): AppDatabase {
+          override fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
             return Room.inMemoryDatabaseBuilder(appContext, AppDatabase::class.java)
                 .openHelperFactory(RequerySQLiteOpenHelperFactory())
                 .build()

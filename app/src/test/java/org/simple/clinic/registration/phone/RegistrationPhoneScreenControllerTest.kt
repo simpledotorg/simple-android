@@ -118,7 +118,7 @@ class RegistrationPhoneScreenControllerTest {
   }
 
   @Test
-  fun `when input text is changed then any visible errors should be reset`() {
+  fun `when input text is changed then any visible errors should be removed`() {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
     verify(screen).hideInvalidNumberError()
   }

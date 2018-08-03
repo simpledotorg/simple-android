@@ -31,7 +31,10 @@
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/registrationname_logo_container">
 
-    <LinearLayout style="@style/Clinic.LoginCardContentContainer">
+    <LinearLayout
+      android:id="@+id/registrationname_card_content"
+      style="@style/Clinic.LoginCardContentContainer"
+      android:animateLayoutChanges="true">
 
       <TextView
         style="@style/Clinic.LoginCardTitle"
@@ -50,6 +53,13 @@
 
         <requestFocus />
       </EditText>
+
+      <TextView
+        android:id="@+id/registrationname_error"
+        style="@style/Clinic.RegistrationInputError"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:visibility="visible"
+        tools:text="A really long error message to test wrapping on this TextView." />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 </org.simple.clinic.registration.name.RegistrationFullNameScreen>

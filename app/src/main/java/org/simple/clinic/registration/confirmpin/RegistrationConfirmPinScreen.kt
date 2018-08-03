@@ -2,9 +2,11 @@ package org.simple.clinic.registration.confirmpin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
@@ -34,6 +36,8 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   private val fullNameTextView by bindView<TextView>(R.id.registrationconfirmpin_user_fullname)
   private val phoneNumberTextView by bindView<TextView>(R.id.registrationconfirmpin_user_phone)
   private val confirmPinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
+  private val pinHintTextView by bindView<TextView>(R.id.registrationconfirmpin_pin_hint)
+  private val errorStateViewGroup by bindView<LinearLayout>(R.id.registrationconfirmpin_error)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -65,6 +69,16 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
       RxTextView
           .editorActions(confirmPinEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationConfirmPinDoneClicked() }
+
+  fun showPinMisMatchError() {
+    errorStateViewGroup.visibility = View.VISIBLE
+    pinHintTextView.visibility = View.GONE
+  }
+
+  fun hidePinMisMatchError() {
+    errorStateViewGroup.visibility = View.GONE
+    pinHintTextView.visibility = View.VISIBLE
+  }
 
   fun openFacilitySelectionScreen() {
     // TODO: Open facility selection instead.

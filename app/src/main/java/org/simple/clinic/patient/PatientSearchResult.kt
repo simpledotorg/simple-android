@@ -1,10 +1,14 @@
 package org.simple.clinic.patient
 
+import android.arch.persistence.db.SimpleSQLiteQuery
+import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
+import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Single
 import org.intellij.lang.annotations.Language
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
@@ -65,6 +69,9 @@ data class PatientSearchResult(
     """
     }
 
+    @Query("""$mainQuery WHERE P.uuid IN (:uuids)""")
+    fun searchByIds(uuids: List<UUID>): Single<List<PatientSearchResult>>
+
     @Query("$mainQuery WHERE P.searchableName LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%'")
     fun search(query: String): Flowable<List<PatientSearchResult>>
 
@@ -86,6 +93,46 @@ data class PatientSearchResult(
     @Transaction
     @Query("$mainQuery WHERE P.syncStatus == :status")
     fun withSyncStatus(status: SyncStatus): Flowable<List<PatientSearchResult>>
+  }
+
+  interface FuzzyPatientSearchDao {
+
+    fun updateFuzzySearchTableForPatients(uuids: List<UUID>): Completable
+
+    fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
+  }
+
+  class LocalFuzzyPatientSearchDao(
+      private val sqLiteOpenHelper: SupportSQLiteOpenHelper,
+      private val patientSearchDao: PatientSearchResult.RoomDao
+  ) : FuzzyPatientSearchDao {
+
+    override fun updateFuzzySearchTableForPatients(uuids: List<UUID>) =
+        Completable.fromAction {
+          sqLiteOpenHelper.writableDatabase.execSQL("""
+            INSERT OR REPLACE INTO "PatientFuzzySearch" ("rowid","word")
+            SELECT "rowid","searchableName" FROM "Patient" WHERE "uuid" in (${uuids.joinToString(",")})
+            """.trimIndent())
+        }!!
+
+    override fun searchForPatientsWithNameLike(query: String) =
+        Single.fromCallable {
+          val searchQuery = SimpleSQLiteQuery("""
+            SELECT "P"."uuid" "uuid"
+            FROM "Patient" "P" INNER JOIN "PatientFuzzySearch" "PFS"
+              ON "P"."rowid"="PFS"."rowid" WHERE "PFS"."word" MATCH '$query*' AND "score" < 1000 AND "top"=5
+            """.trimIndent())
+
+          sqLiteOpenHelper.readableDatabase.query(searchQuery)
+              .use { cursor ->
+                val uuidColumnIndex = cursor.getColumnIndex("uuid")
+
+                generateSequence { cursor.takeIf { it.moveToNext() } }
+                    .map { UUID.fromString(it.getString(uuidColumnIndex)) }
+                    .toList()
+              }
+
+        }.flatMap { patientSearchDao.searchByIds(it) }!!
   }
 
   fun toPayload(): PatientPayload {

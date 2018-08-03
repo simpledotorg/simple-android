@@ -21,6 +21,8 @@ class RegistrationPinScreenController @Inject constructor(
 
     return Observable.merge(
         preFillExistingDetails(replayedEvents),
+        showValidationError(replayedEvents),
+        hideValidationError(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
@@ -33,12 +35,31 @@ class RegistrationPinScreenController @Inject constructor(
         }
   }
 
+  private fun isPinValid(pin: String) = pin.length == 4
+
+  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    val pinTextChanges = events.ofType<RegistrationPinTextChanged>().map { it.pin }
+
+    return events
+        .ofType<RegistrationPinDoneClicked>()
+        .withLatestFrom(pinTextChanges)
+        .filter { (_, pin) -> isPinValid(pin).not() }
+        .map { { ui: Ui -> ui.showIncompletePinError() } }
+  }
+
+  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationPinTextChanged>()
+        .map { { ui: Ui -> ui.hideIncompletePinError() } }
+  }
+
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     val pinTextChanges = events.ofType<RegistrationPinTextChanged>()
     val doneClicks = events.ofType<RegistrationPinDoneClicked>()
 
     return doneClicks
         .withLatestFrom(pinTextChanges.map { it.pin })
+        .filter { (_, pin) -> isPinValid(pin) }
         .flatMap { (_, pin) ->
           if (pin.length > 4) {
             throw AssertionError("Shouldn't happen")

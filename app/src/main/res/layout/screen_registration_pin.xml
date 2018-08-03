@@ -69,8 +69,17 @@
       </EditText>
 
       <TextView
+        android:id="@+id/registrationpin_pin_hint"
         style="@style/Clinic.RegistrationPinHint"
+        android:layout_gravity="center_horizontal"
         android:text="@string/registrationpin_pin_hint" />
+
+      <TextView
+        android:id="@+id/registrationpin_error"
+        style="@style/Clinic.RegistrationInputError"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:text="A really long error message to test wrapping on this TextView." />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 </org.simple.clinic.registration.pin.RegistrationPinScreen>

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -18,6 +19,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -38,6 +40,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   private val confirmPinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
   private val pinHintTextView by bindView<TextView>(R.id.registrationconfirmpin_pin_hint)
   private val errorStateViewGroup by bindView<LinearLayout>(R.id.registrationconfirmpin_error)
+  private val resetPinButton by bindView<Button>(R.id.registrationconfirmpin_reset_pin)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -50,7 +53,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), confirmPinTextChanges(), doneClicks())
+    Observable.merge(screenCreates(), confirmPinTextChanges(), resetPinClicks(), doneClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -64,6 +67,10 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
       RxTextView.textChanges(confirmPinEditText)
           .map(CharSequence::toString)
           .map(::RegistrationConfirmPinTextChanged)
+
+  private fun resetPinClicks() =
+      RxView.clicks(resetPinButton)
+          .map { RegistrationResetPinClicked() }
 
   private fun doneClicks() =
       RxTextView
@@ -89,6 +96,10 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
     fullNameTextView.text = ongoingEntry.fullName
     phoneNumberTextView.text = ongoingEntry.phoneNumber
     confirmPinEditText.setTextAndCursor(ongoingEntry.pinConfirmation)
+  }
+
+  fun goBackToPinScreen() {
+    screenRouter.push(RegistrationPinScreen.KEY)
   }
 
   companion object {

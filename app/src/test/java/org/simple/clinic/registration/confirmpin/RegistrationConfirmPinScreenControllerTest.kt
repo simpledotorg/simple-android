@@ -18,6 +18,8 @@ import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
+import java.util.UUID
 
 class RegistrationConfirmPinScreenControllerTest {
 
@@ -110,5 +112,25 @@ class RegistrationConfirmPinScreenControllerTest {
   fun `when input pin is changed then any visible errors should be removed`() {
     uiEvents.onNext(RegistrationConfirmPinTextChanged(""))
     verify(screen).hidePinMisMatchError()
+  }
+
+  @Test
+  fun `when reset PIN is clicked then both PINs should be reset in ongoing entry and the user should be taken to the PIN entry screen`() {
+    val ongoingEntry = OngoingRegistrationEntry(
+        uuid = UUID.randomUUID(),
+        phoneNumber = "1234567890",
+        fullName = "Ashok",
+        pin = "1234",
+        pinConfirmation = "5678",
+        createdAt = Instant.now())
+    val ongoingEntryWithoutPins = ongoingEntry.copy(pin = null, pinConfirmation = null)
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingRegistrationEntry(ongoingEntryWithoutPins)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationResetPinClicked())
+
+    val inOrder = inOrder(userSession, screen)
+    inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntryWithoutPins)
+    inOrder.verify(screen).goBackToPinScreen()
   }
 }

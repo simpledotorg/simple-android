@@ -2,6 +2,7 @@ package org.simple.clinic.registration.pin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
@@ -33,6 +34,8 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   private val fullNameTextView by bindView<TextView>(R.id.registrationpin_user_fullname)
   private val phoneNumberTextView by bindView<TextView>(R.id.registrationpin_user_phone)
   private val pinEditText by bindView<EditText>(R.id.registrationpin_pin)
+  private val pinHintTextView by bindView<TextView>(R.id.registrationpin_pin_hint)
+  private val errorTextView by bindView<TextView>(R.id.registrationpin_error)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -64,6 +67,17 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
       RxTextView
           .editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationPinDoneClicked() }
+
+  fun showIncompletePinError() {
+    pinHintTextView.visibility = View.GONE
+    errorTextView.visibility = View.VISIBLE
+    errorTextView.text = resources.getString(R.string.registrationpin_error_incomplete_pin)
+  }
+
+  fun hideIncompletePinError() {
+    pinHintTextView.visibility = View.VISIBLE
+    errorTextView.visibility = View.GONE
+  }
 
   fun openRegistrationConfirmPinScreen() {
     screenRouter.push(RegistrationConfirmPinScreen.KEY)

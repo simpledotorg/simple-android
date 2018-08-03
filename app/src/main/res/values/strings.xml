@@ -123,6 +123,7 @@
   <string name="registrationpin_cd_go_back">Go back to name entry</string>
   <string name="registrationpin_pin_label">Create your security PIN</string>
   <string name="registrationpin_pin_hint">Remember your PIN, you’ll need it later</string>
+  <string name="registrationpin_error_incomplete_pin">Enter a 4-digit PIN</string>
 
   <string name="registrationconfirmpin_cd_go_back">Go back to PIN</string>
   <string name="registrationconfirmpin_confirm_pin_label">Enter security pin again</string>

@@ -15,7 +15,7 @@ import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.sync.SyncModule
 
 @Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class, LoginModule::class, RegistrationModule::class])
-open class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
+class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides
   fun appContext(): Application {
@@ -25,7 +25,7 @@ open class AppModule(private val appContext: Application, private val databaseNa
   // TODO: Move to StorageModule.
   @Provides
   @AppScope
-  open fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
+  fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
         .openHelperFactory(factory)
         .addMigrations(

@@ -32,7 +32,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Facility::class,
       LoggedInUser::class],
     version = 5,
-    exportSchema = false)
+    exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
     PatientPhoneNumberType.RoomTypeConverter::class,

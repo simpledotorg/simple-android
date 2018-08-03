@@ -7,7 +7,6 @@ import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
-import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 
 @Module
 open class StorageModule {
@@ -24,5 +23,5 @@ open class StorageModule {
   }
 
   @Provides
-  fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = RequerySQLiteOpenHelperFactory()
+  open fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory()
 }

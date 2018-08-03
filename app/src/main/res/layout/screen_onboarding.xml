@@ -62,7 +62,7 @@
 
   <Button
     android:id="@+id/onboarding_get_started"
-    style="@style/Clinic.Button.Borderless"
+    style="@style/Clinic.Button.Flat"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"

@@ -24,6 +24,8 @@ class RegistrationConfirmPinScreenController @Inject constructor(
 
     return Observable.merge(
         preFillExistingDetails(replayedEvents),
+        showValidationError(replayedEvents),
+        hideValidationError(replayedEvents),
         updateOngoingEntryAndProceed(replayedEvents))
   }
 
@@ -36,23 +38,43 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         }
   }
 
+  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    val pinTextChanges = events.ofType<RegistrationConfirmPinTextChanged>().map { it.confirmPin }
+
+    return events
+        .ofType<RegistrationConfirmPinDoneClicked>()
+        .withLatestFrom(pinTextChanges)
+        .flatMapSingle { (_, confirmPin) -> matchesWithPin(confirmPin) }
+        .filter { pinMatches -> pinMatches.not() }
+        .map { { ui: Ui -> ui.showPinMisMatchError() } }
+  }
+
+  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationConfirmPinTextChanged>()
+        .map { { ui: Ui -> ui.hidePinMisMatchError() } }
+  }
+
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     val pinTextChanges = events.ofType<RegistrationConfirmPinTextChanged>()
     val doneClicks = events.ofType<RegistrationConfirmPinDoneClicked>()
 
     return doneClicks
         .withLatestFrom(pinTextChanges.map { it.confirmPin })
-        .flatMap { (_, pinConfirmation) ->
-          if (pinConfirmation.length > 4) {
-            throw AssertionError("Shouldn't happen")
-          }
-
+        .flatMapSingle { (_, confirmPin) -> matchesWithPin(confirmPin).map { it to confirmPin } }
+        .filter { (pinMatches, _) -> pinMatches }
+        .flatMap { (_, confirmPin) ->
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(pinConfirmation = pinConfirmation, createdAt = Instant.now()) }
+              .map { it.copy(pinConfirmation = confirmPin, createdAt = Instant.now()) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(userSession.loginFromOngoingRegistrationEntry())
               .andThen(registrationScheduler.schedule())
               .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
         }
   }
+
+  private fun matchesWithPin(confirmPin: String) =
+      userSession
+          .ongoingRegistrationEntry()
+          .map { ongoingEntry -> ongoingEntry.pin == confirmPin }
 }

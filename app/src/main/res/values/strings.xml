@@ -127,6 +127,9 @@
 
   <string name="registrationconfirmpin_cd_go_back">Go back to PIN</string>
   <string name="registrationconfirmpin_confirm_pin_label">Enter security pin again</string>
+  <string name="registrationconfirmpin_hint">@string/registrationpin_pin_hint</string>
+  <string name="registrationconfirmpin_error_pin_mismatch">PIN doesn’t match the original PIN</string>
+  <string name="registrationconfirmpin_reset_pin">Reset PIN</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>

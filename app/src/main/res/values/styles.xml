@@ -231,7 +231,7 @@
     <item name="android:textColor">@color/white</item>
   </style>
 
-  <style name="Clinic.Button.Borderless" parent="Widget.AppCompat.Button.Borderless.Colored">
+  <style name="Clinic.Button.Flat" parent="Widget.AppCompat.Button">
     <item name="android:textColor">?android:textColorPrimaryInverse</item>
     <item name="android:background">@color/color_accent</item>
     <item name="android:foreground">?selectableItemBackgroundBorderless</item>

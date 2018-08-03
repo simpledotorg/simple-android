@@ -3,7 +3,10 @@ package org.simple.clinic.registration.confirmpin
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -38,20 +41,22 @@ class RegistrationConfirmPinScreenControllerTest {
   }
 
   @Test
-  fun `when next button is clicked then ongoing entry should be updated with the input pin and the next screen should be opened`() {
+  fun `when next is clicked with a matching PIN then ongoing entry should be updated and the next screen should be opened`() {
     val input = "1234"
 
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    val ongoingEntry = OngoingRegistrationEntry(pin = "1234")
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
-    verify(userSession).saveOngoingRegistrationEntry(check {
+    val inOrder = inOrder(userSession, screen)
+    inOrder.verify(userSession).saveOngoingRegistrationEntry(check {
       assertThat(it.pinConfirmation).isEqualTo(input)
       assertThat(it.createdAt).isNotNull()
     })
-    verify(screen).openFacilitySelectionScreen()
+    inOrder.verify(screen).openFacilitySelectionScreen()
   }
 
   @Test
@@ -66,5 +71,44 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinScreenCreated())
 
     verify(screen).preFillUserDetails(ongoingEntry)
+  }
+
+  @Test
+  fun `proceed button clicks should only be accepted if the confirmation pin matches with original pin`() {
+    val originalPin = "1234"
+    val invalidConfirmationPin = "123"
+    val validConfirmationPin = "1234"
+
+    val ongoingEntry = OngoingRegistrationEntry(pin = originalPin)
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
+
+    uiEvents.onNext(RegistrationConfirmPinTextChanged(validConfirmationPin))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
+
+    verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
+    verify(screen, times(1)).openFacilitySelectionScreen()
+  }
+
+  @Test
+  fun `when proceed is clicked with a confirmation PIN that does not match with original PIN then an error should be shown`() {
+    val ongoingEntry = OngoingRegistrationEntry(pin = "1234")
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+
+    uiEvents.onNext(RegistrationConfirmPinTextChanged("123"))
+    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
+
+    verify(screen).showPinMisMatchError()
+    verify(userSession, never()).saveOngoingRegistrationEntry(any())
+    verify(screen, never()).openFacilitySelectionScreen()
+  }
+
+  @Test
+  fun `when input pin is changed then any visible errors should be removed`() {
+    uiEvents.onNext(RegistrationConfirmPinTextChanged(""))
+    verify(screen).hidePinMisMatchError()
   }
 }

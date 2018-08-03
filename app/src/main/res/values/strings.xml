@@ -113,6 +113,7 @@
 
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">Your phone number</string>
+  <string name="registrationphone_error_invalid_number">Enter a 10-digit phone number</string>
 
   <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_cd_go_back">Go back to phone number</string> <!-- TODO: Get reviewed by Daniel -->

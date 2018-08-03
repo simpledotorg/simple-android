@@ -54,11 +54,20 @@
           android:id="@+id/registrationphone_phone"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:digits="1234567890"
           android:imeOptions="actionDone"
           android:inputType="phone"
+          android:maxLength="10"
           android:minEms="6"
           android:textAppearance="@style/Clinic.LoginInputTextAppearance" />
       </LinearLayout>
+
+      <TextView
+        android:id="@+id/registrationphone_error"
+        style="@style/Clinic.RegistrationInputError"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:visibility="gone"
+        tools:text="A really long error message to test wrapping on this TextView." />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 </org.simple.clinic.registration.phone.RegistrationPhoneScreen>

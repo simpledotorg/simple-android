@@ -102,7 +102,7 @@ data class PatientSearchResult(
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
   }
 
-  class LocalFuzzyPatientSearchDao(
+  class FuzzyPatientSearchDaoImpl(
       private val sqLiteOpenHelper: SupportSQLiteOpenHelper,
       private val patientSearchDao: PatientSearchResult.RoomDao
   ) : FuzzyPatientSearchDao {

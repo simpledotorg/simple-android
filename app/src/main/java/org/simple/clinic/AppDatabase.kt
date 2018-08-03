@@ -64,6 +64,10 @@ abstract class AppDatabase : RoomDatabase() {
     }
   }
 
+  private val patientFuzzyPatientSearchDao by lazy {
+    PatientSearchResult.FuzzyPatientSearchDaoImpl(openHelper, patientSearchDao())
+  }
+
   abstract fun patientDao(): Patient.RoomDao
 
   abstract fun addressDao(): PatientAddress.RoomDao
@@ -79,6 +83,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun facilityDao(): Facility.RoomDao
 
   abstract fun userDao(): LoggedInUser.RoomDao
+
+  fun fuzzyPatientSearchDao(): PatientSearchResult.FuzzyPatientSearchDao = patientFuzzyPatientSearchDao
 
   class Migration_3_4 : Migration(3, 4) {
 

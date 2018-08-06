@@ -59,7 +59,7 @@ class UserSession @Inject constructor(
   // TODO: rename to loginFromOngoingLoginEntry()
   fun login(): Single<LoginResult> {
     return ongoingLoginEntry()
-        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp!!)) }
+        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
           storeUserAndAccessToken(it)

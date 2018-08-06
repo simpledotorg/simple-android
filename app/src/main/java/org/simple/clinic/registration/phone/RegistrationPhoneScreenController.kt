@@ -6,6 +6,10 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.registration.FindUserResult
+import org.simple.clinic.registration.FindUserResult.Found
+import org.simple.clinic.registration.FindUserResult.NetworkError
+import org.simple.clinic.registration.FindUserResult.NotFound
+import org.simple.clinic.registration.FindUserResult.UnexpectedError
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -90,9 +94,13 @@ class RegistrationPhoneScreenController @Inject constructor(
           val showAndHideProgress = cachedUserFindResult
               .flatMap {
                 when (it) {
-                  is FindUserResult.Found, is FindUserResult.NotFound -> Observable.never()
-                  is FindUserResult.NetworkError -> Observable.just({ ui: Ui -> ui.hideProgressIndicator() }, { ui: Ui -> ui.showNetworkErrorMessage() })
-                  is FindUserResult.UnexpectedError -> Observable.just({ ui: Ui -> ui.hideProgressIndicator() }, { ui: Ui -> ui.showUnexpectedErrorMessage() })
+                  is Found, is NotFound -> Observable.never()
+                  is NetworkError -> Observable.just(
+                      { ui: Ui -> ui.hideProgressIndicator() },
+                      { ui: Ui -> ui.showNetworkErrorMessage() })
+                  is UnexpectedError -> Observable.just(
+                      { ui: Ui -> ui.hideProgressIndicator() },
+                      { ui: Ui -> ui.showUnexpectedErrorMessage() })
                 }
               }
               .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
@@ -100,7 +108,7 @@ class RegistrationPhoneScreenController @Inject constructor(
           val proceedToLogin = cachedUserFindResult
               .ofType<FindUserResult.Found>()
               .flatMap {
-                userSession.saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = it.user.phoneNumber))
+                userSession.saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = it.user.phoneNumber, otp = ""))
                     .andThen(userSession.clearOngoingRegistrationEntry())
                     .andThen(Observable.just({ ui: Ui -> ui.openLoginPinEntryScreen() }))
               }

@@ -18,7 +18,7 @@ interface RegistrationApiV1 {
       @Query("phone_number") phoneNumber: String
   ): Single<LoggedInUser>
 
-  @POST("$version/users")
+  @POST("$version/users/register")
   fun createUser(
       @Body body: RegistrationRequest
   ): Single<RegistrationResponse>

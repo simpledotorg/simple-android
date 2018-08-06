@@ -62,6 +62,11 @@ abstract class AppDatabase : RoomDatabase() {
     fun createPatientFuzzySearchTable(database: SupportSQLiteDatabase) {
       database.execSQL("""CREATE VIRTUAL TABLE "PatientFuzzySearch" USING spellfix1""")
     }
+
+    @JvmStatic
+    fun clearPatientFuzzySearchTable(database: SupportSQLiteDatabase) {
+     database.execSQL("""DELETE FROM "PatientFuzzySearch"""")
+    }
   }
 
   private val patientFuzzyPatientSearchDao by lazy {

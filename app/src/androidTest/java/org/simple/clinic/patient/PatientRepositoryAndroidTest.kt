@@ -90,7 +90,6 @@ class PatientRepositoryAndroidTest {
 
     val savedEntries = database.fuzzyPatientSearchDao().savedEntries().blockingGet()
     assertThat(savedEntries.size).isEqualTo(1)
-    assertThat(savedEntries.first().first).isEqualTo(1)
     assertThat(savedEntries.first().second).isEqualTo("RiyaPuri")
   }
 
@@ -282,17 +281,17 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 12).blockingFirst()
+    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 12, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 77).blockingFirst()
+    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 77, includeFuzzyNameSearch = false).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("34159")
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 68).blockingFirst()
+    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 68, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(3)
     assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
     assertThat(search2[0].dateOfBirth).isEqualTo(LocalDate.parse("1950-08-15"))
@@ -336,17 +335,17 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 50).blockingFirst()
+    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 50, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 28).blockingFirst()
+    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 28, includeFuzzyNameSearch = false).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Abhishek Kumar")
     assertThat(person1.age!!.value).isEqualTo(26)
     assertThat(person1.phoneNumber).isEqualTo("99159")
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 18).blockingFirst()
+    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 18, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(2)
     assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
     assertThat(search2[0].age!!.value).isEqualTo(20)
@@ -357,5 +356,6 @@ class PatientRepositoryAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
+    AppDatabase.clearPatientFuzzySearchTable(database.openHelper.writableDatabase)
   }
 }

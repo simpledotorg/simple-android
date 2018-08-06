@@ -103,8 +103,17 @@ data class PatientSearchResult(
 
   interface FuzzyPatientSearchDao {
 
+    data class FuzzySearchResult(
+        val rowId: Long,
+        val uuid: UUID,
+        val word: String
+    )
+
     // Used for testing
-    fun savedEntries(): Single<List<Pair<Long, String>>>
+    fun savedEntries(): Single<List<FuzzySearchResult>>
+
+    // Used for testing
+    fun getEntriesForIds(uuids: List<UUID>): Single<List<FuzzySearchResult>>
 
     fun updateFuzzySearchTableForPatients(uuids: List<UUID>): Completable
 
@@ -118,16 +127,34 @@ data class PatientSearchResult(
       private val patientSearchDao: PatientSearchResult.RoomDao
   ) : FuzzyPatientSearchDao {
 
-    // Used for testing
     override fun savedEntries() = Single.fromCallable {
-      sqLiteOpenHelper.writableDatabase.query("""
-          SELECT "rowid","word" from "PatientFuzzySearch"
+      sqLiteOpenHelper.readableDatabase.query("""
+          SELECT "PFS"."rowid" "rowid","PFS"."word" "word","P"."uuid" "uuid" FROM "PatientFuzzySearch" "PFS"
+          INNER JOIN "Patient" "P" ON "P"."rowid"="PFS"."rowid"
         """.trimIndent())
           .use {
             val rowIdIndex = it.getColumnIndex("rowid")
             val wordIndex = it.getColumnIndex("word")
+            val uuidIndex = it.getColumnIndex("uuid")
+
             generateSequence { it.takeIf { it.moveToNext() } }
-                .map { it.getLong(rowIdIndex) to it.getString(wordIndex) }
+                .map { FuzzyPatientSearchDao.FuzzySearchResult(it.getLong(rowIdIndex), UUID.fromString(it.getString(uuidIndex)), it.getString(wordIndex)) }
+                .toList()
+          }
+    }!!
+
+    override fun getEntriesForIds(uuids: List<UUID>) = Single.fromCallable {
+      sqLiteOpenHelper.readableDatabase.query("""
+          SELECT "PFS"."rowid" "rowid","PFS"."word" "word","P"."uuid" "uuid" FROM "PatientFuzzySearch" "PFS"
+          INNER JOIN "Patient" "P" ON "P"."rowid"="PFS"."rowid" WHERE "uuid" IN (${uuids.joinToString(",", transform = { "'$it'" })})
+        """.trimIndent())
+          .use {
+            val rowIdIndex = it.getColumnIndex("rowid")
+            val wordIndex = it.getColumnIndex("word")
+            val uuidIndex = it.getColumnIndex("uuid")
+
+            generateSequence { it.takeIf { it.moveToNext() } }
+                .map { FuzzyPatientSearchDao.FuzzySearchResult(it.getLong(rowIdIndex), UUID.fromString(it.getString(uuidIndex)), it.getString(wordIndex)) }
                 .toList()
           }
     }!!
@@ -135,8 +162,8 @@ data class PatientSearchResult(
     override fun updateFuzzySearchTableForPatients(uuids: List<UUID>) =
         Completable.fromAction {
           sqLiteOpenHelper.writableDatabase.execSQL("""
-            INSERT OR REPLACE INTO "PatientFuzzySearch" ("rowid","word")
-            SELECT "rowid","searchableName" FROM "Patient" WHERE "uuid" in (${uuids.joinToString(",", transform = { "'$it'"})})
+            INSERT OR IGNORE INTO "PatientFuzzySearch" ("rowid","word")
+            SELECT "rowid","searchableName" FROM "Patient" WHERE "uuid" in (${uuids.joinToString(",", transform = { "'$it'" })})
             """.trimIndent())
         }!!
 

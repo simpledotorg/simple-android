@@ -7,6 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.PatientFaker
 import org.simple.clinic.TestClinicApp
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
@@ -74,7 +75,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun createAnOngoingPatientEntry_thenSaveItToDatabase_shouldUpdateFuzzySearchTable() {
+  fun when_saving_an_ongoing_patient_entry_to_the_database_it_should_also_update_the_fuzzy_search_table() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
 
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Riya Puri", "08/04/1985", null, Gender.TRANSGENDER)
@@ -90,7 +91,7 @@ class PatientRepositoryAndroidTest {
 
     val savedEntries = database.fuzzyPatientSearchDao().savedEntries().blockingGet()
     assertThat(savedEntries.size).isEqualTo(1)
-    assertThat(savedEntries.first().second).isEqualTo("RiyaPuri")
+    assertThat(savedEntries.first().word).isEqualTo("RiyaPuri")
   }
 
   @Test
@@ -351,6 +352,16 @@ class PatientRepositoryAndroidTest {
     assertThat(search2[0].age!!.value).isEqualTo(20)
     assertThat(search2[1].fullName).isEqualTo("Abshot Kumar")
     assertThat(search2[1].age!!.value).isEqualTo(19)
+  }
+
+  @Test
+  fun when_merging_patient_data_locally_it_should_also_add_them_to_the_fuzzy_search_table() {
+    val patientPayloads = listOf(PatientFaker.patientPayload(fullName = "Abhaya Kumari"))
+
+    repository.mergeWithLocalData(patientPayloads).blockingAwait()
+    val searchResult = database.fuzzyPatientSearchDao().getEntriesForIds(patientPayloads.map { it.uuid }).blockingGet()
+    assertThat(searchResult.size).isEqualTo(1)
+    assertThat(searchResult[0].word).isEqualTo("AbhayaKumari")
   }
 
   @After

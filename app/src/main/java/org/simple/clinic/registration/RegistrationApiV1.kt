@@ -1,14 +1,22 @@
 package org.simple.clinic.registration
 
 import io.reactivex.Single
+import org.simple.clinic.user.LoggedInUser
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.Query
 
 interface RegistrationApiV1 {
 
   companion object {
     const val version = "v1"
   }
+
+  @GET("$version/users/find")
+  fun findUser(
+      @Query("phone_number") phoneNumber: String
+  ): Single<LoggedInUser>
 
   @POST("$version/users")
   fun createUser(

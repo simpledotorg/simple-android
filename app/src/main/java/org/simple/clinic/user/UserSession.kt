@@ -16,6 +16,7 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResult
@@ -58,7 +59,7 @@ class UserSession @Inject constructor(
   // TODO: rename to loginFromOngoingLoginEntry()
   fun login(): Single<LoginResult> {
     return ongoingLoginEntry()
-        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
+        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp!!)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
           storeUserAndAccessToken(it)
@@ -68,7 +69,7 @@ class UserSession @Inject constructor(
           facilitySync.sync()
               .toSingleDefault(it)
         }
-        .map<LoginResult> { LoginResult.Success() }
+        .map { LoginResult.Success() as LoginResult }
         .onErrorReturn { error ->
           when {
             error is IOException -> LoginResult.NetworkError()
@@ -101,7 +102,25 @@ class UserSession @Inject constructor(
                 )
               }
         }
-        .flatMapCompletable { storeUser(it) }
+        .flatMapCompletable {
+          // TODO: also clear ongoing registration entry?
+          storeUser(it)
+        }
+  }
+
+  fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
+    return registrationApi.findUser(phoneNumber)
+        .map { user -> FindUserResult.Found(user) as FindUserResult }
+        .onErrorReturn { e ->
+          when {
+            e is IOException -> FindUserResult.NetworkError()
+            e is HttpException && e.code() == 404 -> FindUserResult.NotFound()
+            else -> {
+              Timber.e(e)
+              FindUserResult.UnexpectedError()
+            }
+          }
+        }
   }
 
   fun register(): Single<RegistrationResult> {
@@ -110,9 +129,9 @@ class UserSession @Inject constructor(
         .firstOrError()
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
-        .flatMap<RegistrationResult> {
+        .flatMap {
           storeUser(it.loggedInUser)
-              .andThen(Single.just(RegistrationResult.Success()))
+              .andThen(Single.just(RegistrationResult.Success() as RegistrationResult))
         }
         .onErrorReturn { RegistrationResult.Error() }
   }
@@ -121,6 +140,10 @@ class UserSession @Inject constructor(
     return Completable.fromAction {
       this.ongoingRegistrationEntry = entry
     }
+  }
+
+  fun clearOngoingRegistrationEntry(): Completable {
+    return saveOngoingRegistrationEntry(OngoingRegistrationEntry())
   }
 
   fun ongoingRegistrationEntry(): Single<OngoingRegistrationEntry> {

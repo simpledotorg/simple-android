@@ -1,1 +1,1 @@
-include ':app', ':router', ':libspellfix'
+include ':app', ':router', ':spellfix'

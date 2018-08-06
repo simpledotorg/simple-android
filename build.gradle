@@ -68,7 +68,7 @@ task clean(type: Delete) {
   delete rootProject.buildDir
 }
 
-task compileSpellfix(type: Copy, dependsOn: 'libspellfix:externalNativeBuildRelease') {
+task compileSpellfix(type: Copy, dependsOn: 'spellfix:externalNativeBuildRelease') {
   doLast {
     logger.lifecycle("Copied libspellfix native libs to app jniLibs!")
   }

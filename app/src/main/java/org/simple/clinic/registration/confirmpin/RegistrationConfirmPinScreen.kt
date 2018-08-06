@@ -77,12 +77,12 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
           .editorActions(confirmPinEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { RegistrationConfirmPinDoneClicked() }
 
-  fun showPinMisMatchError() {
+  fun showPinMismatchError() {
     errorStateViewGroup.visibility = View.VISIBLE
     pinHintTextView.visibility = View.GONE
   }
 
-  fun hidePinMisMatchError() {
+  fun hidePinMismatchError() {
     errorStateViewGroup.visibility = View.GONE
     pinHintTextView.visibility = View.VISIBLE
   }

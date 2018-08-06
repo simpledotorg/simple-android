@@ -103,7 +103,7 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinTextChanged("123"))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
-    verify(screen).showPinMisMatchError()
+    verify(screen).showPinMismatchError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(screen, never()).openFacilitySelectionScreen()
   }
@@ -111,7 +111,7 @@ class RegistrationConfirmPinScreenControllerTest {
   @Test
   fun `when input pin is changed then any visible errors should be removed`() {
     uiEvents.onNext(RegistrationConfirmPinTextChanged(""))
-    verify(screen).hidePinMisMatchError()
+    verify(screen).hidePinMismatchError()
   }
 
   @Test

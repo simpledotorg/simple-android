@@ -44,9 +44,7 @@ class RegistrationPhoneScreenController @Inject constructor(
         .ofType<RegistrationPhoneScreenCreated>()
         .flatMap {
           userSession.isOngoingRegistrationEntryPresent()
-              // Because Single.filter() returns a Maybe and
-              // Maybe.flatMapSingle() errors on completion.
-              .toObservable()
+              .toObservable() // Because Single.filter() returns a Maybe and Maybe.flatMapSingle() errors on completion.
               .filter { present -> present }
               .flatMapSingle { userSession.ongoingRegistrationEntry() }
               .map { { ui: Ui -> ui.preFillUserDetails(it) } }

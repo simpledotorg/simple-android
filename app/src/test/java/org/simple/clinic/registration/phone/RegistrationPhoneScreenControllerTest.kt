@@ -13,6 +13,9 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.registration.FindUserResult
+import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -74,6 +77,7 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).thenReturn(Completable.complete())
     whenever(numberValidator.isValid(validNumber)).thenReturn(true)
+    whenever(userSession.findExistingUser(validNumber)).thenReturn(Single.just(FindUserResult.NotFound()))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -89,6 +93,7 @@ class RegistrationPhoneScreenControllerTest {
     val validNumber = "1234567890"
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).thenReturn(Completable.complete())
+    whenever(userSession.findExistingUser(validNumber)).thenReturn(Single.just(FindUserResult.NotFound()))
 
     whenever(numberValidator.isValid(invalidNumber)).thenReturn(false)
     whenever(numberValidator.isValid(validNumber)).thenReturn(true)
@@ -120,6 +125,70 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when input text is changed then any visible errors should be removed`() {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(""))
-    verify(screen).hideInvalidNumberError()
+    verify(screen).hideAnyError()
+  }
+
+  @Test
+  fun `when proceed is clicked with a valid phone number then a network call should be made to check if the phone number belongs to an existing user`() {
+    val inputNumber = "1234567890"
+    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.never())
+    whenever(numberValidator.isValid(inputNumber)).thenReturn(true)
+
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    verify(screen).showProgressIndicator()
+    verify(userSession).findExistingUser(inputNumber)
+  }
+
+  @Test
+  fun `when the network call for checking phone number fails then an error should be shown`() {
+    val inputNumber = "1234567890"
+
+    whenever(userSession.findExistingUser(inputNumber))
+        .thenReturn(Single.just(FindUserResult.UnexpectedError()))
+        .thenReturn(Single.just(FindUserResult.NetworkError()))
+
+    whenever(numberValidator.isValid(inputNumber)).thenReturn(true)
+
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    verify(screen, times(2)).showProgressIndicator()
+    verify(screen, times(2)).hideProgressIndicator()
+    verify(screen).showUnexpectedErrorMessage()
+    verify(screen).showNetworkErrorMessage()
+  }
+
+  @Test
+  fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
+    val inputNumber = "1234567890"
+    val mockUser = mock<LoggedInUser>()
+    whenever(mockUser.phoneNumber).thenReturn(inputNumber)
+
+    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(mockUser)))
+    whenever(numberValidator.isValid(inputNumber)).thenReturn(true)
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = inputNumber))
+    verify(userSession).clearOngoingRegistrationEntry()
+    verify(screen).openLoginPinEntryScreen()
+  }
+
+  @Test
+  fun `when proceed is clicked then any existing error should be cleared`() {
+    val inputNumber = "1234567890"
+    whenever(numberValidator.isValid(inputNumber)).thenReturn(true)
+    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.never())
+
+    uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
+    uiEvents.onNext(RegistrationPhoneDoneClicked())
+
+    verify(screen, times(2)).hideAnyError()
   }
 }

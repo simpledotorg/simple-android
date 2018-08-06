@@ -6,6 +6,7 @@
   <string name="gender_male">Male</string>
   <string name="gender_transgender">Transgender</string>
   <string name="api_unexpected_error">Something went wrong. Please try again.</string>
+  <string name="api_network_error">You appear to be offline. Please check your connection.</string>
 
   <string name="country_dialing_code" translatable="false">+91</string>
 
@@ -106,7 +107,7 @@
   <string name="loginphone_next">Next</string>
   <string name="loginpin_pin_number_hint">Your security PIN</string>
   <string name="loginpin_go_back">Go back to phone number screen</string>
-  <string name="loginpin_error_check_internet_connection">You appear to be offline. Please check your connection.</string>
+  <string name="loginpin_error_check_internet_connection">@string/api_network_error</string>
 
   <!-- App lock -->
   <string name="applock_error_incorrect_pin">Pin doesn\'t match the original PIN</string>
@@ -115,6 +116,8 @@
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">Your phone number</string>
   <string name="registrationphone_error_invalid_number">Enter a 10-digit phone number</string>
+  <string name="registrationphone_error_unexpected_error">@string/api_unexpected_error</string>
+  <string name="registrationphone_error_check_internet_connection">@string/api_network_error</string>
 
   <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_cd_go_back">Go back to phone number</string>

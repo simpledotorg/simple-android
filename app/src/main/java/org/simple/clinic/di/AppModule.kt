@@ -12,6 +12,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.sync.SyncModule
@@ -35,7 +36,7 @@ class AppModule(private val appContext: Application, private val databaseName: S
           // We need to create it here on a fresh install because we can't define an Entity for a virtual
           // table and Room will never create it
           override fun onCreate(db: SupportSQLiteDatabase) {
-            AppDatabase.createPatientFuzzySearchTable(db)
+            PatientFuzzySearch.createTable(db)
           }
         })
         .addMigrations(

@@ -37,7 +37,7 @@ class PatientRepository @Inject constructor(
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun searchPatientsAndPhoneNumbers(query: String?): Observable<List<PatientSearchResult>> {
+  fun searchPatientsAndPhoneNumbers(query: String?, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
           .recentlyUpdated100Records()
@@ -46,7 +46,7 @@ class PatientRepository @Inject constructor(
 
     val actualQuery = nameToSearchableForm(query!!)
 
-    return if (actualQuery.all { it.isDigit() }) {
+    return if (actualQuery.all { it.isDigit() } || includeFuzzyNameSearch.not()) {
       database.patientSearchDao()
           .search(actualQuery)
           .toObservable()
@@ -60,7 +60,7 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun searchPatientsAndPhoneNumbers(query: String?, assumedAge: Int): Observable<List<PatientSearchResult>> {
+  fun searchPatientsAndPhoneNumbers(query: String?, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val ageUpperBound = assumedAge + ageFuzziness
     val ageLowerBound = assumedAge - ageFuzziness
 
@@ -75,7 +75,7 @@ class PatientRepository @Inject constructor(
 
     val actualQuery = nameToSearchableForm(query!!)
 
-    return if (actualQuery.all { it.isDigit() }) {
+    return if (actualQuery.all { it.isDigit() } || includeFuzzyNameSearch.not()) {
       database.patientSearchDao()
           .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()

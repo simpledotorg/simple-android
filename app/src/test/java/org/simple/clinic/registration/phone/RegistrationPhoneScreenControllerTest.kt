@@ -53,6 +53,7 @@ class RegistrationPhoneScreenControllerTest {
   fun `when screen is created and an existing ongoing entry is present then an empty ongoing entry should not be created`() {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(true))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.never())
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
@@ -175,7 +176,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = inputNumber))
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = inputNumber, otp = ""))
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openLoginPinEntryScreen()
   }

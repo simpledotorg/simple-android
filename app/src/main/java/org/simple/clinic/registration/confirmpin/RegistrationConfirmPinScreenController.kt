@@ -47,13 +47,13 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .withLatestFrom(pinTextChanges)
         .flatMapSingle { (_, confirmPin) -> matchesWithPin(confirmPin) }
         .filter { pinMatches -> pinMatches.not() }
-        .map { { ui: Ui -> ui.showPinMisMatchError() } }
+        .map { { ui: Ui -> ui.showPinMismatchError() } }
   }
 
   private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationConfirmPinTextChanged>()
-        .map { { ui: Ui -> ui.hidePinMisMatchError() } }
+        .map { { ui: Ui -> ui.hidePinMismatchError() } }
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

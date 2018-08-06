@@ -367,6 +367,6 @@ class PatientRepositoryAndroidTest {
   @After
   fun tearDown() {
     database.clearAllTables()
-    AppDatabase.clearPatientFuzzySearchTable(database.openHelper.writableDatabase)
+    PatientFuzzySearch.clearTable(database.openHelper.writableDatabase)
   }
 }

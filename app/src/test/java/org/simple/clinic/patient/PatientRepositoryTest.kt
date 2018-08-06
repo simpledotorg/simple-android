@@ -32,7 +32,7 @@ class PatientRepositoryTest {
   private val mockPatientDao = mock<Patient.RoomDao>()
   private val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
   private val mockPatientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
-  private val mockFuzzyPatientSearchDao = mock<PatientSearchResult.FuzzyPatientSearchDao>()
+  private val mockFuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
   private val dobValidator = mock<DateOfBirthFormatValidator>()
 
   @Before

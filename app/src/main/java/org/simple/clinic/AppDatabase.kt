@@ -11,6 +11,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
@@ -44,33 +45,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     UuidRoomTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
-  companion object {
-
-    /*
-    * TODO: I am really unhappy about putting this here, but I can't figure out where else to place it.
-    *
-    * This needs to be accessible both from the AppDatabase builder (since we can't create this table
-    * using the Room classes and requires running a specific SQL query) as well as the migration.
-    *
-    * At the same time, this is very specific to the database and should not be exposed to the rest
-    * of the system as a top-level function.
-    *
-    * Maybe a better place to put this would be in the PatientSearch dao.
-    *
-    * */
-    @JvmStatic
-    fun createPatientFuzzySearchTable(database: SupportSQLiteDatabase) {
-      database.execSQL("""CREATE VIRTUAL TABLE "PatientFuzzySearch" USING spellfix1""")
-    }
-
-    @JvmStatic
-    fun clearPatientFuzzySearchTable(database: SupportSQLiteDatabase) {
-     database.execSQL("""DELETE FROM "PatientFuzzySearch"""")
-    }
-  }
-
   private val patientFuzzyPatientSearchDao by lazy {
-    PatientSearchResult.FuzzyPatientSearchDaoImpl(openHelper, patientSearchDao())
+    PatientFuzzySearch.PatientFuzzySearchDaoImpl(openHelper, patientSearchDao())
   }
 
   abstract fun patientDao(): Patient.RoomDao
@@ -89,7 +65,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun userDao(): LoggedInUser.RoomDao
 
-  fun fuzzyPatientSearchDao(): PatientSearchResult.FuzzyPatientSearchDao = patientFuzzyPatientSearchDao
+  fun fuzzyPatientSearchDao(): PatientFuzzySearch.PatientFuzzySearchDao = patientFuzzyPatientSearchDao
 
   class Migration_3_4 : Migration(3, 4) {
 
@@ -140,7 +116,7 @@ abstract class AppDatabase : RoomDatabase() {
     override fun migrate(database: SupportSQLiteDatabase) {
       database.inTransaction {
         // We need to manually create this table because it's a virtual table and Room doesn't support virtual tables (yet!)
-        createPatientFuzzySearchTable(this)
+        PatientFuzzySearch.createTable(this)
         execSQL("""INSERT INTO "PatientFuzzySearch"("rowid","word") SELECT "rowid","searchableName" FROM "Patient"""")
       }
     }

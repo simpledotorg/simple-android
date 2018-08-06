@@ -121,6 +121,11 @@ class PatientRepository @Inject constructor(
         .andThen(database.fuzzyPatientSearchDao().updateFuzzySearchTableForPatients(listOf(patient.uuid)))
   }
 
+  private fun savePatients(patients: List<Patient>): Completable {
+    return Completable.fromAction { database.patientDao().save(patients) }
+        .andThen(database.fuzzyPatientSearchDao().updateFuzzySearchTableForPatients(patients.map { it.uuid }.distinct()))
+  }
+
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
     return database.patientDao()
         .patient(uuid)
@@ -148,7 +153,7 @@ class PatientRepository @Inject constructor(
 
             val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE) }
 
-            database.patientDao().save(newOrUpdatedPatients)
+            savePatients(newOrUpdatedPatients).blockingAwait()
 
             val newOrUpdatedPhoneNumbers = payloads
                 .filter { it.phoneNumbers != null }

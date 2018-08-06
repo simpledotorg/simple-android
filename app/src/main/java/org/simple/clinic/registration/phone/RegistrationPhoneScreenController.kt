@@ -5,6 +5,8 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.registration.FindUserResult
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -24,8 +26,9 @@ class RegistrationPhoneScreenController @Inject constructor(
 
     return Observable.merge(
         createEmptyOngoingEntryAndPreFill(replayedEvents),
-        validateInputAndProceed(replayedEvents),
-        hideValidationError(replayedEvents))
+        showValidationError(replayedEvents),
+        hideValidationError(replayedEvents),
+        saveOngoingEntryAndProceed(replayedEvents))
   }
 
   private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
@@ -53,33 +56,65 @@ class RegistrationPhoneScreenController @Inject constructor(
     return createEmptyEntry.mergeWith(preFill)
   }
 
-  private fun validateInputAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberTextChanges = events.ofType<RegistrationPhoneNumberTextChanged>().map { it.phoneNumber }
-    val doneClicks = events.ofType<RegistrationPhoneDoneClicked>()
+  private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    val phoneNumberTextChanges = events
+        .ofType<RegistrationPhoneNumberTextChanged>()
+        .map { it.phoneNumber }
 
-    val proceeds = doneClicks
-        .withLatestFrom(phoneNumberTextChanges)
-        .filter { (_, number) -> numberValidator.isValid(number) }
-        .take(1)
-        .flatMap { (_, number) ->
-          userSession.ongoingRegistrationEntry()
-              .map { it.copy(phoneNumber = number) }
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
-        }
-
-    val validations = doneClicks
+    return events
+        .ofType<RegistrationPhoneDoneClicked>()
         .withLatestFrom(phoneNumberTextChanges)
         .map { (_, number) -> numberValidator.isValid(number) }
         .filter { isValidNumber -> isValidNumber.not() }
         .map { { ui: Ui -> ui.showInvalidNumberError() } }
-
-    return validations.mergeWith(proceeds)
   }
 
   private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationPhoneNumberTextChanged>()
-        .map { { ui: Ui -> ui.hideInvalidNumberError() } }
+        .map { { ui: Ui -> ui.hideAnyError() } }
+  }
+
+  private fun saveOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
+    val phoneNumberTextChanges = events.ofType<RegistrationPhoneNumberTextChanged>().map { it.phoneNumber }
+    val doneClicks = events.ofType<RegistrationPhoneDoneClicked>()
+
+    return doneClicks
+        .withLatestFrom(phoneNumberTextChanges)
+        .filter { (_, number) -> numberValidator.isValid(number) }
+        .flatMap { (_, number) ->
+          val cachedUserFindResult = userSession.findExistingUser(number)
+              .cache()
+              .toObservable()
+
+          val showAndHideProgress = cachedUserFindResult
+              .flatMap {
+                when (it) {
+                  is FindUserResult.Found, is FindUserResult.NotFound -> Observable.never()
+                  is FindUserResult.NetworkError -> Observable.just({ ui: Ui -> ui.hideProgressIndicator() }, { ui: Ui -> ui.showNetworkErrorMessage() })
+                  is FindUserResult.UnexpectedError -> Observable.just({ ui: Ui -> ui.hideProgressIndicator() }, { ui: Ui -> ui.showUnexpectedErrorMessage() })
+                }
+              }
+              .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
+
+          val proceedToLogin = cachedUserFindResult
+              .ofType<FindUserResult.Found>()
+              .flatMap {
+                userSession.saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = it.user.phoneNumber))
+                    .andThen(userSession.clearOngoingRegistrationEntry())
+                    .andThen(Observable.just({ ui: Ui -> ui.openLoginPinEntryScreen() }))
+              }
+
+          val proceedWithRegistration = cachedUserFindResult
+              .ofType<FindUserResult.NotFound>()
+              .flatMap {
+                userSession.ongoingRegistrationEntry()
+                    .map { it.copy(phoneNumber = number) }
+                    .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
+                    .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
+              }
+
+          Observable.merge(showAndHideProgress, proceedToLogin, proceedWithRegistration)
+        }
   }
 }

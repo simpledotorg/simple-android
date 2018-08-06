@@ -1,7 +1,7 @@
 package org.simple.clinic.registration.phone
 
 import android.content.Context
-import android.support.v7.widget.CardView
+import android.support.annotation.StringRes
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
@@ -16,6 +16,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -31,9 +32,9 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   @Inject
   lateinit var controller: RegistrationPhoneScreenController
 
-  private val contentCardView by bindView<CardView>(R.id.registrationphone_card)
   private val phoneNumberEditText by bindView<EditText>(R.id.registrationphone_phone)
   private val validationErrorTextView by bindView<TextView>(R.id.registrationphone_error)
+  private val progressView by bindView<View>(R.id.registrationphone_progress)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -73,12 +74,36 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   fun showInvalidNumberError() {
-    validationErrorTextView.visibility = View.VISIBLE
-    validationErrorTextView.text = resources.getString(R.string.registrationphone_error_invalid_number)
+    showError(R.string.registrationphone_error_invalid_number)
   }
 
-  fun hideInvalidNumberError() {
+  fun showUnexpectedErrorMessage() {
+    showError(R.string.registrationphone_error_unexpected_error)
+  }
+
+  fun showNetworkErrorMessage() {
+    showError(R.string.registrationphone_error_check_internet_connection)
+  }
+
+  private fun showError(@StringRes errorResId: Int) {
+    validationErrorTextView.visibility = View.VISIBLE
+    validationErrorTextView.text = resources.getString(errorResId)
+  }
+
+  fun hideAnyError() {
     validationErrorTextView.visibility = View.GONE
+  }
+
+  fun showProgressIndicator() {
+    progressView.visibility = VISIBLE
+  }
+
+  fun hideProgressIndicator() {
+    progressView.visibility = GONE
+  }
+
+  fun openLoginPinEntryScreen() {
+    screenRouter.push(LoginPinScreen.KEY)
   }
 
   companion object {

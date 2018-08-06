@@ -15,6 +15,11 @@
       android:text="@string/app_name" />
   </FrameLayout>
 
+  <View
+    style="@style/Clinic.LoginLogoContainerOverflow"
+    android:layout_height="52dp"
+    android:layout_below="@+id/onboarding_logo_container" />
+
   <android.support.v4.widget.NestedScrollView
     android:id="@+id/onboarding_scrolling_container"
     android:layout_width="match_parent"
@@ -55,9 +60,7 @@
         android:layout_marginTop="@dimen/spacing_24"
         android:background="@drawable/ic_onboarding_03_call_list"
         tools:ignore="ContentDescription" />
-
     </LinearLayout>
-
   </android.support.v4.widget.NestedScrollView>
 
   <Button
@@ -69,5 +72,4 @@
     android:elevation="@dimen/spacing_24"
     android:text="@string/onboarding_get_started"
     tools:ignore="UnusedAttribute" />
-
 </org.simple.clinic.onboarding.OnboardingScreen>

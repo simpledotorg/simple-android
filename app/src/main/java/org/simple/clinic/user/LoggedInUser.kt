@@ -44,13 +44,13 @@ data class LoggedInUser(
 ) {
 
   enum class Status {
-    @Json(name = "waiting_for_approval")
+    @Json(name = "requested")
     WAITING_FOR_APPROVAL,
 
-    @Json(name = "approved_for_syncing")
+    @Json(name = "allowed")
     APPROVED_FOR_SYNCING,
 
-    @Json(name = "disapproved_for_syncing")
+    @Json(name = "denied")
     DISAPPROVED_FOR_SYNCING;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Status>(Status::class.java)

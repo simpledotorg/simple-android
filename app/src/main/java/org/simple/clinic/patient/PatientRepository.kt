@@ -37,7 +37,10 @@ class PatientRepository @Inject constructor(
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun searchPatientsAndPhoneNumbers(query: String?, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
+  fun searchPatientsAndPhoneNumbers(
+      query: String?,
+      includeFuzzyNameSearch: Boolean = true
+  ): Observable<List<PatientSearchResult>> {
     if (query.isNullOrEmpty()) {
       return database.patientSearchDao()
           .recentlyUpdated100Records()
@@ -63,7 +66,11 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun searchPatientsAndPhoneNumbers(query: String?, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
+  fun searchPatientsAndPhoneNumbers(
+      query: String?,
+      assumedAge: Int,
+      includeFuzzyNameSearch: Boolean = true
+  ): Observable<List<PatientSearchResult>> {
     val ageUpperBound = assumedAge + ageFuzziness
     val ageLowerBound = assumedAge - ageFuzziness
 

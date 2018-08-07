@@ -22,5 +22,9 @@ class RuntimePermissions {
       }
       return RuntimePermissionResult.GRANTED
     }
+
+    fun request(activity: Activity, permission: String, requestCode: Int) {
+      ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
+    }
   }
 }

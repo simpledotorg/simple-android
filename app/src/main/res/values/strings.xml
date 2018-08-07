@@ -134,6 +134,12 @@
   <string name="registrationconfirmpin_error_pin_mismatch">PIN doesn’t match the original PIN</string>
   <string name="registrationconfirmpin_reset_pin">Reset PIN</string>
 
+  <string name="registrationlocation_screen_title">Location access</string>
+  <string name="registrationlocation_skip_permission">Skip</string>
+  <string name="registrationlocation_permission_rationale_description">Your location will help us find your clinic</string>
+  <string name="registrationlocation_permission_rationale_title">Find your clinic faster</string>
+  <string name="registrationlocation_allow_access">Allow location access</string>
+
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>
 </resources>

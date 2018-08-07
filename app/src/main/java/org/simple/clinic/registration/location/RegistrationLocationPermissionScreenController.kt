@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.facility
+package org.simple.clinic.registration.location
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource

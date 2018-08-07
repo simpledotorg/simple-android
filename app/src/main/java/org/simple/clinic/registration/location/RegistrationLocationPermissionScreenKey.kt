@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.facility
+package org.simple.clinic.registration.location
 
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R

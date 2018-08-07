@@ -16,7 +16,6 @@ import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.registration.RegistrationConfig
-import org.simple.clinic.registration.facility.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.registration.facility.RegistrationLocationPermissionScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.registration.location.RegistrationLocationPermissionScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -104,4 +104,4 @@
     android:text="@string/registrationlocation_allow_access"
     android:textColor="@color/white"
     tools:ignore="UnusedAttribute" />
-</org.simple.clinic.registration.facility.RegistrationLocationPermissionScreen>
+</org.simple.clinic.registration.location.RegistrationLocationPermissionScreen>

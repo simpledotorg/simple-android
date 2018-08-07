@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.facility
+package org.simple.clinic.registration.location
 
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent

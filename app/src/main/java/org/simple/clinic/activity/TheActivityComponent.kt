@@ -19,7 +19,7 @@ import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
-import org.simple.clinic.registration.facility.RegistrationLocationPermissionScreen
+import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen

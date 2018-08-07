@@ -1,4 +1,4 @@
-package org.simple.clinic.registration.facility
+package org.simple.clinic.registration.location
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify

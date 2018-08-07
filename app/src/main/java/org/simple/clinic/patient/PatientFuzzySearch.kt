@@ -41,9 +41,9 @@ class PatientFuzzySearch {
     fun savedEntries(): Single<List<FuzzySearchResult>>
 
     // Used for testing
-    fun getEntriesForIds(uuids: List<UUID>): Single<List<FuzzySearchResult>>
+    fun getEntriesForPatientIds(uuids: List<UUID>): Single<List<FuzzySearchResult>>
 
-    fun updateFuzzySearchTableForPatients(uuids: List<UUID>): Completable
+    fun updateTableForPatients(uuids: List<UUID>): Completable
 
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
 
@@ -71,7 +71,7 @@ class PatientFuzzySearch {
           }
     }!!
 
-    override fun getEntriesForIds(uuids: List<UUID>) = Single.fromCallable {
+    override fun getEntriesForPatientIds(uuids: List<UUID>) = Single.fromCallable {
       sqLiteOpenHelper.readableDatabase.query("""
           SELECT "PFS"."rowid" "rowid","PFS"."word" "word","P"."uuid" "uuid" FROM "PatientFuzzySearch" "PFS"
           INNER JOIN "Patient" "P" ON "P"."rowid"="PFS"."rowid" WHERE "uuid" IN (${uuids.joinToString(",", transform = { "'$it'" })})
@@ -87,7 +87,7 @@ class PatientFuzzySearch {
           }
     }!!
 
-    override fun updateFuzzySearchTableForPatients(uuids: List<UUID>) =
+    override fun updateTableForPatients(uuids: List<UUID>) =
         Completable.fromAction {
           sqLiteOpenHelper.writableDatabase.execSQL("""
             INSERT OR IGNORE INTO "PatientFuzzySearch" ("rowid","word")

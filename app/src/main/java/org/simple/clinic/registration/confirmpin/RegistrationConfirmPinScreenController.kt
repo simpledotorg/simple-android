@@ -68,8 +68,6 @@ class RegistrationConfirmPinScreenController @Inject constructor(
           userSession.ongoingRegistrationEntry()
               .map { it.copy(pinConfirmation = confirmPin, createdAt = Instant.now()) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(userSession.loginFromOngoingRegistrationEntry())
-              .andThen(registrationScheduler.schedule())
               .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
         }
   }

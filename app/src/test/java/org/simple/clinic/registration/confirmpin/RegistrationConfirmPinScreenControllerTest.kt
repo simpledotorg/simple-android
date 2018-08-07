@@ -35,7 +35,6 @@ class RegistrationConfirmPinScreenControllerTest {
     controller = RegistrationConfirmPinScreenController(userSession, registrationScheduler)
 
     whenever(userSession.loginFromOngoingRegistrationEntry()).thenReturn(Completable.complete())
-    whenever(registrationScheduler.schedule()).thenReturn(Completable.complete())
 
     uiEvents
         .compose(controller)

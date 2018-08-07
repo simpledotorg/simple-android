@@ -18,12 +18,12 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.registration.facility.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
-import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -59,6 +59,9 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+
+    // Showing the keyboard again in case the user returns from location permission screen.
+    confirmPinEditText.showKeyboard()
   }
 
   private fun screenCreates() = Observable.just(RegistrationConfirmPinScreenCreated())
@@ -88,8 +91,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   }
 
   fun openFacilitySelectionScreen() {
-    // TODO: Open facility selection instead.
-    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
+    screenRouter.push(RegistrationLocationPermissionScreen.KEY)
   }
 
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {

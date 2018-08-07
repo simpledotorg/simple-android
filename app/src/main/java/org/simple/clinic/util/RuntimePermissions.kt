@@ -10,21 +10,19 @@ enum class RuntimePermissionResult {
   NEVER_ASK_AGAIN;
 }
 
-class RuntimePermissions {
+object RuntimePermissions {
 
-  companion object {
-    fun check(activity: Activity, permission: String): RuntimePermissionResult {
-      if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
-        if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-          return RuntimePermissionResult.NEVER_ASK_AGAIN
-        }
-        return RuntimePermissionResult.DENIED
+  fun check(activity: Activity, permission: String): RuntimePermissionResult {
+    if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+      if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
+        return RuntimePermissionResult.NEVER_ASK_AGAIN
       }
-      return RuntimePermissionResult.GRANTED
+      return RuntimePermissionResult.DENIED
     }
+    return RuntimePermissionResult.GRANTED
+  }
 
-    fun request(activity: Activity, permission: String, requestCode: Int) {
-      ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
-    }
+  fun request(activity: Activity, permission: String, requestCode: Int) {
+    ActivityCompat.requestPermissions(activity, arrayOf(permission), requestCode)
   }
 }

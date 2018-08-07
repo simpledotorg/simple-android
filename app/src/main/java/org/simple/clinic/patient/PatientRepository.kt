@@ -160,14 +160,14 @@ class PatientRepository @Inject constructor(
         }
         .toList()
         .flatMapCompletable { payloads ->
-          Completable.fromAction {
+          val saveAddresses = Completable.fromAction {
             val newOrUpdatedAddresses = payloads.map { it.address.toDatabaseModel() }
             database.addressDao().save(newOrUpdatedAddresses)
+          }
 
-            val newOrUpdatedPatients = payloads.map { it.toDatabaseModel(newStatus = DONE) }
+          val savePatients = savePatients(payloads.map { it.toDatabaseModel(newStatus = DONE) })
 
-            savePatients(newOrUpdatedPatients).blockingAwait()
-
+          val savePhoneNumbers = Completable.fromAction {
             val newOrUpdatedPhoneNumbers = payloads
                 .filter { it.phoneNumbers != null }
                 .flatMap { patientPayload ->
@@ -177,6 +177,8 @@ class PatientRepository @Inject constructor(
               database.phoneNumberDao().save(newOrUpdatedPhoneNumbers)
             }
           }
+
+          saveAddresses.andThen(savePatients).andThen(savePhoneNumbers)
         }
   }
 

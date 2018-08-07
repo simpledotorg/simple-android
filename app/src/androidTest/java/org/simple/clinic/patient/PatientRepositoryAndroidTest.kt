@@ -359,7 +359,7 @@ class PatientRepositoryAndroidTest {
     val patientPayloads = listOf(PatientFaker.patientPayload(fullName = "Abhaya Kumari"))
 
     repository.mergeWithLocalData(patientPayloads).blockingAwait()
-    val searchResult = database.fuzzyPatientSearchDao().getEntriesForIds(patientPayloads.map { it.uuid }).blockingGet()
+    val searchResult = database.fuzzyPatientSearchDao().getEntriesForPatientIds(patientPayloads.map { it.uuid }).blockingGet()
     assertThat(searchResult.size).isEqualTo(1)
     assertThat(searchResult[0].word).isEqualTo("AbhayaKumari")
   }

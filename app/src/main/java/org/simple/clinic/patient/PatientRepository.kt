@@ -131,12 +131,12 @@ class PatientRepository @Inject constructor(
 
   private fun savePatient(patient: Patient): Completable {
     return Completable.fromAction { database.patientDao().save(patient) }
-        .andThen(database.fuzzyPatientSearchDao().updateFuzzySearchTableForPatients(listOf(patient.uuid)))
+        .andThen(database.fuzzyPatientSearchDao().updateTableForPatients(listOf(patient.uuid)))
   }
 
   private fun savePatients(patients: List<Patient>): Completable {
     return Completable.fromAction { database.patientDao().save(patients) }
-        .andThen(database.fuzzyPatientSearchDao().updateFuzzySearchTableForPatients(patients.map { it.uuid }))
+        .andThen(database.fuzzyPatientSearchDao().updateTableForPatients(patients.map { it.uuid }))
   }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

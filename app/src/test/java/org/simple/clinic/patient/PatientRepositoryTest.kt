@@ -58,7 +58,7 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(mockPatientDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
-    whenever(mockFuzzyPatientSearchDao.updateFuzzySearchTableForPatients(any())).thenReturn(Completable.complete())
+    whenever(mockFuzzyPatientSearchDao.updateTableForPatients(any())).thenReturn(Completable.complete())
 
     val patientUUID = UUID.randomUUID()
     val addressUUID = UUID.randomUUID()
@@ -236,7 +236,7 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(mockPatientDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
-    whenever(mockFuzzyPatientSearchDao.updateFuzzySearchTableForPatients(any())).thenReturn(Completable.complete())
+    whenever(mockFuzzyPatientSearchDao.updateTableForPatients(any())).thenReturn(Completable.complete())
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
@@ -284,7 +284,7 @@ class PatientRepositoryTest {
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(mockPatientPhoneNumberDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
-    whenever(mockFuzzyPatientSearchDao.updateFuzzySearchTableForPatients(any())).thenReturn(Completable.complete())
+    whenever(mockFuzzyPatientSearchDao.updateTableForPatients(any())).thenReturn(Completable.complete())
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()

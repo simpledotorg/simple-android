@@ -2,7 +2,6 @@ package org.simple.clinic.qrscan
 
 import android.Manifest
 import android.content.Context
-import android.support.v4.app.ActivityCompat
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -80,7 +79,7 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
   }
 
   fun requestCameraPermission() {
-    ActivityCompat.requestPermissions(activity, arrayOf(Manifest.permission.CAMERA), REQUESTCODE_CAMERA_PERMISSION)
+    RuntimePermissions.request(activity, Manifest.permission.CAMERA, REQUESTCODE_CAMERA_PERMISSION)
   }
 
   fun setAadhaarScannerEnabled(enabled: Boolean) {

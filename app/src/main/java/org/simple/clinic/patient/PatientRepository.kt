@@ -51,12 +51,15 @@ class PatientRepository @Inject constructor(
           .search(actualQuery)
           .toObservable()
     } else {
+      val fuzzySearch = database.fuzzyPatientSearchDao()
+          .searchForPatientsWithNameLike(actualQuery)
+          .toObservable()
+
       database.patientSearchDao()
           .search(actualQuery)
-          .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithNameLike(actualQuery).toFlowable()) { searchResults, fuzzySearchResults ->
-            (fuzzySearchResults + searchResults).distinctBy { it.uuid }
-          }
           .toObservable()
+          .zipWith(fuzzySearch)
+          .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
     }
   }
 
@@ -80,12 +83,15 @@ class PatientRepository @Inject constructor(
           .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
     } else {
+      val fuzzySearch = database.fuzzyPatientSearchDao()
+          .searchForPatientsWithNameLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+          .toObservable()
+
       database.patientSearchDao()
           .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
-          .zipWith(database.fuzzyPatientSearchDao().searchForPatientsWithNameLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound).toFlowable()) { searchResults, fuzzySearchResults ->
-            (fuzzySearchResults + searchResults).distinctBy { it.uuid }
-          }
           .toObservable()
+          .zipWith(fuzzySearch)
+          .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
     }
   }
 

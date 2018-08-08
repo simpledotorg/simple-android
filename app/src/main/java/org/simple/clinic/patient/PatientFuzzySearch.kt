@@ -3,8 +3,10 @@ package org.simple.clinic.patient
 import android.arch.persistence.db.SimpleSQLiteQuery
 import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.db.SupportSQLiteOpenHelper
+import android.database.Cursor
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.SingleTransformer
 import java.util.UUID
 
 class PatientFuzzySearch {
@@ -32,8 +34,15 @@ class PatientFuzzySearch {
   data class FuzzySearchResult(
       val rowId: Long,
       val uuid: UUID,
-      val word: String
+      val word: String,
+      val rank: Int,
+      val distance: Int,
+      val score: Int,
+      val matchLength: Int,
+      val scope: Int
   )
+
+  data class UuidToScore(val uuid: UUID, val score: Int)
 
   interface PatientFuzzySearchDao {
 
@@ -55,36 +64,47 @@ class PatientFuzzySearch {
       private val patientSearchDao: PatientSearchResult.RoomDao
   ) : PatientFuzzySearchDao {
 
+    private val fuzzyColumnsToFetch = """
+      "P"."uuid" "uuid", "PFS"."rowid" "rowid","PFS"."word" "word","PFS"."rank" "rank","PFS"."distance" "distance","PFS"."score" "score","PFS"."matchlen" "matchlen","PFS"."scope" "scope"
+    """.trimIndent()
+
+    private fun resultsFromCursor(cursor: Cursor) =
+        cursor.use {
+          val uuid = it.getColumnIndex("uuid")
+          val rowId = it.getColumnIndex("rowid")
+          val word = it.getColumnIndex("word")
+          val rank = it.getColumnIndex("rank")
+          val distance = it.getColumnIndex("distance")
+          val score = it.getColumnIndex("score")
+          val matchLength = it.getColumnIndex("matchlen")
+          val scope = it.getColumnIndex("scope")
+          generateSequence { it.takeIf { it.moveToNext() } }
+              .map {
+                FuzzySearchResult(
+                    rowId = it.getLong(rowId),
+                    uuid = UUID.fromString(it.getString(uuid)),
+                    word = it.getString(word),
+                    rank = it.getInt(rank),
+                    distance = it.getInt(distance),
+                    score = it.getInt(score),
+                    matchLength = it.getInt(matchLength),
+                    scope = it.getInt(scope)
+                )
+              }.toList()
+        }
+
     override fun savedEntries() = Single.fromCallable {
       sqLiteOpenHelper.readableDatabase.query("""
-          SELECT "PFS"."rowid" "rowid","PFS"."word" "word","P"."uuid" "uuid" FROM "PatientFuzzySearch" "PFS"
+          SELECT $fuzzyColumnsToFetch FROM "PatientFuzzySearch" "PFS"
           INNER JOIN "Patient" "P" ON "P"."rowid"="PFS"."rowid"
-        """.trimIndent())
-          .use {
-            val rowIdIndex = it.getColumnIndex("rowid")
-            val wordIndex = it.getColumnIndex("word")
-            val uuidIndex = it.getColumnIndex("uuid")
-
-            generateSequence { it.takeIf { it.moveToNext() } }
-                .map { FuzzySearchResult(it.getLong(rowIdIndex), UUID.fromString(it.getString(uuidIndex)), it.getString(wordIndex)) }
-                .toList()
-          }
+        """.trimIndent()).use { resultsFromCursor(it) }
     }!!
 
     override fun getEntriesForPatientIds(uuids: List<UUID>) = Single.fromCallable {
       sqLiteOpenHelper.readableDatabase.query("""
-          SELECT "PFS"."rowid" "rowid","PFS"."word" "word","P"."uuid" "uuid" FROM "PatientFuzzySearch" "PFS"
+          SELECT $fuzzyColumnsToFetch FROM "PatientFuzzySearch" "PFS"
           INNER JOIN "Patient" "P" ON "P"."rowid"="PFS"."rowid" WHERE "uuid" IN (${uuids.joinToString(",", transform = { "'$it'" })})
-        """.trimIndent())
-          .use {
-            val rowIdIndex = it.getColumnIndex("rowid")
-            val wordIndex = it.getColumnIndex("word")
-            val uuidIndex = it.getColumnIndex("uuid")
-
-            generateSequence { it.takeIf { it.moveToNext() } }
-                .map { FuzzySearchResult(it.getLong(rowIdIndex), UUID.fromString(it.getString(uuidIndex)), it.getString(wordIndex)) }
-                .toList()
-          }
+        """.trimIndent()).use { resultsFromCursor(it) }
     }!!
 
     override fun updateTableForPatients(uuids: List<UUID>) =
@@ -98,25 +118,43 @@ class PatientFuzzySearch {
     private fun patientUuidsMatching(query: String) =
         Single.fromCallable {
           val searchQuery = SimpleSQLiteQuery("""
-            SELECT "P"."uuid" "uuid"
+            SELECT "P"."uuid", "PFS"."score"
             FROM "Patient" "P" INNER JOIN "PatientFuzzySearch" "PFS"
-              ON "P"."rowid"="PFS"."rowid" WHERE "PFS"."word" MATCH '$query*' AND "score" < 500 AND "top"=5 ORDER BY "score" ASC
+            ON "P"."rowid"="PFS"."rowid" WHERE "PFS"."word" MATCH '$query' AND "top"=5
             """.trimIndent())
 
           sqLiteOpenHelper.readableDatabase.query(searchQuery)
               .use { cursor ->
-                val uuidColumnIndex = cursor.getColumnIndex("uuid")
+                val uuidIndex = cursor.getColumnIndex("uuid")
+                val scoreIndex = cursor.getColumnIndex("score")
 
                 generateSequence { cursor.takeIf { it.moveToNext() } }
-                    .map { UUID.fromString(it.getString(uuidColumnIndex)) }
+                    .map { UuidToScore(UUID.fromString(it.getString(uuidIndex)), it.getInt(scoreIndex)) }
                     .toList()
               }
         }
 
+    private fun sortPatientSearchResultsByScore(uuidsSortedByScore: List<UuidToScore>) =
+        SingleTransformer<List<PatientSearchResult>, List<PatientSearchResult>> { upstream ->
+          upstream.flatMap { Single.just(it.associateBy { it.uuid }) }
+              .map { resultsByUuid -> uuidsSortedByScore.map { resultsByUuid[it.uuid]!! } }
+        }
+
     override fun searchForPatientsWithNameLike(query: String) =
-        patientUuidsMatching(query).flatMap { patientSearchDao.searchByIds(it) }!!
+        patientUuidsMatching(query)
+            .flatMap { uuidsSortedByScore ->
+              val uuids = uuidsSortedByScore.map { it.uuid }
+              patientSearchDao
+                  .searchByIds(uuids)
+                  .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
+            }!!
 
     override fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String) =
-        patientUuidsMatching(query).flatMap { patientSearchDao.searchByIds(it, dobUpperBound, dobLowerBound) }!!
+        patientUuidsMatching(query).flatMap { uuidsSortedByScore ->
+          val uuids = uuidsSortedByScore.map { it.uuid }
+          patientSearchDao
+              .searchByIds(uuids, dobUpperBound, dobLowerBound)
+              .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
+        }!!
   }
 }

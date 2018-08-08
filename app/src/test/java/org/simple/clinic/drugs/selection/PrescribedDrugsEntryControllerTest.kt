@@ -69,25 +69,25 @@ class PrescribedDrugsEntryControllerTest {
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
 
     val expectedProtocolDrugUiModels = listOf(
-        ProtocolDrugSelectionItem(
+        ProtocolDrugSelectionListItem(
             0,
             drug = amlodipine,
-            option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(amlodipine.dosages[0]),
-            option2 = ProtocolDrugSelectionItem.DosageOption.Selected(amlodipine.dosages[1], prescription = amlodipinePrescription)),
-        ProtocolDrugSelectionItem(
+            option1 = ProtocolDrugSelectionListItem.DosageOption.Unselected(amlodipine.dosages[0]),
+            option2 = ProtocolDrugSelectionListItem.DosageOption.Selected(amlodipine.dosages[1], prescription = amlodipinePrescription)),
+        ProtocolDrugSelectionListItem(
             1,
             drug = telmisartan,
-            option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(telmisartan.dosages[0]),
-            option2 = ProtocolDrugSelectionItem.DosageOption.Unselected(telmisartan.dosages[1])),
-        ProtocolDrugSelectionItem(
+            option1 = ProtocolDrugSelectionListItem.DosageOption.Unselected(telmisartan.dosages[0]),
+            option2 = ProtocolDrugSelectionListItem.DosageOption.Unselected(telmisartan.dosages[1])),
+        ProtocolDrugSelectionListItem(
             2,
             drug = chlorthalidone,
-            option1 = ProtocolDrugSelectionItem.DosageOption.Unselected(chlorthalidone.dosages[0]),
-            option2 = ProtocolDrugSelectionItem.DosageOption.Unselected(chlorthalidone.dosages[1])),
-        CustomPrescribedDrugItem(telmisartanPrescription),
-        CustomPrescribedDrugItem(ReesesPrescription),
-        CustomPrescribedDrugItem(fooPrescription),
-        CustomPrescribedDrugItem(barPrescription))
+            option1 = ProtocolDrugSelectionListItem.DosageOption.Unselected(chlorthalidone.dosages[0]),
+            option2 = ProtocolDrugSelectionListItem.DosageOption.Unselected(chlorthalidone.dosages[1])),
+        CustomPrescribedDrugListItem(telmisartanPrescription),
+        CustomPrescribedDrugListItem(ReesesPrescription),
+        CustomPrescribedDrugListItem(fooPrescription),
+        CustomPrescribedDrugListItem(barPrescription))
     verify(screen).populateDrugsList(expectedProtocolDrugUiModels)
   }
 

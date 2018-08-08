@@ -7,7 +7,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.widgets.UiEvent
 
-class SummaryAddNewBpItem : GroupieItemWithUiEvents<SummaryAddNewBpItem.NewBpViewHolder>(adapterId = 1) {
+class SummaryAddNewBpListItem : GroupieItemWithUiEvents<SummaryAddNewBpListItem.NewBpViewHolder>(adapterId = 1) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

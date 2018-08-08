@@ -9,7 +9,7 @@ import org.simple.clinic.R
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 
-class AddNewPrescriptionItem : GroupieItemWithUiEvents<AddNewPrescriptionItem.AddNewViewHolder>(adapterId = -99) {
+class AddNewPrescriptionListItem : GroupieItemWithUiEvents<AddNewPrescriptionListItem.AddNewViewHolder>(adapterId = -99) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

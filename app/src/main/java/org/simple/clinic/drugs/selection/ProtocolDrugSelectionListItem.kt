@@ -15,12 +15,12 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setPadding
 
-data class ProtocolDrugSelectionItem constructor(
+data class ProtocolDrugSelectionListItem(
     val id: Int,
     val drug: ProtocolDrug,
     val option1: DosageOption,
     val option2: DosageOption
-) : GroupieItemWithUiEvents<ProtocolDrugSelectionItem.DrugViewHolder>(adapterId = id.toLong()) {
+) : GroupieItemWithUiEvents<ProtocolDrugSelectionListItem.DrugViewHolder>(adapterId = id.toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

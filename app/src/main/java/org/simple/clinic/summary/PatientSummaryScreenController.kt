@@ -79,7 +79,7 @@ class PatientSummaryScreenController @Inject constructor(
         .map { measurements ->
           measurements.map { measurement ->
             val timestamp = timestampGenerator.generate(measurement.updatedAt)
-            SummaryBloodPressureItem(measurement, timestamp)
+            SummaryBloodPressureListItem(measurement, timestamp)
           }
         }
         .map { { ui: Ui -> ui.populateBloodPressureHistory(it) } }

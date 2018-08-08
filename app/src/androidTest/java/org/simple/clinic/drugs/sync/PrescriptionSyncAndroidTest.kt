@@ -53,7 +53,8 @@ class PrescriptionSyncAndroidTest {
   @Inject
   lateinit var prescriptionSync: PrescriptionSync
 
-  private val faker = Faker()
+  @Inject
+  lateinit var faker: Faker
 
   @Before
   fun setUp() {

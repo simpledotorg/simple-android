@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
+import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
@@ -9,10 +10,10 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.threeten.bp.Instant
 import java.util.UUID
+import javax.inject.Inject
 
-object PatientFaker {
-
-  private val faker = Faker()
+@AppScope
+class PatientFaker @Inject constructor(private val faker: Faker) {
 
   fun patientPayload(
       fullName: String = faker.name.name(),

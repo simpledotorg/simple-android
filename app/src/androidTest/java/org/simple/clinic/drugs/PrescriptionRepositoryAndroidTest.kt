@@ -35,7 +35,8 @@ class PrescriptionRepositoryAndroidTest {
   @Inject
   lateinit var userSession: UserSession
 
-  private var faker = Faker()
+  @Inject
+  lateinit var faker: Faker
 
   @Before
   fun setUp() {

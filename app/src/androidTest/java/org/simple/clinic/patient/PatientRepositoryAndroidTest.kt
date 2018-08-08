@@ -21,6 +21,9 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var database: AppDatabase
 
+  @Inject
+  lateinit var patientFaker: PatientFaker
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -356,7 +359,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_merging_patient_data_locally_it_should_also_add_them_to_the_fuzzy_search_table() {
-    val patientPayloads = listOf(PatientFaker.patientPayload(fullName = "Abhaya Kumari"))
+    val patientPayloads = listOf(patientFaker.patientPayload(fullName = "Abhaya Kumari"))
 
     repository.mergeWithLocalData(patientPayloads).blockingAwait()
     val searchResult = database.fuzzyPatientSearchDao().getEntriesForPatientIds(patientPayloads.map { it.uuid }).blockingGet()

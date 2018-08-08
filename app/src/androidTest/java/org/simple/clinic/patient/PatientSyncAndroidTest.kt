@@ -52,7 +52,12 @@ class PatientSyncAndroidTest {
   @Inject
   lateinit var patientSyncApiV1: PatientSyncApiV1
 
-  private val faker = Faker()
+  @Inject
+  lateinit var faker: Faker
+
+  @Inject
+  lateinit var patientFaker: PatientFaker
+
   private val oldDateFormatter = SimpleDateFormat("dd/MM/yyyy")
   private val genders = listOf(Gender.MALE, Gender.FEMALE, Gender.TRANSGENDER).shuffled()
 
@@ -112,7 +117,7 @@ class PatientSyncAndroidTest {
     return withDOB.andThen(withoutDOB)
   }
 
-  private fun dummyPatientPayloads(count: Int) = (0..count).map { PatientFaker.patientPayload() }
+  private fun dummyPatientPayloads(count: Int) = (0..count).map { patientFaker.patientPayload() }
 
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {

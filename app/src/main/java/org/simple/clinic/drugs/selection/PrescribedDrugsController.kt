@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.ProtocolDrugSelectionItem.DosageOption
+import org.simple.clinic.drugs.selection.ProtocolDrugSelectionListItem.DosageOption
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -67,7 +67,7 @@ class PrescribedDrugsEntryController @Inject constructor(
                 val isDosage1Selected = protocolPrescribedDrugsMap.contains(drug.name to dosage1)
                 val isDosage2Selected = protocolPrescribedDrugsMap.contains(drug.name to dosage2)
 
-                ProtocolDrugSelectionItem(
+                ProtocolDrugSelectionListItem(
                     id = index,
                     drug = drug,
                     option1 = when {
@@ -83,7 +83,7 @@ class PrescribedDrugsEntryController @Inject constructor(
           val customPrescribedDrugItems = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .map { CustomPrescribedDrugItem(it) }
+              .map { CustomPrescribedDrugListItem(it) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }

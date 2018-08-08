@@ -88,7 +88,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
 
     val newAdapterItems = ArrayList<GroupieItemWithUiEvents<out ViewHolder>>()
     newAdapterItems += protocolDrugItems
-    newAdapterItems += AddNewPrescriptionItem()
+    newAdapterItems += AddNewPrescriptionListItem()
 
     // Not the best way for registering click listeners,
     // but Groupie doesn't seem to have a better option.

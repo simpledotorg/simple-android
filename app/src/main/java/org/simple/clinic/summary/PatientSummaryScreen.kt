@@ -166,7 +166,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     recyclerViewAdapter.add(prescriptionSection)
     populatePrescribedDrugsSummary(emptySummaryItem)
 
-    val newBpItem = SummaryAddNewBpItem()
+    val newBpItem = SummaryAddNewBpListItem()
     newBpItem.uiEvents = adapterUiEvents
     bloodPressureSection.setHeader(newBpItem)
     recyclerViewAdapter.add(bloodPressureSection)
@@ -179,7 +179,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     prescriptionSection.update(listOf(prescribedDrugsItem))
   }
 
-  fun populateBloodPressureHistory(measurementItems: List<SummaryBloodPressureItem>) {
+  fun populateBloodPressureHistory(measurementItems: List<SummaryBloodPressureListItem>) {
     // Skip item animations on the first update.
     if (recyclerViewAdapter.itemCount != 0) {
       val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())

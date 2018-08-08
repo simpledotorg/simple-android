@@ -63,6 +63,7 @@ class PatientRepository @Inject constructor(
           .toObservable()
           .zipWith(fuzzySearch)
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
+//          .map { (_, fuzzyResults) -> fuzzyResults }
     }
   }
 

@@ -11,9 +11,9 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 
-data class CustomPrescribedDrugItem constructor(
+data class CustomPrescribedDrugListItem(
     val prescription: PrescribedDrug
-) : GroupieItemWithUiEvents<CustomPrescribedDrugItem.DrugViewHolder>(prescription.hashCode().toLong()) {
+) : GroupieItemWithUiEvents<CustomPrescribedDrugListItem.DrugViewHolder>(prescription.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

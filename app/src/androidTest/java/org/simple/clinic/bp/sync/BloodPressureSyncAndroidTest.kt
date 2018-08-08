@@ -53,7 +53,8 @@ class BloodPressureSyncAndroidTest {
   @Inject
   lateinit var bpSync: BloodPressureSync
 
-  private val faker = Faker()
+  @Inject
+  lateinit var faker: Faker
 
   @Before
   fun setUp() {

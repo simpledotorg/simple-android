@@ -27,7 +27,6 @@ import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
-import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
@@ -57,6 +56,7 @@ class UserSession @Inject constructor(
     return Single.fromCallable { ongoingLoginEntry }
   }
 
+  // TODO: Test
   // TODO: rename to loginFromOngoingLoginEntry()
   fun login(): Single<LoginResult> {
     return ongoingLoginEntry()
@@ -86,7 +86,8 @@ class UserSession @Inject constructor(
         }
   }
 
-  fun loginFromOngoingRegistrationEntry(facilityUuids: List<UUID>): Completable {
+  // TODO: Test
+  fun loginFromOngoingRegistrationEntry(): Completable {
     return ongoingRegistrationEntry()
         .flatMap { entry ->
           passwordHasher.hash(entry.pin!!)
@@ -96,19 +97,18 @@ class UserSession @Inject constructor(
                     fullName = entry.fullName!!,
                     phoneNumber = entry.phoneNumber!!,
                     pinDigest = passwordDigest,
-                    facilityUuids = facilityUuids,
+                    facilityUuids = entry.facilityIds!!,
                     createdAt = entry.createdAt!!,
                     updatedAt = entry.createdAt,
                     status = LoggedInUser.Status.WAITING_FOR_APPROVAL
                 )
               }
         }
-        .flatMapCompletable {
-          // TODO: also clear ongoing registration entry?
-          storeUser(it)
-        }
+        .flatMapCompletable { storeUser(it) }
+        .andThen(clearOngoingRegistrationEntry())
   }
 
+  // TODO: Test
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
     return registrationApi.findUser(phoneNumber)
         .map { user -> FindUserResult.Found(user) as FindUserResult }
@@ -124,6 +124,7 @@ class UserSession @Inject constructor(
         }
   }
 
+  // TODO: Test
   fun register(): Single<RegistrationResult> {
     return loggedInUser()
         .map { (user) -> user }

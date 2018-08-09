@@ -14,7 +14,6 @@
     <ImageButton
       android:id="@+id/registrationname_back"
       style="@style/Clinic.LoginBackButton"
-      android:contentDescription="@string/registrationname_cd_go_back"
       android:src="@drawable/ic_arrow_back_24dp" />
 
     <TextView

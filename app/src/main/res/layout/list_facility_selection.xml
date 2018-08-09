@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="?attr/selectableItemBackground"
+  android:paddingEnd="@dimen/spacing_16"
+  android:paddingStart="@dimen/spacing_16"
+  android:paddingTop="@dimen/spacing_16">
+
+  <CheckBox
+    android:id="@+id/facility_item_selection_checkbox"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:text="@null" />
+
+  <TextView
+    android:id="@+id/facility_item_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_toEndOf="@+id/facility_item_selection_checkbox"
+    android:textColor="@color/black_opacity_90"
+    android:textSize="@dimen/textsize_16"
+    tools:text="Facility name" />
+
+  <TextView
+    android:id="@+id/facility_item_address"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignStart="@+id/facility_item_name"
+    android:layout_below="@+id/facility_item_name"
+    android:layout_marginTop="2dp"
+    android:textColor="@color/black_opacity_50"
+    tools:text="A really long address for this facility to test line wrapping" />
+
+  <View
+    style="@style/Clinic.Separator.VerticalContent"
+    android:layout_alignStart="@+id/facility_item_name"
+    android:layout_below="@+id/facility_item_address"
+    android:layout_marginTop="@dimen/spacing_16" />
+</RelativeLayout>

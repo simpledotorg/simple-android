@@ -29,8 +29,8 @@ data class LoggedInUser(
     @Json(name = "password_digest")
     val pinDigest: String,
 
-    @Json(name = "facility_id")
-    val facilityUuid: UUID,
+    @Json(name = "facility_ids")
+    val facilityUuids: List<UUID>,
 
     // FIXME: This should not default to approved. This is temporarily done.
     @Json(name = "sync_approval_status")

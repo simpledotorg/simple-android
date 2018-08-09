@@ -86,7 +86,7 @@ class UserSession @Inject constructor(
         }
   }
 
-  fun loginFromOngoingRegistrationEntry(): Completable {
+  fun loginFromOngoingRegistrationEntry(facilityUuids: List<UUID>): Completable {
     return ongoingRegistrationEntry()
         .flatMap { entry ->
           passwordHasher.hash(entry.pin!!)
@@ -96,7 +96,7 @@ class UserSession @Inject constructor(
                     fullName = entry.fullName!!,
                     phoneNumber = entry.phoneNumber!!,
                     pinDigest = passwordDigest,
-                    facilityUuid = UUID.fromString("38b16571-4105-41ae-b8dd-8e3312cdb96c"),
+                    facilityUuids = facilityUuids,
                     createdAt = entry.createdAt!!,
                     updatedAt = entry.createdAt,
                     status = LoggedInUser.Status.WAITING_FOR_APPROVAL

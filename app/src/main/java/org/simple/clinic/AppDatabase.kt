@@ -1,3 +1,5 @@
+@file:Suppress("ClassName")
+
 package org.simple.clinic
 
 import android.arch.persistence.db.SupportSQLiteDatabase
@@ -21,6 +23,7 @@ import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
+import org.simple.clinic.util.UuidListRoomTypeConverter
 import org.simple.clinic.util.UuidRoomTypeConverter
 
 @Database(
@@ -32,7 +35,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       PrescribedDrug::class,
       Facility::class,
       LoggedInUser::class],
-    version = 6,
+    version = 7,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -42,7 +45,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     LoggedInUser.Status.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
-    UuidRoomTypeConverter::class)
+    UuidRoomTypeConverter::class,
+    UuidListRoomTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
   private val patientFuzzyPatientSearchDao by lazy {
@@ -118,6 +122,36 @@ abstract class AppDatabase : RoomDatabase() {
         // We need to manually create this table because it's a virtual table and Room doesn't support virtual tables (yet!)
         PatientFuzzySearch.createTable(this)
         execSQL("""INSERT INTO "PatientFuzzySearch"("rowid","word") SELECT "rowid","searchableName" FROM "Patient"""")
+      }
+    }
+  }
+
+  /**
+   * Renames LoggedInUser.facilityUuid column to LoggedInUser.facilityUuids.
+   * */
+  class Migration_6_7 : Migration(6, 7) {
+
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.inTransaction {
+        database.execSQL("ALTER TABLE `LoggedInUser` RENAME TO `LoggedInUser_v6`")
+        database.execSQL("""
+        CREATE TABLE IF NOT EXISTS `LoggedInUser` (
+        `uuid` TEXT NOT NULL,
+        `fullName` TEXT NOT NULL,
+        `phoneNumber` TEXT NOT NULL,
+        `pinDigest` TEXT NOT NULL,
+        `facilityUuids` TEXT NOT NULL,
+        `status` TEXT NOT NULL,
+        `createdAt` TEXT NOT NULL,
+        `updatedAt` TEXT NOT NULL,
+        PRIMARY KEY(`uuid`));
+        """)
+        database.execSQL("""
+        INSERT INTO `LoggedInUser`(`uuid`, `fullName`, `phoneNumber`, `pinDigest`, `facilityUuids`, `status`, `createdAt`, `updatedAt`)
+        SELECT `uuid`, `fullName`, `phoneNumber`, `pinDigest`, `facilityUuid`, `status`, `createdAt`, `updatedAt`
+        FROM `LoggedInUser_v6`
+        """)
+        database.execSQL("DROP TABLE `LoggedInUser_v6`")
       }
     }
   }

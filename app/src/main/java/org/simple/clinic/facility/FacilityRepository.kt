@@ -15,12 +15,12 @@ class FacilityRepository @Inject constructor(
     private val dao: Facility.RoomDao
 ) {
 
-  // TODO: Maybe change the return type to Single if this function can never emit more than one facilities?
   fun currentFacility(userSession: UserSession): Observable<Facility> {
     return userSession.loggedInUser()
         .map {
           when (it) {
-            is Just -> it.value.facilityUuid
+            // TODO: Find a way to store the current facility instead of defaulting to the first one.
+            is Just -> it.value.facilityUuids.first()
             else -> throw AssertionError("User isn't logged in yet")
           }
         }

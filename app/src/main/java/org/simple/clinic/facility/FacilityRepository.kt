@@ -15,6 +15,10 @@ class FacilityRepository @Inject constructor(
     private val dao: Facility.RoomDao
 ) {
 
+  fun facilities(): Observable<List<Facility>> {
+    return dao.facilities().toObservable()
+  }
+
   fun currentFacility(userSession: UserSession): Observable<Facility> {
     return userSession.loggedInUser()
         .map {

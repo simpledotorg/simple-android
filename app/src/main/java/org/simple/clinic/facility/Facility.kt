@@ -38,7 +38,6 @@ data class Facility(
     val updatedAt: Instant,
 
     val syncStatus: SyncStatus
-
 ) {
 
   @Dao
@@ -58,6 +57,9 @@ data class Facility(
 
     @Query("SELECT * FROM facility WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): Facility?
+
+    @Query("SELECT * FROM facility")
+    fun facilities(): Flowable<List<Facility>>
 
     @Query("SELECT COUNT(*) FROM facility")
     fun count(): Flowable<Int>

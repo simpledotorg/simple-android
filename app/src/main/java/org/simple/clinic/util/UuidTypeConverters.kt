@@ -38,9 +38,9 @@ class UuidListRoomTypeConverter {
     if (uuids == null) {
       return null
     }
-    return uuids
-        .map { uuidConverter.fromUuid(it) }
-        .joinToString(separator = ",")
+    return uuids.joinToString(
+        separator = ",",
+        transform = { uuid -> uuidConverter.fromUuid(uuid) as CharSequence })
   }
 }
 

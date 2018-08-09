@@ -11,8 +11,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RegistrationScheduler @Inject constructor(
-    val workManager: WorkManager,
-    val config: Single<RegistrationConfig>
+    private val workManager: WorkManager,
+    private val config: Single<RegistrationConfig>
 ) {
 
   fun schedule(): Completable {

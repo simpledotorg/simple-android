@@ -131,7 +131,7 @@ object PatientMocker {
         fullName = name,
         phoneNumber = phone,
         pinDigest = pinDigest,
-        facilityUuid = mock(),
+        facilityUuids = mock(),
         createdAt = mock(),
         status = status,
         updatedAt = mock())

@@ -12,4 +12,7 @@
        with Android. We haven't run into errors yet, but we might.  -->
   <issue id="InvalidPackage" severity="informational" />
   <issue id="MissingTranslation" severity="informational" />
+
+  <!-- We do not expect vision impaired nurses to use the app for now. -->
+  <issue id="ContentDescription" severity="ignore" />
 </lint>

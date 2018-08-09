@@ -14,9 +14,8 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
-import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.hideKeyboard
@@ -51,7 +50,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(locationPermissionChanges())
+    locationPermissionChanges()
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -67,7 +66,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     }
 
     allowAccessButton.setOnClickListener {
-      requestCameraPermission()
+      requestLocationPermission()
     }
 
     // Can't tell why, but the keyboard stays
@@ -87,12 +86,11 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
         .map(::LocationPermissionChanged)
   }
 
-  private fun requestCameraPermission() {
+  private fun requestLocationPermission() {
     RuntimePermissions.request(activity, LOCATION_PERMISSION, REQUESTCODE_LOCATION_PERMISSION)
   }
 
   fun openFacilitySelectionScreen() {
-    // TODO: Open facility selection instead.
-    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
+    screenRouter.push(RegistrationFacilitySelectionScreen.KEY)
   }
 }

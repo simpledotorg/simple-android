@@ -11,6 +11,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -22,7 +23,7 @@ class FacilitySync @Inject constructor(
 ) {
 
   fun sync(): Completable {
-    return Completable.mergeArrayDelayError(pull())
+    return pull()
   }
 
   fun pull(): Completable {
@@ -45,6 +46,17 @@ class FacilitySync @Inject constructor(
               .repeat()
               .takeWhile { response -> response.facilities.size >= config.batchSize }
               .ignoreElements()
+        }
+  }
+
+  fun pullWithResult(): Single<FacilityPullResult> {
+    return pull()
+        .toSingleDefault(FacilityPullResult.Success() as FacilityPullResult)
+        .onErrorReturn { e ->
+          when (e) {
+            is IOException -> FacilityPullResult.NetworkError()
+            else -> FacilityPullResult.UnexpectedError()
+          }
         }
   }
 }

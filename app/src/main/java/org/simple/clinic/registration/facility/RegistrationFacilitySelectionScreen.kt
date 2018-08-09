@@ -1,0 +1,119 @@
+package org.simple.clinic.registration.facility
+
+import android.content.Context
+import android.content.SharedPreferences
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.Toolbar
+import android.util.AttributeSet
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.RelativeLayout
+import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotterknife.bindView
+import org.simple.clinic.AppDatabase
+import org.simple.clinic.R
+import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.router.screen.RouterDirection
+import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ScreenCreated
+import javax.inject.Inject
+
+class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+
+  companion object {
+    val KEY = RegistrationFacilitySelectionScreenKey()
+  }
+
+  @Inject
+  lateinit var controller: RegistrationFacilitySelectionScreenController
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var appDatabase: AppDatabase
+
+  @Inject
+  lateinit var sharedPrefs: SharedPreferences
+
+  private val toolbar by bindView<Toolbar>(R.id.registrationfacilities_toolbar)
+  private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
+  private val progressView by bindView<View>(R.id.registrationfacilities_progress)
+  private val doneButton by bindView<Button>(R.id.registrationfacilities_done)
+  private val errorContainer by bindView<ViewGroup>(R.id.registrationfacilities_error_container)
+  private val errorTextView by bindView<TextView>(R.id.registrationfacilities_error)
+  private val errorRetryButton by bindView<Button>(R.id.registrationfacilities_error_retry)
+
+  private val recyclerViewAdapter = FacilitiesAdapter()
+
+  override fun onFinishInflate() {
+    super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
+    TheActivity.component.inject(this)
+
+    Observable.mergeArray(screenCreates(), retryClicks(), recyclerViewAdapter.uiEvents, doneClicks())
+        .observeOn(Schedulers.io())
+        .compose(controller)
+        .observeOn(AndroidSchedulers.mainThread())
+        .takeUntil(RxView.detaches(this))
+        .subscribe { uiChange -> uiChange(this) }
+
+    toolbar.setNavigationOnClickListener {
+      screenRouter.pop()
+    }
+
+    facilityRecyclerView.layoutManager = LinearLayoutManager(context)
+    facilityRecyclerView.adapter = recyclerViewAdapter
+  }
+
+  private fun screenCreates() = Observable.just(ScreenCreated())
+
+  private fun retryClicks() =
+      RxView
+          .clicks(errorRetryButton)
+          .map { RegistrationFacilitySelectionRetryClicked() }
+
+  private fun doneClicks() =
+      RxView
+          .clicks(doneButton)
+          .map { RegistrationFacilitySelectionDoneClicked() }
+
+  fun showProgressIndicator() {
+    progressView.visibility = VISIBLE
+  }
+
+  fun hideProgressIndicator() {
+    progressView.visibility = GONE
+  }
+
+  fun showNetworkError() {
+    errorContainer.visibility = View.VISIBLE
+    errorTextView.setText(R.string.registrationfacilities_error_check_internet_connection)
+  }
+
+  fun showUnexpectedError() {
+    errorContainer.visibility = View.VISIBLE
+    errorTextView.setText(R.string.registrationfacilities_error_unexpected_error)
+  }
+
+  fun hideError() {
+    errorContainer.visibility = View.GONE
+  }
+
+  fun updateFacilities(facilityItems: List<FacilityListItem>) {
+    recyclerViewAdapter.update(facilityItems)
+  }
+
+  fun openHomeScreen() {
+    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
+  }
+}

@@ -19,6 +19,7 @@ import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
+import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
@@ -55,6 +56,7 @@ interface TheActivityComponent {
   fun inject(target: RegistrationConfirmPinScreen)
   fun inject(target: OnboardingScreen)
   fun inject(target: RegistrationLocationPermissionScreen)
+  fun inject(target: RegistrationFacilitySelectionScreen)
 
   @Subcomponent.Builder
   interface Builder {

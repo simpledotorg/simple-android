@@ -6,6 +6,8 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.LoggedInUserPayload
+import org.simple.clinic.user.UserStatus
 import java.util.UUID
 
 /**
@@ -124,9 +126,27 @@ object PatientMocker {
       name: String = "a name",
       phone: String = "a phone",
       pinDigest: String = "a hash",
-      status: LoggedInUser.Status = LoggedInUser.Status.WAITING_FOR_APPROVAL
+      status: UserStatus = UserStatus.WAITING_FOR_APPROVAL
   ): LoggedInUser {
     return LoggedInUser(
+        uuid = uuid,
+        fullName = name,
+        phoneNumber = phone,
+        pinDigest = pinDigest,
+        facilityUuids = mock(),
+        createdAt = mock(),
+        status = status,
+        updatedAt = mock())
+  }
+
+  fun loggedInUserPayload(
+      uuid: UUID = mock(),
+      name: String = "a name",
+      phone: String = "a phone",
+      pinDigest: String = "a hash",
+      status: UserStatus = UserStatus.WAITING_FOR_APPROVAL
+  ): LoggedInUserPayload {
+    return LoggedInUserPayload(
         uuid = uuid,
         fullName = name,
         phoneNumber = phone,

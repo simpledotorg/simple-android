@@ -51,7 +51,7 @@ class UserSessionTest {
         }
       }"""
 
-    val LOGGED_IN_USER = PatientMocker.loggedInUser()
+    val LOGGED_IN_USER = PatientMocker.loggedInUserPayload()
   }
 
   @Before

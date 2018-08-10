@@ -36,7 +36,7 @@ class UserSessionAndroidTest {
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
     assertThat(loggedInUser!!.facilityUuids.first()).isEqualTo(UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977"))
-    assertThat(loggedInUser.status).isEqualTo(LoggedInUser.Status.APPROVED_FOR_SYNCING)
+    assertThat(loggedInUser.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
   }
 
   @Test

@@ -6,40 +6,58 @@ import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
+import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import java.util.UUID
 import javax.inject.Inject
 
 @AppScope
 class FacilityRepository @Inject constructor(
-    private val dao: Facility.RoomDao
+    private val facilityDao: Facility.RoomDao,
+    private val userFacilityMappingDao: LoggedInUserFacilityMapping.RoomDao
 ) {
 
   fun facilities(): Observable<List<Facility>> {
-    return dao.facilities().toObservable()
+    return facilityDao.facilities().toObservable()
+  }
+
+  fun associateUserWithFacilities(user: LoggedInUser, facilityIds: List<UUID>, currentFacility: UUID): Completable {
+    if (facilityIds.contains(currentFacility).not()) {
+      throw AssertionError()
+    }
+    return Completable.fromAction {
+      userFacilityMappingDao.insert(user, facilityIds, currentFacility)
+    }
   }
 
   fun currentFacility(userSession: UserSession): Observable<Facility> {
     return userSession.loggedInUser()
-        .map {
-          when (it) {
-            // TODO: Find a way to store the current facility instead of defaulting to the first one.
-            is Just -> it.value.facilityUuids.first()
-            else -> throw AssertionError("User isn't logged in yet")
+        .doOnNext {
+          if (it === None) {
+            throw AssertionError("User isn't logged in yet")
           }
         }
-        .map { dao.getOne(it) }
+        .map { (user) -> user }
+        .flatMap { userFacilityMappingDao.currentFacility(it.uuid).toObservable() }
+  }
+
+  fun facilityUuidsForUser(user: LoggedInUser): Observable<List<UUID>> {
+    return userFacilityMappingDao
+        .facilityUuidsFor(user.uuid)
+        .toObservable()
   }
 
   fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {
     return payloads
         .toObservable()
         .filter { payload ->
-          val localCopy = dao.getOne(payload.uuid)
+          val localCopy = facilityDao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map { it.toDatabaseModel(SyncStatus.DONE) }
         .toList()
-        .flatMapCompletable { Completable.fromAction { dao.save(it) } }
+        .flatMapCompletable { Completable.fromAction { facilityDao.save(it) } }
   }
 }

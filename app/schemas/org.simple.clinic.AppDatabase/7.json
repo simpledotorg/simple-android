@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 7,
-    "identityHash": "1e41798be0998067575c1e497a34181d",
+    "identityHash": "6785f25444eed9ec52544f2807daab13",
     "entities": [
       {
         "tableName": "Patient",
@@ -544,7 +544,7 @@
       },
       {
         "tableName": "LoggedInUser",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `fullName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `pinDigest` TEXT NOT NULL, `facilityUuids` TEXT NOT NULL, `status` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `fullName` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `pinDigest` TEXT NOT NULL, `status` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, PRIMARY KEY(`uuid`))",
         "fields": [
           {
             "fieldPath": "uuid",
@@ -567,12 +567,6 @@
           {
             "fieldPath": "pinDigest",
             "columnName": "pinDigest",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "facilityUuids",
-            "columnName": "facilityUuids",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -603,11 +597,76 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "LoggedInUserFacilityMapping",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userUuid` TEXT NOT NULL, `facilityUuid` TEXT NOT NULL, `isCurrentFacility` INTEGER NOT NULL, PRIMARY KEY(`userUuid`, `facilityUuid`), FOREIGN KEY(`userUuid`) REFERENCES `LoggedInUser`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION , FOREIGN KEY(`facilityUuid`) REFERENCES `Facility`(`uuid`) ON UPDATE NO ACTION ON DELETE NO ACTION )",
+        "fields": [
+          {
+            "fieldPath": "userUuid",
+            "columnName": "userUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "facilityUuid",
+            "columnName": "facilityUuid",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isCurrentFacility",
+            "columnName": "isCurrentFacility",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "userUuid",
+            "facilityUuid"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_LoggedInUserFacilityMapping_facilityUuid",
+            "unique": false,
+            "columnNames": [
+              "facilityUuid"
+            ],
+            "createSql": "CREATE  INDEX `index_LoggedInUserFacilityMapping_facilityUuid` ON `${TABLE_NAME}` (`facilityUuid`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "LoggedInUser",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "userUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          },
+          {
+            "table": "Facility",
+            "onDelete": "NO ACTION",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "facilityUuid"
+            ],
+            "referencedColumns": [
+              "uuid"
+            ]
+          }
+        ]
       }
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"1e41798be0998067575c1e497a34181d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"6785f25444eed9ec52544f2807daab13\")"
     ]
   }
 }

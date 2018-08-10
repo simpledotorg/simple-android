@@ -16,6 +16,7 @@ import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginResponse
@@ -34,6 +35,7 @@ class UserSessionTest {
   private val registrationApi = mock<RegistrationApiV1>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
+  private val facilityRepository = mock<FacilityRepository>()
   private val sharedPrefs = mock<SharedPreferences>()
   private val appDatabase = mock<AppDatabase>()
   private val passwordHasher = mock<PasswordHasher>()
@@ -61,6 +63,7 @@ class UserSessionTest {
         registrationApi,
         moshi,
         facilitySync,
+        facilityRepository,
         sharedPrefs,
         appDatabase,
         passwordHasher,
@@ -71,16 +74,16 @@ class UserSessionTest {
 
     val mockUserDao = mock<LoggedInUser.RoomDao>()
     whenever(appDatabase.userDao()).thenReturn(mockUserDao)
+
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
   }
 
   @Test
   fun `login should correctly map network response to result`() {
-    val unauthorizedHttpError = unauthorizedHttpError()
-
     whenever(loginApi.login(any()))
         .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER)))
         .thenReturn(Single.error(NullPointerException()))
-        .thenReturn(Single.error(unauthorizedHttpError))
+        .thenReturn(Single.error(unauthorizedHttpError()))
         .thenReturn(Single.error(SocketTimeoutException()))
 
     val result1 = userSession.login().blockingGet()

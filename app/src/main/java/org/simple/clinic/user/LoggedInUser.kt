@@ -21,8 +21,6 @@ data class LoggedInUser(
 
     val pinDigest: String,
 
-    val facilityUuids: List<UUID>,
-
     val status: UserStatus,
 
     val createdAt: Instant,

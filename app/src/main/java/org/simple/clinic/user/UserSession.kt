@@ -7,8 +7,11 @@ import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Singles
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginErrorResponse
@@ -38,6 +41,7 @@ class UserSession @Inject constructor(
     private val registrationApi: RegistrationApiV1,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
+    private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
@@ -89,23 +93,21 @@ class UserSession @Inject constructor(
 
   // TODO: Test
   fun loginFromOngoingRegistrationEntry(): Completable {
-    return ongoingRegistrationEntry()
-        .flatMap { entry ->
-          passwordHasher.hash(entry.pin!!)
-              .map { passwordDigest ->
-                LoggedInUser(
-                    uuid = entry.uuid!!,
-                    fullName = entry.fullName!!,
-                    phoneNumber = entry.phoneNumber!!,
-                    pinDigest = passwordDigest,
-                    facilityUuids = entry.facilityIds!!,
-                    createdAt = entry.createdAt!!,
-                    updatedAt = entry.createdAt,
-                    status = UserStatus.WAITING_FOR_APPROVAL
-                )
-              }
+    val ongoingEntry = ongoingRegistrationEntry().cache()
+
+    return ongoingEntry
+        .zipWith(ongoingEntry.flatMap { entry -> passwordHasher.hash(entry.pin!!) })
+        .flatMapCompletable { (entry, passwordDigest) ->
+          val user = LoggedInUser(
+              uuid = entry.uuid!!,
+              fullName = entry.fullName!!,
+              phoneNumber = entry.phoneNumber!!,
+              pinDigest = passwordDigest,
+              createdAt = entry.createdAt!!,
+              updatedAt = entry.createdAt,
+              status = UserStatus.WAITING_FOR_APPROVAL)
+          storeUser(user, entry.facilityIds!!)
         }
-        .flatMapCompletable { storeUser(it) }
         .andThen(clearOngoingRegistrationEntry())
   }
 
@@ -127,15 +129,23 @@ class UserSession @Inject constructor(
 
   // TODO: Test
   fun register(): Single<RegistrationResult> {
-    return loggedInUser()
-        .map { (user) -> user }
-        .map { userToPayload(it, it.facilityUuids) }
+    val loggedInUser: Single<LoggedInUser> = loggedInUser()
+        .map { (user) -> user!! }
         .firstOrError()
+        .cache()
+
+    val currentFacility = loggedInUser
+        .flatMap { facilityRepository.facilityUuidsForUser(it).firstOrError() }
+
+    return Singles.zip(loggedInUser, currentFacility)
+        .map { (user, facilityUuids) -> userToPayload(user, facilityUuids) }
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
         .flatMap {
-          storeUser(it.loggedInUser)
-              .andThen(Single.just(RegistrationResult.Success() as RegistrationResult))
+          val user = userFromPayload(it.userPayload)
+          val userFacilities = it.userPayload.facilityUuids
+          storeUser(user, userFacilities)
+              .toSingleDefault(RegistrationResult.Success() as RegistrationResult)
         }
         .onErrorReturn { RegistrationResult.Error() }
   }
@@ -161,7 +171,6 @@ class UserSession @Inject constructor(
           fullName = fullName,
           phoneNumber = phoneNumber,
           pinDigest = pinDigest,
-          facilityUuids = facilityUuids,
           status = status,
           createdAt = createdAt,
           updatedAt = updatedAt)
@@ -187,13 +196,15 @@ class UserSession @Inject constructor(
 
   private fun storeUserAndAccessToken(response: LoginResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))
-    return storeUser(userFromPayload(response.loggedInUser))
+    return storeUser(
+        userFromPayload(response.loggedInUser),
+        response.loggedInUser.facilityUuids)
   }
 
-  private fun storeUser(loggedInUser: LoggedInUser): Completable {
-    return Completable.fromAction {
-      appDatabase.userDao().create(loggedInUser)
-    }
+  private fun storeUser(loggedInUser: LoggedInUser, facilityUuids: List<UUID>): Completable {
+    return Completable
+        .fromAction { appDatabase.userDao().create(loggedInUser) }
+        .andThen(facilityRepository.associateUserWithFacilities(loggedInUser, facilityUuids, currentFacility = facilityUuids.first()))
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {

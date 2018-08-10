@@ -2,7 +2,7 @@ package org.simple.clinic.login
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.LoggedInUserPayload
 
 @JsonClass(generateAdapter = true)
 data class LoginResponse(
@@ -11,7 +11,7 @@ data class LoginResponse(
     val accessToken: String,
 
     @Json(name = "user")
-    val loggedInUser: LoggedInUser
+    val loggedInUser: LoggedInUserPayload
 )
 
 @JsonClass(generateAdapter = true)

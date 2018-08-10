@@ -10,10 +10,3 @@ data class RegistrationResponse(
     @Json(name = "user")
     val loggedInUser: LoggedInUser
 )
-
-@JsonClass(generateAdapter = true)
-data class RegistrationErrorResponse(
-
-    @Json(name = "errors")
-    val errors: HashMap<String, List<String>>
-)

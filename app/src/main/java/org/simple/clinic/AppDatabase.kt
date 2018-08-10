@@ -21,6 +21,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
 import org.simple.clinic.util.UuidListRoomTypeConverter
@@ -42,7 +43,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     PatientPhoneNumberType.RoomTypeConverter::class,
     PatientStatus.RoomTypeConverter::class,
     SyncStatus.RoomTypeConverter::class,
-    LoggedInUser.Status.RoomTypeConverter::class,
+    UserStatus.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class,

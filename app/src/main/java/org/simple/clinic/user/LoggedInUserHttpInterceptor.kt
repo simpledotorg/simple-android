@@ -9,12 +9,13 @@ import javax.inject.Inject
 class LoggedInUserHttpInterceptor @Inject constructor() : Interceptor {
 
   // Ugly hack to avoid a cyclic dependency between this class and UserSession.
-  private val userSession by lazy { ClinicApp.appComponent.userSession() }
+  private val userSession
+    get() = ClinicApp.appComponent.userSession()
 
   override fun intercept(chain: Interceptor.Chain?): Response {
     val originalRequest = chain!!.request()
 
-    val (user) = userSession.loggedInUser().blockingFirst()
+    val user = userSession.loggedInUserImmediate()
     val (accessToken) = userSession.accessToken()
 
     return when (user?.isApprovedForSyncing() == true) {

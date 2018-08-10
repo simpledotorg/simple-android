@@ -6,6 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.util.Just
 import java.util.UUID
@@ -16,6 +17,9 @@ class UserSessionAndroidTest {
 
   @Inject
   lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
 
   @Before
   fun setUp() {
@@ -35,8 +39,12 @@ class UserSessionAndroidTest {
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
-    assertThat(loggedInUser!!.facilityUuids.first()).isEqualTo(UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977"))
-    assertThat(loggedInUser.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+
+    val currentFacility = facilityRepository
+        .currentFacility(userSession)
+        .blockingFirst()
+    assertThat(currentFacility.uuid).isEqualTo(UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977"))
   }
 
   @Test

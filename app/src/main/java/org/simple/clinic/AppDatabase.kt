@@ -21,6 +21,7 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
@@ -35,7 +36,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       BloodPressureMeasurement::class,
       PrescribedDrug::class,
       Facility::class,
-      LoggedInUser::class],
+      LoggedInUser::class,
+      LoggedInUserFacilityMapping::class],
     version = 7,
     exportSchema = true)
 @TypeConverters(
@@ -69,6 +71,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun facilityDao(): Facility.RoomDao
 
   abstract fun userDao(): LoggedInUser.RoomDao
+
+  abstract fun userFacilityMappingDao(): LoggedInUserFacilityMapping.RoomDao
 
   fun fuzzyPatientSearchDao(): PatientFuzzySearch.PatientFuzzySearchDao = patientFuzzyPatientSearchDao
 

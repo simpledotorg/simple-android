@@ -14,7 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.registration.FindUserResult
-import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -165,7 +165,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
     val inputNumber = "1234567890"
-    val mockUser = mock<LoggedInUser>()
+    val mockUser = mock<LoggedInUserPayload>()
     whenever(mockUser.phoneNumber).thenReturn(inputNumber)
 
     whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(mockUser)))

@@ -1,10 +1,10 @@
 package org.simple.clinic.registration
 
-import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.LoggedInUserPayload
 
 sealed class FindUserResult {
 
-  data class Found(val user: LoggedInUser) : FindUserResult()
+  data class Found(val user: LoggedInUserPayload) : FindUserResult()
 
   class NotFound : FindUserResult()
 

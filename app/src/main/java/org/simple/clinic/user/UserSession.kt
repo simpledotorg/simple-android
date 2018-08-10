@@ -27,6 +27,7 @@ import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
@@ -100,7 +101,7 @@ class UserSession @Inject constructor(
                     facilityUuids = entry.facilityIds!!,
                     createdAt = entry.createdAt!!,
                     updatedAt = entry.createdAt,
-                    status = LoggedInUser.Status.WAITING_FOR_APPROVAL
+                    status = UserStatus.WAITING_FOR_APPROVAL
                 )
               }
         }
@@ -128,6 +129,7 @@ class UserSession @Inject constructor(
   fun register(): Single<RegistrationResult> {
     return loggedInUser()
         .map { (user) -> user }
+        .map { userToPayload(it, it.facilityUuids) }
         .firstOrError()
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
@@ -136,6 +138,34 @@ class UserSession @Inject constructor(
               .andThen(Single.just(RegistrationResult.Success() as RegistrationResult))
         }
         .onErrorReturn { RegistrationResult.Error() }
+  }
+
+  private fun userToPayload(user: LoggedInUser, facilityUuids: List<UUID>): LoggedInUserPayload {
+    return user.run {
+      LoggedInUserPayload(
+          uuid = uuid,
+          fullName = fullName,
+          phoneNumber = phoneNumber,
+          pinDigest = pinDigest,
+          facilityUuids = facilityUuids,
+          status = status,
+          createdAt = createdAt,
+          updatedAt = updatedAt)
+    }
+  }
+
+  private fun userFromPayload(payload: LoggedInUserPayload): LoggedInUser {
+    return payload.run {
+      LoggedInUser(
+          uuid = uuid,
+          fullName = fullName,
+          phoneNumber = phoneNumber,
+          pinDigest = pinDigest,
+          facilityUuids = facilityUuids,
+          status = status,
+          createdAt = createdAt,
+          updatedAt = updatedAt)
+    }
   }
 
   fun saveOngoingRegistrationEntry(entry: OngoingRegistrationEntry): Completable {
@@ -157,7 +187,7 @@ class UserSession @Inject constructor(
 
   private fun storeUserAndAccessToken(response: LoginResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))
-    return storeUser(response.loggedInUser)
+    return storeUser(userFromPayload(response.loggedInUser))
   }
 
   private fun storeUser(loggedInUser: LoggedInUser): Completable {

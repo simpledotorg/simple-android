@@ -59,8 +59,11 @@ data class LoggedInUser(
   @Dao
   interface RoomDao {
 
-    @Query("SELECT * FROM LoggedInUser")
+    @Query("SELECT * FROM LoggedInUser LIMIT 1")
     fun user(): Flowable<List<LoggedInUser>>
+
+    @Query("SELECT * FROM LoggedInUser LIMIT 1")
+    fun userImmediate(): LoggedInUser?
 
     @Insert
     fun create(user: LoggedInUser)

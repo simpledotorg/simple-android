@@ -1,6 +1,7 @@
 package org.simple.clinic.user
 
 import android.content.SharedPreferences
+import android.support.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
@@ -181,6 +182,14 @@ class UserSession @Inject constructor(
         .toObservable()
         .map { if (it.isEmpty()) None else Just(it.first()) }
   }
+
+  // FIXME: Figure out a better way to add access tokens to network calls in a reactive fashion
+  // FIXME: Maybe add a separate RxCallAdapterFactory that lets us transform requests without interceptors?
+  // This was added because we needed to call it from the OkHttp Interceptor
+  // in a synchronous fashion because the Rx - blocking() call used earlier
+  // was causing a deadlock in the Room threads when data sync happened
+  @WorkerThread
+  fun loggedInUserImmediate() = appDatabase.userDao().userImmediate()
 
   fun isUserLoggedIn(): Boolean {
     // TODO: This is bad. Make this function return Single<Boolean> instead.

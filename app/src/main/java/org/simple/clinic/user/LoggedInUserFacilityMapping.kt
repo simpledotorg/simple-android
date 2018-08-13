@@ -38,39 +38,63 @@ data class LoggedInUserFacilityMapping(
   abstract class RoomDao {
 
     @Transaction
-    open fun insert(user: LoggedInUser, facilityIds: List<UUID>, currentFacilityUuid: UUID) {
+    open fun insert(user: LoggedInUser, facilityIds: List<UUID>, newCurrentFacilityUuid: UUID) {
+      if ((newCurrentFacilityUuid in facilityIds).not()) {
+        throw AssertionError()
+      }
+
       val mappings = facilityIds
           .map {
             LoggedInUserFacilityMapping(
                 userUuid = user.uuid,
                 facilityUuid = it,
-                isCurrentFacility = it == currentFacilityUuid)
+                isCurrentFacility = it == newCurrentFacilityUuid)
           }
       insert(mappings)
-      setCurrentFacility(user.uuid, currentFacilityUuid)
+      changeCurrentFacility(user.uuid, newCurrentFacilityUuid)
     }
 
     @Insert
     abstract fun insert(mappings: List<LoggedInUserFacilityMapping>)
 
+    @Transaction
+    open fun changeCurrentFacility(userUuid: UUID, newCurrentFacilityUuid: UUID) {
+      val oldCurrentFacilityUuid = currentFacilityUuid(userUuid)
+      if (oldCurrentFacilityUuid != null) {
+        setFacilityIsCurrent(userUuid, oldCurrentFacilityUuid, isCurrent = false)
+      }
+      setFacilityIsCurrent(userUuid, newCurrentFacilityUuid, isCurrent = true)
+    }
+
     // TODO: Test that a user only has one facility with isCurrentFacility=true.
     @Query("""
       UPDATE LoggedInUserFacilityMapping
-      SET isCurrentFacility = 'TRUE'
+      SET isCurrentFacility = :isCurrent
       WHERE userUuid = :userUuid AND facilityUuid = :facilityUuid
       """)
-    abstract fun setCurrentFacility(userUuid: UUID, facilityUuid: UUID)
+    protected abstract fun setFacilityIsCurrent(userUuid: UUID, facilityUuid: UUID, isCurrent: Boolean)
 
     @Query("""
       SELECT *
       FROM Facility
       INNER JOIN LoggedInUserFacilityMapping ON LoggedInUserFacilityMapping.facilityUuid = Facility.uuid
       WHERE LoggedInUserFacilityMapping.userUuid = :userUuid
+      AND LoggedInUserFacilityMapping.isCurrentFacility = 1
       LIMIT 1
       """)
     abstract fun currentFacility(userUuid: UUID): Flowable<Facility>
 
-    @Query("SELECT facilityUuid FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid ")
-    abstract fun facilityUuidsFor(userUuid: UUID): Flowable<List<UUID>>
+    @Query("""
+      SELECT facilityUuid FROM LoggedInUserFacilityMapping
+      WHERE userUuid = :userUuid
+      AND isCurrentFacility = 1
+    """)
+    protected abstract fun currentFacilityUuid(userUuid: UUID): UUID?
+
+    @Query("SELECT facilityUuid FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
+    abstract fun facilityUuids(userUuid: UUID): Flowable<List<UUID>>
+
+    @Query("SELECT * FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
+    abstract fun mappingsForUser(userUuid: UUID): Flowable<List<LoggedInUserFacilityMapping>>
   }
 }

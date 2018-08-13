@@ -7,6 +7,7 @@ import android.arch.persistence.room.Index
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
+import android.database.sqlite.SQLiteDatabase
 import io.reactivex.Flowable
 import org.simple.clinic.facility.Facility
 import java.util.UUID
@@ -38,7 +39,7 @@ data class LoggedInUserFacilityMapping(
   abstract class RoomDao {
 
     @Transaction
-    open fun insert(user: LoggedInUser, facilityIds: List<UUID>, newCurrentFacilityUuid: UUID) {
+    open fun insertOrUpdate(user: LoggedInUser, facilityIds: List<UUID>, newCurrentFacilityUuid: UUID) {
       if ((newCurrentFacilityUuid in facilityIds).not()) {
         throw AssertionError()
       }
@@ -50,12 +51,12 @@ data class LoggedInUserFacilityMapping(
                 facilityUuid = it,
                 isCurrentFacility = it == newCurrentFacilityUuid)
           }
-      insert(mappings)
+      insertOrUpdate(mappings)
       changeCurrentFacility(user.uuid, newCurrentFacilityUuid)
     }
 
-    @Insert
-    abstract fun insert(mappings: List<LoggedInUserFacilityMapping>)
+    @Insert(onConflict = SQLiteDatabase.CONFLICT_REPLACE)
+    abstract fun insertOrUpdate(mappings: List<LoggedInUserFacilityMapping>)
 
     @Transaction
     open fun changeCurrentFacility(userUuid: UUID, newCurrentFacilityUuid: UUID) {

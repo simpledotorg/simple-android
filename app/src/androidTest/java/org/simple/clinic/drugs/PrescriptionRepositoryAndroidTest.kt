@@ -50,7 +50,7 @@ class PrescriptionRepositoryAndroidTest {
 
   @Test
   fun prescriptions_for_a_patient_should_exclude_soft_deleted_prescriptions() {
-    val facilityUUID = TestClinicApp.qaUserFacilityUUID()
+    val facilityUUID = TestClinicApp.qaUserFacilityUuid()
     database.facilityDao().save(listOf(
         Facility(
             facilityUUID,

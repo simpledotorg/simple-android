@@ -61,7 +61,6 @@ class UserSession @Inject constructor(
     return Single.fromCallable { ongoingLoginEntry }
   }
 
-  // TODO: Test
   // TODO: rename to loginFromOngoingLoginEntry()
   fun login(): Single<LoginResult> {
     return ongoingLoginEntry()
@@ -91,7 +90,6 @@ class UserSession @Inject constructor(
         }
   }
 
-  // TODO: Test
   fun loginFromOngoingRegistrationEntry(): Completable {
     val ongoingEntry = ongoingRegistrationEntry().cache()
 
@@ -111,7 +109,6 @@ class UserSession @Inject constructor(
         .andThen(clearOngoingRegistrationEntry())
   }
 
-  // TODO: Test
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
     return registrationApi.findUser(phoneNumber)
         .map { user -> FindUserResult.Found(user) as FindUserResult }
@@ -127,7 +124,6 @@ class UserSession @Inject constructor(
         }
   }
 
-  // TODO: Test
   fun register(): Single<RegistrationResult> {
     val loggedInUser: Single<LoggedInUser> = loggedInUser()
         .map { (user) -> user!! }
@@ -144,10 +140,18 @@ class UserSession @Inject constructor(
         .flatMap {
           val user = userFromPayload(it.userPayload)
           val userFacilities = it.userPayload.facilityUuids
+
+          if (userFacilities.isEmpty()) {
+            throw AssertionError("Server did not send back any facilities")
+          }
+
           storeUser(user, userFacilities)
               .toSingleDefault(RegistrationResult.Success() as RegistrationResult)
         }
-        .onErrorReturn { RegistrationResult.Error() }
+        .onErrorReturn { e ->
+          Timber.e(e)
+          RegistrationResult.Error()
+        }
   }
 
   private fun userToPayload(user: LoggedInUser, facilityUuids: List<UUID>): LoggedInUserPayload {
@@ -203,7 +207,7 @@ class UserSession @Inject constructor(
 
   private fun storeUser(loggedInUser: LoggedInUser, facilityUuids: List<UUID>): Completable {
     return Completable
-        .fromAction { appDatabase.userDao().create(loggedInUser) }
+        .fromAction { appDatabase.userDao().createOrUpdate(loggedInUser) }
         .andThen(facilityRepository.associateUserWithFacilities(loggedInUser, facilityUuids, currentFacility = facilityUuids.first()))
   }
 
@@ -213,6 +217,10 @@ class UserSession @Inject constructor(
   }
 
   fun logout(): Completable {
+    // FYI: RegistrationWorker doesn't get canceled when a user logs out.
+    // It's possible that the wrong user will get sent to the server for
+    // registration if another user logs in. This works for now because
+    // there is no way to log out, but this something to keep in mind.
     return Completable.fromAction {
       sharedPreferences.edit().clear().apply()
       appDatabase.clearAllTables()

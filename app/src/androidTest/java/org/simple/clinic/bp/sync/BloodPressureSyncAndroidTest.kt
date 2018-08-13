@@ -67,7 +67,7 @@ class BloodPressureSyncAndroidTest {
   }
 
   private fun insertDummyMeasurements(count: Int): Completable {
-    val facilityUUID = TestClinicApp.qaUserFacilityUUID()
+    val facilityUUID = TestClinicApp.qaUserFacilityUuid()
     database.facilityDao().save(listOf(
         Facility(
             facilityUUID,

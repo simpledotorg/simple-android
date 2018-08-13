@@ -12,6 +12,7 @@ import java.util.UUID
 
 /**
  * Generates test data.
+ * TODO: Rename to DataMocker.
  */
 object PatientMocker {
 
@@ -143,6 +144,7 @@ object PatientMocker {
       name: String = "a name",
       phone: String = "a phone",
       pinDigest: String = "a hash",
+      facilityUuids: List<UUID> = listOf(mock(), mock()),
       status: UserStatus = UserStatus.WAITING_FOR_APPROVAL
   ): LoggedInUserPayload {
     return LoggedInUserPayload(
@@ -150,7 +152,7 @@ object PatientMocker {
         fullName = name,
         phoneNumber = phone,
         pinDigest = pinDigest,
-        facilityUuids = listOf(mock(), mock()),
+        facilityUuids = facilityUuids,
         createdAt = mock(),
         status = status,
         updatedAt = mock())

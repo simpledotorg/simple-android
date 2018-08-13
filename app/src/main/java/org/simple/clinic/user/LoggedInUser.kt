@@ -5,6 +5,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
+import android.database.sqlite.SQLiteDatabase
 import io.reactivex.Flowable
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -37,8 +38,8 @@ data class LoggedInUser(
     @Query("SELECT * FROM LoggedInUser LIMIT 1")
     fun userImmediate(): LoggedInUser?
 
-    @Insert
-    fun create(user: LoggedInUser)
+    @Insert(onConflict = SQLiteDatabase.CONFLICT_REPLACE)
+    fun createOrUpdate(user: LoggedInUser)
   }
 
   fun isApprovedForSyncing(): Boolean {

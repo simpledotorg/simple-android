@@ -32,7 +32,7 @@ class FacilityRepositoryAndroidTest {
     database.clearAllTables()
 
     user = patientFaker.loggedInUser()
-    database.userDao().create(user)
+    database.userDao().createOrUpdate(user)
   }
 
   @Test
@@ -106,6 +106,6 @@ class FacilityRepositoryAndroidTest {
     val facility3 = patientFaker.facility()
     val facilityIds = listOf(facility1, facility2).map { it.uuid }
 
-    database.userFacilityMappingDao().insert(user, facilityIds, facility3.uuid)
+    database.userFacilityMappingDao().insertOrUpdate(user, facilityIds, facility3.uuid)
   }
 }

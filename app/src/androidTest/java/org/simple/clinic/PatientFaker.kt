@@ -11,11 +11,13 @@ import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
+// TODO: Rename to DataFaker.
 @AppScope
 class PatientFaker @Inject constructor(private val faker: Faker) {
 
@@ -67,7 +69,7 @@ class PatientFaker @Inject constructor(private val faker: Faker) {
   }
 
   fun facility(
-      uuid: UUID = UUID.randomUUID(),
+      uuid: UUID = TestClinicApp.qaUserFacilityUuid(),
       name: String = faker.company.name(),
       district: String = faker.address.city(),
       state: String = faker.address.state()
@@ -102,5 +104,17 @@ class PatientFaker @Inject constructor(private val faker: Faker) {
         status = status,
         createdAt = Instant.now(),
         updatedAt = Instant.now())
+  }
+
+  fun ongoingRegistrationEntry(facilities: List<Facility>): OngoingRegistrationEntry {
+    val pin = faker.number.number(4)
+    return OngoingRegistrationEntry(
+        uuid = UUID.randomUUID(),
+        phoneNumber = faker.number.number(10),
+        fullName = faker.name.name(),
+        pin = pin,
+        pinConfirmation = pin,
+        facilityIds = facilities.map { it.uuid },
+        createdAt = Instant.now())
   }
 }

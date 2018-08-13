@@ -5,8 +5,8 @@ import io.reactivex.Single
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
-import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.StorageModule
 import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.sync.SyncConfig
@@ -36,7 +36,8 @@ class TestClinicApp : ClinicApp() {
       return OngoingLoginEntry("0000", "0000", "0000")
     }
 
-    fun qaUserFacilityUUID(): UUID {
+    @Deprecated(message = "Get real facilities from the server instead. Look at UserSessionAndroidTest for examples.")
+    fun qaUserFacilityUuid(): UUID {
       return UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
     }
   }
@@ -52,8 +53,8 @@ class TestClinicApp : ClinicApp() {
   }
 
   override fun buildDaggerGraph(): AppComponent {
-     // We have moved the in-memory database configuration to the sqlite openhelper factory
-     // but we still have to provide a non-empty name for Room, otherwise it complains.
+    // We have moved the in-memory database configuration to the sqlite openhelper factory
+    // but we still have to provide a non-empty name for Room, otherwise it complains.
     return DaggerTestAppComponent.builder()
         .appModule(AppModule(this, "ignored-db-name"))
         .storageModule(object : StorageModule() {

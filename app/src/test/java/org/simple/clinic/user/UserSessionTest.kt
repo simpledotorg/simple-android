@@ -10,6 +10,8 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
+import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.ResponseBody
@@ -23,7 +25,10 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
+import org.simple.clinic.registration.RegistrationResponse
+import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
@@ -117,7 +122,49 @@ class UserSessionTest {
 
     val inOrder = inOrder(appDatabase.userDao(), accessTokenPref, facilitySync)
     inOrder.verify(accessTokenPref).set(any())
-    inOrder.verify(appDatabase.userDao()).create(any())
+    inOrder.verify(appDatabase.userDao()).createOrUpdate(any())
     inOrder.verify(facilitySync, times(1)).sync()
+  }
+
+  @Test
+  fun `login should not be considered complete if facility sync fails`() {
+    // TODO.
+  }
+
+  @Test
+  fun `when find existing user then the network response should correctly be mapped to results`() {
+    val notFoundHttpError = mock<HttpException>()
+    whenever(notFoundHttpError.code()).thenReturn(404)
+
+    whenever(registrationApi.findUser("123")).thenReturn(Single.just(PatientMocker.loggedInUserPayload()))
+    whenever(registrationApi.findUser("456")).thenReturn(Single.error(SocketTimeoutException()))
+    whenever(registrationApi.findUser("789")).thenReturn(Single.error(notFoundHttpError))
+    whenever(registrationApi.findUser("000")).thenReturn(Single.error(NullPointerException()))
+
+    val result1 = userSession.findExistingUser("123").blockingGet()
+    assertThat(result1).isInstanceOf(FindUserResult.Found::class.java)
+
+    val result2 = userSession.findExistingUser("456").blockingGet()
+    assertThat(result2).isInstanceOf(FindUserResult.NetworkError::class.java)
+
+    val result3 = userSession.findExistingUser("789").blockingGet()
+    assertThat(result3).isInstanceOf(FindUserResult.NotFound::class.java)
+
+    val result4 = userSession.findExistingUser("000").blockingGet()
+    assertThat(result4).isInstanceOf(FindUserResult.UnexpectedError::class.java)
+  }
+
+  @Test
+  fun `when the server sends a user without facilities during registration ethen registration should be canceled`() {
+    whenever(appDatabase.userDao().user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser())))
+
+    val userFacility = PatientMocker.facility()
+    whenever(facilityRepository.facilityUuidsForUser(any())).thenReturn(Observable.just(listOf(userFacility.uuid)))
+
+    val response = RegistrationResponse(userPayload = PatientMocker.loggedInUserPayload(facilityUuids = emptyList()))
+    whenever(registrationApi.createUser(any())).thenReturn(Single.just(response))
+
+    val registrationResult = userSession.register().blockingGet()
+    assertThat(registrationResult).isInstanceOf(RegistrationResult.Error::class.java)
   }
 }

@@ -1,8 +1,10 @@
 package org.simple.clinic
 
 import android.arch.persistence.room.testing.MigrationTestHelper
+import android.database.Cursor
 import android.support.test.InstrumentationRegistry
 import android.support.test.runner.AndroidJUnit4
+import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
@@ -10,6 +12,9 @@ import org.junit.runner.RunWith
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 
 private const val TEST_DB_NAME = "migration-test"
+
+private fun Cursor.string(column: String): String = getString(getColumnIndex(column))
+private fun Cursor.boolean(column: String): Boolean = getInt(getColumnIndex(column)) == 1
 
 @RunWith(AndroidJUnit4::class)
 class MigrationAndroidTest {
@@ -40,21 +45,18 @@ class MigrationAndroidTest {
 
     val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, AppDatabase.Migration_6_7())
 
-    val cursor = db_v7.query("SELECT * FROM LoggedInUser")
+    val cursor = db_v7.query("SELECT * FROM LoggedInUserFacilityMapping")
     assertThat(cursor.count).isEqualTo(1)
 
     cursor.use {
-      val string: (String) -> String = { column -> it.getString(it.getColumnIndex(column)) }
+      it.moveToFirst()
+      Truth.assertThat(it.string("userUuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+      Truth.assertThat(it.string("facilityUuid")).isEqualTo("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
+      Truth.assertThat(it.boolean("isCurrentFacility")).isTrue()
+    }
 
-      cursor.moveToFirst()
-      assertThat(string("uuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
-      assertThat(string("fullName")).isEqualTo("Ashok Kumar")
-      assertThat(string("phoneNumber")).isEqualTo("1234567890")
-      assertThat(string("pinDigest")).isEqualTo("pinDigest")
-      assertThat(string("facilityUuids")).isEqualTo("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
-      assertThat(string("status")).isEqualTo("APPROVED_FOR_SYNCING")
-      assertThat(string("createdAt")).isEqualTo("2018-06-21T10:15:58.666Z")
-      assertThat(string("updatedAt")).isEqualTo("2018-06-21T10:15:58.666Z")
+    db_v7.query("SELECT * FROM LoggedInUser").use {
+      assertThat(it.columnNames.contains("facilityUuid")).isFalse()
     }
   }
 }

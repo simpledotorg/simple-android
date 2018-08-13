@@ -27,7 +27,7 @@ class MigrationAndroidTest {
       AppSqliteOpenHelperFactory())
 
   @Test
-  fun migration_6_to_7() {
+  fun migration_6_to_7_with_an_existing_user() {
     val db_v6 = helper.createDatabase(TEST_DB_NAME, 6)
 
     db_v6.execSQL("""
@@ -46,9 +46,9 @@ class MigrationAndroidTest {
     val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, AppDatabase.Migration_6_7())
 
     val cursor = db_v7.query("SELECT * FROM LoggedInUserFacilityMapping")
-    assertThat(cursor.count).isEqualTo(1)
-
     cursor.use {
+      assertThat(cursor.count).isEqualTo(1)
+
       it.moveToFirst()
       Truth.assertThat(it.string("userUuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
       Truth.assertThat(it.string("facilityUuid")).isEqualTo("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
@@ -57,6 +57,18 @@ class MigrationAndroidTest {
 
     db_v7.query("SELECT * FROM LoggedInUser").use {
       assertThat(it.columnNames.contains("facilityUuid")).isFalse()
+    }
+  }
+
+  @Test
+  fun migration_6_to_7_without_an_existing_user() {
+    helper.createDatabase(TEST_DB_NAME, 6)
+    val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, AppDatabase.Migration_6_7())
+
+    val cursor = db_v7.query("SELECT * FROM LoggedInUserFacilityMapping")
+
+    cursor.use {
+      assertThat(cursor.count).isEqualTo(0)
     }
   }
 }

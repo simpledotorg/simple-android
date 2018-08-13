@@ -2,12 +2,16 @@ package org.simple.clinic
 
 import io.bloco.faker.Faker
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -58,6 +62,44 @@ class PatientFaker @Inject constructor(private val faker: Faker) {
         number = faker.phoneNumber.phoneNumber(),
         type = PatientPhoneNumberType.values().toList().shuffled().first(),
         active = true,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+  }
+
+  fun facility(
+      uuid: UUID = UUID.randomUUID(),
+      name: String = faker.company.name(),
+      district: String = faker.address.city(),
+      state: String = faker.address.state()
+  ): Facility {
+    return Facility(
+        uuid = uuid,
+        name = name,
+        district = district,
+        state = state,
+        facilityType = null,
+        streetAddress = null,
+        villageOrColony = null,
+        country = faker.address.country(),
+        pinCode = null,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now(),
+        syncStatus = SyncStatus.values().toList().shuffled().first())
+  }
+
+  fun loggedInUser(
+      uuid: UUID = UUID.randomUUID(),
+      name: String = faker.name.name(),
+      phone: String = faker.phoneNumber.phoneNumber(),
+      pinDigest: String = "pin-digest",
+      status: UserStatus = UserStatus.values().toList().shuffled().first()
+  ): LoggedInUser {
+    return LoggedInUser(
+        uuid = uuid,
+        fullName = name,
+        phoneNumber = phone,
+        pinDigest = pinDigest,
+        status = status,
         createdAt = Instant.now(),
         updatedAt = Instant.now())
   }

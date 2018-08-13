@@ -23,9 +23,8 @@ data class LoggedInUserPayload(
     @Json(name = "facility_ids")
     val facilityUuids: List<UUID>,
 
-    // FIXME: This should not default to approved. This is temporarily done.
     @Json(name = "sync_approval_status")
-    val status: UserStatus = UserStatus.APPROVED_FOR_SYNCING,
+    val status: UserStatus,
 
     @Json(name = "created_at")
     val createdAt: Instant,

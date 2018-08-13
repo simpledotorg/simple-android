@@ -24,9 +24,6 @@ class FacilityRepository @Inject constructor(
   }
 
   fun associateUserWithFacilities(user: LoggedInUser, facilityIds: List<UUID>, currentFacility: UUID): Completable {
-    if (facilityIds.contains(currentFacility).not()) {
-      throw AssertionError()
-    }
     return Completable.fromAction {
       userFacilityMappingDao.insert(user, facilityIds, currentFacility)
     }
@@ -40,12 +37,16 @@ class FacilityRepository @Inject constructor(
           }
         }
         .map { (user) -> user }
-        .flatMap { userFacilityMappingDao.currentFacility(it.uuid).toObservable() }
+        .flatMap { currentFacility(it) }
+  }
+
+  fun currentFacility(user: LoggedInUser): Observable<Facility> {
+    return userFacilityMappingDao.currentFacility(user.uuid).toObservable()
   }
 
   fun facilityUuidsForUser(user: LoggedInUser): Observable<List<UUID>> {
     return userFacilityMappingDao
-        .facilityUuidsFor(user.uuid)
+        .facilityUuids(user.uuid)
         .toObservable()
   }
 

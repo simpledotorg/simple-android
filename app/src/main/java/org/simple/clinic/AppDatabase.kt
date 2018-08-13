@@ -25,7 +25,6 @@ import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
-import org.simple.clinic.util.UuidListRoomTypeConverter
 import org.simple.clinic.util.UuidRoomTypeConverter
 
 @Database(
@@ -48,8 +47,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     UserStatus.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
-    UuidRoomTypeConverter::class,
-    UuidListRoomTypeConverter::class)
+    UuidRoomTypeConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
   private val patientFuzzyPatientSearchDao by lazy {

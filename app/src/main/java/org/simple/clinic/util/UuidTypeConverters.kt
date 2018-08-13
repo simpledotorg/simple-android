@@ -18,32 +18,6 @@ class UuidRoomTypeConverter {
   }
 }
 
-class UuidListRoomTypeConverter {
-
-  private val uuidConverter = UuidRoomTypeConverter()
-
-  @TypeConverter
-  fun toUuids(value: String?): List<UUID>? {
-    if (value == null) {
-      return null
-    }
-
-    return value.split(delimiters = *arrayOf(","))
-        .map { uuidConverter.toUuid(it)!! }
-        .toList()
-  }
-
-  @TypeConverter
-  fun fromUuids(uuids: List<UUID>?): String? {
-    if (uuids == null) {
-      return null
-    }
-    return uuids.joinToString(
-        separator = ",",
-        transform = { uuid -> uuidConverter.fromUuid(uuid) as CharSequence })
-  }
-}
-
 class UuidMoshiAdapter {
 
   @FromJson

@@ -6,6 +6,7 @@ import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.login.TemporaryValidateOtpRequestInterceptor
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
@@ -27,10 +28,11 @@ class NetworkModule {
   }
 
   @Provides
-  fun retrofitBuilder(moshi: Moshi, loggedInInterceptor: LoggedInUserHttpInterceptor): Retrofit.Builder {
+  fun retrofitBuilder(moshi: Moshi, loggedInInterceptor: LoggedInUserHttpInterceptor, otpRequestInterceptor: TemporaryValidateOtpRequestInterceptor): Retrofit.Builder {
     val okHttpBuilder = OkHttpClient.Builder()
 
     okHttpBuilder.addInterceptor(loggedInInterceptor)
+    okHttpBuilder.addInterceptor(otpRequestInterceptor)
 
     if (BuildConfig.DEBUG) {
       val loggingInterceptor = HttpLoggingInterceptor()

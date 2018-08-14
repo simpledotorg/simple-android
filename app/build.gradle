@@ -165,7 +165,6 @@ dependencies {
   implementation "io.reactivex.rxjava2:rxandroid:$versions.rxAndroid"
   implementation "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding"
   implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
-  implementation "com.github.nisrulz:qreader:$versions.qrReader"
   implementation "com.jcabi:jcabi-xml:$versions.jcabiXml"
   implementation "org.threeten:threetenbp:$versions.threetenbp:no-tzdb"
   implementation "com.gabrielittner.threetenbp:lazythreetenbp:$versions.lazythreetenbp"
@@ -185,4 +184,11 @@ dependencies {
   implementation "org.mindrot:jbcrypt:$versions.jbcrypt"
   implementation "com.squareup.flow:flow:$versions.flow"
   implementation "io.requery:sqlite-android:$versions.sqliteAndroid"
+
+  implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuth"
+  // Adding an explicit dependency on this because the qrreader lib exposes an older dependency
+  implementation "com.google.android.gms:play-services-vision:$versions.playServicesVision"
+  implementation ("com.github.nisrulz:qreader:$versions.qrReader") {
+    exclude group: 'com.google.android.gms', module: 'play-services-vision'
+  }
 }

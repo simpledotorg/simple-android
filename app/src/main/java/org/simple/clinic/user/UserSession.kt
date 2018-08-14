@@ -62,9 +62,10 @@ class UserSession @Inject constructor(
   }
 
   // TODO: rename to loginFromOngoingLoginEntry()
-  fun login(): Single<LoginResult> {
+  // TODO: Remove when SMS verification happens
+  fun login(otp: String = ""): Single<LoginResult> {
     return ongoingLoginEntry()
-        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, it.otp)) }
+        .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
           facilitySync.sync()

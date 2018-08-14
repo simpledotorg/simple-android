@@ -32,8 +32,12 @@ class TestClinicApp : ClinicApp() {
       return ClinicApp.appComponent as TestAppComponent
     }
 
+    fun qaUserUuid(): UUID {
+      return UUID.fromString("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+    }
+
     fun qaOngoingLoginEntry(): OngoingLoginEntry {
-      return OngoingLoginEntry("0000", "0000", "0000")
+      return OngoingLoginEntry(qaUserUuid(), phoneNumber = "0000", pin = "0000")
     }
 
     @Deprecated(message = "Get real facilities from the server instead. Look at UserSessionAndroidTest for examples.")

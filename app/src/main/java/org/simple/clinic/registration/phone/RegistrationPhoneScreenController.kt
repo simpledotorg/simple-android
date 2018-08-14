@@ -108,7 +108,7 @@ class RegistrationPhoneScreenController @Inject constructor(
           val proceedToLogin = cachedUserFindResult
               .ofType<FindUserResult.Found>()
               .flatMap {
-                userSession.saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = it.user.phoneNumber, otp = ""))
+                userSession.saveOngoingLoginEntry(OngoingLoginEntry(userId = it.user.uuid, phoneNumber = it.user.phoneNumber))
                     .andThen(userSession.clearOngoingRegistrationEntry())
                     .andThen(Observable.just({ ui: Ui -> ui.openLoginPinEntryScreen() }))
               }

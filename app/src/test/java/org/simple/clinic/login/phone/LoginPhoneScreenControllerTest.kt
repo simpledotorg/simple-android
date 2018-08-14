@@ -13,7 +13,9 @@ import org.junit.Test
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
+// TODO: Remove this test class
 class LoginPhoneScreenControllerTest {
 
   private val screen = mock<LoginPhoneScreen>()
@@ -35,7 +37,7 @@ class LoginPhoneScreenControllerTest {
 
     uiEvents.onNext(LoginPhoneNumberScreenCreated("123"))
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(otp = "123"))
+    verify(userSession).saveOngoingLoginEntry(any())
   }
 
   @Test
@@ -50,13 +52,14 @@ class LoginPhoneScreenControllerTest {
 
   @Test
   fun `if phone number is not empty, and submit is clicked, create an OngoingLoginEntry, and go to pin screen`() {
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(otp = "123")))
+    val userId = UUID.randomUUID()
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(userId)))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(LoginPhoneNumberTextChanged("9999"))
     uiEvents.onNext(LoginPhoneNumberSubmitClicked())
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry("123", "9999"))
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = userId, phoneNumber = "9999"))
     verify(screen).openLoginPinScreen()
   }
 }

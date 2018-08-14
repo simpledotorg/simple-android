@@ -7,11 +7,13 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = LoginPhoneScreen
 typealias UiChange = (Ui) -> Unit
 
+// TODO: Remove this class
 class LoginPhoneScreenController @Inject constructor(
     private val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -27,7 +29,7 @@ class LoginPhoneScreenController @Inject constructor(
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<LoginPhoneNumberScreenCreated>()
-        .map { OngoingLoginEntry(it.otp) }
+        .map { OngoingLoginEntry(UUID.randomUUID()) }
         .flatMap {
           userSession
               .saveOngoingLoginEntry(it)

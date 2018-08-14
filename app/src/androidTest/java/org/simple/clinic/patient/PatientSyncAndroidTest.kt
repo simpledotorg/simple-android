@@ -66,7 +66,7 @@ class PatientSyncAndroidTest {
     TestClinicApp.appComponent().inject(this)
 
     val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
-        .andThen(userSession.login())
+        .andThen(userSession.login("0000"))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }

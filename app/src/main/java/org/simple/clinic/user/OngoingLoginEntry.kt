@@ -1,7 +1,9 @@
 package org.simple.clinic.user
 
+import java.util.UUID
+
 data class OngoingLoginEntry(
-    val otp: String,
-    val phoneNumber: String? = null,
-    val pin: String? = null
+    val userId: UUID,
+    val phoneNumber: String = "",
+    val pin: String = ""
 )

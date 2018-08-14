@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
+import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.Gender
@@ -120,5 +121,22 @@ class PatientFaker @Inject constructor(private val faker: Faker) {
         pinConfirmation = pin,
         facilityIds = facilities.map { it.uuid },
         createdAt = Instant.now())
+  }
+
+  fun bpPayload(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      systolic: Int = faker.number.between(0, 299),
+      diastolic: Int = faker.number.between(50, 60)
+  ): BloodPressureMeasurementPayload {
+    return BloodPressureMeasurementPayload(
+        uuid = uuid,
+        systolic = systolic,
+        diastolic = diastolic,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now(),
+        userUuid = TestClinicApp.qaUserUuid(),
+        facilityUuid = TestClinicApp.qaUserFacilityUuid(),
+        patientUuid = patientUuid)
   }
 }

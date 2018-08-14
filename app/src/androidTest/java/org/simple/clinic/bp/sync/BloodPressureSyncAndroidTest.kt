@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.PatientFaker
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
@@ -54,14 +55,20 @@ class BloodPressureSyncAndroidTest {
   lateinit var bpSync: BloodPressureSync
 
   @Inject
+  lateinit var bpSyncApiV1: BloodPressureSyncApiV1
+
+  @Inject
   lateinit var faker: Faker
+
+  @Inject
+  lateinit var patientFaker: PatientFaker
 
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
     val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
-        .andThen(userSession.login())
+        .andThen(userSession.login("0000"))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }

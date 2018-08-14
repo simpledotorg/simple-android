@@ -19,6 +19,7 @@ import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class LoginPinScreenControllerTest {
@@ -41,7 +42,7 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when screen starts, show phone number`() {
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(otp = "3444", phoneNumber = "123")))
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "123")))
 
     uiEvents.onNext(PinScreenCreated())
 
@@ -51,7 +52,7 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `if pin is not empty, and submit is clicked, make login api call, and open home screen`() {
-    val ongoingEntry = OngoingLoginEntry(otp = "123", phoneNumber = "99999")
+    val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login()).thenReturn(Single.just(LoginResult.Success()))
@@ -62,7 +63,7 @@ class LoginPinScreenControllerTest {
     val inOrder = inOrder(userSession, screen)
     inOrder.verify(userSession).login()
     inOrder.verify(userSession).ongoingLoginEntry()
-    inOrder.verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(otp = "123", phoneNumber = "99999", pin = "0000"))
+    inOrder.verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingEntry.userId, phoneNumber = "99999", pin = "0000"))
     inOrder.verify(screen).showProgressBar()
     inOrder.verify(screen).hideProgressBar()
     inOrder.verify(screen).openHomeScreen()
@@ -70,7 +71,7 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `if login api call throws any errors, show errors`() {
-    val ongoingEntry = OngoingLoginEntry(otp = "123", phoneNumber = "99999")
+    val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login())
@@ -93,7 +94,7 @@ class LoginPinScreenControllerTest {
   fun `data should only be synced when login succeeds`(loginResult: LoginResult, shouldSync: Boolean) {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
-    val ongoingEntry = OngoingLoginEntry(otp = "123", phoneNumber = "99999")
+    val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login()).thenReturn(Single.just(loginResult))

@@ -19,6 +19,7 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class RegistrationPhoneScreenControllerTest {
 
@@ -166,6 +167,8 @@ class RegistrationPhoneScreenControllerTest {
   fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
     val inputNumber = "1234567890"
     val mockUser = mock<LoggedInUserPayload>()
+    val userId = UUID.randomUUID()
+    whenever(mockUser.uuid).thenReturn(userId)
     whenever(mockUser.phoneNumber).thenReturn(inputNumber)
 
     whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(mockUser)))
@@ -176,7 +179,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(phoneNumber = inputNumber, otp = ""))
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = userId, phoneNumber = inputNumber))
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openLoginPinEntryScreen()
   }

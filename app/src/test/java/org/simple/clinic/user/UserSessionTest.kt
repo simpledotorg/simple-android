@@ -33,6 +33,7 @@ import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
 import java.net.SocketTimeoutException
+import java.util.UUID
 
 class UserSessionTest {
 
@@ -74,7 +75,7 @@ class UserSessionTest {
         passwordHasher,
         accessTokenPref
     )
-    userSession.saveOngoingLoginEntry(OngoingLoginEntry("otp", "phone", "pin")).blockingAwait()
+    userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
 
     val mockUserDao = mock<LoggedInUser.RoomDao>()

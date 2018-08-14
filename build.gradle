@@ -40,7 +40,9 @@ buildscript {
       mockito             : '2.18.3',
       mockitoKotlin       : '1.5.0',
       junitParams         : '1.1.1',
-      sqliteAndroid       : '3.24.0'
+      sqliteAndroid       : '3.24.0',
+      playServicesAuth    : '16.0.0',
+      playServicesVision  : '15.0.2'
   ]
 
   repositories {

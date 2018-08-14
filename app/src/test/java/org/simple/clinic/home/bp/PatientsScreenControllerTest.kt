@@ -9,11 +9,11 @@ import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.simple.clinic.widgets.UiEvent
 
-class NewBpScreenControllerTest {
+class PatientsScreenControllerTest {
 
-  private val screen: NewBpScreen = mock()
+  private val screen: PatientsScreen = mock()
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private val controller: NewBpScreenController = NewBpScreenController()
+  private val controller: PatientsScreenController = PatientsScreenController()
 
   @Before
   fun setUp() {

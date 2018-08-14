@@ -5,9 +5,9 @@ import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
-class NewBpScreenKey : FullScreenKey {
+class PatientsScreenKey : FullScreenKey {
 
   override fun layoutRes(): Int {
-    return R.layout.screen_new_bp
+    return R.layout.screen_patients
   }
 }

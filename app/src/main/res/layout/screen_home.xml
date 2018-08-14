@@ -27,7 +27,7 @@
     tools:ignore="UnusedAttribute" />
 
   <include
-    layout="@layout/screen_new_bp"
+    layout="@layout/screen_patients"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/home_viewpager_tabs" />

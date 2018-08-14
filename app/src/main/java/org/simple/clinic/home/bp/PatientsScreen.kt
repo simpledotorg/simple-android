@@ -11,28 +11,24 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import javax.inject.Inject
 
-open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = NewBpScreenKey()
+    val KEY = PatientsScreenKey()
   }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: NewBpScreenController
+  lateinit var controller: PatientsScreenController
 
-  @Inject
-  lateinit var patientRepository: PatientRepository
-
-  private val searchButton by bindView<Button>(R.id.home_search_patients)
-  private val aadhaarScanButton by bindView<Button>(R.id.home_scan_aadhaar)
+  private val searchButton by bindView<Button>(R.id.patients_search_patients)
+  private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -55,10 +51,6 @@ open class NewBpScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
 
   private fun searchButtonClicks() = RxView.clicks(searchButton)
       .map { NewPatientClicked() }
-
-  fun openAadhaarScanScreen() {
-    // TODO
-  }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreen.KEY)

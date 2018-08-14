@@ -50,11 +50,6 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   override fun getItemId(position: Int): Long {
     return facilityItems[position].facility.uuid.hashCode().toLong()
   }
-
-  fun update(facilityItems: List<FacilityListItem>) {
-    this.facilityItems = facilityItems
-    notifyDataSetChanged()
-  }
 }
 
 data class FacilityListItem(

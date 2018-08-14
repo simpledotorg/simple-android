@@ -3,6 +3,7 @@ package org.simple.clinic.login
 import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.MediaType
+import okhttp3.Protocol
 import okhttp3.Request
 import okhttp3.Response
 import okhttp3.ResponseBody
@@ -58,7 +59,8 @@ class TemporaryValidateOtpRequestInterceptor @Inject constructor(moshi: Moshi) :
 
     return Response.Builder()
         .request(request)
-        .code(200)
+        .protocol(Protocol.HTTP_1_1)
+        .code(200).message("OK")
         .body(responseBody)
         .build()
   }
@@ -71,7 +73,8 @@ class TemporaryValidateOtpRequestInterceptor @Inject constructor(moshi: Moshi) :
 
     return Response.Builder()
         .request(request)
-        .code(200)
+        .protocol(Protocol.HTTP_1_1)
+        .code(200).message("OK")
         .body(responseBody)
         .build()
   }

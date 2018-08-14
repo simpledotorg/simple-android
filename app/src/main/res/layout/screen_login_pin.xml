@@ -53,7 +53,10 @@
       <EditText
         android:id="@+id/loginpin_pin"
         style="@style/Clinic.LoginPinEditText"
-        android:imeOptions="actionDone" />
+        android:imeOptions="actionDone">
+
+        <requestFocus />
+      </EditText>
 
       <TextView
         android:id="@+id/loginpin_error"

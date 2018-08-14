@@ -21,16 +21,12 @@ import org.simple.clinic.widgets.UiEvent
  */
 class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(FacilityDiffer()) {
 
-  init {
-    setHasStableIds(true)
-  }
-
   val uiEvents = PublishSubject.create<UiEvent>()!!
 
   var facilityItems: List<FacilityListItem> = emptyList()
     set(value) {
       field = value
-      submitList(field)
+      notifyDataSetChanged()
     }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
@@ -48,7 +44,8 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   }
 
   override fun getItemId(position: Int): Long {
-    return facilityItems[position].facility.uuid.hashCode().toLong()
+    // The data-set never changes, so this is fine.
+    return position.toLong()
   }
 }
 

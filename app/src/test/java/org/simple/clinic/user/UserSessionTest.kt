@@ -109,28 +109,6 @@ class UserSessionTest {
     return HttpException(error)
   }
 
-  // TODO: Could be an Android test.
-  @Test
-  fun `facilities should only be synced when login succeeds`() {
-    whenever(loginApi.login(any()))
-        .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER)))
-        .thenReturn(Single.error(NullPointerException()))
-        .thenReturn(Single.error(unauthorizedHttpError()))
-        .thenReturn(Single.error(SocketTimeoutException()))
-
-    userSession.login().blockingGet()
-
-    val inOrder = inOrder(appDatabase.userDao(), accessTokenPref, facilitySync)
-    inOrder.verify(accessTokenPref).set(any())
-    inOrder.verify(appDatabase.userDao()).createOrUpdate(any())
-    inOrder.verify(facilitySync, times(1)).sync()
-  }
-
-  @Test
-  fun `login should not be considered complete if facility sync fails`() {
-    // TODO.
-  }
-
   @Test
   fun `when find existing user then the network response should correctly be mapped to results`() {
     val notFoundHttpError = mock<HttpException>()

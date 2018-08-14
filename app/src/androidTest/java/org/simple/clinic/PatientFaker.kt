@@ -68,8 +68,12 @@ class PatientFaker @Inject constructor(private val faker: Faker) {
         updatedAt = Instant.now())
   }
 
+  /**
+   * [uuid] is not optional because dummy facility IDs should never be sent to
+   * the server. Doing so may result in data loss due to foreign key constraints.
+   */
   fun facility(
-      uuid: UUID = TestClinicApp.qaUserFacilityUuid(),
+      uuid: UUID,
       name: String = faker.company.name(),
       district: String = faker.address.city(),
       state: String = faker.address.state()

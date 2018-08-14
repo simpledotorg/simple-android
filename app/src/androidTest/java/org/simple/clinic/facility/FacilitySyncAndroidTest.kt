@@ -47,15 +47,15 @@ class FacilitySyncAndroidTest {
   }
 
   @Test
-  fun when_pulling_prescriptions_then_paginate_till_the_server_does_not_have_anymore_prescriptions() {
-    lastPullTimestamp.set(Just(Instant.ofEpochSecond(1234567890)))
+  fun when_pulling_facilities_then_paginate_till_the_server_does_not_have_anymore_facilities() {
+    lastPullTimestamp.set(Just(Instant.EPOCH))
 
     facilitySync.pull()
         .test()
         .assertNoErrors()
 
     val count = database.facilityDao().count().blockingFirst()
-    assertThat(count).isEqualTo(7)
+    assertThat(count).isAtLeast(1)
   }
 
   @After

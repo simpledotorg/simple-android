@@ -17,6 +17,7 @@
        40% = 66 H
        50% = 80 H
        60% = 99 H
+       70% = B3 H
       75% ~= C4 H     This is reverse of 4C == 25%
        80% = CC H
        90% = E6 H
@@ -31,6 +32,7 @@
   <color name="white_opacity_40">#66FFFFFF</color>
   <color name="white_opacity_50">#80FFFFFF</color>
   <color name="white_opacity_60">#99FFFFFF</color>
+  <color name="white_opacity_70">#B3FFFFFF</color>
   <color name="white_opacity_80">#CCFFFFFF</color>
   <color name="white_opacity_90">#E6FFFFFF</color>
 

@@ -276,4 +276,19 @@
     <item name="android:gravity">center_horizontal</item>
     <item name="android:textColor">@color/textinputlayout_error</item>
   </style>
+
+  <style name="Clinic.UserApprovalStatusTitle">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textColor">@color/white</item>
+    <item name="android:textSize">@dimen/textsize_16</item>
+  </style>
+
+  <style name="Clinic.UserApprovalStatusMessage">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:textColor">@color/white_opacity_60</item>
+  </style>
 </resources>

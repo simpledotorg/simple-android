@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.home.patients.PatientsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.home.patients.PatientsScreen android:id="@+id/patients_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/patients_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
@@ -15,19 +15,19 @@
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="@dimen/spacing_24"
-    android:paddingStart="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_16"
     android:gravity="center_horizontal"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/spacing_16"
+    android:paddingStart="@dimen/spacing_16"
+    android:paddingTop="@dimen/spacing_24">
 
     <Button
       android:id="@+id/patients_search_patients"
       android:layout_width="match_parent"
       android:layout_height="64dp"
       android:layout_marginBottom="@dimen/spacing_16"
-      android:paddingStart="20dp"
       android:drawableStart="@drawable/ic_search_black_24dp"
+      android:paddingStart="20dp"
       android:text="@string/home_search_patient_name_phone"
       android:textAllCaps="false"
       android:textColor="@color/black_opacity_30"
@@ -40,8 +40,8 @@
       android:layout_width="match_parent"
       android:layout_height="64dp"
       android:layout_marginBottom="@dimen/spacing_16"
-      android:paddingStart="32dp"
       android:drawableStart="@drawable/qr_code"
+      android:paddingStart="32dp"
       android:text="@string/home_scan_patient_aadhaar"
       android:textAllCaps="false"
       android:textColor="@color/white"
@@ -58,4 +58,68 @@
     android:src="@drawable/scan_illustration"
     tools:ignore="ContentDescription" />
 
+  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+    android:id="@+id/patients_user_status_viewflipper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    app:debug_displayedChild="2">
+
+    <FrameLayout
+      android:id="@+id/patients_user_status_hidden"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content" />
+
+    <RelativeLayout
+      android:id="@+id/patients_user_status_awaitingapproval"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:background="@color/black"
+      android:padding="@dimen/spacing_16">
+
+      <ImageView
+        android:id="@+id/patients_user_awaitingapproval_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_access_time_24dp"
+        tools:ignore="ContentDescription" />
+
+      <TextView
+        android:id="@+id/patients_user_awaitingapproval_title"
+        style="@style/Clinic.UserApprovalStatusTitle"
+        android:layout_marginStart="@dimen/spacing_12"
+        android:layout_toEndOf="@+id/patients_user_awaitingapproval_icon"
+        android:text="@string/patients_user_awaiting_approval_title" />
+
+      <TextView
+        style="@style/Clinic.UserApprovalStatusMessage"
+        android:layout_alignStart="@+id/patients_user_awaitingapproval_title"
+        android:layout_below="@+id/patients_user_awaitingapproval_title"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:text="@string/patients_user_awaiting_approval_message" />
+    </RelativeLayout>
+
+    <RelativeLayout
+      android:id="@+id/patients_user_status_approved"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="bottom"
+      android:background="@color/black"
+      android:padding="@dimen/spacing_16">
+
+      <TextView
+        android:id="@+id/patients_user_approved_title"
+        style="@style/Clinic.UserApprovalStatusTitle"
+        android:layout_marginStart="@dimen/spacing_12"
+        android:text="@string/patients_user_approved_title" />
+
+      <TextView
+        style="@style/Clinic.UserApprovalStatusMessage"
+        android:layout_alignStart="@+id/patients_user_approved_title"
+        android:layout_below="@+id/patients_user_approved_title"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:text="@string/patients_user_approved_message" />
+    </RelativeLayout>
+  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.home.patients.PatientsScreen>

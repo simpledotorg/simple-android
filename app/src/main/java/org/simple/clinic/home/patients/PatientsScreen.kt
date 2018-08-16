@@ -4,16 +4,20 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.RelativeLayout
+import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
+import org.simple.clinic.widgets.setDisplayedChildId
 import javax.inject.Inject
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -33,6 +37,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
+  private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -42,7 +47,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    Observable.merge(activityLifecycle, aadhaarScanButtonClicks(), searchButtonClicks())
+    Observable.merge(screenCreates(), activityStarts(), aadhaarScanButtonClicks(), searchButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -50,11 +55,29 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { uiChange -> uiChange(this) }
   }
 
+  private fun screenCreates() = Observable.just(ScreenCreated())
+
+  private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
+
   private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton).map { ScanAadhaarClicked() }
 
   private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreen.KEY)
+  }
+
+  fun showUserStatusAsWaiting() {
+    approvalStatusViewFlipper.setDisplayedChildId(R.id.patients_user_status_awaitingapproval)
+  }
+
+  fun showUserStatusAsApproved() {
+    approvalStatusViewFlipper.setDisplayedChildId(R.id.patients_user_status_approved)
+  }
+
+  fun hideUserApprovalStatus() {
+    // By changing to an empty child instead of hiding the ViewFlipper entirely,
+    // ViewFlipper's change animations can be re-used for this transition.
+    approvalStatusViewFlipper.setDisplayedChildId(R.id.patients_user_status_hidden)
   }
 }

@@ -13,6 +13,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
+import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -27,6 +28,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var controller: PatientsScreenController
 
+  @Inject
+  lateinit var activityLifecycle: Observable<TheActivityLifecycle>
+
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
 
@@ -38,7 +42,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    Observable.merge(aadhaarScanButtonClicks(), searchButtonClicks())
+    Observable.merge(activityLifecycle, aadhaarScanButtonClicks(), searchButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -46,11 +50,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton)
-      .map { ScanAadhaarClicked() }
-
-  private fun searchButtonClicks() = RxView.clicks(searchButton)
-      .map { NewPatientClicked() }
+  private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton).map { ScanAadhaarClicked() }
+  
+  private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreen.KEY)

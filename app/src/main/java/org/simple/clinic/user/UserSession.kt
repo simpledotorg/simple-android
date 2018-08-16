@@ -125,6 +125,22 @@ class UserSession @Inject constructor(
         }
   }
 
+  fun refreshLoggedInUser(): Completable {
+    return loggedInUser()
+        .map { (user) ->
+          if (user == null) {
+            throw AssertionError("User isn't logged in yet.")
+          }
+          user
+        }
+        .flatMapSingle { registrationApi.findUser(it.phoneNumber) }
+        .flatMapCompletable { userPayload ->
+          val user = userFromPayload(userPayload)
+          val userFacilities = userPayload.facilityUuids
+          storeUser(user, userFacilities)
+        }
+  }
+
   fun register(): Single<RegistrationResult> {
     val loggedInUser: Single<LoggedInUser> = loggedInUser()
         .map { (user) -> user!! }

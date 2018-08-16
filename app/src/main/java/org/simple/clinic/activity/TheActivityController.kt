@@ -11,7 +11,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,25 +34,17 @@ class TheActivityController @Inject constructor(
     val replayedCanShowAppLock = events
         .ofType<TheActivityLifecycle.Started>()
         .filter { userSession.isUserLoggedIn() }
-        .map {
-          Timber.i("-------------")
-          Timber.i("Now: ${Instant.now()}")
-          Timber.i("Lock at: ${lockAfterTimestamp.get()}")
-          Timber.i("Has time passed? ${Instant.now() > lockAfterTimestamp.get()}")
-          Instant.now() > lockAfterTimestamp.get()
-        }
+        .map { Instant.now() > lockAfterTimestamp.get() }
         .replay()
         .refCount()
 
     val showAppLock = replayedCanShowAppLock
         .filter { show -> show }
-        .doOnNext { Timber.i("Showing app-lock") }
         .map { { ui: Ui -> ui.showAppLockScreen() } }
 
     val unsetLockTime = replayedCanShowAppLock
         .filter { show -> !show }
         .flatMap {
-          Timber.i("Unsetting lock time")
           lockAfterTimestamp.delete()
           Observable.empty<UiChange>()
         }
@@ -69,8 +60,6 @@ class TheActivityController @Inject constructor(
         .flatMap {
           appLockConfig
               .flatMapObservable {
-                Timber.i("Advancing lock time because lockAfterTimestamp is empty")
-
                 lockAfterTimestamp.set(Instant.now().plusMillis(it.lockAfterTimeMillis))
                 Observable.empty<UiChange>()
               }

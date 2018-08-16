@@ -5,7 +5,9 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
@@ -23,7 +25,8 @@ class PatientsScreenController @Inject constructor(
 
     return Observable.merge(
         newPatientClicks(replayedEvents),
-        checkApprovalStatusOnStart(replayedEvents))
+        refreshApprovalStatusOnStart(replayedEvents),
+        showApprovalStatus(replayedEvents))
   }
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -31,19 +34,42 @@ class PatientsScreenController @Inject constructor(
         .map { { ui: PatientsScreen -> ui.openNewPatientScreen() } }
   }
 
-  private fun checkApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     // Skipping the first resume because it'll be a duplicate of screen-created.
-    val screenStarts = events.ofType<ScreenCreated>()
+    val screenCreate = events.ofType<ScreenCreated>()
     val screenResumes = events.ofType<TheActivityLifecycle.Resumed>().skip(1)
 
-    return Observable.merge(screenStarts, screenResumes)
+    return Observable.merge(screenCreate, screenResumes)
         .flatMap {
           userSession.loggedInUser()
               .take(1)
-              .map { (user) -> user!! }
-              .filter { user -> user.status == UserStatus.WAITING_FOR_APPROVAL }
+              .filter { (user) -> user!!.status == WAITING_FOR_APPROVAL }
               .flatMapCompletable { userSession.refreshLoggedInUser() }
               .andThen(Observable.never<UiChange>())
+        }
+  }
+
+  private fun showApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScreenCreated>()
+        .flatMap {
+          userSession.loggedInUser()
+              .map { (user) -> user!! }
+              .map {
+                when (it.status) {
+                  WAITING_FOR_APPROVAL -> { ui: Ui -> ui.showUserStatusAsWaiting() }
+                  APPROVED_FOR_SYNCING -> {
+                    val wasApprovedInLast24Hours = true  // TODO: Get this from somewhere.
+
+                    if (wasApprovedInLast24Hours) {
+                      { ui: Ui -> ui.showUserStatusAsApproved() }
+                    } else {
+                      { ui: Ui -> ui.hideUserApprovalStatus() }
+                    }
+                  }
+                  DISAPPROVED_FOR_SYNCING -> { ui: Ui -> ui.hideUserApprovalStatus() }
+                }
+              }
         }
   }
 }

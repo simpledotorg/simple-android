@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
+import android.support.annotation.IdRes
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.ViewFlipper
 import timber.log.Timber
 
 fun EditText.showKeyboard() {
@@ -108,4 +110,14 @@ fun View.topRelativeTo(superParent: ViewGroup): Int {
   }
 
   return totalDistance
+}
+
+@Suppress("FoldInitializerAndIfToElvis")
+fun ViewFlipper.setDisplayedChildId(@IdRes childId: Int) {
+  val child = findViewById<View>(childId)
+  if (child == null) {
+    throw AssertionError("${resources.getResourceEntryName(childId)} isn't a part of this ViewFlipper")
+  }
+  val childIndex = indexOfChild(child)
+  displayedChild = childIndex
 }

@@ -17,8 +17,10 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import java.net.SocketTimeoutException
 
 @RunWith(JUnitParamsRunner::class)
 class PatientsScreenControllerTest {
@@ -75,21 +77,47 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user is waiting for awaiting approval then it's status should be shown`() {
-    // TODO
+    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).showUserStatusAsWaiting()
   }
 
   @Test
-  fun `when the user has been rejected then the approval status shouldn't be shown`() {
-    // TODO
+  fun `when the user has been disapproved then the approval status shouldn't be shown`() {
+    val user = PatientMocker.loggedInUser(status = UserStatus.DISAPPROVED_FOR_SYNCING)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).hideUserApprovalStatus()
   }
 
   @Test
   fun `when the user has been approved within the last 24h then the approval status should be shown`() {
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).showUserStatusAsApproved()
+
     // TODO
   }
 
   @Test
   fun `when the user was approved earlier than 24h then the approval status should not be shown`() {
     // TODO
+  }
+
+  @Test
+  fun `when checking the user's status fails with any error then the error should be silently ignored`() {
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(userSession).refreshLoggedInUser()
   }
 }

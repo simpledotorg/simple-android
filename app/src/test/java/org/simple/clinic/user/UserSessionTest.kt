@@ -4,9 +4,8 @@ import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.argThat
+import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
@@ -151,20 +150,19 @@ class UserSessionTest {
   @Test
   fun `when refreshing the logged in user then the user details should be fetched from the server`() {
     val loggedInUser = PatientMocker.loggedInUser(uuid = LOGGED_IN_USER_PAYLOAD.uuid)
-    val refreshedUserPayload = PatientMocker.loggedInUserPayload(uuid = LOGGED_IN_USER_PAYLOAD.uuid)
+    val refreshedUserPayload = LOGGED_IN_USER_PAYLOAD.copy(status = UserStatus.APPROVED_FOR_SYNCING)
 
     whenever(registrationApi.findUser(LOGGED_IN_USER_PAYLOAD.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
     whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER_PAYLOAD)))
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(loggedInUser)))
 
-    userSession.login()
-        .toCompletable()
-        .andThen(userSession.refreshLoggedInUser())
-        .blockingAwait()
+    userSession.refreshLoggedInUser().blockingAwait()
 
     verify(registrationApi).findUser(LOGGED_IN_USER_PAYLOAD.phoneNumber)
-    verify(userDao, times(2)).createOrUpdate(argThat { uuid == LOGGED_IN_USER_PAYLOAD.uuid })
+    verify(userDao).createOrUpdate(check {
+      assertThat(it.uuid).isEqualTo(LOGGED_IN_USER_PAYLOAD.uuid)
+      assertThat(it.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+    })
   }
 }

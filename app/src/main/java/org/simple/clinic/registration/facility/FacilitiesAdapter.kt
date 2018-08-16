@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CheckBox
+import android.widget.CompoundButton
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.PublishSubject
@@ -26,7 +27,7 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   var facilityItems: List<FacilityListItem> = emptyList()
     set(value) {
       field = value
-      notifyDataSetChanged()
+      submitList(field)
     }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
@@ -59,12 +60,13 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<UiEvent>) : ViewHolde
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
 
+  private val checkedChangeListener: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
+    uiEvents.onNext(RegistrationFacilitySelectionChanged(item.facility, isChecked))
+  }
+
   lateinit var item: FacilityListItem
 
   init {
-    selectionCheckbox.setOnCheckedChangeListener { _, isChecked ->
-      uiEvents.onNext(RegistrationFacilitySelectionChanged(item.facility, isChecked))
-    }
     itemView.setOnClickListener {
       selectionCheckbox.performClick()
     }
@@ -74,7 +76,10 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<UiEvent>) : ViewHolde
     val facility = item.facility
     val isSelected = item.isSelected
 
+    selectionCheckbox.setOnCheckedChangeListener(null)
     selectionCheckbox.isChecked = isSelected
+    selectionCheckbox.setOnCheckedChangeListener(checkedChangeListener)
+
     nameTextView.text = facility.name
 
     if (facility.streetAddress.isNullOrBlank()) {

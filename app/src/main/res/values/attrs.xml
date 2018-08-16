@@ -3,4 +3,8 @@
   <declare-styleable name="ClearFieldImageButton">
     <attr name="cleareableField" format="reference" />
   </declare-styleable>
+
+  <declare-styleable name="ViewFlipperWithDebugPreview">
+    <attr name="debug_displayedChild" format="integer" />
+  </declare-styleable>
 </resources>

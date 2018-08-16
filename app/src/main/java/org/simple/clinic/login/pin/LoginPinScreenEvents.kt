@@ -9,3 +9,5 @@ class PinSubmitClicked : UiEvent
 class PinScreenCreated : UiEvent
 
 class PinBackClicked : UiEvent
+
+data class LoginPinOtpReceived(val otp: String): UiEvent

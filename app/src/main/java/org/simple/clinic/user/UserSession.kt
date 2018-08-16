@@ -18,6 +18,7 @@ import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.SendLoginOtpRequest
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.registration.FindUserResult
@@ -77,6 +78,29 @@ class UserSession @Inject constructor(
               .toSingleDefault(it)
         }
         .map { LoginResult.Success() as LoginResult }
+        .onErrorReturn { error ->
+          when {
+            error is IOException -> LoginResult.NetworkError()
+            error is HttpException && error.code() == 401 -> {
+              val errorResponse = readErrorResponseJson(error, LoginErrorResponse::class)
+              LoginResult.ServerError(errorResponse.firstError())
+            }
+            else -> {
+              Timber.e(error)
+              LoginResult.UnexpectedError()
+            }
+          }
+        }
+  }
+
+  fun requestLoginOtp(): Single<LoginResult> {
+    // TODO: On request validation otp success, save find user result as logged in user
+    // TODO: On request validation otp success, set `is_waiting_login_otp` flag in preferences
+    val ongoingEntry = ongoingLoginEntry().cache()
+    return ongoingEntry
+        .zipWith(ongoingEntry.flatMap { passwordHasher.hash(it.pin) })
+        .map { (entry, passwordDigest) -> SendLoginOtpRequest(passwordDigest, entry.userId) }
+        .flatMap { loginApi.requestLoginOtp(it).toSingleDefault(LoginResult.Success() as LoginResult) }
         .onErrorReturn { error ->
           when {
             error is IOException -> LoginResult.NetworkError()

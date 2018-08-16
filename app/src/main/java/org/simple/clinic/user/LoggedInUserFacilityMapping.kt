@@ -5,9 +5,9 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.Query
 import android.arch.persistence.room.Transaction
-import android.database.sqlite.SQLiteDatabase
 import io.reactivex.Flowable
 import org.simple.clinic.facility.Facility
 import java.util.UUID
@@ -55,7 +55,7 @@ data class LoggedInUserFacilityMapping(
       changeCurrentFacility(user.uuid, newCurrentFacilityUuid)
     }
 
-    @Insert(onConflict = SQLiteDatabase.CONFLICT_REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOrUpdate(mappings: List<LoggedInUserFacilityMapping>)
 
     @Transaction

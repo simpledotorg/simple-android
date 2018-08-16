@@ -1,4 +1,4 @@
-package org.simple.clinic.home.bp
+package org.simple.clinic.home.patients
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -17,7 +17,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 

@@ -1,4 +1,4 @@
-package org.simple.clinic.home.bp
+package org.simple.clinic.home.patients
 
 import org.simple.clinic.widgets.UiEvent
 

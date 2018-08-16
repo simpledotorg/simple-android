@@ -1,4 +1,4 @@
-package org.simple.clinic.home.bp
+package org.simple.clinic.home.patients
 
 import android.content.Context
 import android.util.AttributeSet
@@ -51,7 +51,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton).map { ScanAadhaarClicked() }
-  
+
   private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
 
   fun openNewPatientScreen() {

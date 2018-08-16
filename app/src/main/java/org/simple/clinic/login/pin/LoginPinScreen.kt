@@ -29,10 +29,6 @@ import javax.inject.Inject
 
 class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  companion object {
-    val KEY = LoginPinScreenKey()
-  }
-
   @Inject
   lateinit var screenRouter: ScreenRouter
 
@@ -55,7 +51,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks())
+    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks(), otpReceived())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -79,6 +75,11 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   private fun backClicks() =
       RxView.clicks(backButton)
           .map { PinBackClicked() }
+
+  private fun otpReceived(): Observable<LoginPinOtpReceived>? {
+    val key = screenRouter.key<LoginPinScreenKey>(this)!!
+    return Observable.just(LoginPinOtpReceived(key.otp))
+  }
 
   fun showPhoneNumber(phoneNumber: String) {
     phoneNumberTextView.text = phoneNumber

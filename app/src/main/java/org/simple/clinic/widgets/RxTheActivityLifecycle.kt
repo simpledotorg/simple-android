@@ -6,51 +6,51 @@ import android.os.Bundle
 import io.reactivex.Observable
 import org.simple.clinic.activity.TheActivity
 
-class RxTheActivityLifecycle internal constructor(private val events: Observable<ActivityLifecycle>) {
+class RxTheActivityLifecycle internal constructor(private val events: Observable<TheActivityLifecycle>) {
 
-  fun stream(): Observable<ActivityLifecycle> {
+  fun stream(): Observable<TheActivityLifecycle> {
     return events
   }
 
   companion object {
 
     fun from(theActivity: TheActivity): RxTheActivityLifecycle {
-      val lifecycleEvents = Observable.create<ActivityLifecycle> { emitter ->
+      val lifecycleEvents = Observable.create<TheActivityLifecycle> { emitter ->
         val callbacks = object : SimpleActivityLifecycleCallbacks() {
           override fun onActivityResumed(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(ActivityLifecycle.Resumed())
+              emitter.onNext(TheActivityLifecycle.Resumed())
             }
           }
 
           override fun onActivityStarted(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(ActivityLifecycle.Started())
+              emitter.onNext(TheActivityLifecycle.Started())
             }
           }
 
           override fun onActivityPaused(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(ActivityLifecycle.Paused())
+              emitter.onNext(TheActivityLifecycle.Paused())
             }
           }
 
           override fun onActivityStopped(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(ActivityLifecycle.Stopped())
+              emitter.onNext(TheActivityLifecycle.Stopped())
             }
           }
 
           override fun onActivityDestroyed(activity: Activity) {
             if (activity === theActivity) {
-              emitter.onNext(ActivityLifecycle.Destroyed())
+              emitter.onNext(TheActivityLifecycle.Destroyed())
               emitter.onComplete()
             }
           }
         }
 
-        theActivity.application.registerActivityLifecycleCallbacks(callbacks)
         emitter.setCancellable { theActivity.application.unregisterActivityLifecycleCallbacks(callbacks) }
+        theActivity.application.registerActivityLifecycleCallbacks(callbacks)
       }
 
       return RxTheActivityLifecycle(lifecycleEvents)

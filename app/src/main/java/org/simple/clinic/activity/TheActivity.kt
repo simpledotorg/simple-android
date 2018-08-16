@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
@@ -26,8 +27,7 @@ import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ActivityLifecycle
-import org.simple.clinic.widgets.RxTheActivityLifecycle
+import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -50,7 +50,7 @@ class TheActivity : AppCompatActivity() {
   lateinit var controller: TheActivityController
 
   @Inject
-  lateinit var lifecycle: RxTheActivityLifecycle
+  lateinit var lifecycle: Observable<TheActivityLifecycle>
 
   @Inject
   @field:Named("onboarding_complete")
@@ -75,10 +75,10 @@ class TheActivity : AppCompatActivity() {
     // It can only be overriden here.
     openInitialScreenSetByCaller()
 
-    lifecycle.stream()
-        .startWith(ActivityLifecycle.Started())
+    lifecycle
+        .startWith(TheActivityLifecycle.Started())
         .compose(controller)
-        .takeUntil(lifecycle.stream().ofType<ActivityLifecycle.Destroyed>())
+        .takeUntil(lifecycle.ofType<TheActivityLifecycle.Destroyed>())
         .subscribe { uiChange -> uiChange(this) }
   }
 

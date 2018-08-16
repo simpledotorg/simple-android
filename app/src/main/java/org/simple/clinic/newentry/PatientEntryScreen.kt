@@ -36,13 +36,13 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.ActivityLifecycle
-import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.topRelativeTo
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -59,7 +59,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   lateinit var controller: PatientEntryScreenController
 
   @Inject
-  lateinit var activityLifecycle: RxTheActivityLifecycle
+  lateinit var activityLifecycle: Observable<TheActivityLifecycle>
 
   private val backButton by bindView<View>(R.id.patiententry_back)
   private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollview)
@@ -124,7 +124,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun screenPauses() = activityLifecycle.stream().ofType<ActivityLifecycle.Paused>()
+  private fun screenPauses() = activityLifecycle.ofType<TheActivityLifecycle.Paused>()
 
   private fun formChanges(): Observable<UiEvent> {
     return Observable.mergeArray(

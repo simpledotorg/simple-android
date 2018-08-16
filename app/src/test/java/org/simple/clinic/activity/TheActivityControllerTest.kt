@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ActivityLifecycle
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
@@ -43,7 +43,7 @@ class TheActivityControllerTest {
   fun `when activity is started and user is logged out then app lock shouldn't be shown`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(false)
 
-    uiEvents.onNext(ActivityLifecycle.Started())
+    uiEvents.onNext(TheActivityLifecycle.Started())
 
     verify(activity, never()).showAppLockScreen()
   }
@@ -55,7 +55,7 @@ class TheActivityControllerTest {
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
-    uiEvents.onNext(ActivityLifecycle.Started())
+    uiEvents.onNext(TheActivityLifecycle.Started())
 
     verify(activity).showAppLockScreen()
   }
@@ -66,7 +66,7 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(lockAfterTimestamp.isSet).thenReturn(false)
 
-    uiEvents.onNext(ActivityLifecycle.Stopped())
+    uiEvents.onNext(TheActivityLifecycle.Stopped())
 
     verify(lockAfterTimestamp).set(check {
       // Not the best way, but works.
@@ -80,7 +80,7 @@ class TheActivityControllerTest {
     whenever(lockAfterTimestamp.isSet).thenReturn(true)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.now())
 
-    uiEvents.onNext(ActivityLifecycle.Stopped())
+    uiEvents.onNext(TheActivityLifecycle.Stopped())
 
     verify(lockAfterTimestamp, never()).set(any())
   }
@@ -92,7 +92,7 @@ class TheActivityControllerTest {
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
-    uiEvents.onNext(ActivityLifecycle.Started())
+    uiEvents.onNext(TheActivityLifecycle.Started())
 
     verify(lockAfterTimestamp).delete()
   }
@@ -104,7 +104,7 @@ class TheActivityControllerTest {
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(5))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
-    uiEvents.onNext(ActivityLifecycle.Started())
+    uiEvents.onNext(TheActivityLifecycle.Started())
 
     verify(lockAfterTimestamp, never()).delete()
   }

@@ -33,7 +33,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.nullIfBlank
-import org.simple.clinic.widgets.ActivityLifecycle
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -222,7 +222,7 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun saveOngoingEntry(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ActivityLifecycle.Paused>()
+    return events.ofType<TheActivityLifecycle.Paused>()
         .withLatestFrom(events.ofType<OngoingPatientEntryChanged>())
         .map { (_, entryUpdate) -> entryUpdate.entry }
         .flatMap { entry ->

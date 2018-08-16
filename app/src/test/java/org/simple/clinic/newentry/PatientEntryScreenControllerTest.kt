@@ -26,7 +26,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.widgets.ActivityLifecycle
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -177,7 +177,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
 
-    uiEvents.onNext(ActivityLifecycle.Paused())
+    uiEvents.onNext(TheActivityLifecycle.Paused())
 
     verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
         personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),

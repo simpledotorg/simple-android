@@ -17,6 +17,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.login.pin.LoginPinScreen
+import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
@@ -103,7 +104,7 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   fun openLoginPinEntryScreen() {
-    screenRouter.push(LoginPinScreen.KEY)
+    screenRouter.push(LoginPinScreenKey())
   }
 
   companion object {

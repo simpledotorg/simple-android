@@ -57,13 +57,14 @@ class LoginPinScreenControllerTest {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.login()).thenReturn(Single.just(LoginResult.Success()))
+    whenever(userSession.login(any())).thenReturn(Single.just(LoginResult.Success()))
 
     uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(LoginPinOtpReceived("0000"))
     uiEvents.onNext(PinSubmitClicked())
 
     val inOrder = inOrder(userSession, screen)
-    inOrder.verify(userSession).login()
+    inOrder.verify(userSession).login("0000")
     inOrder.verify(userSession).ongoingLoginEntry()
     inOrder.verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingEntry.userId, phoneNumber = "99999", pin = "0000"))
     inOrder.verify(screen).showProgressBar()
@@ -76,12 +77,13 @@ class LoginPinScreenControllerTest {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.login())
+    whenever(userSession.login(any()))
         .thenReturn(Single.just(LoginResult.NetworkError()))
         .thenReturn(Single.just(LoginResult.ServerError("Server error")))
         .thenReturn(Single.just(LoginResult.UnexpectedError()))
 
     uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(LoginPinOtpReceived("0000"))
     uiEvents.onNext(PinSubmitClicked())
     uiEvents.onNext(PinSubmitClicked())
     uiEvents.onNext(PinSubmitClicked())
@@ -99,9 +101,10 @@ class LoginPinScreenControllerTest {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.login()).thenReturn(Single.just(loginResult))
+    whenever(userSession.login(any())).thenReturn(Single.just(loginResult))
 
     uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(LoginPinOtpReceived("0000"))
     uiEvents.onNext(PinSubmitClicked())
 
     if (shouldSync) {

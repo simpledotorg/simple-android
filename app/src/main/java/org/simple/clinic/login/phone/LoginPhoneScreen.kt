@@ -15,6 +15,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.login.pin.LoginPinScreen
+import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -73,6 +74,7 @@ class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   }
 
   fun openLoginPinScreen() {
-    screenRouter.push(LoginPinScreen.KEY)
+    val key = screenRouter.key<LoginPhoneScreenKey>(this)
+    screenRouter.push(LoginPinScreenKey(key?.otp ?: ""))
   }
 }

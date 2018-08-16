@@ -35,7 +35,7 @@ class LoginPinScreenController @Inject constructor(
     return events.ofType<PinScreenCreated>()
         .flatMapSingle {
           userSession.ongoingLoginEntry()
-              .map { { ui: Ui -> ui.showPhoneNumber(it.phoneNumber!!) } }
+              .map { { ui: Ui -> ui.showPhoneNumber(it.phoneNumber) } }
         }
   }
 
@@ -43,10 +43,14 @@ class LoginPinScreenController @Inject constructor(
     val pinChanges = events.ofType<PinTextChanged>()
         .map { it.pin }
 
+    val otpReceived = events.ofType<LoginPinOtpReceived>()
+        .map { it.otp }
+
     return events.ofType<PinSubmitClicked>()
         .withLatestFrom(pinChanges) { _, pin -> pin }
-        .flatMap { enteredPin ->
-          val cachedLogin = userSession.login()
+        .withLatestFrom(otpReceived)
+        .flatMap { (enteredPin, otp) ->
+          val cachedLogin = userSession.login(otp)
               .cache()
               .toObservable()
 

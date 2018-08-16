@@ -10,6 +10,7 @@ import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
+import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
 
 @AppScope
@@ -25,4 +26,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: PatientRepositoryAndroidTest)
   fun inject(target: PrescriptionRepositoryAndroidTest)
   fun inject(target: FacilityRepositoryAndroidTest)
+  fun inject(target: UserDaoAndroidTest)
 }

@@ -27,6 +27,7 @@ import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchAgeFilterSheet
 import org.simple.clinic.search.PatientSearchScreen
+import org.simple.clinic.sms.SmsReaderModule
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
@@ -71,7 +72,7 @@ interface TheActivityComponent {
   }
 }
 
-@Module(includes = [OnboardingModule::class])
+@Module(includes = [OnboardingModule::class, SmsReaderModule::class])
 class TheActivityModule {
 
   @Provides

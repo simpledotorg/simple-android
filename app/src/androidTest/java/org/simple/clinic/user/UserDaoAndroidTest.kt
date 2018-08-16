@@ -1,0 +1,50 @@
+package org.simple.clinic.user
+
+import android.content.SharedPreferences
+import android.support.test.runner.AndroidJUnit4
+import com.google.common.truth.Truth.assertThat
+import org.junit.Before
+import org.junit.Test
+import org.junit.runner.RunWith
+import org.simple.clinic.AppDatabase
+import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestClinicApp
+import javax.inject.Inject
+
+@RunWith(AndroidJUnit4::class)
+class UserDaoAndroidTest {
+
+  @Inject
+  lateinit var sharedPrefs: SharedPreferences
+
+  @Inject
+  lateinit var appDatabase: AppDatabase
+
+  @Inject
+  lateinit var patientFaker: PatientFaker
+
+  @Before
+  fun setup() {
+    TestClinicApp.appComponent().inject(this)
+
+    appDatabase.clearAllTables()
+    sharedPrefs.edit().clear().apply()
+  }
+
+  /**
+   * This was added after we found that Room doesn't complain if incorrect values
+   * are passed for @Insert's onConflict strategy and [LoggedInUser.RoomDao.createOrUpdate]
+   * was ignoring updates.
+   */
+  @Test
+  fun update_should_work_correctly() {
+    val user = patientFaker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    val updatedUser = user.copy(status = UserStatus.APPROVED_FOR_SYNCING)
+
+    appDatabase.userDao().createOrUpdate(user)
+    appDatabase.userDao().createOrUpdate(updatedUser)
+
+    val updatedUserInDatabase = appDatabase.userDao().userImmediate()
+    assertThat(updatedUserInDatabase).isEqualTo(updatedUser)
+  }
+}

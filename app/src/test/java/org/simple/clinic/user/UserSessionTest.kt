@@ -4,9 +4,10 @@ import android.content.SharedPreferences
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.inOrder
+import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
@@ -45,6 +46,7 @@ class UserSessionTest {
   private val sharedPrefs = mock<SharedPreferences>()
   private val appDatabase = mock<AppDatabase>()
   private val passwordHasher = mock<PasswordHasher>()
+  private val userDao = mock<LoggedInUser.RoomDao>()
 
   private val moshi = Moshi.Builder().build()
 
@@ -59,7 +61,7 @@ class UserSessionTest {
         }
       }"""
 
-    val LOGGED_IN_USER = PatientMocker.loggedInUserPayload()
+    val LOGGED_IN_USER_PAYLOAD = PatientMocker.loggedInUserPayload()
   }
 
   @Before
@@ -78,8 +80,7 @@ class UserSessionTest {
     userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
 
-    val mockUserDao = mock<LoggedInUser.RoomDao>()
-    whenever(appDatabase.userDao()).thenReturn(mockUserDao)
+    whenever(appDatabase.userDao()).thenReturn(userDao)
 
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
   }
@@ -87,7 +88,7 @@ class UserSessionTest {
   @Test
   fun `login should correctly map network response to result`() {
     whenever(loginApi.login(any()))
-        .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER)))
+        .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER_PAYLOAD)))
         .thenReturn(Single.error(NullPointerException()))
         .thenReturn(Single.error(unauthorizedHttpError()))
         .thenReturn(Single.error(SocketTimeoutException()))
@@ -145,5 +146,25 @@ class UserSessionTest {
 
     val registrationResult = userSession.register().blockingGet()
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Error::class.java)
+  }
+
+  @Test
+  fun `when refreshing the logged in user then the user details should be fetched from the server`() {
+    val loggedInUser = PatientMocker.loggedInUser(uuid = LOGGED_IN_USER_PAYLOAD.uuid)
+    val refreshedUserPayload = PatientMocker.loggedInUserPayload(uuid = LOGGED_IN_USER_PAYLOAD.uuid)
+
+    whenever(registrationApi.findUser(LOGGED_IN_USER_PAYLOAD.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
+    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER_PAYLOAD)))
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
+
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(loggedInUser)))
+
+    userSession.login()
+        .toCompletable()
+        .andThen(userSession.refreshLoggedInUser())
+        .blockingAwait()
+
+    verify(registrationApi).findUser(LOGGED_IN_USER_PAYLOAD.phoneNumber)
+    verify(userDao, times(2)).createOrUpdate(argThat { uuid == LOGGED_IN_USER_PAYLOAD.uuid })
   }
 }

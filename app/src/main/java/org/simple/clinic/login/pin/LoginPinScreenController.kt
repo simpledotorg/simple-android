@@ -3,12 +3,15 @@ package org.simple.clinic.login.pin
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.sms.SmsReadResult
 import org.simple.clinic.sms.SmsReader
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -49,15 +52,17 @@ class LoginPinScreenController @Inject constructor(
     return events.ofType<PinSubmitClicked>()
         .withLatestFrom(pinChanges) { _, pin -> pin }
         .withLatestFrom(otpReceived)
-        .flatMap { (enteredPin, otp) ->
-          val cachedLogin = userSession.login(otp)
+        .flatMap { (enteredPin, _) ->
+          val cachedLogin = userSession.requestLoginOtp()
               .cache()
               .toObservable()
 
           val loginResultUiChange = cachedLogin
               .map {
                 when (it) {
-                  is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
+                  is LoginResult.Success -> { ui: Ui ->
+                    // No-Op for now
+                  }
                   is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
                   is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
                   is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
@@ -71,11 +76,26 @@ class LoginPinScreenController @Inject constructor(
           val syncRemainingData = cachedLogin
               .filter { it is LoginResult.Success }
               .doOnNext {
+                // Stop sync for now since we need to validate otp later and then do sync
                 syncScheduler.syncImmediately()
                     .subscribeOn(io())
-                    .subscribe()
+                //                     .subscribe()
               }
               .flatMap { Observable.empty<UiChange>() }
+
+          val readSms = cachedLogin
+              .filter { it is LoginResult.Success }
+              .flatMap { smsReader.waitForSms() }
+              .flatMapSingle {
+                when (it) {
+                  is SmsReadResult.Success -> userSession.validateOtp(it.message)
+                  is SmsReadResult.Error -> {
+                    Single.error<LoggedInUser>(it.cause ?: RuntimeException())
+                  }
+                }
+              }
+              .map { { ui: Ui -> ui.showUnexpectedError() } }
+              .onErrorReturn { { ui: Ui -> ui.showUnexpectedError() } }
 
           userSession.ongoingLoginEntry()
               .map { entry -> entry.copy(pin = enteredPin) }
@@ -83,7 +103,8 @@ class LoginPinScreenController @Inject constructor(
               .andThen(Observable.merge(
                   loginProgressUiChanges,
                   loginResultUiChange,
-                  syncRemainingData
+                  syncRemainingData,
+                  readSms
               ))
         }
   }

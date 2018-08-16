@@ -8,7 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ActivityLifecycle
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import timber.log.Timber
@@ -33,7 +33,7 @@ class TheActivityController @Inject constructor(
 
   private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedCanShowAppLock = events
-        .ofType<ActivityLifecycle.Started>()
+        .ofType<TheActivityLifecycle.Started>()
         .filter { userSession.isUserLoggedIn() }
         .map {
           Timber.i("-------------")
@@ -63,7 +63,7 @@ class TheActivityController @Inject constructor(
 
   private fun updateLockTime(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<ActivityLifecycle.Stopped>()
+        .ofType<TheActivityLifecycle.Stopped>()
         .filter { userSession.isUserLoggedIn() }
         .filter { !lockAfterTimestamp.isSet }
         .flatMap {

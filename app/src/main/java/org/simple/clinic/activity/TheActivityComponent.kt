@@ -6,6 +6,7 @@ import dagger.BindsInstance
 import dagger.Module
 import dagger.Provides
 import dagger.Subcomponent
+import io.reactivex.Observable
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
@@ -31,6 +32,7 @@ import org.simple.clinic.sms.SmsReaderModule
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.threeten.bp.Instant
 import javax.inject.Named
 
@@ -76,8 +78,8 @@ interface TheActivityComponent {
 class TheActivityModule {
 
   @Provides
-  fun theActivityLifecycle(activity: TheActivity): RxTheActivityLifecycle {
-    return RxTheActivityLifecycle.from(activity)
+  fun theActivityLifecycle(activity: TheActivity): Observable<TheActivityLifecycle> {
+    return RxTheActivityLifecycle.from(activity).stream()
   }
 
   @Provides

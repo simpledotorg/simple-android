@@ -11,7 +11,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
-import org.simple.clinic.home.bp.PatientsScreen
+import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.login.pin.LoginPinScreen

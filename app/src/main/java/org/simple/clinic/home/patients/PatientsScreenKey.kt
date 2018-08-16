@@ -1,4 +1,4 @@
-package org.simple.clinic.home.bp
+package org.simple.clinic.home.patients
 
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R

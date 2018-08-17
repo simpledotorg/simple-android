@@ -116,4 +116,12 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   fun openHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
   }
+
+  fun enableDoneButton() {
+    doneButton.isEnabled = true
+  }
+
+  fun disableDoneButton() {
+    doneButton.isEnabled = false
+  }
 }

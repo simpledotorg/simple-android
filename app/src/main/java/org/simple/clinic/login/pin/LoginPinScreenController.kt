@@ -9,10 +9,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.sms.SmsReadResult
-import org.simple.clinic.sms.SmsReader
 import org.simple.clinic.sync.SyncScheduler
-import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -23,7 +20,6 @@ typealias UiChange = (Ui) -> Unit
 class LoginPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val syncScheduler: SyncScheduler,
-    private val smsReader: SmsReader,
     private val loginConfig: Single<LoginConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -82,28 +78,13 @@ class LoginPinScreenController @Inject constructor(
               }
               .flatMap { Observable.empty<UiChange>() }
 
-          val readSms = cachedLogin
-              .filter { it is LoginResult.Success }
-              .flatMap { smsReader.waitForSms() }
-              .flatMapSingle {
-                when (it) {
-                  is SmsReadResult.Success -> userSession.validateOtp(it.message)
-                  is SmsReadResult.Error -> {
-                    Single.error<LoggedInUser>(it.cause ?: RuntimeException())
-                  }
-                }
-              }
-              .map { { ui: Ui -> ui.showUnexpectedError() } }
-              .onErrorReturn { { ui: Ui -> ui.showUnexpectedError() } }
-
           userSession.ongoingLoginEntry()
               .map { entry -> entry.copy(pin = enteredPin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
               .andThen(Observable.merge(
                   loginProgressUiChanges,
                   loginResultUiChange,
-                  syncRemainingData,
-                  readSms
+                  syncRemainingData
               ))
         }
   }

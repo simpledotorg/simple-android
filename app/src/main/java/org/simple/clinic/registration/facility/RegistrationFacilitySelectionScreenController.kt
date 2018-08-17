@@ -35,6 +35,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     return Observable.mergeArray(
         fetchFacilities(transformedEvents),
         showFacilities(transformedEvents),
+        enableDoneButtonOnFacilitySelection(transformedEvents),
         proceedOnDoneClicks(transformedEvents))
   }
 
@@ -69,13 +70,13 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
   private fun handleFacilitySelectionChanges(events: Observable<UiEvent>): Observable<UiEvent> {
     return events
         .ofType<RegistrationFacilitySelectionChanged>()
-        .scan(emptySet<Facility>(), { selectedFacilities, changeEvent ->
+        .scan(emptySet<Facility>()) { selectedFacilities, changeEvent ->
           if (changeEvent.isSelected) {
             selectedFacilities + changeEvent.facility
           } else {
             selectedFacilities - changeEvent.facility
           }
-        })
+        }
         .map(::RegistrationSelectedFacilitiesChanged)
   }
 
@@ -111,6 +112,18 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
               .andThen(userSession.loginFromOngoingRegistrationEntry())
               .andThen(registrationScheduler.schedule())
               .andThen(Observable.just({ ui: Ui -> ui.openHomeScreen() }))
+        }
+  }
+
+  private fun enableDoneButtonOnFacilitySelection(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationSelectedFacilitiesChanged>()
+        .map { it.selectedFacilities.size }
+        .map { selected ->
+          when {
+            selected > 0 -> { ui: Ui -> ui.enableDoneButton() }
+            else -> { ui: Ui -> ui.disableDoneButton() }
+          }
         }
   }
 }

@@ -156,4 +156,19 @@ class RegistrationFacilitySelectionScreenControllerTest {
     inOrder.verify(screen).openHomeScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityIds = listOf(facility1.uuid)))
   }
+
+  @Test
+  fun `done button should remain disabled until a facility is selected`() {
+    whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.never())
+
+    val facility = PatientMocker.facility(name = "Ulsoor", uuid = UUID.randomUUID())
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility, isSelected = true))
+    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility, isSelected = false))
+
+    verify(screen).enableDoneButton()
+    verify(screen, times(2)).disableDoneButton()
+  }
 }

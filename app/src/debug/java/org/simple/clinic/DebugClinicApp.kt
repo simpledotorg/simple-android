@@ -19,6 +19,7 @@ import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
+import org.simple.clinic.util.AppSignatureHelper
 import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -55,7 +56,7 @@ class DebugClinicApp : ClinicApp() {
     registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks() {
       override fun onActivityStarted(activity: Activity) {
         if (activity is TheActivity) {
-          DebugNotification.show(activity)
+          DebugNotification.show(activity, signatureHelper.appSignatures)
         }
       }
 

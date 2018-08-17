@@ -16,7 +16,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.sms.SmsReader
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
@@ -29,7 +28,6 @@ class LoginPinScreenControllerTest {
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
   private val syncScheduler = mock<SyncScheduler>()
-  private val smsReader = mock<SmsReader>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val loginConfigEmitter = PublishSubject.create<LoginConfig>()
@@ -37,7 +35,7 @@ class LoginPinScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = LoginPinScreenController(userSession, syncScheduler, smsReader, loginConfigEmitter.firstOrError())
+    controller = LoginPinScreenController(userSession, syncScheduler, loginConfigEmitter.firstOrError())
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 

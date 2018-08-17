@@ -24,23 +24,13 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
 
   val uiEvents = PublishSubject.create<UiEvent>()!!
 
-  var facilityItems: List<FacilityListItem> = emptyList()
-    set(value) {
-      field = value
-      submitList(field)
-    }
-
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection, parent, false)
     return FacilityViewHolder(layout, uiEvents)
   }
 
-  override fun getItemCount(): Int {
-    return facilityItems.size
-  }
-
   override fun onBindViewHolder(holder: FacilityViewHolder, position: Int) {
-    holder.item = facilityItems[position]
+    holder.item = getItem(position)
     holder.render()
   }
 

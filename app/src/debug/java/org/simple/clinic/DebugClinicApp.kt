@@ -16,6 +16,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.util.AppSignatureHelper
 import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
@@ -56,6 +57,8 @@ class DebugClinicApp : ClinicApp() {
         }
       }
     })
+
+    Timber.d("App Signatures: ${signatureHelper.appSignatures}")
   }
 
   override fun buildDaggerGraph(): AppComponent {

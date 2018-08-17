@@ -110,7 +110,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   }
 
   fun updateFacilities(facilityItems: List<FacilityListItem>) {
-    recyclerViewAdapter.facilityItems = facilityItems
+    recyclerViewAdapter.submitList(facilityItems)
   }
 
   fun openHomeScreen() {

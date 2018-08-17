@@ -11,6 +11,7 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
+import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.registration.RegistrationConfig
@@ -68,6 +69,8 @@ class DebugClinicApp : ClinicApp() {
           override fun appLockConfig(): Single<AppLockConfig> {
             return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(4)))
           }
+
+          override fun loginConfig() = Single.just(LoginConfig(isOtpLoginFlowEnabled = true))
         })
         .registrationModule(object : RegistrationModule() {
           @Provides

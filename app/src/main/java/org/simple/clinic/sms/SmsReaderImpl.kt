@@ -46,6 +46,15 @@ class SmsReaderImpl @Inject constructor(private val activity: TheActivity) : Sms
 
   private val emitter = PublishSubject.create<SmsReadResult>()
 
+  /**
+  The broadcast receiver will get unregistered in two cases
+  1. When the activity is stopped, and
+  2. WHen the SMS read task completes
+
+  We use this flag to stop the receiver from getting unregistered twice
+   */
+  private var isRegistered = false
+
   override fun waitForSms(): Observable<SmsReadResult> {
 
     val task = client.startSmsRetriever()
@@ -65,14 +74,19 @@ class SmsReaderImpl @Inject constructor(private val activity: TheActivity) : Sms
   }
 
   private fun registerSmsReceiver() {
+    unregisterSmsReceiver()
     activity.registerReceiver(smsReceiver, smsReceivedIntentFilter)
     smsReceiver.smsReadResults
         .takeUntil(activity.lifecycle.stream().ofType(ActivityLifecycle.Stopped::class.java))
         .doFinally { unregisterSmsReceiver() }
         .subscribe { emitter.onNext(it) }
+    isRegistered = true
   }
 
   private fun unregisterSmsReceiver() {
-    activity.unregisterReceiver(smsReceiver)
+    if (isRegistered) {
+      activity.unregisterReceiver(smsReceiver)
+      isRegistered = false
+    }
   }
 }

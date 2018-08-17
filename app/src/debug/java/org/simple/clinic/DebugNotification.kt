@@ -17,7 +17,7 @@ object DebugNotification {
   private const val NOTIF_CHANNEL_ID = "debug"
   private const val NOTIF_ID = 0
 
-  fun show(context: Context) {
+  fun show(context: Context, appSignature: String) {
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -33,7 +33,7 @@ object DebugNotification {
 
     val notif = NotificationCompat.Builder(context, NOTIF_CHANNEL_ID)
         .setSmallIcon(R.mipmap.ic_launcher)
-        .setContentTitle(context.getString(R.string.app_name))
+        .setContentTitle("${context.getString(R.string.app_name)}: $appSignature")
         .setContentText("This notification will only be visible on debug builds.")
         .setPriority(NotificationCompat.PRIORITY_MIN)
         .addAction(syncAction)

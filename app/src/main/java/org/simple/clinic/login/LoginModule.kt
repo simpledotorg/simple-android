@@ -46,4 +46,7 @@ open class LoginModule {
   open fun appLockConfig(): Single<AppLockConfig> {
     return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(15)))
   }
+
+  @Provides
+  open fun loginConfig(): Single<LoginConfig> = Single.just(LoginConfig(isOtpLoginFlowEnabled = false))
 }

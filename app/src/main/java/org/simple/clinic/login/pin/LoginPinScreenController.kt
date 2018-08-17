@@ -7,6 +7,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
+import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.sms.SmsReadResult
 import org.simple.clinic.sms.SmsReader
@@ -22,7 +23,8 @@ typealias UiChange = (Ui) -> Unit
 class LoginPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val syncScheduler: SyncScheduler,
-    private val smsReader: SmsReader
+    private val smsReader: SmsReader,
+    private val loginConfig: Single<LoginConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

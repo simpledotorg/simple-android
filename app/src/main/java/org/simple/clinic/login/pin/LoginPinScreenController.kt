@@ -54,17 +54,15 @@ class LoginPinScreenController @Inject constructor(
     return events.ofType<PinSubmitClicked>()
         .withLatestFrom(pinChanges) { _, pin -> pin }
         .withLatestFrom(otpReceived)
-        .flatMap { (enteredPin, _) ->
-          val cachedLogin = userSession.requestLoginOtp()
+        .flatMap { (enteredPin, otp) ->
+          val cachedLogin = userSession.login(otp)
               .cache()
               .toObservable()
 
           val loginResultUiChange = cachedLogin
               .map {
                 when (it) {
-                  is LoginResult.Success -> { ui: Ui ->
-                    // No-Op for now
-                  }
+                  is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
                   is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
                   is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
                   is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
@@ -78,10 +76,9 @@ class LoginPinScreenController @Inject constructor(
           val syncRemainingData = cachedLogin
               .filter { it is LoginResult.Success }
               .doOnNext {
-                // Stop sync for now since we need to validate otp later and then do sync
                 syncScheduler.syncImmediately()
                     .subscribeOn(io())
-                //                     .subscribe()
+                    .subscribe()
               }
               .flatMap { Observable.empty<UiChange>() }
 

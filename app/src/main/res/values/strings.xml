@@ -61,6 +61,7 @@
   <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic</string>
   <string name="patients_user_approved_title">You’ve been approved!</string>
   <string name="patients_user_approved_message">You can now see all patient data for your clinic</string>
+  <string name="patients_dismiss_user_approved_status">Got it</string>
 
   <!-- New blood pressure entry -->
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>

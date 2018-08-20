@@ -38,6 +38,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
+  private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -47,7 +48,14 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), activityStarts(), aadhaarScanButtonClicks(), searchButtonClicks())
+    Observable
+        .mergeArray(
+            screenCreates(),
+            activityStarts(),
+            aadhaarScanButtonClicks(),
+            searchButtonClicks(),
+            dismissApprovedStatusClicks()
+        )
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -62,6 +70,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton).map { ScanAadhaarClicked() }
 
   private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
+
+  private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreen.KEY)

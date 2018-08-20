@@ -48,11 +48,8 @@ class UserSessionTest {
   private val userDao = mock<LoggedInUser.RoomDao>()
 
   private val moshi = Moshi.Builder().build()
-
-  private lateinit var userSession: UserSession
-
-  companion object {
-    const val UNAUTHORIZED_ERROR_RESPONSE_JSON = """{
+  private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
+  private val unauthorizedErrorResponseJson = """{
         "errors": {
           "user": [
             "user is not present"
@@ -60,8 +57,7 @@ class UserSessionTest {
         }
       }"""
 
-    val LOGGED_IN_USER_PAYLOAD = PatientMocker.loggedInUserPayload()
-  }
+  private lateinit var userSession: UserSession
 
   @Before
   fun setUp() {
@@ -87,7 +83,7 @@ class UserSessionTest {
   @Test
   fun `login should correctly map network response to result`() {
     whenever(loginApi.login(any()))
-        .thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER_PAYLOAD)))
+        .thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
         .thenReturn(Single.error(NullPointerException()))
         .thenReturn(Single.error(unauthorizedHttpError()))
         .thenReturn(Single.error(SocketTimeoutException()))
@@ -106,7 +102,7 @@ class UserSessionTest {
   }
 
   private fun unauthorizedHttpError(): HttpException {
-    val error = Response.error<LoginResponse>(401, ResponseBody.create(MediaType.parse("text"), UNAUTHORIZED_ERROR_RESPONSE_JSON))
+    val error = Response.error<LoginResponse>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
   }
 
@@ -151,19 +147,19 @@ class UserSessionTest {
 
   @Test
   fun `when refreshing the logged in user then the user details should be fetched from the server`() {
-    val loggedInUser = PatientMocker.loggedInUser(uuid = LOGGED_IN_USER_PAYLOAD.uuid)
-    val refreshedUserPayload = LOGGED_IN_USER_PAYLOAD.copy(status = UserStatus.APPROVED_FOR_SYNCING)
+    val loggedInUser = PatientMocker.loggedInUser(uuid = loggedInUserPayload.uuid)
+    val refreshedUserPayload = loggedInUserPayload.copy(status = UserStatus.APPROVED_FOR_SYNCING)
 
-    whenever(registrationApi.findUser(LOGGED_IN_USER_PAYLOAD.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
-    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", LOGGED_IN_USER_PAYLOAD)))
+    whenever(registrationApi.findUser(loggedInUserPayload.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
+    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(loggedInUser)))
 
     userSession.refreshLoggedInUser().blockingAwait()
 
-    verify(registrationApi).findUser(LOGGED_IN_USER_PAYLOAD.phoneNumber)
+    verify(registrationApi).findUser(loggedInUserPayload.phoneNumber)
     verify(userDao).createOrUpdate(check {
-      assertThat(it.uuid).isEqualTo(LOGGED_IN_USER_PAYLOAD.uuid)
+      assertThat(it.uuid).isEqualTo(loggedInUserPayload.uuid)
       assertThat(it.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
     })
   }

@@ -12,7 +12,6 @@ import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.ViewFlipper
 import timber.log.Timber
 
 fun EditText.showKeyboard() {
@@ -113,11 +112,10 @@ fun View.topRelativeTo(superParent: ViewGroup): Int {
 }
 
 @Suppress("FoldInitializerAndIfToElvis")
-fun ViewFlipper.setDisplayedChildId(@IdRes childId: Int) {
+fun ViewGroup.indexOfChildId(@IdRes childId: Int): Int {
   val child = findViewById<View>(childId)
   if (child == null) {
-    throw AssertionError("${resources.getResourceEntryName(childId)} isn't a part of this ViewFlipper")
+    throw AssertionError("${resources.getResourceEntryName(childId)} isn't a part of ${resources.getResourceEntryName(id)}")
   }
-  val childIndex = indexOfChild(child)
-  displayedChild = childIndex
+  return indexOfChild(child)
 }

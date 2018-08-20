@@ -1,7 +1,10 @@
 package org.simple.clinic.home.patients
 
 import android.content.Context
+import android.support.annotation.IdRes
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
+import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.ViewFlipper
@@ -17,7 +20,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
-import org.simple.clinic.widgets.setDisplayedChildId
+import org.simple.clinic.widgets.indexOfChildId
 import javax.inject.Inject
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -45,8 +48,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     if (isInEditMode) {
       return
     }
-
     TheActivity.component.inject(this)
+
+    setupApprovalStatusAnimations()
 
     Observable
         .mergeArray(
@@ -63,6 +67,14 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { uiChange -> uiChange(this) }
   }
 
+  private fun setupApprovalStatusAnimations() {
+    val entryAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_entry)
+    approvalStatusViewFlipper.inAnimation = entryAnimation.apply { interpolator = FastOutSlowInInterpolator() }
+
+    val exitAnimation = AnimationUtils.loadAnimation(context, R.anim.user_approval_status_exit)
+    approvalStatusViewFlipper.outAnimation = exitAnimation.apply { interpolator = FastOutSlowInInterpolator() }
+  }
+
   private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
@@ -77,17 +89,29 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     screenRouter.push(PatientSearchScreen.KEY)
   }
 
+  private fun showUserApprovalStatus(@IdRes statusViewId: Int) {
+    approvalStatusViewFlipper.apply {
+      val statusViewIndex = indexOfChildId(statusViewId)
+
+      // Avoid duplicate calls because ViewFlipper re-plays transition
+      // animations even if the child-to-display is the same.
+      if (displayedChild != statusViewIndex) {
+        displayedChild = statusViewIndex
+      }
+    }
+  }
+
   fun showUserStatusAsWaiting() {
-    approvalStatusViewFlipper.setDisplayedChildId(R.id.patients_user_status_awaitingapproval)
+    showUserApprovalStatus(R.id.patients_user_status_awaitingapproval)
   }
 
   fun showUserStatusAsApproved() {
-    approvalStatusViewFlipper.setDisplayedChildId(R.id.patients_user_status_approved)
+    showUserApprovalStatus(R.id.patients_user_status_approved)
   }
 
   fun hideUserApprovalStatus() {
     // By changing to an empty child instead of hiding the ViewFlipper entirely,
     // ViewFlipper's change animations can be re-used for this transition.
-    approvalStatusViewFlipper.setDisplayedChildId(R.id.patients_user_status_hidden)
+    showUserApprovalStatus(R.id.patients_user_status_hidden)
   }
 }

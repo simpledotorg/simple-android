@@ -134,5 +134,7 @@ class UserSessionAndroidTest {
         .blockingGet()
 
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Success::class.java)
+    val (accessToken) = userSession.accessToken()
+    assertThat(accessToken).isNotNull()
   }
 }

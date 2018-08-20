@@ -140,7 +140,9 @@ class UserSessionTest {
     val userFacility = PatientMocker.facility()
     whenever(facilityRepository.facilityUuidsForUser(any())).thenReturn(Observable.just(listOf(userFacility.uuid)))
 
-    val response = RegistrationResponse(userPayload = PatientMocker.loggedInUserPayload(facilityUuids = emptyList()))
+    val response = RegistrationResponse(
+        userPayload = PatientMocker.loggedInUserPayload(facilityUuids = emptyList()),
+        accessToken = "token")
     whenever(registrationApi.createUser(any())).thenReturn(Single.just(response))
 
     val registrationResult = userSession.register().blockingGet()

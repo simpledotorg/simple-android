@@ -7,6 +7,9 @@ import org.simple.clinic.user.LoggedInUserPayload
 @JsonClass(generateAdapter = true)
 data class RegistrationResponse(
 
+    @Json(name = "access_token")
+    val accessToken: String,
+
     @Json(name = "user")
     val userPayload: LoggedInUserPayload
 )

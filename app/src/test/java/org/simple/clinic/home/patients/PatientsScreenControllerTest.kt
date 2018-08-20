@@ -61,7 +61,7 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(TheActivityLifecycle.Resumed())
     uiEvents.onNext(TheActivityLifecycle.Resumed())
 
-    verify(userSession, times(2)).refreshLoggedInUser()
+    verify(userSession, times(3)).refreshLoggedInUser()
   }
 
   @Test

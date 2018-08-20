@@ -31,13 +31,14 @@ class PatientsScreenControllerTest {
   private val screen: PatientsScreen = mock()
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
+  private val hasUserDismissedApprovedStatusPref = mock<Preference<Boolean>>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
 
   @Before
   fun setUp() {
-    controller = PatientsScreenController(userSession, approvalStatusApprovedAt)
+    controller = PatientsScreenController(userSession, approvalStatusApprovedAt, hasUserDismissedApprovedStatusPref)
 
     uiEvents
         .compose(controller)
@@ -56,6 +57,7 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(false))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(TheActivityLifecycle.Resumed())
@@ -73,6 +75,7 @@ class PatientsScreenControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(false))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(TheActivityLifecycle.Resumed())
@@ -86,6 +89,7 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(false))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -96,6 +100,7 @@ class PatientsScreenControllerTest {
   fun `when the user has been disapproved then the approval status shouldn't be shown`() {
     val user = PatientMocker.loggedInUser(status = UserStatus.DISAPPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(false))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -103,23 +108,32 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when the user has been approved within the last 24h then the approval status should be shown`() {
+  @Parameters("true", "false")
+  fun `when the user has been approved within the last 24h then the approval status should be shown`(
+      hasUserDismissedStatus: Boolean
+  ) {
     val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showUserStatusAsApproved()
+    if (hasUserDismissedStatus.not()) {
+      verify(screen).showUserStatusAsApproved()
+    }
   }
 
   @Test
-  fun `when the user was approved earlier than 24h then the approval status should not be shown`() {
+  @Parameters("true", "false")
+  fun `when the user was approved earlier than 24h then the approval status should not be shown`(
+      hasUserDismissedStatus: Boolean
+  ) {
     val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -131,9 +145,23 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(false))
 
     uiEvents.onNext(ScreenCreated())
 
     verify(userSession).refreshLoggedInUser()
+  }
+
+  @Test
+  fun `when the user dismisses the approved status then the status should be hidden`() {
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
+    whenever(hasUserDismissedApprovedStatusPref.asObservable()).thenReturn(Observable.just(false))
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(UserApprovedStatusDismissed())
+
+    verify(hasUserDismissedApprovedStatusPref).set(true)
   }
 }

@@ -16,4 +16,10 @@ class PatientsModule {
   fun approvalStatusChangeTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Instant> {
     return rxSharedPrefs.getObject("approval_status_changed_at", Instant.EPOCH, InstantRxPreferencesConverter())
   }
+
+  @Provides
+  @Named("approved_status_dismissed")
+  fun hasUserDismissedApprovedStatus(rxSharedPrefs: RxSharedPreferences): Preference<Boolean> {
+    return rxSharedPrefs.getBoolean("approved_status_dismissed", false)
+  }
 }

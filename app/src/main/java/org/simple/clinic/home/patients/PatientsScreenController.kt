@@ -6,6 +6,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.user.UserSession
@@ -25,7 +26,8 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
-    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>
+    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
+    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -34,7 +36,8 @@ class PatientsScreenController @Inject constructor(
     return Observable.merge(
         newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
-        showApprovalStatus(replayedEvents))
+        showApprovalStatus(replayedEvents),
+        dismissApprovalStatus(replayedEvents))
   }
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -76,17 +79,18 @@ class PatientsScreenController @Inject constructor(
     return events
         .ofType<ScreenCreated>()
         .flatMap {
-          userSession.loggedInUser()
-              .map { (user) -> user!! }
-              .map {
-                when (it.status) {
+          val user = userSession.loggedInUser().map { (user) -> user!! }
+
+          Observables.combineLatest(user, hasUserDismissedApprovedStatusPref.asObservable())
+              .map { (user, userDismissedStatus) ->
+                when (user.status) {
                   WAITING_FOR_APPROVAL -> { ui: Ui -> ui.showUserStatusAsWaiting() }
                   DISAPPROVED_FOR_SYNCING -> { ui: Ui -> ui.hideUserApprovalStatus() }
                   APPROVED_FOR_SYNCING -> {
                     val twentyFourHoursAgo = Instant.now().minus(24, ChronoUnit.HOURS)
                     val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()
 
-                    if (wasApprovedInLast24Hours) {
+                    if (userDismissedStatus.not() && wasApprovedInLast24Hours) {
                       { ui: Ui -> ui.showUserStatusAsApproved() }
                     } else {
                       { ui: Ui -> ui.hideUserApprovalStatus() }
@@ -94,6 +98,15 @@ class PatientsScreenController @Inject constructor(
                   }
                 }
               }
+        }
+  }
+
+  private fun dismissApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<UserApprovedStatusDismissed>()
+        .flatMap {
+          hasUserDismissedApprovedStatusPref.set(true)
+          Observable.never<UiChange>()
         }
   }
 }

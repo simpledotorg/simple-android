@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -11,13 +12,17 @@ import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
+import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientsScreen
 typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -58,8 +63,10 @@ class PatientsScreenController @Inject constructor(
               .map {
                 when (it.status) {
                   WAITING_FOR_APPROVAL -> { ui: Ui -> ui.showUserStatusAsWaiting() }
+                  DISAPPROVED_FOR_SYNCING -> { ui: Ui -> ui.hideUserApprovalStatus() }
                   APPROVED_FOR_SYNCING -> {
-                    val wasApprovedInLast24Hours = true  // TODO: Get this from somewhere.
+                    val twentyFourHoursAgo = Instant.now().minus(24, ChronoUnit.HOURS)
+                    val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()
 
                     if (wasApprovedInLast24Hours) {
                       { ui: Ui -> ui.showUserStatusAsApproved() }
@@ -67,7 +74,6 @@ class PatientsScreenController @Inject constructor(
                       { ui: Ui -> ui.hideUserApprovalStatus() }
                     }
                   }
-                  DISAPPROVED_FOR_SYNCING -> { ui: Ui -> ui.hideUserApprovalStatus() }
                 }
               }
         }

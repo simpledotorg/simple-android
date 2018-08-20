@@ -33,7 +33,7 @@ class UserDaoAndroidTest {
 
   /**
    * This was added after we found that Room doesn't complain if incorrect values
-   * are passed for @Insert's onConflict strategy and [LoggedInUser.RoomDao.createOrUpdate]
+   * are passed for @Insert's onConflict strategy and [User.RoomDao.createOrUpdate]
    * was ignoring updates.
    */
   @Test

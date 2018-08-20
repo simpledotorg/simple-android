@@ -20,8 +20,8 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.nameToSearchableForm
-import org.simple.clinic.user.LoggedInUser
 import org.simple.clinic.user.LoggedInUserFacilityMapping
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantRoomTypeConverter
 import org.simple.clinic.util.LocalDateRoomTypeConverter
@@ -35,9 +35,9 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       BloodPressureMeasurement::class,
       PrescribedDrug::class,
       Facility::class,
-      LoggedInUser::class,
+      User::class,
       LoggedInUserFacilityMapping::class],
-    version = 7,
+    version = 8,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -45,6 +45,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     PatientStatus.RoomTypeConverter::class,
     SyncStatus.RoomTypeConverter::class,
     UserStatus.RoomTypeConverter::class,
+    User.LoggedInStatus.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class)
@@ -68,7 +69,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   abstract fun facilityDao(): Facility.RoomDao
 
-  abstract fun userDao(): LoggedInUser.RoomDao
+  abstract fun userDao(): User.RoomDao
 
   abstract fun userFacilityMappingDao(): LoggedInUserFacilityMapping.RoomDao
 
@@ -174,6 +175,19 @@ abstract class AppDatabase : RoomDatabase() {
         FROM `LoggedInUser_v6`
         """)
         database.execSQL("DROP TABLE `LoggedInUser_v6`")
+      }
+    }
+  }
+
+  /**
+   * Adds the column `loggedInStatus` to the `LoggedInUser` table
+   **/
+  class Migration_7_8 : Migration(7, 8) {
+
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.inTransaction {
+        database.execSQL("""ALTER TABLE "LoggedInUser" ADD COLUMN "loggedInStatus" TEXT NOT NULL DEFAULT ''""")
+        database.execSQL("""UPDATE "LoggedInUser" SET "loggedInStatus" = 'LOGGED_IN'""")
       }
     }
   }

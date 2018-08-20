@@ -104,7 +104,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)!!
+    val screenKey = screenRouter.key<PatientSummaryScreenKey>(this)
     return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid, screenKey.caller))
   }
 

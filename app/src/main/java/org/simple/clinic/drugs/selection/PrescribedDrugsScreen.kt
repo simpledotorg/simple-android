@@ -71,7 +71,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)!!
+    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
     return Observable.just(PrescribedDrugsScreenCreated(screenKey.patientUuid))
   }
 

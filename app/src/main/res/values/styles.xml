@@ -291,4 +291,8 @@
     <item name="android:lineSpacingExtra">6sp</item>
     <item name="android:textColor">@color/white_opacity_60</item>
   </style>
+
+  <style name="Clinic.DismissUserApprovedStatusTheme">
+    <item name="colorControlHighlight">#4099ff66</item>
+  </style>
 </resources>

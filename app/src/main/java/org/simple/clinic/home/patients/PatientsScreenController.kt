@@ -60,19 +60,21 @@ class PatientsScreenController @Inject constructor(
               .firstOrError()
               .filter { (user) -> user!!.status == WAITING_FOR_APPROVAL }
               .doOnSuccess {
-                // The refresh call should not get canceled when the app is closed.
-                // That is, when this controller gets disposed by the screen.
-                userSession.refreshLoggedInUser()
-                    .doOnComplete {
-                      approvalStatusUpdatedAtPref.set(Instant.now())
-                    }
-                    .onErrorComplete()
-                    .subscribeOn(io())
-                    .subscribe()
+                // The refresh call should not get canceled when the app is closed
+                // (i.e., this chain gets disposed). So it's not a part of this Rx chain.
+                refreshUserStatus()
               }
               .flatMap { Maybe.empty<UiChange>() }
         }, false, 1)
         .toObservable()
+  }
+
+  private fun refreshUserStatus() {
+    userSession.refreshLoggedInUser()
+        .onErrorComplete()
+        .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
+        .subscribeOn(io())
+        .subscribe()
   }
 
   private fun showApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {

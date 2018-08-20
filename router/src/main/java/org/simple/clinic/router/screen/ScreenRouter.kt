@@ -54,9 +54,8 @@ class ScreenRouter(
   /**
    * Get the key that was used for inflating a <var>view</var>.
    */
-  @CheckResult
-  fun <T> key(view: View): T? {
-    return Flow.getKey<T>(view)
+  fun <T> key(view: View): T {
+    return Flow.getKey<T>(view) ?: throw IllegalStateException("No key found for View: [$view]")
   }
 
   fun push(screenKey: FullScreenKey) {

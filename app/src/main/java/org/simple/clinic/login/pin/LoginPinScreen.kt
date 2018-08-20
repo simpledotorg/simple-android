@@ -15,7 +15,6 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
@@ -77,14 +76,10 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       RxView.clicks(backButton)
           .map { PinBackClicked() }
 
-  private fun otpReceived() =
-      Single
-          .fromCallable {
-            val key = screenRouter.key<LoginPinScreenKey>(this)
-            key?.otp ?: ""
-          }
-          .map { LoginPinOtpReceived(it) }
-          .toObservable()
+  private fun otpReceived(): Observable<LoginPinOtpReceived>? {
+    val key = screenRouter.key<LoginPinScreenKey>(this)
+    return Observable.just(LoginPinOtpReceived(key.otp))
+  }
 
   fun showPhoneNumber(phoneNumber: String) {
     phoneNumberTextView.text = phoneNumber

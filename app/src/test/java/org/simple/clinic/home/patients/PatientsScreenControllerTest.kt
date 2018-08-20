@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -20,6 +21,8 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
+import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
 
 @RunWith(JUnitParamsRunner::class)
@@ -27,13 +30,14 @@ class PatientsScreenControllerTest {
 
   private val screen: PatientsScreen = mock()
   private val userSession = mock<UserSession>()
+  private val approvalStatusApprovedAt = mock<Preference<Instant>>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
 
   @Before
   fun setUp() {
-    controller = PatientsScreenController(userSession)
+    controller = PatientsScreenController(userSession, approvalStatusApprovedAt)
 
     uiEvents
         .compose(controller)
@@ -67,6 +71,8 @@ class PatientsScreenControllerTest {
   ) {
     val user = PatientMocker.loggedInUser(status = status)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(TheActivityLifecycle.Resumed())
@@ -79,6 +85,7 @@ class PatientsScreenControllerTest {
   fun `when the user is waiting for awaiting approval then it's status should be shown`() {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
 
     uiEvents.onNext(ScreenCreated())
 
@@ -99,21 +106,30 @@ class PatientsScreenControllerTest {
   fun `when the user has been approved within the last 24h then the approval status should be shown`() {
     val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
 
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showUserStatusAsApproved()
-
-    // TODO
   }
 
   @Test
   fun `when the user was approved earlier than 24h then the approval status should not be shown`() {
-    // TODO
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen, never()).showUserStatusAsApproved()
   }
 
   @Test
   fun `when checking the user's status fails with any error then the error should be silently ignored`() {
+    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
 
     uiEvents.onNext(ScreenCreated())

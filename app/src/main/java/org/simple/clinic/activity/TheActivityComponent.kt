@@ -11,6 +11,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
+import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
@@ -74,7 +75,7 @@ interface TheActivityComponent {
   }
 }
 
-@Module(includes = [OnboardingModule::class, SmsReaderModule::class])
+@Module(includes = [OnboardingModule::class, PatientsModule::class, SmsReaderModule::class])
 class TheActivityModule {
 
   @Provides

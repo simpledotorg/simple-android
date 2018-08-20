@@ -71,4 +71,30 @@ class MigrationAndroidTest {
       assertThat(cursor.count).isEqualTo(0)
     }
   }
+
+  @Test
+  fun migration_7_to_8() {
+    val db_v7 = helper.createDatabase(TEST_DB_NAME, 7)
+
+    db_v7.execSQL("""
+      INSERT OR ABORT INTO `LoggedInUser`(`uuid`,`fullName`,`phoneNumber`,`pinDigest`, `status`,`createdAt`,`updatedAt`)
+      VALUES (
+        'c6834f82-3305-4144-9dc8-5f77c908ebf1',
+        'Ashok Kumar',
+        '1234567890',
+        'pinDigest',
+        'APPROVED_FOR_SYNCING',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z')
+    """)
+
+    val db_v8 = helper.runMigrationsAndValidate(TEST_DB_NAME, 8, true, AppDatabase.Migration_7_8())
+
+    val cursor = db_v8.query("""SELECT "loggedInStatus" FROM "LoggedInUser" WHERE "uuid"='c6834f82-3305-4144-9dc8-5f77c908ebf1'""")
+
+    cursor.use {
+      assertThat(it.moveToFirst()).isTrue()
+      assertThat(it.string("loggedInStatus")).isEqualTo("LOGGED_IN")
+    }
+  }
 }

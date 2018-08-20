@@ -98,14 +98,15 @@ class UserSession @Inject constructor(
     return ongoingEntry
         .zipWith(ongoingEntry.flatMap { entry -> passwordHasher.hash(entry.pin!!) })
         .flatMapCompletable { (entry, passwordDigest) ->
-          val user = LoggedInUser(
+          val user = User(
               uuid = entry.uuid!!,
               fullName = entry.fullName!!,
               phoneNumber = entry.phoneNumber!!,
               pinDigest = passwordDigest,
               createdAt = entry.createdAt!!,
               updatedAt = entry.createdAt,
-              status = UserStatus.WAITING_FOR_APPROVAL)
+              status = UserStatus.WAITING_FOR_APPROVAL,
+              loggedInStatus = User.LoggedInStatus.NOT_SIGNED_IN)
           storeUser(user, entry.facilityIds!!)
         }
         .andThen(clearOngoingRegistrationEntry())
@@ -137,22 +138,22 @@ class UserSession @Inject constructor(
         }
         .flatMap { registrationApi.findUser(it.phoneNumber) }
         .flatMapCompletable { userPayload ->
-          val user = userFromPayload(userPayload)
+          val user = userFromPayload(userPayload, User.LoggedInStatus.LOGGED_IN)
           val userFacilities = userPayload.facilityUuids
           storeUser(user, userFacilities)
         }
   }
 
   fun register(): Single<RegistrationResult> {
-    val loggedInUser: Single<LoggedInUser> = loggedInUser()
+    val user: Single<User> = loggedInUser()
         .map { (user) -> user!! }
         .firstOrError()
         .cache()
 
-    val currentFacility = loggedInUser
+    val currentFacility = user
         .flatMap { facilityRepository.facilityUuidsForUser(it).firstOrError() }
 
-    return Singles.zip(loggedInUser, currentFacility)
+    return Singles.zip(user, currentFacility)
         .map { (user, facilityUuids) -> userToPayload(user, facilityUuids) }
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
@@ -166,7 +167,7 @@ class UserSession @Inject constructor(
         }
   }
 
-  private fun userToPayload(user: LoggedInUser, facilityUuids: List<UUID>): LoggedInUserPayload {
+  private fun userToPayload(user: User, facilityUuids: List<UUID>): LoggedInUserPayload {
     return user.run {
       LoggedInUserPayload(
           uuid = uuid,
@@ -180,16 +181,17 @@ class UserSession @Inject constructor(
     }
   }
 
-  private fun userFromPayload(payload: LoggedInUserPayload): LoggedInUser {
+  private fun userFromPayload(payload: LoggedInUserPayload, status: User.LoggedInStatus): User {
     return payload.run {
-      LoggedInUser(
+      User(
           uuid = uuid,
           fullName = fullName,
           phoneNumber = phoneNumber,
           pinDigest = pinDigest,
-          status = status,
+          status = this.status,
           createdAt = createdAt,
-          updatedAt = updatedAt)
+          updatedAt = updatedAt,
+          loggedInStatus = status)
     }
   }
 
@@ -213,14 +215,14 @@ class UserSession @Inject constructor(
   private fun storeUserAndAccessToken(response: LoginResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))
     return storeUser(
-        userFromPayload(response.loggedInUser),
+        userFromPayload(response.loggedInUser, User.LoggedInStatus.LOGGED_IN),
         response.loggedInUser.facilityUuids)
   }
 
   private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))
 
-    val user = userFromPayload(response.userPayload)
+    val user = userFromPayload(response.userPayload, User.LoggedInStatus.LOGGED_IN)
     val userFacilityIds = response.userPayload.facilityUuids
 
     if (userFacilityIds.isEmpty()) {
@@ -230,10 +232,10 @@ class UserSession @Inject constructor(
     return storeUser(user, userFacilityIds)
   }
 
-  private fun storeUser(loggedInUser: LoggedInUser, facilityUuids: List<UUID>): Completable {
+  private fun storeUser(user: User, facilityUuids: List<UUID>): Completable {
     return Completable
-        .fromAction { appDatabase.userDao().createOrUpdate(loggedInUser) }
-        .andThen(facilityRepository.associateUserWithFacilities(loggedInUser, facilityUuids, currentFacility = facilityUuids.first()))
+        .fromAction { appDatabase.userDao().createOrUpdate(user) }
+        .andThen(facilityRepository.associateUserWithFacilities(user, facilityUuids, currentFacility = facilityUuids.first()))
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {
@@ -252,7 +254,7 @@ class UserSession @Inject constructor(
     }
   }
 
-  fun loggedInUser(): Observable<Optional<LoggedInUser>> {
+  fun loggedInUser(): Observable<Optional<User>> {
     return appDatabase.userDao().user()
         .toObservable()
         .map { if (it.isEmpty()) None else Just(it.first()) }

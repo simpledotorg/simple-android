@@ -9,7 +9,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.PatientFaker
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.User
 import java.util.UUID
 import javax.inject.Inject
 
@@ -25,7 +25,7 @@ class FacilityRepositoryAndroidTest {
   @Inject
   lateinit var patientFaker: PatientFaker
 
-  private lateinit var user: LoggedInUser
+  private lateinit var user: User
 
   @Before
   fun setup() {

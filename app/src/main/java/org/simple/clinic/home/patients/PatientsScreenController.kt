@@ -1,10 +1,13 @@
 package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
@@ -40,18 +43,33 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    // Skipping the first resume because it'll be a duplicate of screen-created.
     val screenCreate = events.ofType<ScreenCreated>()
-    val screenResumes = events.ofType<TheActivityLifecycle.Resumed>().skip(1)
+    val screenResumes = events.ofType<TheActivityLifecycle.Resumed>()
 
     return Observable.merge(screenCreate, screenResumes)
-        .flatMap {
+        // Depending upon the entry point of Patients screen, both screen-create
+        // and screen-resume events may or may not happen at the same time.
+        // So duplicate triggers are dropped by restricting flatMap's
+        // concurrency to 1.
+        .toFlowable(BackpressureStrategy.LATEST)
+        .flatMapMaybe({
           userSession.loggedInUser()
-              .take(1)
+              .firstOrError()
               .filter { (user) -> user!!.status == WAITING_FOR_APPROVAL }
-              .flatMapCompletable { userSession.refreshLoggedInUser() }
-              .andThen(Observable.never<UiChange>())
-        }
+              .doOnSuccess {
+                // The refresh call should not get canceled when the app is closed.
+                // That is, when this controller gets disposed by the screen.
+                userSession.refreshLoggedInUser()
+                    .doOnComplete {
+                      approvalStatusUpdatedAtPref.set(Instant.now())
+                    }
+                    .onErrorComplete()
+                    .subscribeOn(io())
+                    .subscribe()
+              }
+              .flatMap { Maybe.empty<UiChange>() }
+        }, false, 1)
+        .toObservable()
   }
 
   private fun showApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {

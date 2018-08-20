@@ -23,6 +23,7 @@ import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationRequest
+import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -156,14 +157,7 @@ class UserSession @Inject constructor(
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
         .flatMap {
-          val user = userFromPayload(it.userPayload)
-          val userFacilities = it.userPayload.facilityUuids
-
-          if (userFacilities.isEmpty()) {
-            throw AssertionError("Server did not send back any facilities")
-          }
-
-          storeUser(user, userFacilities)
+          storeUserAndAccessToken(it)
               .toSingleDefault(RegistrationResult.Success() as RegistrationResult)
         }
         .onErrorReturn { e ->
@@ -223,6 +217,19 @@ class UserSession @Inject constructor(
         response.loggedInUser.facilityUuids)
   }
 
+  private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
+    accessTokenPreference.set(Just(response.accessToken))
+
+    val user = userFromPayload(response.userPayload)
+    val userFacilityIds = response.userPayload.facilityUuids
+
+    if (userFacilityIds.isEmpty()) {
+      throw AssertionError("Server did not send back any facilities")
+    }
+
+    return storeUser(user, userFacilityIds)
+  }
+
   private fun storeUser(loggedInUser: LoggedInUser, facilityUuids: List<UUID>): Completable {
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(loggedInUser) }
@@ -238,7 +245,7 @@ class UserSession @Inject constructor(
     // FYI: RegistrationWorker doesn't get canceled when a user logs out.
     // It's possible that the wrong user will get sent to the server for
     // registration if another user logs in. This works for now because
-    // there is no way to log out, but this something to keep in mind.
+    // there is no way to log out, but this is something to keep in mind.
     return Completable.fromAction {
       sharedPreferences.edit().clear().apply()
       appDatabase.clearAllTables()

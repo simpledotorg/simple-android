@@ -53,7 +53,7 @@ class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<LoginPhoneScreenKey>(this)!!
+    val screenKey = screenRouter.key<LoginPhoneScreenKey>(this)
     return Observable.just(LoginPhoneNumberScreenCreated(screenKey.otp))
   }
 
@@ -75,6 +75,6 @@ class LoginPhoneScreen(context: Context, attrs: AttributeSet) : RelativeLayout(c
 
   fun openLoginPinScreen() {
     val key = screenRouter.key<LoginPhoneScreenKey>(this)
-    screenRouter.push(LoginPinScreenKey(key?.otp ?: ""))
+    screenRouter.push(LoginPinScreenKey(key.otp))
   }
 }

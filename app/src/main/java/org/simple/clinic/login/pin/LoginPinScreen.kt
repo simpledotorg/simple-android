@@ -77,14 +77,10 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       RxView.clicks(backButton)
           .map { PinBackClicked() }
 
-  private fun otpReceived() =
-      Single
-          .fromCallable {
-            val key = screenRouter.key<LoginPinScreenKey>(this)
-            key?.otp ?: ""
-          }
-          .map { LoginPinOtpReceived(it) }
-          .toObservable()
+  private fun otpReceived(): Observable<LoginPinOtpReceived>? {
+    val key = screenRouter.key<LoginPinScreenKey>(this)
+    return Single.just(LoginPinOtpReceived(key.otp)).toObservable()
+  }
 
   fun showPhoneNumber(phoneNumber: String) {
     phoneNumberTextView.text = phoneNumber

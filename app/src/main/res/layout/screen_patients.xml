@@ -65,7 +65,7 @@
     android:layout_alignParentBottom="true"
     app:debug_displayedChild="2">
 
-    <FrameLayout
+    <View
       android:id="@+id/patients_user_status_hidden"
       android:layout_width="match_parent"
       android:layout_height="wrap_content" />
@@ -106,7 +106,10 @@
       android:layout_height="wrap_content"
       android:layout_gravity="bottom"
       android:background="@color/black"
-      android:padding="@dimen/spacing_16">
+      android:paddingBottom="@dimen/spacing_16"
+      android:paddingEnd="@dimen/spacing_12"
+      android:paddingStart="@dimen/spacing_16"
+      android:paddingTop="@dimen/spacing_16">
 
       <TextView
         android:id="@+id/patients_user_approved_title"
@@ -130,7 +133,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:text="@string/patients_dismiss_user_approved_status"
-        android:textColor="#99ff66" />
+        android:textColor="#99ff66"
+        android:theme="@style/Clinic.DismissUserApprovedStatusTheme" />
     </RelativeLayout>
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.home.patients.PatientsScreen>

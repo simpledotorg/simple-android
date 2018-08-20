@@ -23,8 +23,8 @@ class ViewFlipperWithDebugPreview(context: Context, attrs: AttributeSet) : ViewF
     super.onFinishInflate()
 
     if (isInEditMode) {
-      if (childToDisplayPostInflate > childCount) {
-        throw IllegalStateException("childToDisplayPostInflate is greater than child count")
+      if (childToDisplayPostInflate >= childCount) {
+        throw IllegalStateException("displayed child index is greater than child count")
       }
       displayedChild = childToDisplayPostInflate
     }

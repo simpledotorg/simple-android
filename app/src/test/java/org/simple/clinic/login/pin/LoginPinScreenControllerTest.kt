@@ -16,6 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.LoginSmsListener
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
@@ -27,15 +28,18 @@ class LoginPinScreenControllerTest {
 
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
-  private val syncScheduler = mock<SyncScheduler>()
+  private val loginSmsListener = mock<LoginSmsListener>()
 
+  private val syncScheduler = mock<SyncScheduler>()
   private val uiEvents = PublishSubject.create<UiEvent>()
+
   private val loginConfigEmitter = PublishSubject.create<LoginConfig>()
-  lateinit var controller: LoginPinScreenController
+  private lateinit var controller: LoginPinScreenController
+
 
   @Before
   fun setUp() {
-    controller = LoginPinScreenController(userSession, syncScheduler, loginConfigEmitter.firstOrError())
+    controller = LoginPinScreenController(userSession, syncScheduler, loginConfigEmitter.firstOrError(), loginSmsListener)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
@@ -59,6 +63,7 @@ class LoginPinScreenControllerTest {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login(any())).thenReturn(Single.just(LoginResult.Success()))
 
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = false))
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(LoginPinOtpReceived("0000"))
     uiEvents.onNext(PinSubmitClicked())
@@ -82,6 +87,7 @@ class LoginPinScreenControllerTest {
         .thenReturn(Single.just(LoginResult.ServerError("Server error")))
         .thenReturn(Single.just(LoginResult.UnexpectedError()))
 
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = false))
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(LoginPinOtpReceived("0000"))
     uiEvents.onNext(PinSubmitClicked())
@@ -103,6 +109,7 @@ class LoginPinScreenControllerTest {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.login(any())).thenReturn(Single.just(loginResult))
 
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = false))
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(LoginPinOtpReceived("0000"))
     uiEvents.onNext(PinSubmitClicked())
@@ -112,6 +119,64 @@ class LoginPinScreenControllerTest {
     } else {
       verify(syncScheduler, never()).syncImmediately()
     }
+  }
+
+  @Test
+  fun `when new login flow is enabled, if pin is not empty and submit is clicked, start the task to listen for sms and make the call to request a login otp and show the home screen`() {
+    val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
+    whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.complete())
+
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
+    uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(PinSubmitClicked())
+
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingLoginEntry.userId, phoneNumber = "9999", pin = "0000"))
+    verify(loginSmsListener).startListeningForLoginSms()
+    verify(userSession).requestLoginOtp()
+    verify(screen).showProgressBar()
+    verify(screen).hideProgressBar()
+    verify(screen).openHomeScreen()
+  }
+
+  @Test
+  fun `when new login flow is enabled, if pin is not empty and submit is clicked, if the sms listener fails, then show the error screen`() {
+    val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
+    whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.error(RuntimeException()))
+
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
+    uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(PinSubmitClicked())
+
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingLoginEntry.userId, phoneNumber = "9999", pin = "0000"))
+    verify(screen).showUnexpectedError()
+  }
+
+  @Test
+  fun `when new login flow is enabled, if request api call throws any errors, show errors`() {
+    val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+    whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.complete())
+    whenever(userSession.requestLoginOtp())
+        .thenReturn(Single.just(LoginResult.NetworkError()))
+        .thenReturn(Single.just(LoginResult.ServerError("Server error")))
+        .thenReturn(Single.just(LoginResult.UnexpectedError()))
+
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
+    uiEvents.onNext(PinTextChanged("0000"))
+    uiEvents.onNext(PinSubmitClicked())
+    uiEvents.onNext(PinSubmitClicked())
+    uiEvents.onNext(PinSubmitClicked())
+
+    verify(screen).showNetworkError()
+    verify(screen).showServerError("Server error")
+    verify(screen).showUnexpectedError()
   }
 
   fun `values for data sync`(): Array<Any> {

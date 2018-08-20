@@ -11,7 +11,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
-import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.User
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
@@ -99,16 +99,18 @@ class PatientFaker @Inject constructor(private val faker: Faker) {
       name: String = faker.name.name(),
       phone: String = faker.phoneNumber.phoneNumber(),
       pinDigest: String = "pin-digest",
-      status: UserStatus = UserStatus.values().toList().shuffled().first()
-  ): LoggedInUser {
-    return LoggedInUser(
+      status: UserStatus = UserStatus.values().toList().shuffled().first(),
+      loggedInStatus: User.LoggedInStatus = User.LoggedInStatus.values().toList().shuffled().first()
+  ): User {
+    return User(
         uuid = uuid,
         fullName = name,
         phoneNumber = phone,
         pinDigest = pinDigest,
         status = status,
         createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        updatedAt = Instant.now(),
+        loggedInStatus = loggedInStatus)
   }
 
   fun ongoingRegistrationEntry(facilities: List<Facility>): OngoingRegistrationEntry {

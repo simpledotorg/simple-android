@@ -43,7 +43,8 @@ class AppModule(private val appContext: Application, private val databaseName: S
             AppDatabase.Migration_3_4(),
             AppDatabase.Migration_4_5(),
             AppDatabase.Migration_5_6(),
-            AppDatabase.Migration_6_7()
+            AppDatabase.Migration_6_7(),
+            AppDatabase.Migration_7_8()
         )
         .build()
   }

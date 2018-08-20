@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
@@ -45,7 +46,7 @@ class UserSessionTest {
   private val sharedPrefs = mock<SharedPreferences>()
   private val appDatabase = mock<AppDatabase>()
   private val passwordHasher = mock<PasswordHasher>()
-  private val userDao = mock<LoggedInUser.RoomDao>()
+  private val userDao = mock<User.RoomDao>()
 
   private val moshi = Moshi.Builder().build()
   private val loggedInUserPayload = PatientMocker.loggedInUserPayload()

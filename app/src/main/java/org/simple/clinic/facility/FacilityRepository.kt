@@ -6,7 +6,7 @@ import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.user.LoggedInUser
+import org.simple.clinic.user.User
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
@@ -23,7 +23,7 @@ class FacilityRepository @Inject constructor(
     return facilityDao.facilities().toObservable()
   }
 
-  fun associateUserWithFacilities(user: LoggedInUser, facilityIds: List<UUID>, currentFacility: UUID): Completable {
+  fun associateUserWithFacilities(user: User, facilityIds: List<UUID>, currentFacility: UUID): Completable {
     return Completable.fromAction {
       userFacilityMappingDao.insertOrUpdate(user, facilityIds, currentFacility)
     }
@@ -40,11 +40,11 @@ class FacilityRepository @Inject constructor(
         .flatMap { currentFacility(it) }
   }
 
-  fun currentFacility(user: LoggedInUser): Observable<Facility> {
+  fun currentFacility(user: User): Observable<Facility> {
     return userFacilityMappingDao.currentFacility(user.uuid).toObservable()
   }
 
-  fun facilityUuidsForUser(user: LoggedInUser): Observable<List<UUID>> {
+  fun facilityUuidsForUser(user: User): Observable<List<UUID>> {
     return userFacilityMappingDao
         .facilityUuids(user.uuid)
         .toObservable()

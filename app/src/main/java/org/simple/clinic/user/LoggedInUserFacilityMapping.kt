@@ -16,7 +16,7 @@ import java.util.UUID
     tableName = "LoggedInUserFacilityMapping",
     foreignKeys = [
       ForeignKey(
-          entity = LoggedInUser::class,
+          entity = User::class,
           parentColumns = ["uuid"],
           childColumns = ["userUuid"]),
       ForeignKey(
@@ -39,7 +39,7 @@ data class LoggedInUserFacilityMapping(
   abstract class RoomDao {
 
     @Transaction
-    open fun insertOrUpdate(user: LoggedInUser, facilityIds: List<UUID>, newCurrentFacilityUuid: UUID) {
+    open fun insertOrUpdate(user: User, facilityIds: List<UUID>, newCurrentFacilityUuid: UUID) {
       if ((newCurrentFacilityUuid in facilityIds).not()) {
         throw AssertionError()
       }

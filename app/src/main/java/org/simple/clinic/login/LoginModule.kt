@@ -50,7 +50,7 @@ open class LoginModule {
   }
 
   @Provides
-  open fun loginConfig(): Single<LoginConfig> = Single.just(LoginConfig(isOtpLoginFlowEnabled = false))
+  open fun loginConfig(): Single<LoginConfig> = Single.just(LoginConfig(isOtpLoginFlowEnabled = true))
 
   @Provides
   open fun loginSmsListener(app: Application): LoginSmsListener = LoginSmsListenerImpl(app)

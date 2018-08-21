@@ -191,4 +191,5 @@ dependencies {
   implementation ("com.github.nisrulz:qreader:$versions.qrReader") {
     exclude group: 'com.google.android.gms', module: 'play-services-vision'
   }
+  implementation 'io.github.inflationx:viewpump:1.0.0'
 }

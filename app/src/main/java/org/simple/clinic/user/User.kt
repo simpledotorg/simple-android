@@ -42,7 +42,7 @@ data class User(
      * and information was stored locally, but the
      * OTP request has not yet been made.
      **/
-    NOT_SIGNED_IN,
+    NOT_LOGGED_IN,
 
     /**
      * Login OTP request has been raised with the server.

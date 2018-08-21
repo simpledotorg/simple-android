@@ -5,8 +5,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.protocol.ProtocolDrug
-import org.simple.clinic.user.User
 import org.simple.clinic.user.LoggedInUserPayload
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import java.util.UUID
 
@@ -128,7 +128,7 @@ object PatientMocker {
       phone: String = "a phone",
       pinDigest: String = "a hash",
       status: UserStatus = UserStatus.WAITING_FOR_APPROVAL,
-      loggedInStatus: User.LoggedInStatus = User.LoggedInStatus.NOT_SIGNED_IN
+      loggedInStatus: User.LoggedInStatus = User.LoggedInStatus.LOGGED_IN
   ): User {
     return User(
         uuid = uuid,

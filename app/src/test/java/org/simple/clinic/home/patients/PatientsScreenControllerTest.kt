@@ -16,6 +16,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
@@ -33,13 +34,14 @@ class PatientsScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
+  private val syncScheduler = mock<SyncScheduler>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
 
   @Before
   fun setUp() {
-    controller = PatientsScreenController(userSession, approvalStatusApprovedAt, hasUserDismissedApprovedStatus)
+    controller = PatientsScreenController(userSession, syncScheduler, approvalStatusApprovedAt, hasUserDismissedApprovedStatus)
 
     uiEvents
         .compose(controller)
@@ -167,5 +169,34 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(UserApprovedStatusDismissed())
 
     verify(hasUserDismissedApprovedStatus).set(true)
+  }
+
+  @Test
+  @Parameters(
+      "WAITING_FOR_APPROVAL, false",
+      "APPROVED_FOR_SYNCING, true",
+      "DISAPPROVED_FOR_SYNCING, false")
+  fun `when user is refreshed then patient data should be synced depending on the new approval status`(
+      statusAfterRefresh: UserStatus,
+      shouldSync: Boolean
+  ) {
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL))))
+        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(status = statusAfterRefresh))))
+
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(userSession).refreshLoggedInUser()
+
+    if (shouldSync) {
+      verify(syncScheduler).syncImmediately()
+    } else {
+      verify(syncScheduler, never()).syncImmediately()
+    }
   }
 }

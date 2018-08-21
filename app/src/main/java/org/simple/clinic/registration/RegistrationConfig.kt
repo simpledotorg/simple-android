@@ -1,6 +1,5 @@
 package org.simple.clinic.registration
 
-data class RegistrationConfig constructor(
-    val isRegistrationEnabled: Boolean,
+data class RegistrationConfig(
     val retryBackOffDelayInMinutes: Long
 )

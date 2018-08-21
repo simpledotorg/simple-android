@@ -13,7 +13,6 @@ import org.simple.clinic.login.LoginSmsListener
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = LoginPinScreen
@@ -115,8 +114,7 @@ class LoginPinScreenController @Inject constructor(
                 when (it) {
                   is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
                   is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-                  is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
-                  is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
+                  else -> { ui: Ui -> ui.showUnexpectedError() }
                 }
               }
 

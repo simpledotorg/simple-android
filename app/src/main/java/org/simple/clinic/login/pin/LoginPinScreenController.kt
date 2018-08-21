@@ -4,14 +4,20 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginSmsListener
+import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
+import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -22,7 +28,8 @@ class LoginPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val syncScheduler: SyncScheduler,
     private val loginConfig: Single<LoginConfig>,
-    private val loginSmsListener: LoginSmsListener
+    private val loginSmsListener: LoginSmsListener,
+    private val passwordHasher: PasswordHasher
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -31,7 +38,8 @@ class LoginPinScreenController @Inject constructor(
     return Observable.merge(
         screenSetups(replayedEvents),
         submitClicks(replayedEvents),
-        backClicks(replayedEvents))
+        backClicks(replayedEvents),
+        resetPinValidationError(replayedEvents))
   }
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
@@ -46,6 +54,23 @@ class LoginPinScreenController @Inject constructor(
       loginConfig.flatMapObservable { (isOtpLoginFlowEnabled) ->
         if (isOtpLoginFlowEnabled) loginFlowV2(events) else loginFlowV1(events)
       }
+
+  private fun resetPinValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+    val pinTextChanges = events
+        .ofType<PinTextChanged>()
+
+    val isOtpLoginFlowEnabled = loginConfig
+        .map { it.isOtpLoginFlowEnabled }
+        .toObservable()
+
+    return Observables.combineLatest(pinTextChanges, isOtpLoginFlowEnabled)
+        .map { (_, isOtpLoginFlowEnabled) ->
+          when {
+            isOtpLoginFlowEnabled -> { ui: Ui -> ui.hideError() }
+            else -> { _: Ui -> }
+          }
+        }
+  }
 
   private fun loginFlowV1(events: Observable<UiEvent>): Observable<UiChange> {
     val pinChanges = events.ofType<PinTextChanged>()
@@ -104,10 +129,36 @@ class LoginPinScreenController @Inject constructor(
         .withLatestFrom(pinChanges) { _, pin -> pin }
         .flatMap { enteredPin ->
 
-          val cachedRequestOtp = loginSmsListener.startListeningForLoginSms()
-              .andThen(userSession.requestLoginOtp())
+          val pinValidation = userSession.loggedInUser()
+              .map { (it as Just).value }
+              .map { it.pinDigest }
+              .firstOrError()
+              .flatMap { pinDigest -> passwordHasher.compare(pinDigest, enteredPin) }
               .cache()
+
+          val showProgressOnPinValidation = pinValidation
+              .map {
+                when (it) {
+                  SAME -> { ui: Ui -> ui.showProgressBar() }
+                  DIFFERENT -> { ui: Ui -> ui.showIncorrectPinError() }
+                }
+              }
               .toObservable()
+
+          val pinEnteredSuccessfully = pinValidation
+              .toObservable()
+              .filter { it == SAME }
+              .cache()
+
+          val cachedRequestOtp = pinEnteredSuccessfully
+              .flatMapSingle {
+                loginSmsListener.startListeningForLoginSms()
+                    // LoginSmsListener depends on a Google Play Services task
+                    // which emits the result on the main thread
+                    .observeOn(Schedulers.io())
+                    .andThen(userSession.requestLoginOtp())
+              }
+              .cache()
 
           val loginResultUiChange = cachedRequestOtp
               .map {
@@ -118,16 +169,16 @@ class LoginPinScreenController @Inject constructor(
                 }
               }
 
-          val loginProgressUiChanges = cachedRequestOtp
+          val hideProgressOnNetworkResult = cachedRequestOtp
               .map { { ui: Ui -> ui.hideProgressBar() } }
-              .startWith { ui: Ui -> ui.showProgressBar() }
 
           userSession.ongoingLoginEntry()
               .map { entry -> entry.copy(pin = enteredPin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
               .andThen(Observable.merge(
-                  loginProgressUiChanges,
-                  loginResultUiChange
+                  hideProgressOnNetworkResult,
+                  loginResultUiChange,
+                  showProgressOnPinValidation
               ))
               .onErrorResumeNext(Observable.just({ ui: Ui -> ui.showUnexpectedError() })) // This handles the case where listening for sms fails
         }

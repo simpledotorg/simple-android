@@ -67,6 +67,7 @@ class UserSession @Inject constructor(
         .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
+          // TODO: Review if this is necessary since Facilities are synced before making the request OTP call
           facilitySync.sync()
               .toSingleDefault(it)
         }
@@ -91,8 +92,6 @@ class UserSession @Inject constructor(
   }
 
   fun requestLoginOtp(): Single<LoginResult> {
-    // TODO: On request validation otp success, save find user result as logged in user
-    // TODO: On request validation otp success, set `is_waiting_login_otp` flag in preferences
     val ongoingEntry = ongoingLoginEntry().cache()
     return ongoingEntry
         .flatMap { loginApi.requestLoginOtp(it.userId).toSingleDefault(LoginResult.Success() as LoginResult) }

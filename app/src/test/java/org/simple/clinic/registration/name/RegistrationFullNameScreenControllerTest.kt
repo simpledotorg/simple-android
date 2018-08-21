@@ -7,10 +7,14 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -20,12 +24,14 @@ class RegistrationFullNameScreenControllerTest {
   val uiEvents = PublishSubject.create<UiEvent>()!!
   val screen = mock<RegistrationFullNameScreen>()
   val userSession = mock<UserSession>()
+  val facilityRepository = mock<FacilityRepository>()
+  val facilitySync = mock<FacilitySync>()
 
   private lateinit var controller: RegistrationFullNameScreenController
 
   @Before
   fun setUp() {
-    controller = RegistrationFullNameScreenController(userSession)
+    controller = RegistrationFullNameScreenController(userSession, facilityRepository, facilitySync)
 
     uiEvents
         .compose(controller)
@@ -90,5 +96,27 @@ class RegistrationFullNameScreenControllerTest {
   fun `when input text is changed then any visible errors should be removed`() {
     uiEvents.onNext(RegistrationFullNameTextChanged(""))
     verify(screen).hideValidationError()
+  }
+
+  @Test
+  fun `when screen is started and facilities haven't already been synced then facilities should be synced`() {
+    whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(facilitySync.sync()).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationFullNameScreenCreated())
+
+    verify(facilitySync).sync()
+  }
+
+  @Test
+  fun `when screen is started and facilities have already been synced then facilities should not be synced again`() {
+    whenever(facilityRepository.facilities()).thenReturn(Observable.just(listOf(PatientMocker.facility())))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(facilitySync.sync()).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationFullNameScreenCreated())
+
+    verify(facilitySync, never()).sync()
   }
 }

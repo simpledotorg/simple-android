@@ -18,9 +18,7 @@ import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.SendLoginOtpRequest
 import org.simple.clinic.login.UserPayload
-import org.simple.clinic.login.ValidateLoginOtpRequest
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
@@ -65,7 +63,6 @@ class UserSession @Inject constructor(
   }
 
   // TODO: rename to loginFromOngoingLoginEntry()
-  // TODO: Remove when SMS verification happens
   fun login(otp: String = ""): Single<LoginResult> {
     return ongoingLoginEntry()
         .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
@@ -99,33 +96,16 @@ class UserSession @Inject constructor(
     // TODO: On request validation otp success, set `is_waiting_login_otp` flag in preferences
     val ongoingEntry = ongoingLoginEntry().cache()
     return ongoingEntry
-        .zipWith(ongoingEntry.flatMap { passwordHasher.hash(it.pin) })
-        .map { (entry, passwordDigest) -> SendLoginOtpRequest(passwordDigest, entry.userId) }
-        .flatMap { loginApi.requestLoginOtp(it).toSingleDefault(LoginResult.Success() as LoginResult) }
+        .flatMap { loginApi.requestLoginOtp(it.userId).toSingleDefault(LoginResult.Success() as LoginResult) }
         .onErrorReturn { error ->
-          when {
-            error is IOException -> LoginResult.NetworkError()
-            error is HttpException && error.code() == 401 -> {
-              val errorResponse = readErrorResponseJson(error, LoginErrorResponse::class)
-              LoginResult.ServerError(errorResponse.firstError())
-            }
+          when (error) {
+            is IOException -> LoginResult.NetworkError()
             else -> {
               Timber.e(error)
               LoginResult.UnexpectedError()
             }
           }
         }
-  }
-
-  // TODO: Add the actual flow
-  fun validateOtp(message: String): Single<User> {
-    Timber.d("Read SMS: $message")
-    val ongoingEntry = ongoingLoginEntry().cache()
-    return ongoingLoginEntry()
-        .zipWith(ongoingEntry.flatMap { passwordHasher.hash(it.pin) })
-        .map { (entry, passwordDigest) -> ValidateLoginOtpRequest(entry.userId.toString(), passwordDigest, message) }
-        .flatMap(loginApi::validateLoginOtp)
-        .map { userFromPayload(it.loggedInUser, User.LoggedInStatus.LOGGED_IN) }
   }
 
   fun loginFromOngoingRegistrationEntry(): Completable {

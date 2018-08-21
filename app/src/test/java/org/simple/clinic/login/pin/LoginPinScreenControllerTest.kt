@@ -165,17 +165,14 @@ class LoginPinScreenControllerTest {
     whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp())
         .thenReturn(Single.just(LoginResult.NetworkError()))
-        .thenReturn(Single.just(LoginResult.ServerError("Server error")))
         .thenReturn(Single.just(LoginResult.UnexpectedError()))
 
     loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(PinSubmitClicked())
     uiEvents.onNext(PinSubmitClicked())
-    uiEvents.onNext(PinSubmitClicked())
 
     verify(screen).showNetworkError()
-    verify(screen).showServerError("Server error")
     verify(screen).showUnexpectedError()
   }
 

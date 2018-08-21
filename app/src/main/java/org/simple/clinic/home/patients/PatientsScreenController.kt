@@ -8,7 +8,8 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
+import io.reactivex.schedulers.Schedulers
+import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
@@ -26,6 +27,7 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
+    private val syncScheduler: SyncScheduler,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -70,10 +72,17 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun refreshUserStatus() {
-    userSession.refreshLoggedInUser()
+    val refreshUser = userSession.refreshLoggedInUser()
+        .subscribeOn(Schedulers.io())
         .onErrorComplete()
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
-        .subscribeOn(io())
+
+    val syncData = userSession.loggedInUser()
+        .filter { (user) -> user?.isApprovedForSyncing() ?: false }
+        .flatMapCompletable { syncScheduler.syncImmediately() }
+
+    refreshUser
+        .andThen(syncData)
         .subscribe()
   }
 

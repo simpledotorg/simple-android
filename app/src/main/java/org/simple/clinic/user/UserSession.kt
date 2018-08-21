@@ -106,7 +106,7 @@ class UserSession @Inject constructor(
               createdAt = entry.createdAt!!,
               updatedAt = entry.createdAt,
               status = UserStatus.WAITING_FOR_APPROVAL,
-              loggedInStatus = User.LoggedInStatus.NOT_SIGNED_IN)
+              loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN)
           storeUser(user, entry.facilityIds!!)
         }
         .andThen(clearOngoingRegistrationEntry())

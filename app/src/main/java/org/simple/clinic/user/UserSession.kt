@@ -130,6 +130,7 @@ class UserSession @Inject constructor(
 
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
     return registrationApi.findUser(phoneNumber)
+        .flatMap { saveUserAsNotSignedIn(it).toSingleDefault(it) }
         .map { user -> FindUserResult.Found(user) as FindUserResult }
         .onErrorReturn { e ->
           when {
@@ -141,6 +142,13 @@ class UserSession @Inject constructor(
             }
           }
         }
+  }
+
+  private fun saveUserAsNotSignedIn(loggedInUserPayload: LoggedInUserPayload): Completable {
+    return Single.fromCallable { userFromPayload(loggedInUserPayload, User.LoggedInStatus.NOT_LOGGED_IN) }
+        // We need this because when saving the user from here, there won't be any local facilities
+        .flatMap { user -> facilitySync.sync().toSingleDefault(user) }
+        .flatMapCompletable { storeUser(it, loggedInUserPayload.facilityUuids) }
   }
 
   fun refreshLoggedInUser(): Completable {

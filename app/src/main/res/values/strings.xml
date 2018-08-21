@@ -115,6 +115,7 @@
   <string name="loginpin_go_back">Go back to phone number screen</string>
   <string name="loginpin_error_check_internet_connection">@string/api_network_error</string>
   <string name="loginpin_error_incorrect_pin">PIN doesn\'t match the original PIN</string>
+  <string name="loginpin_you_are_now_logged_in">Verification successful! Patient records now visible.</string>
 
   <!-- App lock -->
   <string name="applock_error_incorrect_pin">PIN doesn\'t match the original PIN</string>

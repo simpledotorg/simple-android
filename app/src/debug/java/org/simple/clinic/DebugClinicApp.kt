@@ -40,19 +40,21 @@ class DebugClinicApp : ClinicApp() {
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()
     Stetho.initializeWithDefaults(this)
-
     syncScheduler.schedule().subscribe()
+    showDebugNotification()
+  }
 
+  private fun showDebugNotification() {
     registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks() {
       override fun onActivityStarted(activity: Activity) {
         if (activity is TheActivity) {
-          DebugNotificationService.show(activity)
+          DebugNotification.show(activity)
         }
       }
 
       override fun onActivityStopped(activity: Activity) {
         if (activity is TheActivity) {
-          DebugNotificationService.stop(activity)
+          DebugNotification.stop(activity)
         }
       }
     })

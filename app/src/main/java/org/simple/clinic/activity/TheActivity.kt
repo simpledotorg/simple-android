@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
 import com.f2prateek.rx.preferences2.Preference
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
@@ -95,6 +96,11 @@ class TheActivity : AppCompatActivity() {
   }
 
   override fun attachBaseContext(baseContext: Context) {
+    val contextWithRouter = wrapContextWithRouter(baseContext)
+    super.attachBaseContext(ViewPumpContextWrapper.wrap(contextWithRouter))
+  }
+
+  private fun wrapContextWithRouter(baseContext: Context): Context {
     screenRouter = ScreenRouter.create(this, NestedKeyChanger(), screenResults)
     component = ClinicApp.appComponent
         .activityComponentBuilder()
@@ -104,8 +110,7 @@ class TheActivity : AppCompatActivity() {
     component.inject(this)
 
     screenRouter.registerKeyChanger(FullScreenKeyChanger(this, android.R.id.content, R.color.window_background))
-    val contextWithRouter = screenRouter.installInContext(baseContext, initialScreenKey())
-    super.attachBaseContext(contextWithRouter)
+    return screenRouter.installInContext(baseContext, initialScreenKey())
   }
 
   private fun initialScreenKey(): FullScreenKey {

@@ -83,7 +83,7 @@ class LoginPinScreenController @Inject constructor(
         .withLatestFrom(pinChanges) { _, pin -> pin }
         .withLatestFrom(otpReceived)
         .flatMap { (enteredPin, otp) ->
-          val cachedLogin = userSession.login(otp)
+          val cachedLogin = userSession.loginWithOtp(otp)
               .cache()
               .toObservable()
 

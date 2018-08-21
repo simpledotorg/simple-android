@@ -22,7 +22,6 @@ import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.OngoingLoginEntry
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
@@ -70,7 +69,7 @@ class LoginPinScreenControllerTest {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.login(any())).thenReturn(Single.just(LoginResult.Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(LoginResult.Success()))
 
     loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = false))
     uiEvents.onNext(PinTextChanged("0000"))
@@ -78,7 +77,7 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(PinSubmitClicked())
 
     val inOrder = inOrder(userSession, screen)
-    inOrder.verify(userSession).login("0000")
+    inOrder.verify(userSession).loginWithOtp("0000")
     inOrder.verify(userSession).ongoingLoginEntry()
     inOrder.verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingEntry.userId, phoneNumber = "99999", pin = "0000"))
     inOrder.verify(screen).showProgressBar()
@@ -91,7 +90,7 @@ class LoginPinScreenControllerTest {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.login(any()))
+    whenever(userSession.loginWithOtp(any()))
         .thenReturn(Single.just(LoginResult.NetworkError()))
         .thenReturn(Single.just(LoginResult.ServerError("Server error")))
         .thenReturn(Single.just(LoginResult.UnexpectedError()))
@@ -116,7 +115,7 @@ class LoginPinScreenControllerTest {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.login(any())).thenReturn(Single.just(loginResult))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(loginResult))
 
     loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = false))
     uiEvents.onNext(PinTextChanged("0000"))

@@ -1,10 +1,12 @@
 package org.simple.clinic.login
 
+import android.app.Application
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
+import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.BCryptPasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher
@@ -46,4 +48,10 @@ open class LoginModule {
   open fun appLockConfig(): Single<AppLockConfig> {
     return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(15)))
   }
+
+  @Provides
+  open fun loginConfig(): Single<LoginConfig> = Single.just(LoginConfig(isOtpLoginFlowEnabled = false))
+
+  @Provides
+  open fun loginSmsListener(app: Application): LoginSmsListener = LoginSmsListenerImpl(app)
 }

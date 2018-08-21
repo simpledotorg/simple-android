@@ -64,5 +64,14 @@
           android:scheme="https" />
       </intent-filter>
     </activity>
+
+    <receiver
+      android:name=".sms.SmsBroadcastReceiver"
+      android:exported="true"
+      tools:ignore="ExportedReceiver">
+      <intent-filter>
+        <action android:name="com.google.android.gms.auth.api.phone.SMS_RETRIEVED" />
+      </intent-filter>
+    </receiver>
   </application>
 </manifest>

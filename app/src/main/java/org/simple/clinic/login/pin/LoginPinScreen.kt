@@ -115,6 +115,15 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     errorTextView.visibility = View.VISIBLE
   }
 
+  fun showIncorrectPinError() {
+    errorTextView.text = context.getString(R.string.loginpin_error_incorrect_pin)
+    errorTextView.visibility = View.VISIBLE
+  }
+
+  fun hideError() {
+    errorTextView.visibility = View.GONE
+  }
+
   fun openHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.REPLACE)
   }

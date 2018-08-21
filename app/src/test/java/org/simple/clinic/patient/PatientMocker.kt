@@ -8,6 +8,7 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.threeten.bp.Instant
 import java.util.UUID
 
 /**
@@ -143,12 +144,14 @@ object PatientMocker {
   }
 
   fun loggedInUserPayload(
-      uuid: UUID = mock(),
+      uuid: UUID = UUID.randomUUID(),
       name: String = "a name",
       phone: String = "a phone",
       pinDigest: String = "a hash",
-      facilityUuids: List<UUID> = listOf(mock(), mock()),
-      status: UserStatus = UserStatus.WAITING_FOR_APPROVAL
+      facilityUuids: List<UUID> = listOf(UUID.randomUUID(), UUID.randomUUID()),
+      status: UserStatus = UserStatus.WAITING_FOR_APPROVAL,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): LoggedInUserPayload {
     return LoggedInUserPayload(
         uuid = uuid,
@@ -156,8 +159,8 @@ object PatientMocker {
         phoneNumber = phone,
         pinDigest = pinDigest,
         facilityUuids = facilityUuids,
-        createdAt = mock(),
+        createdAt = createdAt,
         status = status,
-        updatedAt = mock())
+        updatedAt = updatedAt)
   }
 }

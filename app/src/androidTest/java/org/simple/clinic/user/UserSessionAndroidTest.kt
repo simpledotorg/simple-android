@@ -46,7 +46,7 @@ class UserSessionAndroidTest {
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val lawgon = userSession
         .saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
-        .andThen(userSession.login("0000"))
+        .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
 
     assertThat(lawgon).isInstanceOf(LoginResult.Success::class.java)
@@ -66,7 +66,7 @@ class UserSessionAndroidTest {
   fun when_incorrect_login_params_are_given_then_login_should_fail() {
     val lawgon = userSession
         .saveOngoingLoginEntry(OngoingLoginEntry(TestClinicApp.qaUserUuid(), "9919299", "0102"))
-        .andThen(userSession.login("0000"))
+        .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
 
     assertThat(lawgon).isInstanceOf(LoginResult.ServerError::class.java)
@@ -107,7 +107,7 @@ class UserSessionAndroidTest {
   fun when_user_is_logged_out_then_all_app_data_should_get_cleared() {
     userSession
         .saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
-        .andThen(userSession.login("0000"))
+        .andThen(userSession.loginWithOtp("0000"))
         .toCompletable()
         .andThen(userSession.logout())
         .blockingAwait()

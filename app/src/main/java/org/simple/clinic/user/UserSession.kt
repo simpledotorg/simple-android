@@ -62,8 +62,7 @@ class UserSession @Inject constructor(
     return Single.fromCallable { ongoingLoginEntry }
   }
 
-  // TODO: rename to loginFromOngoingLoginEntry()
-  fun login(otp: String = ""): Single<LoginResult> {
+  fun loginWithOtp(otp: String): Single<LoginResult> {
     return ongoingLoginEntry()
         .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
         .flatMap { loginApi.login(it) }

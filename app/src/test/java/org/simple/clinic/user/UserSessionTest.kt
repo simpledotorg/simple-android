@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
@@ -89,16 +88,16 @@ class UserSessionTest {
         .thenReturn(Single.error(unauthorizedHttpError()))
         .thenReturn(Single.error(SocketTimeoutException()))
 
-    val result1 = userSession.login().blockingGet()
+    val result1 = userSession.loginWithOtp("").blockingGet()
     assertThat(result1).isInstanceOf(LoginResult.Success::class.java)
 
-    val result2 = userSession.login().blockingGet()
+    val result2 = userSession.loginWithOtp("").blockingGet()
     assertThat(result2).isInstanceOf(LoginResult.UnexpectedError::class.java)
 
-    val result3 = userSession.login().blockingGet()
+    val result3 = userSession.loginWithOtp("").blockingGet()
     assertThat(result3).isInstanceOf(LoginResult.ServerError::class.java)
 
-    val result4 = userSession.login().blockingGet()
+    val result4 = userSession.loginWithOtp("").blockingGet()
     assertThat(result4).isInstanceOf(LoginResult.NetworkError::class.java)
   }
 

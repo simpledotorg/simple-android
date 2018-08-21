@@ -12,6 +12,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApiV1
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.util.Just
 import java.util.UUID
@@ -136,5 +137,20 @@ class UserSessionAndroidTest {
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Success::class.java)
     val (accessToken) = userSession.accessToken()
     assertThat(accessToken).isNotNull()
+  }
+
+  @Test
+  fun when_finding_a_user_on_the_server_with_a_phone_number_it_should_save_the_user_locally_with_a_status_of_not_signed_in() {
+    val findUserResult = userSession.findExistingUser(TestClinicApp.qaOngoingLoginEntry().phoneNumber).blockingGet()
+    assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
+
+    val foundUserPayload = (findUserResult as FindUserResult.Found).user
+    val user = appDatabase.userDao().userImmediate()!!
+    assertThat(user.uuid).isEqualTo(foundUserPayload.uuid)
+    assertThat(user.loggedInStatus).isEqualTo(User.LoggedInStatus.NOT_LOGGED_IN)
+
+    val facilityUUIDsForUser = appDatabase.userFacilityMappingDao().facilityUuids(user.uuid).blockingFirst()
+    assertThat(facilityUUIDsForUser.size).isEqualTo(foundUserPayload.facilityUuids.size)
+    assertThat(facilityUUIDsForUser).containsAllIn(foundUserPayload.facilityUuids)
   }
 }

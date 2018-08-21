@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -17,9 +18,13 @@ import org.junit.runner.RunWith
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginSmsListener
+import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -29,6 +34,8 @@ class LoginPinScreenControllerTest {
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
   private val loginSmsListener = mock<LoginSmsListener>()
+  private val passwordHasher = mock<PasswordHasher>()
+  private val localUser = PatientMocker.loggedInUser(pinDigest = "digest")
 
   private val syncScheduler = mock<SyncScheduler>()
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -39,11 +46,13 @@ class LoginPinScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = LoginPinScreenController(userSession, syncScheduler, loginConfigEmitter.firstOrError(), loginSmsListener)
+    controller = LoginPinScreenController(userSession, syncScheduler, loginConfigEmitter.firstOrError(), loginSmsListener, passwordHasher)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(localUser)))
+    whenever(userSession.loggedInUserImmediate()).thenReturn(localUser)
   }
 
   @Test
@@ -122,8 +131,30 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
+  fun `when new login flow is enabled, if pin is incorrect and submit is clicked, show an error`() {
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.DIFFERENT))
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(userId = UUID.randomUUID())))
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
+    uiEvents.onNext(PinTextChanged("1234"))
+    uiEvents.onNext(PinSubmitClicked())
+
+    verify(screen).showIncorrectPinError()
+    verify(loginSmsListener, never()).listenForLoginOtp()
+  }
+
+  @Test
+  fun `when new login flow is enabled any existing errors should be hidden when the user starts typing again`() {
+    loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
+    uiEvents.onNext(PinTextChanged("0"))
+    verify(screen).hideError()
+  }
+
+  @Test
   fun `when new login flow is enabled, if pin is not empty and submit is clicked, start the task to listen for sms and make the call to request a login otp and show the home screen`() {
     val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
@@ -144,6 +175,7 @@ class LoginPinScreenControllerTest {
   @Test
   fun `when new login flow is enabled, if pin is not empty and submit is clicked, if the sms listener fails, then show the error screen`() {
     val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
@@ -160,6 +192,7 @@ class LoginPinScreenControllerTest {
   @Test
   fun `when new login flow is enabled, if request api call throws any errors, show errors`() {
     val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.complete())

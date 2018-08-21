@@ -1,12 +1,12 @@
 package org.simple.clinic.registration.phone
 
-import javax.inject.Inject
+interface PhoneNumberValidator {
+  fun isValid(number: String): Boolean
+}
 
-private const val LENGTH_OF_INDIAN_PHONE_NUMBER = 10
+class IndianPhoneNumberValidator : PhoneNumberValidator {
 
-class PhoneNumberValidator @Inject constructor() {
-
-  fun isValid(number: String): Boolean {
-    return number.length == LENGTH_OF_INDIAN_PHONE_NUMBER
+  override fun isValid(number: String): Boolean {
+    return number.length == 10
   }
 }

@@ -52,7 +52,6 @@ class AppSignatureHelper(private val context: Context) {
       var base64Hash = Base64.encodeToString(hashSignature, Base64.NO_PADDING or Base64.NO_WRAP)
       base64Hash = base64Hash.substring(0, NUM_BASE64_CHAR)
 
-      Timber.d("pkg: $packageName -- hash: $base64Hash")
       return base64Hash
     } catch (e: NoSuchAlgorithmException) {
       Timber.e(e, "hash:NoSuchAlgorithm")

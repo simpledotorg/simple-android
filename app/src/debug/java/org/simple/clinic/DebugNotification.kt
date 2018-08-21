@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.sync.SyncScheduler
 import javax.inject.Inject
 
-object DebugNotificationService {
+object DebugNotification {
 
   private const val NOTIF_CHANNEL_ID = "debug"
   private const val NOTIF_ID = 0

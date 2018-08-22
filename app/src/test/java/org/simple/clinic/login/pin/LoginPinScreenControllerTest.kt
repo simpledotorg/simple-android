@@ -9,6 +9,8 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -16,8 +18,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.login.LoginConfig
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginOtpSmsListener
+import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.SyncScheduler
@@ -45,6 +47,7 @@ class LoginPinScreenControllerTest {
 
   @Before
   fun setUp() {
+    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
     controller = LoginPinScreenController(userSession, syncScheduler, loginConfigEmitter.firstOrError(), loginSmsListener, passwordHasher)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
@@ -81,7 +84,6 @@ class LoginPinScreenControllerTest {
     inOrder.verify(userSession).ongoingLoginEntry()
     inOrder.verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingEntry.userId, phoneNumber = "99999", pin = "0000"))
     inOrder.verify(screen).showProgressBar()
-    inOrder.verify(screen).hideProgressBar()
     inOrder.verify(screen).openHomeScreen()
   }
 
@@ -151,7 +153,7 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `when new login flow is enabled, if pin is not empty and submit is clicked, start the task to listen for sms and make the call to request a login otp and show the home screen`() {
+  fun `when new login flow is enabled, and PIN is submitted, request login otp and open home screen`() {
     val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
@@ -167,7 +169,6 @@ class LoginPinScreenControllerTest {
     verify(loginSmsListener).listenForLoginOtp()
     verify(userSession).requestLoginOtp()
     verify(screen).showProgressBar()
-    verify(screen).hideProgressBar()
     verify(screen).openHomeScreen()
   }
 

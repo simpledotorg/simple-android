@@ -6,7 +6,7 @@ import org.simple.clinic.activity.TheActivityComponent
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.registration.RegistrationWorker
-import org.simple.clinic.sms.SmsBroadcastReceiver
+import org.simple.clinic.sms.OtpSmsReceiver
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.user.UserSession
 import javax.inject.Scope
@@ -19,7 +19,7 @@ interface AppComponent {
   fun inject(target: SyncWorker)
   fun inject(target: ClearFieldImageButton)
   fun inject(target: RegistrationWorker)
-  fun inject(target: SmsBroadcastReceiver)
+  fun inject(target: OtpSmsReceiver)
 
   fun activityComponentBuilder(): TheActivityComponent.Builder
 

@@ -93,7 +93,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     loginFormLayout.visibility = View.INVISIBLE
   }
 
-  fun hideProgressBar() {
+  private fun hideProgressBar() {
     TransitionManager.beginDelayedTransition(this)
 
     progressBar.visibility = View.INVISIBLE
@@ -101,22 +101,24 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   }
 
   fun showNetworkError() {
-    errorTextView.text = context.getString(R.string.loginpin_error_check_internet_connection)
-    errorTextView.visibility = View.VISIBLE
+    showError(context.getString(R.string.loginpin_error_check_internet_connection))
   }
 
   fun showServerError(errorToShow: String) {
-    errorTextView.text = errorToShow
-    errorTextView.visibility = View.VISIBLE
+    showError(errorToShow)
   }
 
   fun showUnexpectedError() {
-    errorTextView.text = context.getString(R.string.api_unexpected_error)
-    errorTextView.visibility = View.VISIBLE
+    showError(context.getString(R.string.api_unexpected_error))
   }
 
   fun showIncorrectPinError() {
-    errorTextView.text = context.getString(R.string.loginpin_error_incorrect_pin)
+    showError(context.getString(R.string.loginpin_error_incorrect_pin))
+  }
+
+  private fun showError(error: String) {
+    hideProgressBar()
+    errorTextView.text = error
     errorTextView.visibility = View.VISIBLE
   }
 

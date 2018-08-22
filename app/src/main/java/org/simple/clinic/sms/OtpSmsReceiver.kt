@@ -18,10 +18,16 @@ import org.simple.clinic.user.UserSession
 import timber.log.Timber
 import javax.inject.Inject
 
+// I don't like magic numbers, but I am not sure of the best
+// place to put this since the message is hard coded.
+//
+// Message format (Next two lines):
+// <#> 000000 is your Simple Verification Code
+// 1zXflK9uq42
 private const val OTP_START_INDEX = 4
 private const val OTP_LENGTH = 6
 
-class SmsBroadcastReceiver : BroadcastReceiver() {
+class OtpSmsReceiver : BroadcastReceiver() {
 
   @Inject
   lateinit var userSession: UserSession
@@ -41,7 +47,6 @@ class SmsBroadcastReceiver : BroadcastReceiver() {
       CommonStatusCodes.SUCCESS -> {
         val message = extras[SmsRetriever.EXTRA_SMS_MESSAGE] as String
 
-        // I don't like magic numbers, but I am not sure of the best place to put this since the message is hard coded
         val otp = message.substring(OTP_START_INDEX, OTP_START_INDEX + OTP_LENGTH)
 
         // TODO: Schedule call with worker instead of logging in directly

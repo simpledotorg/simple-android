@@ -7,12 +7,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
-class CanaryInstrumentationTest {
+class CanaryAndroidTest {
 
   @Test
   fun testEnvironmentWorks() {
     val context = InstrumentationRegistry.getTargetContext()
-
     assertThat(context).isNotNull()
   }
 }

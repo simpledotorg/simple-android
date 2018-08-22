@@ -2,6 +2,7 @@ package org.simple.clinic.router.screen
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.os.Parcelable
 import android.support.annotation.CheckResult
 import android.view.View
@@ -55,7 +56,13 @@ class ScreenRouter(
    * Get the key that was used for inflating a <var>view</var>.
    */
   fun <T> key(view: View): T {
-    return Flow.getKey<T>(view) ?: throw IllegalStateException("No key found for View: [$view]")
+    var name = "<nameless>"
+    try {
+      name = view.resources.getResourceEntryName(view.id)
+    } catch (e: Resources.NotFoundException) {
+      // Nothing to see here
+    }
+    return Flow.getKey<T>(view) ?: throw IllegalStateException("No key found for View: [$name]")
   }
 
   fun push(screenKey: FullScreenKey) {

@@ -1,6 +1,7 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
@@ -81,7 +82,7 @@ fun View.executeOnNextMeasure(runnable: () -> Unit) {
         runnable()
 
       } else if (visibility == View.GONE) {
-        Timber.w("View's visibility is set to Gone. It'll never be measured: %s", resources.getResourceEntryName(id))
+        Timber.w("View's visibility is set to Gone. It'll never be measured: %s", resourceName())
         viewTreeObserver.removeOnPreDrawListener(this)
       }
       return true
@@ -119,3 +120,15 @@ fun ViewGroup.indexOfChildId(@IdRes childId: Int): Int {
   }
   return indexOfChild(child)
 }
+
+fun View.resourceName(): String {
+  var name = "<nameless>"
+  try {
+    name = resources.getResourceEntryName(id)
+  } catch (e: Resources.NotFoundException) {
+    // Nothing to see here
+  }
+
+  return name
+}
+

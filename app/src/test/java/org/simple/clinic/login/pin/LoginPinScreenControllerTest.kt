@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.LoginSmsListener
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.SyncScheduler
@@ -32,7 +32,7 @@ class LoginPinScreenControllerTest {
 
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
-  private val loginSmsListener = mock<LoginSmsListener>()
+  private val loginSmsListener = mock<LoginOtpSmsListener>()
   private val passwordHasher = mock<PasswordHasher>()
   private val localUser = PatientMocker.loggedInUser(pinDigest = "digest")
 
@@ -157,14 +157,14 @@ class LoginPinScreenControllerTest {
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
-    whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.complete())
+    whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
 
     loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(PinSubmitClicked())
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingLoginEntry.userId, phoneNumber = "9999", pin = "0000"))
-    verify(loginSmsListener).startListeningForLoginSms()
+    verify(loginSmsListener).listenForLoginOtp()
     verify(userSession).requestLoginOtp()
     verify(screen).showProgressBar()
     verify(screen).hideProgressBar()
@@ -178,7 +178,7 @@ class LoginPinScreenControllerTest {
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
-    whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.error(RuntimeException()))
+    whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.error(RuntimeException()))
 
     loginConfigEmitter.onNext(LoginConfig(isOtpLoginFlowEnabled = true))
     uiEvents.onNext(PinTextChanged("0000"))
@@ -194,7 +194,7 @@ class LoginPinScreenControllerTest {
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(loginSmsListener.startListeningForLoginSms()).thenReturn(Completable.complete())
+    whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp())
         .thenReturn(Single.just(LoginResult.NetworkError()))
         .thenReturn(Single.just(LoginResult.UnexpectedError()))

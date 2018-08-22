@@ -79,6 +79,8 @@ abstract class AppDatabase : RoomDatabase() {
 
   fun fuzzyPatientSearchDao(): PatientFuzzySearch.PatientFuzzySearchDao = patientFuzzyPatientSearchDao
 
+  abstract fun followUpScheduleDao() : FollowUpSchedule.RoomDao
+
   class Migration_3_4 : Migration(3, 4) {
 
     override fun migrate(database: SupportSQLiteDatabase) {
@@ -207,7 +209,7 @@ abstract class AppDatabase : RoomDatabase() {
         `nextVisit` TEXT NOT NULL,
         `userAction` TEXT NOT NULL,
         `actionByUserId` TEXT NOT NULL,
-        `reasonToAction` TEXT NOT NULL,
+        `reasonForAction` TEXT NOT NULL,
         `createdAt` TEXT NOT NULL,
         `updatedAt` TEXT NOT NULL,
         PRIMARY KEY(`id`))

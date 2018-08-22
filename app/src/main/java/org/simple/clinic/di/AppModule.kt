@@ -25,7 +25,7 @@ class AppModule(private val appContext: Application, private val databaseName: S
     return appContext
   }
 
-  // TODO: Move to StorageModule.
+  // TODO: move to StorageModule.
   @Provides
   @AppScope
   fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {

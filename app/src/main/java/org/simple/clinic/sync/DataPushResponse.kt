@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.sync
+package org.simple.clinic.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

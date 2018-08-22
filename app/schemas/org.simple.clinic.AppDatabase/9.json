@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "37a095c5065f652e1d18882a416e319f",
+    "identityHash": "3eacdbd7f58702148714b61a7030b8af",
     "entities": [
       {
         "tableName": "Patient",
@@ -671,7 +671,7 @@
       },
       {
         "tableName": "FollowUpSchedule",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `patientId` TEXT NOT NULL, `facilityId` TEXT NOT NULL, `nextVisit` TEXT NOT NULL, `userAction` TEXT NOT NULL, `actionByUserId` TEXT NOT NULL, `reasonToAction` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `patientId` TEXT NOT NULL, `facilityId` TEXT NOT NULL, `nextVisit` TEXT NOT NULL, `userAction` TEXT NOT NULL, `actionByUserId` TEXT NOT NULL, `reasonForAction` TEXT NOT NULL, `syncStatus` TEXT NOT NULL, `createdAt` TEXT NOT NULL, `updatedAt` TEXT NOT NULL, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -710,8 +710,14 @@
             "notNull": true
           },
           {
-            "fieldPath": "reasonToAction",
-            "columnName": "reasonToAction",
+            "fieldPath": "reasonForAction",
+            "columnName": "reasonForAction",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "syncStatus",
+            "columnName": "syncStatus",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -740,7 +746,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"37a095c5065f652e1d18882a416e319f\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3eacdbd7f58702148714b61a7030b8af\")"
     ]
   }
 }

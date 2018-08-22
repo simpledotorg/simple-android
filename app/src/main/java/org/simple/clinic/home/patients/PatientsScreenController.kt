@@ -9,6 +9,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
@@ -78,6 +79,8 @@ class PatientsScreenController @Inject constructor(
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
 
     val syncData = userSession.loggedInUser()
+        .take(1)
+        .observeOn(io())
         .filter { (user) -> user?.isApprovedForSyncing() ?: false }
         .flatMapCompletable { syncScheduler.syncImmediately() }
 

@@ -1,6 +1,7 @@
 package org.simple.clinic.patient.sync
 
 import io.reactivex.Single
+import org.simple.clinic.sync.DataPushResponse
 import org.threeten.bp.Instant
 import retrofit2.http.Body
 import retrofit2.http.GET

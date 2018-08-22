@@ -4,6 +4,8 @@ import io.bloco.faker.Faker
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.FollowUpSchedule
+import org.simple.clinic.overdue.FollowUpSchedulePayload
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
@@ -16,6 +18,8 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 import javax.inject.Inject
 import kotlin.reflect.KClass
@@ -156,5 +160,34 @@ class TestData @Inject constructor(private val faker: Faker) {
         userUuid = qaUserUuid(),
         facilityUuid = qaUserFacilityUuid(),
         patientUuid = patientUuid)
+  }
+
+  fun followUpSchedule(
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): FollowUpSchedule {
+    return FollowUpSchedule(
+        id = UUID.randomUUID(),
+        patientId = UUID.randomUUID(),
+        nextVisit = LocalDate.now(UTC).plusDays(30),
+        facilityId = TestClinicApp.qaUserFacilityUuid(),
+        userAction = randomOfEnum(FollowUpSchedule.UserAction::class),
+        reasonForAction = randomOfEnum(FollowUpSchedule.UserActionReason::class),
+        actionByUserId = TestClinicApp.qaUserUuid(),
+        syncStatus = syncStatus,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+  }
+
+  fun followUpSchedulePayload(): FollowUpSchedulePayload {
+    return FollowUpSchedulePayload(
+        id = UUID.randomUUID(),
+        patientId = UUID.randomUUID(),
+        nextVisit = LocalDate.now(UTC).plusDays(30),
+        facilityId = TestClinicApp.qaUserFacilityUuid(),
+        userAction = randomOfEnum(FollowUpSchedule.UserAction::class),
+        reasonForAction = randomOfEnum(FollowUpSchedule.UserActionReason::class),
+        actionByUserId = TestClinicApp.qaUserUuid(),
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
   }
 }

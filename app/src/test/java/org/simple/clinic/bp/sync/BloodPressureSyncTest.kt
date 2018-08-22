@@ -16,8 +16,8 @@ import org.mockito.Mockito
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.patient.sync.DataPushResponse
-import org.simple.clinic.patient.sync.ValidationErrors
+import org.simple.clinic.sync.DataPushResponse
+import org.simple.clinic.sync.ValidationErrors
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

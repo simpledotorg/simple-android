@@ -37,7 +37,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Facility::class,
       User::class,
       LoggedInUserFacilityMapping::class],
-    version = 8,
+    version = 9,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,

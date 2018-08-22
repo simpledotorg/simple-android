@@ -8,16 +8,13 @@ import android.view.WindowManager
 import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockScreen
-import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.onboarding.OnboardingScreen
-import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
@@ -56,9 +53,6 @@ class TheActivity : AppCompatActivity() {
   @Inject
   @field:Named("onboarding_complete")
   lateinit var hasUserCompletedOnboarding: Preference<Boolean>
-
-  @Inject
-  lateinit var registrationConfig: Single<RegistrationConfig>
 
   lateinit var screenRouter: ScreenRouter
 
@@ -117,16 +111,7 @@ class TheActivity : AppCompatActivity() {
     return when {
       userSession.isUserLoggedIn() -> HomeScreen.KEY
       hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
-      else -> {
-        registrationConfig
-            .map {
-              when (it.isRegistrationEnabled) {
-                true -> RegistrationPhoneScreen.KEY
-                false -> LoginPhoneScreen.KEY_WITHOUT_OTP
-              }
-            }
-            .blockingGet()
-      }
+      else -> RegistrationPhoneScreen.KEY
     }
   }
 

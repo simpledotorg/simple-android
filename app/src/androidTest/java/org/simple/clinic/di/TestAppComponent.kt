@@ -1,6 +1,7 @@
 package org.simple.clinic.di
 
 import dagger.Component
+import org.simple.clinic.CanaryEspressoTest
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -27,4 +28,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: PrescriptionRepositoryAndroidTest)
   fun inject(target: FacilityRepositoryAndroidTest)
   fun inject(target: UserDaoAndroidTest)
+  fun inject(target: CanaryEspressoTest)
 }

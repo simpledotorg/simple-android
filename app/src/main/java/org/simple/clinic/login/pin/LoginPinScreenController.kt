@@ -10,8 +10,8 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.login.LoginConfig
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginOtpSmsListener
+import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
@@ -96,10 +96,8 @@ class LoginPinScreenController @Inject constructor(
                   is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
                 }
               }
-
-          val loginProgressUiChanges = cachedLogin
-              .map { { ui: Ui -> ui.hideProgressBar() } }
               .startWith { ui: Ui -> ui.showProgressBar() }
+
 
           val syncRemainingData = cachedLogin
               .filter { it is LoginResult.Success }
@@ -114,7 +112,6 @@ class LoginPinScreenController @Inject constructor(
               .map { entry -> entry.copy(pin = enteredPin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
               .andThen(Observable.merge(
-                  loginProgressUiChanges,
                   loginResultUiChange,
                   syncRemainingData
               ))
@@ -136,15 +133,6 @@ class LoginPinScreenController @Inject constructor(
               .flatMap { pinDigest -> passwordHasher.compare(pinDigest, enteredPin) }
               .cache()
 
-          val showProgressOnPinValidation = pinValidation
-              .map {
-                when (it) {
-                  SAME -> { ui: Ui -> ui.showProgressBar() }
-                  DIFFERENT -> { ui: Ui -> ui.showIncorrectPinError() }
-                }
-              }
-              .toObservable()
-
           val pinEnteredSuccessfully = pinValidation
               .toObservable()
               .filter { it == SAME }
@@ -160,7 +148,16 @@ class LoginPinScreenController @Inject constructor(
               }
               .cache()
 
-          val loginResultUiChange = cachedRequestOtp
+          val showProgressOnPinValidation = pinValidation
+              .map {
+                when (it) {
+                  SAME -> { ui: Ui -> ui.showProgressBar() }
+                  DIFFERENT -> { ui: Ui -> ui.showIncorrectPinError() }
+                }
+              }
+              .toObservable()
+
+          val uiChanges = cachedRequestOtp
               .map {
                 when (it) {
                   is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
@@ -168,19 +165,14 @@ class LoginPinScreenController @Inject constructor(
                   else -> { ui: Ui -> ui.showUnexpectedError() }
                 }
               }
-
-          val hideProgressOnNetworkResult = cachedRequestOtp
-              .map { { ui: Ui -> ui.hideProgressBar() } }
+              // This handles the case where listening for SMS fails
+              .onErrorReturn { { ui: Ui -> ui.showUnexpectedError() } }
+              .mergeWith(showProgressOnPinValidation)
 
           userSession.ongoingLoginEntry()
               .map { entry -> entry.copy(pin = enteredPin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
-              .andThen(Observable.merge(
-                  hideProgressOnNetworkResult,
-                  loginResultUiChange,
-                  showProgressOnPinValidation
-              ))
-              .onErrorResumeNext(Observable.just({ ui: Ui -> ui.showUnexpectedError() })) // This handles the case where listening for sms fails
+              .andThen(uiChanges)
         }
   }
 

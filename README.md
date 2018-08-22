@@ -54,9 +54,9 @@ The binary can now be installed on the phone by running:
 
 If `adb` fails with a `no devices/emulators found` error, it is possible that the device is connected to the computer in charging only mode. In this case, you should see a notification on the device to change this to debugging.
 
-## Build and deploy RedApp-Server
+## Build and deploy Simple Server
 
-Follow the [redapp-server instructions](https://github.com/resolvetosavelives/redapp-server/blob/master/README.md).
+Follow the [simple-server instructions](https://github.com/simpledotorg/simple-server/blob/master/README.md).
 
 ## Miscellaneous
 

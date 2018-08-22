@@ -97,4 +97,18 @@ class MigrationAndroidTest {
       assertThat(it.string("loggedInStatus")).isEqualTo("LOGGED_IN")
     }
   }
+
+  @Test
+  fun migration_8_to_9() {
+    helper.createDatabase(TEST_DB_NAME, 8)
+    val db_v9 = helper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, AppDatabase.Migration_8_9())
+
+    db_v9.query("""SELECT * FROM FollowUp""").use {
+      assertThat(it.columnCount).isAtLeast(1)
+    }
+
+    db_v9.query("""SELECT * FROM FollowUpSchedule""").use {
+      assertThat(it.columnCount).isAtLeast(1)
+    }
+  }
 }

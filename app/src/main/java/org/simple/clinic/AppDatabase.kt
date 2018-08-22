@@ -10,6 +10,8 @@ import android.arch.persistence.room.migration.Migration
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.FollowUp
+import org.simple.clinic.overdue.FollowUpSchedule
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -36,8 +38,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       PrescribedDrug::class,
       Facility::class,
       User::class,
-      LoggedInUserFacilityMapping::class],
-    version = 8,
+      LoggedInUserFacilityMapping::class,
+      FollowUpSchedule::class,
+      FollowUp::class],
+    version = 9,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -46,6 +50,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     SyncStatus.RoomTypeConverter::class,
     UserStatus.RoomTypeConverter::class,
     User.LoggedInStatus.RoomTypeConverter::class,
+    FollowUpSchedule.UserAction.RoomTypeConverter::class,
+    FollowUpSchedule.UserActionReason.RoomTypeConverter::class,
+    FollowUp.Type.RoomTypeConverter::class,
+    FollowUp.Result.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class)
@@ -131,7 +139,7 @@ abstract class AppDatabase : RoomDatabase() {
   }
 
   /**
-   * v7 adds [LoggedInUserFacilityMapping] table.
+   * Adds [LoggedInUserFacilityMapping] table.
    */
   class Migration_6_7 : Migration(6, 7) {
     override fun migrate(database: SupportSQLiteDatabase) {
@@ -189,6 +197,37 @@ abstract class AppDatabase : RoomDatabase() {
         database.execSQL("""ALTER TABLE "LoggedInUser" ADD COLUMN "loggedInStatus" TEXT NOT NULL DEFAULT ''""")
         database.execSQL("""UPDATE "LoggedInUser" SET "loggedInStatus" = 'LOGGED_IN'""")
       }
+    }
+  }
+
+  class Migration_8_9 : Migration(8, 9) {
+
+    override fun migrate(database: SupportSQLiteDatabase) {
+      database.execSQL("""
+        CREATE TABLE IF NOT EXISTS `FollowUpSchedule` (
+        `id` TEXT NOT NULL,
+        `patientId` TEXT NOT NULL,
+        `facilityId` TEXT NOT NULL,
+        `nextVisit` TEXT NOT NULL,
+        `userAction` TEXT NOT NULL,
+        `actionByUserId` TEXT NOT NULL,
+        `reasonToAction` TEXT NOT NULL,
+        `createdAt` TEXT NOT NULL,
+        `updatedAt` TEXT NOT NULL,
+        PRIMARY KEY(`id`))
+        """)
+
+      database.execSQL("""
+        CREATE TABLE IF NOT EXISTS `FollowUp` (
+        `id` TEXT NOT NULL,
+        `followUpScheduleId` TEXT NOT NULL,
+        `followUpType` TEXT NOT NULL,
+        `userId` TEXT NOT NULL,
+        `result` TEXT NOT NULL,
+        `createdAt` TEXT NOT NULL,
+        `updatedAt` TEXT NOT NULL,
+        PRIMARY KEY(`id`))
+        """)
     }
   }
 }

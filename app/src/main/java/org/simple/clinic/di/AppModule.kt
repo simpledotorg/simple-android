@@ -32,9 +32,8 @@ class AppModule(private val appContext: Application, private val databaseName: S
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
         .openHelperFactory(factory)
         .addCallback(object : RoomDatabase.Callback() {
-
-          // We need to create it here on a fresh install because we can't define an Entity for a virtual
-          // table and Room will never create it
+          // We need to create it here on a fresh install because we can't
+          // define an Entity for a virtual table and Room will never create it.
           override fun onCreate(db: SupportSQLiteDatabase) {
             PatientFuzzySearch.createTable(db)
           }
@@ -44,8 +43,8 @@ class AppModule(private val appContext: Application, private val databaseName: S
             AppDatabase.Migration_4_5(),
             AppDatabase.Migration_5_6(),
             AppDatabase.Migration_6_7(),
-            AppDatabase.Migration_7_8()
-        )
+            AppDatabase.Migration_7_8(),
+            AppDatabase.Migration_8_9())
         .build()
   }
 

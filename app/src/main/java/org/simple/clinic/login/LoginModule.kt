@@ -6,7 +6,6 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
-import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.BCryptPasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher
@@ -53,5 +52,5 @@ open class LoginModule {
   open fun loginConfig(): Single<LoginConfig> = Single.just(LoginConfig(isOtpLoginFlowEnabled = true))
 
   @Provides
-  open fun loginSmsListener(app: Application): LoginSmsListener = LoginSmsListenerImpl(app)
+  open fun loginSmsListener(app: Application): LoginOtpSmsListener = LoginOtpSmsListenerImpl(app)
 }

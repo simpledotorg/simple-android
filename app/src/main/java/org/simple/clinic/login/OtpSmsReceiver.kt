@@ -1,4 +1,4 @@
-package org.simple.clinic.sms
+package org.simple.clinic.login
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -12,7 +12,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import timber.log.Timber

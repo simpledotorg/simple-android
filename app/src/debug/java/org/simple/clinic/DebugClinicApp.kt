@@ -55,7 +55,7 @@ class DebugClinicApp : ClinicApp() {
     registerActivityLifecycleCallbacks(object : SimpleActivityLifecycleCallbacks() {
       override fun onActivityStarted(activity: Activity) {
         if (activity is TheActivity) {
-          DebugNotification.show(activity, signatureHelper.appSignatures)
+          DebugNotification.show(activity, signature.appSignatures)
         }
       }
 

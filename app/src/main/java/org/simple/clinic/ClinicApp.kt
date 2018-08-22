@@ -5,7 +5,7 @@ import com.gabrielittner.threetenbp.LazyThreeTen
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import org.simple.clinic.di.AppComponent
-import org.simple.clinic.util.AppSignatureHelper
+import org.simple.clinic.util.AppSignature
 
 abstract class ClinicApp : MultiDexApplication() {
 
@@ -13,7 +13,7 @@ abstract class ClinicApp : MultiDexApplication() {
     lateinit var appComponent: AppComponent
   }
 
-  protected lateinit var signatureHelper: AppSignatureHelper
+  protected lateinit var signature: AppSignature
 
   override fun onCreate() {
     super.onCreate()
@@ -28,7 +28,7 @@ abstract class ClinicApp : MultiDexApplication() {
     appComponent = buildDaggerGraph()
 
     Sentry.init(AndroidSentryClientFactory(applicationContext))
-    signatureHelper = AppSignatureHelper(this)
+    signature = AppSignature(this)
   }
 
   abstract fun buildDaggerGraph(): AppComponent

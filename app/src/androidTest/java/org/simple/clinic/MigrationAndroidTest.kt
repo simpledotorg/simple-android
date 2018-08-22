@@ -45,7 +45,7 @@ class MigrationAndroidTest {
 
     val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, AppDatabase.Migration_6_7())
 
-    val cursor = db_v7.query("SELECT * FROM LoggedInUserFacilityMapping")
+    val cursor = db_v7.query("SELECT * FROM `LoggedInUserFacilityMapping`")
     cursor.use {
       assertThat(cursor.count).isEqualTo(1)
 
@@ -95,6 +95,16 @@ class MigrationAndroidTest {
     cursor.use {
       assertThat(it.moveToFirst()).isTrue()
       assertThat(it.string("loggedInStatus")).isEqualTo("LOGGED_IN")
+    }
+  }
+
+  @Test
+  fun migration_8_to_9() {
+    helper.createDatabase(TEST_DB_NAME, 8)
+    val db_v9 = helper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, AppDatabase.Migration_8_9())
+
+    db_v9.query("SELECT * FROM `FollowUpSchedule`").use {
+      assertThat(it.columnCount).isAtLeast(1)
     }
   }
 }

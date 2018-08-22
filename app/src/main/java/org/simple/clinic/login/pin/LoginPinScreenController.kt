@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.LoginSmsListener
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
@@ -28,7 +28,7 @@ class LoginPinScreenController @Inject constructor(
     private val userSession: UserSession,
     private val syncScheduler: SyncScheduler,
     private val loginConfig: Single<LoginConfig>,
-    private val loginSmsListener: LoginSmsListener,
+    private val loginOtpSmsListener: LoginOtpSmsListener,
     private val passwordHasher: PasswordHasher
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -152,8 +152,8 @@ class LoginPinScreenController @Inject constructor(
 
           val cachedRequestOtp = pinEnteredSuccessfully
               .flatMapSingle {
-                loginSmsListener.startListeningForLoginSms()
-                    // LoginSmsListener depends on a Google Play Services task
+                loginOtpSmsListener.listenForLoginOtp()
+                    // LoginOtpSmsListener depends on a Google Play Services task
                     // which emits the result on the main thread
                     .observeOn(Schedulers.io())
                     .andThen(userSession.requestLoginOtp())

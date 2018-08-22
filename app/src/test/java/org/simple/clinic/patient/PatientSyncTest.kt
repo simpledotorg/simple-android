@@ -17,11 +17,11 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.INVALID
 import org.simple.clinic.patient.SyncStatus.IN_FLIGHT
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.patient.sync.DataPushResponse
+import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.patient.sync.PatientPullResponse
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV1
-import org.simple.clinic.patient.sync.ValidationErrors
+import org.simple.clinic.sync.ValidationErrors
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

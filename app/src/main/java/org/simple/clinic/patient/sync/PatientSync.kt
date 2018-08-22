@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.toCompletable
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None

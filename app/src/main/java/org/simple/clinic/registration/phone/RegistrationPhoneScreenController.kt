@@ -3,6 +3,7 @@ package org.simple.clinic.registration.phone
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.registration.FindUserResult
@@ -10,6 +11,7 @@ import org.simple.clinic.registration.FindUserResult.Found
 import org.simple.clinic.registration.FindUserResult.NetworkError
 import org.simple.clinic.registration.FindUserResult.NotFound
 import org.simple.clinic.registration.FindUserResult.UnexpectedError
+import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -91,7 +93,7 @@ class RegistrationPhoneScreenController @Inject constructor(
               .cache()
               .toObservable()
 
-          val showAndHideProgress = cachedUserFindResult
+          val uiChangesForFindUser = cachedUserFindResult
               .flatMap {
                 when (it) {
                   is Found, is NotFound -> Observable.never()
@@ -107,11 +109,7 @@ class RegistrationPhoneScreenController @Inject constructor(
 
           val proceedToLogin = cachedUserFindResult
               .ofType<FindUserResult.Found>()
-              .flatMap {
-                userSession.saveOngoingLoginEntry(OngoingLoginEntry(userId = it.user.uuid, phoneNumber = it.user.phoneNumber))
-                    .andThen(userSession.clearOngoingRegistrationEntry())
-                    .andThen(Observable.just({ ui: Ui -> ui.openLoginPinEntryScreen() }))
-              }
+              .flatMap(this::saveFoundUserLocallyAndProceedToLogin)
 
           val proceedWithRegistration = cachedUserFindResult
               .ofType<FindUserResult.NotFound>()
@@ -122,7 +120,34 @@ class RegistrationPhoneScreenController @Inject constructor(
                     .andThen(Observable.just({ ui: Ui -> ui.openRegistrationNameEntryScreen() }))
               }
 
-          Observable.merge(showAndHideProgress, proceedToLogin, proceedWithRegistration)
+          Observable.merge(uiChangesForFindUser, proceedToLogin, proceedWithRegistration)
         }
+  }
+
+  private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found): Observable<UiChange> {
+    return userSession
+        .saveOngoingLoginEntry(OngoingLoginEntry(userId = foundUser.user.uuid, phoneNumber = foundUser.user.phoneNumber))
+        .andThen(userSession.clearOngoingRegistrationEntry())
+        .andThen(
+            userSession
+                .syncFacilityAndSaveUser(foundUser.user)
+                .flatMap {
+                  Single.just(when (it) {
+                    is SaveUserLocallyResult.Success -> { ui: Ui ->
+                      ui.hideProgressIndicator()
+                      ui.openLoginPinEntryScreen()
+                    }
+                    is SaveUserLocallyResult.NetworkError -> { ui: Ui ->
+                      ui.hideProgressIndicator()
+                      ui.showNetworkErrorMessage()
+                    }
+                    is SaveUserLocallyResult.UnexpectedError -> { ui: Ui ->
+                      ui.hideProgressIndicator()
+                      ui.showUnexpectedErrorMessage()
+                    }
+                  })
+                }.toObservable()
+                .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
+        )
   }
 }

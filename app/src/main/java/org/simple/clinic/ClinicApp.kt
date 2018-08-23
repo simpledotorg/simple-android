@@ -13,8 +13,6 @@ abstract class ClinicApp : MultiDexApplication() {
     lateinit var appComponent: AppComponent
   }
 
-  protected lateinit var signature: AppSignature
-
   override fun onCreate() {
     super.onCreate()
 
@@ -28,7 +26,6 @@ abstract class ClinicApp : MultiDexApplication() {
     appComponent = buildDaggerGraph()
 
     Sentry.init(AndroidSentryClientFactory(applicationContext))
-    signature = AppSignature(this)
   }
 
   abstract fun buildDaggerGraph(): AppComponent

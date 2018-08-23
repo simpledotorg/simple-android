@@ -42,13 +42,16 @@ buildscript {
       junitParams         : '1.1.1',
       sqliteAndroid       : '3.24.0',
       playServicesAuth    : '16.0.0',
-      playServicesVision  : '15.0.2'
+      playServicesVision  : '15.0.2',
+      viewPump            : '1.0.0',
+      heap                : '0.7.1'
   ]
 
   repositories {
     google()
     jcenter()
     maven { url 'https://jitpack.io' }
+    maven { url 'https://heap-maven-public.s3.amazonaws.com/android-testing' }
   }
 
   dependencies {
@@ -56,6 +59,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentry"
     classpath "com.android.support:multidex:$versions.multidex"
+    classpath "com.heapanalytics.android:heap-android-gradle:$versions.heap"
   }
 }
 

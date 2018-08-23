@@ -3,11 +3,13 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
+apply plugin: 'com.heapanalytics.android'
 
 apply from: "../quality/install-git-hook.gradle"
 
 repositories {
   maven { url 'https://jitpack.io' }
+  maven { url 'https://heap-maven-public.s3.amazonaws.com/android-testing' }
 }
 
 sentry {
@@ -39,6 +41,7 @@ android {
 
   buildTypes {
     debug {
+      ext.heap = ["enabled": false]
       applicationIdSuffix ".debug"
       minifyEnabled false
       useProguard false
@@ -48,7 +51,7 @@ android {
 
     release {
       debuggable false
-
+      ext.heap = ["enabled": true]
       if (runProguard.equalsIgnoreCase("true")) {
         minifyEnabled true
         shrinkResources true
@@ -70,6 +73,7 @@ android {
       applicationIdSuffix ".qa"
       versionNameSuffix "-qa"
       buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
+      buildConfigField "String", "HEAP_ID", "\"" + qaHeapId + "\""
     }
 
     staging {
@@ -77,11 +81,13 @@ android {
       applicationIdSuffix ".staging"
       versionNameSuffix "-staging"
       buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
+      buildConfigField "String", "HEAP_ID", "\"" + stagingHeapId + "\""
     }
 
     production {
       dimension 'track'
       buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
+      buildConfigField "String", "HEAP_ID", "\"" + productionHeapId + "\""
     }
   }
 
@@ -191,5 +197,6 @@ dependencies {
   implementation ("com.github.nisrulz:qreader:$versions.qrReader") {
     exclude group: 'com.google.android.gms', module: 'play-services-vision'
   }
-  implementation 'io.github.inflationx:viewpump:1.0.0'
+  implementation "io.github.inflationx:viewpump:$versions.viewPump"
+  implementation "com.heapanalytics.android:heap-android-client:$versions.heap"
 }

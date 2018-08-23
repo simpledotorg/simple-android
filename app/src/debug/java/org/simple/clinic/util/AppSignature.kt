@@ -12,13 +12,15 @@ private const val HASH_TYPE = "SHA-256"
 private const val NUM_HASHED_BYTES = 9
 private const val NUM_BASE64_CHAR = 11
 
-@SuppressLint("PackageManagerGetSignatures")
 /**
- * This is a helper class to generate your message hash to be included in the SMS message.
+ * This class generates app signature hash that needs
+ * to be included in the SMS Message for login.
  *
- * Without the correct hash, the app won't receive the message callback. This only needs to be
- * generated once per app and stored.
+ * We will generally need it only once per package name
+ * and signing key, but we need it here so we can
+ * generate signatures for development builds.
  */
+@SuppressLint("PackageManagerGetSignatures")
 class AppSignature(private val context: Context) {
 
   // Get all package signatures for the current package
@@ -27,8 +29,7 @@ class AppSignature(private val context: Context) {
     val packageName = context.packageName
     val packageManager = context.packageManager
 
-    val signatures = packageManager.getPackageInfo(packageName,
-        PackageManager.GET_SIGNATURES).signatures
+    val signatures = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures
 
     signatures.joinToString { hash(packageName, it.toCharsString()) }
   }

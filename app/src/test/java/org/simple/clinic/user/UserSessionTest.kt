@@ -167,6 +167,16 @@ class UserSessionTest {
   }
 
   @Test
+  fun `when ongoing registration entry is cleared then isOngoingRegistrationEntryPresent() should emit false`() {
+    userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry())
+        .andThen(userSession.clearOngoingRegistrationEntry())
+        .andThen(userSession.isOngoingRegistrationEntryPresent())
+        .test()
+        .await()
+        .assertValue(false)
+  }
+
+  @Test
   fun `when saving the user locally and the facility sync fails, the network error should correctly map results`() {
     whenever(facilitySync.pullWithResult())
         .thenReturn(

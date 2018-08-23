@@ -18,6 +18,7 @@ import okhttp3.ResponseBody
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
@@ -29,6 +30,7 @@ import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
@@ -162,5 +164,24 @@ class UserSessionTest {
       assertThat(it.uuid).isEqualTo(loggedInUserPayload.uuid)
       assertThat(it.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
     })
+  }
+
+  @Test
+  fun `when saving the user locally and the facility sync fails, the network error should correctly map results`() {
+    whenever(facilitySync.pullWithResult())
+        .thenReturn(
+            Single.just(FacilityPullResult.Success()),
+            Single.just(FacilityPullResult.UnexpectedError()),
+            Single.just(FacilityPullResult.NetworkError())
+        )
+
+    var result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
+    assertThat(result).isInstanceOf(SaveUserLocallyResult.Success::class.java)
+
+    result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
+    assertThat(result).isInstanceOf(SaveUserLocallyResult.UnexpectedError::class.java)
+
+    result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
+    assertThat(result).isInstanceOf(SaveUserLocallyResult.NetworkError::class.java)
   }
 }

@@ -238,12 +238,14 @@ class UserSession @Inject constructor(
     }
   }
 
-  fun clearOngoingRegistrationEntry(): Completable {
-    return saveOngoingRegistrationEntry(OngoingRegistrationEntry())
-  }
-
   fun ongoingRegistrationEntry(): Single<OngoingRegistrationEntry> {
     return Single.fromCallable { ongoingRegistrationEntry }
+  }
+
+  fun clearOngoingRegistrationEntry(): Completable {
+    return Completable.fromAction {
+      ongoingRegistrationEntry = null
+    }
   }
 
   fun isOngoingRegistrationEntryPresent(): Single<Boolean> =

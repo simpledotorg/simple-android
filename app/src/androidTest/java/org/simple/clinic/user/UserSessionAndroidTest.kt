@@ -100,8 +100,8 @@ class UserSessionAndroidTest {
         .blockingFirst()
     assertThat(currentFacility.uuid).isEqualTo(selectedFacilities.first().uuid)
 
-    val postLoginRegistrationEntry = userSession.ongoingRegistrationEntry().blockingGet()
-    assertThat(postLoginRegistrationEntry).isEqualTo(OngoingRegistrationEntry())
+    val isRegistrationEntryPresent = userSession.isOngoingRegistrationEntryPresent().blockingGet()
+    assertThat(isRegistrationEntryPresent).isFalse()
   }
 
   @Test

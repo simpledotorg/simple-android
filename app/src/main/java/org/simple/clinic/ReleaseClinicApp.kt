@@ -1,6 +1,8 @@
 package org.simple.clinic
 
 import android.annotation.SuppressLint
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.HeapReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerAppComponent
@@ -15,9 +17,8 @@ class ReleaseClinicApp : ClinicApp() {
 
   override fun onCreate() {
     super.onCreate()
-
     appComponent.inject(this)
-
+    Analytics.addReporter(HeapReporter(this))
     syncScheduler.schedule().subscribe()
   }
 

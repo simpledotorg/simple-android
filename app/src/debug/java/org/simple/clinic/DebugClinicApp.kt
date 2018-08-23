@@ -18,6 +18,7 @@ import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
 import timber.log.Timber
@@ -29,6 +30,8 @@ class DebugClinicApp : ClinicApp() {
 
   @Inject
   lateinit var syncScheduler: SyncScheduler
+
+  private lateinit var signature: AppSignature
 
   companion object {
     fun appComponent(): DebugAppComponent {
@@ -49,6 +52,8 @@ class DebugClinicApp : ClinicApp() {
     ViewPump.init(ViewPump.builder()
         .addInterceptor(ProxySystemKeyboardEnterToImeOption())
         .build())
+
+    signature = AppSignature(this)
   }
 
   private fun showDebugNotification() {

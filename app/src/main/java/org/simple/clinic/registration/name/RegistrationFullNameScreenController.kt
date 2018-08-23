@@ -46,7 +46,7 @@ class RegistrationFullNameScreenController @Inject constructor(
         .flatMap {
           facilityRepository.facilities()
               .filter { it.isEmpty() }
-              .flatMapCompletable { facilitySync.sync() }
+              .flatMapCompletable { facilitySync.sync().onErrorComplete() }
               .andThen(Observable.empty<UiChange>())
         }
   }

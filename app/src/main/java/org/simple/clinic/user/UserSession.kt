@@ -11,6 +11,9 @@ import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.facility.FacilityPullResult.NetworkError
+import org.simple.clinic.facility.FacilityPullResult.Success
+import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.LoginApiV1
@@ -25,6 +28,7 @@ import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -35,6 +39,7 @@ import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
+
 
 @AppScope
 class UserSession @Inject constructor(
@@ -128,7 +133,6 @@ class UserSession @Inject constructor(
 
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
     return registrationApi.findUser(phoneNumber)
-        .flatMap { saveUserAsNotSignedIn(it).toSingleDefault(it) }
         .map { user -> FindUserResult.Found(user) as FindUserResult }
         .onErrorReturn { e ->
           when {
@@ -142,11 +146,22 @@ class UserSession @Inject constructor(
         }
   }
 
-  private fun saveUserAsNotSignedIn(loggedInUserPayload: LoggedInUserPayload): Completable {
-    return Single.fromCallable { userFromPayload(loggedInUserPayload, User.LoggedInStatus.NOT_LOGGED_IN) }
-        // We need this because when saving the user from here, there won't be any local facilities
-        .flatMap { user -> facilitySync.sync().toSingleDefault(user) }
-        .flatMapCompletable { storeUser(it, loggedInUserPayload.facilityUuids) }
+  fun syncFacilityAndSaveUser(loggedInUserPayload: LoggedInUserPayload): Single<SaveUserLocallyResult> {
+    return facilitySync.pullWithResult()
+        .flatMap {
+          when (it) {
+            is Success -> {
+              Single.just(userFromPayload(loggedInUserPayload, User.LoggedInStatus.NOT_LOGGED_IN))
+                  .flatMap {
+                    storeUser(it, loggedInUserPayload.facilityUuids)
+                        .toSingleDefault(SaveUserLocallyResult.Success() as SaveUserLocallyResult)
+                  }
+                  .onErrorResumeNext(Single.just(SaveUserLocallyResult.UnexpectedError()))
+            }
+            is NetworkError -> Single.just(SaveUserLocallyResult.NetworkError())
+            is UnexpectedError -> Single.just(SaveUserLocallyResult.UnexpectedError())
+          }
+        }
   }
 
   fun refreshLoggedInUser(): Completable {

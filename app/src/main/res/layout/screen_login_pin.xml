@@ -32,7 +32,8 @@
   <android.support.v7.widget.CardView
     android:id="@+id/loginpin_card"
     style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/loginpin_logo_container">
+    android:layout_below="@+id/loginpin_logo_container"
+    android:animateLayoutChanges="true">
 
     <ProgressBar
       android:id="@+id/loginpin_progress"

@@ -5,7 +5,6 @@ import com.gabrielittner.threetenbp.LazyThreeTen
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import org.simple.clinic.di.AppComponent
-import org.simple.clinic.util.AppSignature
 
 abstract class ClinicApp : MultiDexApplication() {
 

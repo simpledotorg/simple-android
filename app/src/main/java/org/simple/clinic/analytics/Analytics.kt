@@ -16,7 +16,7 @@ object Analytics {
     reporters -= reporter
   }
 
-  fun reportInteraction(name: String) {
-    reporters.forEach { it.safeReport("Error reporting interaction!") { createEvent(name, emptyMap()) } }
+  fun reportUserInteraction(name: String) {
+    reporters.forEach { it.safeReport("Error reporting interaction!") { createEvent("UserInteraction", mapOf("name" to name)) } }
   }
 }

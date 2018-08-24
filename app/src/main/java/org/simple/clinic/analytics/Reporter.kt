@@ -9,8 +9,7 @@ interface Reporter {
   fun setProperty(key: String, value: Any)
 
   /**
-   * Safely report events so that the
-   * app does not crash if any of the
+   * Safely report events so that the app does not crash if any of the
    * reporters fail.
    **/
   fun safeReport(message: String = "", block: Reporter.() -> Unit) {

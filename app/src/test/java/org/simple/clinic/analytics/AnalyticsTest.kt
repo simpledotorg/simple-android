@@ -8,7 +8,7 @@ class AnalyticsTest {
 
   @Test
   fun `when reporting interaction events without any reporters, no error should be thrown`() {
-    Analytics.reportInteraction("Test")
+    Analytics.reportUserInteraction("Test")
   }
 
   @Test
@@ -22,7 +22,7 @@ class AnalyticsTest {
         throw RuntimeException()
       }
     })
-    Analytics.reportInteraction("Test")
+    Analytics.reportUserInteraction("Test")
   }
 
   @Test
@@ -41,14 +41,14 @@ class AnalyticsTest {
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
 
-    Analytics.reportInteraction("Test 1")
-    Analytics.reportInteraction("Test 2")
-    Analytics.reportInteraction("Test 3")
+    Analytics.reportUserInteraction("Test 1")
+    Analytics.reportUserInteraction("Test 2")
+    Analytics.reportUserInteraction("Test 3")
 
     val expected = listOf<Pair<String, Map<String, Any>>>(
-        "Test 1" to emptyMap(),
-        "Test 2" to emptyMap(),
-        "Test 3" to emptyMap()
+        "UserInteraction" to mapOf("name" to "Test 1"),
+        "UserInteraction" to mapOf("name" to "Test 2"),
+        "UserInteraction" to mapOf("name" to "Test 3")
     )
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)

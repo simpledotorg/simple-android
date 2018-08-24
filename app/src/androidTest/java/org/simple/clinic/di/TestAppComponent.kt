@@ -8,7 +8,7 @@ import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
-import org.simple.clinic.overdue.FollowUpScheduleSyncTest
+import org.simple.clinic.overdue.FollowUpScheduleSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
 import org.simple.clinic.user.UserDaoAndroidTest
@@ -28,5 +28,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: PrescriptionRepositoryAndroidTest)
   fun inject(target: FacilityRepositoryAndroidTest)
   fun inject(target: UserDaoAndroidTest)
-  fun inject(target: FollowUpScheduleSyncTest)
+  fun inject(target: FollowUpScheduleSyncAndroidTest)
 }

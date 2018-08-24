@@ -11,6 +11,9 @@ import org.simple.clinic.widgets.UiEvent
 
 class ReportAnalyticsEventsTest {
 
+  private data class UiEvent1(val prop: String) : UiEvent
+  private data class UiEvent2(val prop: Int) : UiEvent
+
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val reporter = MockReporter()
@@ -33,9 +36,9 @@ class ReportAnalyticsEventsTest {
     uiEvents.onNext(UiEvent1("3"))
 
     val expected = listOf<Pair<String, Map<String, Any>>>(
-        "UiEvent1" to emptyMap(),
-        "UiEvent2" to emptyMap(),
-        "UiEvent1" to emptyMap()
+        "UserInteraction" to mapOf("name" to "UiEvent1"),
+        "UserInteraction" to mapOf("name" to "UiEvent2"),
+        "UserInteraction" to mapOf("name" to "UiEvent1")
     )
 
     assertThat(reporter.receivedEvents).isEqualTo(expected)
@@ -56,8 +59,4 @@ class ReportAnalyticsEventsTest {
     reporter.clearReceivedEvents()
     Analytics.clearReporters()
   }
-
-  private data class UiEvent1(val prop: String) : UiEvent
-  private data class UiEvent2(val prop: Int) : UiEvent
-
 }

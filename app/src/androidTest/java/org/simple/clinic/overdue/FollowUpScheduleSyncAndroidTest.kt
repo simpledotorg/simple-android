@@ -20,7 +20,7 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-class FollowUpScheduleSyncTest {
+class FollowUpScheduleSyncAndroidTest {
 
   @Inject
   lateinit var configProvider: Single<SyncConfig>

@@ -1,13 +1,13 @@
-package org.simple.clinic.home.overdue
+package org.simple.clinic.home.report
 
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 
-class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
+class ReportsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs){
 
   companion object {
-    val KEY = OverdueScreenKey()
+    val KEY = ReportsScreenKey()
   }
 
   override fun onFinishInflate() {

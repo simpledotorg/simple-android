@@ -2,11 +2,11 @@ package org.simple.clinic.analytics
 
 class MockReporter : Reporter {
 
-  val receivedEvents = mutableListOf<Pair<String, Map<String, Any>>>()
+  val receivedEvents = mutableListOf<Event>()
   val setProperties = mutableMapOf<String, Any>()
 
   override fun createEvent(event: String, props: Map<String, Any>) {
-    receivedEvents.add(event to props)
+    receivedEvents.add(Event(event, props))
   }
 
   override fun setProperty(key: String, value: Any) {
@@ -20,4 +20,6 @@ class MockReporter : Reporter {
   fun clearSetProperties() {
     setProperties.clear()
   }
+
+  data class Event(val name: String, val props: Map<String, Any>)
 }

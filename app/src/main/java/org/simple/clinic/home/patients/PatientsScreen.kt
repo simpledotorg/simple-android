@@ -75,7 +75,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     approvalStatusViewFlipper.outAnimation = exitAnimation.apply { interpolator = FastOutSlowInInterpolator() }
   }
 
-  private fun screenCreates() = Observable.just(ScreenCreated())
+  private fun screenCreates() = Observable.just(ScreenCreated("Home"))
 
   private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
 

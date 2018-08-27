@@ -75,7 +75,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     facilityRecyclerView.adapter = recyclerViewAdapter
   }
 
-  private fun screenCreates() = Observable.just(ScreenCreated())
+  private fun screenCreates() = Observable.just(ScreenCreated("Registration Facility Selection"))
 
   private fun retryClicks() =
       RxView

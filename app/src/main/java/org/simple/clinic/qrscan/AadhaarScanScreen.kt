@@ -58,10 +58,10 @@ class AadhaarScanScreen(context: Context, attrs: AttributeSet) : FrameLayout(con
       .map { AadhaarScanClicked() }
 
   private fun screenCreates() = RxView.attaches(this)
-      .map { ScreenCreated() }
+      .map { ScreenCreated("Scan Aadhaar") }
 
   private fun screenDestroys() = RxView.detaches(this)
-      .map { ScreenDestroyed() }
+      .map { ScreenDestroyed("Scan Aadhaar") }
 
   private fun cameraPermissionChanges(): Observable<CameraPermissionChanged> {
     val permissionGrants = screenRouter.streamScreenResults()

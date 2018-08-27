@@ -122,7 +122,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun screenCreates() = Observable.just(ScreenCreated())
+  private fun screenCreates() = Observable.just(ScreenCreated("Patient Entry"))
 
   private fun screenPauses() = activityLifecycle.ofType<TheActivityLifecycle.Paused>()
 

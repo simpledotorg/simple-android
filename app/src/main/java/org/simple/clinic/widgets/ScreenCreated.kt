@@ -1,3 +1,6 @@
 package org.simple.clinic.widgets
 
-class ScreenCreated : UiEvent
+data class ScreenCreated(val name: String = "") : UiEvent {
+
+  override val analyticsName = if (name.isNotBlank()) "Screen Created:$name" else ""
+}

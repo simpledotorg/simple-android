@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
@@ -34,7 +35,7 @@ class PatientsScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay(1).refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
     return Observable.merge(
         newPatientClicks(replayedEvents),

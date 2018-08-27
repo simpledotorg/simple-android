@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -19,7 +20,7 @@ class LoginPhoneScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.merge(
         screenSetups(replayedEvents),

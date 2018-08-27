@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -15,7 +16,7 @@ typealias UiChange = (Ui) -> Unit
 class BloodPressureEntrySheetController @Inject constructor(val repository: BloodPressureRepository) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay(1).refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
     return Observable.merge(
         handleImeOptionClicks(replayedEvents),

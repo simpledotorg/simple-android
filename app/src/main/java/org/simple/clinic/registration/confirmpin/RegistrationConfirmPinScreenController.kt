@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -20,7 +21,7 @@ class RegistrationConfirmPinScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
         preFillExistingDetails(replayedEvents),

@@ -6,6 +6,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -24,7 +25,8 @@ class TheActivityController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
+
     return Observable.mergeArray(
         showAppLock(replayedEvents),
         updateLockTime(replayedEvents))

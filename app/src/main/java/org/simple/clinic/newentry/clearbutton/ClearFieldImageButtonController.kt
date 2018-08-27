@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -14,7 +15,7 @@ typealias UiChange = (Ui) -> Unit
 class ClearFieldImageButtonController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay(1).refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
     val textChanges = replayedEvents
         .ofType<CleareableFieldTextChanged>()

@@ -9,6 +9,10 @@ import org.simple.clinic.widgets.UiEvent
 class ReportAnalyticsEvents : ObservableTransformer<UiEvent, UiEvent> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiEvent> {
-    return events.doOnNext { Analytics.reportUserInteraction(it.javaClass.simpleName) }
+    return events.doOnNext {
+      if (it.analyticsName.isNotBlank()) {
+        Analytics.reportUserInteraction(it.analyticsName)
+      }
+    }
   }
 }

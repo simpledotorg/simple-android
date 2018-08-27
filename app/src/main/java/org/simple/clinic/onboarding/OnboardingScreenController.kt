@@ -8,6 +8,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -22,7 +23,8 @@ class OnboardingScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return getStartedClicks(events)
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
+    return getStartedClicks(replayedEvents)
   }
 
   private fun getStartedClicks(events: Observable<UiEvent>): Observable<UiChange> {

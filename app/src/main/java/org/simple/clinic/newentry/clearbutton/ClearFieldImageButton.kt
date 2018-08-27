@@ -9,9 +9,10 @@ import android.widget.EditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import org.simple.clinic.R
 import org.simple.clinic.ClinicApp
+import org.simple.clinic.R
 import org.simple.clinic.newentry.MultipleFocusChangeListeners
+import org.simple.clinic.widgets.resourceNameForId
 import javax.inject.Inject
 
 class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatImageButton(context, attrs) {
@@ -20,6 +21,7 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
   lateinit var controller: ClearFieldImageButtonController
 
   private var fieldId: Int
+  private var fieldName: String
   private lateinit var field: EditText
   private var fieldOriginalPaddingEnd: Int = 0
 
@@ -31,6 +33,8 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
     if (fieldId == 0) {
       throw AssertionError()
     }
+
+    fieldName = resourceNameForId(resources, fieldId)
   }
 
   override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
@@ -45,7 +49,7 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
     try {
       field = (parent as ViewGroup).findViewById(fieldId)
     } catch (e: IllegalStateException) {
-      throw NullPointerException("Couldn't find View (${resources.getResourceName(fieldId)}) inside immediate parent.")
+      throw NullPointerException("Couldn't find View ($fieldName) inside immediate parent.")
     }
 
     fieldOriginalPaddingEnd = field.paddingEnd
@@ -62,17 +66,17 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
     return if (field is MultipleFocusChangeListeners) {
       (field as MultipleFocusChangeListeners)
           .focusChanges
-          .map(::CleareableFieldFocusChanged)
+          .map { hasFocus -> CleareableFieldFocusChanged(hasFocus, fieldName) }
     } else {
       RxView
           .focusChanges(field)
-          .map(::CleareableFieldFocusChanged)
+          .map { hasFocus -> CleareableFieldFocusChanged(hasFocus, fieldName) }
     }
   }
 
   private fun cleareableFieldTextChanges() = RxTextView.textChanges(field)
       .map(CharSequence::toString)
-      .map(::CleareableFieldTextChanged)
+      .map { text -> CleareableFieldTextChanged(text, fieldName) }
 
   fun setVisible(visible: Boolean) {
     visibility = when (visible) {

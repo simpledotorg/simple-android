@@ -1,19 +1,34 @@
 package org.simple.clinic.search
 
 import android.os.Parcelable
+import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
 
-class BackButtonClicked : UiEvent
+class BackButtonClicked : UiEvent {
+  override val analyticsName = "Patient Search:Back Clicked"
+}
 
-class CreateNewPatientClicked : UiEvent
+class CreateNewPatientClicked : UiEvent {
+  override val analyticsName = "Patient Search:Create New Patient Clicked"
+}
 
-class SearchQueryAgeFilterClicked : UiEvent
+class SearchQueryAgeFilterClicked : UiEvent {
+  override val analyticsName = "Patient Search:Filter By Age Clicked"
+}
 
-data class SearchQueryTextChanged(val query: String) : UiEvent
+data class SearchQueryTextChanged(val query: String) : UiEvent {
+  override val analyticsName = "Patient Search:Search Query Changed"
+}
 
-data class SearchResultClicked(val searchResult: PatientSearchResult) : UiEvent
+data class SearchResultClicked(val searchResult: PatientSearchResult) : UiEvent {
+  override val analyticsName = "Patient Search:Search Result Clicked"
+}
 
 @Parcelize
-data class SearchQueryAgeChanged(val ageString: String) : UiEvent, Parcelable
+data class SearchQueryAgeChanged(val ageString: String) : UiEvent, Parcelable {
+
+  @IgnoredOnParcel
+  override val analyticsName = "Patient Search:Search Query Age Changed"
+}

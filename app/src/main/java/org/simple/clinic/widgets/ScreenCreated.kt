@@ -1,3 +1,3 @@
 package org.simple.clinic.widgets
 
-class ScreenCreated : UiEvent
+class ScreenCreated: UiEvent

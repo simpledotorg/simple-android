@@ -3,6 +3,7 @@ package org.simple.clinic.analytics
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
+import org.simple.clinic.analytics.MockReporter.Event
 
 class AnalyticsTest {
 
@@ -45,10 +46,10 @@ class AnalyticsTest {
     Analytics.reportUserInteraction("Test 2")
     Analytics.reportUserInteraction("Test 3")
 
-    val expected = listOf<Pair<String, Map<String, Any>>>(
-        "UserInteraction" to mapOf("name" to "Test 1"),
-        "UserInteraction" to mapOf("name" to "Test 2"),
-        "UserInteraction" to mapOf("name" to "Test 3")
+    val expected = listOf(
+        Event("UserInteraction", mapOf("name" to "Test 1")),
+        Event("UserInteraction", mapOf("name" to "Test 2")),
+        Event("UserInteraction", mapOf("name" to "Test 3"))
     )
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)

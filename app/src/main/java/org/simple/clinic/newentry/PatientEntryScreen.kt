@@ -42,7 +42,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.topRelativeTo
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 

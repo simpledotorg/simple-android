@@ -121,7 +121,9 @@ fun ViewGroup.indexOfChildId(@IdRes childId: Int): Int {
   return indexOfChild(child)
 }
 
-fun View.resourceName(): String {
+fun View.resourceName() = resourceNameForId(resources, id)
+
+fun resourceNameForId(resources: Resources, @IdRes id: Int): String {
   var name = "<nameless>"
   try {
     name = resources.getResourceEntryName(id)

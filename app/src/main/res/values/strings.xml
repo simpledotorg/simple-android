@@ -50,9 +50,13 @@
   <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in dd/mm/yyyy</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
 
-  <!-- Home: Patients -->
+  <!-- Home: Tabs -->
+  <!-- Lint fails to find usages for these strings. -->
+  <!--suppress UnusedResources -->
   <string name="tab_patient">Patient</string>
+  <!--suppress UnusedResources -->
   <string name="tab_overdue">Overdue</string>
+  <!--suppress UnusedResources -->
   <string name="tab_reports">Reports</string>
 
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>

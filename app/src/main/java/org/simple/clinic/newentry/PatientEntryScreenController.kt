@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -49,7 +50,7 @@ class PatientEntryScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     val transformedEvents = replayedEvents
         .mergeWith(ongoingPatientEntryUpdates(replayedEvents))

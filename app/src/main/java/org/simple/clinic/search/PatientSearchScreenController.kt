@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
@@ -22,7 +23,7 @@ class PatientSearchScreenController @Inject constructor(
   private var ageText = ""
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
         screenSetup(),

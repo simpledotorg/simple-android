@@ -159,4 +159,7 @@
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>
+
+  <!-- Overdue List -->
+  <string name="overdue_no_patients">No patients overdue yet</string>
 </resources>

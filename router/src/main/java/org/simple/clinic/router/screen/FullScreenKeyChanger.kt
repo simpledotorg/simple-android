@@ -11,6 +11,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import flow.Direction
 import flow.KeyChanger
+import flow.State
+import flow.TraversalCallback
 
 /**
  * Coordinates changes between [FullScreenKey]s.
@@ -20,7 +22,8 @@ import flow.KeyChanger
 class FullScreenKeyChanger(
     private val activity: Activity,
     @IdRes private val screenLayoutContainerRes: Int,
-    @ColorRes private val screenBackgroundRes: Int
+    @ColorRes private val screenBackgroundRes: Int,
+    private val onKeyChange: (FullScreenKey?, FullScreenKey) -> Unit = { _, _ -> }
 ) : BaseViewGroupKeyChanger<FullScreenKey>(), KeyChanger {
 
   override fun layoutResForKey(screenKey: FullScreenKey): Int {
@@ -53,6 +56,19 @@ class FullScreenKeyChanger(
     }
 
     return container
+  }
+
+  override fun changeKey(
+      outgoingState: State?,
+      incomingState: State,
+      direction: Direction,
+      incomingContexts: Map<Any, Context>,
+      callback: TraversalCallback
+  ) {
+    super.changeKey(outgoingState, incomingState, direction, incomingContexts, callback)
+    val outgoingKey = outgoingState?.getKey<FullScreenKey>()
+    val incomingKey = incomingState.getKey<FullScreenKey>()
+    onKeyChange(outgoingKey, incomingKey)
   }
 
   override fun animate(

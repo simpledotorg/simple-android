@@ -17,10 +17,7 @@ open class RegistrationModule {
 
   @Provides
   open fun registrationConfig(): Single<RegistrationConfig> {
-    return Single.just(RegistrationConfig(
-        isRegistrationEnabled = true,
-        retryBackOffDelayInMinutes = 1
-    ))
+    return Single.just(RegistrationConfig(retryBackOffDelayInMinutes = 1))
   }
 
   @Provides

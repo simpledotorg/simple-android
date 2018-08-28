@@ -14,7 +14,6 @@ import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
-import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
@@ -41,7 +40,6 @@ interface TheActivityComponent {
 
   fun inject(target: TheActivity)
   fun inject(target: PatientsScreen)
-  fun inject(target: LoginPhoneScreen)
   fun inject(target: LoginPinScreen)
   fun inject(target: AppLockScreen)
   fun inject(target: AadhaarScanScreen)

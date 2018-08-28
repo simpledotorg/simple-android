@@ -12,7 +12,6 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.login.phone.LoginPhoneScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -68,9 +67,5 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
   fun moveToRegistrationScreen() {
     router.clearHistoryAndPush(RegistrationPhoneScreen.KEY, RouterDirection.FORWARD)
-  }
-
-  fun moveToLoginScreen() {
-    router.clearHistoryAndPush(LoginPhoneScreen.KEY_WITHOUT_OTP, RouterDirection.FORWARD)
   }
 }

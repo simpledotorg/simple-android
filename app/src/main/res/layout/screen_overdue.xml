@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.home.overdue.OverdueScreen
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<org.simple.clinic.home.overdue.OverdueScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/overdue_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+
+  <TextView
+    android:id="@+id/overdue_empty_list_text"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:text="@string/overdue_no_patients"
+    android:textSize="@dimen/textsize_20" />
 
 </org.simple.clinic.home.overdue.OverdueScreen>

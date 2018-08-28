@@ -12,6 +12,8 @@ import android.support.annotation.LayoutRes
  */
 interface FullScreenKey : Parcelable {
 
+  val analyticsName: String
+
   @LayoutRes
   fun layoutRes(): Int
 }

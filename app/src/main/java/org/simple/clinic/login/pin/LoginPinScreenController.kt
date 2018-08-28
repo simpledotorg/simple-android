@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginConfig
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResult
@@ -33,7 +34,7 @@ class LoginPinScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.merge(
         screenSetups(replayedEvents),

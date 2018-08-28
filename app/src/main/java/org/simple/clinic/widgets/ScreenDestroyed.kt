@@ -1,3 +1,6 @@
 package org.simple.clinic.widgets
 
-class ScreenDestroyed : UiEvent
+data class ScreenDestroyed(val name: String = "") : UiEvent {
+
+  override val analyticsName = if (name.isNotBlank()) "Screen Destroyed:$name" else ""
+}

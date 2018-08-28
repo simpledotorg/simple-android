@@ -222,15 +222,6 @@
     <item name="android:background">@color/color_primary</item>
   </style>
 
-  <style name="Clinic.LoginProceedButton">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_alignParentBottom">true</item>
-    <item name="android:background">@drawable/background_login_submit_button</item>
-    <item name="android:foreground">?attr/selectableItemBackground</item>
-    <item name="android:textColor">@color/white</item>
-  </style>
-
   <style name="Clinic.Button.Flat" parent="Widget.AppCompat.Button">
     <item name="android:textColor">?android:textColorPrimaryInverse</item>
     <item name="android:background">@color/color_accent</item>

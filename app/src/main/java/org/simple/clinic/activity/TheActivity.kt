@@ -29,6 +29,7 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
+import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -109,8 +110,14 @@ class TheActivity : AppCompatActivity() {
         .build()
     component.inject(this)
 
-    screenRouter.registerKeyChanger(FullScreenKeyChanger(this, android.R.id.content, R.color.window_background))
+    screenRouter.registerKeyChanger(FullScreenKeyChanger(this, android.R.id.content, R.color.window_background, this::onScreenChanged))
     return screenRouter.installInContext(baseContext, initialScreenKey())
+  }
+
+  private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
+    val outgoingScreenName = if(outgoing == null) "" else outgoing.javaClass.simpleName
+    val incomingScreenName = incoming.javaClass.simpleName
+    Timber.d("$outgoingScreenName -> $incomingScreenName")
   }
 
   private fun initialScreenKey(): FullScreenKey {

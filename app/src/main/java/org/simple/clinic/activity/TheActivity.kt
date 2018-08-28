@@ -13,6 +13,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.phone.LoginPhoneScreen
@@ -29,7 +30,6 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
-import timber.log.Timber
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -115,9 +115,9 @@ class TheActivity : AppCompatActivity() {
   }
 
   private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
-    val outgoingScreenName = if(outgoing == null) "" else outgoing.javaClass.simpleName
-    val incomingScreenName = incoming.javaClass.simpleName
-    Timber.d("$outgoingScreenName -> $incomingScreenName")
+    val outgoingScreenName = outgoing?.analyticsName ?: ""
+    val incomingScreenName = incoming.analyticsName
+    Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
   }
 
   private fun initialScreenKey(): FullScreenKey {

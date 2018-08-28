@@ -113,8 +113,6 @@
   <string name="customprescription_delete_cancel">No</string>
 
   <!-- Login -->
-  <string name="loginphone_phone_number_hint">Your phone number</string>
-  <string name="loginphone_next">Next</string>
   <string name="loginpin_pin_number_hint">Your security PIN</string>
   <string name="loginpin_go_back">Go back to phone number screen</string>
   <string name="loginpin_error_check_internet_connection">@string/api_network_error</string>

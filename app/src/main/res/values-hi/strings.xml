@@ -66,8 +66,6 @@
     <string name="customprescription_delete_confirm">हाँ</string>
     <string name="patientsearch_go_back">होम स्क्रीन पर वापस जाओ</string>
     <string name="patientsummary_prescriptions_add">नई दवा</string>
-    <string name="loginphone_phone_number_hint">आपकी फोन नंबर</string>
-    <string name="loginphone_next">अगला</string>
     <string name="loginpin_pin_number_hint">आपका सुरक्षा पिन</string>
     <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>
     <string name="loginpin_error_check_internet_connection">कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>

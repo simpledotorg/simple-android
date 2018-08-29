@@ -15,6 +15,7 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
 
 @Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class, LoginModule::class, RegistrationModule::class])

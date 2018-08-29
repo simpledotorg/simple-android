@@ -7,7 +7,7 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
-import org.simple.clinic.di.StorageModule
+import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule

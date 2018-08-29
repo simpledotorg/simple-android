@@ -160,4 +160,5 @@
 
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue yet</string>
+  <string name="overdue_empty_desc">You’ll be able to call patients who are overdue for a follow-up blood pressure reading.</string>
 </resources>

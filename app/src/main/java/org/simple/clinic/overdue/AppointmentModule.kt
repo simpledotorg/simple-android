@@ -14,21 +14,21 @@ import retrofit2.Retrofit
 import javax.inject.Named
 
 @Module
-class FollowUpScheduleModule {
+class AppointmentModule {
 
   @Provides
-  fun dao(appDatabase: AppDatabase): FollowUpSchedule.RoomDao {
-    return appDatabase.followUpScheduleDao()
+  fun dao(appDatabase: AppDatabase): Appointment.RoomDao {
+    return appDatabase.appointmentDao()
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): FollowUpScheduleSyncApiV1 {
-    return retrofit.create(FollowUpScheduleSyncApiV1::class.java)
+  fun syncApi(retrofit: Retrofit): AppointmentSyncApiV1 {
+    return retrofit.create(AppointmentSyncApiV1::class.java)
   }
 
   @Provides
-  @Named("last_followupschedule_pull_timestamp")
+  @Named("last_appointment_pull_timestamp")
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
-    return rxSharedPrefs.getObject("last_bp_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
+    return rxSharedPrefs.getObject("last_appointment_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }
 }

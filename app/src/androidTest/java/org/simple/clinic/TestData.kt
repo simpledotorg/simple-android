@@ -4,8 +4,8 @@ import io.bloco.faker.Faker
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.overdue.FollowUpSchedule
-import org.simple.clinic.overdue.FollowUpSchedulePayload
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
@@ -162,31 +162,29 @@ class TestData @Inject constructor(private val faker: Faker) {
         patientUuid = patientUuid)
   }
 
-  fun followUpSchedule(
+  fun appointment(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
-  ): FollowUpSchedule {
-    return FollowUpSchedule(
+  ): Appointment {
+    return Appointment(
         id = UUID.randomUUID(),
         patientId = UUID.randomUUID(),
-        nextVisit = LocalDate.now(UTC).plusDays(30),
-        facilityId = TestClinicApp.qaUserFacilityUuid(),
-        userAction = randomOfEnum(FollowUpSchedule.UserAction::class),
-        reasonForAction = randomOfEnum(FollowUpSchedule.UserActionReason::class),
-        actionByUserId = TestClinicApp.qaUserUuid(),
+        date = LocalDate.now(UTC).plusDays(30),
+        facilityId = qaUserFacilityUuid(),
+        status = randomOfEnum(Appointment.Status::class),
+        statusReason = randomOfEnum(Appointment.StatusReason::class),
         syncStatus = syncStatus,
         createdAt = Instant.now(),
         updatedAt = Instant.now())
   }
 
-  fun followUpSchedulePayload(): FollowUpSchedulePayload {
-    return FollowUpSchedulePayload(
+  fun appointmentPayload(): AppointmentPayload {
+    return AppointmentPayload(
         id = UUID.randomUUID(),
         patientId = UUID.randomUUID(),
-        nextVisit = LocalDate.now(UTC).plusDays(30),
-        facilityId = TestClinicApp.qaUserFacilityUuid(),
-        userAction = randomOfEnum(FollowUpSchedule.UserAction::class),
-        reasonForAction = randomOfEnum(FollowUpSchedule.UserActionReason::class),
-        actionByUserId = TestClinicApp.qaUserUuid(),
+        date = LocalDate.now(UTC).plusDays(30),
+        facilityId = qaUserFacilityUuid(),
+        status = randomOfEnum(Appointment.Status::class),
+        statusReason = randomOfEnum(Appointment.StatusReason::class),
         createdAt = Instant.now(),
         updatedAt = Instant.now())
   }

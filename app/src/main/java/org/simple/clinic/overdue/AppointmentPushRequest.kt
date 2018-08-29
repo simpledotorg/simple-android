@@ -4,9 +4,8 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class FollowUpSchedulePushRequest(
+data class AppointmentPushRequest(
 
-    @Json(name = "follow_up_schedules")
-    val schedules: List<FollowUpSchedulePayload>
+    @Json(name = "appointments")
+    val appointments: List<AppointmentPayload>
 )
-

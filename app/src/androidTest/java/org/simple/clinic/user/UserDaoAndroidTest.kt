@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
 import javax.inject.Inject
 
@@ -21,7 +21,7 @@ class UserDaoAndroidTest {
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  lateinit var patientFaker: PatientFaker
+  lateinit var testData: TestData
 
   @Before
   fun setup() {
@@ -38,7 +38,7 @@ class UserDaoAndroidTest {
    */
   @Test
   fun update_should_work_correctly() {
-    val user = patientFaker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    val user = testData.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
     val updatedUser = user.copy(status = UserStatus.APPROVED_FOR_SYNCING)
 
     appDatabase.userDao().createOrUpdate(user)

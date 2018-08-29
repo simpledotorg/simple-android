@@ -11,6 +11,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
+import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
@@ -42,6 +43,8 @@ interface TheActivityComponent {
   fun inject(target: PatientsScreen)
   fun inject(target: LoginPinScreen)
   fun inject(target: AppLockScreen)
+  fun inject(target: OverdueScreen)
+  fun inject(target: OnboardingScreen)
   fun inject(target: AadhaarScanScreen)
   fun inject(target: PatientEntryScreen)
   fun inject(target: PatientSearchScreen)
@@ -55,7 +58,6 @@ interface TheActivityComponent {
   fun inject(target: RegistrationFullNameScreen)
   fun inject(target: RegistrationPinScreen)
   fun inject(target: RegistrationConfirmPinScreen)
-  fun inject(target: OnboardingScreen)
   fun inject(target: RegistrationLocationPermissionScreen)
   fun inject(target: RegistrationFacilitySelectionScreen)
 

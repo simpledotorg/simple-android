@@ -30,8 +30,8 @@ class AppointmentSync @Inject constructor(
         pullNetworkCall = api::pull)
   }
 
-  private fun toRequest(schedules: List<Appointment>): AppointmentPushRequest {
-    val payloads = schedules
+  private fun toRequest(appointments: List<Appointment>): AppointmentPushRequest {
+    val payloads = appointments
         .map {
           it.run {
             AppointmentPayload(

@@ -10,9 +10,9 @@ import javax.inject.Inject
 
 class AppointmentRepository @Inject constructor(val dao: Appointment.RoomDao) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun save(vararg schedules: Appointment): Completable {
+  fun save(appointments: List<Appointment>): Completable {
     return Completable.fromAction {
-      dao.save(schedules.toList())
+      dao.save(appointments)
     }
   }
 
@@ -32,7 +32,7 @@ class AppointmentRepository @Inject constructor(val dao: Appointment.RoomDao) : 
   }
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {
-    val newOrUpdatedSchedules = payloads
+    val newOrUpdatedAppointments = payloads
         .filter { payload: AppointmentPayload ->
           val localCopy = dao.getOne(payload.id)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
@@ -40,7 +40,7 @@ class AppointmentRepository @Inject constructor(val dao: Appointment.RoomDao) : 
         .map { toDatabaseModel(it, SyncStatus.DONE) }
         .toList()
 
-    return Completable.fromAction { dao.save(newOrUpdatedSchedules) }
+    return Completable.fromAction { dao.save(newOrUpdatedAppointments) }
   }
 
   private fun toDatabaseModel(payload: AppointmentPayload, syncStatus: SyncStatus): Appointment {

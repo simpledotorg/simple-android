@@ -48,7 +48,7 @@ class PrescriptionSyncAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
-  @field:[Named("last_prescription_pull_timestamp")]
+  @field:Named("last_prescription_pull_timestamp")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject

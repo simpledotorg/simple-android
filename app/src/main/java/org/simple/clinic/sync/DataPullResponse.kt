@@ -2,7 +2,7 @@ package org.simple.clinic.sync
 
 import org.threeten.bp.Instant
 
-interface DataPullResponse<T : SynceablePayload<out Synceable>> {
+interface DataPullResponse<T> {
 
   val payloads: List<T>
 

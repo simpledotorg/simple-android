@@ -6,12 +6,12 @@ import org.simple.clinic.sync.DataPullResponse
 import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
-data class FollowUpSchedulePullResponse(
+data class AppointmentPullResponse(
 
-    @Json(name = "follow_up_schedules")
-    override val payloads: List<FollowUpSchedulePayload>,
+    @Json(name = "appointments")
+    override val payloads: List<AppointmentPayload>,
 
     @Json(name = "processed_since")
     override val processedSinceTimestamp: Instant
 
-) : DataPullResponse<FollowUpSchedulePayload>
+) : DataPullResponse<AppointmentPayload>

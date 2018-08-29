@@ -6,7 +6,7 @@ import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
-import org.simple.clinic.overdue.FollowUpScheduleSync
+import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.user.UserSession
 import timber.log.Timber
@@ -32,7 +32,7 @@ class SyncWorker : Worker() {
   lateinit var prescriptionSync: PrescriptionSync
 
   @Inject
-  lateinit var followUpScheduleSync: FollowUpScheduleSync
+  lateinit var appointmentSync: AppointmentSync
 
   override fun doWork(): WorkerResult {
     ClinicApp.appComponent.inject(this)
@@ -54,7 +54,7 @@ class SyncWorker : Worker() {
         .andThen(Completable.mergeArrayDelayError(
             bloodPressureSync.sync(),
             prescriptionSync.sync(),
-            followUpScheduleSync.sync()))
+            appointmentSync.sync()))
         .doOnError {
           if (it !is IOException) {
             Timber.e(it)

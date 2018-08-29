@@ -10,27 +10,12 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import timber.log.Timber
-import java.util.UUID
 import javax.inject.Inject
-
-interface Synceable
-interface SynceablePayload<T : Synceable>
-
-interface SynceableRepository<T : Synceable, P: SynceablePayload<T>> {
-
-  fun pendingSyncRecords(): Single<List<T>>
-
-  fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable
-
-  fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable
-
-  fun mergeWithLocalData(payloads: List<P>): Completable
-}
 
 // TODO: Use this for syncing all data models.
 class DataSync @Inject constructor(val configProvider: Single<SyncConfig>) {
 
-  fun <T : Synceable, P : SynceablePayload<T>> push(
+  fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,
       pushNetworkCall: (List<T>) -> Single<DataPushResponse>
   ): Completable {
@@ -60,7 +45,7 @@ class DataSync @Inject constructor(val configProvider: Single<SyncConfig>) {
     return markAsInFlight.andThen(sendRecords)
   }
 
-  private fun <T : Synceable> logValidationErrorsIfAny(records: List<T>): Consumer<in DataPushResponse> {
+  private fun <T : Any> logValidationErrorsIfAny(records: List<T>): Consumer<in DataPushResponse> {
     return Consumer { response ->
       if (response.validationErrors.isNotEmpty()) {
         val recordType = records.first().javaClass.simpleName
@@ -69,7 +54,7 @@ class DataSync @Inject constructor(val configProvider: Single<SyncConfig>) {
     }
   }
 
-  fun <T : Synceable, P : SynceablePayload<T>> pull(
+  fun <T : Any, P> pull(
       repository: SynceableRepository<T, P>,
       lastPullTimestamp: Preference<Optional<Instant>>,
       pullNetworkCall: (recordsToPull: Int, lastPull: Instant?) -> Single<out DataPullResponse<P>>

@@ -43,7 +43,7 @@ class PatientSyncAndroidTest {
   lateinit var userSession: UserSession
 
   @Inject
-  @field:[Named("last_patient_pull_timestamp")]
+  @field:Named("last_patient_pull_timestamp")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject
@@ -117,7 +117,7 @@ class PatientSyncAndroidTest {
     return withDOB.andThen(withoutDOB)
   }
 
-  private fun dummyPatientPayloads(count: Int) = (0..count).map { testData.patientPayload() }
+  private fun dummyPatientPayloads(count: Int) = (0 until count).map { testData.patientPayload() }
 
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {

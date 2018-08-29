@@ -9,7 +9,6 @@ import android.arch.persistence.room.Query
 import com.squareup.moshi.Json
 import io.reactivex.Flowable
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.sync.Synceable
 import org.simple.clinic.util.RoomEnumTypeConverter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -26,7 +25,7 @@ data class Appointment(
     val syncStatus: SyncStatus,
     val createdAt: Instant,
     val updatedAt: Instant
-) : Synceable {
+) {
 
   enum class Status {
 
@@ -75,9 +74,9 @@ data class Appointment(
     fun getOne(id: UUID): Appointment?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(schedules: List<Appointment>)
+    fun save(appointments: List<Appointment>)
 
-    @Query("SELECT COUNT(*) FROM Appointment")
+    @Query("SELECT COUNT(id) FROM Appointment")
     fun count(): Int
   }
 }

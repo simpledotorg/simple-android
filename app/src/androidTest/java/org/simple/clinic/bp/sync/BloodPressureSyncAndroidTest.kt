@@ -48,7 +48,7 @@ class BloodPressureSyncAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
-  @field:[Named("last_bp_pull_timestamp")]
+  @field:Named("last_bp_pull_timestamp")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject

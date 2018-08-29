@@ -29,6 +29,8 @@ class TestData @Inject constructor(private val faker: Faker) {
 
   fun qaUserUuid() = UUID.fromString("c6834f82-3305-4144-9dc8-5f77c908ebf1")
 
+  fun qaUserOtp(): String = "000000"
+
   fun qaOngoingLoginEntry() = OngoingLoginEntry(qaUserUuid(), phoneNumber = "0000", pin = "0000")
 
   @Deprecated(message = "Get real facilities from the server instead. Look at UserSessionAndroidTest for examples.")

@@ -25,7 +25,7 @@ class OverdueScreenControllerTest {
   fun `when screen is created, show list of overdue patients`() {
     uiEvents.onNext(OverdueScreenCreated())
 
-    verify(screen).setupOverdueList()
+    verify(screen).updateOverdueList()
   }
 
   @Test

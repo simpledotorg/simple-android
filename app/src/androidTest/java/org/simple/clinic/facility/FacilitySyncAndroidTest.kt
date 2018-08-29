@@ -45,7 +45,7 @@ class FacilitySyncAndroidTest {
     TestClinicApp.appComponent().inject(this)
 
     val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp("0000"))
+        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }

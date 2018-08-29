@@ -1,4 +1,4 @@
-package org.simple.clinic.di
+package org.simple.clinic.storage
 
 import android.app.Application
 import android.arch.persistence.db.SupportSQLiteOpenHelper
@@ -7,6 +7,7 @@ import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.di.AppSqliteOpenHelperFactory
 
 @Module
 open class StorageModule {

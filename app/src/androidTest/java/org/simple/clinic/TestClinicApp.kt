@@ -12,10 +12,8 @@ import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
-import org.simple.clinic.user.OngoingLoginEntry
 import org.threeten.bp.Duration
 import timber.log.Timber
-import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -30,19 +28,6 @@ class TestClinicApp : ClinicApp() {
   companion object {
     fun appComponent(): TestAppComponent {
       return ClinicApp.appComponent as TestAppComponent
-    }
-
-    fun qaUserUuid(): UUID {
-      return UUID.fromString("c6834f82-3305-4144-9dc8-5f77c908ebf1")
-    }
-
-    fun qaOngoingLoginEntry(): OngoingLoginEntry {
-      return OngoingLoginEntry(qaUserUuid(), phoneNumber = "0000", pin = "0000")
-    }
-
-    @Deprecated(message = "Get real facilities from the server instead. Look at UserSessionAndroidTest for examples.")
-    fun qaUserFacilityUuid(): UUID {
-      return UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
     }
   }
 

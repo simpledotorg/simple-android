@@ -6,8 +6,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApiV1
 import org.simple.clinic.login.LoginResult
@@ -46,7 +46,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val lawgon = userSession
-        .saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+        .saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
         .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
 
@@ -66,7 +66,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_incorrect_login_params_are_given_then_login_should_fail() {
     val lawgon = userSession
-        .saveOngoingLoginEntry(OngoingLoginEntry(TestClinicApp.qaUserUuid(), "9919299", "0102"))
+        .saveOngoingLoginEntry(OngoingLoginEntry(testData.qaUserUuid(), "9919299", "0102"))
         .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
 
@@ -107,7 +107,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_user_is_logged_out_then_all_app_data_should_get_cleared() {
     userSession
-        .saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+        .saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
         .andThen(userSession.loginWithOtp("0000"))
         .toCompletable()
         .andThen(userSession.logout())
@@ -142,7 +142,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_saving_a_user_locally_it_should_save_the_user_locally_with_a_status_of_not_signed_in() {
-    val findUserResult = userSession.findExistingUser(TestClinicApp.qaOngoingLoginEntry().phoneNumber).blockingGet()
+    val findUserResult = userSession.findExistingUser(testData.qaOngoingLoginEntry().phoneNumber).blockingGet()
     assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
 
     val foundUserPayload = (findUserResult as FindUserResult.Found).user

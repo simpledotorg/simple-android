@@ -13,6 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.login.LoginResult
@@ -56,18 +57,21 @@ class PrescriptionSyncAndroidTest {
   @Inject
   lateinit var faker: Faker
 
+  @Inject
+  lateinit var testData: TestData
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
-    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
         .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyPrescriptions(count: Int): Completable {
-    val facilityUUID = TestClinicApp.qaUserFacilityUuid()
+    val facilityUUID = testData.qaUserFacilityUuid()
     database.facilityDao().save(listOf(
         Facility(
             facilityUUID,

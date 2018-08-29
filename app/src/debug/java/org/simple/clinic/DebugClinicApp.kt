@@ -10,7 +10,6 @@ import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.DebugReporter
-import org.simple.clinic.analytics.HeapReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
@@ -45,7 +44,7 @@ class DebugClinicApp : ClinicApp() {
   override fun onCreate() {
     super.onCreate()
     appComponent().inject(this)
-    Analytics.addReporter(DebugReporter(), HeapReporter(this, debug = true))
+    Analytics.addReporter(DebugReporter())
 
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()

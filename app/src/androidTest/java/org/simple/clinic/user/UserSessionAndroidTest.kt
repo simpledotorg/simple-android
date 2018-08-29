@@ -15,7 +15,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
-import org.simple.clinic.util.Just
 import java.util.UUID
 import javax.inject.Inject
 
@@ -47,11 +46,12 @@ class UserSessionAndroidTest {
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val lawgon = userSession
         .saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp("0000"))
+        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
         .blockingGet()
 
     assertThat(lawgon).isInstanceOf(LoginResult.Success::class.java)
-    assertThat(userSession.accessToken()).isEqualTo(Just("7d728cc7e54aa148e84befda6d6d570f67ac60b3410445a1fb0e8d2216fcde44"))
+    val (accessToken) = userSession.accessToken()
+    assertThat(accessToken).isNotNull()
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
@@ -67,7 +67,7 @@ class UserSessionAndroidTest {
   fun when_incorrect_login_params_are_given_then_login_should_fail() {
     val lawgon = userSession
         .saveOngoingLoginEntry(OngoingLoginEntry(testData.qaUserUuid(), "9919299", "0102"))
-        .andThen(userSession.loginWithOtp("0000"))
+        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
         .blockingGet()
 
     assertThat(lawgon).isInstanceOf(LoginResult.ServerError::class.java)
@@ -108,7 +108,7 @@ class UserSessionAndroidTest {
   fun when_user_is_logged_out_then_all_app_data_should_get_cleared() {
     userSession
         .saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp("0000"))
+        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
         .toCompletable()
         .andThen(userSession.logout())
         .blockingAwait()

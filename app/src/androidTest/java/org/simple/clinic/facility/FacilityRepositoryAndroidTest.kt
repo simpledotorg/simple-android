@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.user.User
 import java.util.UUID
@@ -23,7 +23,7 @@ class FacilityRepositoryAndroidTest {
   lateinit var repository: FacilityRepository
 
   @Inject
-  lateinit var patientFaker: PatientFaker
+  lateinit var testData: TestData
 
   private lateinit var user: User
 
@@ -32,16 +32,16 @@ class FacilityRepositoryAndroidTest {
     TestClinicApp.appComponent().inject(this)
     database.clearAllTables()
 
-    user = patientFaker.loggedInUser()
+    user = testData.loggedInUser()
     database.userDao().createOrUpdate(user)
   }
 
   @Test
   fun when_associating_a_user_with_facilities_then_only_one_facility_should_be_set_as_current_facility() {
-    val facility1 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility2 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility3 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility4 = patientFaker.facility(uuid = UUID.randomUUID())
+    val facility1 = testData.facility(uuid = UUID.randomUUID())
+    val facility2 = testData.facility(uuid = UUID.randomUUID())
+    val facility3 = testData.facility(uuid = UUID.randomUUID())
+    val facility4 = testData.facility(uuid = UUID.randomUUID())
     val facilities = listOf(facility1, facility2, facility3, facility4)
     database.facilityDao().save(facilities)
 
@@ -60,8 +60,8 @@ class FacilityRepositoryAndroidTest {
 
   @Test
   fun when_changing_the_current_facility_for_a_user_then_the_current_facility_should_get_set() {
-    val facility1 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility2 = patientFaker.facility(uuid = UUID.randomUUID())
+    val facility1 = testData.facility(uuid = UUID.randomUUID())
+    val facility2 = testData.facility(uuid = UUID.randomUUID())
     val facilities = listOf(facility1, facility2)
     database.facilityDao().save(facilities)
 
@@ -81,8 +81,8 @@ class FacilityRepositoryAndroidTest {
 
   @Test
   fun when_changing_the_facility_for_a_user_the_older_current_facility_should_get_unset() {
-    val facility1 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility2 = patientFaker.facility(uuid = UUID.randomUUID())
+    val facility1 = testData.facility(uuid = UUID.randomUUID())
+    val facility2 = testData.facility(uuid = UUID.randomUUID())
     val facilities = listOf(facility1, facility2)
     database.facilityDao().save(facilities)
 
@@ -102,9 +102,9 @@ class FacilityRepositoryAndroidTest {
 
   @Test(expected = AssertionError::class)
   fun when_associating_facilities_with_a_user_and_setting_the_current_facility_then_the_current_facility_should_be_part_of_associated_facilities() {
-    val facility1 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility2 = patientFaker.facility(uuid = UUID.randomUUID())
-    val facility3 = patientFaker.facility(uuid = UUID.randomUUID())
+    val facility1 = testData.facility(uuid = UUID.randomUUID())
+    val facility2 = testData.facility(uuid = UUID.randomUUID())
+    val facility3 = testData.facility(uuid = UUID.randomUUID())
     val facilityIds = listOf(facility1, facility2).map { it.uuid }
 
     database.userFacilityMappingDao().insertOrUpdate(user, facilityIds, facility3.uuid)

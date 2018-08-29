@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
@@ -61,7 +61,7 @@ class BloodPressureSyncAndroidTest {
   lateinit var faker: Faker
 
   @Inject
-  lateinit var patientFaker: PatientFaker
+  lateinit var testData: TestData
 
   @Before
   fun setUp() {

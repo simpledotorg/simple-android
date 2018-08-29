@@ -11,10 +11,7 @@ import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
-/**
- * Generates test data.
- * TODO: Rename to DataMocker.
- */
+/** Generates test data. */
 object PatientMocker {
 
   fun patient(

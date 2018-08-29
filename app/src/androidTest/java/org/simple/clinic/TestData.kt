@@ -19,14 +19,12 @@ import java.util.UUID
 import javax.inject.Inject
 import kotlin.reflect.KClass
 
-
 private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
   return enumClass.java.enumConstants.asList().shuffled().first()
 }
 
-// TODO: Rename to DataFaker.
 @AppScope
-class PatientFaker @Inject constructor(private val faker: Faker) {
+class TestData @Inject constructor(private val faker: Faker) {
 
   fun patientPayload(
       fullName: String = faker.name.name(),

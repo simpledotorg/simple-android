@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
@@ -22,7 +22,7 @@ class PatientRepositoryAndroidTest {
   lateinit var database: AppDatabase
 
   @Inject
-  lateinit var patientFaker: PatientFaker
+  lateinit var testData: TestData
 
   @Before
   fun setUp() {
@@ -359,7 +359,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_merging_patient_data_locally_it_should_also_add_them_to_the_fuzzy_search_table() {
-    val patientPayloads = listOf(patientFaker.patientPayload(fullName = "Abhaya Kumari"))
+    val patientPayloads = listOf(testData.patientPayload(fullName = "Abhaya Kumari"))
 
     repository.mergeWithLocalData(patientPayloads).blockingAwait()
     val searchResult = database.fuzzyPatientSearchDao().getEntriesForPatientIds(patientPayloads.map { it.uuid }).blockingGet()

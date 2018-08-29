@@ -6,7 +6,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApiV1
@@ -32,7 +32,7 @@ class UserSessionAndroidTest {
   lateinit var appDatabase: AppDatabase
 
   @Inject
-  lateinit var patientFaker: PatientFaker
+  lateinit var testData: TestData
 
   @Inject
   lateinit var facilityApi: FacilitySyncApiV1
@@ -86,7 +86,7 @@ class UserSessionAndroidTest {
     appDatabase.facilityDao().save(facilities)
 
     val selectedFacilities = facilities.subList(0, 2)
-    val ongoingRegistrationEntry = patientFaker.ongoingRegistrationEntry(selectedFacilities)
+    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(selectedFacilities)
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
         .andThen(userSession.loginFromOngoingRegistrationEntry())
         .blockingAwait()
@@ -127,7 +127,7 @@ class UserSessionAndroidTest {
     appDatabase.facilityDao().save(facilities)
 
     val selectedFacilities = facilities.subList(0, 2)
-    val ongoingRegistrationEntry = patientFaker.ongoingRegistrationEntry(selectedFacilities)
+    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(selectedFacilities)
 
     val registrationResult = userSession
         .saveOngoingRegistrationEntry(ongoingRegistrationEntry)

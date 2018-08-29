@@ -12,7 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.PatientFaker
+import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.sync.PatientPushRequest
@@ -56,7 +56,7 @@ class PatientSyncAndroidTest {
   lateinit var faker: Faker
 
   @Inject
-  lateinit var patientFaker: PatientFaker
+  lateinit var testData: TestData
 
   private val oldDateFormatter = SimpleDateFormat("dd/MM/yyyy")
   private val genders = listOf(Gender.MALE, Gender.FEMALE, Gender.TRANSGENDER).shuffled()
@@ -117,7 +117,7 @@ class PatientSyncAndroidTest {
     return withDOB.andThen(withoutDOB)
   }
 
-  private fun dummyPatientPayloads(count: Int) = (0..count).map { patientFaker.patientPayload() }
+  private fun dummyPatientPayloads(count: Int) = (0..count).map { testData.patientPayload() }
 
   @Test
   fun when_pending_sync_patients_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {

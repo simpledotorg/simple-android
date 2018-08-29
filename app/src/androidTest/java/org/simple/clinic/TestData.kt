@@ -11,6 +11,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -25,6 +26,15 @@ private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
 
 @AppScope
 class TestData @Inject constructor(private val faker: Faker) {
+
+  fun qaUserUuid() = UUID.fromString("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+
+  fun qaOngoingLoginEntry() = OngoingLoginEntry(qaUserUuid(), phoneNumber = "0000", pin = "0000")
+
+  @Deprecated(message = "Get real facilities from the server instead. Look at UserSessionAndroidTest for examples.")
+  fun qaUserFacilityUuid(): UUID {
+    return UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
+  }
 
   fun patientPayload(
       fullName: String = faker.name.name(),
@@ -141,8 +151,8 @@ class TestData @Inject constructor(private val faker: Faker) {
         diastolic = diastolic,
         createdAt = Instant.now(),
         updatedAt = Instant.now(),
-        userUuid = TestClinicApp.qaUserUuid(),
-        facilityUuid = TestClinicApp.qaUserFacilityUuid(),
+        userUuid = qaUserUuid(),
+        facilityUuid = qaUserFacilityUuid(),
         patientUuid = patientUuid)
   }
 }

@@ -12,8 +12,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
@@ -65,7 +65,7 @@ class PatientSyncAndroidTest {
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
-    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
         .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)

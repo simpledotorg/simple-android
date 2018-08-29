@@ -1,19 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.home.overdue.OverdueScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/overdue_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:visibility="gone" />
 
-  <TextView
-    android:id="@+id/overdue_empty_list_text"
+  <LinearLayout
+    android:id="@+id/overdue_list_empty_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="@dimen/spacing_24"
     android:gravity="center"
-    android:text="@string/overdue_no_patients"
-    android:textSize="@dimen/textsize_20" />
+    android:orientation="vertical">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif"
+      android:letterSpacing="0.01"
+      android:text="@string/overdue_no_patients"
+      android:textColor="@color/black_opacity_50"
+      android:textSize="@dimen/textsize_20"
+      android:textStyle="normal"
+      tools:ignore="UnusedAttribute" />
+
+    <ImageView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="40dp"
+      android:layout_marginTop="40dp"
+      android:contentDescription="@string/overdue_no_patients"
+      android:src="@drawable/ic_overdue_empty_list" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:fontFamily="sans-serif"
+      android:text="@string/overdue_empty_desc"
+      android:textColor="@color/black_opacity_50"
+      android:textSize="@dimen/textsize_16"
+      android:textStyle="normal" />
+
+  </LinearLayout>
 
 </org.simple.clinic.home.overdue.OverdueScreen>

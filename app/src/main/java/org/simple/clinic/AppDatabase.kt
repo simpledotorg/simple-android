@@ -10,7 +10,7 @@ import android.arch.persistence.room.migration.Migration
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.overdue.FollowUpSchedule
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -38,7 +38,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Facility::class,
       User::class,
       LoggedInUserFacilityMapping::class,
-      FollowUpSchedule::class],
+      Appointment::class],
     version = 9,
     exportSchema = true)
 @TypeConverters(
@@ -48,8 +48,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     SyncStatus.RoomTypeConverter::class,
     UserStatus.RoomTypeConverter::class,
     User.LoggedInStatus.RoomTypeConverter::class,
-    FollowUpSchedule.UserAction.RoomTypeConverter::class,
-    FollowUpSchedule.UserActionReason.RoomTypeConverter::class,
+    Appointment.Status.RoomTypeConverter::class,
+    Appointment.StatusReason.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class)
@@ -79,7 +79,7 @@ abstract class AppDatabase : RoomDatabase() {
 
   fun fuzzyPatientSearchDao(): PatientFuzzySearch.PatientFuzzySearchDao = patientFuzzyPatientSearchDao
 
-  abstract fun followUpScheduleDao() : FollowUpSchedule.RoomDao
+  abstract fun appointmentDao(): Appointment.RoomDao
 
   class Migration_3_4 : Migration(3, 4) {
 
@@ -202,18 +202,18 @@ abstract class AppDatabase : RoomDatabase() {
 
     override fun migrate(database: SupportSQLiteDatabase) {
       database.execSQL("""
-        CREATE TABLE IF NOT EXISTS `FollowUpSchedule` (
-        `id` TEXT NOT NULL,
-        `patientId` TEXT NOT NULL,
-        `facilityId` TEXT NOT NULL,
-        `nextVisit` TEXT NOT NULL,
-        `userAction` TEXT NOT NULL,
-        `actionByUserId` TEXT NOT NULL,
-        `reasonForAction` TEXT NOT NULL,
-        `createdAt` TEXT NOT NULL,
-        `updatedAt` TEXT NOT NULL,
-        PRIMARY KEY(`id`))
-        """)
+        CREATE TABLE IF NOT EXISTS `Appointment` (
+            `id` TEXT NOT NULL,
+            `patientId` TEXT NOT NULL,
+            `facilityId` TEXT NOT NULL,
+            `date` TEXT NOT NULL,
+            `status` TEXT NOT NULL,
+            `statusReason` TEXT NOT NULL,
+            `syncStatus` TEXT NOT NULL,
+            `createdAt` TEXT NOT NULL,
+            `updatedAt` TEXT NOT NULL,
+            PRIMARY KEY(`id`))
+      """)
     }
   }
 }

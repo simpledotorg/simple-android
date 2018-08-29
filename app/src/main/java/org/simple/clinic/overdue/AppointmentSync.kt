@@ -8,11 +8,11 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-class FollowUpScheduleSync @Inject constructor(
+class AppointmentSync @Inject constructor(
     private val dataSync: DataSync,
-    private val repository: FollowUpScheduleRepository,
-    private val api: FollowUpScheduleSyncApiV1,
-    @Named("last_followupschedule_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    private val repository: AppointmentRepository,
+    private val api: AppointmentSyncApiV1,
+    @Named("last_appointment_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable {
@@ -30,23 +30,22 @@ class FollowUpScheduleSync @Inject constructor(
         pullNetworkCall = api::pull)
   }
 
-  private fun toRequest(schedules: List<FollowUpSchedule>): FollowUpSchedulePushRequest {
+  private fun toRequest(schedules: List<Appointment>): AppointmentPushRequest {
     val payloads = schedules
         .map {
           it.run {
-            FollowUpSchedulePayload(
+            AppointmentPayload(
                 id = id,
                 patientId = patientId,
                 facilityId = facilityId,
-                nextVisit = nextVisit,
-                userAction = userAction,
-                actionByUserId = actionByUserId,
-                reasonForAction = reasonForAction,
+                date = date,
+                status = status,
+                statusReason = statusReason,
                 createdAt = createdAt,
                 updatedAt = updatedAt)
           }
         }
         .toList()
-    return FollowUpSchedulePushRequest(payloads)
+    return AppointmentPushRequest(payloads)
   }
 }

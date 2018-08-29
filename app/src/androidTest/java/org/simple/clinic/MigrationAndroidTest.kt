@@ -103,8 +103,8 @@ class MigrationAndroidTest {
     helper.createDatabase(TEST_DB_NAME, 8)
     val db_v9 = helper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, AppDatabase.Migration_8_9())
 
-    db_v9.query("SELECT * FROM `FollowUpSchedule`").use {
-      assertThat(it.columnCount).isAtLeast(1)
+    db_v9.query("SELECT * FROM `Appointment`").use {
+      assertThat(it.columnCount).isEqualTo(9)
     }
   }
 }

@@ -8,16 +8,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface FollowUpScheduleSyncApiV1 {
+interface AppointmentSyncApiV1 {
 
-  @POST("v1/follow_up_schedules/sync")
+  @POST("v1/appointments/sync")
   fun push(
-      @Body body: FollowUpSchedulePushRequest
+      @Body body: AppointmentPushRequest
   ): Single<DataPushResponse>
 
-  @GET("v1/follow_up_schedules/sync")
+  @GET("v1/appointments/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("processed_since") lastPullTimestamp: Instant? = null
-  ): Single<FollowUpSchedulePullResponse>
+  ): Single<AppointmentPullResponse>
 }

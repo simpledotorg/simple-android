@@ -8,7 +8,7 @@ import org.threeten.bp.LocalDate
 import java.util.UUID
 
 @JsonClass(generateAdapter = true)
-data class FollowUpSchedulePayload(
+data class AppointmentPayload(
     @Json(name = "id")
     val id: UUID,
 
@@ -18,17 +18,14 @@ data class FollowUpSchedulePayload(
     @Json(name = "facility_id")
     val facilityId: UUID,
 
-    @Json(name = "next_visit")
-    val nextVisit: LocalDate,
+    @Json(name = "date")
+    val date: LocalDate,
 
-    @Json(name = "user_action")
-    val userAction: FollowUpSchedule.UserAction,
+    @Json(name = "status")
+    val status: Appointment.Status,
 
-    @Json(name = "action_by_user_id")
-    val actionByUserId: UUID,
-
-    @Json(name = "reason_for_action")
-    val reasonForAction: FollowUpSchedule.UserActionReason,
+    @Json(name = "status_reason")
+    val statusReason: Appointment.StatusReason,
 
     @Json(name = "created_at")
     val createdAt: Instant,
@@ -36,4 +33,4 @@ data class FollowUpSchedulePayload(
     @Json(name = "updated_at")
     val updatedAt: Instant
 
-) : SynceablePayload<FollowUpSchedule>
+) : SynceablePayload<Appointment>

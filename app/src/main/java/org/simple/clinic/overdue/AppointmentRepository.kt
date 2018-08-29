@@ -8,15 +8,15 @@ import org.simple.clinic.sync.SynceableRepository
 import java.util.UUID
 import javax.inject.Inject
 
-class FollowUpScheduleRepository @Inject constructor(val dao: FollowUpSchedule.RoomDao) : SynceableRepository<FollowUpSchedule, FollowUpSchedulePayload> {
+class AppointmentRepository @Inject constructor(val dao: Appointment.RoomDao) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun save(vararg schedules: FollowUpSchedule): Completable {
+  fun save(vararg schedules: Appointment): Completable {
     return Completable.fromAction {
       dao.save(schedules.toList())
     }
   }
 
-  override fun pendingSyncRecords(): Single<List<FollowUpSchedule>> {
+  override fun pendingSyncRecords(): Single<List<Appointment>> {
     return dao.withSyncStatus(SyncStatus.PENDING).firstOrError()
   }
 
@@ -31,9 +31,9 @@ class FollowUpScheduleRepository @Inject constructor(val dao: FollowUpSchedule.R
     return Completable.fromAction { dao.updateSyncStatus(ids, to) }
   }
 
-  override fun mergeWithLocalData(payloads: List<FollowUpSchedulePayload>): Completable {
+  override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {
     val newOrUpdatedSchedules = payloads
-        .filter { payload: FollowUpSchedulePayload ->
+        .filter { payload: AppointmentPayload ->
           val localCopy = dao.getOne(payload.id)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
@@ -43,16 +43,15 @@ class FollowUpScheduleRepository @Inject constructor(val dao: FollowUpSchedule.R
     return Completable.fromAction { dao.save(newOrUpdatedSchedules) }
   }
 
-  private fun toDatabaseModel(payload: FollowUpSchedulePayload, syncStatus: SyncStatus): FollowUpSchedule {
+  private fun toDatabaseModel(payload: AppointmentPayload, syncStatus: SyncStatus): Appointment {
     return payload.run {
-      FollowUpSchedule(
+      Appointment(
           id = id,
           facilityId = facilityId,
-          nextVisit = nextVisit,
-          userAction = userAction,
           patientId = patientId,
-          actionByUserId = actionByUserId,
-          reasonForAction = reasonForAction,
+          date = date,
+          status = status,
+          statusReason = statusReason,
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt)

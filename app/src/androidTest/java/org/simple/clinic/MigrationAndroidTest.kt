@@ -10,6 +10,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.storage.Migration_6_7
+import org.simple.clinic.storage.Migration_7_8
+import org.simple.clinic.storage.Migration_8_9
 
 private const val TEST_DB_NAME = "migration-test"
 
@@ -43,7 +46,7 @@ class MigrationAndroidTest {
         '2018-06-21T10:15:58.666Z')
     """)
 
-    val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, AppDatabase.Migration_6_7())
+    val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, Migration_6_7())
 
     val cursor = db_v7.query("SELECT * FROM `LoggedInUserFacilityMapping`")
     cursor.use {
@@ -63,7 +66,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_6_to_7_without_an_existing_user() {
     helper.createDatabase(TEST_DB_NAME, 6)
-    val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, AppDatabase.Migration_6_7())
+    val db_v7 = helper.runMigrationsAndValidate(TEST_DB_NAME, 7, true, Migration_6_7())
 
     val cursor = db_v7.query("SELECT * FROM LoggedInUserFacilityMapping")
 
@@ -88,7 +91,7 @@ class MigrationAndroidTest {
         '2018-06-21T10:15:58.666Z')
     """)
 
-    val db_v8 = helper.runMigrationsAndValidate(TEST_DB_NAME, 8, true, AppDatabase.Migration_7_8())
+    val db_v8 = helper.runMigrationsAndValidate(TEST_DB_NAME, 8, true, Migration_7_8())
 
     val cursor = db_v8.query("""SELECT "loggedInStatus" FROM "LoggedInUser" WHERE "uuid"='c6834f82-3305-4144-9dc8-5f77c908ebf1'""")
 
@@ -101,7 +104,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_8_to_9() {
     helper.createDatabase(TEST_DB_NAME, 8)
-    val db_v9 = helper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, AppDatabase.Migration_8_9())
+    val db_v9 = helper.runMigrationsAndValidate(TEST_DB_NAME, 9, true, Migration_8_9())
 
     db_v9.query("SELECT * FROM `Appointment`").use {
       assertThat(it.columnCount).isEqualTo(9)

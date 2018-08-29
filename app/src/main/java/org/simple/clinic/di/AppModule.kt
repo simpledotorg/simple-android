@@ -15,6 +15,12 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.storage.Migration_3_4
+import org.simple.clinic.storage.Migration_4_5
+import org.simple.clinic.storage.Migration_5_6
+import org.simple.clinic.storage.Migration_6_7
+import org.simple.clinic.storage.Migration_7_8
+import org.simple.clinic.storage.Migration_8_9
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
 
@@ -40,12 +46,12 @@ class AppModule(private val appContext: Application, private val databaseName: S
           }
         })
         .addMigrations(
-            AppDatabase.Migration_3_4(),
-            AppDatabase.Migration_4_5(),
-            AppDatabase.Migration_5_6(),
-            AppDatabase.Migration_6_7(),
-            AppDatabase.Migration_7_8(),
-            AppDatabase.Migration_8_9())
+            Migration_3_4(),
+            Migration_4_5(),
+            Migration_5_6(),
+            Migration_6_7(),
+            Migration_7_8(),
+            Migration_8_9())
         .build()
   }
 

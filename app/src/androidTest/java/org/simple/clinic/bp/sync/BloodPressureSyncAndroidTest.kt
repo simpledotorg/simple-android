@@ -12,8 +12,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.login.LoginResult
@@ -55,9 +55,6 @@ class BloodPressureSyncAndroidTest {
   lateinit var bpSync: BloodPressureSync
 
   @Inject
-  lateinit var bpSyncApiV1: BloodPressureSyncApiV1
-
-  @Inject
   lateinit var faker: Faker
 
   @Inject
@@ -67,14 +64,14 @@ class BloodPressureSyncAndroidTest {
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
-    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
         .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyMeasurements(count: Int): Completable {
-    val facilityUUID = TestClinicApp.qaUserFacilityUuid()
+    val facilityUUID = testData.qaUserFacilityUuid()
     database.facilityDao().save(listOf(
         Facility(
             facilityUUID,

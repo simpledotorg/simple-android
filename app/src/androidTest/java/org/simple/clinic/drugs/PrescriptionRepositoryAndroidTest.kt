@@ -9,6 +9,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.Gender
@@ -38,11 +39,14 @@ class PrescriptionRepositoryAndroidTest {
   @Inject
   lateinit var faker: Faker
 
+  @Inject
+  lateinit var testData: TestData
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
 
-    val loginResult = userSession.saveOngoingLoginEntry(TestClinicApp.qaOngoingLoginEntry())
+    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
         .andThen(userSession.loginWithOtp("0000"))
         .blockingGet()
     assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
@@ -50,7 +54,7 @@ class PrescriptionRepositoryAndroidTest {
 
   @Test
   fun prescriptions_for_a_patient_should_exclude_soft_deleted_prescriptions() {
-    val facilityUUID = TestClinicApp.qaUserFacilityUuid()
+    val facilityUUID = testData.qaUserFacilityUuid()
     database.facilityDao().save(listOf(
         Facility(
             facilityUUID,

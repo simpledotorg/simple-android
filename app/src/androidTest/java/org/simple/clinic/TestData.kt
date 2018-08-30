@@ -6,6 +6,8 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentPayload
+import org.simple.clinic.overdue.communication.Communication
+import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
@@ -185,6 +187,33 @@ class TestData @Inject constructor(private val faker: Faker) {
         facilityId = qaUserFacilityUuid(),
         status = randomOfEnum(Appointment.Status::class),
         statusReason = randomOfEnum(Appointment.StatusReason::class),
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+  }
+
+  fun communication(
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): Communication {
+    return Communication(
+        id = UUID.randomUUID(),
+        appointmentId = UUID.randomUUID(),
+        userId = qaUserUuid(),
+        type = randomOfEnum(Communication.Type::class),
+        result = randomOfEnum(Communication.Result::class),
+        syncStatus = syncStatus,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+  }
+
+  fun communicationPayload(
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): CommunicationPayload {
+    return CommunicationPayload(
+        id = UUID.randomUUID(),
+        appointmentId = UUID.randomUUID(),
+        userId = qaUserUuid(),
+        type = randomOfEnum(Communication.Type::class),
+        result = randomOfEnum(Communication.Result::class),
         createdAt = Instant.now(),
         updatedAt = Instant.now())
   }

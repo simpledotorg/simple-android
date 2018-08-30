@@ -13,6 +13,7 @@ import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
+import org.simple.clinic.storage.Migration_9_10
 
 private const val TEST_DB_NAME = "migration-test"
 
@@ -108,6 +109,16 @@ class MigrationAndroidTest {
 
     db_v9.query("SELECT * FROM `Appointment`").use {
       assertThat(it.columnCount).isEqualTo(9)
+    }
+  }
+
+  @Test
+  fun migration_9_to_10() {
+    helper.createDatabase(TEST_DB_NAME, 9)
+    val db_v10 = helper.runMigrationsAndValidate(TEST_DB_NAME, 10, true, Migration_9_10())
+
+    db_v10.query("SELECT * FROM `Communication`").use {
+      assertThat(it.columnCount).isEqualTo(8)
     }
   }
 }

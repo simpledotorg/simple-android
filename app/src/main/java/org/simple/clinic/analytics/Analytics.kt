@@ -23,4 +23,8 @@ object Analytics {
   fun reportScreenChange(outgoingScreen: String, incomingScreen: String) {
     reporters.forEach { it.safeReport { createEvent("ScreenChange", mapOf("outgoing" to outgoingScreen, "incoming" to incomingScreen)) } }
   }
+
+  fun reportInputValidationError(error: String) {
+    reporters.forEach { it.safeReport { createEvent("InputValidationError", mapOf("name" to error)) } }
+  }
 }

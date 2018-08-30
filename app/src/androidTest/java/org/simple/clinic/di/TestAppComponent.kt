@@ -10,6 +10,7 @@ import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentSyncAndroidTest
+import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTest
 import org.simple.clinic.overdue.communication.CommunicationSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
@@ -33,4 +34,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: AppointmentSyncAndroidTest)
   fun inject(target: CommunicationSyncAndroidTest)
   fun inject(target: AppointmentRepositoryAndroidTest)
+  fun inject(target: CommunicationRepositoryAndroidTest)
 }

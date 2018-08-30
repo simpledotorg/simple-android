@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue.communication
 
+import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
@@ -8,6 +9,7 @@ import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.login.LoginResult
@@ -20,6 +22,7 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
+@RunWith(AndroidJUnit4::class)
 class CommunicationSyncAndroidTest {
 
   @Inject

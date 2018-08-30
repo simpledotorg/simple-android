@@ -22,8 +22,8 @@ class AppointmentRepository @Inject constructor(
     return facilityRepository
         .currentFacility(userSession)
         .take(1)
-        .flatMapCompletable { facility ->
-          val appointment = Appointment(
+        .map { facility ->
+          Appointment(
               id = UUID.randomUUID(),
               patientId = patientId,
               facilityId = facility.uuid,
@@ -33,8 +33,8 @@ class AppointmentRepository @Inject constructor(
               syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(),
               updatedAt = Instant.now())
-          save(listOf(appointment))
         }
+        .flatMapCompletable { save(listOf(it)) }
   }
 
   fun save(appointments: List<Appointment>): Completable {

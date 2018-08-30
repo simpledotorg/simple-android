@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
@@ -34,8 +35,8 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.nullIfBlank
-import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -269,6 +270,7 @@ class PatientEntryScreenController @Inject constructor(
 
     val showErrors = errors
         .flatMapIterable { it }
+        .doOnNext { Analytics.reportInputValidationError(it.analyticsName) }
         .map {
           val change: UiChange = when (it) {
             FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }

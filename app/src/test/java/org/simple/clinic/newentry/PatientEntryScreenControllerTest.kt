@@ -14,9 +14,12 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
@@ -26,8 +29,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -42,6 +45,7 @@ class PatientEntryScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator)
+  private val reporter = MockReporter()
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -54,6 +58,7 @@ class PatientEntryScreenControllerTest {
     uiEvents
         .compose(controller)
         .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
+    Analytics.addReporter(reporter)
   }
 
   @Test
@@ -224,6 +229,39 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
+  fun `when input validation fails, the errors must be sent to analytics`() {
+    uiEvents.onNext(PatientFullNameTextChanged(""))
+    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged(""))
+    uiEvents.onNext(PatientGenderChanged(None))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
+    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientDistrictTextChanged(""))
+    uiEvents.onNext(PatientStateTextChanged(""))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    whenever(dobValidator.validate("33/33/3333")).thenReturn(Result.DATE_IS_IN_FUTURE)
+    uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    whenever(dobValidator.validate(" ")).thenReturn(Result.INVALID_PATTERN)
+    uiEvents.onNext(PatientAgeTextChanged(" "))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    whenever(dobValidator.validate("16/07/2018")).thenReturn(Result.INVALID_PATTERN)
+    uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    val validationErrors = reporter.receivedEvents
+        .filter { it.name == "InputValidationError" }
+
+    assertThat(validationErrors).isNotEmpty()
+  }
+
+  @Test
   fun `validation errors should be cleared on every input change`() {
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -376,5 +414,11 @@ class PatientEntryScreenControllerTest {
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showEmptyDistrictError(true)
     inOrder.verify(screen).scrollToFirstFieldWithError()
+  }
+
+  @After
+  fun tearDown() {
+    Analytics.removeReporter(reporter)
+    reporter.clearReceivedEvents()
   }
 }

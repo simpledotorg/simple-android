@@ -1,6 +1,7 @@
 package org.simple.clinic.overdue
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
@@ -41,6 +42,10 @@ class AppointmentRepository @Inject constructor(
     return Completable.fromAction {
       dao.save(appointments)
     }
+  }
+
+  fun appointments(): Observable<List<Appointment>> {
+    return dao.appointments().toObservable()
   }
 
   override fun pendingSyncRecords(): Single<List<Appointment>> {

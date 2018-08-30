@@ -78,5 +78,8 @@ data class Appointment(
 
     @Query("SELECT COUNT(id) FROM Appointment")
     fun count(): Int
+
+    @Query("SELECT * FROM Appointment")
+    fun appointments(): Flowable<List<Appointment>>
   }
 }

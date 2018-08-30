@@ -161,4 +161,13 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue yet</string>
   <string name="overdue_empty_desc">You’ll be able to call patients who are overdue for a follow-up blood pressure reading.</string>
+  <plurals name="overdue_list_item_patient_bp">
+    <item quantity="one">%1$d day ago: %2$d / %3$d</item>
+    <item quantity="other">%1$d days ago: %2$d / %3$d</item>
+  </plurals>
+  <plurals name="overdue_list_item_overdue_days">
+    <item quantity="one">%d day overdue</item>
+    <item quantity="other">%d days overdue</item>
+  </plurals>
+  <string name="overdue_list_item_patient_gender_age">(%s, %d)</string>
 </resources>

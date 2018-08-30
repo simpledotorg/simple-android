@@ -41,7 +41,6 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
 
-
 @AppScope
 class UserSession @Inject constructor(
     private val loginApi: LoginApiV1,

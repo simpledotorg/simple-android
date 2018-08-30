@@ -1,7 +1,6 @@
 package org.simple.clinic.registration.facility
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -39,9 +38,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   @Inject
   lateinit var appDatabase: AppDatabase
-
-  @Inject
-  lateinit var sharedPrefs: SharedPreferences
 
   private val toolbar by bindView<Toolbar>(R.id.registrationfacilities_toolbar)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)

@@ -66,7 +66,7 @@ data class Communication(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(schedules: List<Communication>)
 
-    @Query("SELECT COUNT(*) FROM Communication")
+    @Query("SELECT COUNT(id) FROM Communication")
     fun count(): Int
   }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import io.reactivex.Observable
@@ -23,8 +24,10 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var controller: OverdueScreenController
 
+  private val listAdapter = OverdueListAdapter()
+
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
-  private val emptyOverdueListView by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
+  private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -45,13 +48,23 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   private fun setupOverdueList() {
-    overdueRecyclerView.adapter = OverdueListAdapter()
+    overdueRecyclerView.adapter = listAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
   }
 
   private fun screenCreates() = Observable.just(OverdueScreenCreated())
 
-  fun updateOverdueList() {
+  fun updateList(list: List<OverdueListItem>) {
+    listAdapter.submitList(list)
+  }
 
+  fun handleEmptyList(isEmpty: Boolean) {
+    if (isEmpty) {
+      overdueRecyclerView.visibility = View.GONE
+      viewForEmptyList.visibility = View.VISIBLE
+    } else {
+      overdueRecyclerView.visibility = View.VISIBLE
+      viewForEmptyList.visibility = View.GONE
+    }
   }
 }

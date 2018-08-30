@@ -4,14 +4,16 @@ import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
-/** Generates test data. */
 object PatientMocker {
 
   fun patient(
@@ -118,6 +120,20 @@ object PatientMocker {
         rxNormCode = "rxnormcode-1",
         dosages = dosages,
         protocolUUID = mock())
+  }
+
+  fun appointment(): Appointment {
+    return Appointment(
+        id = mock(),
+        patientId = mock(),
+        date = LocalDate.now(ZoneOffset.UTC).minusDays(10),
+        facilityId = mock(),
+        status = Appointment.Status.SCHEDULED,
+        statusReason = Appointment.StatusReason.PATIENT_NOT_RESPONDING,
+        syncStatus = mock(),
+        createdAt = mock(),
+        updatedAt = mock()
+    )
   }
 
   fun loggedInUser(

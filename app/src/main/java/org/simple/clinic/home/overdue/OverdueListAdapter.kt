@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotterknife.bindView
 import org.simple.clinic.R
+import java.util.UUID
 
 class OverdueListAdapter : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
 
@@ -23,12 +24,13 @@ class OverdueListAdapter : ListAdapter<OverdueListItem, OverdueListViewHolder>(O
 }
 
 data class OverdueListItem(
+    val appointmentId: UUID,
     val name: String,
     val gender: String,
     val age: Int,
     val bpSystolic: Int,
     val bpDiastolic: Int,
-    val bpDate: String,
+    val bpDaysAgo: Int,
     val overdueDays: Int
 )
 
@@ -41,19 +43,15 @@ class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
   fun render(item: OverdueListItem) {
     patientName.text = item.name
-    patientBP.text = "${item.bpDate} days ago: ${item.bpSystolic} / ${item.bpDiastolic}"
-    overdueDays.text = "${item.overdueDays} days overdue"
-    patientGenderAge.text = "(${item.gender}, ${item.age})"
+    patientBP.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_patient_bp, item.bpDaysAgo, item.bpSystolic, item.bpDiastolic)
+    overdueDays.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_overdue_days, item.overdueDays)
+    patientGenderAge.text = itemView.context.getString(R.string.overdue_list_item_patient_gender_age, item.gender, item.age)
   }
 }
 
 class OverdueListDiffer : DiffUtil.ItemCallback<OverdueListItem>() {
 
-  override fun areItemsTheSame(oldItem: OverdueListItem?, newItem: OverdueListItem?): Boolean {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
+  override fun areItemsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem.appointmentId == newItem.appointmentId
 
-  override fun areContentsTheSame(oldItem: OverdueListItem?, newItem: OverdueListItem?): Boolean {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-  }
+  override fun areContentsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem == newItem
 }

@@ -5,6 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:animateLayoutChanges="true"
+  android:background="@color/white"
   android:orientation="vertical">
 
   <android.support.v7.widget.Toolbar
@@ -55,13 +56,4 @@
       android:layout_height="wrap_content"
       android:text="@string/registrationfacilities_retry" />
   </LinearLayout>
-
-  <Button
-    android:id="@+id/registrationfacilities_done"
-    style="@style/Clinic.Button.Flat"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
-    android:background="@drawable/background_login_submit_button"
-    android:text="@string/registrationfacilities_done" />
 </org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen>

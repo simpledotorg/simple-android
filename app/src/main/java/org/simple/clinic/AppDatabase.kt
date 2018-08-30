@@ -1,5 +1,3 @@
-@file:Suppress("ClassName")
-
 package org.simple.clinic
 
 import android.arch.persistence.room.Database
@@ -9,6 +7,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -35,8 +34,9 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Facility::class,
       User::class,
       LoggedInUserFacilityMapping::class,
-      Appointment::class],
-    version = 9,
+      Appointment::class,
+      Communication::class],
+    version = 10,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -47,6 +47,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     User.LoggedInStatus.RoomTypeConverter::class,
     Appointment.Status.RoomTypeConverter::class,
     Appointment.StatusReason.RoomTypeConverter::class,
+    Communication.Type.RoomTypeConverter::class,
+    Communication.Result.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class)
@@ -77,4 +79,6 @@ abstract class AppDatabase : RoomDatabase() {
   fun fuzzyPatientSearchDao(): PatientFuzzySearch.PatientFuzzySearchDao = patientFuzzyPatientSearchDao
 
   abstract fun appointmentDao(): Appointment.RoomDao
+
+  abstract fun communicationDao(): Communication.RoomDao
 }

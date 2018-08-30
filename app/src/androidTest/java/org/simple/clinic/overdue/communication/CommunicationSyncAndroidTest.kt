@@ -1,4 +1,4 @@
-package org.simple.clinic.overdue
+package org.simple.clinic.overdue.communication
 
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
@@ -20,29 +20,29 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
-class AppointmentSyncAndroidTest {
+class CommunicationSyncAndroidTest {
 
   @Inject
   lateinit var configProvider: Single<SyncConfig>
 
   @Inject
-  lateinit var repository: AppointmentRepository
+  lateinit var repository: CommunicationRepository
 
   @Inject
-  lateinit var dao: Appointment.RoomDao
+  lateinit var dao: Communication.RoomDao
 
   @Inject
   lateinit var userSession: UserSession
 
   @Inject
-  @field:Named("last_appointment_pull_timestamp")
+  @field:Named("last_communication_pull_timestamp")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject
-  lateinit var sync: AppointmentSync
+  lateinit var sync: CommunicationSync
 
   @Inject
-  lateinit var syncApi: AppointmentSyncApiV1
+  lateinit var syncApi: CommunicationSyncApiV1
 
   @Inject
   lateinit var testData: TestData
@@ -59,7 +59,7 @@ class AppointmentSyncAndroidTest {
 
   private fun insertDummyRecords(count: Int): Completable {
     return Observable.range(0, count)
-        .map { testData.appointment(syncStatus = SyncStatus.PENDING) }
+        .map { testData.communication(syncStatus = SyncStatus.PENDING) }
         .toList()
         .flatMapCompletable { repository.save(it) }
   }
@@ -80,9 +80,9 @@ class AppointmentSyncAndroidTest {
     lastPullTimestamp.set(Just(Instant.EPOCH))
 
     val recordsToInsert = 2 * configProvider.blockingGet().batchSize + 7
-    val dummyPayloads = (0 until recordsToInsert).map { testData.appointmentPayload() }
+    val dummyPayloads = (0 until recordsToInsert).map { testData.communicationPayload() }
 
-    syncApi.push(AppointmentPushRequest(dummyPayloads))
+    syncApi.push(CommunicationPushRequest(dummyPayloads))
         .toCompletable()
         .andThen(sync.pull())
         .blockingGet()

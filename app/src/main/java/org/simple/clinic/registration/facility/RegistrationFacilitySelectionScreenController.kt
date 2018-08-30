@@ -3,11 +3,8 @@ package org.simple.clinic.registration.facility
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
@@ -30,14 +27,10 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    val transformedEvents = replayedEvents
-        .mergeWith(handleFacilitySelectionChanges(replayedEvents))
-
     return Observable.mergeArray(
-        fetchFacilities(transformedEvents),
-        showFacilities(transformedEvents),
-        enableDoneButtonOnFacilitySelection(transformedEvents),
-        proceedOnDoneClicks(transformedEvents))
+        fetchFacilities(replayedEvents),
+        showFacilities(replayedEvents),
+        proceedOnFacilityClicks(replayedEvents))
   }
 
   private fun fetchFacilities(events: Observable<UiEvent>): Observable<UiChange> {
@@ -68,63 +61,26 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         }
   }
 
-  private fun handleFacilitySelectionChanges(events: Observable<UiEvent>): Observable<UiEvent> {
-    return events
-        .ofType<RegistrationFacilitySelectionChanged>()
-        .scan(emptySet<Facility>()) { selectedFacilities, changeEvent ->
-          if (changeEvent.isSelected) {
-            selectedFacilities + changeEvent.facility
-          } else {
-            selectedFacilities - changeEvent.facility
-          }
-        }
-        .map(::RegistrationSelectedFacilitiesChanged)
-  }
-
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
     val facilitiesStream = events
         .ofType<ScreenCreated>()
         .flatMap { facilityRepository.facilities() }
 
-    val facilitySelections = events
-        .ofType<RegistrationSelectedFacilitiesChanged>()
-        .map { it.selectedFacilities }
-
-    return Observables.combineLatest(facilitiesStream, facilitySelections)
-        .map { (facilities, selectedFacilities) ->
-          facilities
-              .map { FacilityListItem(facility = it, isSelected = selectedFacilities.contains(it)) }
-        }
+    return facilitiesStream
         .map { { ui: Ui -> ui.updateFacilities(it) } }
   }
 
-  private fun proceedOnDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    val selectedFacilityUuids = events
-        .ofType<RegistrationSelectedFacilitiesChanged>()
-        .map { it.selectedFacilities.map { it.uuid } }
-
+  private fun proceedOnFacilityClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<RegistrationFacilitySelectionDoneClicked>()
-        .withLatestFrom(selectedFacilityUuids)
-        .flatMap { (_, selectedUuids) ->
+        .ofType<RegistrationFacilityClicked>()
+        .map { it.facility }
+        .flatMap { facility ->
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(facilityIds = selectedUuids) }
+              .map { it.copy(facilityIds = listOf(facility.uuid)) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(userSession.loginFromOngoingRegistrationEntry())
               .andThen(registrationScheduler.schedule())
               .andThen(Observable.just({ ui: Ui -> ui.openHomeScreen() }))
-        }
-  }
-
-  private fun enableDoneButtonOnFacilitySelection(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationSelectedFacilitiesChanged>()
-        .map { it.selectedFacilities.size }
-        .map { selected ->
-          when {
-            selected > 0 -> { ui: Ui -> ui.enableDoneButton() }
-            else -> { ui: Ui -> ui.disableDoneButton() }
-          }
         }
   }
 }

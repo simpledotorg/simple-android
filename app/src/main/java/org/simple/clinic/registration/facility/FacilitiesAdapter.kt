@@ -5,8 +5,6 @@ import android.support.v7.util.DiffUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
-import android.widget.CompoundButton
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.PublishSubject
@@ -20,17 +18,17 @@ import org.simple.clinic.widgets.UiEvent
  * FYI: We tried using Groupie for facility screen, but it was resulting in a weird
  * error where a CheckBox click was leading to callbacks from two CheckBoxes in two rows.
  */
-class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(FacilityDiffer()) {
+class FacilitiesAdapter : ListAdapter<Facility, FacilityViewHolder>(FacilityDiffer()) {
 
-  val uiEvents = PublishSubject.create<UiEvent>()!!
+  val facilityClicks = PublishSubject.create<UiEvent>()!!
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection, parent, false)
-    return FacilityViewHolder(layout, uiEvents)
+    return FacilityViewHolder(layout, facilityClicks)
   }
 
   override fun onBindViewHolder(holder: FacilityViewHolder, position: Int) {
-    holder.item = getItem(position)
+    holder.facility = getItem(position)
     holder.render()
   }
 
@@ -40,36 +38,19 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   }
 }
 
-data class FacilityListItem(
-    val facility: Facility,
-    val isSelected: Boolean
-)
-
 class FacilityViewHolder(rootView: View, uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {
-  private val selectionCheckbox by bindView<CheckBox>(R.id.facility_item_selection_checkbox)
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
 
-  private val checkedChangeListener: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(item.facility, isChecked))
-  }
-
-  lateinit var item: FacilityListItem
+  lateinit var facility: Facility
 
   init {
     itemView.setOnClickListener {
-      selectionCheckbox.performClick()
+      uiEvents.onNext(RegistrationFacilityClicked(facility))
     }
   }
 
   fun render() {
-    val facility = item.facility
-    val isSelected = item.isSelected
-
-    selectionCheckbox.setOnCheckedChangeListener(null)
-    selectionCheckbox.isChecked = isSelected
-    selectionCheckbox.setOnCheckedChangeListener(checkedChangeListener)
-
     nameTextView.text = facility.name
 
     if (facility.streetAddress.isNullOrBlank()) {
@@ -87,7 +68,7 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<UiEvent>) : ViewHolde
   }
 }
 
-class FacilityDiffer : DiffUtil.ItemCallback<FacilityListItem>() {
-  override fun areItemsTheSame(oldItem: FacilityListItem, newItem: FacilityListItem) = oldItem.facility.uuid == newItem.facility.uuid
-  override fun areContentsTheSame(oldItem: FacilityListItem, newItem: FacilityListItem) = oldItem == newItem
+class FacilityDiffer : DiffUtil.ItemCallback<Facility>() {
+  override fun areItemsTheSame(oldItem: Facility, newItem: Facility) = oldItem.uuid == newItem.uuid
+  override fun areContentsTheSame(oldItem: Facility, newItem: Facility) = oldItem == newItem
 }

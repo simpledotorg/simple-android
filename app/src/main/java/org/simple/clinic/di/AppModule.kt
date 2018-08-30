@@ -21,6 +21,7 @@ import org.simple.clinic.storage.Migration_5_6
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
+import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
 
@@ -51,7 +52,8 @@ class AppModule(private val appContext: Application, private val databaseName: S
             Migration_5_6(),
             Migration_6_7(),
             Migration_7_8(),
-            Migration_8_9())
+            Migration_8_9(),
+            Migration_9_10())
         .build()
   }
 

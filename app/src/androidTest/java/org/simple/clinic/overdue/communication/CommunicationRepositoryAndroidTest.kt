@@ -1,4 +1,4 @@
-package org.simple.clinic.overdue
+package org.simple.clinic.overdue.communication
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
@@ -11,15 +11,14 @@ import org.simple.clinic.TestData
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
-import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
-class AppointmentRepositoryAndroidTest {
+class CommunicationRepositoryAndroidTest {
 
   @Inject
-  lateinit var repository: AppointmentRepository
+  lateinit var repository: CommunicationRepository
 
   @Inject
   lateinit var userSession: UserSession
@@ -38,18 +37,18 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now()
-    repository.schedule(patientId, appointmentDate).blockingAwait()
+  fun when_creating_new_communication_then_the_communication_should_be_saved() {
+    val appointmentId = UUID.randomUUID()
 
-    val savedAppointment = repository.pendingSyncRecords().blockingGet().first()
-    savedAppointment.apply {
-      assertThat(this.patientId).isEqualTo(patientId)
-      assertThat(this.date).isEqualTo(appointmentDate)
-      assertThat(this.date).isEqualTo(appointmentDate)
-      assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
-      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+    repository
+        .create(appointmentId, Communication.Type.MANUAL_CALL, result = Communication.Result.AGREED_TO_VISIT)
+        .blockingAwait()
+
+    val savedCommunication = repository.pendingSyncRecords().blockingGet()[0]
+    savedCommunication.apply {
+      assertThat(this.appointmentId).isEqualTo(appointmentId)
+      assertThat(this.type).isEqualTo(Communication.Type.MANUAL_CALL)
+      assertThat(this.result).isEqualTo(Communication.Result.AGREED_TO_VISIT)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
   }

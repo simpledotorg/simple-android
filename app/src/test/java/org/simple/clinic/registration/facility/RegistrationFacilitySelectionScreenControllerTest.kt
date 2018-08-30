@@ -105,31 +105,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen, times(2)).updateFacilities(listOf(
-        FacilityListItem(facility = facility1, isSelected = false),
-        FacilityListItem(facility = facility2, isSelected = false)))
+    verify(screen, times(2)).updateFacilities(listOf(facility1, facility2))
   }
 
   @Test
-  fun `when a facility is selected then the UI models for facility list should be reconstructed`() {
-    val facility1 = PatientMocker.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
-    val facility2 = PatientMocker.facility(name = "Ulsoor", uuid = UUID.randomUUID())
-
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(listOf(facility1, facility2)))
-
-    uiEvents.onNext(ScreenCreated())
-
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility1, isSelected = true))
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility2, isSelected = true))
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility2, isSelected = false))
-
-    verify(screen).updateFacilities(listOf(FacilityListItem(facility1, isSelected = false), FacilityListItem(facility2, isSelected = false)))
-    verify(screen, times(2)).updateFacilities(listOf(FacilityListItem(facility1, isSelected = true), FacilityListItem(facility2, isSelected = false)))
-    verify(screen).updateFacilities(listOf(FacilityListItem(facility1, isSelected = true), FacilityListItem(facility2, isSelected = true)))
-  }
-
-  @Test
-  fun `when done is clicked then the ongoing entry should be updated with selected facilities and the user should be logged in`() {
+  fun `when a facility is clicked then the ongoing entry should be updated with selected facility and the user should be logged in`() {
     val ongoingEntry = OngoingRegistrationEntry(
         uuid = UUID.randomUUID(),
         phoneNumber = "1234567890",
@@ -143,32 +123,12 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(registrationScheduler.schedule()).thenReturn(Completable.complete())
 
     val facility1 = PatientMocker.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
-    val facility2 = PatientMocker.facility(name = "Ulsoor", uuid = UUID.randomUUID())
-
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility1, isSelected = true))
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility2, isSelected = true))
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility2, isSelected = false))
-    uiEvents.onNext(RegistrationFacilitySelectionDoneClicked())
+    uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
     val inOrder = inOrder(userSession, registrationScheduler, screen)
     inOrder.verify(userSession).loginFromOngoingRegistrationEntry()
     inOrder.verify(registrationScheduler).schedule()
     inOrder.verify(screen).openHomeScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityIds = listOf(facility1.uuid)))
-  }
-
-  @Test
-  fun `done button should remain disabled until a facility is selected`() {
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.never())
-
-    val facility = PatientMocker.facility(name = "Ulsoor", uuid = UUID.randomUUID())
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility, isSelected = true))
-    uiEvents.onNext(RegistrationFacilitySelectionChanged(facility, isSelected = false))
-
-    verify(screen).enableDoneButton()
-    verify(screen, times(2)).disableDoneButton()
   }
 }

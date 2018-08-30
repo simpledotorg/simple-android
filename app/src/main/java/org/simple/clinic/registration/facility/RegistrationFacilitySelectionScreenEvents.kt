@@ -7,14 +7,6 @@ class RegistrationFacilitySelectionRetryClicked : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Retry Clicked"
 }
 
-data class RegistrationFacilitySelectionChanged(val facility: Facility, val isSelected: Boolean) : UiEvent {
-  override val analyticsName = "Registration:Facility Selection:Changed Selection Of A Facility"
-}
-
-data class RegistrationSelectedFacilitiesChanged(val selectedFacilities: Set<Facility>) : UiEvent {
-  override val analyticsName = "Registration:Facility Selection:Changed Selected Facilities"
-}
-
-class RegistrationFacilitySelectionDoneClicked : UiEvent {
+data class RegistrationFacilityClicked(val facility: Facility) : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Done Clicked"
 }

@@ -18,6 +18,7 @@ import kotterknife.bindView
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -42,7 +43,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   private val toolbar by bindView<Toolbar>(R.id.registrationfacilities_toolbar)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
   private val progressView by bindView<View>(R.id.registrationfacilities_progress)
-  private val doneButton by bindView<Button>(R.id.registrationfacilities_done)
   private val errorContainer by bindView<ViewGroup>(R.id.registrationfacilities_error_container)
   private val errorTextView by bindView<TextView>(R.id.registrationfacilities_error)
   private val errorRetryButton by bindView<Button>(R.id.registrationfacilities_error_retry)
@@ -56,7 +56,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), retryClicks(), recyclerViewAdapter.uiEvents, doneClicks())
+    Observable.mergeArray(screenCreates(), retryClicks(), recyclerViewAdapter.facilityClicks)
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -77,11 +77,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
       RxView
           .clicks(errorRetryButton)
           .map { RegistrationFacilitySelectionRetryClicked() }
-
-  private fun doneClicks() =
-      RxView
-          .clicks(doneButton)
-          .map { RegistrationFacilitySelectionDoneClicked() }
 
   fun showProgressIndicator() {
     progressView.visibility = VISIBLE
@@ -105,19 +100,11 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     errorContainer.visibility = View.GONE
   }
 
-  fun updateFacilities(facilityItems: List<FacilityListItem>) {
+  fun updateFacilities(facilityItems: List<Facility>) {
     recyclerViewAdapter.submitList(facilityItems)
   }
 
   fun openHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
-  }
-
-  fun enableDoneButton() {
-    doneButton.isEnabled = true
-  }
-
-  fun disableDoneButton() {
-    doneButton.isEnabled = false
   }
 }

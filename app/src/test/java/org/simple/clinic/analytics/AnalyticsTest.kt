@@ -24,58 +24,26 @@ class AnalyticsTest {
 
   @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
-    Analytics.addReporter(object : Reporter {
-      override fun createEvent(event: String, props: Map<String, Any>) {
-        throw RuntimeException()
-      }
-
-      override fun setProperty(key: String, value: Any) {
-        throw RuntimeException()
-      }
-    })
+    Analytics.addReporter(FailingReporter())
     Analytics.reportUserInteraction("Test")
   }
 
   @Test
   fun `when a reporter fails when sending screen change events, no error should be thrown`() {
-    Analytics.addReporter(object : Reporter {
-      override fun createEvent(event: String, props: Map<String, Any>) {
-        throw RuntimeException()
-      }
-
-      override fun setProperty(key: String, value: Any) {
-        throw RuntimeException()
-      }
-    })
+    Analytics.addReporter(FailingReporter())
     Analytics.reportScreenChange("Screen 1", "Screen 2")
   }
 
   @Test
   fun `when a reporter fails when sending validation error events, no error should be thrown`() {
-    Analytics.addReporter(object : Reporter {
-      override fun createEvent(event: String, props: Map<String, Any>) {
-        throw RuntimeException()
-      }
-
-      override fun setProperty(key: String, value: Any) {
-        throw RuntimeException()
-      }
-    })
+    Analytics.addReporter(FailingReporter())
     Analytics.reportInputValidationError("Error")
   }
 
   @Test
   fun `when multiple reporters are present and one throws an error, the others should receive the events`() {
     val reporter1 = MockReporter()
-    val reporter2 = object : Reporter {
-      override fun createEvent(event: String, props: Map<String, Any>) {
-        throw RuntimeException()
-      }
-
-      override fun setProperty(key: String, value: Any) {
-        throw RuntimeException()
-      }
-    }
+    val reporter2 = FailingReporter()
     val reporter3 = MockReporter()
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
@@ -103,5 +71,20 @@ class AnalyticsTest {
   @After
   fun tearDown() {
     Analytics.clearReporters()
+  }
+
+  private class FailingReporter : Reporter {
+
+    override fun setUserIdentity(id: String) {
+      throw RuntimeException()
+    }
+
+    override fun createEvent(event: String, props: Map<String, Any>) {
+      throw RuntimeException()
+    }
+
+    override fun setProperty(key: String, value: Any) {
+      throw RuntimeException()
+    }
   }
 }

@@ -4,6 +4,8 @@ import timber.log.Timber
 
 interface Reporter {
 
+  fun setUserIdentity(id: String)
+
   fun createEvent(event: String, props: Map<String, Any>)
 
   fun setProperty(key: String, value: Any)

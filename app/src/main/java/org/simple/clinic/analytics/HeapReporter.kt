@@ -10,6 +10,10 @@ class HeapReporter(context: Context, debug: Boolean = false) : Reporter {
     Heap.init(context.applicationContext, BuildConfig.HEAP_ID, debug)
   }
 
+  override fun setUserIdentity(id: String) {
+    Heap.identify(id)
+  }
+
   override fun createEvent(event: String, props: Map<String, Any>) {
     Heap.track(event, props.mapValues { (_, value) -> value.toString() })
   }

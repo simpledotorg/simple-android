@@ -15,9 +15,12 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.MediaType
 import okhttp3.ResponseBody
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
@@ -48,6 +51,7 @@ class UserSessionTest {
   private val appDatabase = mock<AppDatabase>()
   private val passwordHasher = mock<PasswordHasher>()
   private val userDao = mock<User.RoomDao>()
+  private val reporter = MockReporter()
 
   private val moshi = Moshi.Builder().build()
   private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
@@ -80,6 +84,8 @@ class UserSessionTest {
     whenever(appDatabase.userDao()).thenReturn(userDao)
 
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
+
+    Analytics.addReporter(reporter)
   }
 
   @Test
@@ -101,6 +107,30 @@ class UserSessionTest {
 
     val result4 = userSession.loginWithOtp("").blockingGet()
     assertThat(result4).isInstanceOf(LoginResult.NetworkError::class.java)
+  }
+
+  @Test
+  fun `if login is successful, the user id must be set in analytics`() {
+    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
+
+    val result = userSession.loginWithOtp("").blockingGet()
+    assertThat(result).isInstanceOf(LoginResult.Success::class.java)
+    assertThat(reporter.setUserIds).isNotEmpty()
+    assertThat(reporter.setUserIds.last()).isEqualTo(loggedInUserPayload.uuid.toString())
+  }
+
+  @Test
+  fun `if login fails, the user id must not be set in analytics`() {
+    whenever(loginApi.login(any()))
+        .thenReturn(Single.error(NullPointerException()))
+        .thenReturn(Single.error(unauthorizedHttpError()))
+        .thenReturn(Single.error(SocketTimeoutException()))
+
+    userSession.loginWithOtp("").blockingGet()
+    userSession.loginWithOtp("").blockingGet()
+    userSession.loginWithOtp("").blockingGet()
+
+    assertThat(reporter.setUserIds).isEmpty()
   }
 
   private fun unauthorizedHttpError(): HttpException {
@@ -132,7 +162,7 @@ class UserSessionTest {
   }
 
   @Test
-  fun `when the server sends a user without facilities during registration ethen registration should be canceled`() {
+  fun `when the server sends a user without facilities during registration then registration should be canceled`() {
     whenever(appDatabase.userDao().user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser())))
 
     val userFacility = PatientMocker.facility()
@@ -145,6 +175,24 @@ class UserSessionTest {
 
     val registrationResult = userSession.register().blockingGet()
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Error::class.java)
+  }
+
+  @Test
+  fun `when the user registration is completed, the user id must be set in the analytics`() {
+    val user = PatientMocker.loggedInUser()
+    whenever(appDatabase.userDao().user()).thenReturn(Flowable.just(listOf(user)))
+
+    val userFacility = PatientMocker.facility()
+    whenever(facilityRepository.facilityUuidsForUser(any())).thenReturn(Observable.just(listOf(userFacility.uuid)))
+
+    val response = RegistrationResponse(
+        userPayload = PatientMocker.loggedInUserPayload(uuid = user.uuid, facilityUuids = listOf(userFacility.uuid)),
+        accessToken = "token")
+    whenever(registrationApi.createUser(any())).thenReturn(Single.just(response))
+
+    userSession.register().blockingGet()
+    assertThat(reporter.setUserIds).isNotEmpty()
+    assertThat(reporter.setUserIds.last()).isEqualTo(user.uuid.toString())
   }
 
   @Test
@@ -193,5 +241,11 @@ class UserSessionTest {
 
     result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
     assertThat(result).isInstanceOf(SaveUserLocallyResult.NetworkError::class.java)
+  }
+
+  @After
+  fun tearDown() {
+    reporter.clear()
+    Analytics.clearReporters()
   }
 }

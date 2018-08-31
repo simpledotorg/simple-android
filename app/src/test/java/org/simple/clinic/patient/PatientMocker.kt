@@ -137,7 +137,7 @@ object PatientMocker {
   }
 
   fun loggedInUser(
-      uuid: UUID = mock(),
+      uuid: UUID = UUID.randomUUID(),
       name: String = "a name",
       phone: String = "a phone",
       pinDigest: String = "a hash",

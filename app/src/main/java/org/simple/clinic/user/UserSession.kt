@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityPullResult.NetworkError
 import org.simple.clinic.facility.FacilityPullResult.Success
@@ -78,6 +79,7 @@ class UserSession @Inject constructor(
         }
         .flatMap {
           storeUserAndAccessToken(it)
+              .doOnComplete { Analytics.setUserId(it.loggedInUser.uuid) }
               .toSingleDefault(it)
         }
         .map { LoginResult.Success() as LoginResult }
@@ -200,6 +202,7 @@ class UserSession @Inject constructor(
         .flatMap { registrationApi.createUser(it) }
         .flatMap {
           storeUserAndAccessToken(it)
+              .doOnComplete { Analytics.setUserId(it.userPayload.uuid) }
               .toSingleDefault(RegistrationResult.Success() as RegistrationResult)
         }
         .onErrorReturn { e ->

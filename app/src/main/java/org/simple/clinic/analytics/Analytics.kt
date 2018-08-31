@@ -17,14 +17,14 @@ object Analytics {
   }
 
   fun reportUserInteraction(name: String) {
-    reporters.forEach { it.safeReport("Error reporting interaction!") { createEvent("UserInteraction", mapOf("name" to name)) } }
+    reporters.forEach { it.safely("Error reporting interaction!") { createEvent("UserInteraction", mapOf("name" to name)) } }
   }
 
   fun reportScreenChange(outgoingScreen: String, incomingScreen: String) {
-    reporters.forEach { it.safeReport { createEvent("ScreenChange", mapOf("outgoing" to outgoingScreen, "incoming" to incomingScreen)) } }
+    reporters.forEach { it.safely { createEvent("ScreenChange", mapOf("outgoing" to outgoingScreen, "incoming" to incomingScreen)) } }
   }
 
   fun reportInputValidationError(error: String) {
-    reporters.forEach { it.safeReport { createEvent("InputValidationError", mapOf("name" to error)) } }
+    reporters.forEach { it.safely { createEvent("InputValidationError", mapOf("name" to error)) } }
   }
 }

@@ -286,4 +286,33 @@
   <style name="Clinic.DismissUserApprovedStatusTheme">
     <item name="colorControlHighlight">#4099ff66</item>
   </style>
+
+  <style name="Clinic.FacilitySelection" />
+
+  <style name="Clinic.FacilitySelection.FacilityName">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textColor">@color/black_opacity_90</item>
+    <item name="android:textSize">@dimen/textsize_16</item>
+  </style>
+
+  <style name="Clinic.FacilitySelection.FacilityAddress">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">2dp</item>
+    <item name="android:textColor">@color/black_opacity_50</item>
+  </style>
+
+  <style name="Clinic.FacilitySelection.FacilitySeparator" parent="Clinic.Separator.VerticalContent">
+    <item name="android:layout_marginTop">@dimen/spacing_16</item>
+  </style>
+
+  <style name="Clinic.FacilitySelection.FacilityContainer">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:orientation">vertical</item>
+    <item name="android:paddingEnd">@dimen/spacing_24</item>
+    <item name="android:paddingStart">@dimen/spacing_24</item>
+    <item name="android:paddingTop">@dimen/spacing_16</item>
+  </style>
 </resources>

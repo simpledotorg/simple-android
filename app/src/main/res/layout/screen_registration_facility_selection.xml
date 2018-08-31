@@ -15,11 +15,12 @@
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:title="@string/registrationfacilities_screen_title" />
 
-  <ProgressBar
+  <include
     android:id="@+id/registrationfacilities_progress"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_centerInParent="true"
+    layout="@layout/screen_registration_facility_selection_progress_state"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/registrationfacilities_toolbar"
     android:visibility="gone" />
 
   <android.support.v7.widget.RecyclerView

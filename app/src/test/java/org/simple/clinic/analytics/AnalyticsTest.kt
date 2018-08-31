@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockReporter.Event
+import java.util.UUID
 
 class AnalyticsTest {
 
@@ -23,6 +24,11 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when setting the user id without any reporters, no error should be thrown`() {
+    Analytics.setUserId(UUID.randomUUID())
+  }
+
+  @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
     Analytics.addReporter(FailingReporter())
     Analytics.reportUserInteraction("Test")
@@ -38,6 +44,26 @@ class AnalyticsTest {
   fun `when a reporter fails when sending validation error events, no error should be thrown`() {
     Analytics.addReporter(FailingReporter())
     Analytics.reportInputValidationError("Error")
+  }
+
+  @Test
+  fun `when a reporter fails when setting the user id, no  error should be thrown`() {
+    Analytics.addReporter(FailingReporter())
+    Analytics.setUserId(UUID.randomUUID())
+  }
+
+  @Test
+  fun `when multiple reporters are present and one throws an error, the user id must by set on the others`() {
+    val reporter1 = MockReporter()
+    val reporter2 = FailingReporter()
+    val reporter3 = MockReporter()
+
+    Analytics.addReporter(reporter1, reporter2, reporter3)
+    val userId = UUID.randomUUID()
+    Analytics.setUserId(userId)
+
+    assertThat(reporter1.setUserIds.first()).isEqualTo(userId.toString())
+    assertThat(reporter3.setUserIds.first()).isEqualTo(userId.toString())
   }
 
   @Test

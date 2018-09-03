@@ -20,7 +20,7 @@ class AppointmentRepository @Inject constructor(
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
-    return facilityRepository
+    val newAppointmentStream = facilityRepository
         .currentFacility(userSession)
         .take(1)
         .map { facility ->
@@ -36,6 +36,18 @@ class AppointmentRepository @Inject constructor(
               updatedAt = Instant.now())
         }
         .flatMapCompletable { save(listOf(it)) }
+
+    return cancelScheduledAppointments(patientUuid).andThen(newAppointmentStream)
+  }
+
+  private fun cancelScheduledAppointments(patientId: UUID): Completable {
+    return Completable.fromAction {
+      dao.cancelScheduledAppointmentsForPatient(
+          patientId = patientId,
+          cancelledStatus = Appointment.Status.CANCELLED,
+          scheduledStatus = Appointment.Status.SCHEDULED,
+          newSyncStatus = SyncStatus.PENDING)
+    }
   }
 
   fun save(appointments: List<Appointment>): Completable {

@@ -47,7 +47,36 @@ class AppointmentRepositoryAndroidTest {
     savedAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.date).isEqualTo(appointmentDate)
-      assertThat(this.date).isEqualTo(appointmentDate)
+      assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
+      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
+    }
+  }
+
+  @Test
+  fun when_creating_new_appointment_then_all_old_appointments_for_that_patient_should_be_canceled() {
+    val patientId = UUID.randomUUID()
+
+    val date1 = LocalDate.now()
+    repository.schedule(patientId, date1).blockingAwait()
+
+    val date2 = LocalDate.now().plusDays(10)
+    repository.schedule(patientId, date2).blockingAwait()
+
+    val savedAppointment = repository.pendingSyncRecords().blockingGet()
+    assertThat(savedAppointment).hasSize(2)
+
+    savedAppointment[0].apply {
+      assertThat(this.patientUuid).isEqualTo(patientId)
+      assertThat(this.date).isEqualTo(date1)
+      assertThat(this.status).isEqualTo(Appointment.Status.CANCELLED)
+      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
+    }
+
+    savedAppointment[1].apply {
+      assertThat(this.patientUuid).isEqualTo(patientId)
+      assertThat(this.date).isEqualTo(date2)
       assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
       assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)

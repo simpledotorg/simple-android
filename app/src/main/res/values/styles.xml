@@ -93,19 +93,9 @@
 
   <style name="Clinic.LoginPinPhoneNumber" parent="Clinic.LoginLogo.Large">
     <item name="android:paddingBottom">26dp</item>
-    <item name="android:paddingTop">44dp</item>
+    <item name="android:paddingTop">0dp</item>
     <item name="android:textColor">@color/white_opacity_90</item>
     <item name="android:textSize">32sp</item>
-  </style>
-
-  <style name="Clinic.LoginPinEditText">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:layout_marginTop">@dimen/spacing_8</item>
-    <item name="android:gravity">center</item>
-    <item name="android:inputType">numberPassword</item>
-    <item name="android:maxLength">4</item>
-    <item name="android:textSize">@dimen/textsize_18</item>
   </style>
 
   <style name="Clinic.LoginPinErrorText">
@@ -115,6 +105,7 @@
     <item name="android:textColor">@color/red_700</item>
     <item name="android:textSize">@dimen/textsize_18</item>
     <item name="android:visibility">gone</item>
+    <item name="android:layout_marginTop">@dimen/spacing_16</item>
   </style>
 
   <style name="Clinic.LoginPinLabel">
@@ -134,6 +125,7 @@
     <item name="android:paddingEnd">@dimen/spacing_24</item>
     <item name="android:paddingStart">@dimen/spacing_24</item>
     <item name="android:paddingTop">@dimen/spacing_24</item>
+    <item name="android:animateLayoutChanges">true</item>
   </style>
 
   <style name="Clinic.LoginCard">
@@ -143,6 +135,23 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginEnd">@dimen/spacing_24</item>
     <item name="android:layout_marginStart">@dimen/spacing_24</item>
+  </style>
+
+  <style name="Clinic.PinEditText">
+    <item name="android:layout_width">160dp</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_marginTop">@dimen/spacing_12</item>
+    <item name="android:gravity">center</item>
+    <item name="android:inputType">numberPassword</item>
+    <item name="android:maxLength">4</item>
+    <item name="android:digits">1234567890</item>
+    <item name="android:textSize">@dimen/textsize_20</item>
+    <item name="pinAnimationType">none</item>
+    <item name="pinCharacterMask">\u25CF</item>
+    <item name="pinCharacterSpacing">@dimen/spacing_8</item>
+    <item name="pinLineColors">@color/pin_edittext_underline</item>
+    <item name="pinLineStroke">1dp</item>
+    <item name="pinLineStrokeSelected">1dp</item>
   </style>
 
   <style name="Clinic.DoneFrame">

@@ -200,4 +200,5 @@ dependencies {
   implementation "io.github.inflationx:viewpump:$versions.viewPump"
   implementation "com.heapanalytics.android:heap-android-client:$versions.heap"
   implementation "com.facebook.shimmer:shimmer:$versions.fbShimmer"
+  implementation "com.alimuzaffar.lib:pinentryedittext:$versions.pinEntryEditText"
 }

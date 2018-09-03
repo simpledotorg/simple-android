@@ -26,7 +26,7 @@ class OverdueScreenController @Inject constructor(
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
     val dbStream = events
         .ofType<OverdueScreenCreated>()
-        .flatMap { appointmentRepo.appointments() }
+        .flatMap { appointmentRepo.overdueAppointments() }
 
     val updateListStream = dbStream
         .map { appointments ->

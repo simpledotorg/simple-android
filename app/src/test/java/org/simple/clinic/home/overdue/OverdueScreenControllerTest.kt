@@ -30,7 +30,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is retrieved, show it`() {
-    whenever(appointmentRepo.appointments()).thenReturn(Observable.just(listOf(PatientMocker.appointment())))
+    whenever(appointmentRepo.overdueAppointments()).thenReturn(Observable.just(listOf(PatientMocker.appointment())))
 
     uiEvents.onNext(OverdueScreenCreated())
 
@@ -41,7 +41,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is empty, show empty list UI`() {
-    whenever(appointmentRepo.appointments()).thenReturn(Observable.just(listOf()))
+    whenever(appointmentRepo.overdueAppointments()).thenReturn(Observable.just(listOf()))
 
     uiEvents.onNext(OverdueScreenCreated())
 

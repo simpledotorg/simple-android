@@ -83,6 +83,31 @@ class AppointmentRepositoryAndroidTest {
     }
   }
 
+  @Test
+  fun when_fetching_appointments_then_only_return_overdue_appointments() {
+    val patient1 = UUID.randomUUID()
+    val date1 = LocalDate.now()
+    repository.schedule(patient1, date1).blockingAwait()
+
+    val patient2 = UUID.randomUUID()
+    val date2 = LocalDate.now().plusDays(10)
+    repository.schedule(patient2, date2).blockingAwait()
+
+    val patient3 = UUID.randomUUID()
+    val date3 = LocalDate.now().minusDays(10)
+    repository.schedule(patient3, date3).blockingAwait()
+
+    val appointments = repository.overdueAppointments().blockingFirst()
+    assertThat(appointments).hasSize(1)
+
+    appointments.first().apply {
+      assertThat(this.patientId).isEqualTo(patient3)
+      assertThat(this.date).isEqualTo(date3)
+      assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
+      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+    }
+  }
+
   @After
   fun tearDown() {
     userSession.logout().blockingAwait()

@@ -286,6 +286,18 @@ class UserSession @Inject constructor(
     return jsonAdapter.fromJson(error.response().errorBody()!!.source())!!
   }
 
+  fun clearLoggedInUser(): Completable {
+    return loggedInUser()
+        .firstOrError()
+        .filter { it is Just<User> }
+        .map { (user) -> user!! }
+        .flatMapCompletable {
+          Completable.fromAction {
+            appDatabase.userDao().deleteUserAndFacilityMappings(it, appDatabase.userFacilityMappingDao())
+          }
+        }
+  }
+
   fun logout(): Completable {
     // FYI: RegistrationWorker doesn't get canceled when a user logs out.
     // It's possible that the wrong user will get sent to the server for

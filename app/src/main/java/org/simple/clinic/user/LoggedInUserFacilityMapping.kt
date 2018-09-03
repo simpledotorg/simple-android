@@ -97,5 +97,8 @@ data class LoggedInUserFacilityMapping(
 
     @Query("SELECT * FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
     abstract fun mappingsForUser(userUuid: UUID): Flowable<List<LoggedInUserFacilityMapping>>
+
+    @Query("DELETE FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
+    abstract fun deleteMappingsForUser(userUuid: UUID)
   }
 }

@@ -21,6 +21,8 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.router.screen.BackPressInterceptCallback
+import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.UiEvent
@@ -72,9 +74,24 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
       RxTextView.editorActions(pinEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { PinSubmitClicked() }
 
-  private fun backClicks() =
-      RxView.clicks(backButton)
-          .map { PinBackClicked() }
+  private fun backClicks(): Observable<PinBackClicked> {
+
+    val backClicksFromView = RxView.clicks(backButton).map { PinBackClicked() }
+
+    val backClicksFromSystem =  Observable.create<PinBackClicked> { emitter ->
+      val backPressInterceptor = object : BackPressInterceptor {
+        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
+          emitter.onNext(PinBackClicked())
+        }
+      }
+
+      screenRouter.registerBackPressInterceptor(backPressInterceptor)
+
+      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(backPressInterceptor) }
+    }
+
+    return backClicksFromView.mergeWith(backClicksFromSystem)
+  }
 
   private fun otpReceived(): Observable<LoginPinOtpReceived>? {
     val key = screenRouter.key<LoginPinScreenKey>(this)
@@ -130,7 +147,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.REPLACE)
   }
 
-  fun goBackToLoginPhoneScreen() {
+  fun goBackToRegistrationScreen() {
     screenRouter.pop()
   }
 }

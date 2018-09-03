@@ -8,14 +8,15 @@ import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class AppointmentPayload(
+
     @Json(name = "id")
-    val id: UUID,
+    val uuid: UUID,
 
     @Json(name = "patient_id")
-    val patientId: UUID,
+    val patientUuid: UUID,
 
     @Json(name = "facility_id")
-    val facilityId: UUID,
+    val facilityUuid: UUID,
 
     @Json(name = "date")
     val date: LocalDate,
@@ -31,5 +32,4 @@ data class AppointmentPayload(
 
     @Json(name = "updated_at")
     val updatedAt: Instant
-
 )

@@ -35,9 +35,9 @@ class CommunicationSync @Inject constructor(
         .map {
           it.run {
             CommunicationPayload(
-                id = id,
-                appointmentId = appointmentId,
-                userId = userId,
+                uuid = uuid,
+                appointmentUuid = appointmentUuid,
+                userUuid = userUuid,
                 type = type,
                 result = result,
                 createdAt = createdAt,

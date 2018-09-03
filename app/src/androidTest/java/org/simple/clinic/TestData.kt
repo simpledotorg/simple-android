@@ -168,10 +168,10 @@ class TestData @Inject constructor(private val faker: Faker) {
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): Appointment {
     return Appointment(
-        id = UUID.randomUUID(),
-        patientId = UUID.randomUUID(),
+        uuid = UUID.randomUUID(),
+        patientUuid = UUID.randomUUID(),
         date = LocalDate.now(UTC).plusDays(30),
-        facilityId = qaUserFacilityUuid(),
+        facilityUuid = qaUserFacilityUuid(),
         status = randomOfEnum(Appointment.Status::class),
         statusReason = randomOfEnum(Appointment.StatusReason::class),
         syncStatus = syncStatus,
@@ -181,10 +181,10 @@ class TestData @Inject constructor(private val faker: Faker) {
 
   fun appointmentPayload(): AppointmentPayload {
     return AppointmentPayload(
-        id = UUID.randomUUID(),
-        patientId = UUID.randomUUID(),
+        uuid = UUID.randomUUID(),
+        patientUuid = UUID.randomUUID(),
         date = LocalDate.now(UTC).plusDays(30),
-        facilityId = qaUserFacilityUuid(),
+        facilityUuid = qaUserFacilityUuid(),
         status = randomOfEnum(Appointment.Status::class),
         statusReason = randomOfEnum(Appointment.StatusReason::class),
         createdAt = Instant.now(),
@@ -195,9 +195,9 @@ class TestData @Inject constructor(private val faker: Faker) {
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): Communication {
     return Communication(
-        id = UUID.randomUUID(),
-        appointmentId = UUID.randomUUID(),
-        userId = qaUserUuid(),
+        uuid = UUID.randomUUID(),
+        appointmentUuid = UUID.randomUUID(),
+        userUuid = qaUserUuid(),
         type = randomOfEnum(Communication.Type::class),
         result = randomOfEnum(Communication.Result::class),
         syncStatus = syncStatus,
@@ -209,9 +209,9 @@ class TestData @Inject constructor(private val faker: Faker) {
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): CommunicationPayload {
     return CommunicationPayload(
-        id = UUID.randomUUID(),
-        appointmentId = UUID.randomUUID(),
-        userId = qaUserUuid(),
+        uuid = UUID.randomUUID(),
+        appointmentUuid = UUID.randomUUID(),
+        userUuid = qaUserUuid(),
         type = randomOfEnum(Communication.Type::class),
         result = randomOfEnum(Communication.Result::class),
         createdAt = Instant.now(),

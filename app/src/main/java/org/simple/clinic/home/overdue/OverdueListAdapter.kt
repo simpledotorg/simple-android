@@ -24,7 +24,7 @@ class OverdueListAdapter : ListAdapter<OverdueListItem, OverdueListViewHolder>(O
 }
 
 data class OverdueListItem(
-    val appointmentId: UUID,
+    val appointmentUuid: UUID,
     val name: String,
     val gender: String,
     val age: Int,
@@ -51,7 +51,7 @@ class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
 class OverdueListDiffer : DiffUtil.ItemCallback<OverdueListItem>() {
 
-  override fun areItemsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem.appointmentId == newItem.appointmentId
+  override fun areItemsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem.appointmentUuid == newItem.appointmentUuid
 
   override fun areContentsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem == newItem
 }

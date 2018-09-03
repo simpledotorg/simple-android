@@ -45,6 +45,7 @@ class DebugClinicApp : ClinicApp() {
     super.onCreate()
     appComponent().inject(this)
     Analytics.addReporter(DebugReporter())
+    keepUserIdUpdatedInAnalytics()
 
     Timber.plant(Timber.DebugTree())
     Traceur.enableLogging()

@@ -45,7 +45,7 @@ class LoginPinScreenController @Inject constructor(
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PinScreenCreated>()
-        .flatMapSingle {
+        .flatMapSingle { _ ->
           userSession.ongoingLoginEntry()
               .map { { ui: Ui -> ui.showPhoneNumber(it.phoneNumber) } }
         }
@@ -179,6 +179,6 @@ class LoginPinScreenController @Inject constructor(
 
   private fun backClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PinBackClicked>()
-        .map { { ui: Ui -> ui.goBackToLoginPhoneScreen() } }
+        .map { { ui: Ui -> ui.goBackToRegistrationScreen() } }
   }
 }

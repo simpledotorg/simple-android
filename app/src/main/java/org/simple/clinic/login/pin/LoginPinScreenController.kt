@@ -179,6 +179,10 @@ class LoginPinScreenController @Inject constructor(
 
   private fun backClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PinBackClicked>()
-        .map { { ui: Ui -> ui.goBackToRegistrationScreen() } }
+        .flatMap {
+          userSession.clearLoggedInUser()
+              .andThen(userSession.clearOngoingLoginEntry())
+              .andThen(Observable.just({ ui: Ui -> ui.goBackToRegistrationScreen() }))
+        }
   }
 }

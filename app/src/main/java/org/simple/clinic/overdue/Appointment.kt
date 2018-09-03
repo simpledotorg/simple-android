@@ -79,12 +79,9 @@ data class Appointment(
     @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Int
 
-    @Query("SELECT * FROM Appointment WHERE status = :scheduledStatus AND date < :dateNow")
-    fun appointments(scheduledStatus: Status, dateNow: LocalDate): Flowable<List<Appointment>>
-
     @Query("""UPDATE Appointment
       SET status = :cancelledStatus, syncStatus = :newSyncStatus
-      WHERE patientId = :patientId AND status = :scheduledStatus""")
+      WHERE patientUuid = :patientId AND status = :scheduledStatus""")
     fun cancelScheduledAppointmentsForPatient(
         patientId: UUID,
         cancelledStatus: Status,

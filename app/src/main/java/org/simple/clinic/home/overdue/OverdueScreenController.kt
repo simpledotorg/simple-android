@@ -5,7 +5,9 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import javax.inject.Inject
@@ -32,14 +34,14 @@ class OverdueScreenController @Inject constructor(
         .map { appointments ->
           appointments.map {
             OverdueListItem(
-                appointmentUuid = it.uuid,
-                name = it.patientUuid.toString(),
-                gender = "Female",
+                appointmentUuid = it.appointment.uuid,
+                name = it.fullName,
+                gender = it.gender,
                 age = 22,
-                bpSystolic = 175,
-                bpDiastolic = 55,
-                bpDaysAgo = 30,
-                overdueDays = getOverdueDays(it.date))
+                bpSystolic = it.bloodPressure.systolic,
+                bpDiastolic = it.bloodPressure.diastolic,
+                bpDaysAgo = calculateDaysAgoFromInstant(it.bloodPressure.updatedAt),
+                overdueDays = calculateOverdueDays(it.appointment.date))
           }
         }
         .map { { ui: Ui -> ui.updateList(it) } }
@@ -51,7 +53,12 @@ class OverdueScreenController @Inject constructor(
     return updateListStream.mergeWith(emptyStateStream)
   }
 
-  private fun getOverdueDays(date: LocalDate): Int {
+  private fun calculateDaysAgoFromInstant(instant: Instant): Int {
+    val localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
+    return calculateOverdueDays(LocalDate.of(localDateTime.year, localDateTime.month, localDateTime.dayOfMonth))
+  }
+
+  private fun calculateOverdueDays(date: LocalDate): Int {
     return DAYS.between(date, LocalDate.now(ZoneOffset.UTC)).toInt()
   }
 }

@@ -5,6 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -19,6 +20,11 @@ class AppointmentModule {
   @Provides
   fun dao(appDatabase: AppDatabase): Appointment.RoomDao {
     return appDatabase.appointmentDao()
+  }
+
+  @Provides
+  fun overdueAppointmentDao(appDatabase: AppDatabase): OverdueAppointment.RoomDao {
+    return appDatabase.overdueAppointmentDao()
   }
 
   @Provides

@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
@@ -133,6 +134,28 @@ object PatientMocker {
         syncStatus = mock(),
         createdAt = mock(),
         updatedAt = mock()
+    )
+  }
+
+  fun overdueAppointment(
+      name: String = "somebody"
+  ): OverdueAppointment {
+    return OverdueAppointment(
+        fullName = name,
+        gender = mock(),
+        dateOfBirth = LocalDate.now(ZoneOffset.UTC).minusYears(30),
+        age = null,
+        appointment = appointment(),
+        bloodPressure = BloodPressureMeasurement(
+            uuid = mock(),
+            systolic = 175,
+            diastolic = 77,
+            createdAt = mock(),
+            updatedAt = Instant.now(),
+            syncStatus = SyncStatus.PENDING,
+            userUuid = mock(),
+            facilityUuid = mock(),
+            patientUuid = mock())
     )
   }
 

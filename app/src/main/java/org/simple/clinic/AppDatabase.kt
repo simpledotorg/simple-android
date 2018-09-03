@@ -6,6 +6,7 @@ import android.arch.persistence.room.TypeConverters
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.patient.Gender
@@ -81,4 +82,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun appointmentDao(): Appointment.RoomDao
 
   abstract fun communicationDao(): Communication.RoomDao
+
+  abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao
 }

@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.patient.Gender
 import java.util.UUID
 
 class OverdueListAdapter : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
@@ -26,7 +27,7 @@ class OverdueListAdapter : ListAdapter<OverdueListItem, OverdueListViewHolder>(O
 data class OverdueListItem(
     val appointmentUuid: UUID,
     val name: String,
-    val gender: String,
+    val gender: Gender,
     val age: Int,
     val bpSystolic: Int,
     val bpDiastolic: Int,
@@ -42,10 +43,11 @@ class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
   private val patientGenderAge by bindView<TextView>(R.id.overdue_gender_age)
 
   fun render(item: OverdueListItem) {
+    val context = itemView.context
     patientName.text = item.name
-    patientBP.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_patient_bp, item.bpDaysAgo, item.bpDaysAgo, item.bpSystolic, item.bpDiastolic)
-    overdueDays.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_overdue_days, item.overdueDays, item.overdueDays)
-    patientGenderAge.text = itemView.context.getString(R.string.overdue_list_item_patient_gender_age, item.gender, item.age)
+    patientBP.text = context.resources.getQuantityString(R.plurals.overdue_list_item_patient_bp, item.bpDaysAgo, item.bpDaysAgo, item.bpSystolic, item.bpDiastolic)
+    overdueDays.text = context.resources.getQuantityString(R.plurals.overdue_list_item_overdue_days, item.overdueDays, item.overdueDays)
+    patientGenderAge.text = context.getString(R.string.overdue_list_item_patient_gender_age, context.getString(item.gender.displayTextRes), item.age)
   }
 }
 

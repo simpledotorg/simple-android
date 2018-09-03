@@ -19,15 +19,15 @@ class AppointmentRepository @Inject constructor(
     val facilityRepository: FacilityRepository
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun schedule(patientId: UUID, appointmentDate: LocalDate): Completable {
+  fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
     return facilityRepository
         .currentFacility(userSession)
         .take(1)
         .map { facility ->
           Appointment(
-              id = UUID.randomUUID(),
-              patientId = patientId,
-              facilityId = facility.uuid,
+              uuid = UUID.randomUUID(),
+              patientUuid = patientUuid,
+              facilityUuid = facility.uuid,
               date = appointmentDate,
               status = Appointment.Status.SCHEDULED,
               statusReason = Appointment.StatusReason.NOT_CALLED_YET,
@@ -66,7 +66,7 @@ class AppointmentRepository @Inject constructor(
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {
     val newOrUpdatedAppointments = payloads
         .filter { payload: AppointmentPayload ->
-          val localCopy = dao.getOne(payload.id)
+          val localCopy = dao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map { toDatabaseModel(it, SyncStatus.DONE) }
@@ -78,9 +78,9 @@ class AppointmentRepository @Inject constructor(
   private fun toDatabaseModel(payload: AppointmentPayload, syncStatus: SyncStatus): Appointment {
     return payload.run {
       Appointment(
-          id = id,
-          facilityId = facilityId,
-          patientId = patientId,
+          uuid = uuid,
+          facilityUuid = facilityUuid,
+          patientUuid = patientUuid,
           date = date,
           status = status,
           statusReason = statusReason,

@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue.communication
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Insert
@@ -15,13 +16,25 @@ import java.util.UUID
 
 @Entity(tableName = "Communication")
 data class Communication(
-    @PrimaryKey val id: UUID,
-    val appointmentId: UUID,
-    val userId: UUID,
+
+    @PrimaryKey
+    @ColumnInfo(name = "id")
+    val uuid: UUID,
+
+    @ColumnInfo(name = "appointmentId")
+    val appointmentUuid: UUID,
+
+    @ColumnInfo(name = "userId")
+    val userUuid: UUID,
+
     val type: Type,
+
     val result: Result,
+
     val syncStatus: SyncStatus,
+
     val createdAt: Instant,
+
     val updatedAt: Instant
 ) {
 

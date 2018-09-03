@@ -124,10 +124,10 @@ object PatientMocker {
 
   fun appointment(): Appointment {
     return Appointment(
-        id = mock(),
-        patientId = mock(),
+        uuid = mock(),
+        patientUuid = mock(),
         date = LocalDate.now(ZoneOffset.UTC).minusDays(10),
-        facilityId = mock(),
+        facilityUuid = mock(),
         status = Appointment.Status.SCHEDULED,
         statusReason = Appointment.StatusReason.PATIENT_NOT_RESPONDING,
         syncStatus = mock(),

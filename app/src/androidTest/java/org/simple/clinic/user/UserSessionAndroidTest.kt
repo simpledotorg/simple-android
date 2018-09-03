@@ -158,4 +158,22 @@ class UserSessionAndroidTest {
     assertThat(facilityUUIDsForUser.size).isEqualTo(foundUserPayload.facilityUuids.size)
     assertThat(facilityUUIDsForUser).containsAllIn(foundUserPayload.facilityUuids)
   }
+
+  @Test
+  fun when_logged_in_user_is_cleared_the_local_saved_user_must_be_removed_from_database() {
+    val lawgon = userSession
+        .saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
+        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
+        .blockingGet()
+
+    assertThat(lawgon).isInstanceOf(LoginResult.Success::class.java)
+
+    assertThat(userSession.isUserLoggedIn()).isTrue()
+
+    userSession.clearLoggedInUser().blockingAwait()
+    assertThat(userSession.isUserLoggedIn()).isFalse()
+
+    val user = userSession.loggedInUserImmediate()
+    assertThat(user).isNull()
+  }
 }

@@ -1,11 +1,13 @@
 package org.simple.clinic.user
 
 import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Delete
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
+import android.arch.persistence.room.Transaction
 import io.reactivex.Flowable
 import org.simple.clinic.util.RoomEnumTypeConverter
 import org.threeten.bp.Instant
@@ -65,16 +67,25 @@ data class User(
   }
 
   @Dao
-  interface RoomDao {
+  abstract class RoomDao {
 
     @Query("SELECT * FROM LoggedInUser LIMIT 1")
-    fun user(): Flowable<List<User>>
+    abstract fun user(): Flowable<List<User>>
 
     @Query("SELECT * FROM LoggedInUser LIMIT 1")
-    fun userImmediate(): User?
+    abstract fun userImmediate(): User?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun createOrUpdate(user: User)
+    abstract fun createOrUpdate(user: User)
+
+    @Delete
+    protected abstract fun deleteUser(user: User)
+
+    @Transaction
+    open fun deleteUserAndFacilityMappings(user: User, userFacilityMappingDao: LoggedInUserFacilityMapping.RoomDao) {
+      userFacilityMappingDao.deleteMappingsForUser(user.uuid)
+      deleteUser(user)
+    }
   }
 
   fun isApprovedForSyncing(): Boolean {

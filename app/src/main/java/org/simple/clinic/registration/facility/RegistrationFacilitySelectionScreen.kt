@@ -44,7 +44,8 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
   private val progressView by bindView<View>(R.id.registrationfacilities_progress)
   private val errorContainer by bindView<ViewGroup>(R.id.registrationfacilities_error_container)
-  private val errorTextView by bindView<TextView>(R.id.registrationfacilities_error)
+  private val errorTitleTextView by bindView<TextView>(R.id.registrationfacilities_error_title)
+  private val errorMessageTextView by bindView<TextView>(R.id.registrationfacilities_error_message)
   private val errorRetryButton by bindView<Button>(R.id.registrationfacilities_error_retry)
 
   private val recyclerViewAdapter = FacilitiesAdapter()
@@ -88,12 +89,15 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   fun showNetworkError() {
     errorContainer.visibility = View.VISIBLE
-    errorTextView.setText(R.string.registrationfacilities_error_check_internet_connection)
+    errorMessageTextView.visibility = View.GONE
+    errorTitleTextView.setText(R.string.registrationfacilities_error_internet_connection_title)
   }
 
   fun showUnexpectedError() {
     errorContainer.visibility = View.VISIBLE
-    errorTextView.setText(R.string.registrationfacilities_error_unexpected_error)
+    errorMessageTextView.visibility = View.VISIBLE
+    errorTitleTextView.setText(R.string.registrationfacilities_error_unexpected_title)
+    errorMessageTextView.setText(R.string.registrationfacilities_error_unexpected_message)
   }
 
   fun hideError() {

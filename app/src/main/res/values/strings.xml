@@ -150,9 +150,10 @@
   <string name="registrationfacilities_screen_title">Select your clinic</string>
   <string name="registrationfacilities_facility_address_without_street">%s, %s</string>   <!-- District, State -->
   <string name="registrationfacilities_facility_address_with_street">%s, %s, %s</string>  <!-- Street, District, State -->
-  <string name="registrationfacilities_error_unexpected_error">@string/api_unexpected_error</string>
-  <string name="registrationfacilities_error_check_internet_connection">@string/api_network_error</string>
-  <string name="registrationfacilities_retry">Retry</string>
+  <string name="registrationfacilities_error_unexpected_title">Something went wrong</string>
+  <string name="registrationfacilities_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
+  <string name="registrationfacilities_error_internet_connection_title">No internet connection</string>
+  <string name="registrationfacilities_retry">Try again</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>

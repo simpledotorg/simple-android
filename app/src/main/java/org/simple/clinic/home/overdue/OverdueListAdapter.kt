@@ -43,8 +43,8 @@ class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
 
   fun render(item: OverdueListItem) {
     patientName.text = item.name
-    patientBP.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_patient_bp, item.bpDaysAgo, item.bpSystolic, item.bpDiastolic)
-    overdueDays.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_overdue_days, item.overdueDays)
+    patientBP.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_patient_bp, item.bpDaysAgo, item.bpDaysAgo, item.bpSystolic, item.bpDiastolic)
+    overdueDays.text = itemView.context.resources.getQuantityString(R.plurals.overdue_list_item_overdue_days, item.overdueDays, item.overdueDays)
     patientGenderAge.text = itemView.context.getString(R.string.overdue_list_item_patient_gender_age, item.gender, item.age)
   }
 }

@@ -14,7 +14,8 @@
     <ImageButton
       android:id="@+id/registrationconfirmpin_back"
       style="@style/Clinic.LoginBackButton"
-      android:src="@drawable/ic_arrow_back_24dp" />
+      android:src="@drawable/ic_arrow_back_24dp"
+      tools:ignore="ContentDescription" />
 
     <TextView
       android:id="@+id/registrationconfirmpin_applogo"
@@ -55,20 +56,14 @@
         android:labelFor="@+id/registrationconfirmpin_pin"
         android:text="@string/registrationconfirmpin_confirm_pin_label" />
 
-      <EditText
+      <org.simple.clinic.widgets.PinEditText
         android:id="@+id/registrationconfirmpin_pin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Clinic.PinEditText"
         android:layout_marginTop="@dimen/spacing_8"
-        android:gravity="center"
-        android:imeOptions="actionDone"
-        android:inputType="numberPassword"
-        android:maxLength="4"
-        android:minEms="3"
-        android:textAppearance="@style/Clinic.LoginInputTextAppearance">
+        android:imeOptions="actionDone">
 
         <requestFocus />
-      </EditText>
+      </org.simple.clinic.widgets.PinEditText>
 
       <TextView
         android:id="@+id/registrationconfirmpin_pin_hint"

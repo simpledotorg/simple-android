@@ -44,9 +44,9 @@
         android:labelFor="@+id/applock_pin"
         android:text="@string/loginpin_pin_number_hint" />
 
-      <EditText
+      <org.simple.clinic.widgets.PinEditText
         android:id="@+id/applock_pin"
-        style="@style/Clinic.LoginPinEditText" />
+        style="@style/Clinic.PinEditText" />
 
       <TextView
         android:id="@+id/applock_error"

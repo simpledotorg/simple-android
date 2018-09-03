@@ -7,13 +7,11 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -23,6 +21,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.PinEditText
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -44,7 +43,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val rootLayout by bindView<ViewGroup>(R.id.applock_root)
   private val progressView by bindView<ProgressBar>(R.id.applock_progress)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
-  private val pinEditText by bindView<EditText>(R.id.applock_pin)
+  private val pinEditText by bindView<PinEditText>(R.id.applock_pin)
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
 
@@ -66,12 +65,12 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private fun screenCreates() = Observable.just(AppLockScreenCreated())
 
   private fun pinTextChanges() =
-      RxTextView.textChanges(pinEditText)
+      pinEditText.textChanges()
           .map(CharSequence::toString)
           .map(::AppLockScreenPinTextChanged)
 
   private fun submitClicks() =
-      RxTextView.textChanges(pinEditText)
+      pinEditText.textChanges()
           .filter { it.length == 4 }
           .map { AppLockScreenSubmitClicked() }
 

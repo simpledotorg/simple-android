@@ -109,30 +109,6 @@ class UserSessionTest {
     assertThat(result4).isInstanceOf(LoginResult.NetworkError::class.java)
   }
 
-  @Test
-  fun `if login is successful, the user id must be set in analytics`() {
-    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
-
-    val result = userSession.loginWithOtp("").blockingGet()
-    assertThat(result).isInstanceOf(LoginResult.Success::class.java)
-    assertThat(reporter.setUserIds).isNotEmpty()
-    assertThat(reporter.setUserIds.last()).isEqualTo(loggedInUserPayload.uuid.toString())
-  }
-
-  @Test
-  fun `if login fails, the user id must not be set in analytics`() {
-    whenever(loginApi.login(any()))
-        .thenReturn(Single.error(NullPointerException()))
-        .thenReturn(Single.error(unauthorizedHttpError()))
-        .thenReturn(Single.error(SocketTimeoutException()))
-
-    userSession.loginWithOtp("").blockingGet()
-    userSession.loginWithOtp("").blockingGet()
-    userSession.loginWithOtp("").blockingGet()
-
-    assertThat(reporter.setUserIds).isEmpty()
-  }
-
   private fun unauthorizedHttpError(): HttpException {
     val error = Response.error<LoginResponse>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
@@ -175,24 +151,6 @@ class UserSessionTest {
 
     val registrationResult = userSession.register().blockingGet()
     assertThat(registrationResult).isInstanceOf(RegistrationResult.Error::class.java)
-  }
-
-  @Test
-  fun `when the user registration is completed, the user id must be set in the analytics`() {
-    val user = PatientMocker.loggedInUser()
-    whenever(appDatabase.userDao().user()).thenReturn(Flowable.just(listOf(user)))
-
-    val userFacility = PatientMocker.facility()
-    whenever(facilityRepository.facilityUuidsForUser(any())).thenReturn(Observable.just(listOf(userFacility.uuid)))
-
-    val response = RegistrationResponse(
-        userPayload = PatientMocker.loggedInUserPayload(uuid = user.uuid, facilityUuids = listOf(userFacility.uuid)),
-        accessToken = "token")
-    whenever(registrationApi.createUser(any())).thenReturn(Single.just(response))
-
-    userSession.register().blockingGet()
-    assertThat(reporter.setUserIds).isNotEmpty()
-    assertThat(reporter.setUserIds.last()).isEqualTo(user.uuid.toString())
   }
 
   @Test

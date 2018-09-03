@@ -43,12 +43,26 @@
     android:visibility="gone">
 
     <TextView
-      android:id="@+id/registrationfacilities_error"
+      android:id="@+id/registrationfacilities_error_title"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="96dp"
-      android:layout_marginStart="96dp"
-      tools:text="@string/registrationfacilities_error_check_internet_connection" />
+      android:fontFamily="sans-serif-medium"
+      android:text="@string/registrationfacilities_error_unexpected_title"
+      android:textColor="@color/black_opacity_40"
+      android:textSize="20sp" />
+
+    <TextView
+      android:id="@+id/registrationfacilities_error_message"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_48"
+      android:layout_marginStart="@dimen/spacing_48"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:gravity="center_horizontal"
+      android:lineSpacingExtra="@dimen/spacing_8"
+      android:textColor="@color/black_opacity_40"
+      android:textSize="@dimen/textsize_16"
+      tools:text="@string/registrationfacilities_error_unexpected_message" />
 
     <Button
       android:id="@+id/registrationfacilities_error_retry"

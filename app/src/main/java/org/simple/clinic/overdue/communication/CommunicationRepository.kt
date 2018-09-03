@@ -16,7 +16,7 @@ class CommunicationRepository @Inject constructor(
     val userSession: UserSession
 ) : SynceableRepository<Communication, CommunicationPayload> {
 
-  fun create(appointmentId: UUID, type: Communication.Type, result: Communication.Result): Completable {
+  fun create(appointmentUuid: UUID, type: Communication.Type, result: Communication.Result): Completable {
     return userSession.loggedInUser()
         .take(1)
         .flatMap { (user) ->
@@ -27,9 +27,9 @@ class CommunicationRepository @Inject constructor(
         }
         .map { user ->
           Communication(
-              id = UUID.randomUUID(),
-              appointmentId = appointmentId,
-              userId = user.uuid,
+              uuid = UUID.randomUUID(),
+              appointmentUuid = appointmentUuid,
+              userUuid = user.uuid,
               type = type,
               result = result,
               syncStatus = SyncStatus.PENDING,
@@ -63,7 +63,7 @@ class CommunicationRepository @Inject constructor(
   override fun mergeWithLocalData(payloads: List<CommunicationPayload>): Completable {
     val newOrUpdatedCommunications = payloads
         .filter { payload: CommunicationPayload ->
-          val localCopy = dao.getOne(payload.id)
+          val localCopy = dao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map { toDatabaseModel(it, SyncStatus.DONE) }
@@ -75,9 +75,9 @@ class CommunicationRepository @Inject constructor(
   private fun toDatabaseModel(payload: CommunicationPayload, syncStatus: SyncStatus): Communication {
     return payload.run {
       Communication(
-          id = id,
-          appointmentId = appointmentId,
-          userId = userId,
+          uuid = uuid,
+          appointmentUuid = appointmentUuid,
+          userUuid = userUuid,
           type = type,
           result = result,
           syncStatus = syncStatus,

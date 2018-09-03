@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Insert
@@ -16,14 +17,27 @@ import java.util.UUID
 
 @Entity(tableName = "Appointment")
 data class Appointment(
-    @PrimaryKey val id: UUID,
-    val patientId: UUID,
-    val facilityId: UUID,
+
+    @ColumnInfo(name = "id")
+    @PrimaryKey
+    val uuid: UUID,
+
+    @ColumnInfo(name = "patientId")
+    val patientUuid: UUID,
+
+    @ColumnInfo(name = "facilityId")
+    val facilityUuid: UUID,
+
     val date: LocalDate,
+
     val status: Status,
+
     val statusReason: StatusReason,
+
     val syncStatus: SyncStatus,
+
     val createdAt: Instant,
+
     val updatedAt: Instant
 ) {
 

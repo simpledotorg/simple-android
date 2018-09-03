@@ -32,8 +32,8 @@ class OverdueScreenController @Inject constructor(
         .map { appointments ->
           appointments.map {
             OverdueListItem(
-                appointmentId = it.id,
-                name = it.patientId.toString(),
+                appointmentUuid = it.uuid,
+                name = it.patientUuid.toString(),
                 gender = "Female",
                 age = 22,
                 bpSystolic = 175,

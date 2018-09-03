@@ -7,14 +7,15 @@ import java.util.UUID
 
 @JsonClass(generateAdapter = true)
 data class CommunicationPayload(
+
     @Json(name = "id")
-    val id: UUID,
+    val uuid: UUID,
 
     @Json(name = "appointment_id")
-    val appointmentId: UUID,
+    val appointmentUuid: UUID,
 
     @Json(name = "user_id")
-    val userId: UUID,
+    val userUuid: UUID,
 
     @Json(name = "communication_type")
     val type: Communication.Type,

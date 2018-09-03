@@ -45,7 +45,7 @@ class AppointmentRepositoryAndroidTest {
 
     val savedAppointment = repository.pendingSyncRecords().blockingGet().first()
     savedAppointment.apply {
-      assertThat(this.patientId).isEqualTo(patientId)
+      assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.date).isEqualTo(appointmentDate)
       assertThat(this.date).isEqualTo(appointmentDate)
       assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)

@@ -35,9 +35,9 @@ class AppointmentSync @Inject constructor(
         .map {
           it.run {
             AppointmentPayload(
-                id = id,
-                patientId = patientId,
-                facilityId = facilityId,
+                uuid = uuid,
+                patientUuid = patientUuid,
+                facilityUuid = facilityUuid,
                 date = date,
                 status = status,
                 statusReason = statusReason,

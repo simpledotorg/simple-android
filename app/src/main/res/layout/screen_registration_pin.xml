@@ -54,20 +54,14 @@
         android:labelFor="@+id/registrationpin_pin"
         android:text="@string/registrationpin_pin_label" />
 
-      <EditText
+      <org.simple.clinic.widgets.PinEditText
         android:id="@+id/registrationpin_pin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Clinic.PinEditText"
         android:layout_marginTop="@dimen/spacing_8"
-        android:gravity="center"
-        android:imeOptions="actionDone"
-        android:inputType="numberPassword"
-        android:maxLength="4"
-        android:minEms="3"
-        android:textAppearance="@style/Clinic.LoginInputTextAppearance">
+        android:imeOptions="actionDone">
 
         <requestFocus />
-      </EditText>
+      </org.simple.clinic.widgets.PinEditText>
 
       <TextView
         android:id="@+id/registrationpin_pin_hint"

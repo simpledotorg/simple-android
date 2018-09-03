@@ -43,6 +43,7 @@ buildscript {
       playServicesVision  : '15.0.2',
       viewPump            : '1.0.0',
       heap                : '0.7.1',
+      pinEntryEditText    : '1.3.3',
       fbShimmer           : '0.3.0'
   ]
 

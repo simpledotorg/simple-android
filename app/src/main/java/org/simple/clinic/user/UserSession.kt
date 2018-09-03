@@ -54,7 +54,7 @@ class UserSession @Inject constructor(
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
 ) {
 
-  private lateinit var ongoingLoginEntry: OngoingLoginEntry
+  private var ongoingLoginEntry: OngoingLoginEntry? = null
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
 
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
@@ -65,6 +65,10 @@ class UserSession @Inject constructor(
 
   fun ongoingLoginEntry(): Single<OngoingLoginEntry> {
     return Single.fromCallable { ongoingLoginEntry }
+  }
+
+  fun clearOngoingLoginEntry(): Completable {
+    return Completable.fromAction { ongoingLoginEntry = null }
   }
 
   fun loginWithOtp(otp: String): Single<LoginResult> {
@@ -99,7 +103,9 @@ class UserSession @Inject constructor(
   fun requestLoginOtp(): Single<LoginResult> {
     val ongoingEntry = ongoingLoginEntry().cache()
     return ongoingEntry
-        .flatMap { loginApi.requestLoginOtp(it.userId).toSingleDefault(LoginResult.Success() as LoginResult) }
+        .flatMap {
+          loginApi.requestLoginOtp(it.userId).toSingleDefault(LoginResult.Success() as LoginResult)
+        }
         .onErrorReturn { error ->
           when (error) {
             is IOException -> LoginResult.NetworkError()

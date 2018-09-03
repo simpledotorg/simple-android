@@ -217,4 +217,22 @@ class LoginPinScreenControllerTest {
         arrayOf(LoginResult.NetworkError(), false)
     )
   }
+
+  @Test
+  fun `when back is clicked, the local logged in user must be cleared before moving back`() {
+    whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.clearOngoingLoginEntry()).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PinBackClicked())
+    verify(userSession).clearLoggedInUser()
+  }
+
+  @Test
+  fun `when back is clicked, the local ongoing login entry must be cleared`() {
+    whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PinBackClicked())
+    verify(userSession).clearOngoingLoginEntry()
+  }
 }

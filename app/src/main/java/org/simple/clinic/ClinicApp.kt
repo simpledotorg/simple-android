@@ -37,6 +37,6 @@ abstract class ClinicApp : MultiDexApplication() {
   abstract fun buildDaggerGraph(): AppComponent
 
   protected fun keepUserIdUpdatedInAnalytics() {
-    updateAnalyticsUserId.update(Schedulers.io())
+    updateAnalyticsUserId.listen(Schedulers.io())
   }
 }

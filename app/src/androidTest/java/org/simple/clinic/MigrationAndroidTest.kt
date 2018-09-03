@@ -10,6 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -119,6 +120,66 @@ class MigrationAndroidTest {
 
     db_v10.query("SELECT * FROM `Communication`").use {
       assertThat(it.columnCount).isEqualTo(8)
+    }
+  }
+
+  @Test
+  fun migration_10_to_11() {
+    val db_v10 = helper.createDatabase(TEST_DB_NAME, 10)
+
+    db_v10.execSQL("""
+      INSERT OR REPLACE INTO `Appointment`(`id`,`patientId`,`facilityId`,`date`,`status`,`statusReason`,`syncStatus`,`createdAt`,`updatedAt`)
+      VALUES (
+        'c6834f82-3305-4144-9dc8-5f77c908ebf1',
+        'a1d33096-cea6-4beb-8441-82cab2befe2d',
+        '0274a4a6-dd0e-493c-86aa-6502cd1fc2a0',
+        '2011-12-03',
+        'SCHEDULED',
+        'NOT_CALLED_YET',
+        'PENDING',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z');
+    """)
+
+    db_v10.execSQL("""
+      INSERT OR REPLACE INTO `Communication`(`id`,`appointmentId`,`userId`,`type`,`result`,`syncStatus`,`createdAt`,`updatedAt`)
+      VALUES (
+        'afea327f-4286-417b-9271-945ef2c7592a',
+        'c6834f82-3305-4144-9dc8-5f77c908ebf1',
+        'c64f76b5-0d37-46e2-9426-554e4f809498',
+        'MANUAL_CALL',
+        'AGREED_TO_VISIT',
+        'PENDING',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z');
+    """)
+
+    val db_v11 = helper.runMigrationsAndValidate(TEST_DB_NAME, 11, true, Migration_10_11())
+
+    db_v11.query("SELECT * FROM `Appointment`").use {
+      assertThat(it.count).isEqualTo(1)
+
+      it.moveToFirst()
+      assertThat(it.columnNames.contains("id")).isFalse()
+      assertThat(it.columnNames.contains("patientId")).isFalse()
+      assertThat(it.columnNames.contains("facilityId")).isFalse()
+
+      assertThat(it.string("uuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+      assertThat(it.string("patientUuid")).isEqualTo("a1d33096-cea6-4beb-8441-82cab2befe2d")
+      assertThat(it.string("facilityUuid")).isEqualTo("0274a4a6-dd0e-493c-86aa-6502cd1fc2a0")
+    }
+
+    db_v11.query("SELECT * FROM `Communication`").use {
+      assertThat(it.count).isEqualTo(1)
+
+      it.moveToFirst()
+      assertThat(it.columnNames.contains("id")).isFalse()
+      assertThat(it.columnNames.contains("appointmentId")).isFalse()
+      assertThat(it.columnNames.contains("userId")).isFalse()
+
+      assertThat(it.string("uuid")).isEqualTo("afea327f-4286-417b-9271-945ef2c7592a")
+      assertThat(it.string("appointmentUuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+      assertThat(it.string("userUuid")).isEqualTo("c64f76b5-0d37-46e2-9426-554e4f809498")
     }
   }
 }

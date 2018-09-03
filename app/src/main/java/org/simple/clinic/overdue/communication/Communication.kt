@@ -1,6 +1,5 @@
 package org.simple.clinic.overdue.communication
 
-import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Insert
@@ -16,25 +15,13 @@ import java.util.UUID
 
 @Entity(tableName = "Communication")
 data class Communication(
-
-    @PrimaryKey
-    @ColumnInfo(name = "id")
-    val uuid: UUID,
-
-    @ColumnInfo(name = "appointmentId")
+    @PrimaryKey val uuid: UUID,
     val appointmentUuid: UUID,
-
-    @ColumnInfo(name = "userId")
     val userUuid: UUID,
-
     val type: Type,
-
     val result: Result,
-
     val syncStatus: SyncStatus,
-
     val createdAt: Instant,
-
     val updatedAt: Instant
 ) {
 
@@ -70,16 +57,16 @@ data class Communication(
     @Query("UPDATE Communication SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
-    @Query("UPDATE Communication SET syncStatus = :to WHERE id IN (:ids)")
+    @Query("UPDATE Communication SET syncStatus = :to WHERE uuid IN (:ids)")
     fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
 
-    @Query("SELECT * FROM Communication WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM Communication WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): Communication?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(schedules: List<Communication>)
 
-    @Query("SELECT COUNT(id) FROM Communication")
+    @Query("SELECT COUNT(uuid) FROM Communication")
     fun count(): Int
   }
 }

@@ -81,5 +81,15 @@ data class Appointment(
 
     @Query("SELECT * FROM Appointment")
     fun appointments(): Flowable<List<Appointment>>
+
+    @Query("""UPDATE Appointment
+      SET status = :cancelledStatus, syncStatus = :newSyncStatus
+      WHERE patientId = :patientId AND status = :scheduledStatus""")
+    fun cancelScheduledAppointmentsForPatient(
+        patientId: UUID,
+        cancelledStatus: Status,
+        scheduledStatus: Status,
+        newSyncStatus: SyncStatus
+    )
   }
 }

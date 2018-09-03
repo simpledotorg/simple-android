@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class UpdateAnalyticsUserId @Inject constructor(private val userSession: UserSession) {
 
-  fun update(scheduler: Scheduler) {
+  fun listen(scheduler: Scheduler) {
     userSession.loggedInUser()
         .subscribeOn(scheduler)
         .filter { it is Just<User> }

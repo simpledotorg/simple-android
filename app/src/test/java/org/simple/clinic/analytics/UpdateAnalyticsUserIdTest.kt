@@ -35,7 +35,7 @@ class UpdateAnalyticsUserIdTest {
   fun `when there is no logged in user present, the user id must not be set`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(None))
 
-    updateAnalyticsUserId.update(scheduler)
+    updateAnalyticsUserId.listen(scheduler)
 
     assertThat(reporter.setUserIds).isEmpty()
   }
@@ -54,7 +54,7 @@ class UpdateAnalyticsUserIdTest {
     val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
 
-    updateAnalyticsUserId.update(scheduler)
+    updateAnalyticsUserId.listen(scheduler)
 
     if (shouldSetUserId) {
       assertThat(reporter.setUserIds).isEqualTo(listOf(user.uuid.toString()))
@@ -72,7 +72,7 @@ class UpdateAnalyticsUserIdTest {
   ) {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(previousUser, updatedUser))
 
-    updateAnalyticsUserId.update(scheduler)
+    updateAnalyticsUserId.listen(scheduler)
 
     assertThat(reporter.setUserIds).isEqualTo(listOf(userIdThatMustBeSet))
   }

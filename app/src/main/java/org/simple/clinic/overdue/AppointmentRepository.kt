@@ -56,8 +56,11 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun appointments(): Observable<List<Appointment>> {
-    return dao.appointments().toObservable()
+  fun overdueAppointments(): Observable<List<Appointment>> {
+    return dao.appointments(
+        scheduledStatus = Appointment.Status.SCHEDULED,
+        dateNow = LocalDate.now()
+    ).toObservable()
   }
 
   override fun pendingSyncRecords(): Single<List<Appointment>> {

@@ -1,6 +1,5 @@
 package org.simple.clinic.overdue
 
-import android.arch.persistence.room.ColumnInfo
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.Insert
@@ -17,27 +16,14 @@ import java.util.UUID
 
 @Entity(tableName = "Appointment")
 data class Appointment(
-
-    @ColumnInfo(name = "id")
-    @PrimaryKey
-    val uuid: UUID,
-
-    @ColumnInfo(name = "patientId")
+    @PrimaryKey val uuid: UUID,
     val patientUuid: UUID,
-
-    @ColumnInfo(name = "facilityId")
     val facilityUuid: UUID,
-
     val date: LocalDate,
-
     val status: Status,
-
     val statusReason: StatusReason,
-
     val syncStatus: SyncStatus,
-
     val createdAt: Instant,
-
     val updatedAt: Instant
 ) {
 
@@ -81,16 +67,16 @@ data class Appointment(
     @Query("UPDATE Appointment SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)
 
-    @Query("UPDATE Appointment SET syncStatus = :to WHERE id IN (:ids)")
+    @Query("UPDATE Appointment SET syncStatus = :to WHERE uuid IN (:ids)")
     fun updateSyncStatus(ids: List<UUID>, to: SyncStatus)
 
-    @Query("SELECT * FROM Appointment WHERE id = :id LIMIT 1")
+    @Query("SELECT * FROM Appointment WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): Appointment?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(appointments: List<Appointment>)
 
-    @Query("SELECT COUNT(id) FROM Appointment")
+    @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Int
 
     @Query("SELECT * FROM Appointment")

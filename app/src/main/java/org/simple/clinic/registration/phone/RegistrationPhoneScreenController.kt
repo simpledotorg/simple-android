@@ -41,7 +41,7 @@ class RegistrationPhoneScreenController @Inject constructor(
   private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
     val createEmptyEntry = events
         .ofType<RegistrationPhoneScreenCreated>()
-        .flatMap {
+        .flatMap { _ ->
           userSession.isOngoingRegistrationEntryPresent()
               .filter { present -> present.not() }
               .flatMapCompletable {
@@ -52,7 +52,7 @@ class RegistrationPhoneScreenController @Inject constructor(
 
     val preFill = events
         .ofType<RegistrationPhoneScreenCreated>()
-        .flatMap {
+        .flatMap { _ ->
           userSession.isOngoingRegistrationEntryPresent()
               .toObservable() // Because Single.filter() returns a Maybe and Maybe.flatMapSingle() errors on completion.
               .filter { present -> present }
@@ -114,7 +114,7 @@ class RegistrationPhoneScreenController @Inject constructor(
 
           val proceedWithRegistration = cachedUserFindResult
               .ofType<FindUserResult.NotFound>()
-              .flatMap {
+              .flatMap { _ ->
                 userSession.ongoingRegistrationEntry()
                     .map { it.copy(phoneNumber = number) }
                     .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }

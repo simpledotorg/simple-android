@@ -171,4 +171,8 @@
     <item quantity="other">%d days overdue</item>
   </plurals>
   <string name="overdue_list_item_patient_gender_age">(%s, %d)</string>
+
+  <!-- Facility change -->
+  <string name="facilitychange_screen_title">Select your clinic</string>
+
 </resources>

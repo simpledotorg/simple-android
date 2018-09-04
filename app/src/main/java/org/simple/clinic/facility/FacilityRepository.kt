@@ -6,10 +6,9 @@ import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.user.User
 import org.simple.clinic.user.LoggedInUserFacilityMapping
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.None
 import java.util.UUID
 import javax.inject.Inject
 
@@ -29,14 +28,18 @@ class FacilityRepository @Inject constructor(
     }
   }
 
-  fun currentFacility(userSession: UserSession): Observable<Facility> {
-    return userSession.loggedInUser()
-        .doOnNext {
-          if (it === None) {
-            throw AssertionError("User isn't logged in yet")
+  fun associateUserWithFacility(userSession: UserSession, facilityId: UUID): Completable {
+    return requireUser(userSession)
+        .take(1)
+        .flatMapCompletable {
+          Completable.fromAction {
+            userFacilityMappingDao.insertOrUpdate(it, listOf(facilityId), newCurrentFacilityUuid = facilityId)
           }
         }
-        .map { (user) -> user }
+  }
+
+  fun currentFacility(userSession: UserSession): Observable<Facility> {
+    return requireUser(userSession)
         .flatMap { currentFacility(it) }
   }
 
@@ -48,6 +51,16 @@ class FacilityRepository @Inject constructor(
     return userFacilityMappingDao
         .facilityUuids(user.uuid)
         .toObservable()
+  }
+
+  private fun requireUser(userSession: UserSession): Observable<User> {
+    return userSession.loggedInUser()
+        .map { (user) ->
+          if (user == null) {
+            throw AssertionError("User isn't logged in yet")
+          }
+          user
+        }
   }
 
   fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {

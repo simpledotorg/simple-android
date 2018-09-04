@@ -12,6 +12,7 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
 import org.simple.clinic.patient.PatientMocker
@@ -25,15 +26,17 @@ class AppLockScreenControllerTest {
   private val screen = mock<AppLockScreen>()
   private val userSession = mock<UserSession>()
   private val passwordHashser = mock<PasswordHasher>()
-  private val loggedInUser = PatientMocker.loggedInUser(pinDigest = "actual-hash")
+  private val facilityRepository = mock<FacilityRepository>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
+
+  private val loggedInUser = PatientMocker.loggedInUser(pinDigest = "actual-hash")
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: AppLockScreenController
 
   @Before
   fun setUp() {
-    controller = AppLockScreenController(userSession, passwordHashser, lastUnlockTimestamp)
+    controller = AppLockScreenController(userSession, passwordHashser, facilityRepository, lastUnlockTimestamp)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
 
     uiEvents
@@ -80,12 +83,29 @@ class AppLockScreenControllerTest {
   @Test
   fun `On start, the logged in user's full name should be shown`() {
     uiEvents.onNext(AppLockScreenCreated())
-    verify(screen).showFullName(loggedInUser.fullName)
+    verify(screen).setUserFullName(loggedInUser.fullName)
+  }
+
+  @Test
+  fun `On start, the currently selected facility should be shown`() {
+    val facility1 = PatientMocker.facility(name = "facility1")
+    val facility2 = PatientMocker.facility(name = "facility2")
+    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility1, facility2))
+
+    uiEvents.onNext(AppLockScreenCreated())
+    verify(screen).setFacilityName(facility1.name)
+    verify(screen).setFacilityName(facility2.name)
   }
 
   @Test
   fun `any existing errors should be reset when the user starts typing again`() {
     uiEvents.onNext(AppLockScreenPinTextChanged("0"))
     verify(screen).setIncorrectPinErrorVisible(false)
+  }
+
+  @Test
+  fun `when facility name is clicked then facility change screen should be shown`() {
+    uiEvents.onNext(AppLockFacilityClicked())
+    verify(screen).openFacilityChangeScreen()
   }
 }

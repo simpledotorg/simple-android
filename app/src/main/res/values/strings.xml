@@ -121,6 +121,7 @@
 
   <!-- App lock -->
   <string name="applock_error_incorrect_pin">PIN doesn\'t match the original PIN</string>
+  <string name="applock_logout">Not you?</string>
 
   <!-- TODO: Get reviewed by Daniel -->
   <!-- Registration -->

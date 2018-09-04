@@ -24,6 +24,10 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.VERIFYING_OTP
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
@@ -91,8 +95,16 @@ class TheActivity : AppCompatActivity() {
   }
 
   private fun initialScreenKey(): FullScreenKey {
+    val localUser = userSession.loggedInUser().blockingFirst().toNullable()
+
+    val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
+      NOT_LOGGED_IN -> false
+      LOGGED_IN, OTP_REQUESTED, VERIFYING_OTP -> true
+      null -> false
+    }
+
     return when {
-      userSession.isUserLoggedIn() -> HomeScreen.KEY
+      canMoveToHomeScreen -> HomeScreen.KEY
       hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
       else -> RegistrationPhoneScreen.KEY
     }

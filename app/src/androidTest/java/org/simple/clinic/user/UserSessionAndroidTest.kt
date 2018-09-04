@@ -15,6 +15,9 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import java.util.UUID
 import javax.inject.Inject
 
@@ -56,6 +59,7 @@ class UserSessionAndroidTest {
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
     assertThat(loggedInUser!!.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+    assertThat(loggedInUser.loggedInStatus).isEqualTo(LOGGED_IN)
 
     val currentFacility = facilityRepository
         .currentFacility(userSession)
@@ -81,7 +85,7 @@ class UserSessionAndroidTest {
   fun when_logging_in_from_registration_entry_user_should_be_logged_in_locally() {
     val facilities = facilityApi.pull(10)
         .map { it.facilities }
-        .map { it.map { it.toDatabaseModel(SyncStatus.DONE) } }
+        .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
     appDatabase.facilityDao().save(facilities)
 
@@ -122,7 +126,7 @@ class UserSessionAndroidTest {
   fun when_registering_a_user_is_registered_then_the_logged_in_user_should_be_sent_to_the_server() {
     val facilities = facilityApi.pull(10)
         .map { it.facilities }
-        .map { it.map { it.toDatabaseModel(SyncStatus.DONE) } }
+        .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
     appDatabase.facilityDao().save(facilities)
 
@@ -152,7 +156,7 @@ class UserSessionAndroidTest {
 
     val user = appDatabase.userDao().userImmediate()!!
     assertThat(user.uuid).isEqualTo(foundUserPayload.uuid)
-    assertThat(user.loggedInStatus).isEqualTo(User.LoggedInStatus.NOT_LOGGED_IN)
+    assertThat(user.loggedInStatus).isEqualTo(NOT_LOGGED_IN)
 
     val facilityUUIDsForUser = appDatabase.userFacilityMappingDao().facilityUuids(user.uuid).blockingFirst()
     assertThat(facilityUUIDsForUser.size).isEqualTo(foundUserPayload.facilityUuids.size)
@@ -175,5 +179,26 @@ class UserSessionAndroidTest {
 
     val user = userSession.loggedInUserImmediate()
     assertThat(user).isNull()
+  }
+
+  @Test
+  fun when_login_otp_is_requested_successfully_it_must_update_the_logged_in_status_of_the_user() {
+    val findUserResult = userSession.findExistingUser(testData.qaOngoingLoginEntry().phoneNumber).blockingGet()
+    assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
+
+    val foundUser = (findUserResult as FindUserResult.Found).user
+
+    val saveLocallyResult = userSession.syncFacilityAndSaveUser(foundUser).blockingGet()
+    assertThat(saveLocallyResult).isInstanceOf(SaveUserLocallyResult.Success::class.java)
+
+    assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(NOT_LOGGED_IN)
+
+    val requestOtpResult = userSession
+        .saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
+        .andThen(userSession.requestLoginOtp())
+        .blockingGet()
+
+    assertThat(requestOtpResult).isInstanceOf(LoginResult.Success::class.java)
+    assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(OTP_REQUESTED)
   }
 }

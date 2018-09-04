@@ -104,7 +104,12 @@ class UserSession @Inject constructor(
     val ongoingEntry = ongoingLoginEntry().cache()
     return ongoingEntry
         .flatMap {
-          loginApi.requestLoginOtp(it.userId).toSingleDefault(LoginResult.Success() as LoginResult)
+          loginApi.requestLoginOtp(it.userId)
+              .andThen(Completable.fromAction {
+                appDatabase.userDao()
+                    .updateLoggedInStatusForUser(it.userId, User.LoggedInStatus.OTP_REQUESTED)
+              })
+              .toSingleDefault(LoginResult.Success() as LoginResult)
         }
         .onErrorReturn { error ->
           when (error) {
@@ -158,8 +163,8 @@ class UserSession @Inject constructor(
 
   fun syncFacilityAndSaveUser(loggedInUserPayload: LoggedInUserPayload): Single<SaveUserLocallyResult> {
     return facilitySync.pullWithResult()
-        .flatMap {
-          when (it) {
+        .flatMap { result ->
+          when (result) {
             is Success -> {
               Single.just(userFromPayload(loggedInUserPayload, User.LoggedInStatus.NOT_LOGGED_IN))
                   .flatMap {

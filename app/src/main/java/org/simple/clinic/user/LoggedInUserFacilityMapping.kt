@@ -64,20 +64,21 @@ data class LoggedInUserFacilityMapping(
       if (oldCurrentFacilityUuid != null) {
         setFacilityIsCurrent(userUuid, oldCurrentFacilityUuid, isCurrent = false)
       }
-      setFacilityIsCurrent(userUuid, newCurrentFacilityUuid, isCurrent = true)
+      val updatedRows = setFacilityIsCurrent(userUuid, newCurrentFacilityUuid, isCurrent = true)
+      if (updatedRows != 1) {
+        throw AssertionError("Couldn't update current facility. A mapping between $userUuid and $newCurrentFacilityUuid probably does not exist.")
+      }
     }
 
-    // TODO: Test that a user only has one facility with isCurrentFacility=true.
     @Query("""
       UPDATE LoggedInUserFacilityMapping
       SET isCurrentFacility = :isCurrent
       WHERE userUuid = :userUuid AND facilityUuid = :facilityUuid
       """)
-    protected abstract fun setFacilityIsCurrent(userUuid: UUID, facilityUuid: UUID, isCurrent: Boolean)
+    protected abstract fun setFacilityIsCurrent(userUuid: UUID, facilityUuid: UUID, isCurrent: Boolean): Int
 
     @Query("""
-      SELECT *
-      FROM Facility
+      SELECT * FROM Facility
       INNER JOIN LoggedInUserFacilityMapping ON LoggedInUserFacilityMapping.facilityUuid = Facility.uuid
       WHERE LoggedInUserFacilityMapping.userUuid = :userUuid
       AND LoggedInUserFacilityMapping.isCurrentFacility = 1

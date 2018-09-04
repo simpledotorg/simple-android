@@ -7,8 +7,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import java.util.UUID
 import javax.inject.Inject
@@ -98,6 +98,20 @@ class FacilityRepositoryAndroidTest {
 
     val facility1Mapping = mappings.first { it.facilityUuid == facility1.uuid }
     assertThat(facility1Mapping.isCurrentFacility).isFalse()
+  }
+
+  @Test(expected = AssertionError::class)
+  fun when_changing_the_facility_for_a_user_to_a_facility_whose_mapping_does_not_exist_then_an_error_should_be_thrown() {
+    val facility1 = testData.facility(uuid = UUID.randomUUID())
+    val facility2 = testData.facility(uuid = UUID.randomUUID())
+    val facilities = listOf(facility1, facility2)
+    database.facilityDao().save(facilities)
+
+    repository
+        .associateUserWithFacilities(user, listOf(facility1.uuid), currentFacility = facility1.uuid)
+        .blockingAwait()
+
+    database.userFacilityMappingDao().changeCurrentFacility(user.uuid, newCurrentFacilityUuid = facility2.uuid)
   }
 
   @Test(expected = AssertionError::class)

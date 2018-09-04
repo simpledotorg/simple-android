@@ -62,10 +62,13 @@
   <string name="home_scan_patient_aadhaar">Scan patient\'s Aadhaar</string>
   <string name="home_search_patient_name_phone">Enter patient\'s name or phone</string>
   <string name="patients_user_awaiting_approval_title">Awaiting approval</string>
-  <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic</string>
+  <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic.</string>
   <string name="patients_user_approved_title">You’ve been approved!</string>
+  <string name="patients_awaiting_sms_verification_title">Waiting for SMS verification</string>
   <string name="patients_user_approved_message">You can now see all patient data for your clinic</string>
+  <string name="patients_awaiting_sms_verification_message">Once verified, you will have access to patient records from your clinic.</string>
   <string name="patients_dismiss_user_approved_status">Got it</string>
+  <string name="patients_enter_code">Enter Code</string>
 
   <!-- New blood pressure entry -->
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>

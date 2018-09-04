@@ -7,6 +7,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
 import org.simple.clinic.user.User
@@ -23,6 +24,7 @@ typealias UiChange = (Ui) -> Unit
 class AppLockScreenController @Inject constructor(
     private val userSession: UserSession,
     private val passwordHasher: PasswordHasher,
+    private val facilityRepository: FacilityRepository,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -31,9 +33,11 @@ class AppLockScreenController @Inject constructor(
 
     return Observable.mergeArray(
         populateFullName(replayedEvents),
+        populateFacilityName(replayedEvents),
         resetValidationError(replayedEvents),
-        pinValidations(replayedEvents),
-        backClicks(replayedEvents))
+        validatePin(replayedEvents),
+        exitOnBackClick(replayedEvents),
+        openFacilityChangeScreen(replayedEvents))
   }
 
   private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
@@ -45,21 +49,23 @@ class AppLockScreenController @Inject constructor(
               .map { (user) -> user!! }
               .map { it.fullName }
         }
-        .map { { ui: Ui -> ui.showFullName(it) } }
+        .map { { ui: Ui -> ui.setUserFullName(it) } }
+  }
+
+  private fun populateFacilityName(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<AppLockScreenCreated>()
+        .flatMap { facilityRepository.currentFacility(userSession) }
+        .map { { ui: Ui -> ui.setFacilityName(it.name) } }
   }
 
   private fun resetValidationError(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenPinTextChanged>()
-        .map {
-          { ui: Ui ->
-            ui.setIncorrectPinErrorVisible(false)
-            Unit
-          }
-        }
+        .map { { ui: Ui -> ui.setIncorrectPinErrorVisible(false) } }
   }
 
-  private fun pinValidations(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun validatePin(events: Observable<UiEvent>): Observable<UiChange> {
     val pinTextChanges = events
         .ofType<AppLockScreenPinTextChanged>()
         .map { it.pin }
@@ -102,9 +108,15 @@ class AppLockScreenController @Inject constructor(
         }
   }
 
-  private fun backClicks(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun exitOnBackClick(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenBackClicked>()
         .map { { ui: Ui -> ui.exitApp() } }
+  }
+
+  private fun openFacilityChangeScreen(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<AppLockFacilityClicked>()
+        .map { { ui: Ui -> ui.openFacilityChangeScreen() } }
   }
 }

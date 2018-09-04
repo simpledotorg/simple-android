@@ -5,17 +5,67 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <FrameLayout
+  <LinearLayout
     android:id="@+id/applock_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary">
+    android:background="@color/color_primary"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_4">
 
-    <TextView
-      android:id="@+id/applock_user_fullname"
-      style="@style/Clinic.LoginPinPhoneNumber"
-      tools:text="1234567890" />
-  </FrameLayout>
+    <Button
+      android:id="@+id/applock_facility_name"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
+      android:drawablePadding="6dp"
+      android:drawableStart="@drawable/ic_location_20dp"
+      android:fontFamily="sans-serif"
+      android:padding="@dimen/spacing_8"
+      android:textAllCaps="false"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_16"
+      tools:text="PHC Hoshiarpur" />
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:gravity="center_vertical">
+
+      <TextView
+        android:id="@+id/applock_user_fullname"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textsize_20"
+        tools:text="A really long person name" />
+
+      <android.support.v7.widget.AppCompatButton
+        android:id="@+id/applock_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_applock_logout"
+        android:foreground="?attr/selectableItemBackgroundBorderless"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:paddingBottom="2dp"
+        android:paddingEnd="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_8"
+        android:paddingTop="2dp"
+        android:text="@string/applock_logout"
+        android:textColor="@color/white"
+        tools:ignore="UnusedAttribute" />
+    </LinearLayout>
+  </LinearLayout>
 
   <View
     android:layout_width="match_parent"
@@ -52,7 +102,6 @@
         android:id="@+id/applock_error"
         style="@style/Clinic.LoginPinErrorText"
         android:text="@string/applock_error_incorrect_pin"
-        android:textSize="@dimen/textsize_16"
         android:visibility="visible" />
     </LinearLayout>
   </android.support.v7.widget.CardView>

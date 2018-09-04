@@ -73,5 +73,7 @@
     <include layout="@layout/layout_user_status_awaitingapproval" />
 
     <include layout="@layout/layout_patients_user_status_approved" />
+
+    <include layout="@layout/layout_patients_user_status_awaitingsmsverification" />
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.home.patients.PatientsScreen>

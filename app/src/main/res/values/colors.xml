@@ -5,7 +5,7 @@
   <color name="color_accent">#4F4DE7</color>
 
   <color name="window_background">#FAFAFA</color>
-  <color name="window_background_registration">#EBEFF0</color>
+  <color name="window_background_auth">#EBEFF0</color>
 
   <color name="patientsummary_high_or_worse_blood_pressure">#c70000</color>
 

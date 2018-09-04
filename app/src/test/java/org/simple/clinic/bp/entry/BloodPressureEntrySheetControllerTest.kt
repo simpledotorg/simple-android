@@ -11,13 +11,17 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 class BloodPressureEntrySheetControllerTest {
 
   private val sheet = mock<BloodPressureEntrySheet>()
-  private val repository = mock<BloodPressureRepository>()
+  private val bloodPressureRepository = mock<BloodPressureRepository>()
+  private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -25,7 +29,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Before
   fun setUp() {
-    controller = BloodPressureEntrySheetController(repository)
+    controller = BloodPressureEntrySheetController(bloodPressureRepository, appointmentRepository)
 
     uiEvents
         .compose(controller)
@@ -39,21 +43,25 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("1"))
     uiEvents.onNext(BloodPressureSaveClicked())
 
-    verify(repository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(appointmentRepository, never()).schedule(any(), any())
     verify(sheet, never()).finish()
   }
 
   @Test
   fun `when save is clicked and input is valid then blood pressure measurement should be saved`() {
-    whenever(repository.saveMeasurement(patientUuid, 142, 80)).thenReturn(Completable.complete())
+    whenever(bloodPressureRepository.saveMeasurement(patientUuid, 142, 80)).thenReturn(Completable.complete())
+    whenever(appointmentRepository.schedule(patientUuid, LocalDate.now(ZoneOffset.UTC).minusDays(1))).thenReturn(Completable.complete())
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
     uiEvents.onNext(BloodPressureSystolicTextChanged("142"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("80"))
     uiEvents.onNext(BloodPressureSaveClicked())
     uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked())
 
-    verify(repository, times(1)).saveMeasurement(patientUuid, 142, 80)
+    verify(bloodPressureRepository, times(1)).saveMeasurement(patientUuid, 142, 80)
+    verify(appointmentRepository, times(1)).schedule(patientUuid, LocalDate.now(ZoneOffset.UTC).minusDays(1))
     verify(sheet).finish()
   }
 }

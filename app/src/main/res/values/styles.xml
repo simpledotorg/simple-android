@@ -102,10 +102,10 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:gravity">center</item>
-    <item name="android:textColor">@color/red_700</item>
-    <item name="android:textSize">@dimen/textsize_18</item>
+    <item name="android:textColor">#F23D00</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
     <item name="android:visibility">gone</item>
-    <item name="android:layout_marginTop">@dimen/spacing_16</item>
+    <item name="android:layout_marginTop">@dimen/spacing_4</item>
   </style>
 
   <style name="Clinic.LoginPinLabel">

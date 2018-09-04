@@ -15,3 +15,7 @@ class AppLockScreenSubmitClicked : UiEvent {
 class AppLockScreenBackClicked : UiEvent {
   override val analyticsName = "App Lock:Back Clicked"
 }
+
+class AppLockFacilityClicked : UiEvent {
+  override val analyticsName = "App Lock:Facility Clicked"
+}

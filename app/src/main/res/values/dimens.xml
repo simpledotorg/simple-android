@@ -2,12 +2,14 @@
 <resources>
   <dimen name="elevation_toolbar">6dp</dimen>
   <dimen name="elevation_cardview">4dp</dimen>
+  <dimen name="corner_radius_button">2dp</dimen>
 
   <dimen name="spacing_4">4dp</dimen>
   <dimen name="spacing_8">8dp</dimen>
   <dimen name="spacing_12">12dp</dimen>
   <dimen name="spacing_16">16dp</dimen>
   <dimen name="spacing_24">24dp</dimen>
+  <dimen name="spacing_32">32dp</dimen>
   <dimen name="spacing_48">48dp</dimen>
   <dimen name="spacing_96">96dp</dimen>
   <dimen name="spacing_128">128dp</dimen>

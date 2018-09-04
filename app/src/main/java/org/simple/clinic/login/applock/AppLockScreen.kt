@@ -7,10 +7,12 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,6 +25,7 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PinEditText
 import org.simple.clinic.widgets.hideKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -41,10 +44,12 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   lateinit var activity: TheActivity
 
   private val rootLayout by bindView<ViewGroup>(R.id.applock_root)
-  private val progressView by bindView<ProgressBar>(R.id.applock_progress)
+  private val facilityButton by bindView<Button>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
+  private val logoutButton by bindView<Button>(R.id.applock_logout)
   private val pinEditText by bindView<PinEditText>(R.id.applock_pin)
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
+  private val progressView by bindView<ProgressBar>(R.id.applock_progress)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
 
   override fun onFinishInflate() {
@@ -54,15 +59,21 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks())
+    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks(), facilityClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+
+    logoutButton.setOnClickListener {
+      Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
+    }
   }
 
   private fun screenCreates() = Observable.just(AppLockScreenCreated())
+
+  private fun facilityClicks() = RxView.clicks(facilityButton).map { AppLockFacilityClicked() }
 
   private fun pinTextChanges() =
       pinEditText.textChanges()
@@ -87,8 +98,12 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
   }
 
-  fun showFullName(fullName: String) {
+  fun setUserFullName(fullName: String) {
     fullNameTextView.text = fullName
+  }
+
+  fun setFacilityName(facilityName: String) {
+    this.facilityButton.text = facilityName
   }
 
   fun restorePreviousScreen() {
@@ -123,5 +138,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
       true -> View.INVISIBLE
       else -> View.VISIBLE
     }
+  }
+
+  fun openFacilityChangeScreen() {
+    Timber.w("TODO")
   }
 }

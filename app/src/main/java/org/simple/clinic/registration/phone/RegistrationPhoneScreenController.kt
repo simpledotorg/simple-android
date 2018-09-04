@@ -39,6 +39,20 @@ class RegistrationPhoneScreenController @Inject constructor(
   }
 
   private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
+    // Handles the following scenario
+    // - Already existing user enters phone number in registration and opens PIN entry.
+    // - Before requesting otp, user suspends the app and maybe kills it from recents.
+    // - User enters the app again, which moves them to home screen since there is a
+    //   local user for which no otp has been requested.
+    //
+    // The registration phone screen already opens if the user has not requested an otp
+    // yet. This just ensures the local stored user is cleared to restart the flow.
+    val clearLocallyStoredUser = events
+        .ofType<RegistrationPhoneScreenCreated>()
+        .flatMap { _ ->
+          userSession.clearLoggedInUser().andThen(Observable.empty<UiChange>())
+        }
+
     val createEmptyEntry = events
         .ofType<RegistrationPhoneScreenCreated>()
         .flatMap { _ ->
@@ -60,7 +74,7 @@ class RegistrationPhoneScreenController @Inject constructor(
               .map { { ui: Ui -> ui.preFillUserDetails(it) } }
         }
 
-    return createEmptyEntry.mergeWith(preFill)
+    return Observable.merge(clearLocallyStoredUser, createEmptyEntry, preFill)
   }
 
   private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {

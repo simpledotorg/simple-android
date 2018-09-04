@@ -9,6 +9,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
@@ -38,9 +39,10 @@ class AppLockScreenController @Inject constructor(
   private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenCreated>()
-        .flatMap {
+        .flatMap { _ ->
           userSession.loggedInUser()
-              .map { (it as Just).value }
+              .filter { it is Just<User> }
+              .map { (user) -> user!! }
               .map { it.fullName }
         }
         .map { { ui: Ui -> ui.showFullName(it) } }

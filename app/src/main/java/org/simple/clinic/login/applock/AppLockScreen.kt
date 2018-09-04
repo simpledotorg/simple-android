@@ -6,7 +6,6 @@ import android.support.transition.TransitionManager
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
@@ -20,12 +19,13 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PinEditText
 import org.simple.clinic.widgets.hideKeyboard
-import timber.log.Timber
+import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -43,7 +43,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var activity: TheActivity
 
-  private val rootLayout by bindView<ViewGroup>(R.id.applock_root)
   private val facilityButton by bindView<Button>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
   private val logoutButton by bindView<Button>(R.id.applock_logout)
@@ -69,6 +68,10 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     logoutButton.setOnClickListener {
       Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
     }
+
+    // The keyboard shows up on PIN field automatically when the app is
+    // starting, but not when the user comes back from FacilityChangeScreen.
+    pinEditText.showKeyboard()
   }
 
   private fun screenCreates() = Observable.just(AppLockScreenCreated())
@@ -123,7 +126,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   fun setProgressVisible(show: Boolean) {
     if (show) {
-      rootLayout.hideKeyboard()
+      hideKeyboard()
     }
 
     TransitionManager.beginDelayedTransition(this, Fade()
@@ -141,6 +144,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun openFacilityChangeScreen() {
-    Timber.w("TODO")
+    screenRouter.push(FacilityChangeScreen.KEY)
   }
 }

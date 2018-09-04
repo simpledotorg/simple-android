@@ -22,15 +22,19 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_24"
       android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
       android:drawablePadding="6dp"
       android:drawableStart="@drawable/ic_location_20dp"
+      android:ellipsize="end"
       android:fontFamily="sans-serif"
+      android:maxLines="1"
       android:padding="@dimen/spacing_8"
       android:textAllCaps="false"
       android:textColor="@color/white"
       android:textSize="@dimen/textsize_16"
-      tools:text="PHC Hoshiarpur" />
+      tools:text="A really long facility name that does not fit" />
 
     <LinearLayout
       android:layout_width="match_parent"
@@ -101,8 +105,7 @@
       <TextView
         android:id="@+id/applock_error"
         style="@style/Clinic.LoginPinErrorText"
-        android:text="@string/applock_error_incorrect_pin"
-        android:visibility="visible" />
+        android:text="@string/applock_error_incorrect_pin" />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 </org.simple.clinic.login.applock.AppLockScreen>

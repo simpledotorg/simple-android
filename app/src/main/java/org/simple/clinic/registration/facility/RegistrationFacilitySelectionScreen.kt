@@ -15,7 +15,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.Facility
@@ -37,9 +36,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  @Inject
-  lateinit var appDatabase: AppDatabase
-
   private val toolbar by bindView<Toolbar>(R.id.registrationfacilities_toolbar)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
   private val progressView by bindView<View>(R.id.registrationfacilities_progress)
@@ -57,7 +53,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), retryClicks(), recyclerViewAdapter.facilityClicks)
+    Observable.mergeArray(screenCreates(), retryClicks(), facilityClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -78,6 +74,8 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
       RxView
           .clicks(errorRetryButton)
           .map { RegistrationFacilitySelectionRetryClicked() }
+
+  private fun facilityClicks() = recyclerViewAdapter.facilityClicks.map(::RegistrationFacilityClicked)
 
   fun showProgressIndicator() {
     progressView.visibility = VISIBLE

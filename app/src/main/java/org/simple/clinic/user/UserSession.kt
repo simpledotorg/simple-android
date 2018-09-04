@@ -10,7 +10,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityPullResult.NetworkError
 import org.simple.clinic.facility.FacilityPullResult.Success
@@ -128,10 +127,6 @@ class UserSession @Inject constructor(
     return ongoingEntry
         .zipWith(ongoingEntry.flatMap { entry -> passwordHasher.hash(entry.pin!!) })
         .flatMapCompletable { (entry, passwordDigest) ->
-          if (BuildConfig.DEBUG) {
-            // FIXME: Strip PIN once we start sending logs to Sentry.
-            Timber.i("Logging in user: $entry")
-          }
           val user = User(
               uuid = entry.uuid!!,
               fullName = entry.fullName!!,

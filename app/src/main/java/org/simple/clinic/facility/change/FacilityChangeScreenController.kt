@@ -28,11 +28,9 @@ class FacilityChangeScreenController @Inject constructor(
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val facilitiesStream = events
+    return events
         .ofType<ScreenCreated>()
         .flatMap { facilityRepository.facilities() }
-
-    return facilitiesStream
         .map { { ui: Ui -> ui.updateFacilities(it) } }
   }
 

@@ -3,7 +3,9 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth"
+  tools:ignore="Overdraw">
 
   <LinearLayout
     android:id="@+id/applock_logo_container"
@@ -53,7 +55,7 @@
         android:textSize="@dimen/textsize_20"
         tools:text="A really long person name" />
 
-      <android.support.v7.widget.AppCompatButton
+      <Button
         android:id="@+id/applock_logout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

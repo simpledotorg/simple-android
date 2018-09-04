@@ -7,13 +7,19 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
 typealias UiChange = (Ui) -> Unit
 
-class BloodPressureEntrySheetController @Inject constructor(val repository: BloodPressureRepository) : ObservableTransformer<UiEvent, UiChange> {
+class BloodPressureEntrySheetController @Inject constructor(
+    private val bloodPressureRepository: BloodPressureRepository,
+    private val appointmentRepository: AppointmentRepository
+) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
@@ -38,11 +44,11 @@ class BloodPressureEntrySheetController @Inject constructor(val repository: Bloo
   }
 
   private fun handleImeOptionClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
+
     val patientUuids = events
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.patientUuid }
-
-    val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
 
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()
@@ -57,8 +63,9 @@ class BloodPressureEntrySheetController @Inject constructor(val repository: Bloo
         .filter { (_, systolic, diastolic) -> isInputValid(systolic, diastolic) }
         .take(1)
         .flatMap { (uuid, systolic, diastolic) ->
-          repository
+          bloodPressureRepository
               .saveMeasurement(uuid, systolic.toInt(), diastolic.toInt())
+              .andThen(appointmentRepository.schedule(uuid, LocalDate.now(ZoneOffset.UTC).minusDays(1)))
               .andThen(Observable.just({ ui: Ui -> ui.finish() }))
         }
   }

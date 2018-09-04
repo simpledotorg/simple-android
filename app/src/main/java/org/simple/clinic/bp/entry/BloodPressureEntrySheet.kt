@@ -86,8 +86,8 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private fun diastolicImeOptionClicks(): Observable<BloodPressureSaveClicked> {
     return Observable
         .merge(
-            RxTextView.editorActions(systolicEditText, { actionId -> actionId == EditorInfo.IME_ACTION_DONE }),
-            RxTextView.editorActions(diastolicEditText, { actionId -> actionId == EditorInfo.IME_ACTION_DONE }))
+            RxTextView.editorActions(systolicEditText) { actionId -> actionId == EditorInfo.IME_ACTION_DONE },
+            RxTextView.editorActions(diastolicEditText) { actionId -> actionId == EditorInfo.IME_ACTION_DONE })
         .map { BloodPressureSaveClicked() }
   }
 

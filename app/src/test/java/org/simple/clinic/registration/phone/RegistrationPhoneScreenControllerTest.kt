@@ -41,10 +41,22 @@ class RegistrationPhoneScreenControllerTest {
   }
 
   @Test
+  fun `when screen is created and a local user is present, then the local user must be cleared`() {
+    whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(false))
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+
+    uiEvents.onNext(RegistrationPhoneScreenCreated())
+
+    verify(userSession).clearLoggedInUser()
+  }
+
+  @Test
   fun `when screen is created and an existing ongoing entry is absent then an empty ongoing entry should be created`() {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(false))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 
@@ -65,6 +77,7 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when screen is created then existing details should be pre-filled`() {
     val ongoingEntry = OngoingRegistrationEntry(phoneNumber = "123")
+    whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(true))
 

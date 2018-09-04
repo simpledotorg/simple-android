@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.facility.change.FacilityChangeScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:animateLayoutChanges="true"
+  android:background="@color/white"
+  tools:ignore="Overdraw"
+  android:orientation="vertical">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/facilitychange_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/facilitychange_screen_title" />
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/facilitychange_list"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/facilitychange_toolbar"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbars="vertical"
+    tools:listitem="@layout/list_facility_selection" />
+</org.simple.clinic.facility.change.FacilityChangeScreen>

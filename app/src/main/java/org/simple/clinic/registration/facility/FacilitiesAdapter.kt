@@ -12,7 +12,6 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.widgets.UiEvent
 
 /**
  * FYI: We tried using Groupie for facility screen, but it was resulting in a weird
@@ -20,7 +19,7 @@ import org.simple.clinic.widgets.UiEvent
  */
 class FacilitiesAdapter : ListAdapter<Facility, FacilityViewHolder>(FacilityDiffer()) {
 
-  val facilityClicks = PublishSubject.create<UiEvent>()!!
+  val facilityClicks = PublishSubject.create<Facility>()!!
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection, parent, false)
@@ -38,7 +37,7 @@ class FacilitiesAdapter : ListAdapter<Facility, FacilityViewHolder>(FacilityDiff
   }
 }
 
-class FacilityViewHolder(rootView: View, uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {
+class FacilityViewHolder(rootView: View, uiEvents: Subject<Facility>) : ViewHolder(rootView) {
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
 
@@ -46,7 +45,7 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<UiEvent>) : ViewHolde
 
   init {
     itemView.setOnClickListener {
-      uiEvents.onNext(RegistrationFacilityClicked(facility))
+      uiEvents.onNext(facility)
     }
   }
 

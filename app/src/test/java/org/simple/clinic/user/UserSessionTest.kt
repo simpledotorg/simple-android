@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
@@ -37,6 +38,7 @@ import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.UUID
 
@@ -199,6 +201,21 @@ class UserSessionTest {
 
     result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
     assertThat(result).isInstanceOf(SaveUserLocallyResult.NetworkError::class.java)
+  }
+
+  @Test
+  fun `when requesting login otp fails, the local logged in status must not be updated`() {
+    whenever(loginApi.requestLoginOtp(any()))
+        .thenReturn(
+            Completable.error(RuntimeException()),
+            Completable.error(IOException())
+        )
+
+    userSession.requestLoginOtp().blockingGet()
+    verify(userDao, never()).updateLoggedInStatusForUser(any(), any())
+
+    userSession.requestLoginOtp().blockingGet()
+    verify(userDao, never()).updateLoggedInStatusForUser(any(), any())
   }
 
   @After

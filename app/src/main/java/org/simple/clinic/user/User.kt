@@ -78,6 +78,9 @@ data class User(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun createOrUpdate(user: User)
 
+    @Query("UPDATE LoggedInUser SET loggedInStatus = :loggedInStatus WHERE uuid = :userUuId")
+    abstract fun updateLoggedInStatusForUser(userUuId: UUID, loggedInStatus: LoggedInStatus)
+
     @Delete
     protected abstract fun deleteUser(user: User)
 

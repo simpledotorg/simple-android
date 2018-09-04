@@ -75,10 +75,9 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
           .map { PinSubmitClicked() }
 
   private fun backClicks(): Observable<PinBackClicked> {
-
     val backClicksFromView = RxView.clicks(backButton).map { PinBackClicked() }
 
-    val backClicksFromSystem =  Observable.create<PinBackClicked> { emitter ->
+    val backClicksFromSystem = Observable.create<PinBackClicked> { emitter ->
       val backPressInterceptor = object : BackPressInterceptor {
         override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
           emitter.onNext(PinBackClicked())

@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import android.content.Context
 import android.support.annotation.IdRes
+import android.support.v4.app.FragmentManager
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.animation.AnimationUtils
@@ -37,6 +38,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Inject
   lateinit var activityLifecycle: Observable<TheActivityLifecycle>
+
+  @Inject
+  lateinit var fragmentManager: FragmentManager
 
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
@@ -117,5 +121,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     // By changing to an empty child instead of hiding the ViewFlipper entirely,
     // ViewFlipper's change animations can be re-used for this transition.
     showUserApprovalStatus(R.id.patients_user_status_hidden)
+  }
+
+  fun showUserVerifiedAlert() {
+    LoggedOutOnOtherDeviceDialog.show(fragmentManager)
   }
 }

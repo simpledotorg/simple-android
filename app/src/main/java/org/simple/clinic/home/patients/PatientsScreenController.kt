@@ -21,6 +21,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
@@ -42,9 +43,10 @@ class PatientsScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
+        showUserVerificationAlert(replayedEvents),
         showApprovalStatus(replayedEvents),
         dismissApprovalStatus(replayedEvents))
   }
@@ -96,7 +98,6 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun showApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
-
     return events
         .ofType<ScreenCreated>()
         .flatMap {
@@ -126,6 +127,22 @@ class PatientsScreenController @Inject constructor(
                   }
                 }
               }
+        }
+  }
+
+  private fun showUserVerificationAlert(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<ScreenCreated>()
+        .flatMap { userSession.loggedInUser() }
+        .filter { it is Just<User> }
+        .map { (user) -> user!!.loggedInStatus }
+        .buffer(2, 1)
+        .filter { it.size == 2 }
+        .filter { it[0] == OTP_REQUESTED && it[1] == LOGGED_IN }
+        .map {
+          { ui: Ui ->
+            ui.showUserVerifiedAlert()
+            ui.hideUserApprovalStatus()
+          }
         }
   }
 

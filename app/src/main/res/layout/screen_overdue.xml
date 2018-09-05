@@ -8,8 +8,7 @@
     android:id="@+id/overdue_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/spacing_8"
-    />
+    android:padding="@dimen/spacing_8" />
 
   <LinearLayout
     android:id="@+id/overdue_list_empty_layout"

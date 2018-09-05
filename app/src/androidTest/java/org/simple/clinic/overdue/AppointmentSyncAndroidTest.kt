@@ -6,13 +6,13 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.user.UserSession
@@ -50,14 +50,12 @@ class AppointmentSyncAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyRecords(count: Int): Completable {
@@ -92,10 +90,5 @@ class AppointmentSyncAndroidTest {
 
     val recordCountAfterPull = dao.count()
     assertThat(recordCountAfterPull).isAtLeast(recordsToInsert)
-  }
-
-  @After
-  fun tearDown() {
-    userSession.logout().blockingAwait()
   }
 }

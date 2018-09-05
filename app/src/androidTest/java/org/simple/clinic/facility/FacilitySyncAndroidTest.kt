@@ -3,14 +3,14 @@ package org.simple.clinic.facility
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -40,14 +40,12 @@ class FacilitySyncAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   @Test
@@ -60,11 +58,5 @@ class FacilitySyncAndroidTest {
 
     val count = database.facilityDao().count().blockingFirst()
     assertThat(count).isAtLeast(1)
-  }
-
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-    userSession.logout().blockingAwait()
   }
 }

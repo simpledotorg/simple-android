@@ -2,13 +2,13 @@ package org.simple.clinic.overdue.communication
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import java.util.UUID
@@ -26,14 +26,12 @@ class CommunicationRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   @Test
@@ -51,10 +49,5 @@ class CommunicationRepositoryAndroidTest {
       assertThat(this.result).isEqualTo(Communication.Result.AGREED_TO_VISIT)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
-  }
-
-  @After
-  fun tearDown() {
-    userSession.logout().blockingAwait()
   }
 }

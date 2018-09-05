@@ -69,6 +69,10 @@
   <string name="patients_awaiting_sms_verification_message">Once verified, you will have access to patient records from your clinic.</string>
   <string name="patients_dismiss_user_approved_status">Got it</string>
   <string name="patients_enter_code">Enter Code</string>
+  <string name="patients_you_are_now_logged_in">Verification successful! Patient records now visible.</string>
+  <string name="patients_loggedoutalert_title">You can only be logged in on one device at a time</string>
+  <string name="patients_loggedoutalert_message">You have been logged out of your previous device.</string>
+  <string name="patients_loggedoutalert_dismiss">Got it</string>
 
   <!-- New blood pressure entry -->
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
@@ -120,7 +124,6 @@
   <string name="loginpin_go_back">Go back to phone number screen</string>
   <string name="loginpin_error_check_internet_connection">@string/api_network_error</string>
   <string name="loginpin_error_incorrect_pin">PIN doesn\'t match the original PIN</string>
-  <string name="loginpin_you_are_now_logged_in">Verification successful! Patient records now visible.</string>
 
   <!-- App lock -->
   <string name="applock_error_incorrect_pin">PIN doesn\'t match the original PIN</string>

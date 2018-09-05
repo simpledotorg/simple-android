@@ -1,5 +1,6 @@
 package org.simple.clinic.activity
 
+import android.support.v4.app.FragmentManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.BindsInstance
@@ -89,4 +90,7 @@ class TheActivityModule {
   fun lastAppStopTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Instant> {
     return rxSharedPrefs.getObject("should_lock_after", Instant.MAX, InstantRxPreferencesConverter())
   }
+
+  @Provides
+  fun fragmentManager(activity: TheActivity): FragmentManager = activity.supportFragmentManager
 }

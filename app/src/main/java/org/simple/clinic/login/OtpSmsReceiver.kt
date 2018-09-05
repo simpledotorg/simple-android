@@ -55,10 +55,10 @@ class OtpSmsReceiver : BroadcastReceiver() {
             .observeOn(mainThread())
             .subscribe({
               when (it) {
-                is LoginResult.Success -> showToast(context, R.string.loginpin_you_are_now_logged_in)
                 is LoginResult.UnexpectedError -> showToast(context, R.string.api_unexpected_error)
                 is LoginResult.NetworkError -> showToast(context, R.string.api_network_error)
                 is LoginResult.ServerError -> showToast(context, it.error)
+                // No need to handle success case because it is handled in the home screen UI
               }
             }, {
               Timber.e(it, "Could not login with OTP!")

@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -226,7 +227,7 @@ class PatientsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    if(shouldShowMessage) {
+    if (shouldShowMessage) {
       verify(screen).showUserStatusAsPendingVerification()
     } else {
       verify(screen, never()).showUserStatusAsPendingVerification()
@@ -258,10 +259,42 @@ class PatientsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    if(shouldHideMessage) {
+    if (shouldHideMessage) {
       verify(screen).hideUserApprovalStatus()
     } else {
       verify(screen, never()).hideUserApprovalStatus()
+    }
+  }
+
+  @Test
+  @Parameters(
+      "OTP_REQUESTED|LOGGED_IN|LOGGED_IN|true",
+      "LOGGED_IN|LOGGED_IN|LOGGED_IN|false"
+  )
+  fun `when a user is verified for login, the verification status must be hidden`(
+      prevloggedInStatus: LoggedInStatus,
+      curLoggedInStatus: LoggedInStatus,
+      nextLoggedInStatus: LoggedInStatus,
+      shouldShowVerificationAlert: Boolean
+  ) {
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    whenever(userSession.loggedInUser()).thenReturn(
+        Observable.just(
+            Just(user),
+            Just(user.copy(loggedInStatus = curLoggedInStatus)),
+            Just(user.copy(loggedInStatus = nextLoggedInStatus)))
+    )
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+
+    uiEvents.onNext(ScreenCreated())
+
+    if(shouldShowVerificationAlert) {
+      verify(screen).showUserVerifiedAlert()
+      verify(screen, atLeastOnce()).hideUserApprovalStatus()
+    } else {
+      verify(screen, never()).showUserVerifiedAlert()
     }
   }
 }

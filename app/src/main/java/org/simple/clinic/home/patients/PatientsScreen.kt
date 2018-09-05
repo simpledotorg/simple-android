@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.RelativeLayout
+import android.widget.Toast
 import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -46,6 +47,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
   private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
+  private val enterOtpManuallyButton by bindView<Button>(R.id.patients_enter_code)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -69,6 +71,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+
+    enterOtpManuallyButton.setOnClickListener { Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show() }
   }
 
   private fun setupApprovalStatusAnimations() {

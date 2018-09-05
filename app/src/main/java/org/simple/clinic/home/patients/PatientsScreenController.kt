@@ -12,6 +12,11 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.VERIFYING_OTP
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
@@ -59,7 +64,7 @@ class PatientsScreenController @Inject constructor(
         // So duplicate triggers are dropped by restricting flatMap's
         // concurrency to 1.
         .toFlowable(BackpressureStrategy.LATEST)
-        .flatMapMaybe({
+        .flatMapMaybe({ _ ->
           userSession.loggedInUser()
               .firstOrError()
               .filter { (user) -> user!!.status == WAITING_FOR_APPROVAL }
@@ -91,16 +96,24 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun showApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
+
     return events
         .ofType<ScreenCreated>()
         .flatMap {
           val user = userSession.loggedInUser().map { (user) -> user!! }
 
+          val setVerificationStatusMessageVisible = { loggedInStatus: User.LoggedInStatus, ui: Ui ->
+            when (loggedInStatus) {
+              NOT_LOGGED_IN, OTP_REQUESTED, VERIFYING_OTP -> ui.showUserStatusAsPendingVerification()
+              LOGGED_IN -> ui.hideUserApprovalStatus()
+            }
+          }
+
           Observables.combineLatest(user, hasUserDismissedApprovedStatusPref.asObservable())
               .map { (user, userDismissedStatus) ->
                 when (user.status) {
                   WAITING_FOR_APPROVAL -> { ui: Ui -> ui.showUserStatusAsWaiting() }
-                  DISAPPROVED_FOR_SYNCING -> { ui: Ui -> ui.hideUserApprovalStatus() }
+                  DISAPPROVED_FOR_SYNCING -> { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
                   APPROVED_FOR_SYNCING -> {
                     val twentyFourHoursAgo = Instant.now().minus(24, ChronoUnit.HOURS)
                     val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()
@@ -108,7 +121,7 @@ class PatientsScreenController @Inject constructor(
                     if (userDismissedStatus.not() && wasApprovedInLast24Hours) {
                       { ui: Ui -> ui.showUserStatusAsApproved() }
                     } else {
-                      { ui: Ui -> ui.hideUserApprovalStatus() }
+                      { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
                     }
                   }
                 }

@@ -17,6 +17,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
@@ -197,6 +198,70 @@ class PatientsScreenControllerTest {
       verify(syncScheduler).syncImmediately()
     } else {
       verify(syncScheduler, never()).syncImmediately()
+    }
+  }
+
+  @Test
+  @Parameters(
+      "WAITING_FOR_APPROVAL|NOT_LOGGED_IN|false",
+      "WAITING_FOR_APPROVAL|OTP_REQUESTED|false",
+      "WAITING_FOR_APPROVAL|LOGGED_IN|false",
+      "APPROVED_FOR_SYNCING|NOT_LOGGED_IN|true",
+      "APPROVED_FOR_SYNCING|OTP_REQUESTED|true",
+      "APPROVED_FOR_SYNCING|LOGGED_IN|false",
+      "DISAPPROVED_FOR_SYNCING|NOT_LOGGED_IN|true",
+      "DISAPPROVED_FOR_SYNCING|OTP_REQUESTED|true",
+      "DISAPPROVED_FOR_SYNCING|LOGGED_IN|false"
+  )
+  fun `when an approved user is awaiting sms verification, the verification status must be shown`(
+      userStatus: UserStatus,
+      loggedInStatus: LoggedInStatus,
+      shouldShowMessage: Boolean
+  ) {
+    val user = PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+
+    uiEvents.onNext(ScreenCreated())
+
+    if(shouldShowMessage) {
+      verify(screen).showUserStatusAsPendingVerification()
+    } else {
+      verify(screen, never()).showUserStatusAsPendingVerification()
+    }
+  }
+
+  @Test
+  @Parameters(
+      "WAITING_FOR_APPROVAL|NOT_LOGGED_IN|false",
+      "WAITING_FOR_APPROVAL|OTP_REQUESTED|false",
+      "WAITING_FOR_APPROVAL|LOGGED_IN|false",
+      "APPROVED_FOR_SYNCING|NOT_LOGGED_IN|false",
+      "APPROVED_FOR_SYNCING|OTP_REQUESTED|false",
+      "APPROVED_FOR_SYNCING|LOGGED_IN|true",
+      "DISAPPROVED_FOR_SYNCING|NOT_LOGGED_IN|false",
+      "DISAPPROVED_FOR_SYNCING|OTP_REQUESTED|false",
+      "DISAPPROVED_FOR_SYNCING|LOGGED_IN|true"
+  )
+  fun `when an approved user is verified, the verification status must be hidden`(
+      userStatus: UserStatus,
+      loggedInStatus: LoggedInStatus,
+      shouldHideMessage: Boolean
+  ) {
+    val user = PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
+    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
+
+    uiEvents.onNext(ScreenCreated())
+
+    if(shouldHideMessage) {
+      verify(screen).hideUserApprovalStatus()
+    } else {
+      verify(screen, never()).hideUserApprovalStatus()
     }
   }
 }

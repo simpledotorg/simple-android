@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/patients_user_status_approved"
+<RelativeLayout android:id="@+id/patients_user_status_awaitingsmsverification"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -36,5 +36,6 @@
     android:layout_alignParentEnd="true"
     android:text="@string/patients_enter_code"
     android:textColor="#99ff66"
-    android:theme="@style/Clinic.DismissUserApprovedStatusTheme" />
+    android:theme="@style/Clinic.DismissUserApprovedStatusTheme"
+    android:visibility="gone" />
 </RelativeLayout>

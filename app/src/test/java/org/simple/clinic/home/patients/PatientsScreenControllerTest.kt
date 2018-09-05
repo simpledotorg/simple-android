@@ -290,7 +290,7 @@ class PatientsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    if(shouldShowVerificationAlert) {
+    if (shouldShowVerificationAlert) {
       verify(screen).showUserVerifiedAlert()
       verify(screen, atLeastOnce()).hideUserAccountStatus()
     } else {

@@ -145,6 +145,7 @@ object PatientMocker {
         gender = mock(),
         dateOfBirth = LocalDate.now(ZoneOffset.UTC).minusYears(30),
         age = null,
+        phoneNumber = mock(),
         appointment = appointment(),
         bloodPressure = BloodPressureMeasurement(
             uuid = mock(),

@@ -29,7 +29,7 @@ class FacilityRepository @Inject constructor(
   }
 
   fun associateUserWithFacility(userSession: UserSession, facilityId: UUID): Completable {
-    return requireUser(userSession)
+    return userSession.requireLoggedInUser()
         .take(1)
         .flatMapCompletable {
           Completable.fromAction {
@@ -39,7 +39,7 @@ class FacilityRepository @Inject constructor(
   }
 
   fun currentFacility(userSession: UserSession): Observable<Facility> {
-    return requireUser(userSession)
+    return userSession.requireLoggedInUser()
         .flatMap { currentFacility(it) }
   }
 
@@ -51,16 +51,6 @@ class FacilityRepository @Inject constructor(
     return userFacilityMappingDao
         .facilityUuids(user.uuid)
         .toObservable()
-  }
-
-  private fun requireUser(userSession: UserSession): Observable<User> {
-    return userSession.loggedInUser()
-        .map { (user) ->
-          if (user == null) {
-            throw AssertionError("User isn't logged in yet")
-          }
-          user
-        }
   }
 
   fun mergeWithLocalData(payloads: List<FacilityPayload>): Completable {

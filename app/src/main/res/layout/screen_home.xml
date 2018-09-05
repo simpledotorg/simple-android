@@ -28,6 +28,7 @@
       android:layout_height="wrap_content"
       android:background="@color/color_primary"
       android:elevation="@dimen/elevation_toolbar"
+      app:tabIndicatorHeight="3dp"
       app:tabIndicatorColor="@color/white"
       app:tabSelectedTextColor="@color/white"
       app:tabTextColor="@color/white_opacity_60"

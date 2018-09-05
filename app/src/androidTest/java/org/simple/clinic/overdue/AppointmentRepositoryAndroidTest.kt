@@ -3,15 +3,15 @@ package org.simple.clinic.overdue
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -41,14 +41,12 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var faker: Faker
 
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
-
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   @Test
@@ -249,10 +247,5 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.appointment.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
       assertThat(this.bloodPressure.uuid).isEqualTo(bp30)
     }
-  }
-
-  @After
-  fun tearDown() {
-    userSession.logout().blockingAwait()
   }
 }

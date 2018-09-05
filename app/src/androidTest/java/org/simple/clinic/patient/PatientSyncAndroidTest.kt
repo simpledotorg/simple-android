@@ -7,14 +7,14 @@ import io.bloco.faker.Faker
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV1
@@ -58,17 +58,15 @@ class PatientSyncAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
   private val oldDateFormatter = SimpleDateFormat("dd/MM/yyyy")
   private val genders = listOf(Gender.MALE, Gender.FEMALE, Gender.TRANSGENDER).shuffled()
 
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyPatients(count: Int): Completable {
@@ -143,11 +141,5 @@ class PatientSyncAndroidTest {
         .blockingGet()
 
     assertThat(patientCountAfterPull).isAtLeast(patientsToInsert)
-  }
-
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-    userSession.logout().blockingAwait()
   }
 }

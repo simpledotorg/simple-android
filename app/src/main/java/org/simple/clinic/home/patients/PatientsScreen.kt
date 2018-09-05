@@ -109,6 +109,10 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showUserApprovalStatus(R.id.patients_user_status_approved)
   }
 
+  fun showUserStatusAsPendingVerification() {
+    showUserApprovalStatus(R.id.patients_user_status_awaitingsmsverification)
+  }
+
   fun hideUserApprovalStatus() {
     // By changing to an empty child instead of hiding the ViewFlipper entirely,
     // ViewFlipper's change animations can be re-used for this transition.

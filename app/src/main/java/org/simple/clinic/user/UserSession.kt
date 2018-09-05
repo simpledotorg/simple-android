@@ -321,6 +321,16 @@ class UserSession @Inject constructor(
         .map { if (it.isEmpty()) None else Just(it.first()) }
   }
 
+  fun requireLoggedInUser(): Observable<User> {
+    return loggedInUser()
+        .map { (user) ->
+          if (user == null) {
+            throw AssertionError("User isn't logged in yet")
+          }
+          user
+        }
+  }
+
   // FIXME: Figure out a better way to add access tokens to network calls in a reactive fashion
   // FIXME: Maybe add a separate RxCallAdapterFactory that lets us transform requests without interceptors?
   // This was added because we needed to call it from the OkHttp Interceptor

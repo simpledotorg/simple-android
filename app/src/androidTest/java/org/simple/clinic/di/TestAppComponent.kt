@@ -1,6 +1,7 @@
 package org.simple.clinic.di
 
 import dagger.Component
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -35,4 +36,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: CommunicationSyncAndroidTest)
   fun inject(target: AppointmentRepositoryAndroidTest)
   fun inject(target: CommunicationRepositoryAndroidTest)
+  fun inject(target: AuthenticationRule)
 }

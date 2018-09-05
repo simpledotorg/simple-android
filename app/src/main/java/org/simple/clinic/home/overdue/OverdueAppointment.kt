@@ -8,6 +8,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.threeten.bp.LocalDate
 
 data class OverdueAppointment(
@@ -25,7 +26,10 @@ data class OverdueAppointment(
     val appointment: Appointment,
 
     @Embedded(prefix = "bp_")
-    val bloodPressure: BloodPressureMeasurement
+    val bloodPressure: BloodPressureMeasurement,
+
+    @Embedded(prefix = "phone_")
+    val phoneNumber: PatientPhoneNumber?
 ) {
 
   @Dao
@@ -38,12 +42,15 @@ data class OverdueAppointment(
           BP.facilityUuid bp_facilityUuid, BP.patientUuid bp_patientUuid, BP.createdAt bp_createdAt, BP.updatedAt bp_updatedAt,
 
           A.uuid appt_uuid, A.patientUuid appt_patientUuid, A.facilityUuid appt_facilityUuid, A.date appt_date, A.status appt_status,
-          A.statusReason appt_statusReason, A.syncStatus appt_syncStatus, A.createdAt appt_createdAt, A.updatedAt appt_updatedAt
+          A.statusReason appt_statusReason, A.syncStatus appt_syncStatus, A.createdAt appt_createdAt, A.updatedAt appt_updatedAt,
+
+          PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active, PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt
 
           FROM Patient P
 
           INNER JOIN Appointment A ON A.patientUuid = P.uuid
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
+          LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
           WHERE A.status = :scheduledStatus AND A.date < :dateNow
           GROUP BY P.uuid HAVING max(BP.updatedAt)

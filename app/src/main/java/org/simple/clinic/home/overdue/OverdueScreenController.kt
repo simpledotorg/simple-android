@@ -3,8 +3,11 @@ package org.simple.clinic.home.overdue
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
+import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -22,9 +25,12 @@ class OverdueScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
-    val replayedEvents = upstream.replay().refCount()
+    val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return screenSetup(replayedEvents)
+    return Observable.merge(
+        screenSetup(replayedEvents),
+        phoneCallPermissionRequests(replayedEvents),
+        patientCalls(replayedEvents))
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
@@ -40,6 +46,7 @@ class OverdueScreenController @Inject constructor(
                 name = it.fullName,
                 gender = it.gender,
                 age = getAge(it.dateOfBirth, it.age),
+                phoneNumber = it.phoneNumber?.number,
                 bpSystolic = it.bloodPressure.systolic,
                 bpDiastolic = it.bloodPressure.diastolic,
                 bpDaysAgo = calculateDaysAgoFromInstant(it.bloodPressure.updatedAt),
@@ -76,5 +83,28 @@ class OverdueScreenController @Inject constructor(
 
   private fun calculateOverdueDays(date: LocalDate): Int {
     return DAYS.between(date, LocalDate.now(ZoneOffset.UTC)).toInt()
+  }
+
+  private fun phoneCallPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<CallPatientClicked>()
+        .map { { ui: Ui -> ui.requestCallPermission() } }
+  }
+
+  private fun patientCalls(events: Observable<UiEvent>): Observable<UiChange> {
+    val callPhonePermissionChanges = events
+        .ofType<CallPhonePermissionChanged>()
+        .map(CallPhonePermissionChanged::result)
+
+    val grantedStream = callPhonePermissionChanges
+        .filter { it == RuntimePermissionResult.GRANTED }
+        .withLatestFrom(events.ofType<CallPatientClicked>())
+        .flatMap { (_, callClicked) -> Observable.just { ui: Ui -> ui.callPatientWithoutUsingDialer(callClicked.phoneNumber) } }
+
+    val notGrantedStream = callPhonePermissionChanges
+        .filter { it != RuntimePermissionResult.GRANTED }
+        .withLatestFrom(events.ofType<CallPatientClicked>())
+        .flatMap { (_, callClicked) -> Observable.just { ui: Ui -> ui.callPatientUsingDialer(callClicked.phoneNumber) } }
+
+    return notGrantedStream.mergeWith(grantedStream)
   }
 }

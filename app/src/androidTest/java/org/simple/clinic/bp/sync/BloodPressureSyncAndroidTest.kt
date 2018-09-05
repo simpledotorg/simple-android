@@ -7,16 +7,16 @@ import io.bloco.faker.Faker
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -60,14 +60,12 @@ class BloodPressureSyncAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
   }
 
   private fun insertDummyMeasurements(count: Int): Completable {
@@ -153,11 +151,5 @@ class BloodPressureSyncAndroidTest {
 
     val measurementCountAfterPull = repository.measurementCount().blockingGet()
     assertThat(measurementCountAfterPull).isAtLeast(measurementsToInsert)
-  }
-
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-    userSession.logout().blockingAwait()
   }
 }

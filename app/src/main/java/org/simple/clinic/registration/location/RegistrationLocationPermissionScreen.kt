@@ -21,8 +21,8 @@ import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
-const val REQUESTCODE_LOCATION_PERMISSION = 0
-const val LOCATION_PERMISSION = Manifest.permission.ACCESS_COARSE_LOCATION
+private const val REQUESTCODE_LOCATION_PERMISSION = 0
+private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_COARSE_LOCATION
 
 class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 

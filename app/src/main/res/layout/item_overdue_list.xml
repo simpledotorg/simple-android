@@ -35,7 +35,6 @@
         android:layout_marginBottom="@dimen/spacing_4"
         android:textColor="@color/black_opacity_50"
         android:textSize="@dimen/textsize_14"
-        android:textStyle="normal"
         tools:text="30 days ago: 175/85" />
 
       <TextView
@@ -44,7 +43,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/red_500"
         android:textSize="@dimen/textsize_14"
-        android:textStyle="normal"
         tools:text="4 day overdue" />
     </LinearLayout>
 

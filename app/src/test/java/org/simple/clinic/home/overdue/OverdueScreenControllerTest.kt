@@ -7,12 +7,17 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 
+@RunWith(JUnitParamsRunner::class)
 class OverdueScreenControllerTest {
 
   private val screen = mock<OverdueScreen>()
@@ -48,5 +53,40 @@ class OverdueScreenControllerTest {
     verify(screen).updateList(any())
     verify(screen).handleEmptyList(true)
     verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when call button is clicked, call permission should be requested`() {
+    uiEvents.onNext(CallPatientClicked("99999"))
+
+    verify(screen).requestCallPermission()
+  }
+
+  @Test
+  @Parameters(method = "params for permission-result dialer-method")
+  fun `when call button is clicked, and permission result is received, call should be made using relevant method`(
+      result: RuntimePermissionResult,
+      shouldUseDialer: Boolean
+  ) {
+    whenever(appointmentRepo.overdueAppointments()).thenReturn(Observable.just(listOf()))
+    val phone = "99999"
+
+    uiEvents.onNext(CallPatientClicked(phone))
+    uiEvents.onNext(CallPhonePermissionChanged(result))
+
+    verify(screen).requestCallPermission()
+    when (shouldUseDialer) {
+      true -> verify(screen).callPatientUsingDialer(phone)
+      false -> verify(screen).callPatientWithoutUsingDialer(phone)
+    }
+    verifyNoMoreInteractions(screen)
+  }
+
+  fun `params for permission-result dialer-method`(): Array<Array<Any>> {
+    return arrayOf(
+        arrayOf(RuntimePermissionResult.GRANTED, false),
+        arrayOf(RuntimePermissionResult.DENIED, true),
+        arrayOf(RuntimePermissionResult.NEVER_ASK_AGAIN, true)
+    )
   }
 }

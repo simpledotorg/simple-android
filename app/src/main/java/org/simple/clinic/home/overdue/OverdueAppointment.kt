@@ -10,6 +10,7 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.threeten.bp.LocalDate
+import java.util.UUID
 
 data class OverdueAppointment(
 
@@ -52,10 +53,10 @@ data class OverdueAppointment(
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
-          WHERE A.status = :scheduledStatus AND A.date < :dateNow
+          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.date < :dateNow
           GROUP BY P.uuid HAVING max(BP.updatedAt)
           ORDER BY A.date ASC
           """)
-    fun appointments(scheduledStatus: Appointment.Status, dateNow: LocalDate): Flowable<List<OverdueAppointment>>
+    fun appointmentsForFacility(facilityUuid: UUID, scheduledStatus: Appointment.Status, dateNow: LocalDate): Flowable<List<OverdueAppointment>>
   }
 }

@@ -39,20 +39,15 @@ data class LoggedInUserFacilityMapping(
   abstract class RoomDao {
 
     @Transaction
-    open fun insertOrUpdate(user: User, facilityIds: List<UUID>, newCurrentFacilityUuid: UUID) {
-      if ((newCurrentFacilityUuid in facilityIds).not()) {
-        throw AssertionError()
-      }
-
+    open fun insertOrUpdate(user: User, facilityIds: List<UUID>) {
       val mappings = facilityIds
           .map {
             LoggedInUserFacilityMapping(
                 userUuid = user.uuid,
                 facilityUuid = it,
-                isCurrentFacility = it == newCurrentFacilityUuid)
+                isCurrentFacility = false)
           }
       insertOrUpdate(mappings)
-      changeCurrentFacility(user.uuid, newCurrentFacilityUuid)
     }
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

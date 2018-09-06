@@ -49,12 +49,15 @@ class FacilityChangeScreenControllerTest {
   @Test
   fun `when a facility is selected then the user's facility should be changed and the screen should be closed`() {
     val newFacility = PatientMocker.facility()
-    whenever(facilityRepository.associateUserWithFacility(userSession, newFacility.uuid)).thenReturn(Completable.complete())
+    val user = PatientMocker.loggedInUser()
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
+    whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
 
     uiEvents.onNext(FacilityClicked(newFacility))
 
     val inOrder = inOrder(facilityRepository, screen)
-    inOrder.verify(facilityRepository).associateUserWithFacility(userSession, newFacility.uuid)
+    inOrder.verify(facilityRepository).associateUserWithFacility(user, newFacility)
     inOrder.verify(screen).goBack()
   }
 }

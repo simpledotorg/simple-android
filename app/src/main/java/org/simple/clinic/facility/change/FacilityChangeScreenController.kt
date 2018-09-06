@@ -39,7 +39,13 @@ class FacilityChangeScreenController @Inject constructor(
         .ofType<FacilityClicked>()
         .map { it.facility }
         .flatMap { facility ->
-          facilityRepository.associateUserWithFacility(userSession, facility.uuid)
+          userSession.requireLoggedInUser()
+              .take(1)
+              .flatMapCompletable {
+                facilityRepository
+                    .associateUserWithFacility(it, facility)
+                    .andThen(facilityRepository.setCurrentFacility(it, facility))
+              }
               .andThen(Observable.just({ ui: Ui -> ui.goBack() }))
         }
   }

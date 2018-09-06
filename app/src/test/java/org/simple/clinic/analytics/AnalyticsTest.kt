@@ -29,6 +29,11 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when reporting an audit event without any reporters, no error should be thrown`() {
+    Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
+  }
+
+  @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
     Analytics.addReporter(FailingReporter())
     Analytics.reportUserInteraction("Test")
@@ -53,6 +58,22 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when a reporter fails when sending an audit event, no error should be thrown`() {
+    Analytics.addReporter(FailingReporter())
+    Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
+  }
+
+  @Test
+  fun `when setting the user id, the property must also be set on the reporters`() {
+    val reporter = MockReporter()
+    Analytics.addReporter(reporter)
+
+    val uuid = UUID.randomUUID()
+    Analytics.setUserId(uuid)
+    assertThat(reporter.setProperties).isEqualTo(mapOf("userId" to uuid.toString()))
+  }
+
+  @Test
   fun `when multiple reporters are present and one throws an error, the user id must by set on the others`() {
     val reporter1 = MockReporter()
     val reporter2 = FailingReporter()
@@ -74,12 +95,17 @@ class AnalyticsTest {
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
 
+    val uuid1 = UUID.randomUUID()
+    val uuid2 = UUID.randomUUID()
+
     Analytics.reportUserInteraction("Test 1")
     Analytics.reportUserInteraction("Test 2")
     Analytics.reportUserInteraction("Test 3")
     Analytics.reportScreenChange("Screen 1", "Screen 2")
     Analytics.reportInputValidationError("Error 1")
     Analytics.reportInputValidationError("Error 2")
+    Analytics.reportViewedPatient(uuid1, "Test 2")
+    Analytics.reportViewedPatient(uuid2, "Test 1")
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -87,7 +113,9 @@ class AnalyticsTest {
         Event("UserInteraction", mapOf("name" to "Test 3")),
         Event("ScreenChange", mapOf("outgoing" to "Screen 1", "incoming" to "Screen 2")),
         Event("InputValidationError", mapOf("name" to "Error 1")),
-        Event("InputValidationError", mapOf("name" to "Error 2"))
+        Event("InputValidationError", mapOf("name" to "Error 2")),
+        Event("ViewedPatient", mapOf("patientId" to uuid1.toString(), "from" to "Test 2")),
+        Event("ViewedPatient", mapOf("patientId" to uuid2.toString(), "from" to "Test 1"))
     )
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)

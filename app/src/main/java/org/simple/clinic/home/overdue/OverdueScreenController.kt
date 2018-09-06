@@ -13,7 +13,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Period
-import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import javax.inject.Inject
 
@@ -64,12 +64,12 @@ class OverdueScreenController @Inject constructor(
 
   private fun getAge(dateOfBirth: LocalDate?, age: Age?): Int {
     return if (age == null) {
-      Period.between(dateOfBirth!!, LocalDate.now()).years
+      Period.between(dateOfBirth!!, LocalDate.now(UTC)).years
 
     } else {
-      val ageUpdatedAt = LocalDateTime.ofInstant(age.updatedAt, ZoneOffset.UTC)
+      val ageUpdatedAt = LocalDateTime.ofInstant(age.updatedAt, UTC)
       val updatedAtLocalDate = LocalDate.of(ageUpdatedAt.year, ageUpdatedAt.month, ageUpdatedAt.dayOfMonth)
-      val yearsSinceThen = Period.between(updatedAtLocalDate, LocalDate.now()).years
+      val yearsSinceThen = Period.between(updatedAtLocalDate, LocalDate.now(UTC)).years
       val ageWhenRecorded = age.value
 
       ageWhenRecorded + yearsSinceThen
@@ -77,12 +77,12 @@ class OverdueScreenController @Inject constructor(
   }
 
   private fun calculateDaysAgoFromInstant(instant: Instant): Int {
-    val localDateTime = LocalDateTime.ofInstant(instant, ZoneOffset.UTC)
+    val localDateTime = LocalDateTime.ofInstant(instant, UTC)
     return calculateOverdueDays(LocalDate.of(localDateTime.year, localDateTime.month, localDateTime.dayOfMonth))
   }
 
   private fun calculateOverdueDays(date: LocalDate): Int {
-    return DAYS.between(date, LocalDate.now(ZoneOffset.UTC)).toInt()
+    return DAYS.between(date, LocalDate.now(UTC)).toInt()
   }
 
   private fun phoneCallPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {
@@ -95,16 +95,20 @@ class OverdueScreenController @Inject constructor(
         .ofType<CallPhonePermissionChanged>()
         .map(CallPhonePermissionChanged::result)
 
-    val grantedStream = callPhonePermissionChanges
+    val callClicks = events
+        .ofType<CallPatientClicked>()
+        .map { it.phoneNumber }
+
+    val withoutDialerCalls = callPhonePermissionChanges
         .filter { it == RuntimePermissionResult.GRANTED }
-        .withLatestFrom(events.ofType<CallPatientClicked>())
-        .flatMap { (_, callClicked) -> Observable.just { ui: Ui -> ui.callPatientWithoutUsingDialer(callClicked.phoneNumber) } }
+        .withLatestFrom(callClicks)
+        .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientWithoutUsingDialer(phoneNumber) } }
 
-    val notGrantedStream = callPhonePermissionChanges
+    val withDialerCalls = callPhonePermissionChanges
         .filter { it != RuntimePermissionResult.GRANTED }
-        .withLatestFrom(events.ofType<CallPatientClicked>())
-        .flatMap { (_, callClicked) -> Observable.just { ui: Ui -> ui.callPatientUsingDialer(callClicked.phoneNumber) } }
+        .withLatestFrom(callClicks)
+        .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientUsingDialer(phoneNumber) } }
 
-    return notGrantedStream.mergeWith(grantedStream)
+    return withDialerCalls.mergeWith(withoutDialerCalls)
   }
 }

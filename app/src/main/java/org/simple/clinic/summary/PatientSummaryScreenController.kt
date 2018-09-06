@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientRepository
@@ -29,6 +30,7 @@ class PatientSummaryScreenController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
     return Observable.mergeArray(
+        reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(replayedEvents),
         constructPrescribedDrugsHistory(replayedEvents),
         constructBloodPressureHistory(replayedEvents),
@@ -36,6 +38,13 @@ class PatientSummaryScreenController @Inject constructor(
         openPrescribedDrugsScreen(replayedEvents),
         handleDoneClicks(replayedEvents),
         handleBackClicks(replayedEvents))
+  }
+
+  private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PatientSummaryScreenCreated>()
+        .firstElement()
+        .doOnSuccess { (patientUuid, caller) -> Analytics.reportViewedPatient(patientUuid, caller.name) }
+        .flatMapObservable { Observable.empty<UiChange>() }
   }
 
   private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {

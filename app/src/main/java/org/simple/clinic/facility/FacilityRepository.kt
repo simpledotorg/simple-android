@@ -15,7 +15,7 @@ import javax.inject.Inject
 @AppScope
 class FacilityRepository @Inject constructor(
     private val facilityDao: Facility.RoomDao,
-    private val userFacilityMappingDao: LoggedInUserFacilityMapping.RoomDao
+    val userFacilityMappingDao: LoggedInUserFacilityMapping.RoomDao
 ) {
 
   fun facilities(): Observable<List<Facility>> {
@@ -23,19 +23,24 @@ class FacilityRepository @Inject constructor(
   }
 
   fun associateUserWithFacilities(user: User, facilityIds: List<UUID>, currentFacility: UUID): Completable {
-    return Completable.fromAction {
-      userFacilityMappingDao.insertOrUpdate(user, facilityIds, currentFacility)
-    }
+    return associateUserWithFacilities(user, facilityIds)
+        .andThen(setCurrentFacility(user, currentFacility))
   }
 
-  fun associateUserWithFacility(userSession: UserSession, facilityId: UUID): Completable {
-    return userSession.requireLoggedInUser()
-        .take(1)
-        .flatMapCompletable {
-          Completable.fromAction {
-            userFacilityMappingDao.insertOrUpdate(it, listOf(facilityId), newCurrentFacilityUuid = facilityId)
-          }
-        }
+  fun associateUserWithFacilities(user: User, facilityIds: List<UUID>): Completable {
+    return Completable.fromAction { userFacilityMappingDao.insertOrUpdate(user, facilityIds) }
+  }
+
+  fun associateUserWithFacility(user: User, facility: Facility): Completable {
+    return Completable.fromAction { userFacilityMappingDao.insertOrUpdate(user, listOf(facility.uuid)) }
+  }
+
+  fun setCurrentFacility(user: User, facility: Facility): Completable {
+    return setCurrentFacility(user, facility.uuid)
+  }
+
+  private fun setCurrentFacility(user: User, facilityUuid: UUID): Completable {
+    return Completable.fromAction { userFacilityMappingDao.changeCurrentFacility(user.uuid, facilityUuid) }
   }
 
   fun currentFacility(userSession: UserSession): Observable<Facility> {

@@ -27,7 +27,6 @@
       android:text="@string/overdue_no_patients"
       android:textColor="@color/black_opacity_50"
       android:textSize="@dimen/textsize_20"
-      android:textStyle="normal"
       tools:ignore="UnusedAttribute" />
 
     <ImageView
@@ -44,8 +43,7 @@
       android:fontFamily="sans-serif"
       android:text="@string/overdue_empty_desc"
       android:textColor="@color/black_opacity_50"
-      android:textSize="@dimen/textsize_16"
-      android:textStyle="normal" />
+      android:textSize="@dimen/textsize_16" />
 
   </LinearLayout>
 

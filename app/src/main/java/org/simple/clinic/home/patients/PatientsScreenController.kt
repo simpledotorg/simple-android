@@ -46,8 +46,7 @@ class PatientsScreenController @Inject constructor(
     return Observable.mergeArray(
         newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
-        showUserVerificationAlert(replayedEvents),
-        showApprovalStatus(replayedEvents),
+        displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents))
   }
 
@@ -97,8 +96,8 @@ class PatientsScreenController @Inject constructor(
         .subscribe()
   }
 
-  private fun showApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun displayUserAccountStatusNotification(events: Observable<UiEvent>): Observable<UiChange> {
+    val displayUserApprovalOrVerificationStatus = events
         .ofType<ScreenCreated>()
         .flatMap {
           val user = userSession.loggedInUser().map { (user) -> user!! }
@@ -106,7 +105,7 @@ class PatientsScreenController @Inject constructor(
           val setVerificationStatusMessageVisible = { loggedInStatus: User.LoggedInStatus, ui: Ui ->
             when (loggedInStatus) {
               NOT_LOGGED_IN, OTP_REQUESTED, VERIFYING_OTP -> ui.showUserStatusAsPendingVerification()
-              LOGGED_IN -> ui.hideUserApprovalStatus()
+              LOGGED_IN -> ui.hideUserAccountStatus()
             }
           }
 
@@ -128,10 +127,11 @@ class PatientsScreenController @Inject constructor(
                 }
               }
         }
-  }
 
-  private fun showUserVerificationAlert(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
+    // We intentionally have this as a separate stream because we need to show
+    // this message when the sms otp is verified instantly rather than checking
+    // it only on screen creates or resumes.
+    val displayUserLoggedOutOnOtherDevice = events.ofType<ScreenCreated>()
         .flatMap { userSession.loggedInUser() }
         .filter { it is Just<User> }
         .map { (user) -> user!!.loggedInStatus }
@@ -141,9 +141,11 @@ class PatientsScreenController @Inject constructor(
         .map {
           { ui: Ui ->
             ui.showUserVerifiedAlert()
-            ui.hideUserApprovalStatus()
+            ui.hideUserAccountStatus()
           }
         }
+
+    return displayUserApprovalOrVerificationStatus.mergeWith(displayUserLoggedOutOnOtherDevice)
   }
 
   private fun dismissApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {

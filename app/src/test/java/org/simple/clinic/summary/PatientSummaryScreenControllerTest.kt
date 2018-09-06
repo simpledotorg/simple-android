@@ -10,9 +10,13 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
+import junitparams.Parameters
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientMocker
@@ -32,6 +36,7 @@ class PatientSummaryScreenControllerTest {
   private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private val reporter = MockReporter()
   private lateinit var controller: PatientSummaryScreenController
 
   @Before
@@ -49,6 +54,8 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.never())
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
+
+    Analytics.addReporter(reporter)
   }
 
   @Test
@@ -133,5 +140,26 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
+  }
+
+  @Test
+  @Parameters(
+      "SEARCH",
+      "NEW_PATIENT"
+  )
+  fun `when the screen is opened, the viewed patient analytics event must be sent`(fromCaller: PatientSummaryCaller) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, fromCaller))
+
+    val expectedEvent = MockReporter.Event("ViewedPatient", mapOf(
+        "patientId" to patientUuid.toString(),
+        "from" to fromCaller.name
+    ))
+    assertThat(reporter.receivedEvents).contains(expectedEvent)
+  }
+
+  @After
+  fun tearDown() {
+    Analytics.clearReporters()
+    reporter.clear()
   }
 }

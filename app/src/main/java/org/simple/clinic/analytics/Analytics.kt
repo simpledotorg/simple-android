@@ -20,7 +20,7 @@ object Analytics {
 
   fun setUserId(uuid: UUID) {
     reporters.forEach {
-      it.safely("Error setting user id") {
+      it.safely("Error setting user ID!") {
         val uuidString = uuid.toString()
 
         setUserIdentity(uuidString)
@@ -47,7 +47,7 @@ object Analytics {
 
   fun reportInputValidationError(error: String) {
     reporters.forEach {
-      it.safely("Error reporting input validation error") {
+      it.safely("Error reporting input validation!") {
         createEvent("InputValidationError", mapOf("name" to error))
       }
     }
@@ -55,7 +55,7 @@ object Analytics {
 
   fun reportViewedPatient(patientUuid: UUID, from: String) {
     reporters.forEach {
-      it.safely("Error reporting viewed patient event") {
+      it.safely("Error reporting viewed patient event!") {
         createEvent("ViewedPatient", mapOf("patientId" to patientUuid.toString(), "from" to from))
       }
     }

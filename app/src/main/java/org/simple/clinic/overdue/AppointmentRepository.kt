@@ -11,14 +11,15 @@ import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 import javax.inject.Inject
 
 class AppointmentRepository @Inject constructor(
-    val appointmentDao: Appointment.RoomDao,
-    val overdueDao: OverdueAppointment.RoomDao,
-    val userSession: UserSession,
-    val facilityRepository: FacilityRepository
+    private val appointmentDao: Appointment.RoomDao,
+    private val overdueDao: OverdueAppointment.RoomDao,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
@@ -59,10 +60,15 @@ class AppointmentRepository @Inject constructor(
   }
 
   fun overdueAppointments(): Observable<List<OverdueAppointment>> {
-    return overdueDao.appointments(
-        scheduledStatus = Appointment.Status.SCHEDULED,
-        dateNow = LocalDate.now()
-    ).toObservable()
+    return facilityRepository.currentFacility(userSession)
+        .map { it.uuid }
+        .flatMap { facilityUuid ->
+          overdueDao.appointmentsForFacility(
+              facilityUuid = facilityUuid,
+              scheduledStatus = Appointment.Status.SCHEDULED,
+              dateNow = LocalDate.now(UTC)
+          ).toObservable()
+        }
   }
 
   override fun pendingSyncRecords(): Single<List<Appointment>> {

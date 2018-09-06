@@ -109,7 +109,7 @@ class PatientsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).hideUserApprovalStatus()
+    verify(screen).hideUserAccountStatus()
   }
 
   @Test
@@ -260,9 +260,9 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     if (shouldHideMessage) {
-      verify(screen).hideUserApprovalStatus()
+      verify(screen).hideUserAccountStatus()
     } else {
-      verify(screen, never()).hideUserApprovalStatus()
+      verify(screen, never()).hideUserAccountStatus()
     }
   }
 
@@ -292,7 +292,7 @@ class PatientsScreenControllerTest {
 
     if(shouldShowVerificationAlert) {
       verify(screen).showUserVerifiedAlert()
-      verify(screen, atLeastOnce()).hideUserApprovalStatus()
+      verify(screen, atLeastOnce()).hideUserAccountStatus()
     } else {
       verify(screen, never()).showUserVerifiedAlert()
     }

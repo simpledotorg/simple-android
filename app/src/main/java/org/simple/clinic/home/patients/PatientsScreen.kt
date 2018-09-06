@@ -93,7 +93,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     screenRouter.push(PatientSearchScreen.KEY)
   }
 
-  private fun showUserApprovalStatus(@IdRes statusViewId: Int) {
+  private fun showUserAccountStatus(@IdRes statusViewId: Int) {
     approvalStatusViewFlipper.apply {
       val statusViewIndex = indexOfChildId(statusViewId)
 
@@ -106,21 +106,21 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showUserStatusAsWaiting() {
-    showUserApprovalStatus(R.id.patients_user_status_awaitingapproval)
+    showUserAccountStatus(R.id.patients_user_status_awaitingapproval)
   }
 
   fun showUserStatusAsApproved() {
-    showUserApprovalStatus(R.id.patients_user_status_approved)
+    showUserAccountStatus(R.id.patients_user_status_approved)
   }
 
   fun showUserStatusAsPendingVerification() {
-    showUserApprovalStatus(R.id.patients_user_status_awaitingsmsverification)
+    showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
   }
 
-  fun hideUserApprovalStatus() {
+  fun hideUserAccountStatus() {
     // By changing to an empty child instead of hiding the ViewFlipper entirely,
     // ViewFlipper's change animations can be re-used for this transition.
-    showUserApprovalStatus(R.id.patients_user_status_hidden)
+    showUserAccountStatus(R.id.patients_user_status_hidden)
   }
 
   fun showUserVerifiedAlert() {

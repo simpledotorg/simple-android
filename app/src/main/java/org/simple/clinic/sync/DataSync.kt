@@ -19,7 +19,7 @@ class DataSync @Inject constructor(val configProvider: Single<SyncConfig>) {
       repository: SynceableRepository<T, P>,
       pushNetworkCall: (List<T>) -> Single<DataPushResponse>
   ): Completable {
-    val cachedPendingSyncRecords = repository.pendingSyncRecords()
+    val cachedPendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
         .toObservable()
         .filter { it.isNotEmpty() }
         .cache()

@@ -55,7 +55,7 @@ class AppointmentRepositoryAndroidTest {
     val appointmentDate = LocalDate.now()
     repository.schedule(patientId, appointmentDate).blockingAwait()
 
-    val savedAppointment = repository.pendingSyncRecords().blockingGet().first()
+    val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
     savedAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.date).isEqualTo(appointmentDate)
@@ -75,7 +75,7 @@ class AppointmentRepositoryAndroidTest {
     val date2 = LocalDate.now().plusDays(10)
     repository.schedule(patientId, date2).blockingAwait()
 
-    val savedAppointment = repository.pendingSyncRecords().blockingGet()
+    val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(savedAppointment).hasSize(2)
 
     savedAppointment[0].apply {

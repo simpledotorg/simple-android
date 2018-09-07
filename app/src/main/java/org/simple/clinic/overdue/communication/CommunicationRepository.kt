@@ -45,8 +45,8 @@ class CommunicationRepository @Inject constructor(
     }
   }
 
-  override fun pendingSyncRecords(): Single<List<Communication>> {
-    return dao.withSyncStatus(SyncStatus.PENDING).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Communication>> {
+    return dao.recordsWithSyncStatus(syncStatus).firstOrError()
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

@@ -71,8 +71,8 @@ class AppointmentRepository @Inject constructor(
         }
   }
 
-  override fun pendingSyncRecords(): Single<List<Appointment>> {
-    return appointmentDao.withSyncStatus(SyncStatus.PENDING).firstOrError()
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Appointment>> {
+    return appointmentDao.recordsWithSyncStatus(syncStatus).firstOrError()
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

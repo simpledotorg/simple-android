@@ -13,4 +13,5 @@
   <color name="prescribeddrugs_protocol_drug_unselected">@color/color_accent</color>
 
   <color name="textinputlayout_error">#FF4200</color>
+  <color name="snackbar_action">#99ff66</color>
 </resources>

@@ -8,7 +8,7 @@ import org.threeten.bp.Instant
 @JsonClass(generateAdapter = true)
 data class MedicalHistoryPullResponse(
 
-    @Json(name = "appointments")
+    @Json(name = "medical_histories")
     override val payloads: List<MedicalHistoryPayload>,
 
     @Json(name = "processed_since")

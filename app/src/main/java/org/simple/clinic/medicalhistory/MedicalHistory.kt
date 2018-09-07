@@ -43,5 +43,8 @@ data class MedicalHistory(
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(appointments: List<MedicalHistory>)
+
+    @Query("SELECT COUNT(uuid) FROM MedicalHistory")
+    fun count(): Flowable<Int>
   }
 }

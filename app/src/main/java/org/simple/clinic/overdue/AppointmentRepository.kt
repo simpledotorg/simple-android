@@ -53,10 +53,14 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun save(appointments: List<Appointment>): Completable {
+  override fun save(records: List<Appointment>): Completable {
     return Completable.fromAction {
-      appointmentDao.save(appointments)
+      appointmentDao.save(records)
     }
+  }
+
+  override fun recordCount(): Single<Int> {
+    return appointmentDao.count().firstOrError()
   }
 
   fun overdueAppointments(): Observable<List<OverdueAppointment>> {

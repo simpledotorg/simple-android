@@ -39,10 +39,14 @@ class CommunicationRepository @Inject constructor(
         .flatMapCompletable { save(listOf(it)) }
   }
 
-  fun save(communications: List<Communication>): Completable {
+  override fun save(records: List<Communication>): Completable {
     return Completable.fromAction {
-      dao.save(communications)
+      dao.save(records)
     }
+  }
+
+  override fun recordCount(): Single<Int> {
+    return dao.count().firstOrError()
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Communication>> {

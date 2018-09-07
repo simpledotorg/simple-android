@@ -7,6 +7,7 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.bp.BloodPressureModule
 import org.simple.clinic.drugs.PrescriptionModule
 import org.simple.clinic.facility.FacilityModule
+import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.communication.CommunicationModule
 import org.simple.clinic.patient.sync.PatientSyncModule
@@ -19,7 +20,8 @@ import retrofit2.Retrofit
   PrescriptionModule::class,
   FacilityModule::class,
   AppointmentModule::class,
-  CommunicationModule::class])
+  CommunicationModule::class,
+  MedicalHistoryModule::class])
 open class SyncModule {
 
   // TODO: move to NetworkModule.

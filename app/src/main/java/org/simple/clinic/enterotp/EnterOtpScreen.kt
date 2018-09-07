@@ -2,6 +2,7 @@ package org.simple.clinic.enterotp
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
@@ -11,6 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PinEditText
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -20,8 +22,12 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   @Inject
   lateinit var controller: EnterOtpScreenController
 
+  @Inject
+  lateinit var screenRouter: ScreenRouter
+
   private val userPhoneNumberTextView by bindView<TextView>(R.id.enterotp_phonenumber)
   private val otpEntryEditText by bindView<PinEditText>(R.id.enterotp_otp)
+  private val backButton by bindView<ImageButton>(R.id.enterotp_back)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -38,6 +44,8 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
         .subscribe { uiChange -> uiChange(this) }
 
     otpEntryEditText.showKeyboard()
+
+    backButton.setOnClickListener { screenRouter.pop() }
   }
 
   private fun screenCreates() = Observable.just(EnterOtpScreenCreated())

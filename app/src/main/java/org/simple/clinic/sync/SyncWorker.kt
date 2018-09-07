@@ -6,6 +6,7 @@ import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
+import org.simple.clinic.medicalhistory.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
@@ -38,6 +39,9 @@ class SyncWorker : Worker() {
   @Inject
   lateinit var communicationSync: CommunicationSync
 
+  @Inject
+  lateinit var mediacalHistorySync: MedicalHistorySync
+
   override fun doWork(): WorkerResult {
     ClinicApp.appComponent.inject(this)
 
@@ -59,7 +63,8 @@ class SyncWorker : Worker() {
             bloodPressureSync.sync(),
             prescriptionSync.sync(),
             appointmentSync.sync(),
-            communicationSync.sync()
+            communicationSync.sync(),
+            mediacalHistorySync.sync()
         ))
         .doOnError {
           if (it !is IOException) {

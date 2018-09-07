@@ -77,7 +77,7 @@ data class Appointment(
     fun save(appointments: List<Appointment>)
 
     @Query("SELECT COUNT(uuid) FROM Appointment")
-    fun count(): Int
+    fun count(): Flowable<Int>
 
     @Query("""UPDATE Appointment
       SET status = :updatedStatus, syncStatus = :newSyncStatus

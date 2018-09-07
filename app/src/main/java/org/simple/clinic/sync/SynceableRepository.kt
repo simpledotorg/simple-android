@@ -7,6 +7,8 @@ import java.util.UUID
 
 interface SynceableRepository<T, P> {
 
+  fun save(records: List<T>): Completable
+
   fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<T>>
 
   fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable
@@ -14,4 +16,6 @@ interface SynceableRepository<T, P> {
   fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable
 
   fun mergeWithLocalData(payloads: List<P>): Completable
+
+  fun recordCount(): Single<Int>
 }

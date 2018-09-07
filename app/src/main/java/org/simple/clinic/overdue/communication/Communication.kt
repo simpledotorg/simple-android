@@ -67,6 +67,6 @@ data class Communication(
     fun save(schedules: List<Communication>)
 
     @Query("SELECT COUNT(uuid) FROM Communication")
-    fun count(): Int
+    fun count(): Flowable<Int>
   }
 }

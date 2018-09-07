@@ -4,6 +4,8 @@ import io.bloco.faker.Faker
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
@@ -205,15 +207,42 @@ class TestData @Inject constructor(private val faker: Faker) {
         updatedAt = Instant.now())
   }
 
-  fun communicationPayload(
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
-  ): CommunicationPayload {
+  fun communicationPayload(): CommunicationPayload {
     return CommunicationPayload(
         uuid = UUID.randomUUID(),
         appointmentUuid = UUID.randomUUID(),
         userUuid = qaUserUuid(),
         type = randomOfEnum(Communication.Type::class),
         result = randomOfEnum(Communication.Result::class),
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+  }
+
+  fun medicalHistory(
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): MedicalHistory {
+    return MedicalHistory(
+        uuid = UUID.randomUUID(),
+        patientUuid = UUID.randomUUID(),
+        hasHadHeartAttack = faker.bool.bool(),
+        hasHadStroke = faker.bool.bool(),
+        hasHadKidneyDisease = faker.bool.bool(),
+        isOnTreatmentForHypertension = faker.bool.bool(),
+        hasDiabetes = faker.bool.bool(),
+        syncStatus = syncStatus,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+  }
+
+  fun medicalHistoryPayload(): MedicalHistoryPayload {
+    return MedicalHistoryPayload(
+        uuid = UUID.randomUUID(),
+        patientUuid = UUID.randomUUID(),
+        hasHadHeartAttack = faker.bool.bool(),
+        hasHadStroke = faker.bool.bool(),
+        hasHadKidneyDisease = faker.bool.bool(),
+        isOnTreatmentForHypertension = faker.bool.bool(),
+        hasDiabetes = faker.bool.bool(),
         createdAt = Instant.now(),
         updatedAt = Instant.now())
   }

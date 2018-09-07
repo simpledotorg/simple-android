@@ -88,7 +88,7 @@ class AppointmentSyncAndroidTest {
         .andThen(sync.pull())
         .blockingGet()
 
-    val recordCountAfterPull = dao.count()
+    val recordCountAfterPull = repository.recordCount().blockingGet()
     assertThat(recordCountAfterPull).isAtLeast(recordsToInsert)
   }
 }

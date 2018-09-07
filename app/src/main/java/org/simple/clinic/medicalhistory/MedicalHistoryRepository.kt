@@ -12,6 +12,12 @@ class MedicalHistoryRepository @Inject constructor(
     val dao: MedicalHistory.RoomDao
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
+  override fun save(records: List<MedicalHistory>): Completable {
+    return Completable.fromAction {
+      dao.save(records)
+    }
+  }
+
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<MedicalHistory>> {
     return dao.recordsWithSyncStatus(syncStatus).firstOrError()
   }
@@ -37,6 +43,10 @@ class MedicalHistoryRepository @Inject constructor(
         .toList()
 
     return Completable.fromAction { dao.save(newOrUpdatedHistories) }
+  }
+
+  override fun recordCount(): Single<Int> {
+    return dao.count().firstOrError()
   }
 
   private fun toDatabaseModel(payload: MedicalHistoryPayload, syncStatus: SyncStatus): MedicalHistory {

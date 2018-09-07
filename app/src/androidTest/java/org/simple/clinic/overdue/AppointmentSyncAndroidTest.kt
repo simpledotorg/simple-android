@@ -72,7 +72,7 @@ class AppointmentSyncAndroidTest {
 
     sync.push().blockingAwait()
 
-    val updatedRecords = dao.withSyncStatus(SyncStatus.DONE).blockingFirst()
+    val updatedRecords = dao.recordsWithSyncStatus(SyncStatus.DONE).blockingFirst()
     assertThat(updatedRecords).hasSize(count)
   }
 

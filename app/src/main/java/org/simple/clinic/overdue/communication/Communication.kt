@@ -52,7 +52,7 @@ data class Communication(
   interface RoomDao {
 
     @Query("SELECT * FROM Communication WHERE syncStatus = :status")
-    fun withSyncStatus(status: SyncStatus): Flowable<List<Communication>>
+    fun recordsWithSyncStatus(status: SyncStatus): Flowable<List<Communication>>
 
     @Query("UPDATE Communication SET syncStatus = :to WHERE syncStatus = :from")
     fun updateSyncStatus(from: SyncStatus, to: SyncStatus)

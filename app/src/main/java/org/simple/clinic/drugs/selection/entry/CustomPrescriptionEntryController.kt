@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 private typealias Ui = CustomPrescriptionEntrySheet
 private typealias UiChange = (Ui) -> Unit
+const val DOSAGE_PLACEHOLDER = "mg"
 
 class CustomPrescriptionEntryController @Inject constructor(
     private val prescriptionRepository: PrescriptionRepository
@@ -78,6 +79,7 @@ class CustomPrescriptionEntryController @Inject constructor(
 
     val setPlaceholder = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
         .filter { (hasFocus, text) -> hasFocus && text.isBlank() }
+        .take(1)
         .map { { ui: Ui -> ui.setDrugDosageText(DOSAGE_PLACEHOLDER) } }
 
     val resetPlaceholder = Observables.combineLatest(dosageFocusChanges, dosageTextChanges)
@@ -89,9 +91,5 @@ class CustomPrescriptionEntryController @Inject constructor(
         .map { { ui: Ui -> ui.moveDrugDosageCursorToBeginning() } }
 
     return Observable.merge(setPlaceholder, resetPlaceholder, moveCursorToStart)
-  }
-
-  companion object {
-    const val DOSAGE_PLACEHOLDER = "mg"
   }
 }

@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntryController.Companion.DOSAGE_PLACEHOLDER
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -79,7 +78,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
     verify(sheet, times(1)).setDrugDosageText(eq(""))
-    verify(sheet, times(2)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
+    verify(sheet, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
   }
 
   @Test

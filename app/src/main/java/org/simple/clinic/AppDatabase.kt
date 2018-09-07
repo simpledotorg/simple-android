@@ -7,6 +7,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.patient.Gender
@@ -36,8 +37,9 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       User::class,
       LoggedInUserFacilityMapping::class,
       Appointment::class,
-      Communication::class],
-    version = 11,
+      Communication::class,
+      MedicalHistory::class],
+    version = 12,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -84,4 +86,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun communicationDao(): Communication.RoomDao
 
   abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao
+
+  abstract fun medicalHistoryDao(): MedicalHistory.RoomDao
 }

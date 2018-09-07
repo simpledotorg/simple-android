@@ -7,7 +7,7 @@ import java.util.UUID
 
 interface SynceableRepository<T, P> {
 
-  fun pendingSyncRecords(): Single<List<T>>
+  fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<T>>
 
   fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable
 

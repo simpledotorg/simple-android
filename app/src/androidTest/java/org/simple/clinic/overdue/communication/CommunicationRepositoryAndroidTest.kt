@@ -42,7 +42,7 @@ class CommunicationRepositoryAndroidTest {
         .create(appointmentId, Communication.Type.MANUAL_CALL, result = Communication.Result.AGREED_TO_VISIT)
         .blockingAwait()
 
-    val savedCommunication = repository.pendingSyncRecords().blockingGet()[0]
+    val savedCommunication = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()[0]
     savedCommunication.apply {
       assertThat(this.appointmentUuid).isEqualTo(appointmentId)
       assertThat(this.type).isEqualTo(Communication.Type.MANUAL_CALL)

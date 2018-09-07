@@ -297,4 +297,10 @@ class PatientsScreenControllerTest {
       verify(screen, never()).showUserVerifiedAlert()
     }
   }
+
+  @Test
+  fun `when the user decides to enter the login code manually, the enter otp screen must be opened`() {
+    uiEvents.onNext(PatientsEnterCodeManuallyClicked())
+    verify(screen).openEnterCodeManuallyScreen()
+  }
 }

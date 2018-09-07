@@ -36,7 +36,6 @@
   </style>
 
   <style name="Clinic.ClearButton">
-    <item name="android:layout_gravity">end</item>
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:layout_marginTop">14dp</item>
     <item name="android:padding">@dimen/spacing_12</item>
@@ -137,21 +136,28 @@
     <item name="android:layout_marginStart">@dimen/spacing_24</item>
   </style>
 
-  <style name="Clinic.PinEditText">
+  <style name="Clinic.StaggeredEditText">
     <item name="android:layout_width">160dp</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginTop">@dimen/spacing_12</item>
     <item name="android:gravity">center</item>
-    <item name="android:inputType">numberPassword</item>
-    <item name="android:maxLength">4</item>
     <item name="android:digits">1234567890</item>
     <item name="android:textSize">@dimen/textsize_20</item>
     <item name="pinAnimationType">none</item>
-    <item name="pinCharacterMask">\u25CF</item>
     <item name="pinCharacterSpacing">@dimen/spacing_8</item>
     <item name="pinLineColors">@color/pin_edittext_underline</item>
     <item name="pinLineStroke">1dp</item>
     <item name="pinLineStrokeSelected">1dp</item>
+  </style>
+
+  <style name="Clinic.StaggeredEditText.Pin">
+    <item name="android:inputType">numberPassword</item>
+    <item name="pinCharacterMask">\u25CF</item>
+  </style>
+
+  <style name="Clinic.StaggeredEditText.Otp">
+    <item name="android:inputType">number</item>
+    <item name="android:textStyle">bold</item>
   </style>
 
   <style name="Clinic.DoneFrame">
@@ -292,8 +298,9 @@
     <item name="android:textColor">@color/white_opacity_60</item>
   </style>
 
-  <style name="Clinic.DismissUserApprovedStatusTheme">
+  <style name="Clinic.SnackbarAction">
     <item name="colorControlHighlight">#4099ff66</item>
+    <item name="android:textColor">@color/snackbar_action</item>
   </style>
 
   <style name="Clinic.FacilitySelection" />

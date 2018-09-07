@@ -10,19 +10,49 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import android.widget.TextView
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.util.Truss
+import org.simple.clinic.util.locationRectOnScreen
+import org.simple.clinic.util.marginLayoutParams
 import java.util.UUID
 
-class OverdueListAdapter(val phoneCallClickStream: PublishSubject<CallPatientClicked>) : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
+class OverdueListAdapter(
+    private val phoneCallClickStream: PublishSubject<CallPatientClicked>
+) : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
+
+  private lateinit var recyclerView: RecyclerView
+
+  override fun onAttachedToRecyclerView(rv: RecyclerView) {
+    super.onAttachedToRecyclerView(rv)
+    recyclerView = rv
+  }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.item_overdue_list, parent, false)
-    return OverdueListViewHolder(layout, phoneCallClickStream)
+    val holder = OverdueListViewHolder(layout, phoneCallClickStream)
+
+    layout.setOnClickListener {
+      holder.handleBottomLayoutVisibility()
+
+      holder.itemView.post {
+        val itemLocation = holder.itemView.locationRectOnScreen()
+        val itemBottomWithMargin = itemLocation.bottom + holder.itemView.marginLayoutParams.bottomMargin
+
+        val rvLocation = recyclerView.locationRectOnScreen()
+        val differenceInBottoms = itemBottomWithMargin - rvLocation.bottom
+
+        if (differenceInBottoms > 0) {
+          (holder.itemView.parent as RecyclerView).smoothScrollBy(0, differenceInBottoms)
+        }
+      }
+    }
+
+    return holder
   }
 
   override fun onBindViewHolder(holder: OverdueListViewHolder, position: Int) {
@@ -53,6 +83,7 @@ class OverdueListViewHolder(
   private val overdueDays by bindView<TextView>(R.id.overdue_days)
   private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
   private val separator by bindView<View>(R.id.overdue_separator)
+  private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
 
   lateinit var appointment: OverdueListItem
 
@@ -60,6 +91,11 @@ class OverdueListViewHolder(
     callButton.setOnClickListener {
       phoneCallClickStream.onNext(CallPatientClicked(appointment.phoneNumber!!))
     }
+  }
+
+  fun handleBottomLayoutVisibility() {
+    val isVisible = actionsContainer.visibility == View.VISIBLE
+    actionsContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
   }
 
   fun render() {
@@ -73,8 +109,20 @@ class OverdueListViewHolder(
         .popSpan()
 
     patientName.text = spanBuilder.build()
-    patientBP.text = context.resources.getQuantityString(R.plurals.overdue_list_item_patient_bp, appointment.bpDaysAgo, appointment.bpDaysAgo, appointment.bpSystolic, appointment.bpDiastolic)
-    overdueDays.text = context.resources.getQuantityString(R.plurals.overdue_list_item_overdue_days, appointment.overdueDays, appointment.overdueDays)
+
+    patientBP.text = context.resources.getQuantityString(
+        R.plurals.overdue_list_item_patient_bp,
+        appointment.bpDaysAgo,
+        appointment.bpDaysAgo,
+        appointment.bpSystolic,
+        appointment.bpDiastolic
+    )
+
+    overdueDays.text = context.resources.getQuantityString(
+        R.plurals.overdue_list_item_overdue_days,
+        appointment.overdueDays,
+        appointment.overdueDays
+    )
 
     if (appointment.phoneNumber == null) {
       callButton.visibility = View.GONE

@@ -44,10 +44,16 @@ class PatientsScreenController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
 
     return Observable.mergeArray(
+        enterCodeManuallyClicks(replayedEvents),
         newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents))
+  }
+
+  private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PatientsEnterCodeManuallyClicked>()
+        .map { { ui: Ui -> ui.openEnterCodeManuallyScreen() } }
   }
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {

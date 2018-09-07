@@ -8,7 +8,6 @@ import android.util.AttributeSet
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.RelativeLayout
-import android.widget.Toast
 import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -18,6 +17,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.widgets.ScreenCreated
@@ -64,15 +64,14 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             activityStarts(),
             aadhaarScanButtonClicks(),
             searchButtonClicks(),
-            dismissApprovedStatusClicks()
+            dismissApprovedStatusClicks(),
+            enterCodeManuallyClicks()
         )
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
-
-    enterOtpManuallyButton.setOnClickListener { Toast.makeText(context, "In Progress", Toast.LENGTH_SHORT).show() }
   }
 
   private fun setupApprovalStatusAnimations() {
@@ -92,6 +91,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
 
   private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
+
+  private fun enterCodeManuallyClicks() = RxView.clicks(enterOtpManuallyButton).map { PatientsEnterCodeManuallyClicked() }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreen.KEY)
@@ -129,5 +130,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun showUserVerifiedAlert() {
     LoggedOutOnOtherDeviceDialog.show(fragmentManager)
+  }
+
+  fun openEnterCodeManuallyScreen() {
+    screenRouter.push(EnterOtpScreenKey())
   }
 }

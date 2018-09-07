@@ -13,3 +13,7 @@ class ScanAadhaarClicked : UiEvent {
 class UserApprovedStatusDismissed : UiEvent {
   override val analyticsName = "Patients:Dismissed User Approved Status"
 }
+
+class PatientsEnterCodeManuallyClicked : UiEvent {
+  override val analyticsName = "Patients:Enter Code Manually Clicked"
+}

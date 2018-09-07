@@ -35,6 +35,6 @@
     android:layout_height="wrap_content"
     android:layout_alignParentEnd="true"
     android:text="@string/patients_enter_code"
-    android:textColor="#99ff66"
-    android:theme="@style/Clinic.DismissUserApprovedStatusTheme" />
+    android:layout_centerVertical="true"
+    android:theme="@style/Clinic.SnackbarAction" />
 </RelativeLayout>

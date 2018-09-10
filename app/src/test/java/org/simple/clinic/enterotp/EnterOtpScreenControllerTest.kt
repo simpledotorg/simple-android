@@ -15,6 +15,7 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
@@ -185,4 +186,30 @@ class EnterOtpScreenControllerTest {
 
     verify(screen, times(2)).hideError()
   }
+
+  @Test
+  fun `when the login call is made, the network progress must be shown`() {
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.never<LoginResult>())
+
+    uiEvents.onNext(EnterOtpSubmitted("111111"))
+
+    verify(screen).showProgress()
+    verify(screen, never()).hideProgress()
+  }
+
+  @Test
+  @Parameters(method = "params for login call progress test")
+  fun `when the login call succeeds or fails, the network progress must be hidden`(loginResult: LoginResult) {
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(loginResult))
+
+    uiEvents.onNext(EnterOtpSubmitted("111111"))
+    verify(screen).hideProgress()
+  }
+
+  fun `params for login call progress test`() = arrayOf<Any>(
+      LoginResult.Success(),
+      LoginResult.NetworkError(),
+      LoginResult.ServerError("Test"),
+      LoginResult.UnexpectedError()
+  )
 }

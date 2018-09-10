@@ -15,13 +15,6 @@
   <string name="patientsearch_go_back">Go back to home screen</string>
   <string name="patientsearch_name_or_phone">Patient\'s name or phone</string>
   <string name="patientsearch_age">Age: %s</string>
-  <string name="patientsearch_filter_by">Filter by</string>
-  <string name="patientsearch_label_age">Age</string>
-
-  <!-- Patient search age filter -->
-  <string name="agefilter_apply_filter">Apply filter</string>
-  <string name="agefilter_enter_age">Enter patient\'s age</string>
-  <string name="agefilter_reset_filter">Reset Filter</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">Go back to search</string>

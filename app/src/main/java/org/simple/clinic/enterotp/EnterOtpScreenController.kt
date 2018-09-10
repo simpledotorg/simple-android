@@ -18,12 +18,20 @@ class EnterOtpScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return showPhoneNumberOnStart(replayedEvents)
+    return Observable.merge(
+        showPhoneNumberOnStart(replayedEvents),
+        handleBackClicks(replayedEvents)
+    )
   }
 
   private fun showPhoneNumberOnStart(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<EnterOtpScreenCreated>()
         .flatMapSingle { userSession.requireLoggedInUser().firstOrError() }
         .map { user -> { ui: Ui -> ui.showUserPhoneNumber(user.phoneNumber) } }
+  }
+
+  private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<EnterOtpBackClicked>()
+        .map { { ui: Ui -> ui.goBack() } }
   }
 }

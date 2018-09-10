@@ -39,4 +39,11 @@ class EnterOtpScreenControllerTest {
 
     verify(screen).showUserPhoneNumber("1111111111")
   }
+
+  @Test
+  fun `when back is pressed, the screen must be closed`() {
+    uiEvents.onNext(EnterOtpBackClicked())
+
+    verify(screen).goBack()
+  }
 }

@@ -80,11 +80,11 @@ data class Appointment(
     fun count(): Int
 
     @Query("""UPDATE Appointment
-      SET status = :cancelledStatus, syncStatus = :newSyncStatus
+      SET status = :updatedStatus, syncStatus = :newSyncStatus
       WHERE patientUuid = :patientId AND status = :scheduledStatus""")
-    fun cancelScheduledAppointmentsForPatient(
+    fun markScheduledAppointmentAsVisited(
         patientId: UUID,
-        cancelledStatus: Status,
+        updatedStatus: Status,
         scheduledStatus: Status,
         newSyncStatus: SyncStatus
     )

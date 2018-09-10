@@ -40,14 +40,14 @@ class AppointmentRepository @Inject constructor(
         }
         .flatMapCompletable { save(listOf(it)) }
 
-    return cancelScheduledAppointments(patientUuid).andThen(newAppointmentStream)
+    return markScheduledAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
   }
 
-  private fun cancelScheduledAppointments(patientId: UUID): Completable {
+  private fun markScheduledAppointmentsAsVisited(patientId: UUID): Completable {
     return Completable.fromAction {
-      appointmentDao.cancelScheduledAppointmentsForPatient(
+      appointmentDao.markScheduledAppointmentAsVisited(
           patientId = patientId,
-          cancelledStatus = Appointment.Status.CANCELLED,
+          updatedStatus = Appointment.Status.VISITED,
           scheduledStatus = Appointment.Status.SCHEDULED,
           newSyncStatus = SyncStatus.PENDING)
     }

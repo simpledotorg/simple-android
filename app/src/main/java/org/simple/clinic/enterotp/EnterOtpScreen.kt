@@ -13,7 +13,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.widgets.PinEditText
+import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -26,7 +26,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   lateinit var screenRouter: ScreenRouter
 
   private val userPhoneNumberTextView by bindView<TextView>(R.id.enterotp_phonenumber)
-  private val otpEntryEditText by bindView<PinEditText>(R.id.enterotp_otp)
+  private val otpEntryEditText by bindView<StaggeredEditText>(R.id.enterotp_otp)
   private val backButton by bindView<ImageButton>(R.id.enterotp_back)
 
   override fun onFinishInflate() {

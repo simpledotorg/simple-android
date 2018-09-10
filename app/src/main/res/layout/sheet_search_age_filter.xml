@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:gravity="center_horizontal"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:labelFor="@id/agefilter_age"
+    android:text="@string/agefilter_enter_age"
+    android:textAllCaps="true"
+    android:textColor="@color/black_opacity_75"
+    android:textSize="14sp" />
+
+  <EditText
+    android:id="@+id/agefilter_age"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:imeOptions="actionDone"
+    android:inputType="number"
+    android:maxEms="2"
+    android:maxLength="3"
+    android:minEms="2"
+    android:textSize="32sp" />
+
+  <Button
+    android:id="@+id/agefilter_reset"
+    style="?attr/borderlessButtonStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:text="@string/agefilter_reset_filter" />
+
+  <Button
+    android:id="@+id/agefilter_apply"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_accent"
+    android:text="@string/agefilter_apply_filter"
+    android:textColor="@color/white" />
+</LinearLayout>

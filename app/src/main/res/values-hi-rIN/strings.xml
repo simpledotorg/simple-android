@@ -8,6 +8,11 @@
     <string name="patientsearch_new_patient">नया रोगी दर्ज करें</string>
     <string name="patientsearch_name_or_phone">रोगी का नाम या फोन नंबर</string>
     <string name="patientsearch_age">आयु %s</string>
+    <string name="patientsearch_label_age">आयु</string>
+    <string name="patientsearch_filter_by">द्वारा चुनें</string>
+    <string name="agefilter_apply_filter">चुनें</string>
+    <string name="agefilter_enter_age">रोगी की आयु  भरें</string>
+    <string name="agefilter_reset_filter">चयन हटाएं</string>
     <string name="patiententry_contentdescription_up_button">खोज पर वापस जाओ</string>
     <string name="patiententry_full_name">रोगी का नाम</string>
     <string name="patiententry_phone_number">रोगी का फोन नंबर</string>

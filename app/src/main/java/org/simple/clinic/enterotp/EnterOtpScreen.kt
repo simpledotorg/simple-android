@@ -13,6 +13,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -46,7 +47,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     otpEntryEditText.showKeyboard()
   }
 
-  private fun screenCreates() = Observable.just(EnterOtpScreenCreated())
+  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun backClicks() = RxView.clicks(backButton).map { EnterOtpBackClicked() }
 

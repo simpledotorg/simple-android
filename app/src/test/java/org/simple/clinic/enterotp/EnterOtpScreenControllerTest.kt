@@ -9,6 +9,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
 class EnterOtpScreenControllerTest {
@@ -35,7 +36,7 @@ class EnterOtpScreenControllerTest {
     val user = PatientMocker.loggedInUser(phone = "1111111111")
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
-    uiEvents.onNext(EnterOtpScreenCreated())
+    uiEvents.onNext(ScreenCreated())
 
     verify(screen).showUserPhoneNumber("1111111111")
   }

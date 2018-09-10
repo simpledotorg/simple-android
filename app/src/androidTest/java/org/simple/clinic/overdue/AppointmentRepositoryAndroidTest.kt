@@ -81,7 +81,7 @@ class AppointmentRepositoryAndroidTest {
     savedAppointment[0].apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.date).isEqualTo(date1)
-      assertThat(this.status).isEqualTo(Appointment.Status.CANCELLED)
+      assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
       assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }

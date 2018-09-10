@@ -188,4 +188,9 @@
   <string name="enterotp_incorrect_code">Incorrect code, please try again.</string>
   <string name="enterotp_resend_sms">Resend SMS</string>
 
+  <!-- Schedule appointment -->
+  <string name="scheduleappointment_next_visit_in">Schedule next visit in</string>
+  <string name="scheduleappointment_not_now">Not now</string>
+  <string name="scheduleappointment_done">done</string>
+
 </resources>

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fontFamily="sans-serif-medium"
+    android:gravity="center"
+    android:paddingBottom="@dimen/textsize_18"
+    android:paddingTop="@dimen/textsize_18"
+    android:text="@string/scheduleappointment_next_visit_in"
+    android:textColor="@color/black_opacity_80"
+    android:textSize="@dimen/textsize_16" />
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginLeft="@dimen/spacing_8"
+    android:layout_marginRight="@dimen/spacing_8"
+    android:background="@color/black_opacity_10" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_24"
+    android:gravity="center"
+    android:orientation="horizontal">
+
+    <ImageButton
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:clickable="true"
+      android:focusable="true"
+      android:src="@drawable/ic_remove_circle_outline_24dp"
+      android:tint="@color/color_accent"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingLeft="@dimen/spacing_24"
+      android:paddingRight="@dimen/spacing_24"
+      android:textColor="@color/black_opacity_80"
+      android:textSize="@dimen/textsize_34"
+      tools:text="4 weeks" />
+
+    <ImageButton
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackground"
+      android:clickable="true"
+      android:focusable="true"
+      android:src="@drawable/ic_add_circle_outline_24dp"
+      android:tint="@color/color_accent"
+      tools:ignore="ContentDescription" />
+
+  </LinearLayout>
+
+  <LinearLayout
+    style="?attr/buttonBarStyle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginTop="@dimen/spacing_24">
+
+    <Button
+      style="?attr/buttonBarButtonStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/scheduleappointment_not_now" />
+
+    <Button
+      style="?attr/buttonBarButtonStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:gravity="center"
+      android:text="@string/scheduleappointment_done" />
+  </LinearLayout>
+
+</LinearLayout>

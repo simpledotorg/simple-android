@@ -1,5 +1,6 @@
 package org.simple.clinic.widgets
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.app.AppCompatActivity
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotterknife.bindView
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
@@ -53,6 +55,10 @@ abstract class BottomSheetActivity : AppCompatActivity() {
           .setInterpolator(FastOutSlowInInterpolator())
           .start()
     }
+  }
+
+  override fun attachBaseContext(baseContext: Context) {
+    super.attachBaseContext(ViewPumpContextWrapper.wrap(baseContext))
   }
 
   override fun finish() {

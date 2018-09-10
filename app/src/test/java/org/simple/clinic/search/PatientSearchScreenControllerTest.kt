@@ -107,8 +107,6 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `when a patient search result is clicked, the patient's summary screen should be started`() {
     val patientUuid = UUID.randomUUID()
-
-    // TODO: Move to PatientMocker.
     val searchResult = PatientSearchResult(
         uuid = patientUuid,
         fullName = "Ashok Kumar",

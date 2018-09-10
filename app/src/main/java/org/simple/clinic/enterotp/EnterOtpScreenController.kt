@@ -5,6 +5,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -25,7 +26,7 @@ class EnterOtpScreenController @Inject constructor(
   }
 
   private fun showPhoneNumberOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<EnterOtpScreenCreated>()
+    return events.ofType<ScreenCreated>()
         .flatMapSingle { userSession.requireLoggedInUser().firstOrError() }
         .map { user -> { ui: Ui -> ui.showUserPhoneNumber(user.phoneNumber) } }
   }

@@ -2,8 +2,8 @@ package org.simple.clinic.enterotp
 
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.sync.SyncScheduler
@@ -58,25 +58,43 @@ class EnterOtpScreenController @Inject constructor(
   private fun handleOtpSubmitted(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<EnterOtpSubmitted>()
         .filter { it.otp.length == OTP_LENGTH }
-        .flatMapSingle { userSession.loginWithOtp(it.otp) }
-        .map { loginResult ->
-          when (loginResult) {
-            is LoginResult.Success -> { ui: Ui ->
-              startSyncing()
-              ui.goBack()
-            }
-            is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
-            is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(loginResult.error) }
-            is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-          }
+        .flatMap { enterOtpSubmitted ->
+
+          userSession.loginWithOtp(enterOtpSubmitted.otp)
+              .flatMapObservable { loginResult ->
+                Observable.merge(
+                    handleLoginResult(loginResult),
+                    hideProgressOnLoginResult(loginResult),
+                    syncOnLoginResult(loginResult)
+                )
+              }
+              .startWith { ui: Ui -> ui.showProgress() }
         }
   }
 
-  private fun startSyncing() {
-    syncScheduler.syncImmediately()
-        .subscribeOn(Schedulers.io())
-        // Swallow errors
-        .onErrorComplete()
-        .subscribe()
+  private fun handleLoginResult(loginResult: LoginResult): Observable<UiChange> {
+    return Single.just(loginResult)
+        .map {
+          when (it) {
+            is LoginResult.Success -> { ui: Ui -> ui.goBack() }
+            is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
+            is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
+            is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
+          }
+        }
+        .toObservable()
+  }
+
+  private fun hideProgressOnLoginResult(loginResult: LoginResult): Observable<UiChange> {
+    return Single.just(loginResult)
+        .map { { ui: Ui -> ui.hideProgress() } }
+        .toObservable()
+  }
+
+  private fun syncOnLoginResult(loginResult: LoginResult): Observable<UiChange> {
+    return Single.just(loginResult)
+        .filter { it is LoginResult.Success }
+        .flatMapCompletable { syncScheduler.syncImmediately().onErrorComplete() }
+        .andThen(Observable.empty())
   }
 }

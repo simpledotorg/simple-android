@@ -1,10 +1,13 @@
 package org.simple.clinic.enterotp
 
 import android.content.Context
+import android.support.transition.TransitionManager
 import android.util.AttributeSet
-import android.widget.ImageButton
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
@@ -18,6 +21,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.StaggeredEditText
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -33,6 +37,8 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   private val otpEntryEditText by bindView<StaggeredEditText>(R.id.enterotp_otp)
   private val backButton by bindView<ImageButton>(R.id.enterotp_back)
   private val errorTextView by bindView<TextView>(R.id.enterotp_error)
+  private val validateOtpProgressBar by bindView<ProgressBar>(R.id.enterotp_progress)
+  private val otpEntryContainer by bindView<ViewGroup>(R.id.enterotp_otp_container)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -99,5 +105,18 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   fun hideError() {
     errorTextView.visibility = View.GONE
+  }
+
+  fun showProgress() {
+    TransitionManager.beginDelayedTransition(this)
+    otpEntryContainer.hideKeyboard()
+    validateOtpProgressBar.visibility = View.VISIBLE
+    otpEntryContainer.visibility = View.INVISIBLE
+  }
+
+  fun hideProgress() {
+    TransitionManager.beginDelayedTransition(this)
+    validateOtpProgressBar.visibility = View.INVISIBLE
+    otpEntryContainer.visibility = View.VISIBLE
   }
 }

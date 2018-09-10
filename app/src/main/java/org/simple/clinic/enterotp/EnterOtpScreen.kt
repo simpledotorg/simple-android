@@ -36,7 +36,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     }
     TheActivity.component.inject(this)
 
-    screenCreates()
+    Observable.merge(screenCreates(), backClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(mainThread())
@@ -44,11 +44,11 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
         .subscribe { uiChange -> uiChange(this) }
 
     otpEntryEditText.showKeyboard()
-
-    backButton.setOnClickListener { screenRouter.pop() }
   }
 
   private fun screenCreates() = Observable.just(EnterOtpScreenCreated())
+
+  private fun backClicks() = RxView.clicks(backButton).map { EnterOtpBackClicked() }
 
   fun showUserPhoneNumber(phoneNumber: String) {
     val phoneNumberWithCountryCode = resources.getString(
@@ -58,5 +58,9 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     )
 
     userPhoneNumberTextView.text = phoneNumberWithCountryCode
+  }
+
+  fun goBack() {
+    screenRouter.pop()
   }
 }

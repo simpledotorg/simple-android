@@ -89,7 +89,7 @@
     android:layout_height="wrap_content"
     android:layout_below="@id/patientsearch_toolbar"
     android:contentDescription="@string/patientsearch_new_patient"
-    android:drawableStart="@drawable/ic_add_circle_outline_black_24dp"
+    android:drawableStart="@drawable/ic_add_circle_outline_24dp"
     android:text="@string/patientsearch_new_patient"
     android:visibility="gone" />
 

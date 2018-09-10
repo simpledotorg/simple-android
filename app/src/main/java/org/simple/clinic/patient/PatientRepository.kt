@@ -33,7 +33,7 @@ class PatientRepository @Inject constructor(
     val dateOfTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
   }
 
-  private val ageFuzziness: Int = 3
+  private val ageFuzziness: Int = 5
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
@@ -53,6 +53,7 @@ class PatientRepository @Inject constructor(
       database.patientSearchDao()
           .search(actualQuery)
           .toObservable()
+
     } else {
       val fuzzySearch = database.fuzzyPatientSearchDao()
           .searchForPatientsWithNameLike(actualQuery)
@@ -63,7 +64,6 @@ class PatientRepository @Inject constructor(
           .toObservable()
           .zipWith(fuzzySearch)
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
-//          .map { (_, fuzzyResults) -> fuzzyResults }
     }
   }
 

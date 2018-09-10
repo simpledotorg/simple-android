@@ -52,14 +52,14 @@
         android:labelFor="@+id/loginpin_pin"
         android:text="@string/loginpin_pin_number_hint" />
 
-      <org.simple.clinic.widgets.PinEditText
+      <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/loginpin_pin"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:maxLength="4"
         android:imeOptions="actionDone">
 
         <requestFocus />
-      </org.simple.clinic.widgets.PinEditText>
+      </org.simple.clinic.widgets.StaggeredEditText>
 
       <TextView
         android:id="@+id/loginpin_error"

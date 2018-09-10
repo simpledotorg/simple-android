@@ -74,7 +74,7 @@
         android:labelFor="@+id/applock_pin"
         android:text="@string/enterotp_enter_verification_code" />
 
-      <org.simple.clinic.widgets.PinEditText
+      <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/enterotp_otp"
         style="@style/Clinic.StaggeredEditText.Otp"
         android:imeOptions="actionDone"
@@ -84,7 +84,7 @@
         tools:text="123456">
 
         <requestFocus />
-      </org.simple.clinic.widgets.PinEditText>
+      </org.simple.clinic.widgets.StaggeredEditText>
 
       <TextView
         android:id="@+id/enterotp_error"

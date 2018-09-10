@@ -11,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.Migration_10_11
+import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -180,6 +181,16 @@ class MigrationAndroidTest {
       assertThat(it.string("uuid")).isEqualTo("afea327f-4286-417b-9271-945ef2c7592a")
       assertThat(it.string("appointmentUuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
       assertThat(it.string("userUuid")).isEqualTo("c64f76b5-0d37-46e2-9426-554e4f809498")
+    }
+  }
+
+  @Test
+  fun migration_11_to_12() {
+    helper.createDatabase(TEST_DB_NAME, 11)
+    val db_v12 = helper.runMigrationsAndValidate(TEST_DB_NAME, 12, true, Migration_11_12())
+
+    db_v12.query("SELECT * FROM `MedicalHistory`").use {
+      assertThat(it.columnCount).isEqualTo(10)
     }
   }
 }

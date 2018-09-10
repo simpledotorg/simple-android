@@ -10,7 +10,7 @@ import io.reactivex.Observable
  * This class exists because a lot of libraries do not extend EditText.
  * If we ever decide to swap libraries, the usages shouldn't be affected.
  */
-class PinEditText(context: Context, attrs: AttributeSet) : PinEntryEditText(context, attrs) {
+class StaggeredEditText(context: Context, attrs: AttributeSet) : PinEntryEditText(context, attrs) {
 
   init {
     // Library recommends doing this.

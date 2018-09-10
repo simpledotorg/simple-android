@@ -23,7 +23,7 @@ import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.widgets.PinEditText
+import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -46,7 +46,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val facilityButton by bindView<Button>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
   private val logoutButton by bindView<Button>(R.id.applock_logout)
-  private val pinEditText by bindView<PinEditText>(R.id.applock_pin)
+  private val pinEditText by bindView<StaggeredEditText>(R.id.applock_pin)
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val progressView by bindView<ProgressBar>(R.id.applock_progress)
   private val errorTextView by bindView<TextView>(R.id.applock_error)

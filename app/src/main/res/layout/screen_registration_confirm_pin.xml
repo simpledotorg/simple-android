@@ -56,7 +56,7 @@
         android:labelFor="@+id/registrationconfirmpin_pin"
         android:text="@string/registrationconfirmpin_confirm_pin_label" />
 
-      <org.simple.clinic.widgets.PinEditText
+      <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/registrationconfirmpin_pin"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:maxLength="4"
@@ -64,7 +64,7 @@
         android:imeOptions="actionDone">
 
         <requestFocus />
-      </org.simple.clinic.widgets.PinEditText>
+      </org.simple.clinic.widgets.StaggeredEditText>
 
       <TextView
         android:id="@+id/registrationconfirmpin_pin_hint"

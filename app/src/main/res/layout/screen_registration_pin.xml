@@ -54,7 +54,7 @@
         android:labelFor="@+id/registrationpin_pin"
         android:text="@string/registrationpin_pin_label" />
 
-      <org.simple.clinic.widgets.PinEditText
+      <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/registrationpin_pin"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:maxLength="4"
@@ -62,7 +62,7 @@
         android:imeOptions="actionDone">
 
         <requestFocus />
-      </org.simple.clinic.widgets.PinEditText>
+      </org.simple.clinic.widgets.StaggeredEditText>
 
       <TextView
         android:id="@+id/registrationpin_pin_hint"

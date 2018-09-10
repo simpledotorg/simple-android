@@ -26,7 +26,7 @@
       android:layout_width="match_parent"
       android:layout_height="64dp"
       android:layout_marginBottom="@dimen/spacing_16"
-      android:drawableStart="@drawable/ic_search_black_24dp"
+      android:drawableStart="@drawable/ic_search_24dp"
       android:paddingStart="20dp"
       android:text="@string/home_search_patient_name_phone"
       android:textAllCaps="false"

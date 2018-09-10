@@ -16,6 +16,7 @@ import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.storage.Migration_10_11
+import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_3_4
 import org.simple.clinic.storage.Migration_4_5
 import org.simple.clinic.storage.Migration_5_6
@@ -55,7 +56,8 @@ class AppModule(private val appContext: Application, private val databaseName: S
             Migration_7_8(),
             Migration_8_9(),
             Migration_9_10(),
-            Migration_10_11())
+            Migration_10_11(),
+            Migration_11_12())
         .build()
   }
 

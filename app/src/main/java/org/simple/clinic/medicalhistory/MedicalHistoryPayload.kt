@@ -14,19 +14,19 @@ data class MedicalHistoryPayload(
     @Json(name = "patient_id")
     val patientUuid: UUID,
 
-    @Json(name = "has_prior_heart_attack")
+    @Json(name = "prior_heart_attack")
     val hasHadHeartAttack: Boolean,
 
-    @Json(name = "has_prior_stroke")
+    @Json(name = "prior_stroke")
     val hasHadStroke: Boolean,
 
-    @Json(name = "has_chronic_kidney_disease")
+    @Json(name = "chronic_kidney_disease")
     val hasHadKidneyDisease: Boolean,
 
-    @Json(name = "is_on_treatment_for_hypertension")
+    @Json(name = "receiving_treatment_for_hypertension")
     val isOnTreatmentForHypertension: Boolean,
 
-    @Json(name = "has_diabetes")
+    @Json(name = "diabetes")
     val hasDiabetes: Boolean,
 
     @Json(name = "created_at")

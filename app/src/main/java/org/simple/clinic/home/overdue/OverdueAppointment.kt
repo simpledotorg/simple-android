@@ -55,7 +55,7 @@ data class OverdueAppointment(
 
           WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.date < :dateNow
           GROUP BY P.uuid HAVING max(BP.updatedAt)
-          ORDER BY A.date ASC
+          ORDER BY A.date, A.updatedAt ASC
           """)
     fun appointmentsForFacility(facilityUuid: UUID, scheduledStatus: Appointment.Status, dateNow: LocalDate): Flowable<List<OverdueAppointment>>
   }

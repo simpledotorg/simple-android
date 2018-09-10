@@ -37,50 +37,6 @@
 
       <requestFocus />
     </EditText>
-
-    <RelativeLayout
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:gravity="end"
-      android:paddingBottom="@dimen/spacing_4"
-      android:paddingEnd="6dp"
-      android:paddingStart="@dimen/spacing_8"
-      android:paddingTop="@dimen/spacing_4">
-
-      <TextView
-        android:id="@+id/patientsearch_filter_by_label"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="2dp"
-        android:layout_marginTop="2dp"
-        android:letterSpacing="0.05"
-        android:text="@string/patientsearch_filter_by"
-        android:textAllCaps="true"
-        android:textSize="12sp" />
-
-      <Button
-        android:id="@+id/patientsearch_age_filter_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#F3F4FB"
-        android:drawableEnd="@drawable/ic_filter_20dp"
-        android:drawablePadding="4dp"
-        android:elevation="0dp"
-        android:minHeight="0dp"
-        android:minWidth="0dp"
-        android:paddingBottom="@dimen/spacing_8"
-        android:paddingEnd="@dimen/spacing_12"
-        android:paddingStart="@dimen/spacing_12"
-        android:paddingTop="@dimen/spacing_8"
-        android:text="@string/patientsearch_label_age"
-        android:textAllCaps="true"
-        android:textColor="@color/color_accent"
-        android:textSize="12sp"
-        android:translationZ="0dp" />
-    </RelativeLayout>
   </LinearLayout>
 
   <Button

@@ -136,8 +136,13 @@ class PatientFuzzySearch {
 
     private fun sortPatientSearchResultsByScore(uuidsSortedByScore: List<UuidToScore>) =
         SingleTransformer<List<PatientSearchResult>, List<PatientSearchResult>> { upstream ->
-          upstream.flatMap { Single.just(it.associateBy { it.uuid }) }
-              .map { resultsByUuid -> uuidsSortedByScore.map { resultsByUuid[it.uuid]!! } }
+          upstream
+              .map { results ->
+                val resultsByUuid = results.associateBy { it.uuid }
+                uuidsSortedByScore
+                    .filter { it.uuid in resultsByUuid }
+                    .map { resultsByUuid[it.uuid]!! }
+              }
         }
 
     override fun searchForPatientsWithNameLike(query: String) =

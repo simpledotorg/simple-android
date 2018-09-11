@@ -6,10 +6,6 @@ import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
 
-class BackButtonClicked : UiEvent {
-  override val analyticsName = "Patient Search:Back Clicked"
-}
-
 class CreateNewPatientClicked : UiEvent {
   override val analyticsName = "Patient Search:Create New Patient Clicked"
 }

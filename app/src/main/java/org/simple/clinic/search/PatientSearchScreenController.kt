@@ -25,13 +25,11 @@ class PatientSearchScreenController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
-        screenSetup(),
         showCreatePatientButton(replayedEvents),
         searchResults(replayedEvents),
         openAgeFilterSheet(replayedEvents),
         openPatientSummary(replayedEvents),
-        saveAndProceeds(replayedEvents),
-        backButtonClicks(replayedEvents))
+        saveAndProceeds(replayedEvents))
   }
 
   private fun showCreatePatientButton(events: Observable<UiEvent>): Observable<UiChange> {
@@ -42,11 +40,6 @@ class PatientSearchScreenController @Inject constructor(
             else -> { ui: Ui -> ui.showCreatePatientButton(false) }
           }
         }
-  }
-
-  // TODO: This doesn't add any value. Call the functions from the UI directly.
-  private fun screenSetup(): Observable<UiChange> {
-    return Observable.just({ ui: Ui -> ui.showKeyboardOnSearchEditText() }, { ui: Ui -> ui.setupSearchResultsList() })
   }
 
   private fun searchResults(events: Observable<UiEvent>): Observable<UiChange> {
@@ -97,12 +90,5 @@ class PatientSearchScreenController @Inject constructor(
         }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
-  }
-
-  // TODO: This doesn't add any value. Call the function from the UI directly.
-  private fun backButtonClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<BackButtonClicked>()
-        .map { { ui: Ui -> ui.goBackToHomeScreen() } }
   }
 }

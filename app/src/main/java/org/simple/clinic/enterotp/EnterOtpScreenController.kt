@@ -7,7 +7,11 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -25,11 +29,12 @@ class EnterOtpScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         showPhoneNumberOnStart(replayedEvents),
         handleBackClicks(replayedEvents),
         showOtpValidationErrors(replayedEvents),
-        handleOtpSubmitted(replayedEvents)
+        handleOtpSubmitted(replayedEvents),
+        closeScreenOnUserLoginInBackground(replayedEvents)
     )
   }
 
@@ -96,5 +101,16 @@ class EnterOtpScreenController @Inject constructor(
         .filter { it is LoginResult.Success }
         .flatMapCompletable { syncScheduler.syncImmediately().onErrorComplete() }
         .andThen(Observable.empty())
+  }
+
+  private fun closeScreenOnUserLoginInBackground(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<ScreenCreated>()
+        .flatMap { userSession.loggedInUser() }
+        .filter { it is Just<User> }
+        .map { (user) -> user!!.loggedInStatus }
+        .buffer(2, 1)
+        .filter { it.size == 2 }
+        .filter { it[0] == OTP_REQUESTED && it[1] == LOGGED_IN }
+        .map { { ui: Ui -> ui.goBack() } }
   }
 }

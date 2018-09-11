@@ -15,6 +15,7 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.LoginResult.NetworkError
 import org.simple.clinic.login.LoginResult.ServerError
@@ -22,7 +23,10 @@ import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
@@ -212,4 +216,31 @@ class EnterOtpScreenControllerTest {
       LoginResult.ServerError("Test"),
       LoginResult.UnexpectedError()
   )
+
+  @Test
+  @Parameters(
+      "OTP_REQUESTED|OTP_REQUESTED|false",
+      "OTP_REQUESTED|LOGGED_IN|true"
+  )
+  fun `when a user is verified for login in the background, the screen must be closed`(
+      prevloggedInStatus: User.LoggedInStatus,
+      curLoggedInStatus: User.LoggedInStatus,
+      shouldCloseScreen: Boolean
+  ) {
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.loggedInUser()).thenReturn(
+        Observable.just(
+            Just(user),
+            Just(user.copy(loggedInStatus = curLoggedInStatus)))
+    )
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    uiEvents.onNext(ScreenCreated())
+
+    if (shouldCloseScreen) {
+      Mockito.verify(screen).goBack()
+    } else {
+      Mockito.verify(screen, never()).goBack()
+    }
+  }
 }

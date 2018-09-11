@@ -128,10 +128,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showUserAccountStatus(R.id.patients_user_status_hidden)
   }
 
-  fun showUserVerifiedAlert() {
-    LoggedOutOnOtherDeviceDialog.show(fragmentManager)
-  }
-
   fun openEnterCodeManuallyScreen() {
     screenRouter.push(EnterOtpScreenKey())
   }

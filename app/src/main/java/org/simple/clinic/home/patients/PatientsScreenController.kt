@@ -21,7 +21,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
-import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
@@ -103,7 +102,7 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun displayUserAccountStatusNotification(events: Observable<UiEvent>): Observable<UiChange> {
-    val displayUserApprovalOrVerificationStatus = events
+    return events
         .ofType<ScreenCreated>()
         .flatMap {
           val user = userSession.loggedInUser().map { (user) -> user!! }
@@ -133,25 +132,6 @@ class PatientsScreenController @Inject constructor(
                 }
               }
         }
-
-    // We intentionally have this as a separate stream because we need to show
-    // this message when the sms otp is verified instantly rather than checking
-    // it only on screen creates or resumes.
-    val displayUserLoggedOutOnOtherDevice = events.ofType<ScreenCreated>()
-        .flatMap { userSession.loggedInUser() }
-        .filter { it is Just<User> }
-        .map { (user) -> user!!.loggedInStatus }
-        .buffer(2, 1)
-        .filter { it.size == 2 }
-        .filter { it[0] == OTP_REQUESTED && it[1] == LOGGED_IN }
-        .map {
-          { ui: Ui ->
-            ui.showUserVerifiedAlert()
-            ui.hideUserAccountStatus()
-          }
-        }
-
-    return displayUserApprovalOrVerificationStatus.mergeWith(displayUserLoggedOutOnOtherDevice)
   }
 
   private fun dismissApprovalStatus(events: Observable<UiEvent>): Observable<UiChange> {

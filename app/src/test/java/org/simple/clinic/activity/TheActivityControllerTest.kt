@@ -7,17 +7,26 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 
+@RunWith(JUnitParamsRunner::class)
 class TheActivityControllerTest {
 
   private val lockInMinutes = 15L
@@ -107,5 +116,33 @@ class TheActivityControllerTest {
     uiEvents.onNext(TheActivityLifecycle.Started())
 
     verify(lockAfterTimestamp, never()).delete()
+  }
+
+  @Test
+  @Parameters(
+      "OTP_REQUESTED|LOGGED_IN|LOGGED_IN|true",
+      "LOGGED_IN|LOGGED_IN|LOGGED_IN|false"
+  )
+  fun `when a user is verified for login, the logged out alert must be shown`(
+      prevloggedInStatus: User.LoggedInStatus,
+      curLoggedInStatus: User.LoggedInStatus,
+      nextLoggedInStatus: User.LoggedInStatus,
+      shouldShowLoggedOutAlert: Boolean
+  ) {
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    whenever(userSession.loggedInUser()).thenReturn(
+        Observable.just(
+            Just(user),
+            Just(user.copy(loggedInStatus = curLoggedInStatus)),
+            Just(user.copy(loggedInStatus = nextLoggedInStatus)))
+    )
+
+    uiEvents.onNext(TheActivityLifecycle.Started())
+
+    if (shouldShowLoggedOutAlert) {
+      verify(activity).showUserLoggedOutOnOtherDeviceAlert()
+    } else {
+      verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
+    }
   }
 }

@@ -3,6 +3,7 @@ package org.simple.clinic.search
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
@@ -26,6 +27,7 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable.mergeArray(
         showCreatePatientButton(replayedEvents),
+        enableSearchButton(replayedEvents),
         searchResults(replayedEvents),
         openAgeFilterSheet(replayedEvents),
         openPatientSummary(replayedEvents),
@@ -38,6 +40,28 @@ class PatientSearchScreenController @Inject constructor(
           when {
             it.query.isNotBlank() -> { ui: Ui -> ui.showCreatePatientButton(true) }
             else -> { ui: Ui -> ui.showCreatePatientButton(false) }
+          }
+        }
+  }
+
+  private fun enableSearchButton(events: Observable<UiEvent>): Observable<UiChange> {
+    val nameChanges = events
+        .ofType<SearchQueryNameChanged>()
+        .map { it.query }
+
+    val ageChanges = events
+        .ofType<SearchQueryAgeChanged>()
+        .map { it.ageString }
+
+    return Observables.combineLatest(nameChanges, ageChanges)
+        .map { (name, age) -> name.isNotBlank() && age.isNotBlank() }
+        .map { isQueryComplete ->
+          { ui: Ui ->
+            if (isQueryComplete) {
+              ui.showSearchButtonAsEnabled()
+            } else {
+              ui.showSearchButtonAsDisabled()
+            }
           }
         }
   }

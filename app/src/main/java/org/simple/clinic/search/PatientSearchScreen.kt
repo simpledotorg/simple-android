@@ -136,4 +136,12 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   fun openPersonalDetailsEntryScreen() {
     screenRouter.push(PatientEntryScreen.KEY)
   }
+
+  fun showSearchButtonAsDisabled() {
+    searchButton.setBackgroundResource(R.color.patientsearch_search_disabled)
+  }
+
+  fun showSearchButtonAsEnabled() {
+    searchButton.setBackgroundResource(R.color.patientsearch_search_enabled)
+  }
 }

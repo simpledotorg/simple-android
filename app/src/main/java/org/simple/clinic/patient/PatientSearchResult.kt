@@ -75,14 +75,14 @@ data class PatientSearchResult(
       """)
     fun searchByIds(uuids: List<UUID>, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
 
-    @Query("$mainQuery WHERE P.searchableName LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%'")
-    fun search(query: String): Flowable<List<PatientSearchResult>>
+    @Query("$mainQuery WHERE P.searchableName LIKE '%' || :name || '%'")
+    fun search(name: String): Flowable<List<PatientSearchResult>>
 
     @Query("""$mainQuery
-      WHERE (P.searchableName LIKE '%' || :query || '%' OR PP.number LIKE '%' || :query || '%')
+      WHERE P.searchableName LIKE '%' || :name || '%'
       AND ((P.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound) OR (P.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
       """)
-    fun search(query: String, dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>
+    fun search(name: String, dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>
 
     @Query("""$mainQuery
       WHERE ((P.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound)

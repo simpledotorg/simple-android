@@ -80,7 +80,7 @@ class PatientSearchScreenController @Inject constructor(
         .ofType<SearchClicked>()
         .withLatestFrom(nameChanges, ageChanges)
         .filter { (_, name, age) -> name.isNotBlank() && age.isNotBlank() }
-        .switchMap { (_, name, age) -> repository.searchPatientsAndPhoneNumbers(name, age.toInt()) }
+        .switchMap { (_, name, age) -> repository.search(name, age.toInt()) }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 

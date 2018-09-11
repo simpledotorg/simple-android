@@ -101,7 +101,7 @@ class PatientRepositoryTest {
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
 
-    repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
+    repository.search(query).blockingFirst()
 
     verify(mockPatientSearchResultDao).search(eq(expectedSearchQuery))
   }
@@ -114,42 +114,9 @@ class PatientRepositoryTest {
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
     whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
 
-    repository.searchPatientsAndPhoneNumbers("Name   Surname", 40).blockingFirst()
+    repository.search("Name   Surname", 40).blockingFirst()
 
     verify(mockPatientSearchResultDao).search(eq("NameSurname"), any(), any())
-  }
-
-  @Test
-  @Parameters(value = [
-    "123, 123",
-    "123 456, 123456",
-    "234 \t1, 2341"
-  ])
-  fun `when searching for query with phone number, do not remove any of the digits`(
-      query: String,
-      expectedSearchQuery: String
-  ) {
-    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
-
-    repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
-
-    verify(mockPatientSearchResultDao).search(eq(expectedSearchQuery))
-  }
-
-  @Test
-  fun `when searching for query with phone number, do not query the fuzzy search dao`() {
-    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
-    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
-
-    repository.searchPatientsAndPhoneNumbers("123").blockingFirst()
-
-    verify(mockFuzzyPatientSearchDao, never()).searchForPatientsWithNameLike(any())
-    verify(mockFuzzyPatientSearchDao, never()).searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())
   }
 
   @Test
@@ -163,7 +130,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
 
-    repository.searchPatientsAndPhoneNumbers("test")
+    repository.search("test")
         .firstOrError()
         .test()
         .assertValue(fuzzyResults + actualResults)
@@ -181,7 +148,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
 
-    repository.searchPatientsAndPhoneNumbers("test")
+    repository.search("test")
         .firstOrError()
         .test()
         .assertValue(expected)

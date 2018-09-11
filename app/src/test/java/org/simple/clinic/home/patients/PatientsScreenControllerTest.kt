@@ -268,14 +268,16 @@ class PatientsScreenControllerTest {
 
   @Test
   @Parameters(
+      "OTP_REQUESTED|OTP_REQUESTED|OTP_REQUESTED|false",
+      "OTP_REQUESTED|OTP_REQUESTED|LOGGED_IN|true",
       "OTP_REQUESTED|LOGGED_IN|LOGGED_IN|true",
-      "LOGGED_IN|LOGGED_IN|LOGGED_IN|false"
+      "LOGGED_IN|LOGGED_IN|LOGGED_IN|true"
   )
-  fun `when a user is verified for login, the verification status must be hidden`(
+  fun `when a user is verified for login, the account status status must be hidden`(
       prevloggedInStatus: LoggedInStatus,
       curLoggedInStatus: LoggedInStatus,
       nextLoggedInStatus: LoggedInStatus,
-      shouldShowVerificationAlert: Boolean
+      shouldHideUserAccountStatus: Boolean
   ) {
     val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(
@@ -290,11 +292,10 @@ class PatientsScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    if (shouldShowVerificationAlert) {
-      verify(screen).showUserVerifiedAlert()
+    if (shouldHideUserAccountStatus) {
       verify(screen, atLeastOnce()).hideUserAccountStatus()
     } else {
-      verify(screen, never()).showUserVerifiedAlert()
+      verify(screen, never()).hideUserAccountStatus()
     }
   }
 

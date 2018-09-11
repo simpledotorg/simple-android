@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -34,13 +33,6 @@ class PatientSearchScreenControllerTest {
     controller = PatientSearchScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
-  }
-
-  @Test
-  fun `when screen starts, the keyboard should be shown on phone number field and patient list should be setup`() {
-    verify(screen).showKeyboardOnSearchEditText()
-    verify(screen).setupSearchResultsList()
-    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -119,13 +111,6 @@ class PatientSearchScreenControllerTest {
       assert(partialName == firstValue.personalDetails!!.fullName)
     }
     verify(screen).openPersonalDetailsEntryScreen()
-  }
-
-  @Test
-  fun `when back button is clicked, home screen should open`() {
-    uiEvents.onNext(BackButtonClicked())
-
-    verify(screen).goBackToHomeScreen()
   }
 
   @Test

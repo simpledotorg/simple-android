@@ -96,6 +96,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   fun showIncorrectOtpError() {
     showError(resources.getString(R.string.enterotp_incorrect_code))
+    otpEntryEditText.showKeyboard()
   }
 
   private fun showError(error: String) {

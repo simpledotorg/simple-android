@@ -14,7 +14,7 @@ class SearchQueryAgeFilterClicked : UiEvent {
   override val analyticsName = "Patient Search:Filter By Age Clicked"
 }
 
-data class SearchQueryNameChanged(val query: String) : UiEvent {
+data class SearchQueryNameChanged(val name: String) : UiEvent {
   override val analyticsName = "Patient Search:Search Query Changed"
 }
 

@@ -294,7 +294,7 @@
   <style name="Clinic.UserApprovalStatusMessage">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:lineSpacingExtra">4sp</item>
     <item name="android:textColor">@color/white_opacity_60</item>
   </style>
 

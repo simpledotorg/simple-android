@@ -17,6 +17,7 @@
   <string name="patientsearch_age">Age: %s</string>
   <string name="patientsearch_filter_by">Filter by</string>
   <string name="patientsearch_label_age">Age</string>
+  <string name="patientsearch_search">Next</string>
 
   <!-- Patient search age filter -->
   <string name="agefilter_apply_filter">Apply filter</string>

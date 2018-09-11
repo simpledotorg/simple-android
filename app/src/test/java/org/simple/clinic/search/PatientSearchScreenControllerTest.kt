@@ -3,6 +3,7 @@ package org.simple.clinic.search
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
@@ -11,6 +12,9 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyBoolean
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.Mockito.anyString
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
@@ -40,27 +44,39 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when search text changes, matching patients should be shown`() {
-    val searchQuery = "999"
-    val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
-    whenever(repository.searchPatientsAndPhoneNumbers(searchQuery)).thenReturn(Observable.just(matchingPatients))
-
-    uiEvents.onNext(SearchQueryTextChanged(searchQuery))
-    uiEvents.onNext(SearchQueryAgeChanged(""))
-
-    verify(screen).updatePatientSearchResults(matchingPatients)
+  fun `when search is clicked with empty name then a validation error should be shown`() {
+    // TODO.
   }
 
   @Test
-  fun `when search text changes, and age filter is set, matching patients should be shown`() {
-    val searchQuery = "foo"
-    val ageFilter = "24"
+  fun `when search is clicked with empty age then a validation error should be shown`() {
+    // TODO.
+  }
+
+  @Test
+  fun `when search is clicked with empty name or age then patients shouldn't be searched`() {
+    uiEvents.onNext(SearchQueryNameChanged("foo"))
+    uiEvents.onNext(SearchQueryAgeChanged(" "))
+    uiEvents.onNext(SearchClicked())
+
+    uiEvents.onNext(SearchQueryNameChanged(""))
+    uiEvents.onNext(SearchQueryAgeChanged("123"))
+    uiEvents.onNext(SearchClicked())
+
+    verify(repository, never()).searchPatientsAndPhoneNumbers(anyString(), anyInt(), anyBoolean())
+    verify(screen, never()).updatePatientSearchResults(any())
+  }
+
+  @Test
+  fun `when full name and age are present, and search is clicked, matching patients should be shown`() {
+    val fullName = "bar"
+    val age = "24"
     val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
+    whenever(repository.searchPatientsAndPhoneNumbers(fullName, age.toInt())).thenReturn(Observable.just(matchingPatients))
 
-    whenever(repository.searchPatientsAndPhoneNumbers(searchQuery, ageFilter.toInt())).thenReturn(Observable.just(matchingPatients))
-
-    uiEvents.onNext(SearchQueryTextChanged(searchQuery))
-    uiEvents.onNext(SearchQueryAgeChanged(ageFilter))
+    uiEvents.onNext(SearchQueryNameChanged(fullName))
+    uiEvents.onNext(SearchQueryAgeChanged(age))
+    uiEvents.onNext(SearchClicked())
 
     verify(screen).updatePatientSearchResults(matchingPatients)
   }
@@ -68,10 +84,14 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `if search query is numbers, and create patient is clicked, the patient create form should open with same text in phone number field`() {
     val partialNumber = "999"
-    whenever(repository.searchPatientsAndPhoneNumbers(partialNumber)).thenReturn(Observable.never())
+    val age = "24"
+
+    whenever(repository.searchPatientsAndPhoneNumbers(partialNumber, age.toInt())).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(SearchQueryTextChanged(partialNumber))
+    uiEvents.onNext(SearchQueryNameChanged(partialNumber))
+    uiEvents.onNext(SearchQueryAgeChanged(age))
+    uiEvents.onNext(SearchClicked())
     uiEvents.onNext(CreateNewPatientClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {
@@ -84,10 +104,14 @@ class PatientSearchScreenControllerTest {
   @Test
   fun `if search query is alphanumeric, and create patient is clicked, the patient create form should open with same text in full name field`() {
     val partialName = "foo"
-    whenever(repository.searchPatientsAndPhoneNumbers(partialName)).thenReturn(Observable.never())
+    val age = "24"
+
+    whenever(repository.searchPatientsAndPhoneNumbers(partialName, age.toInt())).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(SearchQueryTextChanged(partialName))
+    uiEvents.onNext(SearchQueryNameChanged(partialName))
+    uiEvents.onNext(SearchQueryAgeChanged(age))
+    uiEvents.onNext(SearchClicked())
     uiEvents.onNext(CreateNewPatientClicked())
 
     argumentCaptor<OngoingPatientEntry>().apply {

@@ -33,7 +33,7 @@ class EnterOtpScreenController @Inject constructor(
         showPhoneNumberOnStart(replayedEvents),
         handleBackClicks(replayedEvents),
         showOtpValidationErrors(replayedEvents),
-        handleOtpSubmitted(replayedEvents),
+        makeLoginCall(replayedEvents),
         closeScreenOnUserLoginInBackground(replayedEvents)
     )
   }
@@ -60,21 +60,29 @@ class EnterOtpScreenController @Inject constructor(
         .map { { ui: Ui -> ui.goBack() } }
   }
 
-  private fun handleOtpSubmitted(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<EnterOtpSubmitted>()
+  private fun makeLoginCall(events: Observable<UiEvent>): Observable<UiChange> {
+    val otpFromSubmitted = events.ofType<EnterOtpSubmitted>()
         .filter { it.otp.length == OTP_LENGTH }
-        .flatMap { enterOtpSubmitted ->
+        .map { it.otp }
 
-          userSession.loginWithOtp(enterOtpSubmitted.otp)
-              .flatMapObservable { loginResult ->
-                Observable.merge(
-                    handleLoginResult(loginResult),
-                    hideProgressOnLoginResult(loginResult),
-                    syncOnLoginResult(loginResult)
-                )
-              }
-              .startWith { ui: Ui -> ui.showProgress() }
+    val otpFromTextChanges = events.ofType<EnterOtpTextChanges>()
+        .filter { it.otp.length == OTP_LENGTH }
+        .map { it.otp }
+
+    return Observable.merge(otpFromSubmitted, otpFromTextChanges)
+        .flatMap { loginWithOtp(it) }
+  }
+
+  private fun loginWithOtp(otp: String): Observable<UiChange> {
+    return userSession.loginWithOtp(otp)
+        .flatMapObservable { loginResult ->
+          Observable.merge(
+              handleLoginResult(loginResult),
+              hideProgressOnLoginResult(loginResult),
+              syncOnLoginResult(loginResult)
+          )
         }
+        .startWith { ui: Ui -> ui.showProgress() }
   }
 
   private fun handleLoginResult(loginResult: LoginResult): Observable<UiChange> {

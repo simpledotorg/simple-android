@@ -34,14 +34,15 @@ import org.simple.clinic.widgets.UiEvent
 class EnterOtpScreenControllerTest {
 
   private lateinit var controller: EnterOtpScreenController
+  private lateinit var userSession: UserSession
   private lateinit var screen: EnterOtpScreen
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private val userSession = mock<UserSession>()
   private val syncScheduler = mock<SyncScheduler>()
 
   @Before
   fun setUp() {
+    userSession = mock()
     screen = mock()
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
@@ -56,6 +57,7 @@ class EnterOtpScreenControllerTest {
   fun `when the screen is created, the logged in users phone number must be shown`() {
     val user = PatientMocker.loggedInUser(phone = "1111111111")
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
 
     uiEvents.onNext(ScreenCreated())
 
@@ -189,6 +191,18 @@ class EnterOtpScreenControllerTest {
     uiEvents.onNext(EnterOtpTextChanges("11"))
 
     verify(screen, times(2)).hideError()
+  }
+
+  @Test
+  fun `when the OTP changes and meets the otp length, the login call should be made`() {
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+
+    uiEvents.onNext(EnterOtpTextChanges("1111"))
+    uiEvents.onNext(EnterOtpTextChanges("11111"))
+    uiEvents.onNext(EnterOtpTextChanges("111111"))
+    uiEvents.onNext(EnterOtpTextChanges("11111"))
+
+    verify(userSession).loginWithOtp("111111")
   }
 
   @Test

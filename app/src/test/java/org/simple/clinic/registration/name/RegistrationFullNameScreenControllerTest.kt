@@ -58,6 +58,7 @@ class RegistrationFullNameScreenControllerTest {
         fullName = "Ashok Kumar",
         phoneNumber = "1234567890")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(facilityRepository.facilities()).thenReturn(Observable.never())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
 

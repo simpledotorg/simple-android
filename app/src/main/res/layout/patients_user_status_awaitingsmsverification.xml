@@ -6,10 +6,7 @@
   android:layout_height="wrap_content"
   android:layout_gravity="bottom"
   android:background="@color/black"
-  android:paddingBottom="@dimen/spacing_16"
-  android:paddingEnd="@dimen/spacing_12"
-  android:paddingStart="@dimen/spacing_16"
-  android:paddingTop="@dimen/spacing_16"
+  android:padding="@dimen/spacing_12"
   tools:ignore="Overdraw"
   tools:showIn="@layout/screen_patients">
 

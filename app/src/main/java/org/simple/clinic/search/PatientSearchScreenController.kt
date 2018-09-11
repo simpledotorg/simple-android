@@ -38,7 +38,7 @@ class PatientSearchScreenController @Inject constructor(
     return events.ofType<SearchQueryNameChanged>()
         .map {
           when {
-            it.query.isNotBlank() -> { ui: Ui -> ui.showCreatePatientButton(true) }
+            it.name.isNotBlank() -> { ui: Ui -> ui.showCreatePatientButton(true) }
             else -> { ui: Ui -> ui.showCreatePatientButton(false) }
           }
         }
@@ -47,7 +47,7 @@ class PatientSearchScreenController @Inject constructor(
   private fun enableSearchButton(events: Observable<UiEvent>): Observable<UiChange> {
     val nameChanges = events
         .ofType<SearchQueryNameChanged>()
-        .map { it.query }
+        .map { it.name }
 
     val ageChanges = events
         .ofType<SearchQueryAgeChanged>()
@@ -69,7 +69,7 @@ class PatientSearchScreenController @Inject constructor(
   private fun searchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val nameChanges = events
         .ofType<SearchQueryNameChanged>()
-        .map { it.query.trim() }
+        .map { it.name.trim() }
 
     val ageChanges = events
         .ofType<SearchQueryAgeChanged>()
@@ -98,20 +98,15 @@ class PatientSearchScreenController @Inject constructor(
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
-    val queryChanges = events
+    val nameChanges = events
         .ofType<SearchQueryNameChanged>()
-        .map { it.query.trim() }
+        .map { it.name.trim() }
 
     return events
         .ofType<CreateNewPatientClicked>()
-        .withLatestFrom(queryChanges) { _, query -> query }
+        .withLatestFrom(nameChanges) { _, name -> name }
         .take(1)
-        .map {
-          when {
-            it.toIntOrNull() != null -> OngoingPatientEntry(phoneNumber = OngoingPatientEntry.PhoneNumber(it))
-            else -> OngoingPatientEntry(personalDetails = OngoingPatientEntry.PersonalDetails(it, null, null, null))
-          }
-        }
+        .map { OngoingPatientEntry(personalDetails = OngoingPatientEntry.PersonalDetails(it, null, null, null)) }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
   }

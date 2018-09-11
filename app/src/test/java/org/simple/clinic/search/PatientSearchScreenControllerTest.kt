@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -33,6 +34,20 @@ class PatientSearchScreenControllerTest {
     controller = PatientSearchScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+  }
+
+  @Test
+  fun `search button should remain enabled only when both name and age are present`() {
+    uiEvents.onNext(SearchQueryNameChanged("foo"))
+    uiEvents.onNext(SearchQueryAgeChanged(" "))
+
+    uiEvents.onNext(SearchQueryNameChanged(""))
+    uiEvents.onNext(SearchQueryAgeChanged("123"))
+
+    uiEvents.onNext(SearchQueryNameChanged("bar"))
+
+    verify(screen, times(3)).showSearchButtonAsDisabled()
+    verify(screen).showSearchButtonAsEnabled()
   }
 
   @Test

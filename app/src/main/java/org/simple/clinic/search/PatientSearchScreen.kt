@@ -57,7 +57,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     if (isInEditMode) {
       return
     }
-
     TheActivity.component.inject(this)
 
     // TODO: this will be replaced by ACTION_NEXT once DOB and Age fields are also added.
@@ -67,6 +66,15 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       true
     }
 
+    fullNameEditText.showKeyboard()
+
+    patientRecyclerView.adapter = resultsAdapter
+    patientRecyclerView.layoutManager = LinearLayoutManager(context)
+
+    backButton.setOnClickListener {
+      screenRouter.pop()
+    }
+
     Observable
         .mergeArray(
             fullnameChanges(),
@@ -74,7 +82,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             ageFilterTextChanges(),
             searchClicks(),
             newPatientButtonClicks(),
-            backButtonClicks(),
             searchResultClicks())
         .observeOn(io())
         .compose(controller)
@@ -99,9 +106,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun newPatientButtonClicks() = RxView.clicks(newPatientButton)
       .map { CreateNewPatientClicked() }
 
-  private fun backButtonClicks() = RxView.clicks(backButton)
-      .map { BackButtonClicked() }
-
   private fun searchClicks() =
       RxView
           .clicks(searchButton)
@@ -109,21 +113,12 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun searchResultClicks() = resultsAdapter.itemClicks
 
-  fun showKeyboardOnSearchEditText() {
-    fullNameEditText.showKeyboard()
-  }
-
   fun showCreatePatientButton(shouldBeShown: Boolean) {
     if (shouldBeShown) {
       newPatientButton.visibility = View.VISIBLE
     } else {
       newPatientButton.visibility = View.GONE
     }
-  }
-
-  fun setupSearchResultsList() {
-    patientRecyclerView.adapter = resultsAdapter
-    patientRecyclerView.layoutManager = LinearLayoutManager(context)
   }
 
   fun updatePatientSearchResults(patients: List<PatientSearchResult>) {
@@ -140,9 +135,5 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun openPersonalDetailsEntryScreen() {
     screenRouter.push(PatientEntryScreen.KEY)
-  }
-
-  fun goBackToHomeScreen() {
-    screenRouter.pop()
   }
 }

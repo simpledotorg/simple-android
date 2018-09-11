@@ -14,6 +14,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
@@ -134,5 +135,11 @@ class TheActivity : AppCompatActivity() {
 
   fun showAppLockScreen() {
     screenRouter.push(AppLockScreen.KEY)
+  }
+
+  // This is here because we need to show the same alert in multiple
+  // screens when the user gets verified in the background.
+  fun showUserLoggedOutOnOtherDeviceAlert() {
+    LoggedOutOnOtherDeviceDialog.show(supportFragmentManager)
   }
 }

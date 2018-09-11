@@ -70,7 +70,7 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryAgeChanged("123"))
     uiEvents.onNext(SearchClicked())
 
-    verify(repository, never()).searchPatientsAndPhoneNumbers(anyString(), anyInt(), anyBoolean())
+    verify(repository, never()).search(anyString(), anyInt(), anyBoolean())
     verify(screen, never()).updatePatientSearchResults(any())
   }
 
@@ -79,7 +79,7 @@ class PatientSearchScreenControllerTest {
     val fullName = "bar"
     val age = "24"
     val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
-    whenever(repository.searchPatientsAndPhoneNumbers(fullName, age.toInt())).thenReturn(Observable.just(matchingPatients))
+    whenever(repository.search(fullName, age.toInt())).thenReturn(Observable.just(matchingPatients))
 
     uiEvents.onNext(SearchQueryNameChanged(fullName))
     uiEvents.onNext(SearchQueryAgeChanged(age))
@@ -93,7 +93,7 @@ class PatientSearchScreenControllerTest {
     val partialName = "foo"
     val age = "24"
 
-    whenever(repository.searchPatientsAndPhoneNumbers(partialName, age.toInt())).thenReturn(Observable.never())
+    whenever(repository.search(partialName, age.toInt())).thenReturn(Observable.never())
     whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(SearchQueryNameChanged(partialName))

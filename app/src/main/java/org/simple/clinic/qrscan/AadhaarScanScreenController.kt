@@ -81,7 +81,7 @@ class AadhaarScanScreenController @Inject constructor(
           // TODO: Write tests.
           val patientNameOrEmpty = aadhaarData.fullName.orEmpty()
 
-          repository.searchPatientsAndPhoneNumbers(patientNameOrEmpty)
+          repository.search(patientNameOrEmpty)
               .take(1)
               .flatMap { potentiallyMatchingPatients ->
                 Timber.i("Aadhaar data: $aadhaarData")

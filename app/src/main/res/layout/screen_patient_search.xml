@@ -24,8 +24,11 @@
       android:src="@drawable/ic_arrow_back_24dp"
       android:tint="@color/black_opacity_50" />
 
+    <!-- privateImeOptions="nm" is used by the AOSP and some keyboards
+         to hide the suggestions bar entirely. Gboard ignores this
+         unfortunately. -->
     <EditText
-      android:id="@+id/patientsearch_text"
+      android:id="@+id/patientsearch_fullname"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_weight="1"
@@ -98,6 +101,19 @@
     android:id="@+id/patientsearch_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_above="@+id/patientsearch_search"
     android:layout_below="@id/patientsearch_new_patient"
     tools:listitem="@layout/list_patient_search" />
+
+  <FrameLayout
+    android:id="@+id/patientsearch_search"
+    style="@style/Clinic.FullWidthButtonFrame"
+    android:layout_alignParentBottom="true"
+    android:background="@color/color_accent">
+
+    <Button
+      style="@style/Clinic.FullWidthButton"
+      android:text="@string/patientsearch_search"
+      android:textColor="@color/white" />
+  </FrameLayout>
 </org.simple.clinic.search.PatientSearchScreen>

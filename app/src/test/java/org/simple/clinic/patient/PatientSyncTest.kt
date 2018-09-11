@@ -17,12 +17,12 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.INVALID
 import org.simple.clinic.patient.SyncStatus.IN_FLIGHT
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.patient.sync.PatientPullResponse
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV1
-import org.simple.clinic.sync.ValidationErrors
+import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.ValidationErrors
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -98,29 +98,7 @@ class PatientSyncTest {
   @Test
   fun `if there are validation errors during push, then the flagged patient should be marked as invalid`() {
     val patientUuid = UUID.randomUUID()
-    val addressUuid = UUID.randomUUID()
-    val patientAddress = PatientAddress(addressUuid, "colony", "district", "state", "country", mock(), mock())
-    val patientPhoneNumber = PatientPhoneNumber(UUID.randomUUID(), patientUuid, "123", mock(), false, mock(), mock())
-
-    val patientWithErrors = PatientSearchResult(
-        uuid = patientUuid,
-        gender = mock(),
-        dateOfBirth = mock(),
-        fullName = "name",
-        age = mock(),
-        status = mock(),
-        createdAt = mock(),
-        updatedAt = mock(),
-        syncStatus = mock(),
-
-        address = patientAddress,
-
-        phoneUuid = patientPhoneNumber.patientUuid,
-        phoneNumber = patientPhoneNumber.number,
-        phoneType =  patientPhoneNumber.phoneType,
-        phoneActive = patientPhoneNumber.active,
-        phoneCreatedAt = patientPhoneNumber.createdAt,
-        phoneUpdatedAt = patientPhoneNumber.updatedAt)
+    val patientWithErrors = PatientMocker.patientSearchResult()
 
     whenever(repository.patientsWithSyncStatus(PENDING)).thenReturn(Single.just(listOf(patientWithErrors)))
     whenever(repository.updatePatientsSyncStatus(oldStatus = PENDING, newStatus = IN_FLIGHT)).thenReturn(Completable.complete())

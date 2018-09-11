@@ -12,10 +12,10 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 class PatientSearchScreenControllerTest {
 
@@ -106,27 +106,10 @@ class PatientSearchScreenControllerTest {
 
   @Test
   fun `when a patient search result is clicked, the patient's summary screen should be started`() {
-    val patientUuid = UUID.randomUUID()
-    val searchResult = PatientSearchResult(
-        uuid = patientUuid,
-        fullName = "Ashok Kumar",
-        gender = mock(),
-        dateOfBirth = null,
-        age = mock(),
-        status = mock(),
-        createdAt = mock(),
-        updatedAt = mock(),
-        address = mock(),
-        syncStatus = mock(),
-        phoneNumber = "3.14159",
-        phoneType = mock(),
-        phoneUuid = mock(),
-        phoneActive = true,
-        phoneCreatedAt = mock(),
-        phoneUpdatedAt = mock())
+    val searchResult = PatientMocker.patientSearchResult()
 
     uiEvents.onNext(SearchResultClicked(searchResult))
 
-    verify(screen).openPatientSummaryScreen(patientUuid)
+    verify(screen).openPatientSummaryScreen(searchResult.uuid)
   }
 }

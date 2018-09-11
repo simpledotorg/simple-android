@@ -200,4 +200,28 @@ object PatientMocker {
         status = status,
         updatedAt = updatedAt)
   }
+
+  fun patientSearchResult(
+      uuid: UUID = UUID.randomUUID(),
+      fullName: String = "Ashok Kumar",
+      phoneNumber: String = "3.14159"
+  ): PatientSearchResult {
+    return PatientSearchResult(
+        uuid = uuid,
+        fullName = fullName,
+        gender = mock(),
+        dateOfBirth = null,
+        age = mock(),
+        status = mock(),
+        createdAt = mock(),
+        updatedAt = mock(),
+        address = PatientMocker.address(),
+        syncStatus = mock(),
+        phoneNumber = phoneNumber,
+        phoneType = mock(),
+        phoneUuid = mock(),
+        phoneActive = true,
+        phoneCreatedAt = mock(),
+        phoneUpdatedAt = mock())
+  }
 }

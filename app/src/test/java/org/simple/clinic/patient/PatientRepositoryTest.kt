@@ -19,7 +19,6 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
-import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -155,24 +154,7 @@ class PatientRepositoryTest {
 
   @Test
   fun `when the fuzzy patient search returns results, they must be at the head of the final results list`() {
-    val patientSearchResultTemplate = PatientSearchResult(
-        uuid = UUID.randomUUID(),
-        fullName = "",
-        gender = Gender.FEMALE,
-        dateOfBirth = null,
-        age = null,
-        status = PatientStatus.ACTIVE,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now(),
-        syncStatus = SyncStatus.DONE,
-        address = PatientAddress(UUID.randomUUID(), null, "", "", null, createdAt = Instant.now(), updatedAt = Instant.now()),
-        phoneUuid = null,
-        phoneNumber = null,
-        phoneType = null,
-        phoneActive = null,
-        phoneCreatedAt = null,
-        phoneUpdatedAt = null
-    )
+    val patientSearchResultTemplate = PatientMocker.patientSearchResult()
 
     val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
     val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()))
@@ -189,25 +171,7 @@ class PatientRepositoryTest {
 
   @Test
   fun `when the fuzzy patient search returns results, they must not contain any duplicates`() {
-    val patientSearchResultTemplate = PatientSearchResult(
-        uuid = UUID.randomUUID(),
-        fullName = "",
-        gender = Gender.FEMALE,
-        dateOfBirth = null,
-        age = null,
-        status = PatientStatus.ACTIVE,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now(),
-        syncStatus = SyncStatus.DONE,
-        address = PatientAddress(UUID.randomUUID(), null, "", "", null, createdAt = Instant.now(), updatedAt = Instant.now()),
-        phoneUuid = null,
-        phoneNumber = null,
-        phoneType = null,
-        phoneActive = null,
-        phoneCreatedAt = null,
-        phoneUpdatedAt = null
-    )
-
+    val patientSearchResultTemplate = PatientMocker.patientSearchResult()
     val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
     val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), actualResults[0])
 

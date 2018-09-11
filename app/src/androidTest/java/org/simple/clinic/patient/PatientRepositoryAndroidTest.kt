@@ -7,8 +7,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
@@ -45,10 +45,10 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    val search1 = repository.search("lakshman").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("ashok").blockingFirst()
+    val search2 = repository.search("ashok").blockingFirst()
     assertThat(search2).hasSize(1)
     assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
@@ -111,41 +111,14 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    val search1 = repository.search("lakshman").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("bima").blockingFirst()
+    val search2 = repository.search("bima").blockingFirst()
     assertThat(search2).hasSize(1)
     assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
     assertThat(search2.first().phoneNumber).isNull()
-  }
-
-  @Test
-  fun createAnOngoingPatientEntry_withPhoneNumbers_thenSaveItToDatabase_AndSearchByPhoneNumber() {
-    for (i in 1..5) {
-      val ongoingAddress = OngoingPatientEntry.Address("Benson Town", "Bangalore North", "Karnataka")
-      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("$i Chetan Raju", "25/02/200$i", null, Gender.FEMALE)
-      val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber(number = "17121988", type = PatientPhoneNumberType.LANDLINE)
-
-      val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
-
-      repository.saveOngoingEntry(personalDetailsOnlyEntry)
-          .andThen(repository.ongoingEntry())
-          .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
-          .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
-          .flatMapCompletable { withAddressAndPhoneNumbers -> repository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-          .andThen(repository.saveOngoingEntryAsPatient())
-          .subscribe()
-    }
-
-    val search1 = repository.searchPatientsAndPhoneNumbers("9999").blockingFirst()
-    assertThat(search1).isEmpty()
-
-    val search2 = repository.searchPatientsAndPhoneNumbers("1712").blockingFirst()
-    assertThat(search2).hasSize(5)
-    assertThat(search2.first().phoneNumber).isEqualTo("17121988")
-    assertThat(search2.first().phoneType).isEqualTo(PatientPhoneNumberType.LANDLINE)
   }
 
   @Test
@@ -164,10 +137,10 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("lakshman").blockingFirst()
+    val search1 = repository.search("lakshman").blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("ashok").blockingFirst()
+    val search2 = repository.search("ashok").blockingFirst()
     val patient = search2[0]
     assertThat(patient.fullName).isEqualTo("Ashok Kumar")
     assertThat(patient.dateOfBirth).isNull()
@@ -210,7 +183,7 @@ class PatientRepositoryAndroidTest {
           .blockingGet()
 
       val (query, shouldFindInDb) = searches[index]
-      val search = repository.searchPatientsAndPhoneNumbers(query).blockingFirst()
+      val search = repository.search(query).blockingFirst()
       if (shouldFindInDb) {
         assertThat(search).hasSize(1)
         assertThat(search.first().fullName).isEqualTo(fullName)
@@ -235,7 +208,7 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val combinedPatient = repository.searchPatientsAndPhoneNumbers("kumar")
+    val combinedPatient = repository.search("kumar")
         .blockingFirst()
         .first()
 
@@ -285,17 +258,17 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 12, includeFuzzyNameSearch = false).blockingFirst()
+    val search0 = repository.search("kumar", 12, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 77, includeFuzzyNameSearch = false).blockingFirst()
+    val search1 = repository.search("kumar", 77, includeFuzzyNameSearch = false).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("34159")
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 68, includeFuzzyNameSearch = false).blockingFirst()
+    val search2 = repository.search("ab", 68, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(3)
     assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
     assertThat(search2[0].dateOfBirth).isEqualTo(LocalDate.parse("1950-08-15"))
@@ -339,17 +312,17 @@ class PatientRepositoryAndroidTest {
         .andThen(repository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search0 = repository.searchPatientsAndPhoneNumbers("kumar", 50, includeFuzzyNameSearch = false).blockingFirst()
+    val search0 = repository.search("kumar", 50, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = repository.searchPatientsAndPhoneNumbers("kumar", 28, includeFuzzyNameSearch = false).blockingFirst()
+    val search1 = repository.search("kumar", 28, includeFuzzyNameSearch = false).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Abhishek Kumar")
     assertThat(person1.age!!.value).isEqualTo(26)
     assertThat(person1.phoneNumber).isEqualTo("99159")
 
-    val search2 = repository.searchPatientsAndPhoneNumbers("ab", 18, includeFuzzyNameSearch = false).blockingFirst()
+    val search2 = repository.search("ab", 18, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(2)
     assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
     assertThat(search2[0].age!!.value).isEqualTo(20)

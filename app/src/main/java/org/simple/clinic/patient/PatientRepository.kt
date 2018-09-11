@@ -16,7 +16,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Arrays
 import java.util.Locale
@@ -37,67 +37,60 @@ class PatientRepository @Inject constructor(
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun searchPatientsAndPhoneNumbers(
-      query: String?,
-      includeFuzzyNameSearch: Boolean = true
-  ): Observable<List<PatientSearchResult>> {
-    if (query.isNullOrEmpty()) {
+  fun search(name: String?, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
+    if (name.isNullOrEmpty()) {
       return database.patientSearchDao()
           .recentlyUpdated100Records()
           .toObservable()
     }
 
-    val actualQuery = nameToSearchableForm(query!!)
+    val searchableName = nameToSearchableForm(name!!)
 
-    return if (actualQuery.all { it.isDigit() } || includeFuzzyNameSearch.not()) {
+    return if (includeFuzzyNameSearch.not()) {
       database.patientSearchDao()
-          .search(actualQuery)
+          .search(searchableName)
           .toObservable()
 
     } else {
       val fuzzySearch = database.fuzzyPatientSearchDao()
-          .searchForPatientsWithNameLike(actualQuery)
+          .searchForPatientsWithNameLike(searchableName)
           .toObservable()
 
       database.patientSearchDao()
-          .search(actualQuery)
+          .search(searchableName)
           .toObservable()
           .zipWith(fuzzySearch)
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
     }
   }
 
-  fun searchPatientsAndPhoneNumbers(
-      query: String?,
-      assumedAge: Int,
-      includeFuzzyNameSearch: Boolean = true
-  ): Observable<List<PatientSearchResult>> {
+  fun search(name: String?, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val ageUpperBound = assumedAge + ageFuzziness
     val ageLowerBound = assumedAge - ageFuzziness
 
-    val dateOfBirthUpperBound = LocalDate.now(ZoneOffset.UTC).minusYears(ageUpperBound.toLong()).toString()
-    val dateOfBirthLowerBound = LocalDate.now(ZoneOffset.UTC).minusYears(ageLowerBound.toLong()).toString()
+    val dateOfBirthUpperBound = LocalDate.now(UTC).minusYears(ageUpperBound.toLong()).toString()
+    val dateOfBirthLowerBound = LocalDate.now(UTC).minusYears(ageLowerBound.toLong()).toString()
 
-    if (query.isNullOrEmpty()) {
+    if (name.isNullOrEmpty()) {
       return database.patientSearchDao()
           .search(dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
     }
 
-    val actualQuery = nameToSearchableForm(query!!)
+    val searchableName = nameToSearchableForm(name!!)
 
-    return if (actualQuery.all { it.isDigit() } || includeFuzzyNameSearch.not()) {
+    return if (includeFuzzyNameSearch.not()) {
       database.patientSearchDao()
-          .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+          .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
 
     } else {
       val fuzzySearch = database.fuzzyPatientSearchDao()
-          .searchForPatientsWithNameLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+          .searchForPatientsWithNameLikeAndAgeWithin(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
 
       database.patientSearchDao()
-          .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
+          .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
           .zipWith(fuzzySearch)
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }

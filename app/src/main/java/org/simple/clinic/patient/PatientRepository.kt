@@ -90,6 +90,7 @@ class PatientRepository @Inject constructor(
       database.patientSearchDao()
           .search(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
+
     } else {
       val fuzzySearch = database.fuzzyPatientSearchDao()
           .searchForPatientsWithNameLikeAndAgeWithin(actualQuery, dateOfBirthUpperBound, dateOfBirthLowerBound)

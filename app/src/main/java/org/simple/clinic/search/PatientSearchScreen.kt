@@ -45,9 +45,10 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var controller: PatientSearchScreenController
 
   private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
-  private val searchEditText by bindView<EditText>(R.id.patientsearch_text)
+  private val fullNameEditText by bindView<EditText>(R.id.patientsearch_fullname)
   private val ageFilterButton by bindView<Button>(R.id.patientsearch_age_filter_button)
   private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
+  private val searchButton by bindView<View>(R.id.patientsearch_search)
   private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
   private val resultsAdapter = PatientSearchResultsAdapter()
 
@@ -59,7 +60,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     TheActivity.component.inject(this)
 
-    searchEditText.setOnEditorActionListener { _, _, _ ->
+    // TODO: this will be replaced by ACTION_NEXT once DOB and Age fields are also added.
+    fullNameEditText.setOnEditorActionListener { _, _, _ ->
       // Swallow IME key presses because a search is triggered on every text change automatically.
       // Without this, the keyboard gets dismissed
       true
@@ -67,9 +69,10 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     Observable
         .mergeArray(
-            searchQueryChanges(),
+            fullnameChanges(),
             ageFilterToolbarButtonClicks(),
             ageFilterTextChanges(),
+            searchClicks(),
             newPatientButtonClicks(),
             backButtonClicks(),
             searchResultClicks())
@@ -80,9 +83,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun searchQueryChanges() = RxTextView.textChanges(searchEditText)
+  private fun fullnameChanges() = RxTextView.textChanges(fullNameEditText)
       .map(CharSequence::toString)
-      .map(::SearchQueryTextChanged)
+      .map(::SearchQueryNameChanged)
 
   private fun ageFilterToolbarButtonClicks() = RxView.clicks(ageFilterButton)
       .map { SearchQueryAgeFilterClicked() }
@@ -99,10 +102,15 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun backButtonClicks() = RxView.clicks(backButton)
       .map { BackButtonClicked() }
 
+  private fun searchClicks() =
+      RxView
+          .clicks(searchButton)
+          .map { SearchClicked() }
+
   private fun searchResultClicks() = resultsAdapter.itemClicks
 
   fun showKeyboardOnSearchEditText() {
-    searchEditText.showKeyboard()
+    fullNameEditText.showKeyboard()
   }
 
   fun showCreatePatientButton(shouldBeShown: Boolean) {

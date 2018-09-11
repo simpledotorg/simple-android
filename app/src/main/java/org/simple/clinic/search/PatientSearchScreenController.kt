@@ -3,7 +3,6 @@ package org.simple.clinic.search
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
@@ -27,16 +26,16 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable.mergeArray(
         screenSetup(),
-        searchQueryChanged(replayedEvents),
+        showCreatePatientButton(replayedEvents),
         searchResults(replayedEvents),
-        ageFilterClicks(replayedEvents),
-        searchResultClicks(replayedEvents),
+        openAgeFilterSheet(replayedEvents),
+        openPatientSummary(replayedEvents),
         saveAndProceeds(replayedEvents),
         backButtonClicks(replayedEvents))
   }
 
-  private fun searchQueryChanged(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SearchQueryTextChanged>()
+  private fun showCreatePatientButton(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<SearchQueryNameChanged>()
         .map {
           when {
             it.query.isNotBlank() -> { ui: Ui -> ui.showCreatePatientButton(true) }
@@ -45,38 +44,37 @@ class PatientSearchScreenController @Inject constructor(
         }
   }
 
+  // TODO: This doesn't add any value. Call the functions from the UI directly.
   private fun screenSetup(): Observable<UiChange> {
     return Observable.just({ ui: Ui -> ui.showKeyboardOnSearchEditText() }, { ui: Ui -> ui.setupSearchResultsList() })
   }
 
   private fun searchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    val queryChanges = events
-        .ofType<SearchQueryTextChanged>()
+    val nameChanges = events
+        .ofType<SearchQueryNameChanged>()
         .map { it.query.trim() }
 
     val ageChanges = events
         .ofType<SearchQueryAgeChanged>()
-        .map { ageText = it.ageString
-          it.ageString }
+        .map { it.ageString }
+        .doOnNext { ageText = it }  // this will go away soon when age bottom sheet is removed.
 
-    return Observables.combineLatest(queryChanges, ageChanges)
-        .switchMap { (query, age) ->
-          when {
-            age.isEmpty() -> repository.searchPatientsAndPhoneNumbers(query)
-            else -> repository.searchPatientsAndPhoneNumbers(query, age.toInt())
-          }
-        }
+    return events
+        .ofType<SearchClicked>()
+        .withLatestFrom(nameChanges, ageChanges)
+        .filter { (_, name, age) -> name.isNotBlank() && age.isNotBlank() }
+        .switchMap { (_, name, age) -> repository.searchPatientsAndPhoneNumbers(name, age.toInt()) }
         .map { matchingPatients -> { ui: Ui -> ui.updatePatientSearchResults(matchingPatients) } }
   }
 
-  private fun searchResultClicks(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<SearchResultClicked>()
         .map { it.searchResult }
         .map { clickedPatient -> { ui: Ui -> ui.openPatientSummaryScreen(clickedPatient.uuid) } }
   }
 
-  private fun ageFilterClicks(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun openAgeFilterSheet(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<SearchQueryAgeFilterClicked>()
         .map { { ui: Ui -> ui.openAgeFilterSheet(ageText) } }
@@ -84,7 +82,7 @@ class PatientSearchScreenController @Inject constructor(
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
     val queryChanges = events
-        .ofType<SearchQueryTextChanged>()
+        .ofType<SearchQueryNameChanged>()
         .map { it.query.trim() }
 
     return events
@@ -101,6 +99,7 @@ class PatientSearchScreenController @Inject constructor(
         .andThen(Observable.just { ui: Ui -> ui.openPersonalDetailsEntryScreen() })
   }
 
+  // TODO: This doesn't add any value. Call the function from the UI directly.
   private fun backButtonClicks(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<BackButtonClicked>()

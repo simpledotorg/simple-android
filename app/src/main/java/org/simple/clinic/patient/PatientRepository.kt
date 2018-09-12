@@ -37,14 +37,8 @@ class PatientRepository @Inject constructor(
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
-  fun search(name: String?, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
-    if (name.isNullOrEmpty()) {
-      return database.patientSearchDao()
-          .recentlyUpdated100Records()
-          .toObservable()
-    }
-
-    val searchableName = nameToSearchableForm(name!!)
+  fun search(name: String, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
+    val searchableName = nameToSearchableForm(name)
 
     return if (includeFuzzyNameSearch.not()) {
       database.patientSearchDao()
@@ -64,20 +58,14 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun search(name: String?, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
+  fun search(name: String, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val ageUpperBound = assumedAge + ageFuzziness
     val ageLowerBound = assumedAge - ageFuzziness
 
     val dateOfBirthUpperBound = LocalDate.now(UTC).minusYears(ageUpperBound.toLong()).toString()
     val dateOfBirthLowerBound = LocalDate.now(UTC).minusYears(ageLowerBound.toLong()).toString()
 
-    if (name.isNullOrEmpty()) {
-      return database.patientSearchDao()
-          .search(dateOfBirthUpperBound, dateOfBirthLowerBound)
-          .toObservable()
-    }
-
-    val searchableName = nameToSearchableForm(name!!)
+    val searchableName = nameToSearchableForm(name)
 
     return if (includeFuzzyNameSearch.not()) {
       database.patientSearchDao()

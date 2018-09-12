@@ -67,19 +67,17 @@ class EnterOtpScreenController @Inject constructor(
         .map { it.otp }
 
     return Observable.merge(otpFromSubmitted, otpFromTextChanges)
-        .flatMap { loginWithOtp(it) }
-  }
-
-  private fun loginWithOtp(otp: String): Observable<UiChange> {
-    return userSession.loginWithOtp(otp)
-        .flatMapObservable { loginResult ->
-          Observable.merge(
-              handleLoginResult(loginResult),
-              hideProgressOnLoginResult(loginResult),
-              syncOnLoginResult(loginResult)
-          )
+        .flatMap { otp ->
+          userSession.loginWithOtp(otp)
+              .flatMapObservable { loginResult ->
+                Observable.merge(
+                    handleLoginResult(loginResult),
+                    hideProgressOnLoginResult(loginResult),
+                    syncOnLoginResult(loginResult)
+                )
+              }
+              .startWith { ui: Ui -> ui.showProgress() }
         }
-        .startWith { ui: Ui -> ui.showProgress() }
   }
 
   private fun handleLoginResult(loginResult: LoginResult): Observable<UiChange> {

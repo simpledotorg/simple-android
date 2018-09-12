@@ -34,6 +34,11 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when reporting a network call without any reporters, no error should be thrown`() {
+    Analytics.reportNetworkCall("test", "get", 1, 1, 1)
+  }
+
+  @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
     Analytics.addReporter(FailingReporter())
     Analytics.reportUserInteraction("Test")
@@ -61,6 +66,12 @@ class AnalyticsTest {
   fun `when a reporter fails when sending an audit event, no error should be thrown`() {
     Analytics.addReporter(FailingReporter())
     Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
+  }
+
+  @Test
+  fun `when a reporter fails sending a network event, no error should be thrown`() {
+    Analytics.addReporter(FailingReporter())
+    Analytics.reportNetworkCall("test", "get", 1, 1, 1)
   }
 
   @Test
@@ -104,8 +115,10 @@ class AnalyticsTest {
     Analytics.reportScreenChange("Screen 1", "Screen 2")
     Analytics.reportInputValidationError("Error 1")
     Analytics.reportInputValidationError("Error 2")
+    Analytics.reportNetworkCall("Test 1", "GET", 200, 500, 400)
     Analytics.reportViewedPatient(uuid1, "Test 2")
     Analytics.reportViewedPatient(uuid2, "Test 1")
+    Analytics.reportNetworkCall("Test 2", "POST", 400, 1000, 300)
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -114,8 +127,14 @@ class AnalyticsTest {
         Event("ScreenChange", mapOf("outgoing" to "Screen 1", "incoming" to "Screen 2")),
         Event("InputValidationError", mapOf("name" to "Error 1")),
         Event("InputValidationError", mapOf("name" to "Error 2")),
+        Event("NetworkCall", mapOf(
+            "url" to "Test 1", "method" to "GET", "responseCode" to 200, "contentLength" to 500, "durationMs" to 400)
+        ),
         Event("ViewedPatient", mapOf("patientId" to uuid1.toString(), "from" to "Test 2")),
-        Event("ViewedPatient", mapOf("patientId" to uuid2.toString(), "from" to "Test 1"))
+        Event("ViewedPatient", mapOf("patientId" to uuid2.toString(), "from" to "Test 1")),
+        Event("NetworkCall", mapOf(
+            "url" to "Test 2", "method" to "POST", "responseCode" to 400, "contentLength" to 1000, "durationMs" to 300)
+        )
     )
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)

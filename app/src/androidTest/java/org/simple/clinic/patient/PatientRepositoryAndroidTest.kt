@@ -83,7 +83,6 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_a_patient_is_saved_then_its_searchable_name_should_also_be_added() {
-    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val names = arrayOf(
         "Riya Puri" to "RiyaPuri",
         "Manabi    Mehra" to "ManabiMehra",
@@ -92,13 +91,9 @@ class PatientRepositoryAndroidTest {
         "Riya,Puri" to "RiyaPuri")
 
     names.forEach { (fullName, expectedSearchableName) ->
-      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, "08/04/1985", null, Gender.TRANSGENDER)
-      val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
+      val patientEntry = testData.ongoingPatientEntry(fullName = fullName)
 
-      val patient = patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-          .andThen(patientRepository.ongoingEntry())
-          .map { it.copy(address = ongoingAddress) }
-          .flatMapCompletable { patientRepository.saveOngoingEntry(it) }
+      val patient = patientRepository.saveOngoingEntry(patientEntry)
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
 
@@ -108,16 +103,9 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_saving_an_ongoing_patient_entry_to_the_database_it_should_also_update_the_fuzzy_search_table() {
-    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
+    val patientEntry = testData.ongoingPatientEntry(fullName = "Riya Puri")
 
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Riya Puri", "08/04/1985", null, Gender.TRANSGENDER)
-
-    val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
-
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
-        .map { it.copy(address = ongoingAddress) }
-        .flatMapCompletable { patientRepository.saveOngoingEntry(it) }
+    patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .blockingGet()
 
@@ -128,15 +116,9 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_a_patient_without_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
-    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08/04/1985", null, Gender.TRANSGENDER)
+    val patientEntry = testData.ongoingPatientEntry(fullName = "Jeevan Bima", phone = null)
 
-    val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
-
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
-        .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
-        .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+    patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
@@ -145,24 +127,14 @@ class PatientRepositoryAndroidTest {
 
     val search2 = patientRepository.search("bima").blockingFirst()
     assertThat(search2).hasSize(1)
-    assertThat(search2.first().age).isNull()
-    assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
     assertThat(search2.first().phoneNumber).isNull()
   }
 
   @Test
   fun when_a_patient_with_null_dateofbirth_and_nonnull_age_is_saved_then_it_should_be_correctly_stored_in_the_database() {
-    val ongoingAddress = OngoingPatientEntry.Address("Noida", "Gautam Buddha Nagar", "Uttar Pradesh")
-    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("299792458", PatientPhoneNumberType.MOBILE, active = true)
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", null, "42", Gender.MALE)
+    val patientEntry = testData.ongoingPatientEntry(fullName = "Ashok Kumar")
 
-    val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
-
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-        .andThen(patientRepository.ongoingEntry())
-        .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
-        .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
-        .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
+    patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
@@ -171,23 +143,17 @@ class PatientRepositoryAndroidTest {
 
     val search2 = patientRepository.search("ashok").blockingFirst()
     val patient = search2[0]
-    assertThat(patient.fullName).isEqualTo("Ashok Kumar")
+    assertThat(patient.fullName).isEqualTo(patientEntry.personalDetails!!.fullName)
     assertThat(patient.dateOfBirth).isNull()
-    assertThat(patient.age!!.value).isEqualTo(42)
-    assertThat(patient.phoneNumber!!).isNotEmpty()
-    assertThat(patient.phoneNumber!!).isEqualTo("299792458")
+    assertThat(patient.age!!.value).isEqualTo(patientEntry.personalDetails!!.age!!.toInt())
+    assertThat(patient.phoneNumber!!).isEqualTo(patientEntry.phoneNumber!!.number)
   }
 
   @Test
   fun when_a_patient_with_null_dateofbirth_and_null_age_is_saved_then_it_should_not_be_accepted() {
-    val ongoingAddress = OngoingPatientEntry.Address("Noida", "Gautam Buddha Nagar", "Uttar Pradesh")
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", null, null, Gender.MALE)
+    val patientEntry = testData.ongoingPatientEntry(dateOfBirth = null, age = null)
 
-    val ongoingPatientEntry = OngoingPatientEntry(
-        personalDetails = ongoingPersonalDetails,
-        address = ongoingAddress)
-
-    patientRepository.saveOngoingEntry(ongoingPatientEntry)
+    patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .test()
         .assertError(AssertionError::class.java)
@@ -195,24 +161,19 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun patient_search_should_ignore_spaces_and_whitespace_characters() {
-    val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val names = arrayOf("Riya Puri", "Manabi    Mehra", "Amit:Sodhi")
     val searches = arrayOf("ya p" to true, "bime" to true, "ito" to false)
 
     names.forEachIndexed { index, fullName ->
-      val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, "08/04/1985", null, Gender.TRANSGENDER)
+      val patientEntry = testData.ongoingPatientEntry(fullName = fullName)
 
-      val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
-
-      patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
-          .andThen(patientRepository.ongoingEntry())
-          .map { it.copy(address = ongoingAddress) }
-          .flatMapCompletable { patientRepository.saveOngoingEntry(it) }
+      patientRepository.saveOngoingEntry(patientEntry)
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
 
       val (query, shouldFindInDb) = searches[index]
       val search = patientRepository.search(query).blockingFirst()
+
       if (shouldFindInDb) {
         assertThat(search).hasSize(1)
         assertThat(search.first().fullName).isEqualTo(fullName)
@@ -224,16 +185,9 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_a_patient_with_address_is_saved_then_search_should_correctly_return_combined_object() {
-    val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Asha Kumar", "15/08/1947", null, Gender.FEMALE)
+    val patientEntry = testData.ongoingPatientEntry(fullName = "Asha Kumar", dateOfBirth = "15/08/1947", age = null)
 
-    val ongoingPatientEntry = OngoingPatientEntry(
-        personalDetails = ongoingPersonalDetails,
-        address = ongoingAddress,
-        phoneNumber = ongoingPhoneNumber)
-
-    patientRepository.saveOngoingEntry(ongoingPatientEntry)
+    patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
@@ -242,15 +196,15 @@ class PatientRepositoryAndroidTest {
         .first()
 
     assertThat(combinedPatient.fullName).isEqualTo("Asha Kumar")
-    assertThat(combinedPatient.gender).isEqualTo(Gender.FEMALE)
+    assertThat(combinedPatient.gender).isEqualTo(patientEntry.personalDetails!!.gender)
     assertThat(combinedPatient.dateOfBirth).isEqualTo(LocalDate.parse("1947-08-15"))
     assertThat(combinedPatient.createdAt).isAtLeast(combinedPatient.address.createdAt)
     assertThat(combinedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
-    assertThat(combinedPatient.address.colonyOrVillage).isEqualTo("Arambol")
-    assertThat(combinedPatient.address.state).isEqualTo("Goa")
+    assertThat(combinedPatient.address.colonyOrVillage).isEqualTo(patientEntry.address!!.colonyOrVillage)
+    assertThat(combinedPatient.address.state).isEqualTo(patientEntry.address!!.state)
     assertThat(combinedPatient.phoneNumber).isNotEmpty()
-    assertThat(combinedPatient.phoneNumber).isEqualTo("3.14159")
-    assertThat(combinedPatient.phoneActive).isEqualTo(true)
+    assertThat(combinedPatient.phoneNumber).isEqualTo(patientEntry.phoneNumber!!.number)
+    assertThat(combinedPatient.phoneActive).isEqualTo(patientEntry.phoneNumber!!.active)
   }
 
   @Test

@@ -13,6 +13,7 @@ import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
@@ -331,5 +332,24 @@ class TestData @Inject constructor(private val faker: Faker) {
         hasDiabetes = hasDiabetes,
         createdAt = createdAt,
         updatedAt = updatedAt)
+  }
+
+  fun ongoingPatientEntry(
+      fullName: String = faker.name.name(),
+      dateOfBirth: String? = null,
+      age: String? = faker.number.between(0, 100).toString(),
+      gender: Gender = randomOfEnum(Gender::class),
+      colony: String = faker.address.streetName(),
+      district: String = faker.address.city(),
+      state: String = faker.address.state(),
+      phone: String? = faker.phoneNumber.phoneNumber()
+  ): OngoingPatientEntry {
+    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
+    val ongoingAddress = OngoingPatientEntry.Address(colony, district, state)
+    val ongoingPhoneNumber = phone?.let {
+      OngoingPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.MOBILE, active = true)
+    }
+    return OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
+
   }
 }

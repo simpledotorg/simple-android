@@ -80,14 +80,6 @@ When compiling the project using Android Studio's `Make Project` option, it may 
 ./gradlew assembleAndroidTest
 ```
 
-#### Login deeplink
-
-The OTP deeplink can be manually triggered by running,
-
-```
-adb shell am start -W -a android.intent.action.VIEW -d "https://simple.org/register?otp=123456"
-```
-
 #### SQLite Spellfix
 We use [sqlite-android](https://github.com/requery/sqlite-android) because it gives us the ability to load SQLite extensions, which we use specifically for loading [spellfix1](https://www.sqlite.org/spellfix1.html).
 

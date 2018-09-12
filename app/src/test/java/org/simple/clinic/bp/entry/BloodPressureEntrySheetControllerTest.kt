@@ -7,11 +7,13 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -50,7 +52,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Test
   fun `when save is clicked and input is valid then blood pressure measurement should be saved`() {
-    whenever(bloodPressureRepository.saveMeasurement(patientUuid, 142, 80)).thenReturn(Completable.complete())
+    whenever(bloodPressureRepository.saveMeasurement(patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
     whenever(appointmentRepository.schedule(patientUuid, LocalDate.now(ZoneOffset.UTC).minusDays(1))).thenReturn(Completable.complete())
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))

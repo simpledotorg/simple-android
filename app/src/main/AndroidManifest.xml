@@ -48,7 +48,7 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".overdue.ScheduleAppointmentSheet"
+      android:name=".scheduleappointment.ScheduleAppointmentSheet"
       android:theme="@style/ClinicTheme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 

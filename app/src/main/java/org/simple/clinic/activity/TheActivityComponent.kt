@@ -30,6 +30,7 @@ import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchAgeFilterSheet
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.summary.PatientSummaryScreen
@@ -65,6 +66,7 @@ interface TheActivityComponent {
   fun inject(target: RegistrationFacilitySelectionScreen)
   fun inject(target: FacilityChangeScreen)
   fun inject(target: EnterOtpScreen)
+  fun inject(target: ScheduleAppointmentSheet)
 
   @Subcomponent.Builder
   interface Builder {

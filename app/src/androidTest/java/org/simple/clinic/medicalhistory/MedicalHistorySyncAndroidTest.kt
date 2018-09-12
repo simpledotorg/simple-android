@@ -37,9 +37,6 @@ class MedicalHistorySyncAndroidTest {
   @Inject
   lateinit var tester: DataSyncAndroidTester
 
-  @Inject
-  lateinit var config: MedicalHistoryConfig
-
   @get:Rule
   val authenticationRule = AuthenticationRule()
 
@@ -50,10 +47,6 @@ class MedicalHistorySyncAndroidTest {
 
   @Test
   fun when_pending_sync_records_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
-    if (config.isSyncEnabled.not()) {
-      return
-    }
-
     tester.test_push(
         push = { sync.push() },
         repository = repository,
@@ -62,10 +55,6 @@ class MedicalHistorySyncAndroidTest {
 
   @Test
   fun when_pulling_records_then_paginate_till_the_server_does_not_have_anymore_records() {
-    if (config.isSyncEnabled.not()) {
-      return
-    }
-
     tester.test_pull(
         repository = repository,
         lastPullTimestamp = lastPullTimestamp,

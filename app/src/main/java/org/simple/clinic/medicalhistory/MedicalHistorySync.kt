@@ -12,7 +12,6 @@ class MedicalHistorySync @Inject constructor(
     private val dataSync: DataSync,
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApiV1,
-    private val config: MedicalHistoryConfig,
     @Named("last_medicalhistory_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
@@ -21,17 +20,10 @@ class MedicalHistorySync @Inject constructor(
   }
 
   fun push(): Completable {
-    if (!config.isSyncEnabled) {
-      return Completable.complete()
-    }
     return dataSync.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
   }
 
   fun pull(): Completable {
-    if (!config.isSyncEnabled) {
-      return Completable.complete()
-    }
-
     return dataSync.pull(
         repository = repository,
         lastPullTimestamp = lastPullTimestamp,

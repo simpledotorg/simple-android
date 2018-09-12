@@ -60,4 +60,18 @@ object Analytics {
       }
     }
   }
+
+  fun reportNetworkCall(url: String, method: String, responseCode: Int, contentLength: Int, durationMillis: Int) {
+    reporters.forEach {
+      it.safely("Error reporting network call") {
+        createEvent("NetworkCall", mapOf(
+            "url" to url,
+            "method" to method,
+            "responseCode" to responseCode,
+            "contentLength" to contentLength,
+            "durationMs" to durationMillis
+        ))
+      }
+    }
+  }
 }

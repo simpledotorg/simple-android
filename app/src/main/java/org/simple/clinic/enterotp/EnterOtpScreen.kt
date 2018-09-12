@@ -92,6 +92,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   fun showServerError(error: String) {
     showError(error)
+    otpEntryEditText.showKeyboard()
   }
 
   fun showIncorrectOtpError() {

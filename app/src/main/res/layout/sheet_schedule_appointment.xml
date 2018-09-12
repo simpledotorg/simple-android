@@ -32,11 +32,12 @@
 
     <ImageButton
       android:id="@+id/scheduleappointment_decrement_date"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_weight="1"
       android:background="?attr/selectableItemBackground"
-      android:clickable="true"
-      android:focusable="true"
+      android:paddingBottom="@dimen/spacing_16"
+      android:paddingTop="@dimen/spacing_16"
       android:src="@drawable/ic_remove_circle_outline_24dp"
       android:tint="@color/color_accent"
       tools:ignore="ContentDescription" />
@@ -45,19 +46,18 @@
       android:id="@+id/scheduleappointment_current_date"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:paddingLeft="@dimen/spacing_24"
-      android:paddingRight="@dimen/spacing_24"
       android:textColor="@color/black_opacity_80"
       android:textSize="@dimen/textsize_34"
       tools:text="4 weeks" />
 
     <ImageButton
       android:id="@+id/scheduleappointment_increment_date"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_weight="1"
       android:background="?attr/selectableItemBackground"
-      android:clickable="true"
-      android:focusable="true"
+      android:paddingBottom="@dimen/spacing_16"
+      android:paddingTop="@dimen/spacing_16"
       android:src="@drawable/ic_add_circle_outline_24dp"
       android:tint="@color/color_accent"
       tools:ignore="ContentDescription" />
@@ -66,7 +66,7 @@
 
   <LinearLayout
     style="?attr/buttonBarStyle"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:layout_marginTop="@dimen/spacing_24">
@@ -74,16 +74,18 @@
     <Button
       android:id="@+id/scheduleappointment_skip"
       style="?attr/buttonBarButtonStyle"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_weight="1"
       android:gravity="center"
       android:text="@string/scheduleappointment_not_now" />
 
     <Button
       android:id="@+id/scheduleappointment_done"
       style="?attr/buttonBarButtonStyle"
-      android:layout_width="wrap_content"
+      android:layout_width="0dp"
       android:layout_height="wrap_content"
+      android:layout_weight="1"
       android:gravity="center"
       android:text="@string/scheduleappointment_done" />
   </LinearLayout>

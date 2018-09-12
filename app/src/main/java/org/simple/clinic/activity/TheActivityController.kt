@@ -8,9 +8,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.user.User
+import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -74,11 +73,7 @@ class TheActivityController @Inject constructor(
   private fun displayUserLoggedOutOnOtherDevice(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<TheActivityLifecycle.Started>()
         .flatMap { userSession.loggedInUser() }
-        .filter { it is Just<User> }
-        .map { (user) -> user!!.loggedInStatus }
-        .buffer(2, 1)
-        .filter { it.size == 2 }
-        .filter { it[0] == User.LoggedInStatus.OTP_REQUESTED && it[1] == User.LoggedInStatus.LOGGED_IN }
+        .compose(NewlyVerifiedUser())
         .map { { ui: Ui -> ui.showUserLoggedOutOnOtherDeviceAlert() } }
   }
 }

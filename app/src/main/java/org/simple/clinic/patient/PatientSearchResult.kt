@@ -3,7 +3,6 @@ package org.simple.clinic.patient
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Query
-import android.arch.persistence.room.Transaction
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.intellij.lang.annotations.Language
@@ -84,7 +83,6 @@ data class PatientSearchResult(
       """)
     fun search(name: String, dobUpperBound: String, dobLowerBound: String): Flowable<List<PatientSearchResult>>
 
-    @Transaction
     @Query("$mainQuery WHERE P.syncStatus == :status")
     fun withSyncStatus(status: SyncStatus): Flowable<List<PatientSearchResult>>
   }

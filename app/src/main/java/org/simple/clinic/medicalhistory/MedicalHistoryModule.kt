@@ -31,9 +31,4 @@ class MedicalHistoryModule {
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
     return rxSharedPrefs.getObject("last_medicalhistory_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }
-
-  @Provides
-  fun config(): MedicalHistoryConfig {
-    return MedicalHistoryConfig(isSyncEnabled = false)
-  }
 }

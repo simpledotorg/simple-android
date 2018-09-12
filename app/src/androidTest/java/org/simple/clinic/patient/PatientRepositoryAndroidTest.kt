@@ -30,7 +30,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun createAnOngoingPatientEntry_withPhoneNumbers_thenSaveItToDatabase() {
+  fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.TRANSGENDER)
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber(number = "2277", type = PatientPhoneNumberType.LANDLINE)
@@ -57,13 +57,17 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun createAnOngoingPatientEntry_thenSaveItToDatabase_withSearchableName() {
+  fun when_a_patient_is_saved_then_its_searchable_name_should_also_be_added() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
-    val names = arrayOf("Riya Puri" to "RiyaPuri", "Manabi    Mehra" to "ManabiMehra", "Amit:Sodhi" to "AmitSodhi", "Riya.Puri" to "RiyaPuri", "Riya,Puri" to "RiyaPuri")
+    val names = arrayOf(
+        "Riya Puri" to "RiyaPuri",
+        "Manabi    Mehra" to "ManabiMehra",
+        "Amit:Sodhi" to "AmitSodhi",
+        "Riya.Puri" to "RiyaPuri",
+        "Riya,Puri" to "RiyaPuri")
 
     names.forEach { (fullName, expectedSearchableName) ->
       val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, "08/04/1985", null, Gender.TRANSGENDER)
-
       val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
       val patient = repository.saveOngoingEntry(personalDetailsOnlyEntry)
@@ -98,7 +102,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun createAnOngoingPatientEntry_withoutPhoneNumber_thenSaveItToDatabase() {
+  fun when_a_patient_without_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Jeevan Bima", "08/04/1985", null, Gender.TRANSGENDER)
 
@@ -122,7 +126,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun createAnOngoingPatientEntry_withNullDateOfBirth_andAgeFilledIn_thenSaveItCompletely() {
+  fun when_a_patient_with_null_dateofbirth_and_nonnull_age_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingPatientEntry.Address("Noida", "Gautam Buddha Nagar", "Uttar Pradesh")
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("299792458", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", null, "42", Gender.MALE)
@@ -150,7 +154,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun createAnOngoingPatientEntry_withNullDateOfBirth_andNullAgeWhenCreated_thenShouldGetError() {
+  fun when_a_patient_with_null_dateofbirth_and_null_age_is_saved_then_it_should_not_be_accepted() {
     val ongoingAddress = OngoingPatientEntry.Address("Noida", "Gautam Buddha Nagar", "Uttar Pradesh")
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", null, null, Gender.MALE)
 
@@ -165,7 +169,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun patientSearch_shouldIgnore_SpacesAndWhitespaceCharacters() {
+  fun patient_search_should_ignore_spaces_and_whitespace_characters() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val names = arrayOf("Riya Puri", "Manabi    Mehra", "Amit:Sodhi")
     val searches = arrayOf("ya p" to true, "bime" to true, "ito" to false)
@@ -194,7 +198,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun patientWithAddressSearch_shouldReturn_correctlyCombinedObject() {
+  fun when_a_patient_with_address_is_saved_then_search_should_correctly_return_combined_object() {
     val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Asha Kumar", "15/08/1947", null, Gender.FEMALE)
@@ -225,7 +229,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun patientSearch_forPatientsWithDateOfBirth_withAgeFilter_shouldReturnCorrectResults() {
+  fun when_patients_with_date_of_birth_are_present_and_age_filter_is_applied_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.TRANSGENDER)
     val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
@@ -279,7 +283,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun patientSearch_forPatientsWithOnlyAge_withAgeFilter_shouldReturnCorrectResults() {
+  fun when_patients_with_age_are_present_and_age_filter_is_applied_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Abhay Kumar", null, "20", Gender.TRANSGENDER)
     val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)

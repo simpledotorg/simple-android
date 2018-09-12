@@ -45,7 +45,7 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(appointmentRepository, never()).schedule(any(), any())
-    verify(sheet, never()).finish()
+    verify(sheet, never()).finishAndScheduleAppointment(patientUuid)
   }
 
   @Test
@@ -62,6 +62,6 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, times(1)).saveMeasurement(patientUuid, 142, 80)
     verify(appointmentRepository, times(1)).schedule(patientUuid, LocalDate.now(ZoneOffset.UTC).minusDays(1))
-    verify(sheet).finish()
+    verify(sheet).finishAndScheduleAppointment(patientUuid)
   }
 }

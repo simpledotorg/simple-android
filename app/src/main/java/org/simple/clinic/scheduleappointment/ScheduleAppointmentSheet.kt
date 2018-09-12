@@ -1,5 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
@@ -14,11 +16,23 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.threeten.bp.temporal.ChronoUnit
+import java.util.UUID
 import javax.inject.Inject
 
 class ScheduleAppointmentSheet : BottomSheetActivity() {
 
+  companion object {
+    private const val KEY_PATIENT_UUID = "patientUuid"
+
+    fun intent(context: Context, patientUuid: UUID): Intent {
+      val intent = Intent(context, ScheduleAppointmentSheet::class.java)
+      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
+      return intent
+    }
+  }
+
   private val possibleDates = listOf(
+      // TODO: Convert this to a data class; move display text to strings.xml
       ("1 day" to (1 to ChronoUnit.DAYS)),
       ("2 days" to (2 to ChronoUnit.DAYS)),
       ("3 days" to (3 to ChronoUnit.DAYS)),
@@ -48,7 +62,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: ScheduleAppointmentSheetController
 
-  private var currentState = 0
+  private var currentIndex = 0
 
   private val decrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_increment_date)
@@ -65,7 +79,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     TheActivity.component.inject(this)
 
     Observable.merge(decrementClicks(), incrementClicks(), skipClicks(), doneClicks())
-        .startWith(SheetCreated(initialState = currentState))
+        .startWith(initialState())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -78,21 +92,26 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     super.onDestroy()
   }
 
-  private fun incrementClicks() = RxView.clicks(incrementDateButton).map { IncrementAppointmentDate(currentState, possibleDates.size) }
+  private val initialState = {
+    val uuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
+    ScheduleAppointmentSheetCreated(initialIndex = 9, patientUuid = uuid)
+  }
 
-  private fun decrementClicks() = RxView.clicks(decrementDateButton).map { DecrementAppointmentDate(currentState) }
+  private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented(currentIndex, possibleDates.size) }
 
-  private fun skipClicks() = RxView.clicks(skipButton).map { SkipScheduling() }
+  private fun decrementClicks() = RxView.clicks(decrementDateButton).map { AppointmentDateDecremented(currentIndex, possibleDates.size) }
 
-  private fun doneClicks() = RxView.clicks(doneButton).map { ScheduleAppointment(possibleDates[currentState]) }
+  private fun skipClicks() = RxView.clicks(skipButton).map { SchedulingSkipped() }
+
+  private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentScheduled(possibleDates[currentIndex]) }
 
   fun closeSheet() {
     finish()
   }
 
-  fun updateDisplayedDate(newState: Int) {
-    currentState = newState
-    currentDateTextView.text = possibleDates[currentState].first
+  fun updateDisplayedDate(newIndex: Int) {
+    currentIndex = newIndex
+    currentDateTextView.text = possibleDates[currentIndex].first
   }
 
   fun enableIncrementButton(state: Boolean) {

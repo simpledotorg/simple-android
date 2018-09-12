@@ -13,6 +13,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -41,14 +42,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    Observable.merge(
-        sheetCreates(),
-        systolicTextChanges(),
-        diastolicTextChanges(),
-        diastolicImeOptionClicks())
+    Observable.merge(sheetCreates(), systolicTextChanges(), diastolicTextChanges(), diastolicImeOptionClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -93,5 +91,10 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()
+  }
+
+  fun finishAndScheduleAppointment(patientUuid: UUID) {
+    startActivity(ScheduleAppointmentSheet.intent(this, patientUuid))
+    finish()
   }
 }

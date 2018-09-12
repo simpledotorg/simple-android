@@ -66,7 +66,7 @@ class BloodPressureEntrySheetController @Inject constructor(
           bloodPressureRepository
               .saveMeasurement(uuid, systolic.toInt(), diastolic.toInt())
               .andThen(appointmentRepository.schedule(uuid, LocalDate.now(ZoneOffset.UTC).minusDays(1)))
-              .andThen(Observable.just({ ui: Ui -> ui.finish() }))
+              .andThen(Observable.just({ ui: Ui -> ui.finishAndScheduleAppointment(uuid) }))
         }
   }
 

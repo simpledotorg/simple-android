@@ -3,9 +3,13 @@ package org.simple.clinic.scheduleappointment
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 
 typealias Ui = ScheduleAppointmentSheet
@@ -18,54 +22,82 @@ class ScheduleAppointmentSheetController @Inject constructor(
   override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         sheetCreates(replayedEvents),
         dateIncrements(replayedEvents),
         dateDecrements(replayedEvents),
-        schedulingSkips(replayedEvents))
+        schedulingSkips(replayedEvents),
+        scheduleCreates(replayedEvents))
   }
 
   private fun sheetCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SheetCreated>()
-        .map { { ui: Ui -> ui.updateDisplayedDate(it.initialState) } }
+    return events.ofType<ScheduleAppointmentSheetCreated>()
+        .map { { ui: Ui -> ui.updateDisplayedDate(it.initialIndex) } }
   }
 
   private fun dateIncrements(events: Observable<UiEvent>): Observable<UiChange> {
-    val notLastPositionStream = events.ofType<IncrementAppointmentDate>()
-        .filter { (current, size) -> current != size - 1 }
+    val isSecondLastItem = { index: Int, size: Int -> index == size - 2 }
 
-    val updateDateStream = notLastPositionStream
-        .map { { ui: Ui -> ui.updateDisplayedDate(it.currentState.inc()) } }
+    val updateDateStream = events.ofType<AppointmentDateIncremented>()
+        .map { { ui: Ui -> ui.updateDisplayedDate(newIndex = it.currentIndex.inc()) } }
 
-    val enableButtonStream = notLastPositionStream
-        .map { { ui: Ui -> ui.enableIncrementButton(true) } }
+    val firstItemStream = events.ofType<AppointmentDateIncremented>()
+        .filter { it.currentIndex == 0 }
+        .map { { ui: Ui -> ui.enableDecrementButton(true) } }
 
-    val lastPositionStream = events.ofType<IncrementAppointmentDate>()
-        .filter { (current, size) -> current == size - 1 }
+    val secondLastItemStream = events.ofType<AppointmentDateIncremented>()
+        .filter { (current, size) -> isSecondLastItem(current, size) }
         .map { { ui: Ui -> ui.enableIncrementButton(false) } }
 
-    return Observable.merge(updateDateStream, enableButtonStream, lastPositionStream)
+    val notSecondLastItemStream = events.ofType<AppointmentDateIncremented>()
+        .filter { (current, size) -> !isSecondLastItem(current, size) }
+        .distinctUntilChanged()
+        .map { { ui: Ui -> ui.enableIncrementButton(true) } }
+
+    return Observable.merge(updateDateStream, firstItemStream, secondLastItemStream, notSecondLastItemStream)
   }
 
   private fun dateDecrements(events: Observable<UiEvent>): Observable<UiChange> {
-    val notFirstPositionStream = events.ofType<DecrementAppointmentDate>()
-        .filter { it.currentState != 0 }
+    val isLastItem = { index: Int, size: Int -> index == size - 1 }
 
-    val updateDateStream = notFirstPositionStream
-        .map { { ui: Ui -> ui.updateDisplayedDate(it.currentState.dec()) } }
+    val updateDateStream = events.ofType<AppointmentDateDecremented>()
+        .map { { ui: Ui -> ui.updateDisplayedDate(newIndex = it.currentIndex.dec()) } }
 
-    val enableButtonStream = notFirstPositionStream
-        .map { { ui: Ui -> ui.enableDecrementButton(true) } }
-
-    val firstPositionStream = events.ofType<DecrementAppointmentDate>()
-        .filter { it.currentState == 0 }
+    val secondItemStream = events.ofType<AppointmentDateDecremented>()
+        .filter { it.currentIndex == 1 }
         .map { { ui: Ui -> ui.enableDecrementButton(false) } }
 
-    return Observable.merge(updateDateStream, enableButtonStream, firstPositionStream)
+    val notSecondItemStream = events.ofType<AppointmentDateDecremented>()
+        .filter { it.currentIndex != 1 }
+        .distinctUntilChanged()
+        .map { { ui: Ui -> ui.enableDecrementButton(true) } }
+
+    val lastItemStream = events.ofType<AppointmentDateDecremented>()
+        .filter { (current, size) -> isLastItem(current, size) }
+        .map { { ui: Ui -> ui.enableIncrementButton(true) } }
+
+    return Observable.merge(updateDateStream, secondItemStream, notSecondItemStream, lastItemStream)
   }
 
   private fun schedulingSkips(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SkipScheduling>()
+    return events.ofType<SchedulingSkipped>()
         .map { { ui: Ui -> ui.closeSheet() } }
+  }
+
+  private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
+    val toLocalDate = { pair: Pair<Int, ChronoUnit> ->
+      LocalDate.now(UTC).plus(pair.first.toLong(), pair.second)
+    }
+
+    val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated>()
+        .map { it.patientUuid }
+
+    return events.ofType<AppointmentScheduled>()
+        .map { toLocalDate(it.selectedDateState.second) }
+        .withLatestFrom(patientUuidStream)
+        .flatMap { (date, uuid) ->
+          repository.schedule(patientUuid = uuid, appointmentDate = date)
+              .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
+        }
   }
 }

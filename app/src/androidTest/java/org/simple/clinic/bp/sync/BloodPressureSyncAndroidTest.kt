@@ -117,9 +117,10 @@ class BloodPressureSyncAndroidTest {
         ))
 
     return Observable.range(0, count)
-        .flatMapCompletable { index ->
+        .flatMapSingle { index ->
           repository.saveMeasurement(patientUuid, systolic = 100 + index, diastolic = 50 + index)
         }
+        .ignoreElements()
   }
 
   @Test

@@ -1,13 +1,15 @@
 package org.simple.clinic.patient
 
-import android.support.test.runner.AndroidJUnit4
+import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
+import io.reactivex.Observable
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureRepository
@@ -16,14 +18,11 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.user.UserSession
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
-@RunWith(AndroidJUnit4::class)
 class PatientRepositoryAndroidTest {
-
-  @Inject
-  lateinit var facilityRepository: FacilityRepository
 
   @Inject
   lateinit var patientRepository: PatientRepository
@@ -45,6 +44,21 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var database: AppDatabase
+
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
+
+  @get:Rule
+  var instantTaskExecutorRule = InstantTaskExecutorRule()
+
+  @Inject
+  lateinit var bpRepository: BloodPressureRepository
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var userSession: UserSession
 
   @Inject
   lateinit var testData: TestData
@@ -388,9 +402,63 @@ class PatientRepositoryAndroidTest {
     assertThat(database.userFacilityMappingDao().mappingsForUser(user.uuid).blockingFirst()).isNotEmpty()
   }
 
+  @Test
+  fun when_searching_with_age_then_patients_whose_last_visited_facility_matches_with_the_current_facility_should_be_present_at_the_top() {
+    val user = userSession.requireLoggedInUser().blockingFirst()
+
+    val facilities = facilityRepository.facilities().blockingFirst()
+    val currentFacility = facilityRepository.currentFacility(user).blockingFirst()
+    val otherFacility = facilities.first { it != currentFacility }
+
+    facilityRepository.associateUserWithFacilities(user, facilities.map { it.uuid }).blockingAwait()
+
+    val data = listOf(
+        "Ashoka" to listOf(otherFacility),
+        "Ashok Kumari" to listOf(currentFacility),
+        "Kumar Ashok" to listOf(currentFacility, currentFacility),
+        "Ashoka Kumar" to listOf(otherFacility, currentFacility),
+        "Ash Kumari" to listOf())
+
+    Observable.fromIterable(data)
+        .flatMapCompletable { (patientName, visitedFacilities) ->
+          patientRepository
+              .saveOngoingEntry(testData.ongoingPatientEntry(fullName = patientName, age = "20"))
+              .andThen(patientRepository.saveOngoingEntryAsPatient())
+              .flatMapCompletable { savedPatient ->
+                // Record BPs in different facilities.
+                Observable.fromIterable(visitedFacilities)
+                    .flatMapSingle { facility ->
+                      facilityRepository
+                          .setCurrentFacility(user, facility)
+                          .andThen(bpRepository
+                              .saveMeasurement(savedPatient.uuid, systolic = 120, diastolic = 121)
+                          )
+                    }
+                    .ignoreElements()
+              }
+        }
+        .blockingAwait()
+
+    facilityRepository.setCurrentFacility(user, currentFacility).blockingAwait()
+
+    val runAssertions = { searchResults: List<PatientSearchResult> ->
+      assertThat(searchResults).hasSize(5)
+      assertThat(searchResults[0].fullName).isEqualTo("Ashok Kumari")
+      assertThat(searchResults[1].fullName).isEqualTo("Kumar Ashok")
+      assertThat(searchResults[2].fullName).isEqualTo("Ashoka Kumar")
+      assertThat(searchResults[3].fullName).isEqualTo("Ashoka")
+      assertThat(searchResults[4].fullName).isEqualTo("Ash Kumari")
+    }
+
+    val resultsWithoutAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false).blockingFirst()
+    runAssertions(resultsWithoutAgeFilter)
+
+    val resultsWithAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false, assumedAge = 20).blockingFirst()
+    runAssertions(resultsWithAgeFilter)
+  }
+
   @After
   fun tearDown() {
-    database.clearAllTables()
     PatientFuzzySearch.clearTable(database.openHelper.writableDatabase)
   }
 }

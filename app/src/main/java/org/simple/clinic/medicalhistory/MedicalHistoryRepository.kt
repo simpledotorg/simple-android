@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory
 
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository

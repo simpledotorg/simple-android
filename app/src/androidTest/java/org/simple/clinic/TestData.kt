@@ -5,7 +5,7 @@ import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistoryPayload
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication

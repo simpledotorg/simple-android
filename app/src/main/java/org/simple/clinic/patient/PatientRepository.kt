@@ -2,15 +2,19 @@ package org.simple.clinic.patient
 
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.toObservable
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -23,10 +27,15 @@ import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
+typealias PatientUuid = UUID
+typealias FacilityUuid = UUID
+
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
-    private val dobValidator: DateOfBirthFormatValidator
+    private val dobValidator: DateOfBirthFormatValidator,
+    private val facilityRepository: FacilityRepository,
+    private val userSession: UserSession
 ) {
 
   companion object {
@@ -40,21 +49,22 @@ class PatientRepository @Inject constructor(
   fun search(name: String, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val searchableName = nameToSearchableForm(name)
 
+    val substringSearch = database.patientSearchDao()
+        .search(searchableName)
+        .toObservable()
+
     return if (includeFuzzyNameSearch.not()) {
-      database.patientSearchDao()
-          .search(searchableName)
-          .toObservable()
+      substringSearch.compose(sortByCurrentFacility())
 
     } else {
       val fuzzySearch = database.fuzzyPatientSearchDao()
           .searchForPatientsWithNameLike(searchableName)
           .toObservable()
 
-      database.patientSearchDao()
-          .search(searchableName)
-          .toObservable()
+      substringSearch
           .zipWith(fuzzySearch)
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
+          .compose(sortByCurrentFacility())
     }
   }
 
@@ -67,21 +77,58 @@ class PatientRepository @Inject constructor(
 
     val searchableName = nameToSearchableForm(name)
 
+    val substringSearch = database.patientSearchDao()
+        .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .toObservable()
+
     return if (includeFuzzyNameSearch.not()) {
-      database.patientSearchDao()
-          .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
-          .toObservable()
+      substringSearch.compose(sortByCurrentFacility())
 
     } else {
       val fuzzySearch = database.fuzzyPatientSearchDao()
           .searchForPatientsWithNameLikeAndAgeWithin(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
           .toObservable()
 
-      database.patientSearchDao()
-          .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
-          .toObservable()
+      substringSearch
           .zipWith(fuzzySearch)
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
+          .compose(sortByCurrentFacility())
+    }
+  }
+
+  // TODO: Get user from caller.
+  private fun sortByCurrentFacility(): ObservableTransformer<List<PatientSearchResult>, List<PatientSearchResult>> {
+    return ObservableTransformer { searchResults ->
+      val currentFacilityUuidStream = userSession
+          .requireLoggedInUser()
+          .switchMap { facilityRepository.currentFacility(it) }
+          .map { it.uuid }
+
+      val patientToFacilityUuidStream = searchResults
+          .map { patients -> patients.map { it.uuid } }
+          .switchMap {
+            database
+                .bloodPressureDao()
+                .patientToFacilityIds(it)
+                .toObservable()
+          }
+
+      Observables.combineLatest(searchResults, currentFacilityUuidStream, patientToFacilityUuidStream)
+          .map { (patients, currentFacility, patientToFacilities) ->
+            val patientToUniqueFacilities = patientToFacilities
+                .fold(mutableMapOf<PatientUuid, MutableSet<FacilityUuid>>()) { facilityUuids, (patientUuid, facilityUuid) ->
+                  if (patientUuid !in facilityUuids) {
+                    facilityUuids[patientUuid] = mutableSetOf()
+                  }
+
+                  facilityUuids[patientUuid]?.add(facilityUuid)
+                  facilityUuids
+                } as Map<PatientUuid, Set<FacilityUuid>>
+
+            patients.sortedByDescending {
+              patientToUniqueFacilities[it.uuid]?.contains(currentFacility) ?: false
+            }
+          }
     }
   }
 

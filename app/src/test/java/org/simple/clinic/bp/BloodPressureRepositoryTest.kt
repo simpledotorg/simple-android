@@ -16,7 +16,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -36,9 +35,9 @@ class BloodPressureRepositoryTest {
   @Test
   fun `when saving a measurement, correctly get IDs for the current user and facility`() {
     val aUuid = UUID.randomUUID()
-    val loggedInUser = Just(PatientMocker.loggedInUser(aUuid))
+    val loggedInUser = PatientMocker.loggedInUser(aUuid)
 
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(loggedInUser))
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
 
     val facility = PatientMocker.facility()
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))

@@ -45,7 +45,7 @@ class FacilityRepository @Inject constructor(
 
   fun currentFacility(userSession: UserSession): Observable<Facility> {
     return userSession.requireLoggedInUser()
-        .flatMap { currentFacility(it) }
+        .switchMap { currentFacility(it) }
   }
 
   fun currentFacility(user: User): Observable<Facility> {

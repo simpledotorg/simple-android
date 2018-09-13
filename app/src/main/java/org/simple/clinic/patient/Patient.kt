@@ -90,5 +90,8 @@ data class Patient constructor(
 
     @Query("SELECT COUNT(*) FROM patient")
     fun patientCount(): Flowable<Int>
+
+    @Query("DELETE FROM patient")
+    fun clear()
   }
 }

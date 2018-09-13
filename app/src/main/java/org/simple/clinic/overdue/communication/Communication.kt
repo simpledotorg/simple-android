@@ -68,5 +68,8 @@ data class Communication(
 
     @Query("SELECT COUNT(uuid) FROM Communication")
     fun count(): Flowable<Int>
+
+    @Query("DELETE FROM Communication")
+    fun clear()
   }
 }

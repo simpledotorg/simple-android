@@ -49,5 +49,8 @@ data class PatientPhoneNumber(
 
     @Query("SELECT * FROM patientphonenumber WHERE patientUuid = :patientUuid")
     fun phoneNumber(patientUuid: UUID): Flowable<List<PatientPhoneNumber>>
+
+    @Query("DELETE FROM patientphonenumber")
+    fun clear()
   }
 }

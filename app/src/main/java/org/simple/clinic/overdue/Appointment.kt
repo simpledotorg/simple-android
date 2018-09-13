@@ -88,5 +88,8 @@ data class Appointment(
         scheduledStatus: Status,
         newSyncStatus: SyncStatus
     )
+
+    @Query("DELETE FROM Appointment")
+    fun clear()
   }
 }

@@ -7,8 +7,8 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
-import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.di.TestAppComponent
+import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
@@ -45,7 +45,9 @@ class TestClinicApp : ClinicApp() {
     // We have moved the in-memory database configuration to the sqlite openhelper factory
     // but we still have to provide a non-empty name for Room, otherwise it complains.
     return DaggerTestAppComponent.builder()
-        .appModule(AppModule(this, "ignored-db-name"))
+        .appModule(object : AppModule(this, "ignored-db-name") {
+          override fun canRunDatabaseOnMainThread() = true
+        })
         .storageModule(object : StorageModule() {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
         })

@@ -28,12 +28,15 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
 
 @Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class, LoginModule::class, RegistrationModule::class])
-class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
+open class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
 
   @Provides
   fun appContext(): Application {
     return appContext
   }
+
+  @Provides
+  open fun canRunDatabaseOnMainThread() = false
 
   // TODO: move to StorageModule.
   @Provides
@@ -41,6 +44,11 @@ class AppModule(private val appContext: Application, private val databaseName: S
   fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
         .openHelperFactory(factory)
+        .apply {
+          if (canRunDatabaseOnMainThread()) {
+            allowMainThreadQueries()
+          }
+        }
         .addCallback(object : RoomDatabase.Callback() {
           // We need to create it here on a fresh install because we can't
           // define an Entity for a virtual table and Room will never create it.

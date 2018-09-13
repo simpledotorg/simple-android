@@ -9,6 +9,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
+import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityPullResult.NetworkError
@@ -29,6 +30,7 @@ import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
+import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -50,7 +52,8 @@ class UserSession @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
-    @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>
+    @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
+    private val syncScheduler: SyncScheduler
 ) {
 
   private var ongoingLoginEntry: OngoingLoginEntry? = null
@@ -347,5 +350,12 @@ class UserSession @Inject constructor(
 
   fun accessToken(): Optional<String> {
     return accessTokenPreference.get()
+  }
+
+  fun startForgotPinFlow(retryCount: Int = 0): Completable {
+    return syncScheduler.syncImmediately()
+        .subscribeOn(Schedulers.io())
+        .retry(retryCount.toLong())
+        .onErrorComplete()
   }
 }

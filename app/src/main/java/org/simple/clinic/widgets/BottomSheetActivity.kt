@@ -35,6 +35,10 @@ abstract class BottomSheetActivity : AppCompatActivity() {
     }
     super.setContentView(R.layout.bottom_sheet)
 
+    contentContainer.setOnClickListener {
+      // Swallow clicks to avoid dismissing the sheet accidentally.
+    }
+
     backgroundView.setOnClickListener {
       onBackgroundClick()
     }

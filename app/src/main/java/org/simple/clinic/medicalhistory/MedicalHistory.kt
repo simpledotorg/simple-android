@@ -46,5 +46,8 @@ data class MedicalHistory(
 
     @Query("SELECT COUNT(uuid) FROM MedicalHistory")
     fun count(): Flowable<Int>
+
+    @Query("DELETE FROM MedicalHistory")
+    fun clear()
   }
 }

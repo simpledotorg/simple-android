@@ -57,6 +57,8 @@ class PatientFuzzySearch {
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
 
     fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
+
+    fun clearAll()
   }
 
   class PatientFuzzySearchDaoImpl(
@@ -161,5 +163,9 @@ class PatientFuzzySearch {
               .searchByIds(uuids, dobUpperBound, dobLowerBound)
               .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
         }!!
+
+    override fun clearAll() {
+      sqLiteOpenHelper.writableDatabase.execSQL("""DELETE FROM "PatientFuzzySearch"""")
+    }
   }
 }

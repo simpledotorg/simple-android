@@ -35,8 +35,7 @@ open class AppModule(private val appContext: Application, private val databaseNa
     return appContext
   }
 
-  @Provides
-  open fun canRunDatabaseOnMainThread() = false
+  protected open fun canRunDatabaseOnMainThread() = false
 
   // TODO: move to StorageModule.
   @Provides

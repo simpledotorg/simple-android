@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -16,9 +17,12 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.user.UserSession
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -33,12 +37,22 @@ class PatientRepositoryTest {
   private val mockPatientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
   private val mockFuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
   private val dobValidator = mock<DateOfBirthFormatValidator>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
 
   @Before
   fun setUp() {
     database = mock()
     mockPatientSearchResultDao = mock()
-    repository = PatientRepository(database, dobValidator)
+    repository = PatientRepository(database, dobValidator, facilityRepository, userSession)
+
+    val user = PatientMocker.loggedInUser()
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(PatientMocker.facility()))
+
+    val mockBloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
+    whenever(mockBloodPressureDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))
+    whenever(database.bloodPressureDao()).thenReturn(mockBloodPressureDao)
   }
 
   @Test

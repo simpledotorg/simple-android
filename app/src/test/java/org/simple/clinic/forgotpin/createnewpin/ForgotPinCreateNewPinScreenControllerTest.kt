@@ -79,8 +79,8 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
   @Test
   fun `when the PIN text changes, any error must be hidden`() {
-   uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
-   uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
 
     verify(screen, times(2)).hideInvalidPinError()
   }

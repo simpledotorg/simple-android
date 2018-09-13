@@ -45,7 +45,6 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
     TheActivity.component.inject(this)
   }
 
-
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     return AlertDialog.Builder(context!!)
         .setTitle(R.string.applock_reset_pin_alert_title)

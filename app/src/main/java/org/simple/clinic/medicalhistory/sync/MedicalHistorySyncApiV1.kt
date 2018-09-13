@@ -1,4 +1,4 @@
-package org.simple.clinic.medicalhistory
+package org.simple.clinic.medicalhistory.sync
 
 import io.reactivex.Single
 import org.simple.clinic.sync.DataPushResponse

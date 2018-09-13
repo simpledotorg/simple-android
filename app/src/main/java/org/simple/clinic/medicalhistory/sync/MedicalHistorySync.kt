@@ -1,7 +1,9 @@
-package org.simple.clinic.medicalhistory
+package org.simple.clinic.medicalhistory.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant

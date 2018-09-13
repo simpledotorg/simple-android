@@ -1,4 +1,4 @@
-package org.simple.clinic.medicalhistory
+package org.simple.clinic.medicalhistory.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

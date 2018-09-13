@@ -5,6 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV1
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

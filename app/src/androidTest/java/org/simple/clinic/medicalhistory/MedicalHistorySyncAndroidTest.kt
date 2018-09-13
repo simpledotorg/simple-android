@@ -7,6 +7,10 @@ import org.junit.Before
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV1
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseDataSyncAndroidTest
 import org.simple.clinic.sync.DataPushResponse

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -21,7 +20,6 @@ import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
@@ -60,9 +58,9 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
   }
 
   private fun pinSubmitClicked(): Observable<UiEvent> {
-   return RxTextView.editorActions(pinEntryEditText)
-       .filter { it == EditorInfo.IME_ACTION_DONE }
-       .map { ForgotPinCreateNewPinSubmitClicked }
+    return RxTextView.editorActions(pinEntryEditText)
+        .filter { it == EditorInfo.IME_ACTION_DONE }
+        .map { ForgotPinCreateNewPinSubmitClicked }
   }
 
   fun showUserName(name: String) {

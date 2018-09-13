@@ -24,10 +24,15 @@ class AuthenticationRule : TestRule {
       override fun evaluate() {
         TestClinicApp.appComponent().inject(this@AuthenticationRule)
 
+        // Cannot figure out why, but we're occasionally seeing failed tests
+        // because facility syncing gets called with stale "last-pull" timestamp.
+        // As a workaround, the app data will now be cleared before running
+        // every test and not after.
+        logout()
+
         try {
-          // Login also needs to happen inside this try block so
-          // that in case of a failure, logout() still gets called
-          // to reset all app data.
+          // Login also needs to happen inside this try block so that in case
+          // of a failure, logout() still gets called to reset all app data.
           login()
           base.evaluate()
 

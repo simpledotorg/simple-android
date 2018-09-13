@@ -14,11 +14,14 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockReporter
@@ -35,6 +38,7 @@ import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
+import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
@@ -42,6 +46,7 @@ import java.io.IOException
 import java.net.SocketTimeoutException
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class UserSessionTest {
 
   private val loginApi = mock<LoginApiV1>()
@@ -66,9 +71,12 @@ class UserSessionTest {
       }"""
 
   private lateinit var userSession: UserSession
+  private lateinit var syncScheduler: SyncScheduler
 
   @Before
   fun setUp() {
+    syncScheduler = mock()
+
     userSession = UserSession(
         loginApi,
         registrationApi,
@@ -78,7 +86,8 @@ class UserSessionTest {
         sharedPrefs,
         appDatabase,
         passwordHasher,
-        accessTokenPref
+        accessTokenPref,
+        syncScheduler
     )
     userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
@@ -216,6 +225,51 @@ class UserSessionTest {
 
     userSession.requestLoginOtp().blockingGet()
     verify(userDao, never()).updateLoggedInStatusForUser(any(), any())
+  }
+
+  @Test
+  fun `when the reset PIN flow is started, the sync must be triggered`() {
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    userSession.startForgotPinFlow().blockingAwait()
+
+    verify(syncScheduler).syncImmediately()
+  }
+
+  @Test
+  @Parameters(value = ["0", "1", "2"])
+  fun `if the sync fails when resetting PIN, it should be retried and complete if any retry succeeds`(retryCount: Int) {
+    // Mockito doesn't have a way to specify a vararg for all invocations and expects
+    // the first emission to be explicitly provided. This dynamically constructs the
+    // rest of the emissions and ensures that the last one succeeds.
+    val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
+        .map { retryIndex ->
+          if (retryIndex == retryCount - 1) Completable.complete() else Completable.error(RuntimeException())
+        }.toTypedArray()
+
+    whenever(syncScheduler.syncImmediately())
+        .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
+
+    userSession.startForgotPinFlow(retryCount)
+        .test()
+        .await()
+        .assertComplete()
+  }
+
+  @Test
+  @Parameters(value = ["0", "1", "2"])
+  fun `if the sync fails when resetting PIN, it should be retried and complete if all retries fail`(retryCount: Int) {
+
+    val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
+        .map { Completable.error(RuntimeException()) }.toTypedArray()
+
+    whenever(syncScheduler.syncImmediately())
+        .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
+
+    userSession.startForgotPinFlow(retryCount)
+        .test()
+        .await()
+        .assertComplete()
   }
 
   @After

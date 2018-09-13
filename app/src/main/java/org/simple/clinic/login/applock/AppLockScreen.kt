@@ -50,6 +50,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private val pinFormLayout by bindView<LinearLayout>(R.id.applock_pin_container)
   private val progressView by bindView<ProgressBar>(R.id.applock_progress)
   private val errorTextView by bindView<TextView>(R.id.applock_error)
+  private val forgotPinButton by bindView<Button>(R.id.applock_forgotpin)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -58,7 +59,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks(), facilityClicks())
+    Observable.mergeArray(screenCreates(), pinTextChanges(), submitClicks(), backClicks(), facilityClicks(), forgotPinClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -100,6 +101,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
       screenRouter.registerBackPressInterceptor(interceptor)
     }
   }
+
+  private fun forgotPinClicks() =
+      RxView.clicks(forgotPinButton).map { AppLockForgotPinClicked() }
 
   fun setUserFullName(fullName: String) {
     fullNameTextView.text = fullName
@@ -145,5 +149,9 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   fun openFacilityChangeScreen() {
     screenRouter.push(FacilityChangeScreen.KEY)
+  }
+
+  fun showConfirmResetPinDialog() {
+    ConfirmResetPinDialog.show(activity.supportFragmentManager)
   }
 }

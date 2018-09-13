@@ -37,7 +37,9 @@ class AppLockScreenController @Inject constructor(
         resetValidationError(replayedEvents),
         validatePin(replayedEvents),
         exitOnBackClick(replayedEvents),
-        openFacilityChangeScreen(replayedEvents))
+        openFacilityChangeScreen(replayedEvents),
+        showConfirmResetPinDialog(replayedEvents)
+    )
   }
 
   private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
@@ -118,5 +120,11 @@ class AppLockScreenController @Inject constructor(
     return events
         .ofType<AppLockFacilityClicked>()
         .map { { ui: Ui -> ui.openFacilityChangeScreen() } }
+  }
+
+  private fun showConfirmResetPinDialog(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<AppLockForgotPinClicked>()
+        .map { { ui: Ui -> ui.showConfirmResetPinDialog() } }
   }
 }

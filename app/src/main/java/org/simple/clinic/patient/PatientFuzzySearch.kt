@@ -59,6 +59,8 @@ class PatientFuzzySearch {
     fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
 
     fun clearAll()
+
+    fun count(): Int
   }
 
   class PatientFuzzySearchDaoImpl(
@@ -116,6 +118,15 @@ class PatientFuzzySearch {
             SELECT "rowid","searchableName" FROM "Patient" WHERE "uuid" in (${uuids.joinToString(",", transform = { "'$it'" })})
             """.trimIndent())
         }!!
+
+    override fun count(): Int {
+      return sqLiteOpenHelper.readableDatabase.query("""
+        SELECT COUNT("rowid") FROM "PatientFuzzySearch"
+      """.trimIndent()).use {
+        it.moveToFirst()
+        it.getInt(0)
+      }
+    }
 
     private fun patientUuidsMatching(query: String) =
         Single.fromCallable {

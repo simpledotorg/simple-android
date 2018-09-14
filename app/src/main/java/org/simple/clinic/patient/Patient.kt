@@ -88,7 +88,7 @@ data class Patient constructor(
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
     fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
-    @Query("SELECT COUNT(*) FROM patient")
+    @Query("SELECT COUNT(uuid) FROM patient")
     fun patientCount(): Flowable<Int>
 
     @Query("DELETE FROM patient")

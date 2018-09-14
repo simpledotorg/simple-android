@@ -302,4 +302,20 @@ class PatientRepository @Inject constructor(
           }
         }
   }
+
+  fun clearPatientData(): Completable {
+    return Completable.fromCallable {
+      database.runInTransaction {
+        database.patientDao().clear()
+        database.phoneNumberDao().clear()
+        database.addressDao().clear()
+        database.fuzzyPatientSearchDao().clearAll()
+        database.bloodPressureDao().clearData()
+        database.prescriptionDao().clearData()
+        database.appointmentDao().clear()
+        database.communicationDao().clear()
+        database.medicalHistoryDao().clear()
+      }
+    }
+  }
 }

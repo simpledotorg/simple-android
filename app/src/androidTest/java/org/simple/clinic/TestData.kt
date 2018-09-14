@@ -3,7 +3,9 @@ package org.simple.clinic
 import io.bloco.faker.Faker
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
@@ -118,6 +120,27 @@ class TestData @Inject constructor(private val faker: Faker) {
         syncStatus = randomOfEnum(SyncStatus::class))
   }
 
+  fun facilityPayload(
+      uuid: UUID = UUID.randomUUID(),
+      name: String = faker.company.name(),
+      district: String = faker.address.city(),
+      state: String = faker.address.state()
+  ): FacilityPayload {
+    return FacilityPayload(
+        uuid = uuid,
+        name = name,
+        district = district,
+        state = state,
+        facilityType = null,
+        streetAddress = null,
+        villageOrColony = null,
+        country = faker.address.country(),
+        pinCode = null,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now()
+    )
+  }
+
   fun loggedInUser(
       uuid: UUID = UUID.randomUUID(),
       name: String = faker.name.name(),
@@ -152,6 +175,7 @@ class TestData @Inject constructor(private val faker: Faker) {
   fun bpPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
+      facilytyUuid: UUID = qaUserFacilityUuid(),
       systolic: Int = faker.number.between(0, 299),
       diastolic: Int = faker.number.between(50, 60)
   ): BloodPressureMeasurementPayload {
@@ -162,8 +186,34 @@ class TestData @Inject constructor(private val faker: Faker) {
         createdAt = Instant.now(),
         updatedAt = Instant.now(),
         userUuid = qaUserUuid(),
-        facilityUuid = qaUserFacilityUuid(),
+        facilityUuid = facilytyUuid,
         patientUuid = patientUuid)
+  }
+
+  fun prescriptionPayload(
+      uuid: UUID = UUID.randomUUID(),
+      name: String = faker.food.dish(),
+      dosage: String = "${faker.number.positive(10, 50)}mg",
+      rxNormCode: String = faker.food.metricMeasurement(),
+      isDeleted: Boolean = false,
+      isProtocolDrug: Boolean = false,
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): PrescribedDrugPayload {
+    return PrescribedDrugPayload(
+        uuid = uuid,
+        name = name,
+        dosage = dosage,
+        rxNormCode = rxNormCode,
+        isDeleted = isDeleted,
+        isProtocolDrug = isProtocolDrug,
+        patientId = patientUuid,
+        facilityId = facilityUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
   }
 
   fun appointment(
@@ -181,16 +231,25 @@ class TestData @Inject constructor(private val faker: Faker) {
         updatedAt = Instant.now())
   }
 
-  fun appointmentPayload(): AppointmentPayload {
+  fun appointmentPayload(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      date: LocalDate = LocalDate.now(UTC).plusDays(30),
+      facilityUuid: UUID = qaUserFacilityUuid(),
+      status: Appointment.Status = randomOfEnum(Appointment.Status::class),
+      statusReason: Appointment.StatusReason = randomOfEnum(Appointment.StatusReason::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): AppointmentPayload {
     return AppointmentPayload(
-        uuid = UUID.randomUUID(),
-        patientUuid = UUID.randomUUID(),
-        date = LocalDate.now(UTC).plusDays(30),
-        facilityUuid = qaUserFacilityUuid(),
-        status = randomOfEnum(Appointment.Status::class),
-        statusReason = randomOfEnum(Appointment.StatusReason::class),
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        uuid = uuid,
+        patientUuid = patientUuid,
+        date = date,
+        facilityUuid = facilityUuid,
+        status = status,
+        statusReason = statusReason,
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 
   fun communication(
@@ -207,43 +266,70 @@ class TestData @Inject constructor(private val faker: Faker) {
         updatedAt = Instant.now())
   }
 
-  fun communicationPayload(): CommunicationPayload {
+  fun communicationPayload(
+      uuid: UUID = UUID.randomUUID(),
+      appointmentUuid: UUID = UUID.randomUUID(),
+      userUuid: UUID = qaUserUuid(),
+      type: Communication.Type = randomOfEnum(Communication.Type::class),
+      result: Communication.Result = randomOfEnum(Communication.Result::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): CommunicationPayload {
     return CommunicationPayload(
-        uuid = UUID.randomUUID(),
-        appointmentUuid = UUID.randomUUID(),
-        userUuid = qaUserUuid(),
-        type = randomOfEnum(Communication.Type::class),
-        result = randomOfEnum(Communication.Result::class),
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        uuid = uuid,
+        appointmentUuid = appointmentUuid,
+        userUuid = userUuid,
+        type = type,
+        result = result,
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 
   fun medicalHistory(
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      hasHadHeartAttack: Boolean = faker.bool.bool(),
+      hasHadStroke: Boolean = faker.bool.bool(),
+      hasHadKidneyDisease: Boolean = faker.bool.bool(),
+      isOnTreatmentForHypertension: Boolean = faker.bool.bool(),
+      hasDiabetes: Boolean = faker.bool.bool(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): MedicalHistory {
     return MedicalHistory(
-        uuid = UUID.randomUUID(),
-        patientUuid = UUID.randomUUID(),
-        hasHadHeartAttack = faker.bool.bool(),
-        hasHadStroke = faker.bool.bool(),
-        hasHadKidneyDisease = faker.bool.bool(),
-        isOnTreatmentForHypertension = faker.bool.bool(),
-        hasDiabetes = faker.bool.bool(),
+        uuid = uuid,
+        patientUuid = patientUuid,
+        hasHadHeartAttack = hasHadHeartAttack,
+        hasHadStroke = hasHadStroke,
+        hasHadKidneyDisease = hasHadKidneyDisease,
+        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
+        hasDiabetes = hasDiabetes,
         syncStatus = syncStatus,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 
-  fun medicalHistoryPayload(): MedicalHistoryPayload {
+  fun medicalHistoryPayload(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      hasHadHeartAttack: Boolean = faker.bool.bool(),
+      hasHadStroke: Boolean = faker.bool.bool(),
+      hasHadKidneyDisease: Boolean = faker.bool.bool(),
+      isOnTreatmentForHypertension: Boolean = faker.bool.bool(),
+      hasDiabetes: Boolean = faker.bool.bool(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): MedicalHistoryPayload {
     return MedicalHistoryPayload(
-        uuid = UUID.randomUUID(),
-        patientUuid = UUID.randomUUID(),
-        hasHadHeartAttack = faker.bool.bool(),
-        hasHadStroke = faker.bool.bool(),
-        hasHadKidneyDisease = faker.bool.bool(),
-        isOnTreatmentForHypertension = faker.bool.bool(),
-        hasDiabetes = faker.bool.bool(),
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        uuid = uuid,
+        patientUuid = patientUuid,
+        hasHadHeartAttack = hasHadHeartAttack,
+        hasHadStroke = hasHadStroke,
+        hasHadKidneyDisease = hasHadKidneyDisease,
+        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
+        hasDiabetes = hasDiabetes,
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 }

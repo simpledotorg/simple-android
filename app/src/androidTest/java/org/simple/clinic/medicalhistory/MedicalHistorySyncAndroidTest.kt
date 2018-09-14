@@ -49,7 +49,7 @@ class MedicalHistorySyncAndroidTest : BaseDataSyncAndroidTest<MedicalHistory, Me
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.medicalHistory(syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.medicalHistory(syncStatus = syncStatus)
 
   override fun generatePayload() = testData.medicalHistoryPayload()
 

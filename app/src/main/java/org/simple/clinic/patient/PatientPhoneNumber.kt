@@ -52,5 +52,8 @@ data class PatientPhoneNumber(
 
     @Query("DELETE FROM patientphonenumber")
     fun clear()
+
+    @Query("SELECT COUNT(uuid) FROM PatientPhoneNumber")
+    fun count(): Int
   }
 }

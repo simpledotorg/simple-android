@@ -59,5 +59,8 @@ data class PatientAddress(
 
     @Query("DELETE FROM patientaddress")
     fun clear()
+
+    @Query("SELECT COUNT(uuid) FROM PatientAddress")
+    fun count(): Int
   }
 }

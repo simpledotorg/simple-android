@@ -5,9 +5,7 @@
     <string name="gender_male">पुरुष</string>
     <string name="gender_transgender">ट्रांसजेंडर</string>
     <string name="api_unexpected_error">कुछ गलत हो गया। बाद में पुन: प्रयास करें।</string>
-    <string name="patientsearch_new_patient">नया रोगी दर्ज करें</string>
-    <string name="patientsearch_name_or_phone">रोगी का नाम या फोन नंबर</string>
-    <string name="patientsearch_age">आयु %s</string>
+    <string name="patientsearchresult_age">आयु %s</string>
     <string name="patiententry_contentdescription_up_button">खोज पर वापस जाओ</string>
     <string name="patiententry_full_name">रोगी का नाम</string>
     <string name="patiententry_phone_number">रोगी का फोन नंबर</string>
@@ -59,7 +57,6 @@
     <string name="customprescription_delete_message">क्या आप वाकई दवा को हटाना चाहते हैं?</string>
     <string name="customprescription_delete_cancel">नहीं</string>
     <string name="customprescription_delete_confirm">हाँ</string>
-    <string name="patientsearch_go_back">होम स्क्रीन पर वापस जाओ</string>
     <string name="patientsummary_prescriptions_add">नई दवा</string>
     <string name="loginpin_pin_number_hint">आपका सुरक्षा पिन</string>
     <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>

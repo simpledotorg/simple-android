@@ -55,7 +55,7 @@
         </android.support.design.widget.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/Clinic.ClearButton"
+          style="@style/Clinic.Button.ClearEditText"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
@@ -124,7 +124,7 @@
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-            style="@style/Clinic.ClearButton"
+            style="@style/Clinic.Button.ClearEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -166,7 +166,7 @@
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-            style="@style/Clinic.ClearButton"
+            style="@style/Clinic.Button.ClearEditText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"

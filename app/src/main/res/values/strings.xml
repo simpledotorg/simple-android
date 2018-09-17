@@ -11,11 +11,14 @@
   <string name="country_dialing_code" translatable="false">+91</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_new_patient">Register new patient</string>
-  <string name="patientsearch_go_back">Go back to home screen</string>
-  <string name="patientsearch_name_or_phone">Patient\'s name or phone</string>
-  <string name="patientsearch_age">Age: %s</string>
+  <string name="patientsearch_name">Patient’s name</string>
+  <string name="patientsearch_dateofbirth">Date of birth</string>
+  <string name="patientsearch_age">Age</string>
   <string name="patientsearch_search">Next</string>
+  <string name="patientsearch_dateofbirth_and_age_separator">or</string>
+
+  <!-- Patient search results -->
+  <string name="patientsearchresult_age">Age: %s</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">Go back to search</string>

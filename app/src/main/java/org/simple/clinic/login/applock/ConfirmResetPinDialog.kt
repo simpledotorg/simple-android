@@ -11,6 +11,9 @@ import android.view.View
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.router.screen.RouterDirection
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
 import javax.inject.Inject
 
@@ -18,6 +21,9 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
 
   @Inject
   lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   companion object {
     fun show(fragmentManager: FragmentManager) {
@@ -49,7 +55,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
               .observeOn(mainThread())
               .doOnTerminate { snackbar.dismiss() }
               .subscribe {
-                // TODO: Open new PIN entry screen
+                screenRouter.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey(), RouterDirection.REPLACE)
               }
         }
         .setNegativeButton(R.string.applock_reset_pin_alert_cancel, null)

@@ -52,16 +52,22 @@ data class User(
     OTP_REQUESTED,
 
     /**
-     * Login OTP was received, and a call to validate
-     * the OTP with the server has been scheduled.
-     */
-    VERIFYING_OTP,
-
-    /**
      * Login OTP has been validated with the server
      * and the user is verified.
      */
-    LOGGED_IN;
+    LOGGED_IN,
+
+    /**
+     * User has begun the reset PIN flow, but hasn't yet
+     * submitted the PIN reset request to the server
+     **/
+    RESETTING_PIN,
+
+    /**
+     * User has raised a PIN reset request with the
+     * server, but it has not yet been approved
+     **/
+    RESET_PIN_REQUESTED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<LoggedInStatus>(LoggedInStatus::class.java)
   }

@@ -16,7 +16,6 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.VERIFYING_OTP
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
@@ -109,7 +108,7 @@ class PatientsScreenController @Inject constructor(
 
           val setVerificationStatusMessageVisible = { loggedInStatus: User.LoggedInStatus, ui: Ui ->
             when (loggedInStatus) {
-              NOT_LOGGED_IN, OTP_REQUESTED, VERIFYING_OTP -> ui.showUserStatusAsPendingVerification()
+              NOT_LOGGED_IN, OTP_REQUESTED -> ui.showUserStatusAsPendingVerification()
               LOGGED_IN -> ui.hideUserAccountStatus()
             }
           }

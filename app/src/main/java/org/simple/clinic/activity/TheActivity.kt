@@ -25,10 +25,9 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.VERIFYING_OTP
+import org.simple.clinic.user.User
+import org.simple.clinic.user.User.*
+import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
@@ -98,9 +97,10 @@ class TheActivity : AppCompatActivity() {
   private fun initialScreenKey(): FullScreenKey {
     val localUser = userSession.loggedInUser().blockingFirst().toNullable()
 
+    // TODO: Figure out how to handle the new PIN reset status
     val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
-      NOT_LOGGED_IN -> false
-      LOGGED_IN, OTP_REQUESTED, VERIFYING_OTP -> true
+      NOT_LOGGED_IN, RESETTING_PIN -> false
+      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED  -> true
       null -> false
     }
 

@@ -9,11 +9,6 @@
     <string name="patientsearch_go_back">ਹੋਮ ਸਕ੍ਰੀਨ ਤੇ ਵਾਪਸ ਜਾਓ</string>
     <string name="patientsearch_name_or_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਤੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ</string>
     <string name="patientsearch_age">ਉਮਰ: %s</string>
-    <string name="patientsearch_filter_by">ਦੁਆਰਾ ਚੁਣੋ</string>
-    <string name="patientsearch_label_age">ਉਮਰ</string>
-    <string name="agefilter_apply_filter">ਚੁਣੋ</string>
-    <string name="agefilter_enter_age">ਮਰੀਜ਼ ਦੀ ਉਮਰ ਭਰੋ</string>
-    <string name="agefilter_reset_filter">ਨਾ ਚੁਣੋ</string>
     <string name="patiententry_contentdescription_up_button">ਖੋਜ ਲਈ ਵਾਪਸ ਜਾਉ</string>
     <string name="patiententry_full_name">ਮਰੀਜ਼ ਦਾ ਨਾਮ</string>
     <string name="patiententry_phone_number">ਫ਼ੋਨ ਨੰਬਰ</string>

@@ -31,7 +31,6 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
-import org.simple.clinic.search.PatientSearchAgeFilterSheet
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.InstantRxPreferencesConverter
@@ -55,7 +54,6 @@ interface TheActivityComponent {
   fun inject(target: PatientSummaryScreen)
   fun inject(target: PrescribedDrugsScreen)
   fun inject(target: BloodPressureEntrySheet)
-  fun inject(target: PatientSearchAgeFilterSheet)
   fun inject(target: CustomPrescriptionEntrySheet)
   fun inject(target: ConfirmDeletePrescriptionDialog)
   fun inject(target: RegistrationPhoneScreen)

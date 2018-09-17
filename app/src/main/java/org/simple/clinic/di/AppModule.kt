@@ -27,15 +27,23 @@ import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
 
-@Module(includes = [QrModule::class, SyncModule::class, NetworkModule::class, StorageModule::class, LoginModule::class, RegistrationModule::class])
-open class AppModule(private val appContext: Application, private val databaseName: String = "red-db") {
+@Module(includes = [
+  QrModule::class,
+  SyncModule::class,
+  NetworkModule::class,
+  StorageModule::class,
+  LoginModule::class,
+  RegistrationModule::class])
+class AppModule(
+    private val appContext: Application,
+    private val databaseName: String = "red-db",
+    private val runDatabaseQueriesOnMainThread: Boolean = false
+) {
 
   @Provides
   fun appContext(): Application {
     return appContext
   }
-
-  protected open fun canRunDatabaseOnMainThread() = false
 
   // TODO: move to StorageModule.
   @Provides
@@ -44,7 +52,7 @@ open class AppModule(private val appContext: Application, private val databaseNa
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
         .openHelperFactory(factory)
         .apply {
-          if (canRunDatabaseOnMainThread()) {
+          if (runDatabaseQueriesOnMainThread) {
             allowMainThreadQueries()
           }
         }

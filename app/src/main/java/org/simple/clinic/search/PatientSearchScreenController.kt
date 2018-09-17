@@ -19,9 +19,6 @@ class PatientSearchScreenController @Inject constructor(
     private val repository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  // TODO: This is obviously a bad idea. Fix this.
-  private var ageText = ""
-
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
@@ -29,7 +26,6 @@ class PatientSearchScreenController @Inject constructor(
         showCreatePatientButton(replayedEvents),
         enableSearchButton(replayedEvents),
         searchResults(replayedEvents),
-        openAgeFilterSheet(replayedEvents),
         openPatientSummary(replayedEvents),
         saveAndProceeds(replayedEvents))
   }
@@ -74,7 +70,6 @@ class PatientSearchScreenController @Inject constructor(
     val ageChanges = events
         .ofType<SearchQueryAgeChanged>()
         .map { it.ageString }
-        .doOnNext { ageText = it }  // this will go away soon when age bottom sheet is removed.
 
     return events
         .ofType<SearchClicked>()
@@ -89,12 +84,6 @@ class PatientSearchScreenController @Inject constructor(
         .ofType<SearchResultClicked>()
         .map { it.searchResult }
         .map { clickedPatient -> { ui: Ui -> ui.openPatientSummaryScreen(clickedPatient.uuid) } }
-  }
-
-  private fun openAgeFilterSheet(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SearchQueryAgeFilterClicked>()
-        .map { { ui: Ui -> ui.openAgeFilterSheet(ageText) } }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {

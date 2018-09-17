@@ -13,14 +13,12 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.patient.PatientSearchResult
-import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.summary.PatientSummaryScreen
@@ -32,7 +30,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   companion object {
     val KEY = PatientSearchScreenKey()
-    const val REQCODE_AGE = 1
   }
 
   @Inject
@@ -46,7 +43,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
   private val fullNameEditText by bindView<EditText>(R.id.patientsearch_fullname)
-  private val ageFilterButton by bindView<Button>(R.id.patientsearch_age_filter_button)
   private val newPatientButton by bindView<Button>(R.id.patientsearch_new_patient)
   private val searchButton by bindView<View>(R.id.patientsearch_search)
   private val patientRecyclerView by bindView<RecyclerView>(R.id.patientsearch_recyclerview)
@@ -77,8 +73,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     Observable
         .mergeArray(
-            fullnameChanges(),
-            ageFilterToolbarButtonClicks(),
+            searchQueryChanges(),
             ageFilterTextChanges(),
             searchClicks(),
             newPatientButtonClicks(),
@@ -90,21 +85,17 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { uiChange -> uiChange(this) }
   }
 
-  private fun fullnameChanges() = RxTextView.textChanges(fullNameEditText)
-      .map(CharSequence::toString)
-      .map(::SearchQueryNameChanged)
+  private fun searchQueryChanges() =
+      RxTextView
+          .textChanges(fullNameEditText)
+          .map(CharSequence::toString)
+          .map(::SearchQueryNameChanged)
 
-  private fun ageFilterToolbarButtonClicks() = RxView.clicks(ageFilterButton)
-      .map { SearchQueryAgeFilterClicked() }
-
-  private fun ageFilterTextChanges() = screenRouter.streamScreenResults()
-      .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_AGE && it.succeeded() }
-      .map { PatientSearchAgeFilterSheet.extractResult(it.data!!) }
-      .startWith(SearchQueryAgeChanged(""))
-
-  private fun newPatientButtonClicks() = RxView.clicks(newPatientButton)
-      .map { CreateNewPatientClicked() }
+  private fun ageFilterTextChanges() = Observable.just(SearchQueryAgeChanged(""))
+  private fun newPatientButtonClicks() =
+      RxView
+          .clicks(newPatientButton)
+          .map { CreateNewPatientClicked() }
 
   private fun searchClicks() =
       RxView
@@ -123,10 +114,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun updatePatientSearchResults(patients: List<PatientSearchResult>) {
     resultsAdapter.updateAndNotifyChanges(patients)
-  }
-
-  fun openAgeFilterSheet(ageText: String) {
-    activity.startActivityForResult(PatientSearchAgeFilterSheet.intent(context, ageText), REQCODE_AGE)
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

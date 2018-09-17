@@ -45,9 +45,7 @@ class TestClinicApp : ClinicApp() {
     // We have moved the in-memory database configuration to the sqlite openhelper factory
     // but we still have to provide a non-empty name for Room, otherwise it complains.
     return DaggerTestAppComponent.builder()
-        .appModule(object : AppModule(this, "ignored-db-name") {
-          override fun canRunDatabaseOnMainThread() = true
-        })
+        .appModule(AppModule(this, "ignored-db-name", runDatabaseQueriesOnMainThread = true))
         .storageModule(object : StorageModule() {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
         })

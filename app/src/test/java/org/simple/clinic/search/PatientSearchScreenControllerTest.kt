@@ -1,24 +1,14 @@
 package org.simple.clinic.search
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.argumentCaptor
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentMatchers.anyBoolean
-import org.mockito.ArgumentMatchers.anyInt
-import org.mockito.Mockito.anyString
-import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
 
 class PatientSearchScreenControllerTest {
@@ -70,50 +60,32 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryAgeChanged("123"))
     uiEvents.onNext(SearchClicked())
 
-    verify(repository, never()).search(anyString(), anyInt(), anyBoolean())
-    verify(screen, never()).updatePatientSearchResults(any())
+    verify(screen, never()).openPatientSearchResultsScreen()
   }
 
   @Test
   fun `when full name and age are present, and search is clicked, matching patients should be shown`() {
     val fullName = "bar"
     val age = "24"
-    val matchingPatients = listOf<PatientSearchResult>(mock(), mock(), mock())
-    whenever(repository.search(fullName, age.toInt())).thenReturn(Observable.just(matchingPatients))
 
     uiEvents.onNext(SearchQueryNameChanged(fullName))
     uiEvents.onNext(SearchQueryAgeChanged(age))
     uiEvents.onNext(SearchClicked())
 
-    verify(screen).updatePatientSearchResults(matchingPatients)
+    verify(screen).openPatientSearchResultsScreen()
   }
 
   @Test
-  fun `when create patient is clicked, the patient create form should open with same text in full name field`() {
-    val partialName = "foo"
-    val age = "24"
+  fun `date-of-birth and age fields should only be visible while one of them is empty`() {
+    uiEvents.onNext(SearchQueryDateOfBirthChanged(""))
+    uiEvents.onNext(SearchQueryAgeChanged(""))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
 
-    whenever(repository.search(partialName, age.toInt())).thenReturn(Observable.never())
-    whenever(repository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+    uiEvents.onNext(SearchQueryAgeChanged("1"))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
 
-    uiEvents.onNext(SearchQueryNameChanged(partialName))
-    uiEvents.onNext(SearchQueryAgeChanged(age))
-    uiEvents.onNext(SearchClicked())
-    uiEvents.onNext(CreateNewPatientClicked())
-
-    argumentCaptor<OngoingPatientEntry>().apply {
-      verify(repository).saveOngoingEntry(capture())
-      assert(partialName == firstValue.personalDetails!!.fullName)
-    }
-    verify(screen).openPersonalDetailsEntryScreen()
-  }
-
-  @Test
-  fun `when a patient search result is clicked, the patient's summary screen should be started`() {
-    val searchResult = PatientMocker.patientSearchResult()
-
-    uiEvents.onNext(SearchResultClicked(searchResult))
-
-    verify(screen).openPatientSummaryScreen(searchResult.uuid)
+    uiEvents.onNext(SearchQueryAgeChanged(""))
+    uiEvents.onNext(SearchQueryDateOfBirthChanged("1"))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
   }
 }

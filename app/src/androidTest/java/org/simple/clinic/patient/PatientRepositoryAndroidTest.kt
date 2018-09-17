@@ -49,7 +49,7 @@ class PatientRepositoryAndroidTest {
   val authenticationRule = AuthenticationRule()
 
   @get:Rule
-  var instantTaskExecutorRule = InstantTaskExecutorRule()
+  val instantTaskExecutorRule = InstantTaskExecutorRule()
 
   @Inject
   lateinit var bpRepository: BloodPressureRepository

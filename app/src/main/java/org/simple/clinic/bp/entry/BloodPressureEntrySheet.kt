@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +14,6 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -32,11 +32,14 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_PATIENT_UUID = "patientUuid"
+    private const val EXTRA_WAS_BP_SAVED = "wasBpSaved"
 
-    fun intent(context: Context, patientUuid: UUID): Intent {
-      val intent = Intent(context, BloodPressureEntrySheet::class.java)
-      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
-      return intent
+    fun intent(context: Context, patientUuid: UUID) =
+        Intent(context, BloodPressureEntrySheet::class.java)
+            .putExtra(KEY_PATIENT_UUID, patientUuid)!!
+
+    fun wasBloodPressureSaved(data: Intent): Boolean {
+      return data.getBooleanExtra(EXTRA_WAS_BP_SAVED, false)
     }
   }
 
@@ -93,8 +96,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     diastolicEditText.requestFocus()
   }
 
-  fun finishAndScheduleAppointment(patientUuid: UUID) {
-    startActivity(ScheduleAppointmentSheet.intent(this, patientUuid))
+  fun setBPSavedResultAndFinish() {
+    val intent = Intent()
+    intent.putExtra(EXTRA_WAS_BP_SAVED, true)
+    setResult(Activity.RESULT_OK, intent)
     finish()
   }
+
 }

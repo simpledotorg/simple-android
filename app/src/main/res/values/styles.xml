@@ -26,16 +26,7 @@
 
   <style name="Clinic.Button" />
 
-  <style name="Clinic.Button.PatientEntry">
-    <item name="android:textColor">@color/color_accent</item>
-    <item name="android:gravity">start|center_vertical</item>
-    <item name="backgroundTint">#F2F4FB</item>
-    <item name="android:drawablePadding">@dimen/spacing_8</item>
-    <item name="android:paddingStart">14dp</item>
-    <item name="android:paddingEnd">@dimen/spacing_16</item>
-  </style>
-
-  <style name="Clinic.ClearButton">
+  <style name="Clinic.Button.ClearEditText">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:layout_marginTop">14dp</item>
     <item name="android:padding">@dimen/spacing_12</item>

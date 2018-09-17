@@ -50,7 +50,6 @@ class UserSession @Inject constructor(
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
-    private val patientRepository: PatientRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
@@ -354,7 +353,7 @@ class UserSession @Inject constructor(
     return accessTokenPreference.get()
   }
 
-  fun startForgotPinFlow(retryCount: Int = 0): Completable {
+  fun startForgotPinFlow(patientRepository: PatientRepository, retryCount: Int = 0): Completable {
     return syncScheduler.syncImmediately()
         .subscribeOn(Schedulers.io())
         .retry(retryCount.toLong())

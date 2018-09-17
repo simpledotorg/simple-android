@@ -33,6 +33,7 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationResponse
@@ -54,6 +55,7 @@ class UserSessionTest {
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val patientRepository = mock<PatientRepository>()
   private val sharedPrefs = mock<SharedPreferences>()
   private val appDatabase = mock<AppDatabase>()
   private val passwordHasher = mock<PasswordHasher>()
@@ -83,6 +85,7 @@ class UserSessionTest {
         moshi,
         facilitySync,
         facilityRepository,
+        patientRepository,
         sharedPrefs,
         appDatabase,
         passwordHasher,
@@ -91,6 +94,7 @@ class UserSessionTest {
     )
     userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
 
     whenever(appDatabase.userDao()).thenReturn(userDao)
 
@@ -259,7 +263,6 @@ class UserSessionTest {
   @Test
   @Parameters(value = ["0", "1", "2"])
   fun `if the sync fails when resetting PIN, it should be retried and complete if all retries fail`(retryCount: Int) {
-
     val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
         .map { Completable.error(RuntimeException()) }.toTypedArray()
 
@@ -270,6 +273,28 @@ class UserSessionTest {
         .test()
         .await()
         .assertComplete()
+  }
+
+  @Test
+  fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    userSession.startForgotPinFlow()
+        .test()
+        .await()
+
+    verify(patientRepository).clearPatientData()
+  }
+
+  @Test
+  fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    userSession.startForgotPinFlow()
+        .test()
+        .await()
+
+    verify(patientRepository).clearPatientData()
   }
 
   @After

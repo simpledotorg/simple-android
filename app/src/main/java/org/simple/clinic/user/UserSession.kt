@@ -24,6 +24,7 @@ import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationRequest
@@ -49,6 +50,7 @@ class UserSession @Inject constructor(
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
+    private val patientRepository: PatientRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
@@ -357,5 +359,6 @@ class UserSession @Inject constructor(
         .subscribeOn(Schedulers.io())
         .retry(retryCount.toLong())
         .onErrorComplete()
+        .andThen(patientRepository.clearPatientData())
   }
 }

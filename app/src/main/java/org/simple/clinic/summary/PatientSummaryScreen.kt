@@ -18,6 +18,7 @@ import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
@@ -30,10 +31,12 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -48,6 +51,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   companion object {
     val KEY = ::PatientSummaryScreenKey
+
+    const val REQCODE_BP_SAVED = 1
+    const val REQCODE_SCHEDULE_APPOINTMENT = 2
   }
 
   @Inject
@@ -95,7 +101,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     setupSummaryList()
 
-    Observable.mergeArray(screenCreates(), backClicks(), doneClicks(), adapterUiEvents)
+    Observable
+        .mergeArray(
+            screenCreates(),
+            backClicks(),
+            doneClicks(),
+            adapterUiEvents,
+            bloodPressureSaves(),
+            appointmentScheduleSheetClosed())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -126,6 +139,16 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .mergeWith(hardwareBackKeyClicks)
         .map { PatientSummaryBackClicked() }
   }
+
+  private fun bloodPressureSaves() = screenRouter.streamScreenResults()
+      .ofType<ActivityResult>()
+      .filter { it.requestCode == REQCODE_BP_SAVED && it.succeeded() }
+      .map { PatientSummaryBloodPressureClosed(BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!)) }
+
+  private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
+      .ofType<ActivityResult>()
+      .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
+      .map { ScheduleAppointmentSheetClosed() }
 
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
@@ -195,16 +218,20 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // FIXME: This is a really ugly workaround. Shouldn't be managing state like this.
     if (!bpEntrySheetAlreadyShownOnStart) {
       bpEntrySheetAlreadyShownOnStart = true
-      activity.startActivity(BloodPressureEntrySheet.intent(context, patientUuid))
+      showBloodPressureEntrySheet(patientUuid)
     }
   }
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
-    activity.startActivity(BloodPressureEntrySheet.intent(context, patientUuid))
+    activity.startActivityForResult(BloodPressureEntrySheet.intent(context, patientUuid), REQCODE_BP_SAVED)
   }
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
+  }
+
+  fun showScheduleAppointmentSheet(patientUuid: UUID) {
+    activity.startActivityForResult(ScheduleAppointmentSheet.intent(context, patientUuid), REQCODE_SCHEDULE_APPOINTMENT)
   }
 
   fun goBackToPatientSearch() {

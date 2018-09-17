@@ -74,14 +74,14 @@ class OverdueListViewHolder(
     private val phoneCallClickStream: PublishSubject<CallPatientClicked>
 ) : RecyclerView.ViewHolder(itemView) {
 
-  private val patientName by bindView<TextView>(R.id.overdue_patient_name_gender)
-  private val patientBP by bindView<TextView>(R.id.overdue_patient_bp)
-  private val overdueDays by bindView<TextView>(R.id.overdue_days)
+  private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_gender)
+  private val patientBPTextView by bindView<TextView>(R.id.overdue_patient_bp)
+  private val overdueDaysTextView by bindView<TextView>(R.id.overdue_days)
   private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
-  private val separator by bindView<View>(R.id.overdue_separator)
+  private val separatorView by bindView<View>(R.id.overdue_separator)
   private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
-  private val age by bindView<TextView>(R.id.overdue_patient_age)
-  private val phoneNumber by bindView<TextView>(R.id.overdue_patient_phoneNo)
+  private val ageTextView by bindView<TextView>(R.id.overdue_patient_age)
+  private val phoneNumberTextView by bindView<TextView>(R.id.overdue_patient_phoneNo)
 
   lateinit var appointment: OverdueListItem
 
@@ -99,9 +99,9 @@ class OverdueListViewHolder(
   fun render() {
     val context = itemView.context
 
-    patientName.text = """${appointment.name}, ${context.getString(appointment.gender.displayLetterRes)}"""
+    patientNameTextView.text = "${appointment.name}, ${context.getString(appointment.gender.displayLetterRes)}"
 
-    patientBP.text = context.resources.getQuantityString(
+    patientBPTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_patient_bp,
         appointment.bpDaysAgo,
         appointment.bpSystolic,
@@ -109,7 +109,7 @@ class OverdueListViewHolder(
         appointment.bpDaysAgo
     )
 
-    overdueDays.text = context.resources.getQuantityString(
+    overdueDaysTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_overdue_days,
         appointment.overdueDays,
         appointment.overdueDays
@@ -117,14 +117,14 @@ class OverdueListViewHolder(
 
     if (appointment.phoneNumber == null) {
       callButton.visibility = View.GONE
-      separator.visibility = View.GONE
+      separatorView.visibility = View.GONE
     } else {
       callButton.visibility = View.VISIBLE
-      separator.visibility = View.VISIBLE
+      separatorView.visibility = View.VISIBLE
     }
 
-    age.text = """${appointment.age}"""
-    phoneNumber.text = appointment.phoneNumber
+    ageTextView.text = "${appointment.age}"
+    phoneNumberTextView.text = appointment.phoneNumber
 
   }
 }

@@ -7,18 +7,14 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
 typealias UiChange = (Ui) -> Unit
 
 class BloodPressureEntrySheetController @Inject constructor(
-    private val bloodPressureRepository: BloodPressureRepository,
-    private val appointmentRepository: AppointmentRepository
+    private val bloodPressureRepository: BloodPressureRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -66,8 +62,7 @@ class BloodPressureEntrySheetController @Inject constructor(
           bloodPressureRepository
               .saveMeasurement(uuid, systolic.toInt(), diastolic.toInt())
               .toCompletable()
-              .andThen(appointmentRepository.schedule(uuid, LocalDate.now(ZoneOffset.UTC).minusDays(1)))
-              .andThen(Observable.just({ ui: Ui -> ui.finishAndScheduleAppointment(uuid) }))
+              .andThen(Observable.just({ ui: Ui -> ui.setBPSavedResultAndFinish() }))
         }
   }
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -24,11 +25,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   companion object {
     private const val KEY_PATIENT_UUID = "patientUuid"
 
-    fun intent(context: Context, patientUuid: UUID): Intent {
-      val intent = Intent(context, ScheduleAppointmentSheet::class.java)
-      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
-      return intent
-    }
+    fun intent(context: Context, patientUuid: UUID) =
+        Intent(context, ScheduleAppointmentSheet::class.java)
+            .putExtra(KEY_PATIENT_UUID, patientUuid)
   }
 
   private val possibleDates = listOf(
@@ -67,7 +66,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private val decrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_increment_date)
   private val currentDateTextView by bindView<TextView>(R.id.scheduleappointment_current_date)
-  private val skipButton by bindView<Button>(R.id.scheduleappointment_skip)
+  private val notNowButton by bindView<Button>(R.id.scheduleappointment_not_now)
   private val doneButton by bindView<Button>(R.id.scheduleappointment_done)
 
   private val onDestroys = PublishSubject.create<Any>()
@@ -78,7 +77,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_schedule_appointment)
     TheActivity.component.inject(this)
 
-    Observable.merge(decrementClicks(), incrementClicks(), skipClicks(), doneClicks())
+    Observable.merge(decrementClicks(), incrementClicks(), notNowClicks(), doneClicks())
         .startWith(initialState())
         .observeOn(io())
         .compose(controller)
@@ -101,11 +100,12 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun decrementClicks() = RxView.clicks(decrementDateButton).map { AppointmentDateDecremented(currentIndex, possibleDates.size) }
 
-  private fun skipClicks() = RxView.clicks(skipButton).map { SchedulingSkipped() }
+  private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped() }
 
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentScheduled(possibleDates[currentIndex]) }
 
   fun closeSheet() {
+    setResult(Activity.RESULT_OK)
     finish()
   }
 

@@ -36,8 +36,8 @@ class PatientSummaryScreenController @Inject constructor(
         constructBloodPressureHistory(replayedEvents),
         openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
-        handleDoneClicks(replayedEvents),
-        handleBackClicks(replayedEvents))
+        handleBackAndDoneClicks(replayedEvents),
+        exitScreenAfterScheduleAppointment(replayedEvents))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
@@ -125,15 +125,61 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (_, patientUuid) -> { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
   }
 
-  private fun handleBackClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun handleBackAndDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuids = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.patientUuid }
+
+    val bloodPressureSaves = events
+        .ofType<PatientSummaryBloodPressureClosed>()
+        .startWith(PatientSummaryBloodPressureClosed(false))
+        .map { it.wasBloodPressureSaved }
+
+    val backClicks = events
         .ofType<PatientSummaryBackClicked>()
+
+    val doneClicks = events
+        .ofType<PatientSummaryDoneClicked>()
+
+    val doneOrBackClicksWithBpSaved = Observable.merge(doneClicks, backClicks)
+        .withLatestFrom(bloodPressureSaves, patientUuids)
+        .filter { it.second }
+        .map { { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = it.third) } }
+
+    val backClicksWithBpNotSaved = backClicks
+        .withLatestFrom(bloodPressureSaves)
+        .filter { !it.second }
         .map { { ui: Ui -> ui.goBackToPatientSearch() } }
+
+    val doneClicksWithBpNotSaved = doneClicks
+        .withLatestFrom(bloodPressureSaves)
+        .filter { !it.second }
+        .map { { ui: Ui -> ui.goBackToHome() } }
+
+    return Observable.mergeArray(
+        doneOrBackClicksWithBpSaved,
+        backClicksWithBpNotSaved,
+        doneClicksWithBpNotSaved)
   }
 
-  private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun exitScreenAfterScheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {
+    val scheduleAppointmentCloses = events
+        .ofType<ScheduleAppointmentSheetClosed>()
+
+    val backClicks = events
+        .ofType<PatientSummaryBackClicked>()
+
+    val doneClicks = events
         .ofType<PatientSummaryDoneClicked>()
+
+    val afterBackClicks = scheduleAppointmentCloses
+        .withLatestFrom(backClicks)
+        .map { { ui: Ui -> ui.goBackToPatientSearch() } }
+
+    val afterDoneClicks = scheduleAppointmentCloses
+        .withLatestFrom(doneClicks)
         .map { { ui: Ui -> ui.goBackToHome() } }
+
+    return afterBackClicks.mergeWith(afterDoneClicks)
   }
 }

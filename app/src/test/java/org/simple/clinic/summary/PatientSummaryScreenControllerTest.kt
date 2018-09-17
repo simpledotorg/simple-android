@@ -121,18 +121,45 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when the up button is pressed then the user should be taken back to search`() {
+  @Parameters(method = "bpSavedAndPatientSummary")
+  fun `when the back is clicked, then user should be taken back to search, or schedule appointment sheet should open`(
+      wasBloodPressureSaved: Boolean,
+      patientSummaryCaller: PatientSummaryCaller
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller))
+    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    verify(screen).goBackToPatientSearch()
+    if (wasBloodPressureSaved) {
+      verify(screen).showScheduleAppointmentSheet(patientUuid)
+    } else {
+      verify(screen).goBackToPatientSearch()
+    }
   }
 
   @Test
-  fun `when the save button is pressed then the user should be taken back to the home screen`() {
+  @Parameters(method = "bpSavedAndPatientSummary")
+  fun `when the save button is clicked, then user should be taken back to the home screen, or schedule appointment sheet should open`(
+      wasBloodPressureSaved: Boolean,
+      patientSummaryCaller: PatientSummaryCaller
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller))
+    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
-    verify(screen).goBackToHome()
+    if (wasBloodPressureSaved) {
+      verify(screen).showScheduleAppointmentSheet(patientUuid)
+    } else {
+      verify(screen).goBackToHome()
+    }
   }
+
+  fun bpSavedAndPatientSummary() = arrayOf(
+      arrayOf(true, PatientSummaryCaller.NEW_PATIENT),
+      arrayOf(true, PatientSummaryCaller.SEARCH),
+      arrayOf(false, PatientSummaryCaller.NEW_PATIENT),
+      arrayOf(false, PatientSummaryCaller.SEARCH)
+  )
 
   @Test
   fun `when update medicines is clicked then BP medicines screen should be shown`() {

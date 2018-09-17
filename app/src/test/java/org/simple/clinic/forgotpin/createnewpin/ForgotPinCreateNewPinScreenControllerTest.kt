@@ -2,6 +2,7 @@ package org.simple.clinic.forgotpin.createnewpin
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -51,5 +52,36 @@ class ForgotPinCreateNewPinScreenControllerTest {
     verify(screen).showFacility(facility.name)
   }
 
+  @Test
+  fun `when an incomplete PIN is submitted, an error must be shown`() {
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
+    uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
 
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
+    uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
+
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("111"))
+    uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
+
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
+    uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
+
+    verify(screen, times(3)).showInvalidPinError()
+  }
+
+  @Test
+  fun `when a complete PIN is submitted, the confirm PIN screen must be shown`() {
+    uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1111"))
+    uiEvents.onNext(ForgotPinCreateNewPinSubmitClicked)
+
+    verify(screen).showConfirmPinScreen("1111")
+  }
+
+  @Test
+  fun `when the PIN text changes, any error must be hidden`() {
+   uiEvents.onNext(ForgotPinCreateNewPinTextChanged("1"))
+   uiEvents.onNext(ForgotPinCreateNewPinTextChanged("11"))
+
+    verify(screen, times(2)).hideInvalidPinError()
+  }
 }

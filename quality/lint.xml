@@ -4,6 +4,7 @@
   <issue id="AllowBackup" severity="informational" />
   <issue id="UnusedResources">
     <ignore path="src/main/res/values/colors_material.xml" />
+    <ignore path="src/main/res/values/colors_v2.xml" />
 
     <!-- Heap analytics plugin adds these resources dynamically -->
     <ignore regexp="com.heapanalytics.android.*" />

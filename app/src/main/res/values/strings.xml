@@ -199,4 +199,7 @@
   <string name="scheduleappointment_not_now">Not now</string>
   <string name="scheduleappointment_done">done</string>
 
+  <!-- Forgot PIN -->
+  <string name="forgotpin_create_new_pin">Create new security PIN</string>
+
 </resources>

@@ -24,7 +24,7 @@
         android:padding="@dimen/spacing_16">
 
         <TextView
-          android:id="@+id/overdue_patient_name_gender_age"
+          android:id="@+id/overdue_patient_name_gender"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/spacing_4"
@@ -39,7 +39,39 @@
           android:layout_marginBottom="@dimen/spacing_4"
           android:textColor="@color/black_opacity_50"
           android:textSize="@dimen/textsize_14"
-          tools:text="30 days ago: 175/85" />
+          tools:text="175/85, 30 days ago" />
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+
+          <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_4"
+            android:text="@string/overduelist_age"
+            android:textAllCaps="true"
+            android:textColor="@color/black_opacity_50"
+            android:textSize="@dimen/textsize_12" />
+
+          <TextView
+            android:id="@+id/overdue_patient_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/spacing_4"
+            android:paddingEnd="@dimen/spacing_12"
+            android:paddingStart="@dimen/spacing_4"
+            android:textColor="@color/black_opacity_50"
+            android:textSize="@dimen/textsize_14"
+            tools:text="11" />
+
+          <TextView
+            android:id="@+id/overdue_patient_phoneNo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        </LinearLayout>
 
         <TextView
           android:id="@+id/overdue_days"

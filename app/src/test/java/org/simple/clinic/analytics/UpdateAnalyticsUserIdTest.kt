@@ -44,10 +44,11 @@ class UpdateAnalyticsUserIdTest {
   @Parameters(value = [
     "NOT_LOGGED_IN|false",
     "OTP_REQUESTED|false",
-    "VERIFYING_OTP|false",
+    "RESETTING_PIN|true",
+    "RESET_PIN_REQUESTED|true",
     "LOGGED_IN|true"
   ])
-  fun `the user id must be set only if the local logged in status is LOGGED_IN`(
+  fun `the user id must be set only if the local logged in status is LOGGED_IN, RESETTING_PIN or RESET_PIN_REQUESTED`(
       loggedInStatus: User.LoggedInStatus,
       shouldSetUserId: Boolean
   ) {

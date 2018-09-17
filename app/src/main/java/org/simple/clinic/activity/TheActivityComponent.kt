@@ -14,6 +14,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
@@ -69,6 +70,7 @@ interface TheActivityComponent {
   fun inject(target: EnterOtpScreen)
   fun inject(target: ScheduleAppointmentSheet)
   fun inject(target: ConfirmResetPinDialog)
+  fun inject(target: ForgotPinCreateNewPinScreen)
 
   @Subcomponent.Builder
   interface Builder {

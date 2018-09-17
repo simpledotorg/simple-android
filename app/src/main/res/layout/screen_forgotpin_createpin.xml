@@ -74,7 +74,9 @@
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/forgotpin_pin"
         style="@style/Clinic.StaggeredEditText.Pin"
-        android:maxLength="4" />
+        android:maxLength="4"
+        android:imeOptions="actionDone"
+        />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 </org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen>

@@ -5,7 +5,7 @@ import com.squareup.moshi.Json
 import org.simple.clinic.R
 import org.simple.clinic.util.RoomEnumTypeConverter
 
-enum class Gender(@StringRes val displayTextRes: Int, val displayLetterRes: Int) {
+enum class Gender(@StringRes val displayTextRes: Int, @StringRes val displayLetterRes: Int) {
 
   @Json(name = "male")
   MALE(R.string.gender_male, R.string.gender_male_letter),

@@ -18,6 +18,7 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
+import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
@@ -67,6 +68,7 @@ interface TheActivityComponent {
   fun inject(target: FacilityChangeScreen)
   fun inject(target: EnterOtpScreen)
   fun inject(target: ScheduleAppointmentSheet)
+  fun inject(target: ConfirmResetPinDialog)
 
   @Subcomponent.Builder
   interface Builder {

@@ -85,7 +85,6 @@ class UserSessionTest {
         moshi,
         facilitySync,
         facilityRepository,
-        patientRepository,
         sharedPrefs,
         appDatabase,
         passwordHasher,
@@ -235,7 +234,7 @@ class UserSessionTest {
   fun `when the reset PIN flow is started, the sync must be triggered`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
-    userSession.startForgotPinFlow().blockingAwait()
+    userSession.startForgotPinFlow(patientRepository).blockingAwait()
 
     verify(syncScheduler).syncImmediately()
   }
@@ -254,7 +253,7 @@ class UserSessionTest {
     whenever(syncScheduler.syncImmediately())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
 
-    userSession.startForgotPinFlow(retryCount)
+    userSession.startForgotPinFlow(patientRepository, retryCount)
         .test()
         .await()
         .assertComplete()
@@ -269,7 +268,7 @@ class UserSessionTest {
     whenever(syncScheduler.syncImmediately())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
 
-    userSession.startForgotPinFlow(retryCount)
+    userSession.startForgotPinFlow(patientRepository, retryCount)
         .test()
         .await()
         .assertComplete()
@@ -279,7 +278,7 @@ class UserSessionTest {
   fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
-    userSession.startForgotPinFlow()
+    userSession.startForgotPinFlow(patientRepository)
         .test()
         .await()
 
@@ -290,7 +289,7 @@ class UserSessionTest {
   fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
-    userSession.startForgotPinFlow()
+    userSession.startForgotPinFlow(patientRepository)
         .test()
         .await()
 

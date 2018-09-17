@@ -12,6 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.UserSession
@@ -24,6 +25,11 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
+  private val numberOfSyncRetries = 1
 
   companion object {
     fun show(fragmentManager: FragmentManager) {
@@ -51,7 +57,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
           val snackbar = Snackbar.make(view, getString(R.string.applock_reset_pin_waiting), Snackbar.LENGTH_INDEFINITE)
           snackbar.show()
 
-          userSession.startForgotPinFlow(1)
+          userSession.startForgotPinFlow(patientRepository, numberOfSyncRetries)
               .observeOn(mainThread())
               .doOnTerminate { snackbar.dismiss() }
               .subscribe {

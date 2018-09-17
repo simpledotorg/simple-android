@@ -1,11 +1,8 @@
 package org.simple.clinic.home.overdue
 
-import android.support.v4.content.ContextCompat
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
-import android.text.style.AbsoluteSizeSpan
-import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,7 +13,6 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.util.Truss
 import org.simple.clinic.util.locationRectOnScreen
 import org.simple.clinic.util.marginLayoutParams
 import java.util.UUID
@@ -78,12 +74,14 @@ class OverdueListViewHolder(
     private val phoneCallClickStream: PublishSubject<CallPatientClicked>
 ) : RecyclerView.ViewHolder(itemView) {
 
-  private val patientName by bindView<TextView>(R.id.overdue_patient_name_gender_age)
+  private val patientName by bindView<TextView>(R.id.overdue_patient_name_gender)
   private val patientBP by bindView<TextView>(R.id.overdue_patient_bp)
   private val overdueDays by bindView<TextView>(R.id.overdue_days)
   private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
   private val separator by bindView<View>(R.id.overdue_separator)
   private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
+  private val age by bindView<TextView>(R.id.overdue_patient_age)
+  private val phoneNumber by bindView<TextView>(R.id.overdue_patient_phoneNo)
 
   lateinit var appointment: OverdueListItem
 
@@ -100,22 +98,15 @@ class OverdueListViewHolder(
 
   fun render() {
     val context = itemView.context
-    val spanBuilder = Truss()
-        .append(appointment.name)
-        .append(" ")
-        .pushSpan(ForegroundColorSpan(ContextCompat.getColor(context, R.color.black_opacity_50)))
-        .pushSpan(AbsoluteSizeSpan(14, true))
-        .append(context.getString(R.string.overdue_list_item_patient_gender_age, context.getString(appointment.gender.displayTextRes), appointment.age))
-        .popSpan()
 
-    patientName.text = spanBuilder.build()
+    patientName.text = """${appointment.name}, ${context.getString(appointment.gender.displayLetterRes)}"""
 
     patientBP.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_patient_bp,
         appointment.bpDaysAgo,
-        appointment.bpDaysAgo,
         appointment.bpSystolic,
-        appointment.bpDiastolic
+        appointment.bpDiastolic,
+        appointment.bpDaysAgo
     )
 
     overdueDays.text = context.resources.getQuantityString(
@@ -131,6 +122,10 @@ class OverdueListViewHolder(
       callButton.visibility = View.VISIBLE
       separator.visibility = View.VISIBLE
     }
+
+    age.text = """${appointment.age}"""
+    phoneNumber.text = appointment.phoneNumber
+
   }
 }
 

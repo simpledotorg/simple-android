@@ -84,4 +84,11 @@ class ForgotPinCreateNewPinScreenControllerTest {
 
     verify(screen, times(2)).hideInvalidPinError()
   }
+
+  @Test
+  fun `when the facility name is clicked then facility change screen should be shown`() {
+    uiEvents.onNext(ForgotPinCreateNewPinFacilityClicked)
+
+    verify(screen).openFacilityChangeScreen()
+  }
 }

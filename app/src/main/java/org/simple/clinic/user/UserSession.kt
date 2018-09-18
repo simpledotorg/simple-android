@@ -353,10 +353,10 @@ class UserSession @Inject constructor(
     return accessTokenPreference.get()
   }
 
-  fun startForgotPinFlow(patientRepository: PatientRepository, retryCount: Int = 0): Completable {
+  fun startForgotPinFlow(patientRepository: PatientRepository, syncRetryCount: Int = 0): Completable {
     return syncScheduler.syncImmediately()
         .subscribeOn(Schedulers.io())
-        .retry(retryCount.toLong())
+        .retry(syncRetryCount.toLong())
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
   }

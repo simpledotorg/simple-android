@@ -1,5 +1,6 @@
 package org.simple.clinic.search
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -60,7 +61,7 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryAgeChanged("123"))
     uiEvents.onNext(SearchClicked())
 
-    verify(screen, never()).openPatientSearchResultsScreen()
+    verify(screen, never()).openPatientSearchResultsScreen(any(), any(), any())
   }
 
   @Test
@@ -72,7 +73,7 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryAgeChanged(age))
     uiEvents.onNext(SearchClicked())
 
-    verify(screen).openPatientSearchResultsScreen()
+    verify(screen).openPatientSearchResultsScreen(fullName, age, "")
   }
 
   @Test

@@ -32,6 +32,7 @@ import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchScreen
+import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
@@ -51,6 +52,7 @@ interface TheActivityComponent {
   fun inject(target: AadhaarScanScreen)
   fun inject(target: PatientEntryScreen)
   fun inject(target: PatientSearchScreen)
+  fun inject(target: PatientSearchResultsScreen)
   fun inject(target: PatientSummaryScreen)
   fun inject(target: PrescribedDrugsScreen)
   fun inject(target: BloodPressureEntrySheet)

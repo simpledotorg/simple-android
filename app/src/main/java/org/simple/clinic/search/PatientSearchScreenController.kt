@@ -12,6 +12,7 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.search.results.CreateNewPatientClicked
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -88,7 +89,8 @@ class PatientSearchScreenController @Inject constructor(
         .ofType<SearchClicked>()
         .withLatestFrom(nameChanges, ageChanges)
         .filter { (_, name, age) -> name.isNotBlank() && age.isNotBlank() }
-        .map { { ui: Ui -> ui.openPatientSearchResultsScreen() } }
+        // TODO: Send date of birth.
+        .map { (_, name, age) -> { ui: Ui -> ui.openPatientSearchResultsScreen(name, age, dateOfBirth = "") } }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {

@@ -9,6 +9,7 @@
   <dimen name="spacing_12">12dp</dimen>
   <dimen name="spacing_16">16dp</dimen>
   <dimen name="spacing_24">24dp</dimen>
+  <dimen name="spacing_32">32dp</dimen>
   <dimen name="spacing_40">40dp</dimen>
   <dimen name="spacing_48">48dp</dimen>
   <dimen name="spacing_56">56dp</dimen>

@@ -11,6 +11,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.DebugReporter
 import org.simple.clinic.di.AppComponent
+import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.login.LoginModule
@@ -77,6 +78,7 @@ class DebugClinicApp : ClinicApp() {
 
   override fun buildDaggerGraph(): AppComponent {
     return DaggerDebugAppComponent.builder()
+        .appModule(AppModule(this))
         .loginModule(object : LoginModule() {
           override fun appLockConfig(): Single<AppLockConfig> {
             return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(4)))

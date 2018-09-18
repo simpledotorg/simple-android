@@ -30,7 +30,8 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
         showFacilityOnScreenCreate(replayedEvents),
         showInvalidPinErrorOnIncompletePin(replayedEvents),
         openConfirmPinEntryScreenOnValidPin(replayedEvents),
-        hidePinValidationErrors(replayedEvents)
+        hidePinValidationErrors(replayedEvents),
+        openFacilityChangeScreen(replayedEvents)
     )
   }
 
@@ -74,5 +75,10 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
   private fun hidePinValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ForgotPinCreateNewPinTextChanged>()
         .map { { ui: Ui -> ui.hideInvalidPinError() } }
+  }
+
+  private fun openFacilityChangeScreen(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<ForgotPinCreateNewPinFacilityClicked>()
+        .map { { ui: Ui -> ui.openFacilityChangeScreen() } }
   }
 }

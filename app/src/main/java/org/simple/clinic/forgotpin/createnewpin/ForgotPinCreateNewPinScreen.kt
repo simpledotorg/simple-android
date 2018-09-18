@@ -15,6 +15,8 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.facility.change.FacilityChangeScreenKey
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.UiEvent
@@ -26,6 +28,9 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
   @Inject
   lateinit var controller: ForgotPinCreateNewPinScreenController
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
   private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
@@ -40,7 +45,7 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), pinTextChanges(), pinSubmitClicked())
+    Observable.merge(screenCreates(), pinTextChanges(), pinSubmitClicked(), facilityClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -63,6 +68,10 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
         .map { ForgotPinCreateNewPinSubmitClicked }
   }
 
+  private fun facilityClicks(): Observable<UiEvent> {
+    return RxView.clicks(facilityNameTextView).map { ForgotPinCreateNewPinFacilityClicked }
+  }
+
   fun showUserName(name: String) {
     userNameTextView.text = name
   }
@@ -82,5 +91,9 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
   fun hideInvalidPinError() {
     pinErrorTextView.visibility = View.GONE
+  }
+
+  fun openFacilityChangeScreen() {
+    screenRouter.push(FacilityChangeScreenKey())
   }
 }

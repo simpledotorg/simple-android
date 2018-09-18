@@ -234,6 +234,9 @@ class UserSessionTest {
   fun `when the reset PIN flow is started, the sync must be triggered`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
     userSession.startForgotPinFlow(patientRepository).blockingAwait()
 
     verify(syncScheduler).syncImmediately()
@@ -253,6 +256,9 @@ class UserSessionTest {
     whenever(syncScheduler.syncImmediately())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
 
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
     userSession.startForgotPinFlow(patientRepository, retryCount)
         .test()
         .await()
@@ -268,6 +274,9 @@ class UserSessionTest {
     whenever(syncScheduler.syncImmediately())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
 
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
     userSession.startForgotPinFlow(patientRepository, retryCount)
         .test()
         .await()
@@ -277,6 +286,9 @@ class UserSessionTest {
   @Test
   fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
     userSession.startForgotPinFlow(patientRepository)
         .test()
@@ -289,11 +301,28 @@ class UserSessionTest {
   fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
     userSession.startForgotPinFlow(patientRepository)
         .test()
         .await()
 
     verify(patientRepository).clearPatientData()
+  }
+
+  @Test
+  fun `after clearing patient related data during forgot PIN flow, the user status must be set to RESETTING_PIN`() {
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
+    userSession.startForgotPinFlow(patientRepository)
+        .test()
+        .await()
+
+    verify(userDao).updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
   }
 
   @After

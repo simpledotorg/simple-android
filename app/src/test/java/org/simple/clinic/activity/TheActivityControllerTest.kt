@@ -43,6 +43,8 @@ class TheActivityControllerTest {
     val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
     controller = TheActivityController(userSession, Single.just(appLockConfig), lockAfterTimestamp)
 
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN))))
+
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(activity) }
@@ -58,15 +60,30 @@ class TheActivityControllerTest {
   }
 
   @Test
-  fun `when activity is started, user is logged and in user was inactive then app lock should be shown`() {
+  @Parameters(value = [
+    "NOT_LOGGED_IN|false",
+    "OTP_REQUESTED|true",
+    "LOGGED_IN|true",
+    "RESETTING_PIN|false",
+    "RESET_PIN_REQUESTED|true"
+  ])
+  fun `when activity is started, user is logged in and user was inactive then app lock should be shown`(
+      loggedInStatus: User.LoggedInStatus,
+      shouldShowAppLock: Boolean
+  ) {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = loggedInStatus))))
 
     val lockAfterTime = Instant.now().minusSeconds(TimeUnit.MINUTES.toSeconds(1))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
 
     uiEvents.onNext(TheActivityLifecycle.Started())
 
-    verify(activity).showAppLockScreen()
+    if (shouldShowAppLock) {
+      verify(activity).showAppLockScreen()
+    } else {
+      verify(activity, never()).showAppLockScreen()
+    }
   }
 
   @Test
@@ -97,6 +114,8 @@ class TheActivityControllerTest {
   @Test
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN))))
 
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -130,6 +149,7 @@ class TheActivityControllerTest {
       shouldShowLoggedOutAlert: Boolean
   ) {
     val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Just(user),

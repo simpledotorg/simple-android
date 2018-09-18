@@ -138,6 +138,15 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
+  fun `when a valid PIN is submitted and reset PIN call fails, it must show the unexpected error`() {
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
+
+    verify(screen).showUnexpectedError()
+    verify(userSession, never()).resetPin(any())
+  }
+
+  @Test
   fun `when a valid PIN is submitted, the progress must be shown`() {
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))

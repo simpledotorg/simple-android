@@ -26,6 +26,8 @@ class FullScreenKeyChanger(
     private val onKeyChange: (FullScreenKey?, FullScreenKey) -> Unit = { _, _ -> }
 ) : BaseViewGroupKeyChanger<FullScreenKey>(), KeyChanger {
 
+  private val containerIds = mutableMapOf<FullScreenKey, Int>()
+
   override fun layoutResForKey(screenKey: FullScreenKey): Int {
     return screenKey.layoutRes()
   }
@@ -43,7 +45,12 @@ class FullScreenKeyChanger(
     // end up overlapping with each other. It's difficult to debug if it's a problem with Flow
     // or in our code. As a workaround, the window background is applied on every screen.
     val container = FrameLayout(incomingContext)
-    container.id = View.generateViewId()
+
+    // The ID for each screen's container should remain the same for View state restoration to work.
+    if (containerIds.containsKey(incomingKey).not()) {
+      containerIds[incomingKey] = View.generateViewId()
+    }
+    container.id = containerIds[incomingKey]!!
 
     val contentView = super.inflateIncomingView(incomingContext, incomingKey, container)
     container.addView(contentView)
@@ -56,6 +63,15 @@ class FullScreenKeyChanger(
     }
 
     return container
+  }
+
+  override fun removeOutgoingView(outgoingState: State, outgoingView: View) {
+    super.removeOutgoingView(outgoingState, outgoingView)
+
+    val outgoingKey = outgoingState.getKey<Any>()
+    containerIds[outgoingKey]?.let {
+      containerIds.remove(outgoingKey)
+    }
   }
 
   override fun changeKey(

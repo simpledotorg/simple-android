@@ -8,11 +8,13 @@ import android.view.WindowManager
 import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreen
@@ -25,9 +27,11 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.User
-import org.simple.clinic.user.User.*
-import org.simple.clinic.user.User.LoggedInStatus.*
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
@@ -66,6 +70,7 @@ class TheActivity : AppCompatActivity() {
     lifecycle
         .startWith(TheActivityLifecycle.Started())
         .compose(controller)
+        .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(lifecycle.ofType<TheActivityLifecycle.Destroyed>())
         .subscribe { uiChange -> uiChange(this) }
   }
@@ -97,17 +102,22 @@ class TheActivity : AppCompatActivity() {
   private fun initialScreenKey(): FullScreenKey {
     val localUser = userSession.loggedInUser().blockingFirst().toNullable()
 
-    // TODO: Figure out how to handle the new PIN reset status
     val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
       NOT_LOGGED_IN, RESETTING_PIN -> false
-      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED  -> true
+      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED -> true
       null -> false
     }
 
     return when {
       canMoveToHomeScreen -> HomeScreen.KEY
       hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
-      else -> RegistrationPhoneScreen.KEY
+      else -> {
+        return if (localUser?.loggedInStatus == RESETTING_PIN) {
+          ForgotPinCreateNewPinScreenKey()
+        } else {
+          RegistrationPhoneScreen.KEY
+        }
+      }
     }
   }
 

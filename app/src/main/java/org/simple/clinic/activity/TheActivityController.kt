@@ -9,7 +9,13 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.user.NewlyVerifiedUser
+import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -25,6 +31,8 @@ class TheActivityController @Inject constructor(
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
+  private val showAppLockForUserStates = setOf(OTP_REQUESTED, LOGGED_IN, RESET_PIN_REQUESTED)
+
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
@@ -37,7 +45,14 @@ class TheActivityController @Inject constructor(
   private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedCanShowAppLock = events
         .ofType<TheActivityLifecycle.Started>()
-        .filter { userSession.isUserLoggedIn() }
+        .flatMapMaybe { _ ->
+          userSession.loggedInUser()
+              .firstElement()
+              .filter { it is Just<User> }
+              .map { (user) -> user!!.loggedInStatus }
+              .defaultIfEmpty(NOT_LOGGED_IN)
+        }
+        .filter { it in showAppLockForUserStates }
         .map { Instant.now() > lockAfterTimestamp.get() }
         .replay()
         .refCount()

@@ -67,9 +67,9 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
           incomingView,
           direction,
           onCompleteListener = {
-            if (outgoingView != null) {
-              outgoingState?.save(outgoingView)
-              frame.removeView(outgoingView)
+            if (outgoingView != null && outgoingState != null) {
+              outgoingState.save(outgoingView)
+              removeOutgoingView(outgoingState, outgoingView)
             }
           }
       )
@@ -78,6 +78,10 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
 
   open fun inflateIncomingView(incomingContext: Context, incomingKey: T, frame: ViewGroup): View {
     return LayoutInflater.from(incomingContext).inflate(layoutResForKey(incomingKey), frame, false)
+  }
+
+  open fun removeOutgoingView(outgoingState: State, outgoingView: View) {
+    screenLayoutContainer().removeView(outgoingView)
   }
 
   private fun throwIfIdIsMissing(incomingView: View, incomingKey: T) {

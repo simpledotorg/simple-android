@@ -198,6 +198,7 @@
   <string name="overduelist_agreed_to_visit">Mark patient as “agreed to visit”</string>
   <string name="overduelist_remind_call_later">Remind to call later…</string>
   <string name="overduelist_remove_from_list">Remove from overdue list…</string>
+  <string name="overduelist_result_of_call">Result of call</string>
 
   <!-- Facility change -->
   <string name="facilitychange_screen_title">Select your clinic</string>
@@ -217,7 +218,9 @@
   <!-- Forgot PIN -->
   <string name="forgotpin_create_new_pin">Create new security PIN</string>
   <string name="forgotpin_create_new_pin_invalid_pin">PIN is too short. Please enter 4 numbers.</string>
-  <string name="overduelist_result_of_call">Result of call</string>
+  <string name="forgotpin_confirm_pin">Enter security PIN again</string>
+  <string name="forgotpin_confirm_pin_message">Enter your PIN again to confirm it</string>
+  <string name="forgotpin_error_pin_mismatch">PIN doesn’t match the original PIN</string>
 
   <!-- Reports -->
   <string name="reports_come_back_later">Come back later</string>

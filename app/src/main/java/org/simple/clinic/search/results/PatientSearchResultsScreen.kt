@@ -17,7 +17,6 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.widgets.UiEvent
@@ -51,9 +50,8 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     }
     TheActivity.component.inject(this)
     hideKeyboard()
-
     toolbar.setNavigationOnClickListener {
-      screenRouter.push(PatientSearchScreen.KEY)
+      screenRouter.pop()
     }
 
     recyclerView.layoutManager = LinearLayoutManager(context)

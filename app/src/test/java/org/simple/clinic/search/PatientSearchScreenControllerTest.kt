@@ -47,7 +47,7 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when search is clicked with empty age then a validation error should be shown`() {
+  fun `when search is clicked with empty age or date of birth then a validation error should be shown`() {
     // TODO.
   }
 

@@ -10,7 +10,6 @@ import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = PatientSearchResultsScreen
@@ -40,7 +39,7 @@ class PatientSearchResultsController @Inject constructor(
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SearchResultClicked>()
+    return events.ofType<PatientSearchResultClicked>()
         .map { it.searchResult.uuid }
         .map { { ui: Ui -> ui.openPatientSummaryScreen(patientUuid = it) } }
   }
@@ -49,9 +48,6 @@ class PatientSearchResultsController @Inject constructor(
     val screenKey = events
         .ofType<PatientSearchResultsScreenCreated>()
         .map { it.key }
-        .doOnNext {
-          Timber.i("Key: $it")
-        }
 
     return events.ofType<CreateNewPatientClicked>()
         .withLatestFrom(screenKey)
@@ -63,7 +59,6 @@ class PatientSearchResultsController @Inject constructor(
               gender = null))
         }
         .flatMap {
-          Timber.i("Saving entry: $it")
           repository
               .saveOngoingEntry(it)
               .andThen(Observable.just({ ui: Ui -> ui.openPatientEntryScreen() }))

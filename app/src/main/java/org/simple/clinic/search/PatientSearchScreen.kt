@@ -60,7 +60,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     TheActivity.component.inject(this)
 
     fullNameEditText.showKeyboard()
-
     backButton.setOnClickListener {
       screenRouter.pop()
     }

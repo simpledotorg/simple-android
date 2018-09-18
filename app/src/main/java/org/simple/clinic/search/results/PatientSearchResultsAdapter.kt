@@ -53,7 +53,7 @@ class PatientSearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<P
 
     fun setClickListener(itemClicks: PublishSubject<UiEvent>) {
       itemView.setOnClickListener {
-        itemClicks.onNext(SearchResultClicked(searchResult))
+        itemClicks.onNext(PatientSearchResultClicked(searchResult))
       }
     }
 

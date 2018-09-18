@@ -47,7 +47,7 @@ import javax.inject.Inject
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY: (patientUuid: UUID, PatientSummaryCaller) -> PatientSummaryScreenKey = ::PatientSummaryScreenKey
+    val KEY = ::PatientSummaryScreenKey
   }
 
   @Inject

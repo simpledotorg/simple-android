@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.search.results.PatientSearchResultsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <!-- TODO: Tint the nav icon with grey1 -->
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/patientsearchresults_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white100"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp" />
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/patientsearchresults_results"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/patientsearchresults_new_patient_container"
+    android:layout_below="@+id/patientsearchresults_toolbar" />
+
+  <LinearLayout
+    android:id="@+id/patientsearchresults_new_patient_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:background="@color/blue2"
+    android:elevation="40dp"
+    android:orientation="vertical"
+    android:padding="@dimen/spacing_8"
+    tools:ignore="UnusedAttribute">
+
+    <TextView
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:gravity="center_horizontal"
+      android:text="@string/patientsearchresults_new_patient_rationale" />
+
+    <Button
+      android:id="@+id/patientsearchresults_new_patient"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsearchresults_new_patient" />
+  </LinearLayout>
+</org.simple.clinic.search.results.PatientSearchResultsScreen>

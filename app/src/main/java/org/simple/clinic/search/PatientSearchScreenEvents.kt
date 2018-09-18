@@ -2,6 +2,8 @@ package org.simple.clinic.search
 
 import org.simple.clinic.widgets.UiEvent
 
+data class PatientSearchScreenCreated(val key: PatientSearchScreenKey): UiEvent
+
 data class SearchQueryNameChanged(val name: String) : UiEvent {
   override val analyticsName = "Patient Search:Search Query Changed"
 }

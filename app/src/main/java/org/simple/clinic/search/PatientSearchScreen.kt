@@ -13,7 +13,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
-import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -25,6 +24,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -115,8 +115,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     screenRouter.push(PatientEntryScreen.KEY)
   }
 
-  fun openPatientSearchResultsScreen() {
-    Toast.makeText(context, "Work in progress", Toast.LENGTH_SHORT).show()
+  fun openPatientSearchResultsScreen(name: String, age: String, dateOfBirth: String) {
+    screenRouter.push(PatientSearchResultsScreen.KEY(name, age, dateOfBirth))
   }
 
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {

@@ -1,4 +1,4 @@
-package org.simple.clinic.search
+package org.simple.clinic.search.results
 
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -14,8 +14,9 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Period
 import org.threeten.bp.ZoneOffset
+import javax.inject.Inject
 
-class PatientSearchResultsAdapter : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
+class PatientSearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   private var patients: List<PatientSearchResult> = listOf()
 

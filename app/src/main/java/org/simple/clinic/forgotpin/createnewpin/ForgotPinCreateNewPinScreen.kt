@@ -16,6 +16,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
+import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.StaggeredEditText
@@ -85,8 +86,8 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
   }
 
   fun showConfirmPinScreen(pin: String) {
-    Toast.makeText(context, "Under Construction", Toast.LENGTH_SHORT).show()
     hideKeyboard()
+    screenRouter.push(ForgotPinConfirmPinScreenKey(pin))
   }
 
   fun hideInvalidPinError() {

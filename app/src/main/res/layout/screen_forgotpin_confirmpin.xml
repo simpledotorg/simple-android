@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen android:id="@+id/applock_root"
+<org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen android:id="@+id/applock_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -14,29 +14,40 @@
     android:background="@color/color_primary"
     android:orientation="vertical"
     android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_24"
-    android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_4">
 
-    <Button
-      android:id="@+id/forgotpin_facility_name"
-      style="@style/Widget.AppCompat.Button.Borderless"
-      android:layout_width="wrap_content"
+    <LinearLayout
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_horizontal"
-      android:layout_marginEnd="@dimen/spacing_24"
-      android:layout_marginStart="@dimen/spacing_24"
-      android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
-      android:drawablePadding="6dp"
-      android:drawableStart="@drawable/ic_location_20dp"
-      android:ellipsize="end"
-      android:fontFamily="sans-serif"
-      android:maxLines="1"
-      android:padding="@dimen/spacing_8"
-      android:textAllCaps="false"
-      android:textColor="@color/white"
-      android:textSize="@dimen/textsize_16"
-      tools:text="A really long facility name that does not fit" />
+      android:orientation="horizontal">
+
+      <ImageButton
+        android:id="@+id/forgotpin_back"
+        style="@style/Clinic.LoginBackButton"
+        android:src="@drawable/ic_arrow_back_24dp"
+        tools:ignore="ContentDescription" />
+
+      <Button
+        android:id="@+id/forgotpin_facility_name"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/spacing_24"
+        android:layout_marginStart="@dimen/spacing_24"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
+        android:drawablePadding="6dp"
+        android:drawableStart="@drawable/ic_location_20dp"
+        android:ellipsize="end"
+        android:fontFamily="sans-serif"
+        android:maxLines="1"
+        android:padding="@dimen/spacing_8"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textsize_16"
+        tools:text="A really long facility name that does not fit" />
+    </LinearLayout>
 
     <TextView
       android:id="@+id/forgotpin_user_fullname"
@@ -70,7 +81,7 @@
       <TextView
         style="@style/Clinic.LoginPinLabel"
         android:labelFor="@+id/forgotpin_pin"
-        android:text="@string/forgotpin_create_new_pin" />
+        android:text="@string/forgotpin_confirm_pin" />
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/forgotpin_pin"
@@ -81,8 +92,13 @@
       <TextView
         android:id="@+id/forgotpin_error"
         style="@style/Clinic.LoginPinErrorText"
-        android:text="@string/forgotpin_create_new_pin_invalid_pin"
+        android:text="@string/forgotpin_error_pin_mismatch"
         tools:visibility="visible" />
+
+      <TextView
+        android:id="@+id/forgotpin_confirm_message"
+        style="@style/Clinic.ConfirmPinMessageText"
+        android:text="@string/forgotpin_confirm_pin_message" />
     </LinearLayout>
   </android.support.v7.widget.CardView>
-</org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen>
+</org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen>

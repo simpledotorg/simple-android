@@ -16,10 +16,10 @@ data class ForgotPinConfirmPinScreenCreated(val pin: String) : UiEvent {
   }
 }
 
-data class ForgotPinConfirmPinSubmitClicked(val pin: String): UiEvent {
+data class ForgotPinConfirmPinSubmitClicked(val pin: String) : UiEvent {
   override val analyticsName = "Forgot PIN:Confirm PIN:Submit Clicked"
 }
 
-data class ForgotPinConfirmPinTextChanged(val text: String): UiEvent {
+data class ForgotPinConfirmPinTextChanged(val text: String) : UiEvent {
   override val analyticsName = "Forgot PIN:Confirm PIN:Text Changed"
 }

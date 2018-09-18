@@ -29,8 +29,6 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
   @Inject
   lateinit var patientRepository: PatientRepository
 
-  private val numberOfSyncRetries = 1
-
   companion object {
     fun show(fragmentManager: FragmentManager) {
       (fragmentManager.findFragmentByTag("confirm_reset_pin_alert") as ConfirmResetPinDialog?)?.dismiss()
@@ -57,7 +55,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
           val snackbar = Snackbar.make(view, getString(R.string.applock_reset_pin_waiting), Snackbar.LENGTH_INDEFINITE)
           snackbar.show()
 
-          userSession.startForgotPinFlow(patientRepository, numberOfSyncRetries)
+          userSession.startForgotPinFlow(patientRepository, syncRetryCount = 1)
               .observeOn(mainThread())
               .doOnTerminate { snackbar.dismiss() }
               .subscribe {

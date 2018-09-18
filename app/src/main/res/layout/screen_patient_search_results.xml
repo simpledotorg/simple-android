@@ -6,12 +6,13 @@
   android:layout_height="match_parent">
 
   <!-- TODO: Tint the nav icon with grey1 -->
-  <android.support.v7.widget.Toolbar
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
     android:id="@+id/patientsearchresults_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white100"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp" />
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:navigationIconTint="@color/grey1" />
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/patientsearchresults_results"

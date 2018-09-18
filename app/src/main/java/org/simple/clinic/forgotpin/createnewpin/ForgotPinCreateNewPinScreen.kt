@@ -6,12 +6,11 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -47,9 +46,9 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
     TheActivity.component.inject(this)
 
     Observable.merge(screenCreates(), pinTextChanges(), pinSubmitClicked(), facilityClicks())
-        .observeOn(Schedulers.io())
+        .observeOn(io())
         .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { it.invoke(this) }
 

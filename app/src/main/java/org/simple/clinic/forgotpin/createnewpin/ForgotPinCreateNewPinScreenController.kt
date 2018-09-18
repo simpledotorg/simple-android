@@ -37,20 +37,16 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
   private fun showUserNameOnScreenCreate(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
-        .firstOrError()
-        .flatMap { userSession.requireLoggedInUser().firstOrError() }
+        .flatMap { userSession.requireLoggedInUser() }
         .map { { ui: Ui -> ui.showUserName(it.fullName) } }
-        .toObservable()
   }
 
   private fun showFacilityOnScreenCreate(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<ScreenCreated>()
-        .firstOrError()
-        .flatMap { userSession.requireLoggedInUser().firstOrError() }
-        .flatMap { facilityRepository.currentFacility(it).firstOrError() }
+        .flatMap { userSession.requireLoggedInUser() }
+        .switchMap { facilityRepository.currentFacility(it) }
         .map { { ui: Ui -> ui.showFacility(it.name) } }
-        .toObservable()
   }
 
   private fun showInvalidPinErrorOnIncompletePin(events: Observable<UiEvent>): Observable<UiChange> {
@@ -79,5 +75,4 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
     return events.ofType<ForgotPinCreateNewPinTextChanged>()
         .map { { ui: Ui -> ui.hideInvalidPinError() } }
   }
-
 }

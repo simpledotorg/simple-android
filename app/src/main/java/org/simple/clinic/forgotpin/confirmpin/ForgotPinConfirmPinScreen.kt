@@ -42,11 +42,11 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   private val backButton by bindView<ImageButton>(R.id.forgotpin_back)
   private val progressBar by bindView<ProgressBar>(R.id.forgotpin_progress)
-  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
-  private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
   private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_pin)
   private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_error)
   private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_pin_container)
+  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
+  private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

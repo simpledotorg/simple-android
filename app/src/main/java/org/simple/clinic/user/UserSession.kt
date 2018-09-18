@@ -359,5 +359,10 @@ class UserSession @Inject constructor(
         .retry(syncRetryCount.toLong())
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
+        .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
+          Completable.fromAction {
+            appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
+          }
+        })
   }
 }

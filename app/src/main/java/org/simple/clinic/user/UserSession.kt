@@ -17,6 +17,8 @@ import org.simple.clinic.facility.FacilityPullResult.Success
 import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.forgotpin.ForgotPinApiV1
+import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginRequest
@@ -48,6 +50,7 @@ import kotlin.reflect.KClass
 class UserSession @Inject constructor(
     private val loginApi: LoginApiV1,
     private val registrationApi: RegistrationApiV1,
+    private val forgotPinApiV1: ForgotPinApiV1,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
@@ -368,13 +371,31 @@ class UserSession @Inject constructor(
   }
 
   fun resetPin(pin: String): Single<ForgotPinResult> {
-    return requireLoggedInUser()
-        .delaySubscription(3L, TimeUnit.SECONDS)
-        .take(1)
-        .flatMapCompletable {
-          Completable
-              .fromCallable { appDatabase.userDao().updateLoggedInStatusForUser(it.uuid, User.LoggedInStatus.LOGGED_IN) }
+    val hashedPin = passwordHasher.hash(pin)
+        .cache()
+
+    val updateUserOnSuccess = hashedPin
+        .zipWith(requireLoggedInUser().firstOrError())
+        .map { (newPinDigest, user) -> user.copy(pinDigest = newPinDigest, loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED) }
+        .doOnSuccess { appDatabase.userDao().createOrUpdate(it) }
+        .map { ForgotPinResult.Success as ForgotPinResult }
+
+    val forgotPinResult = hashedPin.map { ResetPinRequest(it) }
+        .flatMapCompletable { forgotPinApiV1.resetPin(it) }
+        .toSingleDefault(ForgotPinResult.Success as ForgotPinResult)
+        .flatMap { updateUserOnSuccess }
+        .onErrorReturn {
+          when (it) {
+            is IOException -> ForgotPinResult.NetworkError
+            is HttpException -> if (it.code() == 401) {
+              ForgotPinResult.UserNotFound
+            } else {
+              ForgotPinResult.UnexpectedError(it)
+            }
+            else -> ForgotPinResult.UnexpectedError(it)
+          }
         }
-        .toSingleDefault(ForgotPinResult.Success)
+
+    return forgotPinResult
   }
 }

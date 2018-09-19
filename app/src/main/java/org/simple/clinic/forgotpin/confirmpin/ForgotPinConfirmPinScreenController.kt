@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -31,13 +30,13 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
   }
 
   private fun showUserNameOnScreenStarted(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
+    return events.ofType<ForgotPinConfirmPinScreenCreated>()
         .flatMap { userSession.requireLoggedInUser() }
         .map { user -> { ui: Ui -> ui.showUserName(user.fullName) } }
   }
 
   private fun showFacilityOnScreenCreated(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ScreenCreated>()
+    return events.ofType<ForgotPinConfirmPinScreenCreated>()
         .flatMap { userSession.requireLoggedInUser() }
         .switchMap { facilityRepository.currentFacility(it) }
         .map { facility -> { ui: Ui -> ui.showFacility(facility.name) } }

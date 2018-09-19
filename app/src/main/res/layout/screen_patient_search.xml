@@ -55,7 +55,8 @@
             android:hint="@string/patientsearch_name"
             android:imeOptions="flagNoFullscreen|actionNext"
             android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-            android:privateImeOptions="nm" />
+            android:privateImeOptions="nm"
+            android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
         </android.support.design.widget.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
@@ -95,7 +96,8 @@
               android:hint="@string/patientsearch_age"
               android:imeOptions="flagNoFullscreen|actionSearch"
               android:inputType="number"
-              android:maxLength="3" />
+              android:maxLength="3"
+              android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0" />
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
@@ -141,6 +143,7 @@
               android:hint="@string/patientsearch_dateofbirth"
               android:imeOptions="flagNoFullscreen|actionSearch"
               android:inputType="number"
+              android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
               app:allowed_chars="1234567890"
               app:mask="##/##/####" />
           </android.support.design.widget.TextInputLayout>

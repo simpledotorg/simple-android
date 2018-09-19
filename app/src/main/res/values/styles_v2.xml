@@ -91,6 +91,20 @@
     <item name="cardCornerRadius">4dp</item>
   </style>
 
+  <style name="Clinic.V2.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
+    <item name="android:background">@color/color_primary</item>
+    <item name="titleTextColor">@color/white</item>
+    <item name="contentInsetStartWithNavigation">64dp</item>
+    <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>
+    <item name="titleTextAppearance">@style/Clinic.V2.TextAppearance.ToolbarTitle</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.ToolbarTitle">
+    <item name="android:textSize">@dimen/textsize_18</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+  </style>
+
   <style name="Clinic.V2.ClearEditTextButton">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:padding">@dimen/spacing_8</item>

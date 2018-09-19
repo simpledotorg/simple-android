@@ -2,6 +2,7 @@ package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -14,8 +15,8 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
@@ -29,6 +30,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val backButton by bindView<ImageButton>(R.id.forgotpin_back)
   private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
   private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
+  private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_pin)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -41,9 +43,14 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { it.invoke(this) }
+
+    pinEntryEditText.showKeyboard()
   }
 
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
+  private fun screenCreates(): Observable<UiEvent> {
+    val screenKey = screenRouter.key<ForgotPinConfirmPinScreenKey>(this)
+    return Observable.just(ForgotPinConfirmPinScreenCreated(screenKey.enteredPin))
+  }
 
   private fun facilityClicks(): Observable<UiEvent> =
       RxView.clicks(facilityNameTextView)

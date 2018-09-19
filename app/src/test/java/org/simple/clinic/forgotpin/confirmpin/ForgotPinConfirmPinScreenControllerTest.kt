@@ -12,7 +12,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
 class ForgotPinConfirmPinScreenControllerTest {
@@ -42,14 +41,14 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @Test
   fun `on start, the logged in user's full name must be shown`() {
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("1111"))
 
     verify(screen).showUserName(loggedInUser.fullName)
   }
 
   @Test
   fun `on start, the current selected facility should be shown`() {
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("1111"))
 
     verify(screen).showFacility(facility.name)
   }

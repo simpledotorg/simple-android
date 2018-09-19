@@ -12,6 +12,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -34,7 +35,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), facilityClicks())
+    Observable.merge(screenCreates(), facilityClicks(), backClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -48,6 +49,10 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
       RxView.clicks(facilityNameTextView)
           .map { ForgotPinConfirmPinScreenFacilityClicked }
 
+  private fun backClicks(): Observable<UiEvent> =
+      RxView.clicks(backButton)
+          .map { ForgotPinConfirmPinScreenBackClicked }
+
   fun showUserName(name: String) {
     userNameTextView.text = name
   }
@@ -57,6 +62,10 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   fun openFacilityChangeScreen() {
+    screenRouter.push(FacilityChangeScreenKey())
+  }
+
+  fun goBack() {
     screenRouter.pop()
   }
 }

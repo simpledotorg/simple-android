@@ -60,4 +60,11 @@ class ForgotPinConfirmPinScreenControllerTest {
 
     verify(screen).openFacilityChangeScreen()
   }
+
+  @Test
+  fun `when pressing the back button the screen must be closed`() {
+    uiEvents.onNext(ForgotPinConfirmPinScreenBackClicked)
+
+    verify(screen).goBack()
+  }
 }

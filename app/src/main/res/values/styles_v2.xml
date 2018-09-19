@@ -105,6 +105,33 @@
     <item name="android:lineSpacingExtra">6sp</item>
   </style>
 
+  <style name="Clinic.V2.Button">
+    <item name="android:paddingTop">20dp</item>
+    <item name="android:paddingBottom">20dp</item>
+  </style>
+
+  <style name="Clinic.V2.Button.Solid" />
+
+  <style name="Clinic.V2.Button.Solid.WithoutIcon" />
+
+  <style name="Clinic.V2.Button.Solid.WithoutIcon.Blue1">
+    <item name="android:backgroundTint" tools:ignore="NewApi">@color/blue1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
+    <item name="android:textAllCaps">true</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textSize">@dimen/textsize_16</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.08</item>
+    <item name="android:lineSpacingExtra">4sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Button1.White100">
+    <item name="android:textColor">@color/white100</item>
+  </style>
+
+  <!-- Screen/feature specific styles start here. -->
+
   <style name="Clinic.V2.ClearEditTextButton">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:padding">@dimen/spacing_8</item>

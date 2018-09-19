@@ -32,22 +32,28 @@
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
     android:background="@color/blue2"
-    android:elevation="40dp"
+    android:elevation="20dp"
     android:orientation="vertical"
-    android:padding="@dimen/spacing_8"
+    android:paddingTop="@dimen/spacing_8"
+    android:paddingStart="@dimen/spacing_4"
+    android:paddingEnd="@dimen/spacing_4"
     tools:ignore="UnusedAttribute">
 
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_4"
       android:layout_gravity="center_horizontal"
       android:gravity="center_horizontal"
-      android:text="@string/patientsearchresults_new_patient_rationale" />
+      android:text="@string/patientsearchresults_new_patient_rationale"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0" />
 
     <Button
       android:id="@+id/patientsearchresults_new_patient"
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:text="@string/patientsearchresults_new_patient" />
+      android:text="@string/patientsearchresults_new_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
   </LinearLayout>
 </org.simple.clinic.search.results.PatientSearchResultsScreen>

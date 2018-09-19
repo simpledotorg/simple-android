@@ -12,13 +12,14 @@
   <style name="Clinic.V2.TextAppearance" />
 
   <style name="Clinic.V2.TextInputLayoutTheme">
-    <item name="colorControlNormal">@color/grey1</item>
+    <item name="colorControlNormal">@color/grey2</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Label">
     <item name="android:textSize">@dimen/textsize_12</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>
     <item name="android:lineSpacingExtra">4sp</item>
+    <item name="android:textColor">@color/grey1</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.TextInputLayoutError">
@@ -38,11 +39,22 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
-  <style name="Clinic.V2.TextAppearance.Body2TagGrey1">
+  <style name="Clinic.V2.TextAppearance.Body2Tag">
     <item name="android:textSize">12sp</item>
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.06</item>
     <item name="android:lineSpacingExtra">8sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Tag.Grey1">
     <item name="android:textColor">@color/grey1</item>
+  </style>
+
+  <style name="Clinic.V2.ClearEditTextButton">
+    <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:tint">@color/grey2</item>
+    <item name="android:src">@drawable/ic_clear_circular_24dp</item>
+    <item name="android:layout_gravity">end</item>
   </style>
 </resources>

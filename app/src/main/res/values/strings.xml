@@ -209,4 +209,7 @@
   <string name="forgotpin_create_new_pin">Create new security PIN</string>
   <string name="forgotpin_create_new_pin_invalid_pin">PIN is too short. Please enter 4 numbers.</string>
 
+  <!-- Reports -->
+  <string name="reports_come_back_later">Come back later</string>
+  <string name="reports_you_will_be_able_to_see">You will be able to see hypertension reports for your clinic here.</string>
 </resources>

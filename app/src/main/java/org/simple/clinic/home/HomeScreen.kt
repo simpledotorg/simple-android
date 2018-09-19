@@ -29,5 +29,4 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
     viewPager.adapter = HomePagerAdapter(context)
   }
-
 }

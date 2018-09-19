@@ -108,9 +108,9 @@
       android:fontFamily="sans-serif-medium"
       android:letterSpacing="0.05"
       android:lineSpacingExtra="4sp"
-      android:maxLines="1"
       android:textColor="@color/grey0"
       android:textSize="@dimen/textsize_16"
+      tools:ignore="UnusedAttribute"
       tools:text="42" />
   </LinearLayout>
 </android.support.v7.widget.CardView>

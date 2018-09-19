@@ -6,7 +6,12 @@
     <ignore path="src/main/res/values/colors_material.xml" />
     <ignore path="src/main/res/values/colors_v2.xml" />
 
-    <!-- Heap analytics plugin adds these resources dynamically -->
+    <!-- These are referenced from code. -->
+    <ignore path="src/main/res/drawable/ic_patient_female.xml" />
+    <ignore path="src/main/res/drawable/ic_patient_male.xml" />
+    <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
+
+    <!-- Heap analytics plugin adds these resources dynamically. -->
     <ignore regexp="com.heapanalytics.android.*" />
   </issue>
   <issue id="ParcelCreator" severity="informational" />

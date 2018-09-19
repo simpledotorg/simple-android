@@ -39,6 +39,7 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
@@ -364,5 +365,9 @@ class UserSession @Inject constructor(
             appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
           }
         })
+  }
+
+  fun resetPin(pin: String): Single<ForgotPinResult> {
+    return Single.just(ForgotPinResult.Success as ForgotPinResult).delaySubscription(3L, TimeUnit.SECONDS)
   }
 }

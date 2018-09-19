@@ -67,6 +67,13 @@
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/forgotpin_logo_container">
 
+    <ProgressBar
+      android:id="@+id/forgotpin_progress"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:visibility="invisible" />
+
     <LinearLayout
       android:id="@+id/forgotpin_pin_container"
       style="@style/Clinic.LoginCardContentContainer">

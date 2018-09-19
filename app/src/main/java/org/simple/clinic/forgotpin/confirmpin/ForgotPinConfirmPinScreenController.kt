@@ -25,7 +25,8 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
     return Observable.merge(
         showUserNameOnScreenStarted(replayedEvents),
         showFacilityOnScreenCreated(replayedEvents),
-        openFacilityChangeScreen(replayedEvents)
+        openFacilityChangeScreen(replayedEvents),
+        goBack(replayedEvents)
     )
   }
 
@@ -45,5 +46,10 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
   private fun openFacilityChangeScreen(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ForgotPinConfirmPinScreenFacilityClicked>()
         .map { { ui: Ui -> ui.openFacilityChangeScreen() } }
+  }
+
+  private fun goBack(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<ForgotPinConfirmPinScreenBackClicked>()
+        .map { { ui: Ui -> ui.goBack() } }
   }
 }

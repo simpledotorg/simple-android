@@ -22,7 +22,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/patientsearchresults_new_patient_container"
-    android:layout_below="@+id/patientsearchresults_toolbar" />
+    android:layout_below="@+id/patientsearchresults_toolbar"
+    android:clipToPadding="false"
+    android:paddingTop="@dimen/spacing_8" />
 
   <LinearLayout
     android:id="@+id/patientsearchresults_new_patient_container"

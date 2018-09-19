@@ -50,6 +50,47 @@
     <item name="android:textColor">@color/grey1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body2Tag.Green1">
+    <item name="android:textColor">@color/green1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left">
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
+    <item name="android:lineSpacingExtra">8sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Blue1">
+    <item name="android:textColor">@color/blue1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left">
+    <item name="android:textSize">14sp</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.02</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left.Green1">
+    <item name="android:textColor">@color/green1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left.Numeric">
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.05</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
+  <style name="Clinic.V2.CardView">
+    <item name="android:stateListAnimator" tools:ignore="NewApi">@animator/raise_card_on_press</item>
+    <item name="cardCornerRadius">4dp</item>
+  </style>
+
   <style name="Clinic.V2.ClearEditTextButton">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
     <item name="android:padding">@dimen/spacing_8</item>

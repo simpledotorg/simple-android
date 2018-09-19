@@ -36,6 +36,8 @@ data class PatientSearchResult(
     @Embedded(prefix = "addr_")
     val address: PatientAddress,
 
+    // TODO: Use embedded PatientPhoneNumber instead of flattened fields.
+    // https://www.pivotaltracker.com/story/show/160617492
     val phoneUuid: UUID?,
 
     val phoneNumber: String?,

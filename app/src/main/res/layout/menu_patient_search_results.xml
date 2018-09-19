@@ -11,7 +11,7 @@
   tools:ignore="RtlSymmetry,UnusedAttribute">
 
   <TextView
-    style="@style/Clinic.V2.TextAppearance.Body2TagGrey1"
+    style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="@string/patientsearchresult_query_age"

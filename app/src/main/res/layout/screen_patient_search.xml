@@ -59,10 +59,9 @@
         </android.support.design.widget.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/Clinic.Button.ClearEditText"
+          style="@style/Clinic.V2.ClearEditTextButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="end"
           app:cleareableField="@id/patientsearch_fullname" />
       </FrameLayout>
 
@@ -70,7 +69,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
-        android:paddingTop="@dimen/spacing_4">
+        android:paddingTop="2dp">
 
         <!--
           A background is intentionally set on these Views
@@ -100,11 +99,9 @@
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-            style="@style/Clinic.Button.ClearEditText"
+            style="@style/Clinic.V2.ClearEditTextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginBottom="@dimen/spacing_24"
             app:cleareableField="@id/patientsearch_age" />
         </FrameLayout>
 
@@ -149,10 +146,9 @@
           </android.support.design.widget.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-            style="@style/Clinic.Button.ClearEditText"
+            style="@style/Clinic.V2.ClearEditTextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
             app:cleareableField="@id/patientsearch_dateofbirth" />
         </FrameLayout>
       </LinearLayout>

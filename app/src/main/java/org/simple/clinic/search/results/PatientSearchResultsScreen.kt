@@ -7,6 +7,7 @@ import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -43,19 +44,20 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   private val recyclerView by bindView<RecyclerView>(R.id.patientsearchresults_results)
   private val newPatientButton by bindView<Button>(R.id.patientsearchresults_new_patient)
 
+  private val queryAgeTextView by lazy {
+    // The age View is inflated as a menu so that it forces the toolbar
+    // title to get ellipsized instead of overlapping age if it's really long.
+    toolbar.inflateMenu(R.menu.patient_search_results)
+    toolbar.findViewById<TextView>(R.id.patientsearchresults_query_age)
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
       return
     }
     TheActivity.component.inject(this)
-    hideKeyboard()
-    toolbar.setNavigationOnClickListener {
-      screenRouter.pop()
-    }
-
-    recyclerView.layoutManager = LinearLayoutManager(context)
-    recyclerView.adapter = adapter
+    setupScreen()
 
     Observable
         .mergeArray(screenCreates(), newPatientClicks(), adapter.itemClicks)
@@ -64,6 +66,20 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
         .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { it(this) }
+  }
+
+  private fun setupScreen() {
+    hideKeyboard()
+    toolbar.setNavigationOnClickListener {
+      screenRouter.pop()
+    }
+
+    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.adapter = adapter
+
+    val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
+    toolbar.title = screenKey.fullName
+    queryAgeTextView.text = screenKey.age
   }
 
   private fun screenCreates(): Observable<UiEvent> {

@@ -24,7 +24,8 @@
   <string name="patientsearch_dateofbirth_and_age_separator">or</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresult_age">Age: %s</string>
+  <string name="patientsearchresult_query_age">Age</string>
+  <string name="patientsearchresult_item_age">Age: %s</string>
   <string name="patientsearchresults_new_patient_rationale">Can’t find the patient in this list?</string>
   <string name="patientsearchresults_new_patient">Register as a new patient</string>
 

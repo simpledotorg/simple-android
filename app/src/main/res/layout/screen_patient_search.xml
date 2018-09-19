@@ -156,14 +156,15 @@
   </ScrollView>
 
   <FrameLayout
-    android:id="@+id/patientsearch_search"
-    style="@style/Clinic.FullWidthButtonFrame"
-    android:layout_alignParentBottom="true"
-    android:background="@color/color_accent">
+    android:id="@+id/patientsearch_search_frame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue1">
 
     <Button
-      style="@style/Clinic.FullWidthButton"
+      android:id="@+id/patientsearch_search"
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
       android:text="@string/patientsearch_search"
-      android:textColor="@color/white" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
   </FrameLayout>
 </org.simple.clinic.search.PatientSearchScreen>

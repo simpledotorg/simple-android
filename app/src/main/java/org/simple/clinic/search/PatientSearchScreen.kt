@@ -10,6 +10,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -50,7 +51,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patientsearch_dateofbirth_and_age_separator)
   private val ageEditText by bindView<EditText>(R.id.patientsearch_age)
   private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientsearch_age_container)
-  private val searchButton by bindView<View>(R.id.patientsearch_search)
+  private val searchButton by bindView<Button>(R.id.patientsearch_search)
+  private val searchButtonFrame by bindView<ViewGroup>(R.id.patientsearch_search_frame)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -103,11 +105,13 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showSearchButtonAsDisabled() {
-    searchButton.setBackgroundResource(R.color.patientsearch_search_disabled)
+    searchButton.isEnabled = false
+    searchButtonFrame.setBackgroundResource(R.color.bottom_aligned_button_frame_disabled)
   }
 
   fun showSearchButtonAsEnabled() {
-    searchButton.setBackgroundResource(R.color.patientsearch_search_enabled)
+    searchButton.isEnabled = true
+    searchButtonFrame.setBackgroundResource(R.color.bottom_aligned_button_blue2_frame_enabled)
   }
 
   fun openPatientEntryScreen() {

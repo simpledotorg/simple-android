@@ -106,16 +106,18 @@
   </style>
 
   <style name="Clinic.V2.Button">
-    <item name="android:paddingTop">20dp</item>
-    <item name="android:paddingBottom">20dp</item>
+    <item name="android:paddingTop">18dp</item>
+    <item name="android:paddingBottom">18dp</item>
   </style>
 
-  <style name="Clinic.V2.Button.Solid" />
+  <style name="Clinic.V2.Button.Solid">
+    <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
+  </style>
 
   <style name="Clinic.V2.Button.Solid.WithoutIcon" />
 
   <style name="Clinic.V2.Button.Solid.WithoutIcon.Blue1">
-    <item name="android:backgroundTint" tools:ignore="NewApi">@color/blue1</item>
+    <item name="android:background">@drawable/selector_background_button_solid_blue1</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
@@ -131,6 +133,21 @@
   </style>
 
   <!-- Screen/feature specific styles start here. -->
+
+  <style name="Clinic.V2.BottomAlignedButtonFrame">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+    <item name="android:paddingTop">@dimen/spacing_4</item>
+    <item name="android:paddingBottom">@dimen/spacing_4</item>
+    <item name="android:paddingStart">@dimen/spacing_4</item>
+    <item name="android:paddingEnd">@dimen/spacing_4</item>
+    <item name="android:layout_alignParentBottom">true</item>
+  </style>
+
+  <style name="Clinic.V2.BottomAlignedButtonFrame.Blue1">
+    <item name="android:background">@color/bottom_aligned_button_blue2_frame_enabled</item>
+  </style>
 
   <style name="Clinic.V2.ClearEditTextButton">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>

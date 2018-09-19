@@ -5,7 +5,7 @@
     <item name="colorPrimaryDark">@color/color_primary_dark</item>
     <item name="colorAccent">@color/color_accent</item>
 
-    <item name="toolbarStyle">@style/Clinic.ToolbarStyle</item>
+    <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
     <item name="android:windowBackground">@color/window_background</item>
   </style>
 
@@ -16,12 +16,6 @@
     <item name="android:windowBackground">@android:color/transparent</item>
     <item name="android:colorBackgroundCacheHint">@null</item>
     <item name="android:windowTranslucentStatus">true</item>
-  </style>
-
-  <style name="Clinic.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
-    <item name="android:background">@color/color_primary</item>
-    <item name="titleTextColor">@color/white</item>
-    <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>
   </style>
 
   <style name="Clinic.Button" />

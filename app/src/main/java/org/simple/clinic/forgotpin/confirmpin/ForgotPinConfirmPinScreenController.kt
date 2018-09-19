@@ -27,7 +27,8 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         showFacilityOnScreenCreated(replayedEvents),
         openFacilityChangeScreen(replayedEvents),
         goBack(replayedEvents),
-        showPinMismatchedErrors(replayedEvents)
+        showPinMismatchedErrors(replayedEvents),
+        hideErrors(replayedEvents)
     )
   }
 
@@ -64,5 +65,10 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .withLatestFrom(previouslyEnteredPin)
         .filter { (enteredPin, previousPin) -> enteredPin != previousPin }
         .map { { ui: Ui -> ui.showPinMismatchedError() } }
+  }
+
+  private fun hideErrors(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<ForgotPinConfirmPinTextChanged>()
+        .map { { ui: Ui -> ui.hideError() } }
   }
 }

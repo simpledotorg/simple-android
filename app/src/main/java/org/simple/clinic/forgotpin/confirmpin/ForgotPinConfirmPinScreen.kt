@@ -2,7 +2,6 @@ package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
@@ -41,7 +40,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), facilityClicks(), backClicks(), pinSubmits())
+    Observable.mergeArray(screenCreates(), facilityClicks(), backClicks(), pinSubmits(), pinTextChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -64,10 +63,16 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
       RxView.clicks(backButton)
           .map { ForgotPinConfirmPinScreenBackClicked }
 
-  private fun pinSubmits(): Observable<UiEvent> =
-      RxTextView.editorActions(pinEntryEditText)
-          .filter { it == EditorInfo.IME_ACTION_DONE }
-          .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
+  private fun pinSubmits(): Observable<UiEvent> {
+    return RxTextView.editorActions(pinEntryEditText)
+        .filter { it == EditorInfo.IME_ACTION_DONE }
+        .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
+  }
+
+  private fun pinTextChanges(): Observable<UiEvent> {
+    return RxTextView.textChanges(pinEntryEditText)
+        .map { ForgotPinConfirmPinTextChanged(it.toString()) }
+  }
 
   fun showUserName(name: String) {
     userNameTextView.text = name
@@ -86,6 +91,10 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   fun showPinMismatchedError() {
-    pinErrorTextView.visibility = View.VISIBLE
+    pinErrorTextView.visibility = VISIBLE
+  }
+
+  fun hideError() {
+    pinErrorTextView.visibility = GONE
   }
 }

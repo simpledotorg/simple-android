@@ -11,6 +11,8 @@
   <color name="white48">#7affffff</color>
   <color name="white24">#3dffffff</color>
 
+  <color name="black48">#7a000000</color>
+
   <color name="red0">#b81631</color>
   <color name="red1">#ff3355</color>
 
@@ -23,6 +25,7 @@
   <color name="blue0">#0c3966</color>
   <color name="blue2">#d6ebff</color>
 
+  <color name="yellow0">#e0b000</color>
   <color name="yellow1">#ffc800</color>
   <color name="yellow2">#fff8e0</color>
 </resources>

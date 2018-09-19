@@ -74,14 +74,12 @@ class OverdueListViewHolder(
     private val phoneCallClickStream: PublishSubject<CallPatientClicked>
 ) : RecyclerView.ViewHolder(itemView) {
 
-  private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_gender)
+  private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
   private val patientBPTextView by bindView<TextView>(R.id.overdue_patient_bp)
   private val overdueDaysTextView by bindView<TextView>(R.id.overdue_days)
   private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
-  private val separatorView by bindView<View>(R.id.overdue_separator)
   private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
-  private val ageTextView by bindView<TextView>(R.id.overdue_patient_age)
-  private val phoneNumberTextView by bindView<TextView>(R.id.overdue_patient_phoneNo)
+  private val phoneNumberTextView by bindView<TextView>(R.id.overdue_patient_phone_number)
 
   lateinit var appointment: OverdueListItem
 
@@ -99,7 +97,7 @@ class OverdueListViewHolder(
   fun render() {
     val context = itemView.context
 
-    patientNameTextView.text = "${appointment.name}, ${context.getString(appointment.gender.displayLetterRes)}"
+    patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, appointment.name, appointment.age)
 
     patientBPTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_patient_bp,
@@ -109,23 +107,21 @@ class OverdueListViewHolder(
         appointment.bpDaysAgo
     )
 
+    if (appointment.phoneNumber == null) {
+      callButton.visibility = View.GONE
+      phoneNumberTextView.visibility = View.GONE
+    } else {
+      callButton.visibility = View.VISIBLE
+      phoneNumberTextView.visibility = View.VISIBLE
+    }
+
+    phoneNumberTextView.text = appointment.phoneNumber
+
     overdueDaysTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_overdue_days,
         appointment.overdueDays,
         appointment.overdueDays
     )
-
-    if (appointment.phoneNumber == null) {
-      callButton.visibility = View.GONE
-      separatorView.visibility = View.GONE
-    } else {
-      callButton.visibility = View.VISIBLE
-      separatorView.visibility = View.VISIBLE
-    }
-
-    ageTextView.text = "${appointment.age}"
-    phoneNumberTextView.text = appointment.phoneNumber
-
   }
 }
 

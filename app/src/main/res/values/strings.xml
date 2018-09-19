@@ -185,15 +185,19 @@
   <!-- Overdue List -->
   <string name="overdue_no_patients">No patients overdue yet</string>
   <string name="overdue_empty_desc">You’ll be able to call patients who are overdue for a follow-up blood pressure reading.</string>
+  <string name="overdue_list_item_name_age">%s, %d</string>
   <plurals name="overdue_list_item_patient_bp">
-    <item quantity="one">LAST BP: %1$d/%2$d, %3$d day ago</item>
-    <item quantity="other">LAST BP: %1$d/%2$d, %3$d days ago</item>
+    <item quantity="one">%1$d/%2$d, %3$d day ago</item>
+    <item quantity="other">%1$d/%2$d, %3$d days ago</item>
   </plurals>
   <plurals name="overdue_list_item_overdue_days">
     <item quantity="one">%d day overdue</item>
     <item quantity="other">%d days overdue</item>
   </plurals>
-  <string name="overduelist_age">Age:</string>
+  <string name="overduelist_last_bp">Last BP:</string>
+  <string name="overduelist_agreed_to_visit">Mark patient as “agreed to visit”</string>
+  <string name="overduelist_remind_call_later">Remind to call later…</string>
+  <string name="overduelist_remove_from_list">Remove from overdue list…</string>
 
   <!-- Facility change -->
   <string name="facilitychange_screen_title">Select your clinic</string>
@@ -213,6 +217,7 @@
   <!-- Forgot PIN -->
   <string name="forgotpin_create_new_pin">Create new security PIN</string>
   <string name="forgotpin_create_new_pin_invalid_pin">PIN is too short. Please enter 4 numbers.</string>
+  <string name="overduelist_result_of_call">Result of call</string>
 
   <!-- Reports -->
   <string name="reports_come_back_later">Come back later</string>

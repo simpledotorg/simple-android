@@ -27,15 +27,21 @@
     <item name="android:textSize">@dimen/textsize_12</item>
   </style>
 
-  <style name="Clinic.V2.TextInputEditText" parent="Clinic.V2.TextAppearance.Input">
-    <item name="android:paddingTop">6dp</item>
-    <item name="android:paddingBottom">@dimen/spacing_16</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Input">
+  <style name="Clinic.V2.TextAppearance.Body1Left">
     <item name="android:textSize">@dimen/textsize_16</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>
     <item name="android:lineSpacingExtra">8sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body1Left.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric">
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.06</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0">
     <item name="android:textColor">@color/grey0</item>
   </style>
 
@@ -130,6 +136,11 @@
 
   <style name="Clinic.V2.TextAppearance.Button1.White100">
     <item name="android:textColor">@color/white100</item>
+  </style>
+
+  <style name="Clinic.V2.TextInputEditText">
+    <item name="android:paddingTop">6dp</item>
+    <item name="android:paddingBottom">@dimen/spacing_16</item>
   </style>
 
   <!-- Screen/feature specific styles start here. -->

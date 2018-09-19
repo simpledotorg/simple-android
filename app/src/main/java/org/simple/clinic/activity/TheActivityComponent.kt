@@ -33,6 +33,7 @@ import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.search.PatientSearchModule
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.summary.PatientSummaryScreen
@@ -85,7 +86,7 @@ interface TheActivityComponent {
   }
 }
 
-@Module(includes = [OnboardingModule::class, PatientsModule::class])
+@Module(includes = [OnboardingModule::class, PatientsModule::class, PatientSearchModule::class])
 class TheActivityModule {
 
   @Provides

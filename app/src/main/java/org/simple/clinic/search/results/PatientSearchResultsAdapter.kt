@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
@@ -13,10 +14,16 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Period
-import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import javax.inject.Inject
 
-class PatientSearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
+private val DATE_OF_BIRTH_FORMATTER = DateTimeFormatter.ofPattern("d-MM-yyyy", Locale.ENGLISH)
+
+class PatientSearchResultsAdapter @Inject constructor(
+    private val phoneObfuscator: PhoneNumberObfuscator
+) : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   private var patients: List<PatientSearchResult> = listOf()
 
@@ -36,7 +43,7 @@ class PatientSearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<P
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     holder.searchResult = patients[position]
-    holder.render()
+    holder.render(phoneObfuscator)
   }
 
   override fun getItemCount(): Int {
@@ -45,9 +52,13 @@ class PatientSearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<P
 
   class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-    private val titleTextView by bindView<TextView>(R.id.patientsearch_item_title)
+    private val genderImageView by bindView<ImageView>(R.id.patientsearchresult_item_gender)
+    private val titleTextView by bindView<TextView>(R.id.patientsearchresult_item_title)
+    private val addressTextView by bindView<TextView>(R.id.patientsearchresult_item_address)
+    private val dateOfBirthTextView by bindView<TextView>(R.id.patientsearchresult_item_dateofbirth)
+    private val phoneNumberTextView by bindView<TextView>(R.id.patientsearchresult_item_phone)
+    private val lastBpDateTextView by bindView<TextView>(R.id.patientsearchresults_item_last_bp)
     private val ageTextView by bindView<TextView>(R.id.patientsearch_item_age)
-    private val bylineTextView by bindView<TextView>(R.id.patientsearch_item_byline)
 
     lateinit var searchResult: PatientSearchResult
 
@@ -57,33 +68,69 @@ class PatientSearchResultsAdapter @Inject constructor() : RecyclerView.Adapter<P
       }
     }
 
-    fun render() {
-      titleTextView.text = String.format("%s • %s", searchResult.fullName, searchResult.gender.toString().substring(0, 1))
+    fun render(phoneObfuscator: PhoneNumberObfuscator) {
+      genderImageView.setImageResource(searchResult.gender.displayIconRes)
 
-      val storedAddress = searchResult.address
-      if (storedAddress.colonyOrVillage.isNullOrEmpty()) {
-        bylineTextView.text = String.format("%s", searchResult.address.district)
+      val resources = itemView.resources
+      titleTextView.text = resources.getString(
+          R.string.patientsearchresults_item_name_with_gender,
+          searchResult.fullName,
+          resources.getString(searchResult.gender.displayLetterRes))
+
+      val address = searchResult.address
+      if (address.colonyOrVillage.isNullOrEmpty()) {
+        addressTextView.text = searchResult.address.district
       } else {
-        bylineTextView.text = String.format("%s, %s", searchResult.address.colonyOrVillage, searchResult.address.district)
+        addressTextView.text = resources.getString(
+            R.string.patientsearchresults_item_address_with_colony_and_district,
+            searchResult.address.colonyOrVillage,
+            searchResult.address.district)
       }
 
-      if (searchResult.age == null) {
-        val years = Period.between(searchResult.dateOfBirth, LocalDate.now()).years.toString()
-        ageTextView.text = itemView.context.getString(R.string.patientsearchresult_item_age, years)
+      val dateOfBirth = searchResult.dateOfBirth
+      if (dateOfBirth == null) {
+        dateOfBirthTextView.visibility = View.GONE
+      } else {
+        dateOfBirthTextView.visibility = View.VISIBLE
+        dateOfBirthTextView.text = DATE_OF_BIRTH_FORMATTER.format(dateOfBirth)
+      }
+
+      val phoneNumber = searchResult.phoneNumber
+      if (phoneNumber.isNullOrBlank()) {
+        phoneNumberTextView.visibility = View.GONE
+      } else {
+        phoneNumberTextView.visibility = View.VISIBLE
+        phoneNumberTextView.text = phoneObfuscator.obfuscate(phoneNumber!!)
+      }
+
+      // TODO: Join BP table with patient search query.
+      val lastBpDate: LocalDate? = null
+      val lastBpFacilityName: String? = null
+
+      if (lastBpDate == null) {
+        lastBpDateTextView.visibility = View.GONE
+      } else {
+        lastBpDateTextView.visibility = View.VISIBLE
+        val formattedLastBpDate = DATE_OF_BIRTH_FORMATTER.format(lastBpDate)
+        lastBpDateTextView.text = resources.getString(
+            R.string.patientsearchresults_item_last_bp_date_with_facility,
+            formattedLastBpDate,
+            lastBpFacilityName)
+      }
+
+      val age = searchResult.age
+      if (age == null) {
+        val years = Period.between(searchResult.dateOfBirth, LocalDate.now()).years
+        ageTextView.text = years.toString()
 
       } else {
-        val ageUpdatedAt = LocalDateTime.ofInstant(searchResult.age!!.updatedAt, ZoneOffset.UTC)
+        val ageUpdatedAt = LocalDateTime.ofInstant(age.updatedAt, UTC)
         val updatedAtLocalDate = LocalDate.of(ageUpdatedAt.year, ageUpdatedAt.month, ageUpdatedAt.dayOfMonth)
         val yearsSinceThen = Period.between(updatedAtLocalDate, LocalDate.now()).years
 
-        val oldAge = searchResult.age!!.value
+        val oldAge = age.value
         val currentAge = oldAge + yearsSinceThen
-        ageTextView.text = itemView.context.getString(R.string.patientsearchresult_item_age, currentAge.toString())
-      }
-
-      if (searchResult.phoneNumber?.isNotEmpty() == true) {
-        val current = bylineTextView.text
-        bylineTextView.text = String.format("%s | $current", searchResult.phoneNumber)
+        ageTextView.text = currentAge.toString()
       }
     }
   }

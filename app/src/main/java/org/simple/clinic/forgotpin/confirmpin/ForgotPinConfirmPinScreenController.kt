@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
@@ -21,11 +22,12 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
   override fun apply(upstream: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         showUserNameOnScreenStarted(replayedEvents),
         showFacilityOnScreenCreated(replayedEvents),
         openFacilityChangeScreen(replayedEvents),
-        goBack(replayedEvents)
+        goBack(replayedEvents),
+        showPinMismatchedErrors(replayedEvents)
     )
   }
 
@@ -50,5 +52,17 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
   private fun goBack(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ForgotPinConfirmPinScreenBackClicked>()
         .map { { ui: Ui -> ui.goBack() } }
+  }
+
+  private fun showPinMismatchedErrors(events: Observable<UiEvent>): Observable<UiChange> {
+    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
+        .map { it.pin }
+        .cache()
+
+    return events.ofType<ForgotPinConfirmPinSubmitClicked>()
+        .map { it.pin }
+        .withLatestFrom(previouslyEnteredPin)
+        .filter { (enteredPin, previousPin) -> enteredPin != previousPin }
+        .map { { ui: Ui -> ui.showPinMismatchedError() } }
   }
 }

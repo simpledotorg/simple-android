@@ -2,11 +2,14 @@ package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
@@ -31,13 +34,14 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
   private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
   private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_pin)
+  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_error)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), facilityClicks(), backClicks())
+    Observable.merge(screenCreates(), facilityClicks(), backClicks(), pinSubmits())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -60,6 +64,11 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
       RxView.clicks(backButton)
           .map { ForgotPinConfirmPinScreenBackClicked }
 
+  private fun pinSubmits(): Observable<UiEvent> =
+      RxTextView.editorActions(pinEntryEditText)
+          .filter { it == EditorInfo.IME_ACTION_DONE }
+          .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
+
   fun showUserName(name: String) {
     userNameTextView.text = name
   }
@@ -74,5 +83,9 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   fun goBack() {
     screenRouter.pop()
+  }
+
+  fun showPinMismatchedError() {
+    pinErrorTextView.visibility = View.VISIBLE
   }
 }

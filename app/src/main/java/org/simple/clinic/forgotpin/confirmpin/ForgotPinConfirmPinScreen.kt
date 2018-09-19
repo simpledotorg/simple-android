@@ -1,10 +1,13 @@
 package org.simple.clinic.forgotpin.confirmpin
 
 import android.content.Context
+import android.support.annotation.StringRes
 import android.util.AttributeSet
+import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
@@ -16,8 +19,11 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
+import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -30,10 +36,12 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   lateinit var screenRouter: ScreenRouter
 
   private val backButton by bindView<ImageButton>(R.id.forgotpin_back)
+  private val progressBar by bindView<ProgressBar>(R.id.forgotpin_progress)
   private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
   private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
   private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_pin)
   private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_error)
+  private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_pin_container)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -91,10 +99,39 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   fun showPinMismatchedError() {
-    pinErrorTextView.visibility = VISIBLE
+    showError(R.string.forgotpin_error_pin_mismatch)
+  }
+
+  fun showUnexpectedError() {
+    showError(R.string.api_unexpected_error)
+  }
+
+  fun showNetworkError() {
+    showError(R.string.api_network_error)
   }
 
   fun hideError() {
     pinErrorTextView.visibility = GONE
+  }
+
+  fun showProgress() {
+    progressBar.visibility = VISIBLE
+    pinEntryContainer.visibility = INVISIBLE
+    hideKeyboard()
+  }
+
+  fun hideProgress() {
+    progressBar.visibility = INVISIBLE
+    pinEntryContainer.visibility = VISIBLE
+  }
+
+  fun goToHomeScreen() {
+     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
+  }
+
+  private fun showError(@StringRes errorMessageResId: Int) {
+    pinErrorTextView.setText(errorMessageResId)
+    pinErrorTextView.visibility = VISIBLE
+    pinEntryEditText.showKeyboard()
   }
 }

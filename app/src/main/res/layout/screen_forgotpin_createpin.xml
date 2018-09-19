@@ -81,7 +81,7 @@
       <TextView
         android:id="@+id/forgotpin_error"
         style="@style/Clinic.LoginPinErrorText"
-        android:text="@string/forgotpin_create_new_pin_invalid_pin"
+        tools:text="@string/forgotpin_create_new_pin_invalid_pin"
         tools:visibility="visible" />
     </LinearLayout>
   </android.support.v7.widget.CardView>

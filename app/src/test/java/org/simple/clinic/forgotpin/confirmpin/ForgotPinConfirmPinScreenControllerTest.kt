@@ -94,4 +94,13 @@ class ForgotPinConfirmPinScreenControllerTest {
       verify(screen).showPinMismatchedError()
     }
   }
+
+  @Test
+  fun `when PIN is changed, any errors must be hidden`() {
+    uiEvents.onNext(ForgotPinConfirmPinTextChanged("1"))
+    uiEvents.onNext(ForgotPinConfirmPinTextChanged("11"))
+    uiEvents.onNext(ForgotPinConfirmPinTextChanged("111"))
+
+    verify(screen, times(3)).hideError()
+  }
 }

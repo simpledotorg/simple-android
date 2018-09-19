@@ -7,61 +7,54 @@
   android:background="@color/window_background_auth"
   tools:ignore="Overdraw">
 
-  <LinearLayout
+  <RelativeLayout
     android:id="@+id/forgotpin_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_primary"
-    android:orientation="vertical"
     android:paddingBottom="@dimen/spacing_16"
     android:paddingTop="@dimen/spacing_4">
 
-    <LinearLayout
-      android:layout_width="match_parent"
+    <ImageButton
+      android:id="@+id/forgotpin_back"
+      style="@style/Clinic.LoginBackButton"
+      android:src="@drawable/ic_arrow_back_24dp"
+      tools:ignore="ContentDescription" />
+
+    <Button
+      android:id="@+id/forgotpin_facility_name"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:orientation="horizontal">
-
-      <ImageButton
-        android:id="@+id/forgotpin_back"
-        style="@style/Clinic.LoginBackButton"
-        android:src="@drawable/ic_arrow_back_24dp"
-        tools:ignore="ContentDescription" />
-
-      <Button
-        android:id="@+id/forgotpin_facility_name"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginEnd="@dimen/spacing_24"
-        android:layout_marginStart="@dimen/spacing_24"
-        android:layout_marginTop="@dimen/spacing_4"
-        android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
-        android:drawablePadding="6dp"
-        android:drawableStart="@drawable/ic_location_20dp"
-        android:ellipsize="end"
-        android:fontFamily="sans-serif"
-        android:maxLines="1"
-        android:padding="@dimen/spacing_8"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textsize_16"
-        tools:text="A really long facility name that does not fit" />
-    </LinearLayout>
+      android:layout_centerHorizontal="true"
+      android:layout_marginEnd="@dimen/spacing_24"
+      android:layout_marginStart="@dimen/spacing_96"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
+      android:drawablePadding="6dp"
+      android:drawableStart="@drawable/ic_location_20dp"
+      android:ellipsize="end"
+      android:fontFamily="sans-serif"
+      android:maxLines="1"
+      android:padding="@dimen/spacing_8"
+      android:textAllCaps="false"
+      android:textColor="@color/white"
+      android:textSize="@dimen/textsize_16"
+      tools:text="A really long facility name that does not fit" />
 
     <TextView
       android:id="@+id/forgotpin_user_fullname"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/forgotpin_back"
+      android:layout_centerHorizontal="true"
       android:layout_marginTop="@dimen/spacing_32"
-      android:layout_weight="1"
       android:ellipsize="end"
-      android:gravity="center"
       android:maxLines="1"
       android:textColor="@color/white"
       android:textSize="@dimen/textsize_20"
       tools:text="A really long person name" />
-  </LinearLayout>
+  </RelativeLayout>
 
   <View
     android:layout_width="match_parent"

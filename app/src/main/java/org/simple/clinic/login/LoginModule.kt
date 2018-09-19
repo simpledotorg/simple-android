@@ -6,6 +6,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
+import org.simple.clinic.forgotpin.ForgotPinApiV1
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.BCryptPasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher
@@ -22,6 +23,11 @@ open class LoginModule {
   @Provides
   fun loginApi(retrofit: Retrofit): LoginApiV1 {
     return retrofit.create(LoginApiV1::class.java)
+  }
+
+  @Provides
+  fun forgotPinApi(retrofit: Retrofit): ForgotPinApiV1 {
+    return object : ForgotPinApiV1 {}
   }
 
   @Provides

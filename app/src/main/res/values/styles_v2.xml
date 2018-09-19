@@ -37,4 +37,12 @@
     <item name="android:lineSpacingExtra">8sp</item>
     <item name="android:textColor">@color/grey0</item>
   </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2TagGrey1">
+    <item name="android:textSize">12sp</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.06</item>
+    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:textColor">@color/grey1</item>
+  </style>
 </resources>

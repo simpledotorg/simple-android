@@ -11,8 +11,11 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white100"
+    app:contentInsetStartWithNavigation="64dp"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:navigationIconTint="@color/grey1" />
+    app:navigationIconTint="@color/grey1"
+    app:title="Anish Acharya with a really long surname"
+    app:titleTextColor="@color/black" />
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/patientsearchresults_results"

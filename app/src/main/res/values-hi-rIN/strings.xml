@@ -5,7 +5,7 @@
     <string name="gender_male">पुरुष</string>
     <string name="gender_transgender">ट्रांसजेंडर</string>
     <string name="api_unexpected_error">कुछ गलत हो गया। बाद में पुन: प्रयास करें।</string>
-    <string name="patientsearchresult_age">आयु %s</string>
+    <string name="patientsearchresult_item_age">आयु %s</string>
     <string name="patiententry_contentdescription_up_button">खोज पर वापस जाओ</string>
     <string name="patiententry_full_name">रोगी का नाम</string>
     <string name="patiententry_phone_number">रोगी का फोन नंबर</string>

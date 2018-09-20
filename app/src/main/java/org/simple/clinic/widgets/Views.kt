@@ -2,6 +2,7 @@ package org.simple.clinic.widgets
 
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
@@ -134,3 +135,14 @@ fun resourceNameForId(resources: Resources, @IdRes id: Int): String {
   return name
 }
 
+fun View.locationRectOnScreen(): Rect {
+  val location = IntArray(2)
+  getLocationOnScreen(location)
+
+  val left = location[0]
+  val top = location[1]
+  return Rect(left, top, left + width, top + height)
+}
+
+val View.marginLayoutParams: ViewGroup.MarginLayoutParams
+  get() = layoutParams as ViewGroup.MarginLayoutParams

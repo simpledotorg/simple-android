@@ -10,8 +10,8 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -61,9 +61,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
     Observable
         .mergeArray(screenCreates(), newPatientClicks(), adapter.itemClicks)
-        .observeOn(Schedulers.io())
+        .observeOn(io())
         .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { it(this) }
   }
@@ -79,7 +79,6 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
     toolbar.title = screenKey.fullName
-    queryAgeTextView.text = screenKey.age
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -102,5 +101,13 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun openPatientEntryScreen() {
     screenRouter.push(PatientEntryScreen.KEY)
+  }
+
+  fun setEmptyStateVisible(visible: Boolean) {
+    // TODO.
+  }
+
+  fun showComputedAge(age: String) {
+    queryAgeTextView.text = age
   }
 }

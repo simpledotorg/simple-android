@@ -30,6 +30,8 @@ import javax.inject.Inject
 typealias PatientUuid = UUID
 typealias FacilityUuid = UUID
 
+val DATE_OF_BIRTH_FORMAT_FOR_UI = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)!!
+
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
@@ -37,10 +39,6 @@ class PatientRepository @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession
 ) {
-
-  companion object {
-    val dateOfTimeFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
-  }
 
   private val ageFuzziness: Int = 5
 
@@ -309,7 +307,7 @@ class PatientRepository @Inject constructor(
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {
     return dateOfBirth?.let {
-      val formatter = dateOfTimeFormatter
+      val formatter = DATE_OF_BIRTH_FORMAT_FOR_UI
       formatter.parse(dateOfBirth, LocalDate::from)
     }
   }

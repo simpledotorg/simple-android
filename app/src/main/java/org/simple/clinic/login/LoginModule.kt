@@ -30,9 +30,9 @@ open class LoginModule {
     return retrofit.create(LoginApiV1::class.java)
   }
 
+  // TODO: This is temporary until the api is ready. Remove later.
   @Provides
-  fun forgotPinApi(retrofit: Retrofit, appDatabase: AppDatabase): ForgotPinApiV1 {
-    // TODO: This is temporary until the api is ready. Remove later.
+  fun forgotPinApi(appDatabase: AppDatabase, @Named("preference_access_token") accessToken: Preference<Optional<String>>): ForgotPinApiV1 {
     return object : ForgotPinApiV1 {
 
       val userDao = appDatabase.userDao()
@@ -53,7 +53,7 @@ open class LoginModule {
                   updatedAt = it.updatedAt
               )
             }
-            .map { ForgotPinResponse(accessToken = "new_access_token", loggedInUser = it) }
+            .map { ForgotPinResponse(accessToken = accessToken.get().toNullable()!!, loggedInUser = it) }
       }
     }
   }

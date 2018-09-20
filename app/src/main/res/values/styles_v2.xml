@@ -152,6 +152,18 @@
     <item name="android:paddingBottom">@dimen/spacing_16</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.H6">
+    <item name="android:textSize">20sp</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
+    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:textColor">@color/grey2</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.H6.Grey2">
+    <item name="android:textColor">@color/grey2</item>
+  </style>
+
   <!-- Screen/feature specific styles start here. -->
 
   <style name="Clinic.V2.BottomAlignedButtonFrame">
@@ -165,8 +177,8 @@
     <item name="android:layout_alignParentBottom">true</item>
   </style>
 
-  <style name="Clinic.V2.BottomAlignedButtonFrame.Blue1">
-    <item name="android:background">@color/blue1</item>
+  <style name="Clinic.V2.BottomAlignedButtonFrame.Blue2">
+    <item name="android:background">@color/blue2</item>
   </style>
 
   <style name="Clinic.V2.ClearEditTextButton">

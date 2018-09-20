@@ -45,7 +45,7 @@ class PatientSearchResultsControllerTest {
 
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey("name", age = "23", dateOfBirth = "")))
 
-    verify(repository).search("name", 23)
+    verify(repository).search("name", 23, true)
     verify(screen).updateSearchResults(searchResults)
     verify(screen).setEmptyStateVisible(false)
   }
@@ -81,7 +81,7 @@ class PatientSearchResultsControllerTest {
 
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey("name", age = "23", dateOfBirth = "")))
 
-    verify(repository).search("name", 23)
+    verify(repository).search("name", 23, true)
     verify(screen).updateSearchResults(emptyResults)
     verify(screen).setEmptyStateVisible(true)
   }

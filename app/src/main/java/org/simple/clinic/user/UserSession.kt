@@ -18,6 +18,7 @@ import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinApiV1
+import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginErrorResponse
@@ -275,6 +276,13 @@ class UserSession @Inject constructor(
         response.loggedInUser.facilityUuids)
   }
 
+  private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {
+    accessTokenPreference.set(Just(response.accessToken))
+
+    val user = userFromPayload(response.loggedInUser, User.LoggedInStatus.RESET_PIN_REQUESTED)
+    return storeUser(user, response.loggedInUser.facilityUuids)
+  }
+
   private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
     accessTokenPreference.set(Just(response.accessToken))
 
@@ -370,26 +378,15 @@ class UserSession @Inject constructor(
   }
 
   fun resetPin(pin: String): Single<ForgotPinResult> {
-    val hashedPin = passwordHasher.hash(pin)
-        .cache()
-
-    val updateUserOnSuccess = hashedPin
-        .zipWith(requireLoggedInUser().firstOrError())
-        .map { (newPinDigest, user) ->
-          user.copy(
-              pinDigest = newPinDigest,
-              loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
-              status = UserStatus.WAITING_FOR_APPROVAL
-          )
-        }
-        .doOnSuccess { appDatabase.userDao().createOrUpdate(it) }
-        .map { ForgotPinResult.Success as ForgotPinResult }
-
-    return hashedPin
+    val resetPasswordCall = passwordHasher.hash(pin)
         .map { ResetPinRequest(it) }
-        .flatMapCompletable { forgotPinApiV1.resetPin(it) }
+        .flatMap { forgotPinApiV1.resetPin(it) }
+
+    val updateUserOnSuccess = resetPasswordCall
+        .flatMapCompletable { storeUserAndAccessToken(it) }
         .toSingleDefault(ForgotPinResult.Success as ForgotPinResult)
-        .flatMap { updateUserOnSuccess }
+
+    return updateUserOnSuccess
         .onErrorReturn {
           when (it) {
             is IOException -> ForgotPinResult.NetworkError

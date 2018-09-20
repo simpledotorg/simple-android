@@ -30,6 +30,7 @@ import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinApiV1
+import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginResponse
@@ -43,6 +44,7 @@ import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import retrofit2.HttpException
 import retrofit2.Response
@@ -343,7 +345,11 @@ class UserSessionTest {
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just(hashed))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Completable.complete())
+    whenever(forgotPinApiV1.resetPin(any()))
+        .thenReturn(Single.just(ForgotPinResponse(
+            accessToken = "",
+            loggedInUser = PatientMocker.loggedInUserPayload()
+        )))
 
     userSession.resetPin(pin).blockingGet()
 
@@ -365,7 +371,7 @@ class UserSessionTest {
   @Test
   @Parameters(method = "params for forgot pin api")
   fun `the appropriate result must be returned when the reset pin call finishes`(
-      apiResult: Completable,
+      apiResult: Single<ForgotPinResponse>,
       expectedResult: ForgotPinResult
   ) {
     val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
@@ -382,9 +388,9 @@ class UserSessionTest {
   private fun `params for forgot pin api`(): Array<Array<Any>> {
     val exception = RuntimeException()
     return arrayOf(
-        arrayOf(Completable.error(IOException()), ForgotPinResult.NetworkError),
-        arrayOf(Completable.error(unauthorizedHttpError<Any>()), ForgotPinResult.UserNotFound),
-        arrayOf(Completable.error(exception), ForgotPinResult.UnexpectedError(exception))
+        arrayOf(Single.error<ForgotPinResponse>(IOException()), ForgotPinResult.NetworkError),
+        arrayOf(Single.error<ForgotPinResponse>(unauthorizedHttpError<Any>()), ForgotPinResult.UserNotFound),
+        arrayOf(Single.error<ForgotPinResponse>(exception), ForgotPinResult.UnexpectedError(exception))
     )
   }
 
@@ -398,7 +404,20 @@ class UserSessionTest {
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("new-digest"))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Completable.complete())
+
+    val response = ForgotPinResponse(
+        loggedInUser = PatientMocker.loggedInUserPayload(
+            uuid = currentUser.uuid,
+            name = currentUser.fullName,
+            phone = currentUser.phoneNumber,
+            pinDigest = "new-digest",
+            status = UserStatus.WAITING_FOR_APPROVAL,
+            createdAt = currentUser.createdAt,
+            updatedAt = currentUser.updatedAt
+        ),
+        accessToken = "new_access_token"
+    )
+    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.just(response))
 
     userSession.resetPin("0000").blockingGet()
 
@@ -410,16 +429,59 @@ class UserSessionTest {
   }
 
   @Test
+  fun `whenever the forgot pin api succeeds, the access token must be updated`() {
+    val currentUser = PatientMocker.loggedInUser(
+        pinDigest = "old-digest",
+        loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
+        status = UserStatus.APPROVED_FOR_SYNCING
+    )
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
+
+    whenever(passwordHasher.hash(any())).thenReturn(Single.just("new-digest"))
+
+    val response = ForgotPinResponse(
+        loggedInUser = PatientMocker.loggedInUserPayload(
+            uuid = currentUser.uuid,
+            name = currentUser.fullName,
+            phone = currentUser.phoneNumber,
+            pinDigest = "new-digest",
+            status = UserStatus.WAITING_FOR_APPROVAL,
+            createdAt = currentUser.createdAt,
+            updatedAt = currentUser.updatedAt
+        ),
+        accessToken = "new_access_token"
+    )
+    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.just(response))
+
+    userSession.resetPin("0000").blockingGet()
+
+    verify(accessTokenPref).set(Just("new_access_token"))
+  }
+
+  @Test
   fun `whenever the forgot pin api call fails, the logged in user must not be updated`() {
     val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Completable.error(RuntimeException()))
+    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.error<ForgotPinResponse>(RuntimeException()))
 
     userSession.resetPin("0000").blockingGet()
 
     verify(userDao, never()).createOrUpdate(any())
+  }
+
+  @Test
+  fun `whenever the forgot pin api call fails, the access token must not be updated`() {
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
+
+    whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
+    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.error<ForgotPinResponse>(RuntimeException()))
+
+    userSession.resetPin("0000").blockingGet()
+
+    verify(accessTokenPref, never()).set(any())
   }
 
   @Test
@@ -434,7 +496,20 @@ class UserSessionTest {
     errorToThrow?.let { whenever(userDao.createOrUpdate(any())).doThrow(it) }
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("new-digest"))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Completable.complete())
+
+    val response = ForgotPinResponse(
+        loggedInUser = PatientMocker.loggedInUserPayload(
+            uuid = currentUser.uuid,
+            name = currentUser.fullName,
+            phone = currentUser.phoneNumber,
+            pinDigest = "new-digest",
+            status = UserStatus.WAITING_FOR_APPROVAL,
+            createdAt = currentUser.createdAt,
+            updatedAt = currentUser.updatedAt
+        ),
+        accessToken = "new_access_token"
+    )
+    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.just(response))
 
     val result = userSession.resetPin("0000").blockingGet()
 

@@ -124,6 +124,7 @@
     <item name="android:paddingBottom">18dp</item>
   </style>
 
+  <!-- PSA: To be used with PrimarySolidButton.kt -->
   <style name="Clinic.V2.Button.Solid">
     <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
   </style>
@@ -131,7 +132,7 @@
   <style name="Clinic.V2.Button.Solid.WithoutIcon" />
 
   <style name="Clinic.V2.Button.Solid.WithoutIcon.Blue1">
-    <item name="android:background">@drawable/selector_background_button_solid_blue1</item>
+    <item name="android:background">@color/blue1</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
@@ -165,7 +166,7 @@
   </style>
 
   <style name="Clinic.V2.BottomAlignedButtonFrame.Blue1">
-    <item name="android:background">@color/bottom_aligned_button_blue2_frame_enabled</item>
+    <item name="android:background">@color/blue1</item>
   </style>
 
   <style name="Clinic.V2.ClearEditTextButton">

@@ -1,6 +1,7 @@
 package org.simple.clinic.activity
 
 import com.f2prateek.rx.preferences2.Preference
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
@@ -15,12 +16,23 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.registration.phone.RegistrationPhoneScreen
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -34,16 +46,19 @@ class TheActivityControllerTest {
   private val activity = mock<TheActivity>()
   private val userSession = mock<UserSession>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
+  private lateinit var hasUserCompletedOnboarding: Preference<Boolean>
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   lateinit var controller: TheActivityController
 
   @Before
   fun setUp() {
-    val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
-    controller = TheActivityController(userSession, Single.just(appLockConfig), lockAfterTimestamp)
+    hasUserCompletedOnboarding = mock()
 
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN))))
+    val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
+    controller = TheActivityController(userSession, Single.just(appLockConfig), lockAfterTimestamp, hasUserCompletedOnboarding)
+
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = NOT_LOGGED_IN))))
 
     uiEvents
         .compose(controller)
@@ -115,7 +130,7 @@ class TheActivityControllerTest {
   fun `when app is started unlocked and lock timer hasn't expired yet then the timer should be unset`() {
     whenever(userSession.isUserLoggedIn()).thenReturn(true)
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN))))
+        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = LOGGED_IN))))
 
     val lockAfterTime = Instant.now().plusSeconds(TimeUnit.MINUTES.toSeconds(10))
     whenever(lockAfterTimestamp.get()).thenReturn(lockAfterTime)
@@ -164,5 +179,56 @@ class TheActivityControllerTest {
     } else {
       verify(activity, never()).showUserLoggedOutOnOtherDeviceAlert()
     }
+  }
+
+  @Test
+  @Parameters(method = "params for local user initial screen key")
+  fun `when a local user exists, the appropriate initial key must be returned based on the logged in status`(
+      hasCompletedOnboarding: Boolean,
+      loggedInStatus: User.LoggedInStatus,
+      expectedKeyType: Class<FullScreenKey>
+  ) {
+    val user = PatientMocker.loggedInUser(loggedInStatus = loggedInStatus)
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+
+    whenever(hasUserCompletedOnboarding.get()).thenReturn(hasCompletedOnboarding)
+
+    assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
+  }
+
+  @Suppress("Unused")
+  private fun `params for local user initial screen key`(): Array<Array<Any>> {
+    return arrayOf(
+        arrayOf<Any>(true, NOT_LOGGED_IN, RegistrationPhoneScreen.KEY::class.java),
+        arrayOf<Any>(true, OTP_REQUESTED, HomeScreen.KEY::class.java),
+        arrayOf<Any>(true, RESET_PIN_REQUESTED, HomeScreen.KEY::class.java),
+        arrayOf<Any>(true, RESETTING_PIN, ForgotPinCreateNewPinScreenKey::class.java),
+        arrayOf<Any>(true, LOGGED_IN, HomeScreen.KEY::class.java),
+        arrayOf<Any>(false, NOT_LOGGED_IN, OnboardingScreen.KEY::class.java),
+        arrayOf<Any>(false, OTP_REQUESTED, HomeScreen.KEY::class.java),
+        arrayOf<Any>(false, RESET_PIN_REQUESTED, HomeScreen.KEY::class.java),
+        arrayOf<Any>(false, RESETTING_PIN, OnboardingScreen.KEY::class.java),
+        arrayOf<Any>(false, LOGGED_IN, HomeScreen.KEY::class.java)
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for missing user initial screen key")
+  fun `when a local user does not exist, the appropriate initial key must be returned based on the onboarding flag`(
+      hasCompletedOnboarding: Boolean,
+      expectedKeyType: Class<FullScreenKey>
+  ) {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(None))
+    whenever(hasUserCompletedOnboarding.get()).thenReturn(hasCompletedOnboarding)
+
+    assertThat(controller.initialScreenKey()).isInstanceOf(expectedKeyType)
+  }
+
+  @Suppress("Unused")
+  private fun `params for missing user initial screen key`(): Array<Array<Any>> {
+    return arrayOf(
+        arrayOf<Any>(true, RegistrationPhoneScreen.KEY::class.java),
+        arrayOf<Any>(false, OnboardingScreen.KEY::class.java)
+    )
   }
 }

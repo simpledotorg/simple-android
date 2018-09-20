@@ -17,6 +17,9 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneOffset.UTC
 
 @RunWith(JUnitParamsRunner::class)
 class PatientSearchResultsControllerTest {
@@ -29,7 +32,9 @@ class PatientSearchResultsControllerTest {
 
   @Before
   fun setUp() {
-    controller = PatientSearchResultsController(repository)
+    val fixedClock = Clock.fixed(Instant.parse("2018-09-20T10:15:30.000Z"), UTC)
+
+    controller = PatientSearchResultsController(repository, fixedClock)
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 

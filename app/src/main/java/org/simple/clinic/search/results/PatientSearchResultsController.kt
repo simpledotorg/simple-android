@@ -11,16 +11,17 @@ import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
-import org.threeten.bp.ZoneOffset.UTC
 import javax.inject.Inject
 
 typealias Ui = PatientSearchResultsScreen
 typealias UiChange = (Ui) -> Unit
 
 class PatientSearchResultsController @Inject constructor(
-    val repository: PatientRepository
+    private val repository: PatientRepository,
+    private val clock: Clock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -68,7 +69,7 @@ class PatientSearchResultsController @Inject constructor(
 
   private fun calculateAgeFromDateOfBirth(dob: String): Int {
     val dateOfBirth = DATE_OF_BIRTH_FORMAT_FOR_UI.parse(dob.trim(), LocalDate::from)
-    return Period.between(dateOfBirth, LocalDate.now(UTC)).years
+    return Period.between(dateOfBirth, LocalDate.now(clock)).years
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

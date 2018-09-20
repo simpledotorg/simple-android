@@ -7,7 +7,12 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.onboarding.OnboardingScreen
+import org.simple.clinic.registration.phone.RegistrationPhoneScreen
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -28,7 +33,8 @@ typealias UiChange = (Ui) -> Unit
 class TheActivityController @Inject constructor(
     private val userSession: UserSession,
     private val appLockConfig: Single<AppLockConfig>,
-    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
+    @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>,
+    @Named("onboarding_complete") private val hasUserCompletedOnboarding: Preference<Boolean>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val showAppLockForUserStates = setOf(OTP_REQUESTED, LOGGED_IN, RESET_PIN_REQUESTED)
@@ -90,5 +96,27 @@ class TheActivityController @Inject constructor(
         .flatMap { userSession.loggedInUser() }
         .compose(NewlyVerifiedUser())
         .map { { ui: Ui -> ui.showUserLoggedOutOnOtherDeviceAlert() } }
+  }
+
+  fun initialScreenKey(): FullScreenKey {
+    val localUser = userSession.loggedInUser().blockingFirst().toNullable()
+
+    val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
+      NOT_LOGGED_IN, User.LoggedInStatus.RESETTING_PIN -> false
+      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED -> true
+      null -> false
+    }
+
+    return when {
+      canMoveToHomeScreen -> HomeScreen.KEY
+      hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
+      else -> {
+        return if (localUser?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN) {
+          ForgotPinCreateNewPinScreenKey()
+        } else {
+          RegistrationPhoneScreen.KEY
+        }
+      }
+    }
   }
 }

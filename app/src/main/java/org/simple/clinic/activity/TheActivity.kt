@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.WindowManager
-import com.f2prateek.rx.preferences2.Preference
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,12 +13,8 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreen
-import org.simple.clinic.onboarding.OnboardingScreen
-import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -27,15 +22,8 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
-import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
-import javax.inject.Named
 
 class TheActivity : AppCompatActivity() {
 
@@ -44,17 +32,10 @@ class TheActivity : AppCompatActivity() {
   }
 
   @Inject
-  lateinit var userSession: UserSession
-
-  @Inject
   lateinit var controller: TheActivityController
 
   @Inject
   lateinit var lifecycle: Observable<TheActivityLifecycle>
-
-  @Inject
-  @field:Named("onboarding_complete")
-  lateinit var hasUserCompletedOnboarding: Preference<Boolean>
 
   lateinit var screenRouter: ScreenRouter
 
@@ -90,35 +71,13 @@ class TheActivity : AppCompatActivity() {
     component.inject(this)
 
     screenRouter.registerKeyChanger(FullScreenKeyChanger(this, android.R.id.content, R.color.window_background, this::onScreenChanged))
-    return screenRouter.installInContext(baseContext, initialScreenKey())
+    return screenRouter.installInContext(baseContext, controller.initialScreenKey())
   }
 
   private fun onScreenChanged(outgoing: FullScreenKey?, incoming: FullScreenKey) {
     val outgoingScreenName = outgoing?.analyticsName ?: ""
     val incomingScreenName = incoming.analyticsName
     Analytics.reportScreenChange(outgoingScreenName, incomingScreenName)
-  }
-
-  private fun initialScreenKey(): FullScreenKey {
-    val localUser = userSession.loggedInUser().blockingFirst().toNullable()
-
-    val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
-      NOT_LOGGED_IN, RESETTING_PIN -> false
-      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED -> true
-      null -> false
-    }
-
-    return when {
-      canMoveToHomeScreen -> HomeScreen.KEY
-      hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
-      else -> {
-        return if (localUser?.loggedInStatus == RESETTING_PIN) {
-          ForgotPinCreateNewPinScreenKey()
-        } else {
-          RegistrationPhoneScreen.KEY
-        }
-      }
-    }
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

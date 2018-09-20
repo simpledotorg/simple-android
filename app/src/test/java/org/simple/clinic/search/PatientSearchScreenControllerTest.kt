@@ -32,17 +32,29 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `search button should remain enabled only when both name and age are present`() {
+  fun `search button should remain enabled only when both name and age or date of birth are present`() {
+    uiEvents.onNext(SearchQueryNameChanged(""))
+    uiEvents.onNext(SearchQueryAgeChanged(""))
+    uiEvents.onNext(SearchQueryDateOfBirthChanged(""))
+
     uiEvents.onNext(SearchQueryNameChanged("foo"))
     uiEvents.onNext(SearchQueryAgeChanged(" "))
+    uiEvents.onNext(SearchQueryDateOfBirthChanged(""))
 
     uiEvents.onNext(SearchQueryNameChanged(""))
     uiEvents.onNext(SearchQueryAgeChanged("123"))
+    uiEvents.onNext(SearchQueryDateOfBirthChanged(" "))
+
+    uiEvents.onNext(SearchQueryNameChanged(" "))
+    uiEvents.onNext(SearchQueryAgeChanged(""))
+    uiEvents.onNext(SearchQueryDateOfBirthChanged("12"))
 
     uiEvents.onNext(SearchQueryNameChanged("bar"))
+    uiEvents.onNext(SearchQueryDateOfBirthChanged(""))
+    uiEvents.onNext(SearchQueryAgeChanged("23"))
 
-    verify(screen, times(3)).showSearchButtonAsDisabled()
-    verify(screen).showSearchButtonAsEnabled()
+    verify(screen, times(11)).showSearchButtonAsDisabled()
+    verify(screen, times(2)).showSearchButtonAsEnabled()
   }
 
   @Test

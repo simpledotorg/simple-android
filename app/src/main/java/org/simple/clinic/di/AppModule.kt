@@ -27,6 +27,7 @@ import org.simple.clinic.storage.Migration_8_9
 import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
+import org.threeten.bp.Clock
 
 @Module(includes = [
   QrModule::class,
@@ -83,4 +84,7 @@ class AppModule(
 
   @Provides
   fun workManager() = WorkManager.getInstance()!!
+
+  @Provides
+  fun clock() = Clock.systemUTC()!!
 }

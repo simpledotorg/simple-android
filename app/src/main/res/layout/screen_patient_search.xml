@@ -155,6 +155,22 @@
             app:cleareableField="@id/patientsearch_dateofbirth" />
         </FrameLayout>
       </LinearLayout>
+
+      <!--
+        Setting errors on individual TextInputLayout doesn't
+        look good if both age and DOB are empty. The area
+        available is too small.
+      -->
+      <TextView
+        android:id="@+id/patientsearch_age_or_dateofbirth_error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginTop="-32dp"
+        android:visibility="gone"
+        android:text="@string/patientsearch_error_invalid_dateofbirth"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.TextInputLayoutError" />
     </LinearLayout>
   </ScrollView>
 

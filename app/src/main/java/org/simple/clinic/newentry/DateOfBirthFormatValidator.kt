@@ -2,7 +2,7 @@ package org.simple.clinic.newentry
 
 import org.simple.clinic.patient.PatientRepository
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeParseException
 import javax.inject.Inject
 
@@ -14,7 +14,7 @@ class DateOfBirthFormatValidator @Inject constructor() {
     DATE_IS_IN_FUTURE,
   }
 
-  fun validate(dateText: String, nowDate: LocalDate = LocalDate.now(ZoneOffset.UTC)): Result {
+  fun validate(dateText: String, nowDate: LocalDate = LocalDate.now(UTC)): Result {
     return try {
       if (dateText.isBlank()) {
         Result.INVALID_PATTERN

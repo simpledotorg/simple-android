@@ -1,6 +1,7 @@
 package org.simple.clinic.search
 
 import android.content.Context
+import android.support.design.widget.TextInputLayout
 import android.support.transition.ChangeBounds
 import android.support.transition.Fade
 import android.support.transition.TransitionManager
@@ -14,6 +15,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -46,11 +48,15 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
   private val fullNameEditText by bindView<EditText>(R.id.patientsearch_fullname)
+  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientsearch_fullname_inputlayout)
+  private val ageEditText by bindView<EditText>(R.id.patientsearch_age)
+  private val ageInputLayout by bindView<TextInputLayout>(R.id.patientsearch_age_inputlayout)
+  private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientsearch_age_container)
   private val dateOfBirthEditText by bindView<EditText>(R.id.patientsearch_dateofbirth)
+  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientsearch_dateofbirth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patientsearch_dateofbirth_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patientsearch_dateofbirth_and_age_separator)
-  private val ageEditText by bindView<EditText>(R.id.patientsearch_age)
-  private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientsearch_age_container)
+  private val ageOrDateOfBirthErrorTextView by bindView<TextView>(R.id.patientsearch_age_or_dateofbirth_error)
   private val searchButton by bindView<Button>(R.id.patientsearch_search)
   private val searchButtonFrame by bindView<ViewGroup>(R.id.patientsearch_search_frame)
 
@@ -105,12 +111,13 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun showSearchButtonAsDisabled() {
-    searchButton.isEnabled = false
+    // TODO: Create a custom button that can show disabled state.
+    // searchButton.isEnabled = false
     searchButtonFrame.setBackgroundResource(R.color.bottom_aligned_button_frame_disabled)
   }
 
   fun showSearchButtonAsEnabled() {
-    searchButton.isEnabled = true
+    // searchButton.isEnabled = true
     searchButtonFrame.setBackgroundResource(R.color.bottom_aligned_button_blue2_frame_enabled)
   }
 
@@ -145,5 +152,40 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       DateOfBirthAndAgeVisibility.AGE_VISIBLE, DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
       else -> View.GONE
     }
+  }
+
+  fun setEmptyFullNameErrorVisible(visible: Boolean) {
+    fullNameInputLayout.error = if (visible) {
+      resources.getString(R.string.patientsearch_error_empty_fullname)
+    } else {
+      null
+    }
+  }
+
+  fun setEmptyDateOfBirthAndAgeErrorVisible(visible: Boolean) {
+    ageOrDateOfBirthErrorTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    ageOrDateOfBirthErrorTextView.apply {
+      visibility = if (visible) View.VISIBLE else View.GONE
+      text = if (visible) resources.getString(R.string.patientsearch_error_both_dateofbirth_and_age_empty) else null
+    }
+    ageInputLayout.error = if (visible) " " else null
+  }
+
+  fun setInvalidDateOfBirthErrorVisible(visible: Boolean) {
+    ageOrDateOfBirthErrorTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    ageOrDateOfBirthErrorTextView.apply {
+      visibility = if (visible) View.VISIBLE else View.GONE
+      text = if (visible) resources.getString(R.string.patientsearch_error_invalid_dateofbirth) else null
+    }
+    dateOfBirthInputLayout.error = if (visible) " " else null
+  }
+
+  fun setDateOfBirthIsInFutureErrorVisible(visible: Boolean) {
+    ageOrDateOfBirthErrorTextView.visibility = if (visible) View.VISIBLE else View.GONE
+    ageOrDateOfBirthErrorTextView.apply {
+      visibility = if (visible) View.VISIBLE else View.GONE
+      text = if (visible) resources.getString(R.string.patientsearch_error_dateofbirth_is_in_future) else null
+    }
+    dateOfBirthInputLayout.error = if (visible) " " else null
   }
 }

@@ -15,7 +15,9 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.marginLayoutParams
+import org.simple.clinic.widgets.setCompoundDrawableStart
 import java.util.UUID
+
 
 class OverdueListAdapter(
     private val phoneCallClickStream: PublishSubject<CallPatientClicked>
@@ -33,7 +35,8 @@ class OverdueListAdapter(
     val holder = OverdueListViewHolder(layout, phoneCallClickStream)
 
     layout.setOnClickListener {
-      holder.handleBottomLayoutVisibility()
+      holder.toggleBottomLayoutVisibility()
+      holder.togglePhoneNumberViewVisibility()
 
       holder.itemView.post {
         val itemLocation = holder.itemView.locationRectOnScreen()
@@ -89,15 +92,25 @@ class OverdueListViewHolder(
     }
   }
 
-  fun handleBottomLayoutVisibility() {
+  fun toggleBottomLayoutVisibility() {
     val isVisible = actionsContainer.visibility == View.VISIBLE
     actionsContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
+  }
+
+  fun togglePhoneNumberViewVisibility() {
+    val isVisible = phoneNumberTextView.visibility == View.VISIBLE
+    if (!isVisible && appointment.phoneNumber != null) {
+      phoneNumberTextView.visibility = View.VISIBLE
+    } else {
+      phoneNumberTextView.visibility = View.GONE
+    }
   }
 
   fun render() {
     val context = itemView.context
 
     patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, appointment.name, appointment.age)
+    patientNameTextView.setCompoundDrawableStart(appointment.gender.displayIconRes)
 
     patientBPTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_patient_bp,
@@ -109,10 +122,8 @@ class OverdueListViewHolder(
 
     if (appointment.phoneNumber == null) {
       callButton.visibility = View.GONE
-      phoneNumberTextView.visibility = View.GONE
     } else {
       callButton.visibility = View.VISIBLE
-      phoneNumberTextView.visibility = View.VISIBLE
     }
 
     phoneNumberTextView.text = appointment.phoneNumber

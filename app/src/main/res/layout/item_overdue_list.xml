@@ -28,14 +28,13 @@
 
         <TextView
           android:id="@+id/overdue_patient_name_age"
+          style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/spacing_4"
           android:layout_marginStart="@dimen/spacing_16"
           android:drawablePadding="@dimen/spacing_16"
           android:drawableStart="@drawable/ic_patient_female"
-          android:textColor="@color/blue1"
-          android:textSize="@dimen/textsize_16"
           tools:text="Anisha Acharya" />
 
         <LinearLayout
@@ -46,25 +45,25 @@
           android:orientation="horizontal">
 
           <TextView
+            style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/overduelist_last_bp"
-            android:textAllCaps="true"
-            android:textColor="@color/grey1"
-            android:textSize="@dimen/textsize_12" />
+            android:textAllCaps="true" />
 
           <TextView
             android:id="@+id/overdue_patient_bp"
+            style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_4"
-            android:textColor="@color/grey1"
-            android:textSize="@dimen/textsize_14"
             tools:text="175/85, 30 days ago" />
+
         </LinearLayout>
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView
           android:id="@+id/overdue_patient_phone_number"
+          style="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginBottom="@dimen/spacing_4"
@@ -72,16 +71,15 @@
           android:drawablePadding="@dimen/spacing_4"
           android:drawableStart="@drawable/ic_call_16dp"
           android:gravity="center"
-          android:textColor="@color/grey1"
-          android:textSize="@dimen/textsize_14" />
+          android:visibility="gone"/>
+
 
         <TextView
           android:id="@+id/overdue_days"
+          style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_marginStart="@dimen/spacing_56"
-          android:textColor="@color/red1"
-          android:textSize="@dimen/textsize_14"
           tools:text="4 day overdue" />
       </LinearLayout>
 
@@ -111,6 +109,7 @@
       android:visibility="gone">
 
       <TextView
+        style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_12"
@@ -118,23 +117,14 @@
         android:paddingEnd="@dimen/spacing_4"
         android:paddingStart="@dimen/spacing_56"
         android:text="@string/overduelist_result_of_call"
-        android:textAllCaps="true"
-        android:textColor="@color/grey1"
-        android:textSize="@dimen/textsize_12" />
+        android:textAllCaps="true" />
 
       <TextView
+        style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:background="?attr/selectableItemBackground"
-        android:drawablePadding="@dimen/spacing_16"
         android:drawableStart="@drawable/ic_radio_button_unchecked_green1_24dp"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/spacing_12"
-        android:paddingTop="@dimen/spacing_12"
-        android:text="@string/overduelist_agreed_to_visit"
-        android:textColor="@color/grey0"
-        android:textSize="@dimen/textsize_16" />
+        android:text="@string/overduelist_agreed_to_visit" />
 
       <View
         android:layout_width="match_parent"
@@ -144,18 +134,11 @@
         android:background="@color/grey3" />
 
       <TextView
+        style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:background="?attr/selectableItemBackground"
-        android:drawablePadding="@dimen/spacing_16"
         android:drawableStart="@drawable/ic_radio_button_unchecked_yellow0_24dp"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/spacing_12"
-        android:paddingTop="@dimen/spacing_12"
-        android:text="@string/overduelist_remind_call_later"
-        android:textColor="@color/grey0"
-        android:textSize="@dimen/textsize_16" />
+        android:text="@string/overduelist_remind_call_later" />
 
       <View
         android:layout_width="match_parent"
@@ -165,18 +148,11 @@
         android:background="@color/grey3" />
 
       <TextView
+        style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:background="?attr/selectableItemBackground"
-        android:drawablePadding="@dimen/spacing_16"
         android:drawableStart="@drawable/ic_remove_circle_outline_red1_24dp"
-        android:gravity="center_vertical"
-        android:paddingBottom="@dimen/spacing_12"
-        android:paddingTop="@dimen/spacing_12"
-        android:text="@string/overduelist_remove_from_list"
-        android:textColor="@color/grey0"
-        android:textSize="@dimen/textsize_16" />
+        android:text="@string/overduelist_remove_from_list" />
     </LinearLayout>
 
   </RelativeLayout>

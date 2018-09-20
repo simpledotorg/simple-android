@@ -25,7 +25,9 @@ class PatientSearchResultsController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
+    val replayedEvents = events
+        .compose(ReportAnalyticsEvents())
+        .replay().refCount()
 
     return Observable.mergeArray(
         showComputedAge(replayedEvents),
@@ -37,28 +39,17 @@ class PatientSearchResultsController @Inject constructor(
   private fun showComputedAge(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSearchResultsScreenCreated>()
         .map { it.key }
-        .map { (_, age, dob) ->
-          val computedAge = when {
-            age.isNotBlank() -> age.trim().toInt()
-            else -> calculateAgeFromDateOfBirth(dob)
-          }
-          computedAge
-        }
+        .map { (_, age, dob) -> ageOrAgeFromDateOfBirth(age, dob) }
         .map { { ui: Ui -> ui.showComputedAge(it.toString()) } }
   }
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSearchResultsScreenCreated>()
         .map { it.key }
-        .map { (name, age, dob) ->
-          val computedAge = when {
-            age.isNotBlank() -> age.trim().toInt()
-            else -> calculateAgeFromDateOfBirth(dob)
-          }
-          name to computedAge
-        }
+        .map { (name, age, dob) -> name to ageOrAgeFromDateOfBirth(age, dob) }
         .flatMap { (name, computedAge) ->
-          repository.search(name, computedAge, includeFuzzyNameSearch = true) }
+          repository.search(name, computedAge, includeFuzzyNameSearch = true)
+        }
         .map {
           { ui: Ui ->
             ui.updateSearchResults(it)
@@ -67,9 +58,14 @@ class PatientSearchResultsController @Inject constructor(
         }
   }
 
-  private fun calculateAgeFromDateOfBirth(dob: String): Int {
-    val dateOfBirth = DATE_OF_BIRTH_FORMAT_FOR_UI.parse(dob.trim(), LocalDate::from)
-    return Period.between(dateOfBirth, LocalDate.now(clock)).years
+  private fun ageOrAgeFromDateOfBirth(age: String, dob: String): Int {
+    return when {
+      age.isNotBlank() -> age.trim().toInt()
+      else -> {
+        val dateOfBirth = DATE_OF_BIRTH_FORMAT_FOR_UI.parse(dob.trim(), LocalDate::from)
+        Period.between(dateOfBirth, LocalDate.now(clock)).years
+      }
+    }
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

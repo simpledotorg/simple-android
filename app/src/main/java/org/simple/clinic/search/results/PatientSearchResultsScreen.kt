@@ -5,6 +5,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
+import android.view.View
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -42,6 +43,8 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsearchresults_results)
+  private val emptyStateView by bindView<View>(R.id.patientsearchresults_empty_state)
+  private val newPatientRationaleTextView by bindView<TextView>(R.id.patientsearchresults_new_patient_rationale)
   private val newPatientButton by bindView<Button>(R.id.patientsearchresults_new_patient)
 
   private val queryAgeTextView by lazy {
@@ -104,7 +107,16 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun setEmptyStateVisible(visible: Boolean) {
-    // TODO.
+    emptyStateView.visibility = if (visible) View.VISIBLE else View.GONE
+
+    newPatientRationaleTextView.setText(when {
+      visible -> R.string.patientsearchresults_register_patient_rationale_for_empty_state
+      else -> R.string.patientsearchresults_register_patient_rationale
+    })
+    newPatientButton.setText(when {
+      visible -> R.string.patientsearchresults_register_patient_for_empty_state
+      else -> R.string.patientsearchresults_register_patient
+    })
   }
 
   fun showComputedAge(age: String) {

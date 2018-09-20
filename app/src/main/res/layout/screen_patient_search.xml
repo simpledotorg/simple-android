@@ -176,7 +176,7 @@
 
   <FrameLayout
     android:id="@+id/patientsearch_search_frame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue1"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue2"
     android:background="@color/patientsearch_search_button_frame_enabled">
 
     <org.simple.clinic.widgets.PrimarySolidButton

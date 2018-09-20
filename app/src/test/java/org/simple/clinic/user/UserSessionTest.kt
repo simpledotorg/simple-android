@@ -390,7 +390,11 @@ class UserSessionTest {
 
   @Test
   fun `whenever the forgot pin api succeeds, the logged in users password digest and logged in status must be updated`() {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(
+        pinDigest = "old-digest",
+        loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
+        status = UserStatus.APPROVED_FOR_SYNCING
+    )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("new-digest"))
@@ -398,7 +402,11 @@ class UserSessionTest {
 
     userSession.resetPin("0000").blockingGet()
 
-    verify(userDao).createOrUpdate(currentUser.copy(pinDigest = "new-digest", loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED))
+    verify(userDao).createOrUpdate(currentUser.copy(
+        pinDigest = "new-digest",
+        loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
+        status = UserStatus.WAITING_FOR_APPROVAL
+    ))
   }
 
   @Test

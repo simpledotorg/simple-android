@@ -41,7 +41,6 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
@@ -376,11 +375,18 @@ class UserSession @Inject constructor(
 
     val updateUserOnSuccess = hashedPin
         .zipWith(requireLoggedInUser().firstOrError())
-        .map { (newPinDigest, user) -> user.copy(pinDigest = newPinDigest, loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED) }
+        .map { (newPinDigest, user) ->
+          user.copy(
+              pinDigest = newPinDigest,
+              loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
+              status = UserStatus.WAITING_FOR_APPROVAL
+          )
+        }
         .doOnSuccess { appDatabase.userDao().createOrUpdate(it) }
         .map { ForgotPinResult.Success as ForgotPinResult }
 
-    val forgotPinResult = hashedPin.map { ResetPinRequest(it) }
+    return hashedPin
+        .map { ResetPinRequest(it) }
         .flatMapCompletable { forgotPinApiV1.resetPin(it) }
         .toSingleDefault(ForgotPinResult.Success as ForgotPinResult)
         .flatMap { updateUserOnSuccess }
@@ -395,7 +401,5 @@ class UserSession @Inject constructor(
             else -> ForgotPinResult.UnexpectedError(it)
           }
         }
-
-    return forgotPinResult
   }
 }

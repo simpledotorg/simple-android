@@ -1,6 +1,6 @@
 package org.simple.clinic.newentry
 
-import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeParseException
@@ -20,7 +20,7 @@ class DateOfBirthFormatValidator @Inject constructor() {
         Result.INVALID_PATTERN
       }
 
-      val parsedDate = PatientRepository.dateOfTimeFormatter.parse(dateText, LocalDate::from)
+      val parsedDate = DATE_OF_BIRTH_FORMAT_FOR_UI.parse(dateText, LocalDate::from)
       when {
         parsedDate > nowDate -> Result.DATE_IS_IN_FUTURE
         else -> Result.VALID

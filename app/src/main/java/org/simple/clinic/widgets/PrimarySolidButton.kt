@@ -46,7 +46,6 @@ class PrimarySolidButton(context: Context, attrs: AttributeSet?) : AppCompatButt
 
   override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
     super.onSizeChanged(w, h, oldw, oldh)
-    Timber.i("cornerRadiusPx: $cornerRadiusPx")
     shapeBounds.set(
         insets.left,
         insets.top,

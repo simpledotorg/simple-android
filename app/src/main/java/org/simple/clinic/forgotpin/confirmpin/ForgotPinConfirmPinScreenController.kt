@@ -7,6 +7,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.ForgotPinResult
 import org.simple.clinic.user.ForgotPinResult.NetworkError
 import org.simple.clinic.user.ForgotPinResult.Success
 import org.simple.clinic.user.ForgotPinResult.UnexpectedError
@@ -20,7 +22,8 @@ typealias UiChange = (Ui) -> Unit
 
 class ForgotPinConfirmPinScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(upstream: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -59,18 +62,6 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .map { { ui: Ui -> ui.goBack() } }
   }
 
-  private fun showPinMismatchedErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
-        .map { it.pin }
-        .cache()
-
-    return events.ofType<ForgotPinConfirmPinSubmitClicked>()
-        .map { it.pin }
-        .withLatestFrom(previouslyEnteredPin)
-        .filter { (enteredPin, previousPin) -> enteredPin != previousPin }
-        .map { { ui: Ui -> ui.showPinMismatchedError() } }
-  }
-
   private fun hideErrorsOnPinTextChanged(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ForgotPinConfirmPinTextChanged>()
         .map { { ui: Ui -> ui.hideError() } }
@@ -96,7 +87,9 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
     val showProgressOnValidPin = validPin.map { { ui: Ui -> ui.showProgress() } }
 
     val makeResetPinCall = validPin
+        .flatMapSingle { userSession.syncAndClearData(patientRepository, 1).toSingleDefault(it) }
         .flatMapSingle { userSession.resetPin(it) }
+        .onErrorReturn { ForgotPinResult.UnexpectedError(it) }
         .share()
 
     val hideProgressOnResetPinCall = makeResetPinCall

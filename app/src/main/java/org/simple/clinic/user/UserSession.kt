@@ -42,6 +42,7 @@ import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.reflect.KClass
@@ -369,13 +370,15 @@ class UserSession @Inject constructor(
     return accessTokenPreference.get()
   }
 
-  fun startForgotPinFlow(patientRepository: PatientRepository, syncRetryCount: Int = 0): Completable {
+  fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
     return syncScheduler.syncImmediately()
         .subscribeOn(Schedulers.io())
         .retry(syncRetryCount.toLong())
+        .timeout(timeoutSeconds, TimeUnit.SECONDS)
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
         .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
+          // TODO: Move this to a separate method which can be called from wherever
           Completable.fromAction {
             appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
           }

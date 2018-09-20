@@ -143,8 +143,6 @@
   <string name="applock_reset_pin_alert_message">Are you sure you want to reset your security PIN?</string>
   <string name="applock_reset_pin_alert_confirm">Reset</string>
   <string name="applock_reset_pin_alert_cancel">Cancel</string>
-  <string name="applock_reset_pin_waiting">Please wait…</string>
-
 
   <!-- TODO: Get reviewed by Daniel -->
   <!-- Registration -->

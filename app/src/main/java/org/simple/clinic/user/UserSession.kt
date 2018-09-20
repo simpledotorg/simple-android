@@ -38,6 +38,7 @@ import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.threeten.bp.Instant
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -59,7 +60,13 @@ class UserSession @Inject constructor(
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    private val syncScheduler: SyncScheduler
+    private val syncScheduler: SyncScheduler,
+    @Named("last_patient_pull_timestamp") private val patientSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_bp_pull_timestamp") private val bpSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_prescription_pull_timestamp") private val prescriptionSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_appointment_pull_timestamp") private val appointmentSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_communication_pull_timestamp") private val communicationSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_medicalhistory_pull_timestamp") private val medicalHistorySyncPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   private var ongoingLoginEntry: OngoingLoginEntry? = null
@@ -377,6 +384,14 @@ class UserSession @Inject constructor(
         .timeout(timeoutSeconds, TimeUnit.SECONDS)
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
+        .andThen(Completable.fromAction {
+          patientSyncPullTimestamp.delete()
+          bpSyncPullTimestamp.delete()
+          prescriptionSyncPullTimestamp.delete()
+          appointmentSyncPullTimestamp.delete()
+          communicationSyncPullTimestamp.delete()
+          medicalHistorySyncPullTimestamp.delete()
+        })
         .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
           // TODO: Move this to a separate method which can be called from wherever
           Completable.fromAction {

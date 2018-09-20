@@ -46,6 +46,7 @@ import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.threeten.bp.Instant
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -68,6 +69,7 @@ class UserSessionTest {
   private val userDao = mock<User.RoomDao>()
   private val reporter = MockReporter()
 
+
   private val moshi = Moshi.Builder().build()
   private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
   private val unauthorizedErrorResponseJson = """{
@@ -81,22 +83,41 @@ class UserSessionTest {
   private lateinit var userSession: UserSession
   private lateinit var syncScheduler: SyncScheduler
 
+  private lateinit var medicalHistoryPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var communicationPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var appointmentPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var prescriptionPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var bpPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var patientPullTimestamp: Preference<Optional<Instant>>
+
   @Before
   fun setUp() {
     syncScheduler = mock()
+    medicalHistoryPullTimestamp = mock()
+    communicationPullTimestamp = mock()
+    appointmentPullTimestamp = mock()
+    prescriptionPullTimestamp = mock()
+    bpPullTimestamp = mock()
+    patientPullTimestamp = mock()
 
     userSession = UserSession(
-        loginApi,
-        registrationApi,
-        forgotPinApiV1,
-        moshi,
-        facilitySync,
-        facilityRepository,
-        sharedPrefs,
-        appDatabase,
-        passwordHasher,
-        accessTokenPref,
-        syncScheduler
+        loginApi = loginApi,
+        registrationApi = registrationApi,
+        forgotPinApiV1 = forgotPinApiV1,
+        moshi = moshi,
+        facilitySync = facilitySync,
+        facilityRepository = facilityRepository,
+        sharedPreferences = sharedPrefs,
+        appDatabase = appDatabase,
+        passwordHasher = passwordHasher,
+        accessTokenPreference = accessTokenPref,
+        syncScheduler = syncScheduler,
+        patientSyncPullTimestamp = patientPullTimestamp,
+        bpSyncPullTimestamp = bpPullTimestamp,
+        prescriptionSyncPullTimestamp = prescriptionPullTimestamp,
+        appointmentSyncPullTimestamp = appointmentPullTimestamp,
+        communicationSyncPullTimestamp = communicationPullTimestamp,
+        medicalHistorySyncPullTimestamp = medicalHistoryPullTimestamp
     )
     userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
@@ -262,7 +283,7 @@ class UserSessionTest {
   }
 
   @Test
-  fun `when the reset PIN flow is started, the sync must be triggered`() {
+  fun `when the sync and clear data is started, the sync must be triggered`() {
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
@@ -354,6 +375,25 @@ class UserSessionTest {
         .await()
 
     verify(userDao).updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
+  }
+
+  @Test
+  fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    val user = PatientMocker.loggedInUser()
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
+    userSession.syncAndClearData(patientRepository)
+        .test()
+        .await()
+
+    verify(patientPullTimestamp).delete()
+    verify(bpPullTimestamp).delete()
+    verify(appointmentPullTimestamp).delete()
+    verify(communicationPullTimestamp).delete()
+    verify(medicalHistoryPullTimestamp).delete()
+    verify(prescriptionPullTimestamp).delete()
   }
 
   @Test

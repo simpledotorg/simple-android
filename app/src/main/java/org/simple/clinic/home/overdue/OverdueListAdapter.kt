@@ -13,8 +13,8 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.util.locationRectOnScreen
-import org.simple.clinic.util.marginLayoutParams
+import org.simple.clinic.widgets.locationRectOnScreen
+import org.simple.clinic.widgets.marginLayoutParams
 import java.util.UUID
 
 class OverdueListAdapter(

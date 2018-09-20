@@ -80,8 +80,16 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body2Left.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body2Left.Green1">
     <item name="android:textColor">@color/green1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left.Red1">
+    <item name="android:textColor">@color/red1</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Left.Numeric">
@@ -166,5 +174,15 @@
     <item name="android:tint">@color/grey2</item>
     <item name="android:src">@drawable/ic_clear_circular_24dp</item>
     <item name="android:layout_gravity">end</item>
+  </style>
+
+  <style name="Clinic.V2.OverdueListAction">
+    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left.Grey0</item>
+    <item name="android:layout_marginStart">@dimen/spacing_16</item>
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:drawablePadding">@dimen/spacing_16</item>
+    <item name="android:gravity">center_vertical</item>
+    <item name="android:paddingBottom">@dimen/spacing_12</item>
+    <item name="android:paddingTop">@dimen/spacing_12</item>
   </style>
 </resources>

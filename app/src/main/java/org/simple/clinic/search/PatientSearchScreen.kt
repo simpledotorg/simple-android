@@ -159,6 +159,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     } else {
       null
     }
+    fullNameInputLayout.isErrorEnabled = visible
   }
 
   fun setEmptyDateOfBirthAndAgeErrorVisible(visible: Boolean) {

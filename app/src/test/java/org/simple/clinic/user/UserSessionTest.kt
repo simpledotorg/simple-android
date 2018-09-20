@@ -175,12 +175,35 @@ class UserSessionTest {
   }
 
   @Test
-  fun `when refreshing the logged in user then the user details should be fetched from the server`() {
-    val loggedInUser = PatientMocker.loggedInUser(uuid = loggedInUserPayload.uuid)
-    val refreshedUserPayload = loggedInUserPayload.copy(status = UserStatus.APPROVED_FOR_SYNCING)
+  @Parameters(value = [
+    "NOT_LOGGED_IN|WAITING_FOR_APPROVAL|NOT_LOGGED_IN",
+    "OTP_REQUESTED|WAITING_FOR_APPROVAL|OTP_REQUESTED",
+    "LOGGED_IN|WAITING_FOR_APPROVAL|LOGGED_IN",
+    "RESETTING_PIN|WAITING_FOR_APPROVAL|RESETTING_PIN",
+    "RESET_PIN_REQUESTED|WAITING_FOR_APPROVAL|RESET_PIN_REQUESTED",
+
+    "NOT_LOGGED_IN|APPROVED_FOR_SYNCING|LOGGED_IN",
+    "OTP_REQUESTED|APPROVED_FOR_SYNCING|LOGGED_IN",
+    "LOGGED_IN|APPROVED_FOR_SYNCING|LOGGED_IN",
+    "RESETTING_PIN|APPROVED_FOR_SYNCING|LOGGED_IN",
+    "RESET_PIN_REQUESTED|APPROVED_FOR_SYNCING|LOGGED_IN",
+
+    "NOT_LOGGED_IN|DISAPPROVED_FOR_SYNCING|NOT_LOGGED_IN",
+    "OTP_REQUESTED|DISAPPROVED_FOR_SYNCING|OTP_REQUESTED",
+    "LOGGED_IN|DISAPPROVED_FOR_SYNCING|LOGGED_IN",
+    "RESETTING_PIN|DISAPPROVED_FOR_SYNCING|RESETTING_PIN",
+    "RESET_PIN_REQUESTED|DISAPPROVED_FOR_SYNCING|RESET_PIN_REQUESTED"
+  ]
+  )
+  fun `when refreshing the logged in user then the user details should be fetched from the server and login status must be updated`(
+      olderLoggedInStatus: User.LoggedInStatus,
+      userStatus: UserStatus,
+      newerLoggedInStatus: User.LoggedInStatus
+  ) {
+    val loggedInUser = PatientMocker.loggedInUser(uuid = loggedInUserPayload.uuid, loggedInStatus = olderLoggedInStatus)
+    val refreshedUserPayload = loggedInUserPayload.copy(status = userStatus)
 
     whenever(registrationApi.findUser(loggedInUserPayload.phoneNumber)).thenReturn(Single.just(refreshedUserPayload))
-    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(loggedInUser)))
 
@@ -189,7 +212,8 @@ class UserSessionTest {
     verify(registrationApi).findUser(loggedInUserPayload.phoneNumber)
     verify(userDao).createOrUpdate(check {
       assertThat(it.uuid).isEqualTo(loggedInUserPayload.uuid)
-      assertThat(it.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+      assertThat(it.status).isEqualTo(userStatus)
+      assertThat(it.loggedInStatus).isEqualTo(newerLoggedInStatus)
     })
   }
 

@@ -268,7 +268,7 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.startForgotPinFlow(patientRepository).blockingAwait()
+    userSession.syncAndClearData(patientRepository).blockingAwait()
 
     verify(syncScheduler).syncImmediately()
   }
@@ -290,7 +290,7 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.startForgotPinFlow(patientRepository, retryCount)
+    userSession.syncAndClearData(patientRepository, retryCount)
         .test()
         .await()
         .assertComplete()
@@ -308,7 +308,7 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.startForgotPinFlow(patientRepository, retryCount)
+    userSession.syncAndClearData(patientRepository, retryCount)
         .test()
         .await()
         .assertComplete()
@@ -321,7 +321,7 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.startForgotPinFlow(patientRepository)
+    userSession.syncAndClearData(patientRepository)
         .test()
         .await()
 
@@ -335,7 +335,7 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.startForgotPinFlow(patientRepository)
+    userSession.syncAndClearData(patientRepository)
         .test()
         .await()
 
@@ -349,7 +349,7 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.startForgotPinFlow(patientRepository)
+    userSession.syncAndClearData(patientRepository)
         .test()
         .await()
 

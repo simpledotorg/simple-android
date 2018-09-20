@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -16,6 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.ForgotPinResult
 import org.simple.clinic.user.ForgotPinResult.NetworkError
 import org.simple.clinic.user.ForgotPinResult.Success
@@ -34,6 +36,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
 
   private lateinit var controller: ForgotPinConfirmPinScreenController
+  private lateinit var patientRepository: PatientRepository
   private lateinit var screen: ForgotPinConfirmPinScreen
 
   private val loggedInUser = PatientMocker.loggedInUser()
@@ -42,8 +45,9 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Before
   fun setUp() {
     screen = mock()
+    patientRepository = mock()
 
-    controller = ForgotPinConfirmPinScreenController(userSession, facilityRepository)
+    controller = ForgotPinConfirmPinScreenController(userSession, facilityRepository, patientRepository)
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
     whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(facility))
 
@@ -91,6 +95,7 @@ class ForgotPinConfirmPinScreenControllerTest {
       submittedPin2: String,
       bothAreFailures: Boolean
   ) {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userSession.resetPin(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated(originalPin))
@@ -114,6 +119,38 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
+  fun `when a valid PIN is submitted, the local patient data must be synced and then cleared`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
+    whenever(userSession.resetPin(any())).thenReturn(Single.just(ForgotPinResult.Success))
+
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
+
+    verify(userSession).syncAndClearData(any(), any(), any())
+  }
+
+  @Test
+  fun `when the sync fails, it must show an unexpected error`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.error(RuntimeException()))
+    whenever(userSession.resetPin(any())).thenReturn(Single.just(ForgotPinResult.Success))
+
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
+
+    verify(screen).showUnexpectedError()
+  }
+
+  @Test
+  fun `when the sync fails, the progress must be hidden`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.error(RuntimeException()))
+
+    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
+    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
+
+    verify(screen).hideProgress()
+  }
+
+  @Test
   @Parameters(value = [
     "0|false",
     "00|false",
@@ -121,11 +158,12 @@ class ForgotPinConfirmPinScreenControllerTest {
     "0000|true",
     "00000|false"
   ])
-  fun `when a valid PIN is submitted, it must raise the Reset PIN request`(
+  fun `when a valid PIN is submitted and sync succeeds, it must raise the Reset PIN request`(
       pin: String,
       shouldRaiseRequest: Boolean
   ) {
     whenever(userSession.resetPin(any())).thenReturn(Single.just(Success))
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked(pin))
@@ -138,16 +176,8 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
-  fun `when a valid PIN is submitted and reset PIN call fails, it must show the unexpected error`() {
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
-    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
-
-    verify(screen).showUnexpectedError()
-    verify(userSession, never()).resetPin(any())
-  }
-
-  @Test
   fun `when a valid PIN is submitted, the progress must be shown`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
 
@@ -157,6 +187,7 @@ class ForgotPinConfirmPinScreenControllerTest {
   @Test
   @Parameters(method = "params For failed forgot pin call")
   fun `when the forgot PIN call completes, the progress must be hidden`(result: Single<ForgotPinResult>) {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userSession.resetPin(any())).thenReturn(result)
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
@@ -178,6 +209,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @Test
   fun `when the forgot PIN call fails with a network error, the error must be shown`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userSession.resetPin(any())).thenReturn(Single.just(NetworkError))
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
@@ -188,6 +220,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @Test
   fun `when the forgot PIN call fails with an unexpected error, the error must be shown`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userSession.resetPin(any())).thenReturn(Single.just(UnexpectedError(RuntimeException())))
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
@@ -198,6 +231,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @Test
   fun `when the forgot PIN call fails with a user not found error, the error must be shown`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userSession.resetPin(any())).thenReturn(Single.just(UserNotFound))
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
@@ -208,6 +242,7 @@ class ForgotPinConfirmPinScreenControllerTest {
 
   @Test
   fun `when the forgot PIN call succeeds, the home screen must be opened`() {
+    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userSession.resetPin(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))

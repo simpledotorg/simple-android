@@ -183,19 +183,26 @@ class UserSession @Inject constructor(
   }
 
   fun refreshLoggedInUser(): Completable {
-    return loggedInUser()
+    return requireLoggedInUser()
         .firstOrError()
-        .map { (user) ->
-          if (user == null) {
-            throw AssertionError("User isn't logged in yet.")
-          }
-          user
-        }
-        .flatMap { registrationApi.findUser(it.phoneNumber) }
-        .flatMapCompletable { userPayload ->
-          val user = userFromPayload(userPayload, User.LoggedInStatus.LOGGED_IN)
-          val userFacilities = userPayload.facilityUuids
-          storeUser(user, userFacilities)
+        .flatMapCompletable { loggedInUser ->
+          registrationApi.findUser(loggedInUser.phoneNumber)
+              .flatMapCompletable { userPayload ->
+                // TODO: This was added to handle the case where the user logged in status will
+                // not get set to LOGGED_IN when the PIN reset request is approved. See if it can
+                // be done in a better way since there are many places where this sort of logic is
+                // littered all over the app currently.
+                val finalLoggedInStatus = if (userPayload.status == UserStatus.APPROVED_FOR_SYNCING) {
+                  User.LoggedInStatus.LOGGED_IN
+
+                } else {
+                  loggedInUser.loggedInStatus
+                }
+
+                val user = userFromPayload(userPayload, finalLoggedInStatus)
+                val userFacilities = userPayload.facilityUuids
+                storeUser(user, userFacilities)
+              }
         }
   }
 

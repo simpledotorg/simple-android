@@ -168,17 +168,18 @@
         android:layout_marginEnd="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_4"
         android:layout_marginTop="-32dp"
-        android:visibility="gone"
         android:text="@string/patientsearch_error_invalid_dateofbirth"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.TextInputLayoutError" />
+        android:textAppearance="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
+        android:visibility="gone" />
     </LinearLayout>
   </ScrollView>
 
   <FrameLayout
     android:id="@+id/patientsearch_search_frame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue1">
+    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue1"
+    android:background="@color/patientsearch_search_button_frame_enabled">
 
-    <Button
+    <org.simple.clinic.widgets.PrimarySolidButton
       android:id="@+id/patientsearch_search"
       style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
       android:layout_width="match_parent"

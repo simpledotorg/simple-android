@@ -110,15 +110,14 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .map { SearchClicked() }
   }
 
-  fun showSearchButtonAsDisabled() {
-    // TODO: Create a custom button that can show disabled state.
-    // searchButton.isEnabled = false
-    searchButtonFrame.setBackgroundResource(R.color.bottom_aligned_button_frame_disabled)
+  fun showSearchButtonAsEnabled() {
+    searchButton.setBackgroundResource(R.color.patientsearch_search_button_enabled)
+    searchButtonFrame.setBackgroundResource(R.color.patientsearch_search_button_frame_enabled)
   }
 
-  fun showSearchButtonAsEnabled() {
-    // searchButton.isEnabled = true
-    searchButtonFrame.setBackgroundResource(R.color.bottom_aligned_button_blue2_frame_enabled)
+  fun showSearchButtonAsDisabled() {
+    searchButton.setBackgroundResource(R.color.patientsearch_search_button_disabled)
+    searchButtonFrame.setBackgroundResource(R.color.patientsearch_search_button_frame_disabled)
   }
 
   fun openPatientEntryScreen() {

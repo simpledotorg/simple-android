@@ -15,6 +15,9 @@
   <color name="textinputlayout_error">#FF4200</color>
   <color name="snackbar_action">#99ff66</color>
 
-  <color name="bottom_aligned_button_blue2_frame_enabled">@color/blue2</color>
-  <color name="bottom_aligned_button_frame_disabled">@color/grey3</color>
+  <color name="patientsearch_search_button_enabled">@color/blue1</color>
+  <color name="patientsearch_search_button_disabled">@color/grey2</color>
+
+  <color name="patientsearch_search_button_frame_enabled">@color/blue2</color>
+  <color name="patientsearch_search_button_frame_disabled">@color/grey3</color>
 </resources>

@@ -38,7 +38,7 @@ open class LoginModule {
       val userDao = appDatabase.userDao()
       val userFacilityMappingDao = appDatabase.userFacilityMappingDao()
 
-      override fun resetPin2(request: ResetPinRequest): Single<ForgotPinResponse> {
+      override fun resetPin(request: ResetPinRequest): Single<ForgotPinResponse> {
         return Single.fromCallable { userDao.userImmediate() }
             .delay(2L, TimeUnit.SECONDS)
             .map {

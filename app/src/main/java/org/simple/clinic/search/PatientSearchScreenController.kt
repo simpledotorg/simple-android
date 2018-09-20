@@ -139,7 +139,6 @@ class PatientSearchScreenController @Inject constructor(
 
   private fun showValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<SearchQueryValidated>()
-        .distinctUntilChanged()
         .flatMapIterable { it.validationErrors }
         .doOnNext { Analytics.reportInputValidationError(it.analyticsName) }
         .map {
@@ -149,10 +148,7 @@ class PatientSearchScreenController @Inject constructor(
               BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> ui.setEmptyDateOfBirthAndAgeErrorVisible(true)
               INVALID_DATE_OF_BIRTH -> ui.setInvalidDateOfBirthErrorVisible(true)
               DATE_OF_BIRTH_IN_FUTURE -> ui.setDateOfBirthIsInFutureErrorVisible(true)
-
-              BOTH_DATEOFBIRTH_AND_AGE_PRESENT -> {
-                throw AssertionError("Should never receive $it")
-              }
+              BOTH_DATEOFBIRTH_AND_AGE_PRESENT -> throw AssertionError("Should never receive $it")
             }
           }
         }

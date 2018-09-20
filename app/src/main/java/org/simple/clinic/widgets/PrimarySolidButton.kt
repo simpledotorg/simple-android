@@ -1,6 +1,7 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -10,7 +11,6 @@ import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import org.simple.clinic.R
-import timber.log.Timber
 
 /**
  * Accepting better names.
@@ -19,12 +19,6 @@ import timber.log.Timber
  * TODO: Draw touch feedback.
  */
 class PrimarySolidButton(context: Context, attrs: AttributeSet?) : AppCompatButton(context, attrs) {
-
-  private val dpToPx = { dp: Int ->
-    val resources = context.resources
-    val metrics = resources.displayMetrics
-    dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
-  }
 
   /**
    * These insets are applied as extra padding around the button shape. They are set
@@ -38,11 +32,6 @@ class PrimarySolidButton(context: Context, attrs: AttributeSet?) : AppCompatButt
 
   private val shapeBounds = RectF()
   private val cornerRadiusPx = resources.getDimensionPixelSize(R.dimen.corner_radius_button).toFloat()
-
-  private fun requireBackgroundColorPaint(): Paint {
-    backgroundColorPaint = Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
-    return backgroundColorPaint!!
-  }
 
   override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
     super.onSizeChanged(w, h, oldw, oldh)
@@ -69,5 +58,15 @@ class PrimarySolidButton(context: Context, attrs: AttributeSet?) : AppCompatButt
   override fun onDraw(canvas: Canvas) {
     canvas.drawRoundRect(shapeBounds, cornerRadiusPx, cornerRadiusPx, backgroundColorPaint)
     super.onDraw(canvas)
+  }
+
+  private fun requireBackgroundColorPaint(): Paint {
+    backgroundColorPaint = Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+    return backgroundColorPaint!!
+  }
+
+  private fun dpToPx(dp: Int): Float {
+    val metrics = Resources.getSystem().displayMetrics
+    return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
   }
 }

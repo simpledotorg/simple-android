@@ -39,14 +39,14 @@ class PatientSearchResultsController @Inject constructor(
   private fun showComputedAge(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSearchResultsScreenCreated>()
         .map { it.key }
-        .map { (_, age, dob) -> ageOrAgeFromDateOfBirth(age, dob) }
+        .map { (_, age, dob) -> coerceAgeFrom(age, dob) }
         .map { { ui: Ui -> ui.showComputedAge(it.toString()) } }
   }
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSearchResultsScreenCreated>()
         .map { it.key }
-        .map { (name, age, dob) -> name to ageOrAgeFromDateOfBirth(age, dob) }
+        .map { (name, age, dob) -> name to coerceAgeFrom(age, dob) }
         .flatMap { (name, computedAge) ->
           repository.search(name, computedAge, includeFuzzyNameSearch = true)
         }
@@ -58,7 +58,7 @@ class PatientSearchResultsController @Inject constructor(
         }
   }
 
-  private fun ageOrAgeFromDateOfBirth(age: String, dob: String): Int {
+  private fun coerceAgeFrom(age: String, dob: String): Int {
     return when {
       age.isNotBlank() -> age.trim().toInt()
       else -> {

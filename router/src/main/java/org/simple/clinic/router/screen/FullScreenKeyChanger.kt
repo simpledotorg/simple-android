@@ -65,15 +65,6 @@ class FullScreenKeyChanger(
     return container
   }
 
-  override fun removeOutgoingView(outgoingState: State, outgoingView: View) {
-    super.removeOutgoingView(outgoingState, outgoingView)
-
-    val outgoingKey = outgoingState.getKey<Any>()
-    containerIds[outgoingKey]?.let {
-      containerIds.remove(outgoingKey)
-    }
-  }
-
   override fun changeKey(
       outgoingState: State?,
       incomingState: State,

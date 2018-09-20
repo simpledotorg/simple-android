@@ -90,15 +90,26 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when the user is awaiting approval then the approval status should be shown`() {
-    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+  @Parameters(value = [
+    "LOGGED_IN|true",
+    "RESET_PIN_REQUESTED|false"
+  ])
+  fun `when the user is awaiting approval then the approval status should be shown`(
+      loggedInStatus: LoggedInStatus,
+      shouldShowApprovalStatus: Boolean
+  ) {
+    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showUserStatusAsWaiting()
+    if (shouldShowApprovalStatus) {
+      verify(screen).showUserStatusAsWaiting()
+    } else {
+      verify(screen, never()).showUserStatusAsWaiting()
+    }
   }
 
   @Test
@@ -113,21 +124,29 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters("true", "false")
+  @Parameters(value = [
+    "LOGGED_IN|true|false",
+    "LOGGED_IN|false|true",
+    "RESET_PIN_REQUESTED|true|false",
+    "RESET_PIN_REQUESTED|false|true"
+  ]
+  )
   fun `when the user has been approved within the last 24h then the approval status should be shown`(
-      hasUserDismissedStatus: Boolean
+      loggedInStatus: LoggedInStatus,
+      hasUserDismissedStatus: Boolean,
+      shouldShowApprovedStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
 
     uiEvents.onNext(ScreenCreated())
 
-    if (hasUserDismissedStatus) {
-      verify(screen, never()).showUserStatusAsApproved()
-    } else {
+    if (shouldShowApprovedStatus) {
       verify(screen).showUserStatusAsApproved()
+    } else {
+      verify(screen, never()).showUserStatusAsApproved()
     }
   }
 

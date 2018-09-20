@@ -56,8 +56,12 @@ class PatientSearchScreenController @Inject constructor(
         .ofType<SearchQueryAgeChanged>()
         .map { it.ageString }
 
-    return Observables.combineLatest(nameChanges, ageChanges)
-        .map { (name, age) -> name.isNotBlank() && age.isNotBlank() }
+    val dateOfBirthChanges = events
+        .ofType<SearchQueryDateOfBirthChanged>()
+        .map { it.dateOfBirth }
+
+    return Observables.combineLatest(nameChanges, ageChanges, dateOfBirthChanges)
+        .map { (name, age, dob) -> name.isNotBlank() && (age.isNotBlank() || dob.isNotBlank()) }
         .map { isQueryComplete ->
           { ui: Ui ->
             if (isQueryComplete) {

@@ -29,7 +29,6 @@ import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
-import org.simple.clinic.forgotpin.ForgotPinApiV1
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
@@ -57,7 +56,6 @@ import java.util.UUID
 class UserSessionTest {
 
   private val loginApi = mock<LoginApiV1>()
-  private val forgotPinApiV1 = mock<ForgotPinApiV1>()
   private val registrationApi = mock<RegistrationApiV1>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
@@ -103,7 +101,6 @@ class UserSessionTest {
     userSession = UserSession(
         loginApi = loginApi,
         registrationApi = registrationApi,
-        forgotPinApiV1 = forgotPinApiV1,
         moshi = moshi,
         facilitySync = facilitySync,
         facilityRepository = facilityRepository,
@@ -409,7 +406,7 @@ class UserSessionTest {
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just(hashed))
-    whenever(forgotPinApiV1.resetPin(any()))
+    whenever(loginApi.resetPin(any()))
         .thenReturn(Single.just(ForgotPinResponse(
             accessToken = "",
             loggedInUser = PatientMocker.loggedInUserPayload()
@@ -417,7 +414,7 @@ class UserSessionTest {
 
     userSession.resetPin(pin).blockingGet()
 
-    verify(forgotPinApiV1).resetPin(ResetPinRequest(hashed))
+    verify(loginApi).resetPin(ResetPinRequest(hashed))
   }
 
   @Test
@@ -442,7 +439,7 @@ class UserSessionTest {
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(apiResult)
+    whenever(loginApi.resetPin(any())).thenReturn(apiResult)
 
     val result = userSession.resetPin("0000").blockingGet()
     assertThat(result).isEqualTo(expectedResult)
@@ -481,7 +478,7 @@ class UserSessionTest {
         ),
         accessToken = "new_access_token"
     )
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.just(response))
+    whenever(loginApi.resetPin(any())).thenReturn(Single.just(response))
 
     userSession.resetPin("0000").blockingGet()
 
@@ -515,7 +512,7 @@ class UserSessionTest {
         ),
         accessToken = "new_access_token"
     )
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.just(response))
+    whenever(loginApi.resetPin(any())).thenReturn(Single.just(response))
 
     userSession.resetPin("0000").blockingGet()
 
@@ -528,7 +525,7 @@ class UserSessionTest {
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.error<ForgotPinResponse>(RuntimeException()))
+    whenever(loginApi.resetPin(any())).thenReturn(Single.error<ForgotPinResponse>(RuntimeException()))
 
     userSession.resetPin("0000").blockingGet()
 
@@ -541,7 +538,7 @@ class UserSessionTest {
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.error<ForgotPinResponse>(RuntimeException()))
+    whenever(loginApi.resetPin(any())).thenReturn(Single.error<ForgotPinResponse>(RuntimeException()))
 
     userSession.resetPin("0000").blockingGet()
 
@@ -573,7 +570,7 @@ class UserSessionTest {
         ),
         accessToken = "new_access_token"
     )
-    whenever(forgotPinApiV1.resetPin(any())).thenReturn(Single.just(response))
+    whenever(loginApi.resetPin(any())).thenReturn(Single.just(response))
 
     val result = userSession.resetPin("0000").blockingGet()
 

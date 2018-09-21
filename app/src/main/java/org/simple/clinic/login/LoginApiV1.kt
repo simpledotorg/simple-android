@@ -21,6 +21,6 @@ interface LoginApiV1 {
   @POST("$version/users/{userId}/request_otp")
   fun requestLoginOtp(@Path("userId") userId: UUID): Completable
 
-  @POST("$version/me/reset_password")
+  @POST("$version/users/me/reset_password")
   fun resetPin(@Body request: ResetPinRequest): Single<ForgotPinResponse>
 }

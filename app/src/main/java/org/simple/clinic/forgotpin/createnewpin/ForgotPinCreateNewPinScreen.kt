@@ -15,7 +15,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
-import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreenKey
+import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.StaggeredEditText
@@ -25,6 +25,11 @@ import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
+
+  companion object {
+    @JvmField
+    val KEY = ::ForgotPinCreateNewPinScreenKey
+  }
 
   @Inject
   lateinit var controller: ForgotPinCreateNewPinScreenController
@@ -86,7 +91,7 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
   fun showConfirmPinScreen(pin: String) {
     hideKeyboard()
-    screenRouter.push(ForgotPinConfirmPinScreenKey(pin))
+    screenRouter.push(ForgotPinConfirmPinScreen.KEY(pin))
   }
 
   fun hideInvalidPinError() {

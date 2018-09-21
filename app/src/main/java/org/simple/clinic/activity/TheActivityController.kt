@@ -7,7 +7,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.onboarding.OnboardingScreen
@@ -112,7 +112,7 @@ class TheActivityController @Inject constructor(
       hasUserCompletedOnboarding.get().not() -> OnboardingScreen.KEY
       else -> {
         return if (localUser?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN) {
-          ForgotPinCreateNewPinScreenKey()
+          ForgotPinCreateNewPinScreen.KEY()
         } else {
           RegistrationPhoneScreen.KEY
         }

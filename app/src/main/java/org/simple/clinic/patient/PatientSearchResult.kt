@@ -48,7 +48,10 @@ data class PatientSearchResult(
 
     val phoneCreatedAt: Instant?,
 
-    val phoneUpdatedAt: Instant?
+    val phoneUpdatedAt: Instant?,
+
+    @Embedded(prefix = "bp_")
+    val lastBp: LastBp?
 ) {
 
   @Dao
@@ -60,10 +63,18 @@ data class PatientSearchResult(
           SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth, P.status, P.createdAt, P.updatedAt, P.syncStatus,
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district, PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
-          PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt
+          PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
+          BP.createdAt bp_takenOn, BP.facilityName bp_takenAtFacilityName
           FROM Patient P
           INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
+          LEFT JOIN (
+        		SELECT BP.patientUuid, BP.createdAt, F.name facilityName
+        		FROM BloodPressureMeasurement BP
+        		INNER JOIN Facility F ON BP.facilityUuid = F.uuid
+            GROUP BY BP.patientUuid
+        		ORDER BY BP.createdAt DESC
+        	) BP ON (BP.patientUuid = P.uuid)
     """
     }
 

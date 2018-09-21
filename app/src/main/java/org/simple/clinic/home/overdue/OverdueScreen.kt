@@ -15,7 +15,6 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -37,19 +36,16 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   @Inject
-  lateinit var controller: OverdueScreenController
+  lateinit var activity: TheActivity
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var activity: TheActivity
+  lateinit var controller: OverdueScreenController
 
-  private val phoneCallClicks = PublishSubject.create<CallPatientClicked>()
-  private val agreedToVisitClicks = PublishSubject.create<AgreedToVisitClicked>()
-  private val remindLaterClicks = PublishSubject.create<RemindToCallLaterClicked>()
-  private val removeFromListClicks = PublishSubject.create<RemoveFromListClicked>()
-  private val listAdapter = OverdueListAdapter(phoneCallClicks, agreedToVisitClicks, remindLaterClicks, removeFromListClicks)
+  @Inject
+  lateinit var overdueListAdapter: OverdueListAdapter
 
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
@@ -62,17 +58,14 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
     TheActivity.component.inject(this)
 
-    overdueRecyclerView.adapter = listAdapter
+    overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
     Observable
         .mergeArray(
             screenCreates(),
             callPermissionChanges(),
-            phoneCallClicks,
-            agreedToVisitClicks,
-            remindLaterClicks,
-            removeFromListClicks)
+            overdueListAdapter.itemClicks)
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -90,7 +83,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun updateList(list: List<OverdueListItem>) {
-    listAdapter.submitList(list)
+    overdueListAdapter.submitList(list)
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

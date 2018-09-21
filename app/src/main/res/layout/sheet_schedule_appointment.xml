@@ -4,7 +4,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
 
   <TextView
     android:layout_width="match_parent"
@@ -95,7 +96,7 @@
       android:textColor="@color/color_accent"
       tools:ignore="ButtonStyle" />
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
       android:id="@+id/scheduleappointment_done"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -107,6 +108,7 @@
       android:paddingTop="21dp"
       android:text="@string/scheduleappointment_done"
       android:textColor="@color/white"
-      app:backgroundTint="@color/color_accent" />
+      app:backgroundTint="@color/color_accent"
+      tools:ignore="ButtonStyle" />
   </LinearLayout>
 </LinearLayout>

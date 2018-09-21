@@ -68,24 +68,22 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     return Observable.just(ForgotPinConfirmPinScreenCreated(screenKey.enteredPin))
   }
 
-  private fun facilityClicks(): Observable<UiEvent> =
+  private fun facilityClicks() =
       RxView.clicks(facilityNameTextView)
           .map { ForgotPinConfirmPinScreenFacilityClicked }
 
-  private fun backClicks(): Observable<UiEvent> =
+  private fun backClicks() =
       RxView.clicks(backButton)
           .map { ForgotPinConfirmPinScreenBackClicked }
 
-  private fun pinSubmits(): Observable<UiEvent> {
-    return RxTextView.editorActions(pinEntryEditText)
-        .filter { it == EditorInfo.IME_ACTION_DONE }
-        .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
-  }
+  private fun pinSubmits() =
+      RxTextView.editorActions(pinEntryEditText)
+          .filter { it == EditorInfo.IME_ACTION_DONE }
+          .map { ForgotPinConfirmPinSubmitClicked(pinEntryEditText.text.toString()) }
 
-  private fun pinTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(pinEntryEditText)
-        .map { ForgotPinConfirmPinTextChanged(it.toString()) }
-  }
+  private fun pinTextChanges() =
+      RxTextView.textChanges(pinEntryEditText)
+          .map { ForgotPinConfirmPinTextChanged(it.toString()) }
 
   fun showUserName(name: String) {
     userNameTextView.text = name
@@ -131,7 +129,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   fun goToHomeScreen() {
-     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {

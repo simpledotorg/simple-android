@@ -62,20 +62,18 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
   private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
-  private fun pinTextChanges(): Observable<UiEvent> {
-    return RxTextView.textChanges(pinEntryEditText)
-        .map { ForgotPinCreateNewPinTextChanged(it.toString()) }
-  }
+  private fun pinTextChanges() =
+      RxTextView.textChanges(pinEntryEditText)
+          .map { ForgotPinCreateNewPinTextChanged(it.toString()) }
 
-  private fun pinSubmitClicked(): Observable<UiEvent> {
-    return RxTextView.editorActions(pinEntryEditText)
-        .filter { it == EditorInfo.IME_ACTION_DONE }
-        .map { ForgotPinCreateNewPinSubmitClicked }
-  }
+  private fun pinSubmitClicked() =
+      RxTextView.editorActions(pinEntryEditText)
+          .filter { it == EditorInfo.IME_ACTION_DONE }
+          .map { ForgotPinCreateNewPinSubmitClicked }
 
-  private fun facilityClicks(): Observable<UiEvent> {
-    return RxView.clicks(facilityNameTextView).map { ForgotPinCreateNewPinFacilityClicked }
-  }
+  private fun facilityClicks() =
+      RxView.clicks(facilityNameTextView)
+          .map { ForgotPinCreateNewPinFacilityClicked }
 
   fun showUserName(name: String) {
     userNameTextView.text = name

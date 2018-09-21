@@ -67,7 +67,7 @@
 
     <LinearLayout
       android:id="@+id/enterotp_otp_container"
-      style="@style/Clinic.LoginCardContentContainer">
+      style="@style/Clinic.CardContentContainer.Login">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"

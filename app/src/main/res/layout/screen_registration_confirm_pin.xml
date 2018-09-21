@@ -47,7 +47,7 @@
     android:layout_below="@+id/registrationconfirmpin_logo_container">
 
     <LinearLayout
-      style="@style/Clinic.LoginCardContentContainer"
+      style="@style/Clinic.CardContentContainer.Login"
       android:animateLayoutChanges="true"
       android:paddingBottom="@dimen/spacing_12">
 

@@ -17,7 +17,6 @@ import org.simple.clinic.facility.FacilityPullResult.Success
 import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
-import org.simple.clinic.forgotpin.ForgotPinApiV1
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
@@ -52,7 +51,6 @@ import kotlin.reflect.KClass
 class UserSession @Inject constructor(
     private val loginApi: LoginApiV1,
     private val registrationApi: RegistrationApiV1,
-    private val forgotPinApiV1: ForgotPinApiV1,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
@@ -405,7 +403,7 @@ class UserSession @Inject constructor(
   fun resetPin(pin: String): Single<ForgotPinResult> {
     val resetPasswordCall = passwordHasher.hash(pin)
         .map { ResetPinRequest(it) }
-        .flatMap { forgotPinApiV1.resetPin(it) }
+        .flatMap { loginApi.resetPin(it) }
 
     val updateUserOnSuccess = resetPasswordCall
         .flatMapCompletable { storeUserAndAccessToken(it) }

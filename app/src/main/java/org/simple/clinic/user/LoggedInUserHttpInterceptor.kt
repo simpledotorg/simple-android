@@ -18,9 +18,10 @@ class LoggedInUserHttpInterceptor @Inject constructor() : Interceptor {
     val user = userSession.loggedInUserImmediate()
     val (accessToken) = userSession.accessToken()
 
-    return when (user?.isApprovedForSyncing() == true) {
-      true -> chain.proceed(addHeaders(originalRequest, accessToken!!, user!!))
-      false -> chain.proceed(originalRequest)
+    return if (user != null && accessToken.isNullOrBlank().not()) {
+      chain.proceed(addHeaders(originalRequest, accessToken!!, user))
+    } else {
+      chain.proceed(originalRequest)
     }
   }
 

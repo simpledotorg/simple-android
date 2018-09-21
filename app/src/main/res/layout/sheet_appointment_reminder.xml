@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:ellipsize="end"
+    android:fontFamily="sans-serif-medium"
+    android:gravity="center"
+    android:maxLines="1"
+    android:paddingBottom="@dimen/textsize_18"
+    android:paddingTop="@dimen/textsize_18"
+    android:text="@string/appointmentreminder_call_later_in"
+    android:textColor="@color/black_opacity_80"
+    android:textSize="@dimen/textsize_16">
+
+    <requestFocus />
+  </TextView>
+
+  <View
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginLeft="@dimen/spacing_8"
+    android:layout_marginRight="@dimen/spacing_8"
+    android:background="@color/black_opacity_10" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_24"
+    android:layout_marginEnd="44dp"
+    android:layout_marginStart="44dp"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageButton
+      android:id="@+id/appointmentreminder_decrement_date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
+      android:src="@drawable/ic_remove_circle_outline_24dp"
+      android:tint="@color/color_accent"
+      tools:ignore="ContentDescription" />
+
+    <TextView
+      android:id="@+id/appointmentreminder_current_date"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="@dimen/spacing_8"
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="1"
+      android:gravity="center_horizontal"
+      android:textColor="@color/black_opacity_80"
+      android:textSize="@dimen/textsize_34"
+      tools:text="4 weeks" />
+
+    <ImageButton
+      android:id="@+id/appointmentreminder_increment_date"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="?attr/selectableItemBackgroundBorderless"
+      android:padding="@dimen/spacing_12"
+      android:src="@drawable/ic_add_circle_outline_24dp"
+      android:tint="@color/color_accent"
+      tools:ignore="ContentDescription" />
+  </LinearLayout>
+
+  <android.support.v7.widget.AppCompatButton
+    android:id="@+id/appointmentreminder_done"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_4"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:gravity="center"
+    android:paddingBottom="21dp"
+    android:paddingTop="21dp"
+    android:text="@string/appointmentreminder_done"
+    android:textColor="@color/white"
+    app:backgroundTint="@color/color_accent" />
+
+</LinearLayout>

@@ -27,7 +27,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
     fun intent(context: Context, patientUuid: UUID) =
         Intent(context, ScheduleAppointmentSheet::class.java)
-            .putExtra(KEY_PATIENT_UUID, patientUuid)
+            .putExtra(KEY_PATIENT_UUID, patientUuid)!!
   }
 
   private val possibleDates = listOf(

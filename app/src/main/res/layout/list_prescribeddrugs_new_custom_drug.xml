@@ -4,9 +4,10 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
 
-  <android.support.v7.widget.AppCompatButton
+  <Button
     android:id="@+id/prescribeddrug_item_addnewprescription"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

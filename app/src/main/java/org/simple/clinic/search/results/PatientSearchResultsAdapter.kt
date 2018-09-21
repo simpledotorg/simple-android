@@ -58,6 +58,7 @@ class PatientSearchResultsAdapter @Inject constructor(
     private val dateOfBirthTextView by bindView<TextView>(R.id.patientsearchresult_item_dateofbirth)
     private val phoneNumberTextView by bindView<TextView>(R.id.patientsearchresult_item_phone)
     private val lastBpDateTextView by bindView<TextView>(R.id.patientsearchresults_item_last_bp)
+    private val lastBpDateFrame by bindView<ViewGroup>(R.id.patientsearchresults_item_last_bp_container)
     private val ageTextView by bindView<TextView>(R.id.patientsearch_item_age)
 
     lateinit var searchResult: PatientSearchResult
@@ -103,19 +104,20 @@ class PatientSearchResultsAdapter @Inject constructor(
         phoneNumberTextView.text = phoneObfuscator.obfuscate(phoneNumber!!)
       }
 
-      // TODO: Join BP table with patient search query.
-      val lastBpDate: LocalDate? = null
-      val lastBpFacilityName: String? = null
+      val lastBp = searchResult.lastBp
+      if (lastBp == null) {
+        lastBpDateFrame.visibility = View.GONE
 
-      if (lastBpDate == null) {
-        lastBpDateTextView.visibility = View.GONE
       } else {
-        lastBpDateTextView.visibility = View.VISIBLE
+        lastBpDateFrame.visibility = View.VISIBLE
+
+        val lastBpDate = lastBp.takenOn.atZone(UTC).toLocalDate()
         val formattedLastBpDate = DATE_OF_BIRTH_FORMATTER.format(lastBpDate)
+
         lastBpDateTextView.text = resources.getString(
             R.string.patientsearchresults_item_last_bp_date_with_facility,
             formattedLastBpDate,
-            lastBpFacilityName)
+            lastBp.takenAtFacilityName)
       }
 
       val age = searchResult.age

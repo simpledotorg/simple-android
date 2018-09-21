@@ -29,6 +29,11 @@ import javax.inject.Inject
 
 class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {
 
+  companion object {
+    @JvmField
+    val KEY = ::ForgotPinConfirmPinScreenKey
+  }
+
   @Inject
   lateinit var controller: ForgotPinConfirmPinScreenController
 

@@ -27,7 +27,7 @@ class PatientSummaryScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
@@ -42,9 +42,9 @@ class PatientSummaryScreenController @Inject constructor(
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSummaryScreenCreated>()
-        .firstElement()
-        .doOnSuccess { (patientUuid, caller) -> Analytics.reportViewedPatient(patientUuid, caller.name) }
-        .flatMapObservable { Observable.empty<UiChange>() }
+        .take(1L)
+        .doOnNext { (patientUuid, caller) -> Analytics.reportViewedPatient(patientUuid, caller.name) }
+        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun populatePatientProfile(events: Observable<UiEvent>): Observable<UiChange> {

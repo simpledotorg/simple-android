@@ -53,6 +53,11 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
+  fun createReminderForAppointment(appointmentUUID: UUID, reminderDate: LocalDate): Completable {
+    // TODO: Implement after changes to Appointment and Communication model
+    return Completable.complete()
+  }
+
   override fun save(records: List<Appointment>): Completable {
     return Completable.fromAction {
       appointmentDao.save(records)

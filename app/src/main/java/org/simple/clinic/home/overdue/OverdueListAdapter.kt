@@ -13,20 +13,18 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.marginLayoutParams
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import java.util.UUID
+import javax.inject.Inject
 
-
-class OverdueListAdapter(
-    private val phoneCallClickStream: PublishSubject<CallPatientClicked>,
-    private val agreedToVisitClickStream: PublishSubject<AgreedToVisitClicked>,
-    private val remindLaterClickStream: PublishSubject<RemindToCallLaterClicked>,
-    private val removeFromListClickStream: PublishSubject<RemoveFromListClicked>
-) : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
+class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
 
   private lateinit var recyclerView: RecyclerView
+
+  val itemClicks = PublishSubject.create<UiEvent>()!!
 
   override fun onAttachedToRecyclerView(rv: RecyclerView) {
     super.onAttachedToRecyclerView(rv)
@@ -35,7 +33,7 @@ class OverdueListAdapter(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.item_overdue_list, parent, false)
-    val holder = OverdueListViewHolder(layout, phoneCallClickStream, agreedToVisitClickStream, remindLaterClickStream, removeFromListClickStream)
+    val holder = OverdueListViewHolder(layout, itemClicks)
 
     layout.setOnClickListener {
       holder.toggleBottomLayoutVisibility()
@@ -77,10 +75,7 @@ data class OverdueListItem(
 
 class OverdueListViewHolder(
     itemView: View,
-    phoneCallClickStream: PublishSubject<CallPatientClicked>,
-    agreedToVisitClickStream: PublishSubject<AgreedToVisitClicked>,
-    remindLaterClickStream: PublishSubject<RemindToCallLaterClicked>,
-    removeFromListClickStream: PublishSubject<RemoveFromListClicked>
+    eventStream: PublishSubject<UiEvent>
 ) : RecyclerView.ViewHolder(itemView) {
 
   private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
@@ -97,16 +92,16 @@ class OverdueListViewHolder(
 
   init {
     callButton.setOnClickListener {
-      phoneCallClickStream.onNext(CallPatientClicked(appointment.phoneNumber!!))
+      eventStream.onNext(CallPatientClicked(appointment.phoneNumber!!))
     }
     agreedToVisitTextView.setOnClickListener {
-      agreedToVisitClickStream.onNext(AgreedToVisitClicked)
+      eventStream.onNext(AgreedToVisitClicked)
     }
     remindLaterTextView.setOnClickListener {
-      remindLaterClickStream.onNext(RemindToCallLaterClicked(appointment.appointmentUuid))
+      eventStream.onNext(RemindToCallLaterClicked(appointment.appointmentUuid))
     }
     removeFromListTextView.setOnClickListener {
-      removeFromListClickStream.onNext(RemoveFromListClicked)
+      eventStream.onNext(RemoveFromListClicked)
     }
   }
 

@@ -58,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_4"
             tools:text="175/85, 30 days ago" />
-
         </LinearLayout>
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView
@@ -71,8 +70,7 @@
           android:drawablePadding="@dimen/spacing_4"
           android:drawableStart="@drawable/ic_call_16dp"
           android:gravity="center"
-          android:visibility="gone"/>
-
+          android:visibility="gone" />
 
         <TextView
           android:id="@+id/overdue_days"
@@ -120,6 +118,7 @@
         android:textAllCaps="true" />
 
       <TextView
+        android:id="@+id/overdue_agreed_to_visit"
         style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -134,6 +133,7 @@
         android:background="@color/grey3" />
 
       <TextView
+        android:id="@+id/overdue_reminder_later"
         style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -148,6 +148,7 @@
         android:background="@color/grey3" />
 
       <TextView
+        android:id="@+id/overdue_remove_from_list"
         style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

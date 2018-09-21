@@ -178,7 +178,7 @@
 
   <style name="Clinic.V2.OverdueListAction">
     <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left.Grey0</item>
-    <item name="android:layout_marginStart">@dimen/spacing_16</item>
+    <item name="android:paddingStart">@dimen/spacing_16</item>
     <item name="android:background">?attr/selectableItemBackground</item>
     <item name="android:drawablePadding">@dimen/spacing_16</item>
     <item name="android:gravity">center_vertical</item>

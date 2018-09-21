@@ -33,10 +33,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
     fun show(fragmentManager: FragmentManager) {
       (fragmentManager.findFragmentByTag("confirm_reset_pin_alert") as ConfirmResetPinDialog?)?.dismiss()
 
-      val fragment = ConfirmResetPinDialog()
-      // Cancellable on the dialog builder is ignored. We have to use this.
-      fragment.isCancelable = false
-      fragment.show(fragmentManager, "confirm_reset_pin_alert")
+      ConfirmResetPinDialog().show(fragmentManager, "confirm_reset_pin_alert")
     }
   }
 

@@ -5,7 +5,8 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_marginTop="@dimen/spacing_8"
-  android:background="@color/white">
+  android:background="@color/white"
+  tools:ignore="MissingPrefix">
 
   <RelativeLayout
     android:layout_width="match_parent"
@@ -14,7 +15,7 @@
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_24">
 
-    <android.support.v7.widget.AppCompatButton
+    <Button
       android:id="@+id/patientsummary_item_newbp"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

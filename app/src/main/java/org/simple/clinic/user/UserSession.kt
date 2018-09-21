@@ -368,6 +368,13 @@ class UserSession @Inject constructor(
   }
 
   fun resetPin(pin: String): Single<ForgotPinResult> {
-    return Single.just(ForgotPinResult.Success as ForgotPinResult).delaySubscription(3L, TimeUnit.SECONDS)
+    return requireLoggedInUser()
+        .delaySubscription(3L, TimeUnit.SECONDS)
+        .take(1)
+        .flatMapCompletable {
+          Completable
+              .fromCallable { appDatabase.userDao().updateLoggedInStatusForUser(it.uuid, User.LoggedInStatus.LOGGED_IN) }
+        }
+        .toSingleDefault(ForgotPinResult.Success)
   }
 }

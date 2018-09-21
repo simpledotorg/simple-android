@@ -9,14 +9,12 @@ import com.google.android.gms.auth.api.phone.SmsRetriever
 import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.common.api.Status
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 // I don't like magic numbers, but I am not sure of the best
@@ -53,8 +51,6 @@ class OtpSmsReceiver : BroadcastReceiver() {
         // TODO: Schedule call with worker instead of logging in directly
         userSession.loginWithOtp(otp)
             .subscribeOn(io())
-            // TODO: Remove later after feature is tested
-            .delaySubscription(45L, TimeUnit.SECONDS, Schedulers.io())
             .flatMap { syncScheduler.syncImmediately().toSingleDefault(it) }
             .observeOn(mainThread())
             .subscribe({

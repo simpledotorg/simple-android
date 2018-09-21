@@ -200,6 +200,10 @@
   <string name="overduelist_remove_from_list">Remove from overdue list…</string>
   <string name="overduelist_result_of_call">Result of call</string>
 
+  <!-- Appointment reminder -->
+  <string name="appointmentreminder_call_later_in">Call later in</string>
+  <string name="appointmentreminder_done">Done</string>
+
   <!-- Facility change -->
   <string name="facilitychange_screen_title">Select your clinic</string>
 

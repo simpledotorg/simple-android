@@ -30,7 +30,8 @@ class OverdueScreenController @Inject constructor(
     return Observable.merge(
         screenSetup(replayedEvents),
         phoneCallPermissionRequests(replayedEvents),
-        patientCalls(replayedEvents))
+        patientCalls(replayedEvents),
+        appointmentReminderSheetOpens(replayedEvents))
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
@@ -110,5 +111,10 @@ class OverdueScreenController @Inject constructor(
         .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientUsingDialer(phoneNumber) } }
 
     return withDialerCalls.mergeWith(withoutDialerCalls)
+  }
+
+  private fun appointmentReminderSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<RemindToCallLaterClicked>()
+        .map { { ui: Ui -> ui.showAppointmentReminderSheet(it.appointmentUUID) } }
   }
 }

@@ -19,12 +19,15 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
+import java.util.UUID
 import javax.inject.Inject
 
 private const val REQUESTCODE_CALL_PHONE_PERMISSION = 17
+private const val REQUESTCODE_REMIND_TO_CALL_LATER = 23
 private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
 class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -43,7 +46,10 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   lateinit var activity: TheActivity
 
   private val phoneCallClicks = PublishSubject.create<CallPatientClicked>()
-  private val listAdapter = OverdueListAdapter(phoneCallClicks)
+  private val agreedToVisitClicks = PublishSubject.create<AgreedToVisitClicked>()
+  private val remindLaterClicks = PublishSubject.create<RemindToCallLaterClicked>()
+  private val removeFromListClicks = PublishSubject.create<RemoveFromListClicked>()
+  private val listAdapter = OverdueListAdapter(phoneCallClicks, agreedToVisitClicks, remindLaterClicks, removeFromListClicks)
 
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
@@ -59,7 +65,14 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     overdueRecyclerView.adapter = listAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
-    Observable.merge(screenCreates(), callPermissionChanges(), phoneCallClicks)
+    Observable
+        .mergeArray(
+            screenCreates(),
+            callPermissionChanges(),
+            phoneCallClicks,
+            agreedToVisitClicks,
+            remindLaterClicks,
+            removeFromListClicks)
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -103,5 +116,10 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   fun callPatientWithoutUsingDialer(phoneNumber: String) {
     val intent = Intent(Intent.ACTION_CALL, Uri.fromParts("tel", phoneNumber, null))
     activity.startActivity(intent)
+  }
+
+  fun showAppointmentReminderSheet(appointmentUuid: UUID) {
+    val intent = AppointmentReminderSheet.intent(this.context, appointmentUuid)
+    activity.startActivityForResult(intent, REQUESTCODE_REMIND_TO_CALL_LATER)
   }
 }

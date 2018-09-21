@@ -20,7 +20,10 @@ import java.util.UUID
 
 
 class OverdueListAdapter(
-    private val phoneCallClickStream: PublishSubject<CallPatientClicked>
+    private val phoneCallClickStream: PublishSubject<CallPatientClicked>,
+    private val agreedToVisitClickStream: PublishSubject<AgreedToVisitClicked>,
+    private val remindLaterClickStream: PublishSubject<RemindToCallLaterClicked>,
+    private val removeFromListClickStream: PublishSubject<RemoveFromListClicked>
 ) : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
 
   private lateinit var recyclerView: RecyclerView
@@ -32,7 +35,7 @@ class OverdueListAdapter(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.item_overdue_list, parent, false)
-    val holder = OverdueListViewHolder(layout, phoneCallClickStream)
+    val holder = OverdueListViewHolder(layout, phoneCallClickStream, agreedToVisitClickStream, remindLaterClickStream, removeFromListClickStream)
 
     layout.setOnClickListener {
       holder.toggleBottomLayoutVisibility()
@@ -74,7 +77,10 @@ data class OverdueListItem(
 
 class OverdueListViewHolder(
     itemView: View,
-    private val phoneCallClickStream: PublishSubject<CallPatientClicked>
+    phoneCallClickStream: PublishSubject<CallPatientClicked>,
+    agreedToVisitClickStream: PublishSubject<AgreedToVisitClicked>,
+    remindLaterClickStream: PublishSubject<RemindToCallLaterClicked>,
+    removeFromListClickStream: PublishSubject<RemoveFromListClicked>
 ) : RecyclerView.ViewHolder(itemView) {
 
   private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
@@ -83,12 +89,24 @@ class OverdueListViewHolder(
   private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
   private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
   private val phoneNumberTextView by bindView<TextView>(R.id.overdue_patient_phone_number)
+  private val agreedToVisitTextView by bindView<TextView>(R.id.overdue_agreed_to_visit)
+  private val remindLaterTextView by bindView<TextView>(R.id.overdue_reminder_later)
+  private val removeFromListTextView by bindView<TextView>(R.id.overdue_remove_from_list)
 
   lateinit var appointment: OverdueListItem
 
   init {
     callButton.setOnClickListener {
       phoneCallClickStream.onNext(CallPatientClicked(appointment.phoneNumber!!))
+    }
+    agreedToVisitTextView.setOnClickListener {
+      agreedToVisitClickStream.onNext(AgreedToVisitClicked)
+    }
+    remindLaterTextView.setOnClickListener {
+      remindLaterClickStream.onNext(RemindToCallLaterClicked(appointment.appointmentUuid))
+    }
+    removeFromListTextView.setOnClickListener {
+      removeFromListClickStream.onNext(RemoveFromListClicked)
     }
   }
 

@@ -26,7 +26,7 @@
     android:layout_below="@+id/registrationphone_logo_container">
 
     <LinearLayout
-      style="@style/Clinic.LoginCardContentContainer"
+      style="@style/Clinic.CardContentContainer.Login"
       android:animateLayoutChanges="true">
 
       <TextView

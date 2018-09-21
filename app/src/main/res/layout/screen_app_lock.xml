@@ -93,7 +93,7 @@
 
     <LinearLayout
       android:id="@+id/applock_pin_container"
-      style="@style/Clinic.LoginCardContentContainer">
+      style="@style/Clinic.CardContentContainer.AppLock">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"

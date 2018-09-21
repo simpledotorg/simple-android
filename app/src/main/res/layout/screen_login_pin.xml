@@ -45,7 +45,7 @@
 
     <LinearLayout
       android:id="@+id/loginpin_form"
-      style="@style/Clinic.LoginCardContentContainer">
+      style="@style/Clinic.CardContentContainer.Login">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"

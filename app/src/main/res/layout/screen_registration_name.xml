@@ -32,7 +32,7 @@
 
     <LinearLayout
       android:id="@+id/registrationname_card_content"
-      style="@style/Clinic.LoginCardContentContainer"
+      style="@style/Clinic.CardContentContainer.Login"
       android:animateLayoutChanges="true">
 
       <TextView

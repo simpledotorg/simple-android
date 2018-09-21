@@ -76,7 +76,7 @@
 
     <LinearLayout
       android:id="@+id/forgotpin_pin_container"
-      style="@style/Clinic.LoginCardContentContainer">
+      style="@style/Clinic.CardContentContainer.Login">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"

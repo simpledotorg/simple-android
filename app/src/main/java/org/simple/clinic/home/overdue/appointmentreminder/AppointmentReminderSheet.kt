@@ -1,10 +1,16 @@
 package org.simple.clinic.home.overdue.appointmentreminder
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -46,7 +52,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   )
 
   @Inject
-  lateinit var appointmentReminderSheetController: AppointmentReminderSheetController
+  lateinit var controller: AppointmentReminderSheetController
 
   private var currentIndex = 0
 
@@ -55,13 +61,50 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   private val decrementDateButton by bindView<ImageButton>(R.id.appointmentreminder_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.appointmentreminder_increment_date)
   private val currentDateTextView by bindView<TextView>(R.id.appointmentreminder_current_date)
-  private val doneButton by bindView<ImageButton>(R.id.appointmentreminder_done)
+  private val doneButton by bindView<Button>(R.id.appointmentreminder_done)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.sheet_appointment_reminder)
     TheActivity.component.inject(this)
+
+    Observable.merge(incrementClicks(), decrementClicks(), doneClicks())
+        .startWith(initialState())
+        .observeOn(io())
+        .compose(controller)
+        .observeOn(mainThread())
+        .takeUntil(onDestroys)
+        .subscribe { uiChange -> uiChange(this) }
+  }
+
+  private val initialState = {
+    val uuid = intent.extras.getSerializable(AppointmentReminderSheet.KEY_APPOINTMENT_UUID) as UUID
+    AppointmentReminderSheetCreated(initialIndex = 6, appointmentUuid = uuid)
+  }
+
+  private fun incrementClicks() = RxView.clicks(incrementDateButton).map { ReminderDateIncremented(currentIndex, possibleDates.size) }
+
+  private fun decrementClicks() = RxView.clicks(decrementDateButton).map { ReminderDateDecremented(currentIndex, possibleDates.size) }
+
+  private fun doneClicks() = RxView.clicks(doneButton).map { ReminderCreated(possibleDates[currentIndex]) }
+
+  fun closeSheet() {
+    setResult(Activity.RESULT_OK)
+    finish()
+  }
+
+  fun updateDisplayedDate(newIndex: Int) {
+    currentIndex = newIndex
+    currentDateTextView.text = possibleDates[currentIndex].displayText
+  }
+
+  fun enableIncrementButton(state: Boolean) {
+    incrementDateButton.isEnabled = state
+  }
+
+  fun enableDecrementButton(state: Boolean) {
+    decrementDateButton.isEnabled = state
   }
 
   override fun onDestroy() {

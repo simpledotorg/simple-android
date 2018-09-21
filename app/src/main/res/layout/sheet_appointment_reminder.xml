@@ -4,7 +4,8 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:ignore="MissingPrefix">
 
   <TextView
     android:layout_width="match_parent"
@@ -72,7 +73,7 @@
       tools:ignore="ContentDescription" />
   </LinearLayout>
 
-  <android.support.v7.widget.AppCompatButton
+  <Button
     android:id="@+id/appointmentreminder_done"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"

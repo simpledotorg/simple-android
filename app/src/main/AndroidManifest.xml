@@ -17,7 +17,7 @@
     android:icon="@mipmap/ic_launcher"
     android:label="@string/app_name"
     android:supportsRtl="true"
-    android:theme="@style/ClinicTheme"
+    android:theme="@style/Clinic.V2.Theme"
     tools:ignore="AllowBackup,GoogleAppIndexingWarning"
     tools:replace="android:allowBackup">
 

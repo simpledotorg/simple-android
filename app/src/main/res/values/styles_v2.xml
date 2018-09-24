@@ -3,6 +3,15 @@
 
   <style name="Clinic.V2" />
 
+  <style name="Clinic.V2.Theme" parent="Theme.Design.Light.NoActionBar">
+    <item name="colorPrimary">@color/blue0</item>
+    <item name="colorPrimaryDark">@color/blue0</item>
+    <item name="colorAccent">@color/red1</item>
+
+    <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
+    <item name="android:windowBackground">@color/window_background</item>
+  </style>
+
   <style name="Clinic.V2.TextInputLayout">
     <item name="android:theme">@style/Clinic.V2.TextInputLayoutTheme</item>
     <item name="hintTextAppearance">@style/Clinic.V2.TextAppearance.Label</item>

@@ -236,7 +236,7 @@
 
   <style name="Clinic.LoginInputTextAppearance">
     <item name="android:textSize">@dimen/textsize_20</item>
-    <item name="android:textStyle">bold</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
   </style>
 
   <!-- TODO: Accepting better names. -->

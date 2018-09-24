@@ -14,6 +14,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
@@ -36,11 +37,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   private val toolbar by bindView<Toolbar>(R.id.newmedicalhistory_toolbar)
   private val heartAttackQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
-  private val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
-  private val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
-  private val hypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
-  private val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
-  private val noneQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
+  private val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_stroke)
+  private val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_kidney)
+  private val hypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_hypertension)
+  private val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diabetes)
+  private val noneQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_none)
   private val nextButtonFrame by bindView<ViewGroup>(R.id.newmedicalhistory_next_frame)
   private val saveButton by bindView<Button>(R.id.newmedicalhistory_save)
 
@@ -54,6 +55,13 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
     toolbar.setNavigationOnClickListener {
       screenRouter.pop()
     }
+
+    heartAttackQuestionView.render(MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK)
+    strokeQuestionView.render(MedicalHistoryQuestion.HAS_HAD_A_STROKE)
+    kidneyDiseaseQuestionView.render(MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE)
+    hypertensionQuestionView.render(MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION)
+    diabetesQuestionView.render(MedicalHistoryQuestion.HAS_DIABETES)
+    noneQuestionView.render(MedicalHistoryQuestion.NONE)
 
     Observable.mergeArray(screenCreates(), answerToggles(), saveClicks())
         .observeOn(io())
@@ -69,8 +77,13 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   private fun answerToggles(): ObservableSource<UiEvent> {
-    // TODO.
-    return Observable.empty()
+    return Observable.mergeArray(
+        heartAttackQuestionView.toggles,
+        strokeQuestionView.toggles,
+        kidneyDiseaseQuestionView.toggles,
+        hypertensionQuestionView.toggles,
+        diabetesQuestionView.toggles,
+        noneQuestionView.toggles)
   }
 
   private fun saveClicks() =
@@ -94,11 +107,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
     screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT))
   }
 
-  fun setNextButtonEnabled(enabled: Boolean) {
+  fun setSaveButtonEnabled(enabled: Boolean) {
     nextButtonFrame.setBackgroundResource(when {
       enabled -> R.color.newmedicalhistory_save_button_frame_enabled
       else -> R.color.newmedicalhistory_save_button_frame_disabled
     })
-    saveButton.isEnabled = true
+    saveButton.isEnabled = enabled
   }
 }

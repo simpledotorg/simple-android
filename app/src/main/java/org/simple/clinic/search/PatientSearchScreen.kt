@@ -1,6 +1,7 @@
 package org.simple.clinic.search
 
 import android.content.Context
+import android.support.annotation.StringRes
 import android.support.design.widget.TextInputLayout
 import android.support.transition.ChangeBounds
 import android.support.transition.Fade
@@ -163,29 +164,25 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun setEmptyDateOfBirthAndAgeErrorVisible(visible: Boolean) {
-    ageOrDateOfBirthErrorTextView.visibility = if (visible) View.VISIBLE else View.GONE
-    ageOrDateOfBirthErrorTextView.apply {
-      visibility = if (visible) View.VISIBLE else View.GONE
-      text = if (visible) resources.getString(R.string.patientsearch_error_both_dateofbirth_and_age_empty) else null
-    }
+    setAgeOrDateOfBirthErrorVisible(visible, R.string.patientsearch_error_both_dateofbirth_and_age_empty)
     ageInputLayout.error = if (visible) " " else null
   }
 
   fun setInvalidDateOfBirthErrorVisible(visible: Boolean) {
-    ageOrDateOfBirthErrorTextView.visibility = if (visible) View.VISIBLE else View.GONE
-    ageOrDateOfBirthErrorTextView.apply {
-      visibility = if (visible) View.VISIBLE else View.GONE
-      text = if (visible) resources.getString(R.string.patientsearch_error_invalid_dateofbirth) else null
-    }
+    setAgeOrDateOfBirthErrorVisible(visible, R.string.patientsearch_error_invalid_dateofbirth)
     dateOfBirthInputLayout.error = if (visible) " " else null
   }
 
   fun setDateOfBirthIsInFutureErrorVisible(visible: Boolean) {
+    setAgeOrDateOfBirthErrorVisible(visible, R.string.patientsearch_error_dateofbirth_is_in_future)
+    dateOfBirthInputLayout.error = if (visible) " " else null
+  }
+
+  private fun setAgeOrDateOfBirthErrorVisible(visible: Boolean, @StringRes errorTextRes: Int) {
     ageOrDateOfBirthErrorTextView.visibility = if (visible) View.VISIBLE else View.GONE
     ageOrDateOfBirthErrorTextView.apply {
       visibility = if (visible) View.VISIBLE else View.GONE
-      text = if (visible) resources.getString(R.string.patientsearch_error_dateofbirth_is_in_future) else null
+      text = if (visible) resources.getString(errorTextRes) else null
     }
-    dateOfBirthInputLayout.error = if (visible) " " else null
   }
 }

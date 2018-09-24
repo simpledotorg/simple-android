@@ -116,7 +116,7 @@ class PatientSearchScreenController @Inject constructor(
             if (dateOfBirth.isNullOrBlank() && age.isNullOrBlank()) {
               errors += BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 
-            } else if (dateOfBirth?.isNotBlank() == true && age?.isNotBlank() == true) {
+            } else if (dateOfBirth.isNullOrBlank().not() && age.isNullOrBlank().not()) {
               errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
             } else if (dateOfBirth.isNotBlank()) {

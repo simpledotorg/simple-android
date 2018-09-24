@@ -1,5 +1,6 @@
 package org.simple.clinic.router.screen
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.LayoutRes
 import android.view.LayoutInflater
@@ -67,7 +68,7 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
           incomingView,
           direction,
           onCompleteListener = {
-            if (outgoingView != null) {
+            outgoingView?.let {
               outgoingState?.save(outgoingView)
               frame.removeView(outgoingView)
             }
@@ -106,6 +107,7 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
     }
 
     viewTreeObserver.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
+      @SuppressLint("BinaryOperationInTimber")
       override fun onPreDraw(): Boolean {
         if (isLaidOut) {
           viewTreeObserver.removeOnPreDrawListener(this)

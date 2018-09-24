@@ -44,7 +44,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   lateinit var fragmentManager: FragmentManager
 
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
-  private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
+//  private val aadhaarScanButton by bindView<Button>(R.id.patients_scan_aadhaar)
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
   private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
   private val enterOtpManuallyButton by bindView<Button>(R.id.patients_enter_code)
@@ -62,7 +62,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .mergeArray(
             screenCreates(),
             activityStarts(),
-            aadhaarScanButtonClicks(),
+//            aadhaarScanButtonClicks(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
             enterCodeManuallyClicks()
@@ -86,7 +86,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
 
-  private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton).map { ScanAadhaarClicked() }
+//  private fun aadhaarScanButtonClicks() = RxView.clicks(aadhaarScanButton).map { ScanAadhaarClicked() }
 
   private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
 

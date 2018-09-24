@@ -6,56 +6,41 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
+  <Button
+    android:id="@+id/patients_search_patients"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_48"
+    android:drawableStart="@drawable/ic_search_24dp"
+    android:gravity="center"
+    android:paddingStart="20dp"
+    android:text="@string/home_search_patient_name_phone"
+    android:textAllCaps="false"
+    android:textColor="@color/black_opacity_30"
+    android:textSize="@dimen/textsize_18"
+    app:backgroundTint="@color/white"
+    tools:ignore="MissingPrefix,RtlSymmetry" />
+
+  <!-- We don't currently have a center color for the background gradient
+  so we can't adjust the centerY of the background. This lets us have a
+  different centerY because we can freely adjust the height of this view.
+   -->
   <View
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="112dp"
-    android:background="#05000000" />
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:gravity="center_horizontal"
-    android:orientation="vertical"
-    android:paddingEnd="@dimen/spacing_16"
-    android:paddingStart="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_24">
-
-    <Button
-      android:id="@+id/patients_search_patients"
-      android:layout_width="match_parent"
-      android:layout_height="64dp"
-      android:layout_marginBottom="@dimen/spacing_16"
-      android:drawableStart="@drawable/ic_search_24dp"
-      android:paddingStart="20dp"
-      android:text="@string/home_search_patient_name_phone"
-      android:textAllCaps="false"
-      android:textColor="@color/black_opacity_30"
-      android:textSize="@dimen/textsize_18"
-      app:backgroundTint="@color/white"
-      tools:ignore="MissingPrefix,RtlSymmetry" />
-
-    <Button
-      android:id="@+id/patients_scan_aadhaar"
-      android:layout_width="match_parent"
-      android:layout_height="64dp"
-      android:layout_marginBottom="@dimen/spacing_16"
-      android:drawableStart="@drawable/qr_code"
-      android:paddingStart="32dp"
-      android:text="@string/home_scan_patient_aadhaar"
-      android:textAllCaps="false"
-      android:textColor="@color/white"
-      android:textSize="@dimen/textsize_18"
-      app:backgroundTint="@color/color_accent"
-      tools:ignore="MissingPrefix,RtlSymmetry" />
-  </LinearLayout>
+    android:layout_below="@id/patients_search_patients"
+    android:layout_marginTop="@dimen/spacing_48"
+    android:background="@drawable/background_patients" />
 
   <ImageView
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_alignParentBottom="true"
+    android:layout_below="@id/patients_search_patients"
     android:layout_centerHorizontal="true"
-    android:src="@drawable/scan_illustration"
+    android:layout_marginTop="@dimen/spacing_48"
+    android:src="@drawable/register_illustration"
     tools:ignore="ContentDescription" />
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview

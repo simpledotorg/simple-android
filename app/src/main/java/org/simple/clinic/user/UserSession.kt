@@ -17,6 +17,8 @@ import org.simple.clinic.facility.FacilityPullResult.Success
 import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.forgotpin.ForgotPinResponse
+import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginRequest
@@ -35,6 +37,7 @@ import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.threeten.bp.Instant
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -55,7 +58,13 @@ class UserSession @Inject constructor(
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    private val syncScheduler: SyncScheduler
+    private val syncScheduler: SyncScheduler,
+    @Named("last_patient_pull_timestamp") private val patientSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_bp_pull_timestamp") private val bpSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_prescription_pull_timestamp") private val prescriptionSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_appointment_pull_timestamp") private val appointmentSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_communication_pull_timestamp") private val communicationSyncPullTimestamp: Preference<Optional<Instant>>,
+    @Named("last_medicalhistory_pull_timestamp") private val medicalHistorySyncPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   private var ongoingLoginEntry: OngoingLoginEntry? = null
@@ -180,19 +189,24 @@ class UserSession @Inject constructor(
   }
 
   fun refreshLoggedInUser(): Completable {
-    return loggedInUser()
+    return requireLoggedInUser()
         .firstOrError()
-        .map { (user) ->
-          if (user == null) {
-            throw AssertionError("User isn't logged in yet.")
-          }
-          user
-        }
-        .flatMap { registrationApi.findUser(it.phoneNumber) }
-        .flatMapCompletable { userPayload ->
-          val user = userFromPayload(userPayload, User.LoggedInStatus.LOGGED_IN)
-          val userFacilities = userPayload.facilityUuids
-          storeUser(user, userFacilities)
+        .flatMapCompletable { loggedInUser ->
+          registrationApi.findUser(loggedInUser.phoneNumber)
+              .flatMapCompletable { userPayload ->
+                // FIXME: This is a hack to handle the case where the user logged in status will
+                // not get set to RESET_PIN_REQUESTED when the PIN reset status is approved.
+                val finalLoggedInStatus = if (userPayload.status == UserStatus.APPROVED_FOR_SYNCING) {
+                  User.LoggedInStatus.LOGGED_IN
+
+                } else {
+                  loggedInUser.loggedInStatus
+                }
+
+                val user = userFromPayload(userPayload, finalLoggedInStatus)
+                val userFacilities = userPayload.facilityUuids
+                storeUser(user, userFacilities)
+              }
         }
   }
 
@@ -271,6 +285,13 @@ class UserSession @Inject constructor(
     return storeUser(
         userFromPayload(response.loggedInUser, User.LoggedInStatus.LOGGED_IN),
         response.loggedInUser.facilityUuids)
+  }
+
+  private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {
+    accessTokenPreference.set(Just(response.accessToken))
+
+    val user = userFromPayload(response.loggedInUser, User.LoggedInStatus.RESET_PIN_REQUESTED)
+    return storeUser(user, response.loggedInUser.facilityUuids)
   }
 
   private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
@@ -354,13 +375,23 @@ class UserSession @Inject constructor(
     return accessTokenPreference.get()
   }
 
-  fun startForgotPinFlow(patientRepository: PatientRepository, syncRetryCount: Int = 0): Completable {
+  fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
     return syncScheduler.syncImmediately()
         .subscribeOn(Schedulers.io())
         .retry(syncRetryCount.toLong())
+        .timeout(timeoutSeconds, TimeUnit.SECONDS)
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
+        .andThen(Completable.fromAction {
+          patientSyncPullTimestamp.delete()
+          bpSyncPullTimestamp.delete()
+          prescriptionSyncPullTimestamp.delete()
+          appointmentSyncPullTimestamp.delete()
+          communicationSyncPullTimestamp.delete()
+          medicalHistorySyncPullTimestamp.delete()
+        })
         .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
+          // TODO: Move this to a separate method which can be called from wherever
           Completable.fromAction {
             appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
           }
@@ -368,13 +399,25 @@ class UserSession @Inject constructor(
   }
 
   fun resetPin(pin: String): Single<ForgotPinResult> {
-    return requireLoggedInUser()
-        .delaySubscription(3L, TimeUnit.SECONDS)
-        .take(1)
-        .flatMapCompletable {
-          Completable
-              .fromCallable { appDatabase.userDao().updateLoggedInStatusForUser(it.uuid, User.LoggedInStatus.LOGGED_IN) }
+    val resetPasswordCall = passwordHasher.hash(pin)
+        .map { ResetPinRequest(it) }
+        .flatMap { loginApi.resetPin(it) }
+
+    val updateUserOnSuccess = resetPasswordCall
+        .flatMapCompletable { storeUserAndAccessToken(it) }
+        .toSingleDefault(ForgotPinResult.Success as ForgotPinResult)
+
+    return updateUserOnSuccess
+        .onErrorReturn {
+          when (it) {
+            is IOException -> ForgotPinResult.NetworkError
+            is HttpException -> if (it.code() == 401) {
+              ForgotPinResult.UserNotFound
+            } else {
+              ForgotPinResult.UnexpectedError(it)
+            }
+            else -> ForgotPinResult.UnexpectedError(it)
+          }
         }
-        .toSingleDefault(ForgotPinResult.Success)
   }
 }

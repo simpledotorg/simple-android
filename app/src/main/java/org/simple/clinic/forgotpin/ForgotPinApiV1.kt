@@ -1,12 +1,8 @@
 package org.simple.clinic.forgotpin
 
-import io.reactivex.Completable
-import java.util.concurrent.TimeUnit
+import io.reactivex.Single
 
 interface ForgotPinApiV1 {
 
-  fun resetPin(request: ResetPinRequest): Completable {
-    return Completable.complete()
-        .delay(3L, TimeUnit.SECONDS)
-  }
+  fun resetPin(request: ResetPinRequest): Single<ForgotPinResponse>
 }

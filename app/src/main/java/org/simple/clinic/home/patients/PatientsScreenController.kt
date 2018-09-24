@@ -8,7 +8,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.sync.SyncScheduler
@@ -16,6 +15,8 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
@@ -85,7 +86,7 @@ class PatientsScreenController @Inject constructor(
 
   private fun refreshUserStatus() {
     val refreshUser = userSession.refreshLoggedInUser()
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(io())
         .onErrorComplete()
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
 
@@ -109,14 +110,18 @@ class PatientsScreenController @Inject constructor(
           val setVerificationStatusMessageVisible = { loggedInStatus: User.LoggedInStatus, ui: Ui ->
             when (loggedInStatus) {
               NOT_LOGGED_IN, OTP_REQUESTED -> ui.showUserStatusAsPendingVerification()
-              LOGGED_IN -> ui.hideUserAccountStatus()
+              LOGGED_IN, RESETTING_PIN, RESET_PIN_REQUESTED -> ui.hideUserAccountStatus()
             }
           }
 
           Observables.combineLatest(user, hasUserDismissedApprovedStatusPref.asObservable())
               .map { (user, userDismissedStatus) ->
                 when (user.status) {
-                  WAITING_FOR_APPROVAL -> { ui: Ui -> ui.showUserStatusAsWaiting() }
+                  WAITING_FOR_APPROVAL -> { ui: Ui ->
+                    if (user.loggedInStatus != RESET_PIN_REQUESTED) {
+                      ui.showUserStatusAsWaiting()
+                    }
+                  }
                   DISAPPROVED_FOR_SYNCING -> { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
                   APPROVED_FOR_SYNCING -> {
                     val twentyFourHoursAgo = Instant.now().minus(24, ChronoUnit.HOURS)

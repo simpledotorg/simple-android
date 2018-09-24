@@ -3,6 +3,7 @@ package org.simple.clinic.forgotpin.confirmpin
 import android.content.Context
 import android.support.annotation.StringRes
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -19,7 +20,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
-import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.UiEvent
@@ -40,20 +41,21 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  private val backButton by bindView<ImageButton>(R.id.forgotpin_back)
-  private val progressBar by bindView<ProgressBar>(R.id.forgotpin_progress)
-  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
-  private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
-  private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_pin)
-  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_error)
-  private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_pin_container)
+  private val backButton by bindView<ImageButton>(R.id.forgotpin_confirmpin_back)
+  private val progressBar by bindView<ProgressBar>(R.id.forgotpin_confirmpin_progress)
+  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_confirmpin_facility_name)
+  private val userNameTextView by bindView<TextView>(R.id.forgotpin_confirmpin_user_fullname)
+  private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_confirmpin_pin)
+  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_confirmpin_error)
+  private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
+  private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
 
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), facilityClicks(), backClicks(), pinSubmits(), pinTextChanges())
+    Observable.mergeArray(screenCreates(), facilityClicks(), pinSubmits(), pinTextChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -61,6 +63,8 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
         .subscribe { it.invoke(this) }
 
     pinEntryEditText.showKeyboard()
+
+    backButton.setOnClickListener { goBack() }
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -71,10 +75,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private fun facilityClicks() =
       RxView.clicks(facilityNameTextView)
           .map { ForgotPinConfirmPinScreenFacilityClicked }
-
-  private fun backClicks() =
-      RxView.clicks(backButton)
-          .map { ForgotPinConfirmPinScreenBackClicked }
 
   private fun pinSubmits() =
       RxTextView.editorActions(pinEntryEditText)
@@ -97,7 +97,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     screenRouter.push(FacilityChangeScreenKey())
   }
 
-  fun goBack() {
+  private fun goBack() {
     screenRouter.pop()
   }
 
@@ -115,6 +115,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   fun hideError() {
     pinErrorTextView.visibility = GONE
+    pinEntryHintTextView.visibility = VISIBLE
   }
 
   fun showProgress() {
@@ -123,16 +124,18 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     hideKeyboard()
   }
 
-  fun hideProgress() {
+  private fun hideProgress() {
     progressBar.visibility = INVISIBLE
     pinEntryContainer.visibility = VISIBLE
   }
 
   fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
+    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {
+    hideProgress()
+    pinEntryHintTextView.visibility = GONE
     pinErrorTextView.setText(errorMessageResId)
     pinErrorTextView.visibility = VISIBLE
     pinEntryEditText.showKeyboard()

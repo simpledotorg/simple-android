@@ -1,6 +1,6 @@
 package org.simple.clinic
 
-import android.support.multidex.MultiDexApplication
+import android.app.Application
 import com.gabrielittner.threetenbp.LazyThreeTen
 import io.reactivex.schedulers.Schedulers
 import io.sentry.Sentry
@@ -9,7 +9,7 @@ import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.di.AppComponent
 import javax.inject.Inject
 
-abstract class ClinicApp : MultiDexApplication() {
+abstract class ClinicApp : Application() {
 
   companion object {
     lateinit var appComponent: AppComponent

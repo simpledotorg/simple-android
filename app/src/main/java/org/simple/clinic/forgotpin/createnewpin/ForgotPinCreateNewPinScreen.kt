@@ -37,10 +37,10 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  private val userNameTextView by bindView<TextView>(R.id.forgotpin_user_fullname)
-  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_facility_name)
-  private val pinEntryEditText by bindView<StaggeredEditText>(R.id.forgotpin_pin)
-  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_error)
+  private val userNameTextView by bindView<TextView>(R.id.forgotpin_createpin_user_fullname)
+  private val facilityNameTextView by bindView<TextView>(R.id.forgotpin_createpin_facility_name)
+  private val pinEntryEditText by bindView<StaggeredEditText>(R.id.forgotpin_createpin_pin)
+  private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_createpin_error)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

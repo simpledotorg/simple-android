@@ -32,7 +32,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenControllerTest {
@@ -77,8 +76,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
@@ -99,7 +96,6 @@ class PatientEntryScreenControllerTest {
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
     verify(patientRepository).saveOngoingEntryAsPatient()
-    verify(screen).openMedicalHistoryEntryScreen(savedPatient.uuid)
   }
 
   @Test
@@ -167,8 +163,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
@@ -296,7 +290,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `regression test for validations 1`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
@@ -311,14 +304,13 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, never()).openMedicalHistoryEntryScreen(any())
+    verify(screen, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
   @Test
   fun `regression test for validations 2`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -333,14 +325,13 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, never()).openMedicalHistoryEntryScreen(any())
+    verify(screen, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
   @Test
   fun `regression test for validations 3`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
@@ -355,14 +346,13 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, never()).openMedicalHistoryEntryScreen(any())
+    verify(screen, never()).openMedicalHistoryEntryScreen()
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
   @Test
   fun `regression test for validations 4`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(PatientMocker.patient()))
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
@@ -377,7 +367,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen).openMedicalHistoryEntryScreen(any())
+    verify(screen).openMedicalHistoryEntryScreen()
     verify(patientRepository).saveOngoingEntry(any())
   }
 
@@ -394,7 +384,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.never())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))

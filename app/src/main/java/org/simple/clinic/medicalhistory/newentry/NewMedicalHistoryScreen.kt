@@ -24,6 +24,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -31,7 +32,7 @@ import javax.inject.Inject
 class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = ::NewMedicalHistoryScreenKey
+    val KEY = NewMedicalHistoryScreenKey()
   }
 
   @Inject
@@ -76,10 +77,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
         .subscribe { it(this) }
   }
 
-  private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<NewMedicalHistoryScreenKey>(this)
-    return Observable.just(NewMedicalHistoryScreenCreated(screenKey.patientUuid))
-  }
+  private fun screenCreates() = Observable.just(ScreenCreated())
 
   private fun answerToggles(): ObservableSource<UiEvent> {
     return Observable.mergeArray(

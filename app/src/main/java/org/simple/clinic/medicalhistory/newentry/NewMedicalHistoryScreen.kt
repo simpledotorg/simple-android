@@ -14,7 +14,12 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
@@ -56,12 +61,12 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
       screenRouter.pop()
     }
 
-    heartAttackQuestionView.render(MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK)
-    strokeQuestionView.render(MedicalHistoryQuestion.HAS_HAD_A_STROKE)
-    kidneyDiseaseQuestionView.render(MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE)
-    hypertensionQuestionView.render(MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION)
-    diabetesQuestionView.render(MedicalHistoryQuestion.HAS_DIABETES)
-    noneQuestionView.render(MedicalHistoryQuestion.NONE)
+    heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK)
+    strokeQuestionView.render(HAS_HAD_A_STROKE)
+    kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE)
+    hypertensionQuestionView.render(IS_ON_TREATMENT_FOR_HYPERTENSION)
+    diabetesQuestionView.render(HAS_DIABETES)
+    noneQuestionView.render(NONE)
 
     Observable.mergeArray(screenCreates(), answerToggles(), saveClicks())
         .observeOn(io())

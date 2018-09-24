@@ -10,6 +10,8 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Scheduler
+import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientFuzzySearch
@@ -28,6 +30,7 @@ import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncModule
 import org.threeten.bp.Clock
+import javax.inject.Named
 
 @Module(includes = [
   QrModule::class,
@@ -87,4 +90,8 @@ class AppModule(
 
   @Provides
   fun clock() = Clock.systemUTC()!!
+
+  @Provides
+  @Named("io")
+  fun ioScheduler(): Scheduler = Schedulers.io()
 }

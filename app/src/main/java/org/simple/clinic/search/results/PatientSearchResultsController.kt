@@ -3,6 +3,7 @@ package org.simple.clinic.search.results
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Scheduler
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
@@ -15,13 +16,15 @@ import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientSearchResultsScreen
 typealias UiChange = (Ui) -> Unit
 
 class PatientSearchResultsController @Inject constructor(
     private val repository: PatientRepository,
-    private val clock: Clock
+    private val clock: Clock,
+    @Named("io") private val ioScheduler: Scheduler
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -48,7 +51,11 @@ class PatientSearchResultsController @Inject constructor(
         .map { it.key }
         .map { (name, age, dob) -> name to coerceAgeFrom(age, dob) }
         .flatMap { (name, computedAge) ->
-          repository.search(name, computedAge, includeFuzzyNameSearch = true)
+          repository
+              .search(name, computedAge, includeFuzzyNameSearch = true)
+              // We can't understand why, but search is occasionally
+              // running on the main thread. This is a temporary solution.
+              .subscribeOn(ioScheduler)
         }
         .map {
           { ui: Ui ->

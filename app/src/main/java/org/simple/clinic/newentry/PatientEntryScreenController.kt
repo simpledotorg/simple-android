@@ -384,7 +384,7 @@ class PatientEntryScreenController @Inject constructor(
           when {
             canBeSaved -> patientRepository.saveOngoingEntry(entry)
                 .andThen(patientRepository.saveOngoingEntryAsPatient())
-                .map { savedPatient -> { ui: Ui -> ui.openSummaryScreenForBpEntry(savedPatient.uuid) } }
+                .map { savedPatient -> { ui: Ui -> ui.openMedicalHistoryEntryScreen(savedPatient.uuid) } }
             else -> Single.never()
           }
         }

@@ -6,12 +6,29 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 class MedicalHistoryRepository @Inject constructor(
     val dao: MedicalHistory.RoomDao
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
+
+  // TODO: Android Test.
+  fun save(patientUuid: UUID, historyEntry: OngoingMedicalHistoryEntry): Completable {
+    val medicalHistory = MedicalHistory(
+        uuid = UUID.randomUUID(),
+        patientUuid = patientUuid,
+        hasHadHeartAttack = historyEntry.hasHadHeartAttack,
+        hasHadStroke = historyEntry.hasHadStroke,
+        hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
+        isOnTreatmentForHypertension = historyEntry.isOnTreatmentForHypertension,
+        hasDiabetes = historyEntry.hasDiabetes,
+        syncStatus = SyncStatus.PENDING,
+        createdAt = Instant.now(),
+        updatedAt = Instant.now())
+    return save(listOf(medicalHistory))
+  }
 
   override fun save(records: List<MedicalHistory>): Completable {
     return Completable.fromAction {

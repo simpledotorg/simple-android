@@ -248,4 +248,28 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.bloodPressure.uuid).isEqualTo(bp30)
     }
   }
+
+  @Test
+  fun when_setting_appointment_reminder_then_reminder_with_correct_date_should_be_set() {
+    val patientId = UUID.randomUUID()
+    val appointmentDate = LocalDate.now()
+    repository.schedule(patientId, appointmentDate).blockingAwait()
+
+    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(appointments).hasSize(1)
+    assertThat(appointments.first().remindOn).isNull()
+
+    val uuid = appointments[0].uuid
+    val reminderDate = LocalDate.now().plusDays(10)
+
+    repository.createReminderForAppointment(uuid, reminderDate).blockingGet()
+
+    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(updatedList).hasSize(1)
+    updatedList[0].apply {
+      assertThat(this.uuid).isEqualTo(uuid)
+      assertThat(this.remindOn).isEqualTo(reminderDate)
+      assertThat(this.agreedToVisit).isNull()
+    }
+  }
 }

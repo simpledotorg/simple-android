@@ -91,6 +91,9 @@ data class Appointment(
         newSyncStatus: SyncStatus
     )
 
+    @Query("UPDATE Appointment SET remindOn = :reminderDate WHERE uuid = :appointmentUUID")
+    fun createReminderForAppointment(appointmentUUID: UUID, reminderDate: LocalDate)
+
     @Query("DELETE FROM Appointment")
     fun clear()
   }

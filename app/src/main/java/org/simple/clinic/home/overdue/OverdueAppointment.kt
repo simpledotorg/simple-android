@@ -56,6 +56,8 @@ data class OverdueAppointment(
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
           WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :dateNow
+          AND (A.remindOn < :dateNow OR A.remindOn IS NULL)
+
           GROUP BY P.uuid HAVING max(BP.updatedAt)
           ORDER BY A.scheduledDate, A.updatedAt ASC
           """)

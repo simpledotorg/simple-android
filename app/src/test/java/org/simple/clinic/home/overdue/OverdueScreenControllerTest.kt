@@ -16,6 +16,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class OverdueScreenControllerTest {
@@ -79,6 +80,15 @@ class OverdueScreenControllerTest {
       true -> verify(screen).callPatientUsingDialer(phone)
       false -> verify(screen).callPatientWithoutUsingDialer(phone)
     }
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when "remind to call later" is clicked, appointment reminder sheet should open`() {
+    val appointmentUuid = UUID.randomUUID()
+    uiEvents.onNext(RemindToCallLaterClicked(appointmentUuid))
+
+    verify(screen).showAppointmentReminderSheet(appointmentUuid)
     verifyNoMoreInteractions(screen)
   }
 

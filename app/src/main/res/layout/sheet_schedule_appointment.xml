@@ -46,7 +46,7 @@
       android:layout_height="wrap_content"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
-      android:src="@drawable/ic_remove_circle_outline_24dp"
+      android:src="@drawable/ic_remove_circle_outline_32dp"
       android:tint="@color/color_accent"
       tools:ignore="ContentDescription" />
 
@@ -68,7 +68,7 @@
       android:layout_height="wrap_content"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
-      android:src="@drawable/ic_add_circle_outline_24dp"
+      android:src="@drawable/ic_add_circle_outline_32dp"
       android:tint="@color/color_accent"
       tools:ignore="ContentDescription" />
 

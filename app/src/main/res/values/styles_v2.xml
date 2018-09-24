@@ -160,6 +160,10 @@
     <item name="android:textColor">@color/grey2</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.H6.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.H6.Grey2">
     <item name="android:textColor">@color/grey2</item>
   </style>

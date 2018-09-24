@@ -39,7 +39,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Appointment::class,
       Communication::class,
       MedicalHistory::class],
-    version = 12,
+    version = 13,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -49,7 +49,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     UserStatus.RoomTypeConverter::class,
     User.LoggedInStatus.RoomTypeConverter::class,
     Appointment.Status.RoomTypeConverter::class,
-    Appointment.StatusReason.RoomTypeConverter::class,
+    Appointment.CancelReason.RoomTypeConverter::class,
     Communication.Type.RoomTypeConverter::class,
     Communication.Result.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,

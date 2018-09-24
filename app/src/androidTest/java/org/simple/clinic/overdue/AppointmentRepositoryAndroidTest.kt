@@ -58,9 +58,9 @@ class AppointmentRepositoryAndroidTest {
     val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
     savedAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
-      assertThat(this.date).isEqualTo(appointmentDate)
+      assertThat(this.scheduledDate).isEqualTo(appointmentDate)
       assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
-      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
   }
@@ -80,17 +80,17 @@ class AppointmentRepositoryAndroidTest {
 
     savedAppointment[0].apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
-      assertThat(this.date).isEqualTo(date1)
+      assertThat(this.scheduledDate).isEqualTo(date1)
       assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
-      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
 
     savedAppointment[1].apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
-      assertThat(this.date).isEqualTo(date2)
+      assertThat(this.scheduledDate).isEqualTo(date2)
       assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
-      assertThat(this.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
   }
@@ -235,16 +235,16 @@ class AppointmentRepositoryAndroidTest {
     assertThat(overdueAppts).hasSize(2)
     overdueAppts[0].apply {
       assertThat(this.appointment.patientUuid).isEqualTo(patient1)
-      assertThat(this.appointment.date).isEqualTo(date1)
+      assertThat(this.appointment.scheduledDate).isEqualTo(date1)
       assertThat(this.appointment.status).isEqualTo(Appointment.Status.SCHEDULED)
-      assertThat(this.appointment.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.appointment.cancelReason).isEqualTo(null)
       assertThat(this.bloodPressure.uuid).isEqualTo(bp1)
     }
     overdueAppts[1].apply {
       assertThat(this.appointment.patientUuid).isEqualTo(patient3)
-      assertThat(this.appointment.date).isEqualTo(date3)
+      assertThat(this.appointment.scheduledDate).isEqualTo(date3)
       assertThat(this.appointment.status).isEqualTo(Appointment.Status.SCHEDULED)
-      assertThat(this.appointment.statusReason).isEqualTo(Appointment.StatusReason.NOT_CALLED_YET)
+      assertThat(this.appointment.cancelReason).isEqualTo(null)
       assertThat(this.bloodPressure.uuid).isEqualTo(bp30)
     }
   }

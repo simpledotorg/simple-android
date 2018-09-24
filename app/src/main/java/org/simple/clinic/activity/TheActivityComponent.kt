@@ -23,6 +23,7 @@ import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
+import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
@@ -76,6 +77,7 @@ interface TheActivityComponent {
   fun inject(target: ForgotPinCreateNewPinScreen)
   fun inject(target: AppointmentReminderSheet)
   fun inject(target: ForgotPinConfirmPinScreen)
+  fun inject(target: NewMedicalHistoryScreen)
 
   @Subcomponent.Builder
   interface Builder {

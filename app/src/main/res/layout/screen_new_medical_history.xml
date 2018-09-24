@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/newmedicalhistory_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/newmedicalhistory_screen_title" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/newmedicalhistory_toolbar">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_heartattack"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_stroke"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_kidney"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_hypertension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_diabetes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_none"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    </LinearLayout>
+  </ScrollView>
+
+  <FrameLayout
+    android:id="@+id/newmedicalhistory_next_frame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue2">
+
+    <Button
+      android:id="@+id/newmedicalhistory_save"
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/newmedicalhistory_next"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+  </FrameLayout>
+</org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen>

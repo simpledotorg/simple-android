@@ -233,4 +233,20 @@
   <!-- Reports -->
   <string name="reports_come_back_later">Come back later</string>
   <string name="reports_you_will_be_able_to_see">You will be able to see hypertension reports for your clinic here.</string>
+
+  <!-- Medical History -->
+  <string name="newmedicalhistory_screen_title">Cardiovascular history</string>
+  <!--suppress UnusedResources used in enum -->
+  <string name="medicalhistory_question_heartattack">Heart attack in last 3 years</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_stroke">Past history of stroke</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_kidney">Past history of kidney disease</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_hypertension">Already takes hypertension drugs</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_diabetes">Has diabetes</string>
+  <!--suppress UnusedResources -->
+  <string name="medicalhistory_question_none">None of the above</string>
+  <string name="newmedicalhistory_next">Next</string>
 </resources>

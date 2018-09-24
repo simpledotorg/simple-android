@@ -28,13 +28,12 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.summary.PatientSummaryCaller
-import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -171,8 +170,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     stateEditText.setTextAndCursor(details.address?.state)
   }
 
-  fun openSummaryScreenForBpEntry(savedPatientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreen.KEY(savedPatientUuid, PatientSummaryCaller.NEW_PATIENT))
+  fun openMedicalHistoryEntryScreen(savedPatientUuid: UUID) {
+    screenRouter.push(NewMedicalHistoryScreen.KEY(savedPatientUuid))
   }
 
   fun resetPhoneNumberField() {

@@ -10,6 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -17,7 +18,8 @@ typealias Ui = NewMedicalHistoryScreen
 typealias UiChange = (Ui) -> Unit
 
 class NewMedicalHistoryScreenController @Inject constructor(
-    private val repository: MedicalHistoryRepository
+    private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -56,10 +58,6 @@ class NewMedicalHistoryScreenController @Inject constructor(
   }
 
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuids = events
-        .ofType<NewMedicalHistoryScreenCreated>()
-        .map { it.patientUuid }
-
     val ongoingHistoryEntry = events
         .ofType<MedicalHistoryAnswerToggled>()
         .scan(OngoingMedicalHistoryEntry()) { ongoingEntry, toggleEvent ->
@@ -70,11 +68,12 @@ class NewMedicalHistoryScreenController @Inject constructor(
 
     return events
         .ofType<SaveMedicalHistoryClicked>()
-        .withLatestFrom(patientUuids, ongoingHistoryEntry)
-        .flatMap { (_, uuid, entry) ->
-          repository
-              .save(uuid, entry)
-              .andThen(Observable.just({ ui: Ui -> ui.openPatientSummaryScreen(uuid) }))
+        .flatMapSingle { patientRepository.saveOngoingEntryAsPatient() }
+        .withLatestFrom(ongoingHistoryEntry)
+        .flatMap { (savedPatient, entry) ->
+          medicalHistoryRepository
+              .save(savedPatient.uuid, entry)
+              .andThen(Observable.just({ ui: Ui -> ui.openPatientSummaryScreen(savedPatient.uuid) }))
         }
   }
 }

@@ -383,8 +383,7 @@ class PatientEntryScreenController @Inject constructor(
         .flatMapSingle { (_, entry, canBeSaved) ->
           when {
             canBeSaved -> patientRepository.saveOngoingEntry(entry)
-                .andThen(patientRepository.saveOngoingEntryAsPatient())
-                .map { savedPatient -> { ui: Ui -> ui.openMedicalHistoryEntryScreen(savedPatient.uuid) } }
+                .andThen(Single.just({ ui: Ui -> ui.openMedicalHistoryEntryScreen() }))
             else -> Single.never()
           }
         }

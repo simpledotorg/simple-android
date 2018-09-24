@@ -20,7 +20,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_24"
-      app:backgroundTint="@color/color_accent" />
+      app:backgroundTint="?colorAccent" />
 
     <org.simple.clinic.widgets.TintableCompoundDrawableTextView
       android:layout_width="wrap_content"

@@ -50,7 +50,7 @@
     android:id="@+id/customprescription_save"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_accent"
+    android:background="?colorAccent"
     android:foreground="?attr/selectableItemBackground"
     android:text="@string/customprescription_save_drug"
     android:textColor="@color/white" />

@@ -66,7 +66,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/spacing_24"
         android:layout_marginTop="@dimen/summary_prescriptions_update_when_empty"
-        app:backgroundTint="@color/color_accent" />
+        app:backgroundTint="?colorAccent" />
 
       <TextView
         android:id="@+id/patientsummary_prescriptions_update_text_view"

@@ -106,7 +106,7 @@
   </style>
 
   <style name="Clinic.V2.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
-    <item name="android:background">@color/color_primary</item>
+    <item name="android:background">?colorPrimary</item>
     <item name="titleTextColor">@color/white</item>
     <item name="contentInsetStartWithNavigation">64dp</item>
     <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>

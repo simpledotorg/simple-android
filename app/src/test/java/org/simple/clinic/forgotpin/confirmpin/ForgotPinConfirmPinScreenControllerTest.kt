@@ -141,16 +141,6 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
-  fun `when the sync fails, the progress must be hidden`() {
-    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.error(RuntimeException()))
-
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
-    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
-
-    verify(screen).hideProgress()
-  }
-
-  @Test
   @Parameters(value = [
     "0|false",
     "00|false",
@@ -182,29 +172,6 @@ class ForgotPinConfirmPinScreenControllerTest {
     uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
 
     verify(screen).showProgress()
-  }
-
-  @Test
-  @Parameters(method = "params For failed forgot pin call")
-  fun `when the forgot PIN call completes, the progress must be hidden`(result: Single<ForgotPinResult>) {
-    whenever(userSession.syncAndClearData(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(userSession.resetPin(any())).thenReturn(result)
-
-    uiEvents.onNext(ForgotPinConfirmPinScreenCreated("0000"))
-    uiEvents.onNext(ForgotPinConfirmPinSubmitClicked("0000"))
-
-    verify(screen).hideProgress()
-  }
-
-  // Accessed via reflection
-  @Suppress("Unused")
-  private fun `params For failed forgot pin call`(): Array<Any> {
-    return arrayOf(
-        Single.just(Success),
-        Single.just(NetworkError),
-        Single.just(UnexpectedError(RuntimeException())),
-        Single.just(UserNotFound)
-    )
   }
 
   @Test

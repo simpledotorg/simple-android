@@ -35,7 +35,9 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         openFacilityChangeScreen(replayedEvents),
         goBack(replayedEvents),
         hideErrorsOnPinTextChanged(replayedEvents),
-        handlePinSubmitted(replayedEvents)
+        showMismatchedPinErrors(replayedEvents),
+        showProgress(replayedEvents),
+        syncPatientDataAndResetPin(replayedEvents)
     )
   }
 
@@ -67,15 +69,31 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .map { { ui: Ui -> ui.hideError() } }
   }
 
-  private fun handlePinSubmitted(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun showMismatchedPinErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
         .map { it.pin }
 
-    val showMismatchedPinErrors = events.ofType<ForgotPinConfirmPinSubmitClicked>()
+    return events.ofType<ForgotPinConfirmPinSubmitClicked>()
         .map { it.pin }
         .withLatestFrom(previouslyEnteredPin)
         .filter { (enteredPin, previousPin) -> enteredPin != previousPin }
         .map { { ui: Ui -> ui.showPinMismatchedError() } }
+  }
+
+  private fun showProgress(events: Observable<UiEvent>): Observable<UiChange> {
+    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
+        .map { it.pin }
+
+    return events.ofType<ForgotPinConfirmPinSubmitClicked>()
+        .map { it.pin }
+        .withLatestFrom(previouslyEnteredPin)
+        .filter { (enteredPin, previousPin) -> enteredPin == previousPin }
+        .map { { ui: Ui -> ui.showProgress() } }
+  }
+
+  private fun syncPatientDataAndResetPin(events: Observable<UiEvent>): Observable<UiChange> {
+    val previouslyEnteredPin = events.ofType<ForgotPinConfirmPinScreenCreated>()
+        .map { it.pin }
 
     val validPin = events.ofType<ForgotPinConfirmPinSubmitClicked>()
         .map { it.pin }
@@ -84,16 +102,11 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .map { (enteredPin, _) -> enteredPin }
         .share()
 
-    val showProgressOnValidPin = validPin.map { { ui: Ui -> ui.showProgress() } }
-
     val makeResetPinCall = validPin
         .flatMapSingle { userSession.syncAndClearData(patientRepository, 1).toSingleDefault(it) }
         .flatMapSingle { userSession.resetPin(it) }
         .onErrorReturn { ForgotPinResult.UnexpectedError(it) }
         .share()
-
-    val hideProgressOnResetPinCall = makeResetPinCall
-        .map { { ui: Ui -> ui.hideProgress() } }
 
     val showErrorsOnResetPinCall = makeResetPinCall
         .filter { it !is Success }
@@ -110,9 +123,6 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .map { { ui: Ui -> ui.goToHomeScreen() } }
 
     return Observable.mergeArray(
-        showMismatchedPinErrors,
-        showProgressOnValidPin,
-        hideProgressOnResetPinCall,
         showErrorsOnResetPinCall,
         openHomeOnResetPinCallSuccess
     )

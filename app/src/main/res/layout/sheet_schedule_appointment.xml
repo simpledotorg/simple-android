@@ -47,7 +47,7 @@
       android:background="?attr/selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_remove_circle_outline_32dp"
-      android:tint="@color/color_accent"
+      android:tint="?colorAccent"
       tools:ignore="ContentDescription" />
 
     <TextView
@@ -69,7 +69,7 @@
       android:background="?attr/selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_add_circle_outline_32dp"
-      android:tint="@color/color_accent"
+      android:tint="?colorAccent"
       tools:ignore="ContentDescription" />
 
   </LinearLayout>
@@ -93,7 +93,7 @@
       android:background="@drawable/scheduleappointment_button_outline_ripple"
       android:gravity="center"
       android:text="@string/scheduleappointment_not_now"
-      android:textColor="@color/color_accent"
+      android:textColor="?colorAccent"
       tools:ignore="ButtonStyle" />
 
     <Button
@@ -108,7 +108,7 @@
       android:paddingTop="21dp"
       android:text="@string/scheduleappointment_done"
       android:textColor="@color/white"
-      app:backgroundTint="@color/color_accent"
+      app:backgroundTint="?colorAccent"
       tools:ignore="ButtonStyle" />
   </LinearLayout>
 </LinearLayout>

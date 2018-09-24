@@ -1,6 +1,6 @@
 buildscript {
   ext.versions = [
-      minSdk              : 19,
+      minSdk              : 21,
       compileSdk          : 27,
       kotlin              : '1.2.50',
       supportLib          : '27.1.1',
@@ -16,7 +16,6 @@ buildscript {
       sentry              : '1.7.4',
       groupie             : '2.1.0',
       flow                : '1.0.0-alpha3',
-      multidex            : '1.0.0',
       rxJava              : '2.1.9',
       rxAndroid           : '2.0.2',
       rxBinding           : '2.1.1',
@@ -58,7 +57,6 @@ buildscript {
     classpath 'com.android.tools.build:gradle:3.1.4'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentry"
-    classpath "com.android.support:multidex:$versions.multidex"
     classpath "com.heapanalytics.android:heap-android-gradle:$versions.heap"
   }
 }

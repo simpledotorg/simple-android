@@ -12,6 +12,7 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
+import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class PatientSummaryScreenController @Inject constructor(
         openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         handleBackAndDoneClicks(replayedEvents),
-        exitScreenAfterScheduleAppointment(replayedEvents))
+        exitScreenAfterSchedulingAppointment(replayedEvents))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
@@ -126,6 +127,10 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun handleBackAndDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {
+    val callers = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.caller }
+
     val patientUuids = events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
@@ -143,17 +148,24 @@ class PatientSummaryScreenController @Inject constructor(
 
     val doneOrBackClicksWithBpSaved = Observable.merge(doneClicks, backClicks)
         .withLatestFrom(bloodPressureSaves, patientUuids)
-        .filter { it.second }
-        .map { { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = it.third) } }
+        .filter { (_, saved, _) -> saved }
+        .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
     val backClicksWithBpNotSaved = backClicks
-        .withLatestFrom(bloodPressureSaves)
-        .filter { !it.second }
-        .map { { ui: Ui -> ui.goBackToPatientSearch() } }
+        .withLatestFrom(bloodPressureSaves, callers)
+        .filter { (_, saved, _) -> saved.not() }
+        .map { (_, _, caller) ->
+          { ui: Ui ->
+            when (caller!!) {
+              SEARCH -> ui.goBackToPatientSearch()
+              NEW_PATIENT -> ui.goBackToHome()
+            }.exhaustive()
+          }
+        }
 
     val doneClicksWithBpNotSaved = doneClicks
         .withLatestFrom(bloodPressureSaves)
-        .filter { !it.second }
+        .filter { (_, saved) -> saved.not() }
         .map { { ui: Ui -> ui.goBackToHome() } }
 
     return Observable.mergeArray(
@@ -162,7 +174,11 @@ class PatientSummaryScreenController @Inject constructor(
         doneClicksWithBpNotSaved)
   }
 
-  private fun exitScreenAfterScheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
+    val callers = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.caller }
+
     val scheduleAppointmentCloses = events
         .ofType<ScheduleAppointmentSheetClosed>()
 
@@ -173,8 +189,15 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks)
-        .map { { ui: Ui -> ui.goBackToPatientSearch() } }
+        .withLatestFrom(backClicks, callers)
+        .map { (_, _, caller) ->
+          { ui: Ui ->
+            when (caller!!) {
+              SEARCH -> ui.goBackToPatientSearch()
+              NEW_PATIENT -> ui.goBackToHome()
+            }.exhaustive()
+          }
+        }
 
     val afterDoneClicks = scheduleAppointmentCloses
         .withLatestFrom(doneClicks)
@@ -183,3 +206,6 @@ class PatientSummaryScreenController @Inject constructor(
     return afterBackClicks.mergeWith(afterDoneClicks)
   }
 }
+
+// Forces when blocks to be exhaustive.
+private fun Unit.exhaustive() {}

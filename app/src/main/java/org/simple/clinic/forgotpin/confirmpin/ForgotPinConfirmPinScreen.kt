@@ -53,7 +53,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), facilityClicks(), backClicks(), pinSubmits(), pinTextChanges())
+    Observable.mergeArray(screenCreates(), facilityClicks(), pinSubmits(), pinTextChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -61,6 +61,8 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
         .subscribe { it.invoke(this) }
 
     pinEntryEditText.showKeyboard()
+
+    backButton.setOnClickListener { goBack() }
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -71,10 +73,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private fun facilityClicks() =
       RxView.clicks(facilityNameTextView)
           .map { ForgotPinConfirmPinScreenFacilityClicked }
-
-  private fun backClicks() =
-      RxView.clicks(backButton)
-          .map { ForgotPinConfirmPinScreenBackClicked }
 
   private fun pinSubmits() =
       RxTextView.editorActions(pinEntryEditText)
@@ -97,7 +95,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     screenRouter.push(FacilityChangeScreenKey())
   }
 
-  fun goBack() {
+  private fun goBack() {
     screenRouter.pop()
   }
 

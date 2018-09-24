@@ -77,13 +77,6 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
-  fun `when pressing the back button the screen must be closed`() {
-    uiEvents.onNext(ForgotPinConfirmPinScreenBackClicked)
-
-    verify(screen).goBack()
-  }
-
-  @Test
   @Parameters(value = [
     "0000|000|0000|false",
     "0000|000|001|true",

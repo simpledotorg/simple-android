@@ -20,4 +20,7 @@
 
   <color name="patientsearch_search_button_frame_enabled">@color/blue2</color>
   <color name="patientsearch_search_button_frame_disabled">@color/grey3</color>
+
+  <color name="newmedicalhistory_save_button_frame_enabled">@color/blue2</color>
+  <color name="newmedicalhistory_save_button_frame_disabled">@color/grey3</color>
 </resources>

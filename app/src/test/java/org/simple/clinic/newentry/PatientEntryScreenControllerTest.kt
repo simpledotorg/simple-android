@@ -99,7 +99,7 @@ class PatientEntryScreenControllerTest {
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
     verify(patientRepository).saveOngoingEntryAsPatient()
-    verify(screen).openSummaryScreenForBpEntry(savedPatient.uuid)
+    verify(screen).openMedicalHistoryEntryScreen(savedPatient.uuid)
   }
 
   @Test
@@ -311,7 +311,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, never()).openSummaryScreenForBpEntry(any())
+    verify(screen, never()).openMedicalHistoryEntryScreen(any())
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -333,7 +333,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, never()).openSummaryScreenForBpEntry(any())
+    verify(screen, never()).openMedicalHistoryEntryScreen(any())
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -355,7 +355,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, never()).openSummaryScreenForBpEntry(any())
+    verify(screen, never()).openMedicalHistoryEntryScreen(any())
     verify(patientRepository, never()).saveOngoingEntry(any())
   }
 
@@ -377,7 +377,7 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen).openSummaryScreenForBpEntry(any())
+    verify(screen).openMedicalHistoryEntryScreen(any())
     verify(patientRepository).saveOngoingEntry(any())
   }
 

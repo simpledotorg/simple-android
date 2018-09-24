@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="?attr/selectableItemBackground"
+  android:orientation="vertical"
+  android:paddingTop="@dimen/spacing_16"
+  tools:parentTag="android.widget.RelativeLayout">
+
+  <CheckBox
+    android:id="@+id/newmedicalhistory_item_checkbox"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_16"
+    android:paddingStart="@dimen/spacing_16"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+    android:theme="@style/Clinic.V2.MedicalHistoryQuestionCheckboxTheme"
+    tools:text="A really long medical history question that shouldn't fit" />
+
+  <View
+    style="@style/Clinic.Separator.VerticalContent"
+    android:layout_alignStart="@+id/newmedicalhistory_item_checkbox"
+    android:layout_below="@+id/newmedicalhistory_item_checkbox"
+    android:layout_marginTop="@dimen/spacing_16" />
+</merge>

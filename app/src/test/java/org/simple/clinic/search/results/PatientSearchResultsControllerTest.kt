@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -34,7 +35,7 @@ class PatientSearchResultsControllerTest {
   fun setUp() {
     val fixedClock = Clock.fixed(Instant.parse("2018-09-20T10:15:30.000Z"), UTC)
 
-    controller = PatientSearchResultsController(repository, fixedClock)
+    controller = PatientSearchResultsController(repository, fixedClock, Schedulers.trampoline())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 

@@ -3,6 +3,7 @@ package org.simple.clinic.forgotpin.confirmpin
 import android.content.Context
 import android.support.annotation.StringRes
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -47,6 +48,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val pinEntryEditText by bindView<EditText>(R.id.forgotpin_confirmpin_pin)
   private val pinErrorTextView by bindView<TextView>(R.id.forgotpin_confirmpin_error)
   private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
+  private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -113,6 +115,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   fun hideError() {
     pinErrorTextView.visibility = GONE
+    pinEntryHintTextView.visibility = VISIBLE
   }
 
   fun showProgress() {
@@ -132,6 +135,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   private fun showError(@StringRes errorMessageResId: Int) {
     hideProgress()
+    pinEntryHintTextView.visibility = GONE
     pinErrorTextView.setText(errorMessageResId)
     pinErrorTextView.visibility = VISIBLE
     pinEntryEditText.showKeyboard()

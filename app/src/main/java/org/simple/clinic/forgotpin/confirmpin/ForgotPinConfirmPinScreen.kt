@@ -123,7 +123,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     hideKeyboard()
   }
 
-  fun hideProgress() {
+  private fun hideProgress() {
     progressBar.visibility = INVISIBLE
     pinEntryContainer.visibility = VISIBLE
   }
@@ -133,6 +133,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {
+    hideProgress()
     pinErrorTextView.setText(errorMessageResId)
     pinErrorTextView.visibility = VISIBLE
     pinEntryEditText.showKeyboard()

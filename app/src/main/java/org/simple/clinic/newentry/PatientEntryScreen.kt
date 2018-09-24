@@ -41,7 +41,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.topRelativeTo
-import java.util.UUID
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -170,8 +169,8 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     stateEditText.setTextAndCursor(details.address?.state)
   }
 
-  fun openMedicalHistoryEntryScreen(savedPatientUuid: UUID) {
-    screenRouter.push(NewMedicalHistoryScreen.KEY(savedPatientUuid))
+  fun openMedicalHistoryEntryScreen() {
+    screenRouter.push(NewMedicalHistoryScreen.KEY)
   }
 
   fun resetPhoneNumberField() {

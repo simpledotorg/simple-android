@@ -121,8 +121,8 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummary")
-  fun `when the back is clicked, then user should be taken back to search, or schedule appointment sheet should open`(
+  @Parameters(method = "bpSavedAndPatientSummaryCallers")
+  fun `when back is clicked, then user should be taken back to search, or schedule appointment sheet should open`(
       wasBloodPressureSaved: Boolean,
       patientSummaryCaller: PatientSummaryCaller
   ) {
@@ -133,13 +133,17 @@ class PatientSummaryScreenControllerTest {
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
     } else {
-      verify(screen).goBackToPatientSearch()
+      if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+        verify(screen).goBackToHome()
+      } else {
+        verify(screen).goBackToPatientSearch()
+      }
     }
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummary")
-  fun `when the save button is clicked, then user should be taken back to the home screen, or schedule appointment sheet should open`(
+  @Parameters(method = "bpSavedAndPatientSummaryCallers")
+  fun `when save button is clicked, then user should be taken back to the home screen, or schedule appointment sheet should open`(
       wasBloodPressureSaved: Boolean,
       patientSummaryCaller: PatientSummaryCaller
   ) {
@@ -154,7 +158,7 @@ class PatientSummaryScreenControllerTest {
     }
   }
 
-  fun bpSavedAndPatientSummary() = arrayOf(
+  fun bpSavedAndPatientSummaryCallers() = arrayOf(
       arrayOf(true, PatientSummaryCaller.NEW_PATIENT),
       arrayOf(true, PatientSummaryCaller.SEARCH),
       arrayOf(false, PatientSummaryCaller.NEW_PATIENT),

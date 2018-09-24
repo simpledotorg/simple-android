@@ -26,7 +26,7 @@
       android:id="@+id/home_tabs"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@color/color_primary"
+      android:background="?colorPrimary"
       android:elevation="@dimen/elevation_toolbar"
       app:tabIndicatorHeight="3dp"
       app:tabIndicatorColor="@color/white"

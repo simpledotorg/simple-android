@@ -201,7 +201,7 @@
   <style name="Clinic.LoginLogoContainer">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:background">@color/color_primary</item>
+    <item name="android:background">?colorPrimary</item>
   </style>
 
   <style name="Clinic.LoginLogo">
@@ -244,12 +244,12 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">48dp</item>
     <item name="android:layout_alignTop">@+id/loginphone_card</item>
-    <item name="android:background">@color/color_primary</item>
+    <item name="android:background">?colorPrimary</item>
   </style>
 
   <style name="Clinic.Button.Flat" parent="Widget.AppCompat.Button">
     <item name="android:textColor">?android:textColorPrimaryInverse</item>
-    <item name="android:background">@color/color_accent</item>
+    <item name="android:background">?colorAccent</item>
     <item name="android:foreground">?selectableItemBackgroundBorderless</item>
   </style>
 

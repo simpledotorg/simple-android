@@ -10,7 +10,7 @@
     android:id="@+id/patientsummary_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/color_primary"
+    android:background="?colorPrimary"
     android:elevation="@dimen/elevation_toolbar"
     tools:ignore="UnusedAttribute">
 

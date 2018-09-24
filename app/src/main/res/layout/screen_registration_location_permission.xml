@@ -92,7 +92,7 @@
     android:layout_above="@id/registrationlocation_rationale_card"
     android:layout_centerHorizontal="true"
     android:layout_marginBottom="-24dp"
-    android:backgroundTint="@color/color_accent"
+    android:backgroundTint="?colorAccent"
     android:drawablePadding="@dimen/spacing_8"
     android:drawableStart="@drawable/ic_my_location_24dp"
     android:elevation="1dp"

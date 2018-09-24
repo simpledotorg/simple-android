@@ -39,11 +39,11 @@ data class Communication(
     @Json(name = "unavailable")
     UNAVAILABLE,
 
-    @Json(name = "agreed_to_visit")
-    AGREED_TO_VISIT,
+    @Json(name = "unreachable")
+    UNREACHABLE,
 
-    @Json(name = "denied_to_visit")
-    DENIED_TO_VISIT;
+    @Json(name = "successful")
+    SUCCESSFUL;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Result>(Result::class.java)
   }

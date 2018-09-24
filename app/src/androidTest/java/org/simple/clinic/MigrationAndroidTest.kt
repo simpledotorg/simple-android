@@ -12,6 +12,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
+import org.simple.clinic.storage.Migration_12_13
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -191,6 +192,43 @@ class MigrationAndroidTest {
 
     db_v12.query("SELECT * FROM `MedicalHistory`").use {
       assertThat(it.columnCount).isEqualTo(10)
+    }
+  }
+
+  @Test
+  fun migration_12_to_13() {
+    val db_v12 = helper.createDatabase(TEST_DB_NAME, 12)
+
+    db_v12.execSQL("""
+      INSERT OR REPLACE INTO `Appointment`(`uuid`,`patientUuid`,`facilityUuid`,`date`,`status`,`statusReason`,`syncStatus`,`createdAt`,`updatedAt`)
+      VALUES (
+        'c6834f82-3305-4144-9dc8-5f77c908ebf1',
+        'a1d33096-cea6-4beb-8441-82cab2befe2d',
+        '0274a4a6-dd0e-493c-86aa-6502cd1fc2a0',
+        '2011-12-03',
+        'SCHEDULED',
+        'NOT_CALLED_YET',
+        'PENDING',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z');
+    """)
+
+    val db_v13 = helper.runMigrationsAndValidate(TEST_DB_NAME, 13, true, Migration_12_13())
+
+    db_v13.query("SELECT * FROM `Appointment`").use {
+      assertThat(it.count).isEqualTo(1)
+
+      it.moveToFirst()
+      assertThat(it.columnNames.contains("date")).isFalse()
+      assertThat(it.columnNames.contains("statusReason")).isFalse()
+      assertThat(it.columnNames.contains("scheduledDate")).isTrue()
+      assertThat(it.columnNames.contains("cancelReason")).isTrue()
+      assertThat(it.columnNames.contains("remindOn")).isTrue()
+      assertThat(it.columnNames.contains("agreedToVisit")).isTrue()
+
+      assertThat(it.string("uuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+      assertThat(it.string("scheduledDate")).isEqualTo("2011-12-03")
+      assertThat(it.isNull(it.getColumnIndex("cancelReason"))).isTrue()
     }
   }
 }

@@ -18,14 +18,20 @@ data class AppointmentPayload(
     @Json(name = "facility_id")
     val facilityUuid: UUID,
 
-    @Json(name = "date")
+    @Json(name = "scheduled_date")
     val date: LocalDate,
 
     @Json(name = "status")
     val status: Appointment.Status,
 
-    @Json(name = "status_reason")
-    val statusReason: Appointment.StatusReason,
+    @Json(name = "cancel_reason")
+    val cancelReason: Appointment.CancelReason?,
+
+    @Json(name = "remind_on")
+    val remindOn: LocalDate?,
+
+    @Json(name = "agreed_to_visit")
+    val agreedToVisit: Boolean?,
 
     @Json(name = "created_at")
     val createdAt: Instant,

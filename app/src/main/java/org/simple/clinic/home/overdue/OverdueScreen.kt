@@ -26,7 +26,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 private const val REQUESTCODE_CALL_PHONE_PERMISSION = 17
-private const val REQUESTCODE_REMIND_TO_CALL_LATER = 23
 private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
 class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -113,6 +112,6 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   fun showAppointmentReminderSheet(appointmentUuid: UUID) {
     val intent = AppointmentReminderSheet.intent(this.context, appointmentUuid)
-    activity.startActivityForResult(intent, REQUESTCODE_REMIND_TO_CALL_LATER)
+    activity.startActivity(intent)
   }
 }

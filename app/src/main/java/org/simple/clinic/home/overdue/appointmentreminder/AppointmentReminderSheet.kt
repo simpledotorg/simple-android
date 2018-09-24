@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue.appointmentreminder
 
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -90,7 +89,6 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   private fun doneClicks() = RxView.clicks(doneButton).map { ReminderCreated(possibleDates[currentIndex]) }
 
   fun closeSheet() {
-    setResult(Activity.RESULT_OK)
     finish()
   }
 

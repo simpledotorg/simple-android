@@ -27,7 +27,7 @@ class OverdueScreenController @Inject constructor(
   override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         screenSetup(replayedEvents),
         phoneCallPermissionRequests(replayedEvents),
         patientCalls(replayedEvents),

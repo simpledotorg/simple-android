@@ -8,7 +8,7 @@
   tools:ignore="Overdraw">
 
   <LinearLayout
-    android:id="@+id/forgotpin_logo_container"
+    android:id="@+id/forgotpin_createpin_logo_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/color_primary"
@@ -19,7 +19,7 @@
     android:paddingTop="@dimen/spacing_4">
 
     <Button
-      android:id="@+id/forgotpin_facility_name"
+      android:id="@+id/forgotpin_createpin_facility_name"
       style="@style/Widget.AppCompat.Button.Borderless"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
@@ -39,7 +39,7 @@
       tools:text="A really long facility name that does not fit" />
 
     <TextView
-      android:id="@+id/forgotpin_user_fullname"
+      android:id="@+id/forgotpin_createpin_user_fullname"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_marginTop="@dimen/spacing_32"
@@ -55,31 +55,31 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_alignTop="@+id/forgotpin_card"
+    android:layout_alignTop="@+id/forgotpin_createpin_card"
     android:background="@color/color_primary" />
 
   <android.support.v7.widget.CardView
-    android:id="@+id/forgotpin_card"
+    android:id="@+id/forgotpin_createpin_card"
     style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/forgotpin_logo_container">
+    android:layout_below="@+id/forgotpin_createpin_logo_container">
 
     <LinearLayout
-      android:id="@+id/forgotpin_pin_container"
+      android:id="@+id/forgotpin_createpin_pin_container"
       style="@style/Clinic.CardContentContainer.Login">
 
       <TextView
         style="@style/Clinic.LoginPinLabel"
-        android:labelFor="@+id/forgotpin_pin"
+        android:labelFor="@+id/forgotpin_createpin_pin"
         android:text="@string/forgotpin_create_new_pin" />
 
       <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/forgotpin_pin"
+        android:id="@+id/forgotpin_createpin_pin"
         style="@style/Clinic.StaggeredEditText.Pin"
         android:imeOptions="actionDone"
         android:maxLength="4" />
 
       <TextView
-        android:id="@+id/forgotpin_error"
+        android:id="@+id/forgotpin_createpin_error"
         style="@style/Clinic.LoginPinErrorText"
         tools:text="@string/forgotpin_create_new_pin_invalid_pin"
         tools:visibility="visible" />

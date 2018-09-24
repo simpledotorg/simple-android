@@ -19,9 +19,11 @@ data class Appointment(
     @PrimaryKey val uuid: UUID,
     val patientUuid: UUID,
     val facilityUuid: UUID,
-    val date: LocalDate,
+    val scheduledDate: LocalDate,
     val status: Status,
-    val statusReason: StatusReason,
+    val cancelReason: CancelReason?,
+    val remindOn: LocalDate?,
+    val agreedToVisit: Boolean?,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
     val updatedAt: Instant
@@ -41,10 +43,7 @@ data class Appointment(
     class RoomTypeConverter : RoomEnumTypeConverter<Status>(Status::class.java)
   }
 
-  enum class StatusReason {
-
-    @Json(name = "not_called_yet")
-    NOT_CALLED_YET,
+  enum class CancelReason {
 
     @Json(name = "not_responding")
     PATIENT_NOT_RESPONDING,
@@ -53,9 +52,12 @@ data class Appointment(
     MOVED,
 
     @Json(name = "dead")
-    DEAD;
+    DEAD,
 
-    class RoomTypeConverter : RoomEnumTypeConverter<StatusReason>(StatusReason::class.java)
+    @Json(name = "other")
+    OTHER;
+
+    class RoomTypeConverter : RoomEnumTypeConverter<CancelReason>(CancelReason::class.java)
   }
 
   @Dao

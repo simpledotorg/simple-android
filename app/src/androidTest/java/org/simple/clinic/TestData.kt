@@ -223,10 +223,12 @@ class TestData @Inject constructor(private val faker: Faker) {
     return Appointment(
         uuid = UUID.randomUUID(),
         patientUuid = UUID.randomUUID(),
-        date = LocalDate.now(UTC).plusDays(30),
+        scheduledDate = LocalDate.now(UTC).plusDays(30),
         facilityUuid = qaUserFacilityUuid(),
         status = randomOfEnum(Appointment.Status::class),
-        statusReason = randomOfEnum(Appointment.StatusReason::class),
+        cancelReason = randomOfEnum(Appointment.CancelReason::class),
+        remindOn = null,
+        agreedToVisit = null,
         syncStatus = syncStatus,
         createdAt = Instant.now(),
         updatedAt = Instant.now())
@@ -238,7 +240,7 @@ class TestData @Inject constructor(private val faker: Faker) {
       date: LocalDate = LocalDate.now(UTC).plusDays(30),
       facilityUuid: UUID = qaUserFacilityUuid(),
       status: Appointment.Status = randomOfEnum(Appointment.Status::class),
-      statusReason: Appointment.StatusReason = randomOfEnum(Appointment.StatusReason::class),
+      cancelReason: Appointment.CancelReason = randomOfEnum(Appointment.CancelReason::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now()
   ): AppointmentPayload {
@@ -248,7 +250,9 @@ class TestData @Inject constructor(private val faker: Faker) {
         date = date,
         facilityUuid = facilityUuid,
         status = status,
-        statusReason = statusReason,
+        cancelReason = cancelReason,
+        remindOn = null,
+        agreedToVisit = null,
         createdAt = createdAt,
         updatedAt = updatedAt)
   }

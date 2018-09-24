@@ -127,11 +127,13 @@ object PatientMocker {
     return Appointment(
         uuid = mock(),
         patientUuid = mock(),
-        date = LocalDate.now(ZoneOffset.UTC).minusDays(10),
+        scheduledDate = LocalDate.now(ZoneOffset.UTC).minusDays(10),
         facilityUuid = mock(),
         status = Appointment.Status.SCHEDULED,
-        statusReason = Appointment.StatusReason.PATIENT_NOT_RESPONDING,
+        cancelReason = Appointment.CancelReason.PATIENT_NOT_RESPONDING,
         syncStatus = mock(),
+        agreedToVisit = null,
+        remindOn = LocalDate.now(ZoneOffset.UTC).minusDays(2),
         createdAt = mock(),
         updatedAt = mock()
     )

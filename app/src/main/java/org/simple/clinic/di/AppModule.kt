@@ -17,6 +17,7 @@ import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
+import org.simple.clinic.storage.Migration_12_13
 import org.simple.clinic.storage.Migration_3_4
 import org.simple.clinic.storage.Migration_4_5
 import org.simple.clinic.storage.Migration_5_6
@@ -72,7 +73,8 @@ class AppModule(
             Migration_8_9(),
             Migration_9_10(),
             Migration_10_11(),
-            Migration_11_12())
+            Migration_11_12(),
+            Migration_12_13())
         .build()
   }
 

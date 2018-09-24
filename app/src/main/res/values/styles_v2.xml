@@ -47,6 +47,10 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body1Left.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body1Left.Numeric">
     <item name="android:letterSpacing" tools:ignore="NewApi">0.06</item>
   </style>
@@ -211,6 +215,10 @@
     <item name="android:gravity">center_vertical</item>
     <item name="android:paddingBottom">@dimen/spacing_12</item>
     <item name="android:paddingTop">@dimen/spacing_12</item>
+  </style>
+
+  <style name="Clinic.V2.MedicalHistoryQuestionCheckboxTheme">
+    <item name="colorControlNormal">@color/grey2</item>
   </style>
 
   <style name="Clinic.V2.LoginLogo">

@@ -9,6 +9,7 @@ import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
+import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentSyncAndroidTest
@@ -39,4 +40,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: CommunicationRepositoryAndroidTest)
   fun inject(target: AuthenticationRule)
   fun inject(target: MedicalHistorySyncAndroidTest)
+  fun inject(target: MedicalHistoryRepositoryAndroidTest)
 }

@@ -39,7 +39,7 @@ import javax.inject.Named
   StorageModule::class,
   LoginModule::class,
   RegistrationModule::class])
-class AppModule(
+open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",
     private val runDatabaseQueriesOnMainThread: Boolean = false
@@ -89,7 +89,8 @@ class AppModule(
   fun workManager() = WorkManager.getInstance()!!
 
   @Provides
-  fun clock() = Clock.systemUTC()!!
+  @AppScope
+  open fun clock() = Clock.systemUTC()!!
 
   @Provides
   @Named("io")

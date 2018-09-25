@@ -11,7 +11,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class MedicalHistoryRepository @Inject constructor(
-    val dao: MedicalHistory.RoomDao
+    private val dao: MedicalHistory.RoomDao
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
   // TODO: Android Test.

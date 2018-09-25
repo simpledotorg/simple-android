@@ -79,11 +79,11 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    val prescriptionUpdates = patientUuid
+    val prescriptionItems = patientUuid
         .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
         .map(::SummaryPrescribedDrugsItem)
 
-    val bloodPressureUpdates = patientUuid
+    val bloodPressureItems = patientUuid
         .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
         .map { measurements ->
           measurements.map { measurement ->
@@ -92,12 +92,16 @@ class PatientSummaryScreenController @Inject constructor(
           }
         }
 
+    val medicalHistoryItems = patientUuid
+        .flatMap { medicalHistoryRepository.historyForPatient(it) }
+        .map(::SummaryMedicalHistoryItem)
+
     // combineLatest() is important here so that the first data-set for the list
     // is dispatched in one go instead of them appearing one after another on the UI.
-    return Observables.combineLatest(prescriptionUpdates, bloodPressureUpdates)
-        .map { (prescriptions, bp) ->
+    return Observables.combineLatest(prescriptionItems, bloodPressureItems, medicalHistoryItems)
+        .map { (prescriptions, bp, history) ->
           { ui: Ui ->
-            ui.populateList(prescriptions, bp)
+            ui.populateList(prescriptions, bp, history)
           }
         }
   }

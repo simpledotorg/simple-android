@@ -74,8 +74,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val doneButton by bindView<ViewGroup>(R.id.patientsummary_done)
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
-  private val prescriptionSection: Section = Section()
-  private val bloodPressureSection: Section = Section()
+  private val prescriptionSection = Section()
+  private val bloodPressureSection = Section()
+  private val medicalHistorySection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   private var bpEntrySheetAlreadyShownOnStart: Boolean = false
@@ -192,7 +193,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun populateList(
       prescribedDrugsItem: SummaryPrescribedDrugsItem,
-      measurementItems: List<SummaryBloodPressureListItem>
+      measurementItems: List<SummaryBloodPressureListItem>,
+      medicalHistoryItem: SummaryMedicalHistoryItem
   ) {
     // Skip item animations on the first update.
     val isFirstUpdate = recyclerViewAdapter.itemCount == 0
@@ -206,6 +208,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // but Groupie doesn't seem to have a better option.
     prescribedDrugsItem.uiEvents = adapterUiEvents
     measurementItems.forEach { it.uiEvents = adapterUiEvents }
+    medicalHistoryItem.uiEvents = adapterUiEvents
 
     prescriptionSection.update(listOf(prescribedDrugsItem))
     if (isFirstUpdate) {
@@ -215,6 +218,11 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     bloodPressureSection.update(measurementItems)
     if (isFirstUpdate) {
       recyclerViewAdapter.add(bloodPressureSection)
+    }
+
+    medicalHistorySection.update(listOf(medicalHistoryItem))
+    if (isFirstUpdate) {
+      recyclerViewAdapter.add(medicalHistorySection)
     }
   }
 

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="start"
+    android:paddingBottom="@dimen/spacing_12"
+    android:paddingEnd="@dimen/spacing_24"
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_24"
+    android:text="@string/removeoverduepatient_select_a_reason"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+
+  <RadioGroup
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingEnd="@dimen/spacing_16"
+    android:paddingStart="@dimen/spacing_24">
+
+    <RadioButton
+      android:id="@+id/removeappointment_reason_patient_already_visited"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/removepatient_patient_has_already_visited_clinic"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+      android:textColor="@color/removeappointment_radio_button" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginStart="@dimen/spacing_48"
+      android:background="@color/grey3" />
+
+    <RadioButton
+      android:id="@+id/removeappointment_reason_patient_moved"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/removepatient_patient_has_moved_out_of_the_area"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+      android:textColor="@color/removeappointment_radio_button" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginStart="@dimen/spacing_48"
+      android:background="@color/grey3" />
+
+    <RadioButton
+      android:id="@+id/removeappointment_reason_patient_not_responding"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/removepatient_patient_is_not_responding"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+      android:textColor="@color/removeappointment_radio_button" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginStart="@dimen/spacing_48"
+      android:background="@color/grey3" />
+
+    <RadioButton
+      android:id="@+id/removeappointment_reason_patient_died"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/removepatient_patient_died"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+      android:textColor="@color/removeappointment_radio_button" />
+
+    <View
+      android:layout_width="match_parent"
+      android:layout_height="1dp"
+      android:layout_marginStart="@dimen/spacing_48"
+      android:background="@color/grey3" />
+
+    <RadioButton
+      android:id="@+id/removeappointment_reason_other"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:padding="@dimen/spacing_16"
+      android:text="@string/removepatient_other_reason"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
+      android:textColor="@color/removeappointment_radio_button" />
+  </RadioGroup>
+
+  <org.simple.clinic.widgets.PrimarySolidButton
+    android:id="@+id/removeappointment_done_button"
+    style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:text="@string/appointmentreminder_done"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+
+</LinearLayout>

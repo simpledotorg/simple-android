@@ -9,6 +9,7 @@ import android.widget.TextView
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -25,12 +26,14 @@ class PatientSearchResultsAdapter @Inject constructor(
     private val phoneObfuscator: PhoneNumberObfuscator
 ) : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
-  private var patients: List<PatientSearchResult> = listOf()
-
   val itemClicks: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
-  fun updateAndNotifyChanges(patients: List<PatientSearchResult>) {
+  private var patients: List<PatientSearchResult> = listOf()
+  private lateinit var currentFacility: Facility
+
+  fun updateAndNotifyChanges(patients: List<PatientSearchResult>, currentFacility: Facility) {
     this.patients = patients
+    this.currentFacility = currentFacility
     notifyDataSetChanged()
   }
 
@@ -43,7 +46,7 @@ class PatientSearchResultsAdapter @Inject constructor(
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     holder.searchResult = patients[position]
-    holder.render(phoneObfuscator)
+    holder.render(phoneObfuscator, currentFacility)
   }
 
   override fun getItemCount(): Int {
@@ -69,7 +72,7 @@ class PatientSearchResultsAdapter @Inject constructor(
       }
     }
 
-    fun render(phoneObfuscator: PhoneNumberObfuscator) {
+    fun render(phoneObfuscator: PhoneNumberObfuscator, currentFacility: Facility) {
       genderImageView.setImageResource(searchResult.gender.displayIconRes)
 
       val resources = itemView.resources
@@ -114,10 +117,15 @@ class PatientSearchResultsAdapter @Inject constructor(
         val lastBpDate = lastBp.takenOn.atZone(UTC).toLocalDate()
         val formattedLastBpDate = DATE_OF_BIRTH_FORMATTER.format(lastBpDate)
 
-        lastBpDateTextView.text = resources.getString(
-            R.string.patientsearchresults_item_last_bp_date_with_facility,
-            formattedLastBpDate,
-            lastBp.takenAtFacilityName)
+        val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacility.uuid
+        if (isCurrentFacility) {
+          lastBpDateTextView.text = formattedLastBpDate
+        } else {
+          lastBpDateTextView.text = resources.getString(
+              R.string.patientsearchresults_item_last_bp_date_with_facility,
+              formattedLastBpDate,
+              lastBp.takenAtFacilityName)
+        }
       }
 
       val age = searchResult.age

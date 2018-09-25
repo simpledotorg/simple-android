@@ -7,6 +7,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -35,29 +36,26 @@ data class SummaryMedicalHistoryItem(
         R.string.patientsummary_medicalhistory_last_updated,
         lastUpdatedAt.displayText(context).toLowerCase(ENGLISH))
 
-    holder.heartAttackQuestionView.apply {
-      render(HAS_HAD_A_HEART_ATTACK)
-      checkBox.isChecked = medicalHistory.hasHadHeartAttack
+    val questionViewToQuestions = mapOf(
+        holder.heartAttackQuestionView to HAS_HAD_A_HEART_ATTACK,
+        holder.strokeQuestionView to HAS_HAD_A_STROKE,
+        holder.kidneyDiseaseQuestionView to HAS_HAD_A_KIDNEY_DISEASE,
+        holder.hypertensionQuestionView to IS_ON_TREATMENT_FOR_HYPERTENSION,
+        holder.diabetesQuestionView to HAS_DIABETES)
+
+    questionViewToQuestions.forEach { (view, question) ->
+      view.render(question)
+      view.checkBox.setOnCheckedChangeListener { _, isChecked ->
+        uiEvents.onNext(MedicalHistoryAnswerToggled(question, isChecked))
+      }
     }
 
-    holder.strokeQuestionView.apply {
-      render(HAS_HAD_A_STROKE)
-      checkBox.isChecked = medicalHistory.hasHadStroke
-    }
-
-    holder.kidneyDiseaseQuestionView.apply {
-      render(HAS_HAD_A_KIDNEY_DISEASE)
-      checkBox.isChecked = medicalHistory.hasHadKidneyDisease
-    }
-
-    holder.hypertensionQuestionView.apply {
-      render(IS_ON_TREATMENT_FOR_HYPERTENSION)
-      checkBox.isChecked = medicalHistory.isOnTreatmentForHypertension
-    }
-
-    holder.diabetesQuestionView.apply {
-      render(HAS_DIABETES)
-      checkBox.isChecked = medicalHistory.hasDiabetes
+    holder.apply {
+      heartAttackQuestionView.checkBox.isChecked = medicalHistory.hasHadHeartAttack
+      strokeQuestionView.checkBox.isChecked = medicalHistory.hasHadStroke
+      kidneyDiseaseQuestionView.checkBox.isChecked = medicalHistory.hasHadKidneyDisease
+      hypertensionQuestionView.checkBox.isChecked = medicalHistory.isOnTreatmentForHypertension
+      diabetesQuestionView.checkBox.isChecked = medicalHistory.hasDiabetes
     }
   }
 

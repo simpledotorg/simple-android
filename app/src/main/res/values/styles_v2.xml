@@ -6,7 +6,8 @@
   <style name="Clinic.V2.Theme" parent="Theme.Design.Light.NoActionBar">
     <item name="colorPrimary">@color/blue0</item>
     <item name="colorPrimaryDark">@color/blue0</item>
-    <item name="colorAccent">@color/red1</item>
+    <item name="colorAccent">@color/blue1</item>
+    <item name="colorError">@color/red1</item>
 
     <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
     <item name="android:windowBackground">@color/window_background</item>
@@ -210,5 +211,27 @@
     <item name="android:gravity">center_vertical</item>
     <item name="android:paddingBottom">@dimen/spacing_12</item>
     <item name="android:paddingTop">@dimen/spacing_12</item>
+  </style>
+
+  <style name="Clinic.V2.LoginLogo">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:layout_gravity">center_horizontal</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:textColor">@color/white100</item>
+    <item name="android:textStyle">bold</item>
+  </style>
+
+  <style name="Clinic.V2.LoginLogo.Compact">
+    <item name="android:textSize">@dimen/textsize_20</item>
+  </style>
+
+  <style name="Clinic.V2.LoginLogo.Large">
+    <item name="android:layout_marginEnd">@dimen/spacing_24</item>
+    <item name="android:layout_marginStart">@dimen/spacing_24</item>
+    <item name="android:layout_marginTop">44dp</item>
+    <item name="android:layout_marginBottom">@dimen/spacing_24</item>
+    <item name="android:textSize">34sp</item>
   </style>
 </resources>

@@ -5,6 +5,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
@@ -229,5 +230,26 @@ object PatientMocker {
             takenOn = Instant.now(),
             takenAtFacilityName = "Some Facility",
             takenAtFacilityUuid = UUID.randomUUID()))
+  }
+
+  fun medicalHistory(
+      hasHadHeartAttack: Boolean = true,
+      hasHadStroke: Boolean = false,
+      hasHadKidneyDisease: Boolean = true,
+      isOnTreatmentForHypertension: Boolean = false,
+      hasDiabetes: Boolean = true,
+      updatedAt: Instant = Instant.now()
+  ): MedicalHistory {
+    return MedicalHistory(
+        uuid = UUID.randomUUID(),
+        patientUuid = UUID.randomUUID(),
+        hasHadHeartAttack = hasHadHeartAttack,
+        hasHadStroke = hasHadStroke,
+        hasHadKidneyDisease = hasHadKidneyDisease,
+        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
+        hasDiabetes = hasDiabetes,
+        syncStatus = SyncStatus.PENDING,
+        createdAt = Instant.now(),
+        updatedAt = updatedAt)
   }
 }

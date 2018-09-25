@@ -84,7 +84,7 @@
         android:visibility="gone">
 
         <TextView
-          style="@style/Clinic.RegistrationInputError"
+          style="@style/Clinic.V2.RegistrationInputError"
           android:layout_marginTop="@dimen/spacing_8"
           android:text="@string/registrationconfirmpin_error_pin_mismatch" />
 

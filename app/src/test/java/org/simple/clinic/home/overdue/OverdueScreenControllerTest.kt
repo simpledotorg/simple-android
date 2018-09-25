@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -89,6 +90,17 @@ class OverdueScreenControllerTest {
     uiEvents.onNext(RemindToCallLaterClicked(appointmentUuid))
 
     verify(screen).showAppointmentReminderSheet(appointmentUuid)
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when "mark patient as agreed to visit" is click`() {
+    val appointmentUuid = UUID.randomUUID()
+
+    whenever(appointmentRepo.agreedToVisit(appointmentUuid)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))
+
     verifyNoMoreInteractions(screen)
   }
 

@@ -272,4 +272,28 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.agreedToVisit).isNull()
     }
   }
+
+  @Test
+  fun when_marking_appointment_as_agreed_to_visit_reminder_for_30_days_should_be_set() {
+    val patientId = UUID.randomUUID()
+    val appointmentDate = LocalDate.now()
+    repository.schedule(patientId, appointmentDate).blockingAwait()
+
+    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(appointments).hasSize(1)
+    assertThat(appointments.first().remindOn).isNull()
+    assertThat(appointments.first().agreedToVisit).isNull()
+
+    val uuid = appointments[0].uuid
+
+    repository.agreedToVisit(uuid).blockingGet()
+
+    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(updatedList).hasSize(1)
+    updatedList[0].apply {
+      assertThat(this.uuid).isEqualTo(uuid)
+      assertThat(this.remindOn).isEqualTo(LocalDate.now().plusDays(30))
+      assertThat(this.agreedToVisit).isTrue()
+    }
+  }
 }

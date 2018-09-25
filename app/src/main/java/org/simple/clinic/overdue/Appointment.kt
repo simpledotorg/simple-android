@@ -94,6 +94,11 @@ data class Appointment(
     @Query("UPDATE Appointment SET remindOn = :reminderDate WHERE uuid = :appointmentUUID")
     fun createReminderForAppointment(appointmentUUID: UUID, reminderDate: LocalDate)
 
+    @Query("""UPDATE Appointment
+      SET remindOn = :reminderDate, agreedToVisit = :agreed
+      WHERE uuid = :appointmentUUID""")
+    fun markAgreedToVisit(appointmentUUID: UUID, reminderDate: LocalDate, agreed: Boolean)
+
     @Query("DELETE FROM Appointment")
     fun clear()
   }

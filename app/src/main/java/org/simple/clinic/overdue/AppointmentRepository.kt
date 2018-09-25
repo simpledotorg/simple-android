@@ -9,6 +9,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -19,7 +20,8 @@ class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val clock: Clock
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
@@ -58,6 +60,15 @@ class AppointmentRepository @Inject constructor(
   fun createReminderForAppointment(appointmentUUID: UUID, reminderDate: LocalDate): Completable {
     return Completable.fromAction {
       appointmentDao.createReminderForAppointment(appointmentUUID, reminderDate)
+    }
+  }
+
+  fun agreedToVisit(appointmentUUID: UUID): Completable {
+    return Completable.fromAction {
+      appointmentDao.markAgreedToVisit(
+          appointmentUUID = appointmentUUID,
+          reminderDate = LocalDate.now(clock).plusDays(30),
+          agreed = true)
     }
   }
 

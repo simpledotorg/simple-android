@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.support.transition.TransitionManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
@@ -86,6 +87,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun handleEmptyList(isEmpty: Boolean) {
+    TransitionManager.beginDelayedTransition(this)
     if (isEmpty) {
       overdueRecyclerView.visibility = View.GONE
       viewForEmptyList.visibility = View.VISIBLE

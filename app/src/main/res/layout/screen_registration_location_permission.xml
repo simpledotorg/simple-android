@@ -28,7 +28,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:backgroundTint="#CB4213"
+      android:backgroundTint="#3D000000"
       android:elevation="0dp"
       android:minHeight="0dp"
       android:minWidth="0dp"

@@ -20,6 +20,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
+import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentSheet
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
@@ -113,7 +114,13 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun showAppointmentReminderSheet(appointmentUuid: UUID) {
-    val intent = AppointmentReminderSheet.intent(this.context, appointmentUuid)
+    val intent = AppointmentReminderSheet.intent(context, appointmentUuid)
     activity.startActivity(intent)
   }
+
+  fun showRemovePatientReasonSheet(appointmentUuid: UUID) {
+    val intent = RemoveAppointmentSheet.intent(context, appointmentUuid)
+    activity.startActivity(intent)
+  }
+
 }

@@ -18,6 +18,7 @@ import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
+import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentSheet
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.login.applock.AppLockScreen
@@ -75,8 +76,9 @@ interface TheActivityComponent {
   fun inject(target: ScheduleAppointmentSheet)
   fun inject(target: ConfirmResetPinDialog)
   fun inject(target: ForgotPinCreateNewPinScreen)
-  fun inject(target: AppointmentReminderSheet)
   fun inject(target: ForgotPinConfirmPinScreen)
+  fun inject(target: AppointmentReminderSheet)
+  fun inject(target: RemoveAppointmentSheet)
   fun inject(target: NewMedicalHistoryScreen)
 
   @Subcomponent.Builder

@@ -12,7 +12,7 @@
     style="@style/Clinic.LoginLogoContainer">
 
     <TextView
-      style="@style/Clinic.LoginLogo.Large"
+      style="@style/Clinic.V2.LoginLogo.Large"
       android:text="@string/app_name" />
   </FrameLayout>
 

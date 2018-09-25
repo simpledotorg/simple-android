@@ -6,7 +6,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <Button
+  <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/patients_search_patients"
     android:layout_width="match_parent"
     android:layout_height="64dp"
@@ -15,13 +15,14 @@
     android:layout_marginTop="@dimen/spacing_48"
     android:background="@drawable/button_outline_ripple"
     android:drawableStart="@drawable/ic_search_24dp"
+    android:drawablePadding="@dimen/spacing_8"
     android:gravity="center"
     android:paddingStart="20dp"
     android:text="@string/home_search_patient_name_phone"
     android:textAllCaps="false"
     android:textColor="?colorAccent"
     android:textSize="@dimen/textsize_18"
-    tools:drawableTint="?colorAccent"
+    app:drawableTint="?colorAccent"
     tools:ignore="MissingPrefix,RtlSymmetry" />
 
   <!-- We don't currently have a center color for the background gradient

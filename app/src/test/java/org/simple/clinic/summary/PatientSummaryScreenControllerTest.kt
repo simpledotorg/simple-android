@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -19,6 +20,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
@@ -33,6 +35,7 @@ class PatientSummaryScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -44,7 +47,12 @@ class PatientSummaryScreenControllerTest {
     val timestampGenerator = mock<RelativeTimestampGenerator>()
     whenever(timestampGenerator.generate(any())).thenReturn(Today())
 
-    controller = PatientSummaryScreenController(patientRepository, bpRepository, prescriptionRepository, timestampGenerator)
+    controller = PatientSummaryScreenController(
+        patientRepository,
+        bpRepository,
+        prescriptionRepository,
+        medicalHistoryRepository,
+        timestampGenerator)
 
     uiEvents
         .compose(controller)
@@ -82,10 +90,11 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
-    verify(screen).populatePrescribedDrugsSummary(SummaryPrescribedDrugsItem(prescriptions))
+    verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any())
   }
 
   @Test
@@ -95,12 +104,15 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95),
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
-    verify(screen).populateBloodPressureHistory(check {
-      it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
-    })
+    verify(screen).populateList(
+        any(),
+        check {
+          it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
+        })
   }
 
   @Test

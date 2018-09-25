@@ -10,6 +10,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
@@ -24,6 +25,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
+    private val medicalHistoryRepository: MedicalHistoryRepository,
     private val timestampGenerator: RelativeTimestampGenerator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -33,8 +35,7 @@ class PatientSummaryScreenController @Inject constructor(
     return Observable.mergeArray(
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(replayedEvents),
-        constructPrescribedDrugsHistory(replayedEvents),
-        constructBloodPressureHistory(replayedEvents),
+        constructListDataSet(replayedEvents),
         openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         handleBackAndDoneClicks(replayedEvents),
@@ -73,19 +74,16 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populatePatientProfile(patient, address, phoneNumber) } }
   }
 
-  private fun constructPrescribedDrugsHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+  private fun constructListDataSet(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuid = events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
+
+    val prescriptionUpdates = patientUuid
         .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
         .map(::SummaryPrescribedDrugsItem)
-        .map { { ui: Ui -> ui.populatePrescribedDrugsSummary(it) } }
-  }
 
-  private fun constructBloodPressureHistory(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
+    val bloodPressureUpdates = patientUuid
         .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
         .map { measurements ->
           measurements.map { measurement ->
@@ -93,7 +91,15 @@ class PatientSummaryScreenController @Inject constructor(
             SummaryBloodPressureListItem(measurement, timestamp)
           }
         }
-        .map { { ui: Ui -> ui.populateBloodPressureHistory(it) } }
+
+    // combineLatest() is important here so that the first data-set for the list
+    // is dispatched in one go instead of them appearing one after another on the UI.
+    return Observables.combineLatest(prescriptionUpdates, bloodPressureUpdates)
+        .map { (prescriptions, bp) ->
+          { ui: Ui ->
+            ui.populateList(prescriptions, bp)
+          }
+        }
   }
 
   private fun openBloodPressureBottomSheet(events: Observable<UiEvent>): Observable<UiChange> {

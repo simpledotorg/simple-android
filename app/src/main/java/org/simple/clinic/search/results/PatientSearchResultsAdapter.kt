@@ -60,7 +60,7 @@ class PatientSearchResultsAdapter @Inject constructor(
     private val addressTextView by bindView<TextView>(R.id.patientsearchresult_item_address)
     private val dateOfBirthTextView by bindView<TextView>(R.id.patientsearchresult_item_dateofbirth)
     private val phoneNumberTextView by bindView<TextView>(R.id.patientsearchresult_item_phone)
-    private val lastBpDateTextView by bindView<TextView>(R.id.patientsearchresults_item_last_bp)
+    private val lastBpDateAndFacilityTextView by bindView<TextView>(R.id.patientsearchresults_item_last_bp)
     private val lastBpDateFrame by bindView<ViewGroup>(R.id.patientsearchresults_item_last_bp_container)
     private val ageTextView by bindView<TextView>(R.id.patientsearch_item_age)
 
@@ -110,7 +110,6 @@ class PatientSearchResultsAdapter @Inject constructor(
       val lastBp = searchResult.lastBp
       if (lastBp == null) {
         lastBpDateFrame.visibility = View.GONE
-
       } else {
         lastBpDateFrame.visibility = View.VISIBLE
 
@@ -119,9 +118,9 @@ class PatientSearchResultsAdapter @Inject constructor(
 
         val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacility.uuid
         if (isCurrentFacility) {
-          lastBpDateTextView.text = formattedLastBpDate
+          lastBpDateAndFacilityTextView.text = formattedLastBpDate
         } else {
-          lastBpDateTextView.text = resources.getString(
+          lastBpDateAndFacilityTextView.text = resources.getString(
               R.string.patientsearchresults_item_last_bp_date_with_facility,
               formattedLastBpDate,
               lastBp.takenAtFacilityName)

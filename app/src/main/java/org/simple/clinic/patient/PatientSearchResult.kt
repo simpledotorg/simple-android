@@ -128,4 +128,10 @@ data class PatientSearchResult(
 
     return payload
   }
+
+  data class LastBp(
+      val takenOn: Instant,
+      val takenAtFacilityName: String,
+      val takenAtFacilityUuid: UUID
+  )
 }

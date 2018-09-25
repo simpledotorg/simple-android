@@ -94,7 +94,10 @@ class PatientSummaryScreenController @Inject constructor(
 
     val medicalHistoryItems = patientUuid
         .flatMap { medicalHistoryRepository.historyForPatient(it) }
-        .map(::SummaryMedicalHistoryItem)
+        .map { history ->
+          val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt)
+          SummaryMedicalHistoryItem(history, lastSyncTimestamp)
+        }
 
     // combineLatest() is important here so that the first data-set for the list
     // is dispatched in one go instead of them appearing one after another on the UI.

@@ -185,33 +185,37 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = recyclerViewAdapter
 
-    val emptySummaryItem = SummaryPrescribedDrugsItem(listOf())
-    recyclerViewAdapter.add(prescriptionSection)
-    populatePrescribedDrugsSummary(emptySummaryItem)
-
     val newBpItem = SummaryAddNewBpListItem()
     newBpItem.uiEvents = adapterUiEvents
     bloodPressureSection.setHeader(newBpItem)
-    recyclerViewAdapter.add(bloodPressureSection)
   }
 
-  fun populatePrescribedDrugsSummary(prescribedDrugsItem: SummaryPrescribedDrugsItem) {
-    // Not the best way for registering click listeners,
-    // but Groupie doesn't seem to have a better option.
-    prescribedDrugsItem.uiEvents = adapterUiEvents
-    prescriptionSection.update(listOf(prescribedDrugsItem))
-  }
-
-  fun populateBloodPressureHistory(measurementItems: List<SummaryBloodPressureListItem>) {
+  fun populateList(
+      prescribedDrugsItem: SummaryPrescribedDrugsItem,
+      measurementItems: List<SummaryBloodPressureListItem>
+  ) {
     // Skip item animations on the first update.
-    if (recyclerViewAdapter.itemCount != 0) {
+    val isFirstUpdate = recyclerViewAdapter.itemCount == 0
+    if (isFirstUpdate.not()) {
       val animator = SlideUpAlphaAnimator().withInterpolator(FastOutSlowInInterpolator())
       animator.supportsChangeAnimations = false
       recyclerView.itemAnimator = animator
     }
 
+    // Not the best way for registering click listeners,
+    // but Groupie doesn't seem to have a better option.
+    prescribedDrugsItem.uiEvents = adapterUiEvents
     measurementItems.forEach { it.uiEvents = adapterUiEvents }
+
+    prescriptionSection.update(listOf(prescribedDrugsItem))
+    if (isFirstUpdate) {
+      recyclerViewAdapter.add(prescriptionSection)
+    }
+
     bloodPressureSection.update(measurementItems)
+    if (isFirstUpdate) {
+      recyclerViewAdapter.add(bloodPressureSection)
+    }
   }
 
   fun showBloodPressureEntrySheetIfNotShownAlready(patientUuid: UUID) {

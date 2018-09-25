@@ -9,7 +9,7 @@
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/patients_search_patients"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
+    android:layout_height="56dp"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_48"

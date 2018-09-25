@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
+import android.arch.persistence.room.Update
 import io.reactivex.Flowable
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
@@ -42,8 +43,8 @@ data class MedicalHistory(
     @Query("SELECT * FROM MedicalHistory WHERE uuid = :id LIMIT 1")
     fun getOne(id: UUID): MedicalHistory?
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun save(history: MedicalHistory)
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    fun update(history: MedicalHistory)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(histories: List<MedicalHistory>)

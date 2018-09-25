@@ -8,15 +8,16 @@ import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 class MedicalHistoryRepository @Inject constructor(
-    private val dao: MedicalHistory.RoomDao
+    private val dao: MedicalHistory.RoomDao,
+    private val clock: Clock
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
-  // TODO: Android Test.
   fun historyForPatient(patientUuid: PatientUuid): Observable<MedicalHistory> {
     return dao.historyForPatient(patientUuid)
         .map { patients ->
@@ -28,7 +29,6 @@ class MedicalHistoryRepository @Inject constructor(
         .toObservable()
   }
 
-  // TODO: Android Test.
   fun save(patientUuid: UUID, historyEntry: OngoingMedicalHistoryEntry): Completable {
     val medicalHistory = MedicalHistory(
         uuid = UUID.randomUUID(),
@@ -39,18 +39,17 @@ class MedicalHistoryRepository @Inject constructor(
         isOnTreatmentForHypertension = historyEntry.isOnTreatmentForHypertension,
         hasDiabetes = historyEntry.hasDiabetes,
         syncStatus = SyncStatus.PENDING,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock))
     return save(listOf(medicalHistory))
   }
 
-  // TODO: Android Test.
   fun update(history: MedicalHistory): Completable {
     return Completable.fromAction {
       val dirtyHistory = history.copy(
           syncStatus = SyncStatus.PENDING,
-          updatedAt = Instant.now())
-      dao.save(dirtyHistory)
+          updatedAt = Instant.now(clock))
+      dao.update(dirtyHistory)
     }
   }
 

@@ -7,6 +7,7 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -49,5 +50,8 @@ data class MedicalHistory(
 
     @Query("DELETE FROM MedicalHistory")
     fun clear()
+
+    @Query("SELECT * FROM MedicalHistory WHERE patientUuid = :patientUuid")
+    fun historyForPatient(patientUuid: PatientUuid): Flowable<List<MedicalHistory>>
   }
 }

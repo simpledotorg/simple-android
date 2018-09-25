@@ -1,8 +1,10 @@
 package org.simple.clinic.medicalhistory
 
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
@@ -13,6 +15,18 @@ import javax.inject.Inject
 class MedicalHistoryRepository @Inject constructor(
     private val dao: MedicalHistory.RoomDao
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
+
+  // TODO: Android Test.
+  fun historyForPatient(patientUuid: PatientUuid): Observable<MedicalHistory> {
+    return dao.historyForPatient(patientUuid)
+        .map { patients ->
+          when {
+            patients.isNotEmpty() -> patients.first()
+            else -> throw AssertionError("Medical History isn't present for $patientUuid")
+          }
+        }
+        .toObservable()
+  }
 
   // TODO: Android Test.
   fun save(patientUuid: UUID, historyEntry: OngoingMedicalHistoryEntry): Completable {

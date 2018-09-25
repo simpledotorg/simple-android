@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -21,9 +23,12 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   private val toggleSubject = PublishSubject.create<UiEvent>()!!
   private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
+  private val containerFrame by bindView<ViewGroup>(R.id.newmedicalhistory_item_frame)
+
   private lateinit var question: MedicalHistoryQuestion
 
   val checkBox by bindView<CheckBox>(R.id.newmedicalhistory_item_checkbox)
+  val divider by bindView<View>(R.id.newmedicalhistory_item_divider)
   val toggles = toggleSubject.hide()!!
 
   init {
@@ -38,6 +43,12 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
       checkBox.isChecked = checkBox.isChecked.not()
     }
     checkBox.setOnTouchListener { _, event -> this.onTouchEvent(event) }
+
+    // Transferring padding so that external usages can set a padding on the internal frame
+    // directly that contains a touch selector. <merge> would have been a better option, but
+    // attributes on <merge> tag don't get merged.
+    containerFrame.setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
+    setPaddingRelative(0, 0, 0, 0)
   }
 
   fun render(question: MedicalHistoryQuestion) {

@@ -103,6 +103,8 @@
   <string name="patientsummary_prescriptions_update">Update medicines</string>
   <string name="patientsummary_bp_add_new">New BP</string>
   <string name="patientsummary_finish_saving_patient">Save</string>
+  <string name="patientsummary_medicalhistory_title">Cardiovascular History</string>
+  <string name="patientsummary_medicalhistory_last_updated">Updated %s</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->

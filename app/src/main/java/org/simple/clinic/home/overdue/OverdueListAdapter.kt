@@ -101,7 +101,7 @@ class OverdueListViewHolder(
       eventStream.onNext(RemindToCallLaterClicked(appointment.appointmentUuid))
     }
     removeFromListTextView.setOnClickListener {
-      eventStream.onNext(RemoveFromListClicked)
+      eventStream.onNext(RemoveFromListClicked(appointment.appointmentUuid))
     }
   }
 

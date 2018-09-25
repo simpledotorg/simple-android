@@ -57,6 +57,11 @@
       android:theme="@style/ClinicTheme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
+    <activity
+      android:name=".home.overdue.removepatient.RemoveAppointmentSheet"
+      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:windowSoftInputMode="adjustResize" />
+
     <receiver
       android:name=".login.OtpSmsReceiver"
       android:exported="true"

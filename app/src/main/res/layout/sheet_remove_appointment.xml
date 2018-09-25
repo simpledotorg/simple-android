@@ -12,7 +12,7 @@
     android:paddingEnd="@dimen/spacing_24"
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_24"
-    android:text="@string/removeoverduepatient_select_a_reason"
+    android:text="@string/removeappointment_select_a_reason"
     android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
   <RadioGroup
@@ -27,7 +27,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:padding="@dimen/spacing_16"
-      android:text="@string/removepatient_patient_has_already_visited_clinic"
+      android:text="@string/removeappointment_patient_has_already_visited_clinic"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
       android:textColor="@color/removeappointment_radio_button" />
 
@@ -42,7 +42,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:padding="@dimen/spacing_16"
-      android:text="@string/removepatient_patient_has_moved_out_of_the_area"
+      android:text="@string/removeappointment_patient_has_moved_out_of_the_area"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
       android:textColor="@color/removeappointment_radio_button" />
 
@@ -57,7 +57,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:padding="@dimen/spacing_16"
-      android:text="@string/removepatient_patient_is_not_responding"
+      android:text="@string/removeappointment_patient_is_not_responding"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
       android:textColor="@color/removeappointment_radio_button" />
 
@@ -72,7 +72,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:padding="@dimen/spacing_16"
-      android:text="@string/removepatient_patient_died"
+      android:text="@string/removeappointment_patient_died"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
       android:textColor="@color/removeappointment_radio_button" />
 
@@ -87,7 +87,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:padding="@dimen/spacing_16"
-      android:text="@string/removepatient_other_reason"
+      android:text="@string/removeappointment_other_reason"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left"
       android:textColor="@color/removeappointment_radio_button" />
   </RadioGroup>
@@ -98,6 +98,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_16"
+    android:enabled="false"
     android:text="@string/appointmentreminder_done"
     android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
 

@@ -94,9 +94,8 @@ class OverdueScreenControllerTest {
   }
 
   @Test
-  fun `when "mark patient as agreed to visit" is click`() {
+  fun `when "mark patient as agreed to visit" is clicked, then relevant repository method should be called`() {
     val appointmentUuid = UUID.randomUUID()
-
     whenever(appointmentRepo.agreedToVisit(appointmentUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))

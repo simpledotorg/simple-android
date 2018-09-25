@@ -99,6 +99,18 @@ data class Appointment(
       WHERE uuid = :appointmentUUID""")
     fun markAgreedToVisit(appointmentUUID: UUID, reminderDate: LocalDate, agreed: Boolean)
 
+    @Query("""UPDATE Appointment
+      SET status = :newStatus, syncStatus = :newSyncStatus
+      WHERE uuid = :appointmentUuid
+    """)
+    fun markAppointmentAsVisited(appointmentUuid: UUID, newStatus: Status, newSyncStatus: SyncStatus)
+
+    @Query("""UPDATE Appointment
+      SET cancelReason = :cancelReason, status = :newStatus, syncStatus = :newSyncStatus
+      WHERE uuid = :appointmentUuid
+    """)
+    fun cancelAppointmentWithReason(appointmentUuid: UUID, cancelReason: CancelReason, newStatus: Status, newSyncStatus: SyncStatus)
+
     @Query("DELETE FROM Appointment")
     fun clear()
   }

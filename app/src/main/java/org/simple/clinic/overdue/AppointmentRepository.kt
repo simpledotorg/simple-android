@@ -72,6 +72,25 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
+  fun markAppointmentAsVisited(appointmentUuid: UUID): Completable {
+    return Completable.fromAction {
+      appointmentDao.markAppointmentAsVisited(
+          appointmentUuid = appointmentUuid,
+          newStatus = Appointment.Status.VISITED,
+          newSyncStatus = SyncStatus.PENDING)
+    }
+  }
+
+  fun cancelAppointmentWithReason(appointmentUuid: UUID, reason: Appointment.CancelReason): Completable {
+    return Completable.fromAction {
+      appointmentDao.cancelAppointmentWithReason(
+          appointmentUuid = appointmentUuid,
+          cancelReason = reason,
+          newStatus = Appointment.Status.CANCELLED,
+          newSyncStatus = SyncStatus.PENDING)
+    }
+  }
+
   override fun save(records: List<Appointment>): Completable {
     return Completable.fromAction {
       appointmentDao.save(records)

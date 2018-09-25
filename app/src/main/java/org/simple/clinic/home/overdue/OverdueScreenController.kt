@@ -32,7 +32,8 @@ class OverdueScreenController @Inject constructor(
         phoneCallPermissionRequests(replayedEvents),
         patientCalls(replayedEvents),
         appointmentMarkedAgreedToVisit(replayedEvents),
-        appointmentReminderSheetOpens(replayedEvents))
+        appointmentReminderSheetOpens(replayedEvents),
+        removeAppointmentSheetOpens(replayedEvents))
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
@@ -125,5 +126,10 @@ class OverdueScreenController @Inject constructor(
   private fun appointmentReminderSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<RemindToCallLaterClicked>()
         .map { { ui: Ui -> ui.showAppointmentReminderSheet(it.appointmentUUID) } }
+  }
+
+  private fun removeAppointmentSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<RemoveFromListClicked>()
+        .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUUID) } }
   }
 }

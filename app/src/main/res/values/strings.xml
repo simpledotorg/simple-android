@@ -209,12 +209,12 @@
   <string name="appointmentreminder_done">Done</string>
 
   <!-- Remove Overdue Patients -->
-  <string name="removeoverduepatient_select_a_reason">Select a Reason</string>
-  <string name="removepatient_patient_has_already_visited_clinic">Patient has already visited clinic</string>
-  <string name="removepatient_patient_has_moved_out_of_the_area">Patient has moved out of the area</string>
-  <string name="removepatient_patient_is_not_responding">Patient is not responding</string>
-  <string name="removepatient_patient_died">Patient died</string>
-  <string name="removepatient_other_reason">Other reason</string>
+  <string name="removeappointment_select_a_reason">Select a Reason</string>
+  <string name="removeappointment_patient_has_already_visited_clinic">Patient has already visited clinic</string>
+  <string name="removeappointment_patient_has_moved_out_of_the_area">Patient has moved out of the area</string>
+  <string name="removeappointment_patient_is_not_responding">Patient is not responding</string>
+  <string name="removeappointment_patient_died">Patient died</string>
+  <string name="removeappointment_other_reason">Other reason</string>
 
   <!-- Facility change -->
   <string name="facilitychange_screen_title">Select your clinic</string>

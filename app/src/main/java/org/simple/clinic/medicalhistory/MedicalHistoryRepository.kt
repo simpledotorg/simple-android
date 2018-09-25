@@ -44,6 +44,16 @@ class MedicalHistoryRepository @Inject constructor(
     return save(listOf(medicalHistory))
   }
 
+  // TODO: Android Test.
+  fun update(history: MedicalHistory): Completable {
+    return Completable.fromAction {
+      val dirtyHistory = history.copy(
+          syncStatus = SyncStatus.PENDING,
+          updatedAt = Instant.now())
+      dao.save(dirtyHistory)
+    }
+  }
+
   override fun save(records: List<MedicalHistory>): Completable {
     return Completable.fromAction {
       dao.save(records)

@@ -10,6 +10,15 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
@@ -36,6 +45,7 @@ class PatientSummaryScreenController @Inject constructor(
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(replayedEvents),
         constructListDataSet(replayedEvents),
+        updateMedicalHistory(replayedEvents),
         openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         handleBackAndDoneClicks(replayedEvents),
@@ -75,15 +85,15 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun constructListDataSet(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuid = events
+    val patientUuids = events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    val prescriptionItems = patientUuid
+    val prescriptionItems = patientUuids
         .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
         .map(::SummaryPrescribedDrugsItem)
 
-    val bloodPressureItems = patientUuid
+    val bloodPressureItems = patientUuids
         .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
         .map { measurements ->
           measurements.map { measurement ->
@@ -92,7 +102,7 @@ class PatientSummaryScreenController @Inject constructor(
           }
         }
 
-    val medicalHistoryItems = patientUuid
+    val medicalHistoryItems = patientUuids
         .flatMap { medicalHistoryRepository.historyForPatient(it) }
         .map { history ->
           val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt)
@@ -106,6 +116,37 @@ class PatientSummaryScreenController @Inject constructor(
           { ui: Ui ->
             ui.populateList(prescriptions, bp, history)
           }
+        }
+  }
+
+  private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuids = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.patientUuid }
+
+    val medicalHistories = patientUuids
+        .flatMap { medicalHistoryRepository.historyForPatient(it) }
+
+    val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, selected: Boolean ->
+      when (question) {
+        HAS_HAD_A_HEART_ATTACK -> medicalHistory.copy(hasHadHeartAttack = selected)
+        HAS_HAD_A_STROKE -> medicalHistory.copy(hasHadStroke = selected)
+        HAS_HAD_A_KIDNEY_DISEASE -> medicalHistory.copy(hasHadKidneyDisease = selected)
+        IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = selected)
+        HAS_DIABETES -> medicalHistory.copy(hasDiabetes = selected)
+        NONE -> throw AssertionError("There's no none question in summary")
+      }
+    }
+
+    return events.ofType<MedicalHistoryAnswerToggled>()
+        .withLatestFrom(medicalHistories)
+        .map { (toggleEvent, medicalHistory) ->
+          updateHistory(medicalHistory, toggleEvent.question, toggleEvent.selected)
+        }
+        .flatMap {
+          medicalHistoryRepository
+              .update(it)
+              .andThen(Observable.never<UiChange>())
         }
   }
 

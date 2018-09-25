@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -20,12 +21,20 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -45,7 +54,7 @@ class PatientSummaryScreenControllerTest {
   @Before
   fun setUp() {
     val timestampGenerator = mock<RelativeTimestampGenerator>()
-    whenever(timestampGenerator.generate(any())).thenReturn(Today())
+    whenever(timestampGenerator.generate(any())).thenReturn(Today)
 
     controller = PatientSummaryScreenController(
         patientRepository,
@@ -91,10 +100,11 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(mock()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
-    verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any())
+    verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any(), any())
   }
 
   @Test
@@ -112,7 +122,21 @@ class PatientSummaryScreenControllerTest {
         any(),
         check {
           it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
-        })
+        },
+        any())
+  }
+
+  @Test
+  fun `patient's medical history should be populated`() {
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+
+    val medicalHistory = PatientMocker.medicalHistory(updatedAt = Instant.now())
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(medicalHistory))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+
+    verify(screen).populateList(any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today)))
   }
 
   @Test
@@ -170,6 +194,7 @@ class PatientSummaryScreenControllerTest {
     }
   }
 
+  @Suppress("unused")
   fun bpSavedAndPatientSummaryCallers() = arrayOf(
       arrayOf(true, PatientSummaryCaller.NEW_PATIENT),
       arrayOf(true, PatientSummaryCaller.SEARCH),
@@ -199,6 +224,42 @@ class PatientSummaryScreenControllerTest {
     ))
     assertThat(reporter.receivedEvents).contains(expectedEvent)
   }
+
+  @Test
+  @Parameters(method = "medicalHistoryQuestions")
+  fun `when answers for medical history questions are toggled then the updated medical history should be saved`(
+      question: MedicalHistoryQuestion
+  ) {
+    val medicalHistory = PatientMocker.medicalHistory(
+        hasHadHeartAttack = false,
+        hasHadStroke = false,
+        hasHadKidneyDisease = false,
+        isOnTreatmentForHypertension = false,
+        hasDiabetes = false,
+        updatedAt = Instant.now())
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(medicalHistory))
+    whenever(medicalHistoryRepository.update(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
+    uiEvents.onNext(MedicalHistoryAnswerToggled(question, selected = true))
+
+    val updatedMedicalHistory = medicalHistory.copy(
+        hasHadHeartAttack = question == HAS_HAD_A_HEART_ATTACK,
+        hasHadStroke = question == HAS_HAD_A_STROKE,
+        hasHadKidneyDisease = question == HAS_HAD_A_KIDNEY_DISEASE,
+        isOnTreatmentForHypertension = question == IS_ON_TREATMENT_FOR_HYPERTENSION,
+        hasDiabetes = question == HAS_DIABETES)
+    verify(medicalHistoryRepository).update(updatedMedicalHistory)
+  }
+
+  @Suppress("unused")
+  fun medicalHistoryQuestions() = arrayOf(
+      HAS_HAD_A_HEART_ATTACK,
+      HAS_HAD_A_STROKE,
+      HAS_HAD_A_KIDNEY_DISEASE,
+      IS_ON_TREATMENT_FOR_HYPERTENSION,
+      HAS_DIABETES
+  )
 
   @After
   fun tearDown() {

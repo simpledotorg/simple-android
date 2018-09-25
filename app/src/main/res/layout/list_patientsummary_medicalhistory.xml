@@ -4,14 +4,17 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_marginBottom="@dimen/spacing_8"
+  android:layout_marginTop="@dimen/spacing_16"
   tools:ignore="MissingPrefix">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:paddingBottom="@dimen/spacing_24"
     android:paddingEnd="@dimen/spacing_24"
-    android:paddingStart="@dimen/spacing_24">
+    android:paddingStart="@dimen/spacing_24"
+    android:paddingTop="@dimen/spacing_24">
 
     <TextView
       android:layout_width="match_parent"
@@ -20,8 +23,10 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
     <TextView
+      android:id="@+id/patientsummary_medicalhistory_last_update_timestamp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_4"
       android:text="@string/patientsummary_medicalhistory_last_updated"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
   </LinearLayout>

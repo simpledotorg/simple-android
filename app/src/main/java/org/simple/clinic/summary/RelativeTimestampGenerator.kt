@@ -19,8 +19,8 @@ class RelativeTimestampGenerator @Inject constructor() {
     val yesterdayAtMidnight = todayAtMidnight.minusDays(1)
 
     return when {
-      dateTime > todayAtMidnight -> Today()
-      dateTime > yesterdayAtMidnight -> Yesterday()
+      dateTime > todayAtMidnight -> Today
+      dateTime > yesterdayAtMidnight -> Yesterday
       dateTime > today.minusMonths(6) -> WithinSixMonths(ChronoUnit.DAYS.between(dateTime, today))
       else -> OlderThanSixMonths(time)
     }
@@ -36,13 +36,13 @@ sealed class RelativeTimestamp {
   abstract fun displayText(context: Context): String
 }
 
-class Today : RelativeTimestamp() {
+object Today : RelativeTimestamp() {
   override fun displayText(context: Context): String {
     return context.getString(R.string.timestamp_today)
   }
 }
 
-class Yesterday : RelativeTimestamp() {
+object Yesterday : RelativeTimestamp() {
   override fun displayText(context: Context): String {
     return context.getString(R.string.timestamp_yesterday)
   }

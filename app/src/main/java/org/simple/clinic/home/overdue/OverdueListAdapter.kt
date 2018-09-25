@@ -95,7 +95,7 @@ class OverdueListViewHolder(
       eventStream.onNext(CallPatientClicked(appointment.phoneNumber!!))
     }
     agreedToVisitTextView.setOnClickListener {
-      eventStream.onNext(AgreedToVisitClicked)
+      eventStream.onNext(AgreedToVisitClicked(appointment.appointmentUuid))
     }
     remindLaterTextView.setOnClickListener {
       eventStream.onNext(RemindToCallLaterClicked(appointment.appointmentUuid))

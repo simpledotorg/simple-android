@@ -64,12 +64,12 @@ data class PatientSearchResult(
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district, PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-          BP.createdAt bp_takenOn, BP.facilityName bp_takenAtFacilityName
+          BP.createdAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
           FROM Patient P
           INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
-        		SELECT BP.patientUuid, BP.createdAt, F.name facilityName
+        		SELECT BP.patientUuid, BP.createdAt, F.name facilityName, F.uuid facilityUuid
         		FROM BloodPressureMeasurement BP
         		INNER JOIN Facility F ON BP.facilityUuid = F.uuid
             GROUP BY BP.patientUuid

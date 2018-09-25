@@ -4,13 +4,16 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
@@ -22,7 +25,9 @@ typealias Ui = PatientSearchResultsScreen
 typealias UiChange = (Ui) -> Unit
 
 class PatientSearchResultsController @Inject constructor(
-    private val repository: PatientRepository,
+    private val patientRepository: PatientRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
     private val clock: Clock,
     @Named("io") private val ioScheduler: Scheduler
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -51,16 +56,21 @@ class PatientSearchResultsController @Inject constructor(
         .map { it.key }
         .map { (name, age, dob) -> name to coerceAgeFrom(age, dob) }
         .flatMap { (name, computedAge) ->
-          repository
-              .search(name, computedAge, includeFuzzyNameSearch = true)
+          val facilities = userSession
+              .requireLoggedInUser()
+              .switchMap { facilityRepository.currentFacility(it) }
+
+          val searchResults = patientRepository.search(name, computedAge, includeFuzzyNameSearch = true)
+
+          Observables.combineLatest(searchResults, facilities)
               // We can't understand why, but search is occasionally
               // running on the main thread. This is a temporary solution.
               .subscribeOn(ioScheduler)
         }
-        .map {
+        .map { (results, currentFacility) ->
           { ui: Ui ->
-            ui.updateSearchResults(it)
-            ui.setEmptyStateVisible(it.isEmpty())
+            ui.updateSearchResults(results, currentFacility)
+            ui.setEmptyStateVisible(results.isEmpty())
           }
         }
   }
@@ -96,7 +106,7 @@ class PatientSearchResultsController @Inject constructor(
               gender = null))
         }
         .flatMap {
-          repository
+          patientRepository
               .saveOngoingEntry(it)
               .andThen(Observable.just({ ui: Ui -> ui.openPatientEntryScreen() }))
         }

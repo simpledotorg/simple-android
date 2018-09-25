@@ -16,6 +16,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -94,8 +95,8 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
           .clicks(newPatientButton)
           .map { CreateNewPatientClicked() }
 
-  fun updateSearchResults(results: List<PatientSearchResult>) {
-    adapter.updateAndNotifyChanges(results)
+  fun updateSearchResults(results: List<PatientSearchResult>, currentFacility: Facility) {
+    adapter.updateAndNotifyChanges(results, currentFacility)
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

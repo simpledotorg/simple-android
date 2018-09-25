@@ -18,7 +18,7 @@
 
     <TextView
       android:id="@+id/registrationpin_applogo"
-      style="@style/Clinic.LoginLogo.Compact"
+      style="@style/Clinic.V2.LoginLogo.Compact"
       android:layout_alignTop="@+id/registrationpin_back"
       android:layout_centerHorizontal="true"
       android:text="@string/app_name" />

@@ -210,4 +210,11 @@
   <style name="Clinic.V2.MedicalHistoryQuestionCheckboxTheme">
     <item name="colorControlNormal">@color/grey2</item>
   </style>
+
+  <style name="Clinic.V2.SummaryMedicalHistoryQuestion">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:paddingEnd">@dimen/spacing_8</item>
+    <item name="android:paddingStart">@dimen/spacing_8</item>
+  </style>
 </resources>

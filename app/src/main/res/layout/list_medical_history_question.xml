@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout android:id="@+id/newmedicalhistory_item_frame"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:foreground="?attr/selectableItemBackgroundBorderless"
-  android:orientation="vertical"
   tools:parentTag="android.widget.RelativeLayout">
 
   <CheckBox
@@ -14,16 +14,17 @@
     android:layout_alignBottom="@+id/newmedicalhistory_item_label"
     android:layout_alignTop="@+id/newmedicalhistory_item_label"
     android:layout_marginStart="10dp"
-    android:scaleX="0.8"
-    android:scaleY="0.8"
     android:focusable="false"
     android:focusableInTouchMode="false"
+    android:scaleX="0.8"
+    android:scaleY="0.8"
     android:theme="@style/Clinic.V2.MedicalHistoryQuestionCheckboxTheme" />
 
   <TextView
     android:id="@+id/newmedicalhistory_item_label"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="10dp"
     android:layout_marginTop="@dimen/spacing_16"
@@ -32,11 +33,11 @@
     tools:text="A really long medical history question that shouldn't fit" />
 
   <View
+    android:id="@+id/newmedicalhistory_item_divider"
     android:layout_width="match_parent"
     android:layout_height="1dp"
     android:layout_alignEnd="@+id/newmedicalhistory_item_label"
     android:layout_alignStart="@+id/newmedicalhistory_item_label"
     android:layout_below="@+id/newmedicalhistory_item_label"
-    android:layout_marginTop="16dp"
     android:background="@color/grey3" />
 </RelativeLayout>

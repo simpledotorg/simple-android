@@ -80,7 +80,7 @@
 
       <TextView
         android:id="@+id/forgotpin_createpin_error"
-        style="@style/Clinic.LoginPinErrorText"
+        style="@style/Clinic.V2.LoginPinErrorText"
         tools:text="@string/forgotpin_create_new_pin_invalid_pin"
         tools:visibility="visible" />
     </LinearLayout>

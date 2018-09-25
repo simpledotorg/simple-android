@@ -107,7 +107,7 @@
 
       <TextView
         android:id="@+id/applock_error"
-        style="@style/Clinic.LoginPinErrorText"
+        style="@style/Clinic.V2.LoginPinErrorText"
         android:text="@string/applock_error_incorrect_pin"
         tools:visibility="visible" />
 

@@ -91,7 +91,7 @@
 
       <TextView
         android:id="@+id/forgotpin_confirmpin_error"
-        style="@style/Clinic.LoginPinErrorText"
+        style="@style/Clinic.V2.LoginPinErrorText"
         android:text="@string/forgotpin_error_pin_mismatch"
         tools:visibility="visible" />
 

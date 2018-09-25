@@ -88,7 +88,7 @@
 
       <TextView
         android:id="@+id/enterotp_error"
-        style="@style/Clinic.LoginPinErrorText"
+        style="@style/Clinic.V2.LoginPinErrorText"
         android:text="@string/enterotp_incorrect_code"
         tools:visibility="visible" />
 

@@ -55,7 +55,7 @@
 
       <TextView
         android:id="@+id/registrationname_error"
-        style="@style/Clinic.RegistrationInputError"
+        style="@style/Clinic.V2.RegistrationInputError"
         android:layout_marginTop="@dimen/spacing_8"
         android:visibility="gone"
         tools:text="A really long error message to test wrapping on this TextView." />

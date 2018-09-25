@@ -225,7 +225,7 @@ object PatientMocker {
         phoneActive = true,
         phoneCreatedAt = mock(),
         phoneUpdatedAt = mock(),
-        lastBp = LastBp(
+        lastBp = PatientSearchResult.LastBp(
             takenOn = Instant.now(),
             takenAtFacilityName = "Some Facility",
             takenAtFacilityUuid = UUID.randomUUID()))

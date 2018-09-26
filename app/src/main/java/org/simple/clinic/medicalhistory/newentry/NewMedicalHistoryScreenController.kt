@@ -6,7 +6,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
@@ -34,21 +33,21 @@ class NewMedicalHistoryScreenController @Inject constructor(
 
   private fun unSelectAllOnNoneSelection(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<MedicalHistoryAnswerToggled>()
+        .ofType<NewMedicalHistoryAnswerToggled>()
         .filter { it.question == MedicalHistoryQuestion.NONE && it.selected }
         .map { { ui: Ui -> ui.unSelectAllAnswersExceptNone() } }
   }
 
   private fun unSelectNone(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<MedicalHistoryAnswerToggled>()
+        .ofType<NewMedicalHistoryAnswerToggled>()
         .filter { it.question != MedicalHistoryQuestion.NONE && it.selected }
         .map { { ui: Ui -> ui.unSelectNoneAnswer() } }
   }
 
   private fun enableSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<MedicalHistoryAnswerToggled>()
+        .ofType<NewMedicalHistoryAnswerToggled>()
         .scan(0) { selectedAnswersCount, toggleEvent ->
           if (toggleEvent.selected) selectedAnswersCount + 1 else selectedAnswersCount - 1
         }
@@ -59,7 +58,7 @@ class NewMedicalHistoryScreenController @Inject constructor(
 
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
     val ongoingHistoryEntry = events
-        .ofType<MedicalHistoryAnswerToggled>()
+        .ofType<NewMedicalHistoryAnswerToggled>()
         .scan(OngoingMedicalHistoryEntry()) { ongoingEntry, toggleEvent ->
           val question = toggleEvent.question
           val selected = toggleEvent.selected

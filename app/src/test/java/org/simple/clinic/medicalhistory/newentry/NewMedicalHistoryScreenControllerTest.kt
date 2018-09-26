@@ -11,7 +11,6 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -50,8 +49,8 @@ class NewMedicalHistoryScreenControllerTest {
     val answersMinusNone = MedicalHistoryQuestion.values().filter { it != NONE }
 
     answersMinusNone.forEach {
-      uiEvents.onNext(MedicalHistoryAnswerToggled(question = it, selected = false))
-      uiEvents.onNext(MedicalHistoryAnswerToggled(question = it, selected = true))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = true))
     }
 
     verify(screen, times(answersMinusNone.size)).unSelectNoneAnswer()
@@ -59,8 +58,8 @@ class NewMedicalHistoryScreenControllerTest {
 
   @Test
   fun `when none is selected then all answers should get unselected`() {
-    uiEvents.onNext(MedicalHistoryAnswerToggled(question = NONE, selected = true))
-    uiEvents.onNext(MedicalHistoryAnswerToggled(question = NONE, selected = false))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = NONE, selected = true))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = NONE, selected = false))
     verify(screen).unSelectAllAnswersExceptNone()
   }
 
@@ -75,10 +74,10 @@ class NewMedicalHistoryScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
     selectedAnswers.forEach {
-      uiEvents.onNext(MedicalHistoryAnswerToggled(it, selected = true))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, selected = true))
     }
     unselectedAnswers.forEach {
-      uiEvents.onNext(MedicalHistoryAnswerToggled(it, selected = false))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, selected = false))
     }
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -101,7 +100,7 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(MedicalHistoryAnswerToggled(question = NONE, selected = true))
+    uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = NONE, selected = true))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
@@ -121,8 +120,8 @@ class NewMedicalHistoryScreenControllerTest {
   fun `save button should remain enabled only when atleast one answer is selected`() {
     val answers = MedicalHistoryQuestion.values()
     answers.forEach {
-      uiEvents.onNext(MedicalHistoryAnswerToggled(question = it, selected = true))
-      uiEvents.onNext(MedicalHistoryAnswerToggled(question = it, selected = false))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = true))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
     }
     verify(screen, times(answers.size)).setSaveButtonEnabled(true)
     verify(screen, times(answers.size + 1)).setSaveButtonEnabled(false)

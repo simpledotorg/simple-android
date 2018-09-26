@@ -9,34 +9,29 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.TextView
-import io.reactivex.subjects.PublishSubject
+import com.jakewharton.rxbinding2.InitialValueObservable
+import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.widgets.UiEvent
-
-data class MedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, val selected: Boolean) : UiEvent {
-  override val analyticsName = "New Medical History:Answer Toggled"
-}
 
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
-  private val toggleSubject = PublishSubject.create<UiEvent>()!!
   private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
   private val containerFrame by bindView<ViewGroup>(R.id.newmedicalhistory_item_frame)
+  private val checkBox by bindView<CheckBox>(R.id.newmedicalhistory_item_checkbox)
+  private val divider by bindView<View>(R.id.newmedicalhistory_item_divider)
 
-  private lateinit var question: MedicalHistoryQuestion
+  lateinit var question: MedicalHistoryQuestion
 
-  val checkBox by bindView<CheckBox>(R.id.newmedicalhistory_item_checkbox)
-  val divider by bindView<View>(R.id.newmedicalhistory_item_divider)
-  val toggles = toggleSubject.hide()!!
+  var isChecked: Boolean
+    get() = checkBox.isChecked
+    set(value) {
+      checkBox.isChecked = value
+    }
 
   init {
     LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)
-
-    checkBox.setOnCheckedChangeListener { _, isChecked ->
-      toggleSubject.onNext(MedicalHistoryAnswerToggled(question, isChecked))
-    }
 
     // The entire View should show a touch feedback instead of just the CheckBox.
     setOnClickListener {
@@ -49,6 +44,18 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     // attributes on <merge> tag don't get merged.
     containerFrame.setPaddingRelative(paddingStart, paddingTop, paddingEnd, paddingBottom)
     setPaddingRelative(0, 0, 0, 0)
+  }
+
+  fun setOnCheckedChangeListener(listener: (View, Boolean) -> Unit) {
+    checkBox.setOnCheckedChangeListener(listener)
+  }
+
+  fun checkedChanges(): InitialValueObservable<Boolean> {
+    return RxCompoundButton.checkedChanges(checkBox)
+  }
+
+  fun hideDivider() {
+    divider.visibility = View.GONE
   }
 
   fun render(question: MedicalHistoryQuestion) {

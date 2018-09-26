@@ -52,8 +52,7 @@ class PatientSummaryScreenControllerTest {
 
   @Before
   fun setUp() {
-    val timestampGenerator = mock<RelativeTimestampGenerator>()
-    whenever(timestampGenerator.generate(any())).thenReturn(Today)
+    val timestampGenerator = RelativeTimestampGenerator()
 
     controller = PatientSummaryScreenController(
         patientRepository,
@@ -70,6 +69,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.never())
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -99,7 +99,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(mock()))
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
@@ -114,6 +114,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 

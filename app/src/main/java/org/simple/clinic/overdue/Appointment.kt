@@ -83,9 +83,9 @@ data class Appointment(
 
     @Query("""UPDATE Appointment
       SET status = :updatedStatus, syncStatus = :newSyncStatus
-      WHERE patientUuid = :patientId AND status = :scheduledStatus""")
+      WHERE patientUuid = :patientUuid AND status = :scheduledStatus""")
     fun markOlderAppointmentsAsVisited(
-        patientId: UUID,
+        patientUuid: UUID,
         updatedStatus: Status,
         scheduledStatus: Status,
         newSyncStatus: SyncStatus
@@ -99,17 +99,14 @@ data class Appointment(
       WHERE uuid = :appointmentUUID""")
     fun markAsAgreedToVisit(appointmentUUID: UUID, reminderDate: LocalDate, agreed: Boolean)
 
-    @Query("""UPDATE Appointment
-      SET status = :newStatus, syncStatus = :newSyncStatus
-      WHERE uuid = :appointmentUuid
-    """)
-    fun markAsVisited(appointmentUuid: UUID, newStatus: Status, newSyncStatus: SyncStatus)
+    @Query("UPDATE Appointment SET status = :newStatus WHERE uuid = :appointmentUuid")
+    fun markAsVisited(appointmentUuid: UUID, newStatus: Status)
 
     @Query("""UPDATE Appointment
-      SET cancelReason = :cancelReason, status = :newStatus, syncStatus = :newSyncStatus
+      SET cancelReason = :cancelReason, status = :newStatus
       WHERE uuid = :appointmentUuid
     """)
-    fun cancelWithReason(appointmentUuid: UUID, cancelReason: CancelReason, newStatus: Status, newSyncStatus: SyncStatus)
+    fun cancelWithReason(appointmentUuid: UUID, cancelReason: CancelReason, newStatus: Status)
 
     @Query("DELETE FROM Appointment")
     fun clear()

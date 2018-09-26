@@ -40,6 +40,7 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.LocalDate
@@ -71,7 +72,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val byline1TextView by bindView<TextView>(R.id.patientsummary_byline1)
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
-  private val doneButton by bindView<ViewGroup>(R.id.patientsummary_done)
+  private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsummary_done)
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val prescriptionSection = Section()
@@ -122,7 +123,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     return Observable.just(PatientSummaryScreenCreated(screenKey.patientUuid, screenKey.caller))
   }
 
-  private fun doneClicks() = RxView.clicks(doneButton).map { PatientSummaryDoneClicked() }
+  private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PatientSummaryDoneClicked() }
 
   private fun backClicks(): Observable<UiEvent> {
     val hardwareBackKeyClicks = Observable.create<Any> { emitter ->

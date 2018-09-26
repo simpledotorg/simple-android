@@ -24,6 +24,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -45,7 +46,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
 
   private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
-  private val doneButton by bindView<ViewGroup>(R.id.prescribeddrugs_done)
+  private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.prescribeddrugs_done)
 
   private val groupieAdapter = GroupAdapter<ViewHolder>()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -75,7 +76,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
     return Observable.just(PrescribedDrugsScreenCreated(screenKey.patientUuid))
   }
 
-  private fun doneClicks() = RxView.clicks(doneButton).map { PrescribedDrugsDoneClicked() }
+  private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked() }
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     // Replace the default fade animator with another animator that

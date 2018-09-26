@@ -6,7 +6,12 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
@@ -34,14 +39,14 @@ class NewMedicalHistoryScreenController @Inject constructor(
   private fun unSelectAllOnNoneSelection(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<NewMedicalHistoryAnswerToggled>()
-        .filter { it.question == MedicalHistoryQuestion.NONE && it.selected }
+        .filter { it.question == NONE && it.selected }
         .map { { ui: Ui -> ui.unSelectAllAnswersExceptNone() } }
   }
 
   private fun unSelectNone(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<NewMedicalHistoryAnswerToggled>()
-        .filter { it.question != MedicalHistoryQuestion.NONE && it.selected }
+        .filter { it.question != NONE && it.selected }
         .map { { ui: Ui -> ui.unSelectNoneAnswer() } }
   }
 
@@ -57,13 +62,22 @@ class NewMedicalHistoryScreenController @Inject constructor(
   }
 
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
+    val updateEntry = { entry: OngoingMedicalHistoryEntry, toggleEvent: NewMedicalHistoryAnswerToggled ->
+      toggleEvent.run {
+        when (question) {
+          HAS_HAD_A_HEART_ATTACK -> entry.copy(hasHadHeartAttack = selected)
+          HAS_HAD_A_STROKE -> entry.copy(hasHadStroke = selected)
+          HAS_HAD_A_KIDNEY_DISEASE -> entry.copy(hasHadKidneyDisease = selected)
+          IS_ON_TREATMENT_FOR_HYPERTENSION -> entry.copy(isOnTreatmentForHypertension = selected)
+          HAS_DIABETES -> entry.copy(hasDiabetes = selected)
+          NONE -> entry
+        }
+      }
+    }
+
     val ongoingHistoryEntry = events
         .ofType<NewMedicalHistoryAnswerToggled>()
-        .scan(OngoingMedicalHistoryEntry()) { ongoingEntry, toggleEvent ->
-          val question = toggleEvent.question
-          val selected = toggleEvent.selected
-          question.setter(ongoingEntry, selected)
-        }
+        .scan(OngoingMedicalHistoryEntry(), updateEntry)
 
     return events
         .ofType<SaveMedicalHistoryClicked>()

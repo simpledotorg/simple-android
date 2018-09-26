@@ -81,7 +81,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   private fun answerToggles(): Observable<UiEvent> {
     val toggles = { view: MedicalHistoryQuestionView ->
       view.checkedChanges()
-          .map { NewMedicalHistoryAnswerToggled(view.question, view.isSelected) }
+          .map { NewMedicalHistoryAnswerToggled(view.question, view.isChecked) }
     }
 
     return Observable.mergeArray(

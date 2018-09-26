@@ -3,7 +3,6 @@ package org.simple.clinic.medicalhistory.newentry
 import android.content.Context
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
@@ -23,6 +22,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -47,8 +47,8 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   private val hypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_hypertension)
   private val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diabetes)
   private val noneQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_none)
-  private val nextButtonFrame by bindView<ViewGroup>(R.id.newmedicalhistory_next_frame)
-  private val saveButton by bindView<Button>(R.id.newmedicalhistory_save)
+  private val nextButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.newmedicalhistory_next_frame)
+  private val nextButton by bindView<Button>(R.id.newmedicalhistory_save)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -95,7 +95,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   private fun saveClicks() =
       RxView
-          .clicks(saveButton)
+          .clicks(nextButtonFrame.button)
           .map { SaveMedicalHistoryClicked() }
 
   fun unSelectNoneAnswer() {
@@ -115,10 +115,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   fun setSaveButtonEnabled(enabled: Boolean) {
-    nextButtonFrame.setBackgroundResource(when {
-      enabled -> R.color.newmedicalhistory_save_button_frame_enabled
-      else -> R.color.newmedicalhistory_save_button_frame_disabled
-    })
-    saveButton.isEnabled = enabled
+    nextButtonFrame.isEnabled = enabled
+    nextButton.isEnabled = enabled
   }
 }

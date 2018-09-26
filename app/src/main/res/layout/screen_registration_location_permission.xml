@@ -47,7 +47,7 @@
     android:layout_below="@+id/registrationlocation_toolbar"
     android:layout_marginBottom="-8dp"
     android:scaleType="centerCrop"
-    android:src="@drawable/registration_location_permission"
+    android:src="@drawable/illustration_location"
     tools:ignore="ContentDescription" />
 
   <android.support.v7.widget.CardView

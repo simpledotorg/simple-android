@@ -59,7 +59,7 @@
 
     <activity
       android:name=".home.overdue.removepatient.RemoveAppointmentSheet"
-      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <receiver

@@ -18,7 +18,7 @@
 
   <!-- Patient search -->
   <string name="patientsearch_name">Patient’s name</string>
-  <string name="patientsearch_dateofbirth">Date of birth</string>
+  <string name="patientsearch_dateofbirth">Date of birth dd/mm/yyyy</string>
   <string name="patientsearch_age">Age</string>
   <string name="patientsearch_search">Next</string>
   <string name="patientsearch_dateofbirth_and_age_separator">or</string>

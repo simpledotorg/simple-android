@@ -51,14 +51,14 @@ class RemoveAppointmentSheetController @Inject constructor(
     val markAsVisitedStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is AlreadyVisitedReasonClicked }
         .flatMap { (_, uuid, _) ->
-          repository.markAppointmentAsVisited(uuid)
+          repository.markAsVisited(uuid)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
     val cancelWithReasonStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is CancelReasonClicked }
         .flatMap { (_, uuid, reason) ->
-          repository.cancelAppointmentWithReason(uuid, (reason as CancelReasonClicked).selectedReason)
+          repository.cancelWithReason(uuid, (reason as CancelReasonClicked).selectedReason)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 

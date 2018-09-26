@@ -262,7 +262,7 @@ class AppointmentRepositoryAndroidTest {
     val uuid = appointments[0].uuid
     val reminderDate = LocalDate.now().plusDays(10)
 
-    repository.createReminderForAppointment(uuid, reminderDate).blockingGet()
+    repository.createReminder(uuid, reminderDate).blockingGet()
 
     val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
@@ -286,7 +286,7 @@ class AppointmentRepositoryAndroidTest {
 
     val uuid = appointments[0].uuid
 
-    repository.agreedToVisit(uuid).blockingGet()
+    repository.markAsAgreedToVisit(uuid).blockingGet()
 
     val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)

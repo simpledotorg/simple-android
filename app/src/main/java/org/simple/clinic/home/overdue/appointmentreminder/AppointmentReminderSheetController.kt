@@ -91,7 +91,7 @@ class AppointmentReminderSheetController @Inject constructor(
         .map { toLocalDate(it.selectedReminderState.timeAmount, it.selectedReminderState.chronoUnit) }
         .withLatestFrom(appointmentUuids)
         .flatMap { (date, uuid) ->
-          repository.createReminderForAppointment(appointmentUUID = uuid, reminderDate = date)
+          repository.createReminder(appointmentUUID = uuid, reminderDate = date)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
   }

@@ -24,20 +24,20 @@ class OverdueScreenControllerTest {
 
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val appointmentRepo = mock<AppointmentRepository>()
+  private val repository = mock<AppointmentRepository>()
 
   lateinit var controller: OverdueScreenController
 
   @Before
   fun setUp() {
-    controller = OverdueScreenController(appointmentRepo)
+    controller = OverdueScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
   fun `when screen is created, and overdue list is retrieved, show it`() {
-    whenever(appointmentRepo.overdueAppointments()).thenReturn(Observable.just(listOf(PatientMocker.overdueAppointment())))
+    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf(PatientMocker.overdueAppointment())))
 
     uiEvents.onNext(OverdueScreenCreated())
 
@@ -48,7 +48,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is empty, show empty list UI`() {
-    whenever(appointmentRepo.overdueAppointments()).thenReturn(Observable.just(listOf()))
+    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf()))
 
     uiEvents.onNext(OverdueScreenCreated())
 
@@ -70,7 +70,7 @@ class OverdueScreenControllerTest {
       result: RuntimePermissionResult,
       shouldUseDialer: Boolean
   ) {
-    whenever(appointmentRepo.overdueAppointments()).thenReturn(Observable.just(listOf()))
+    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf()))
     val phone = "99999"
 
     uiEvents.onNext(CallPatientClicked(phone))
@@ -96,7 +96,7 @@ class OverdueScreenControllerTest {
   @Test
   fun `when "mark patient as agreed to visit" is clicked, then relevant repository method should be called`() {
     val appointmentUuid = UUID.randomUUID()
-    whenever(appointmentRepo.agreedToVisit(appointmentUuid)).thenReturn(Completable.complete())
+    whenever(repository.markAsAgreedToVisit(appointmentUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))
 

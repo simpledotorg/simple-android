@@ -20,7 +20,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Inject
 
-private val DATE_OF_BIRTH_FORMATTER = DateTimeFormatter.ofPattern("d-MM-yyyy", Locale.ENGLISH)
+private val DATE_OF_BIRTH_FORMATTER = DateTimeFormatter.ofPattern("d-MMM-yyyy", Locale.ENGLISH)
 
 class PatientSearchResultsAdapter @Inject constructor(
     private val phoneObfuscator: PhoneNumberObfuscator

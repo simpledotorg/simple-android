@@ -34,27 +34,27 @@
 
     <activity
       android:name=".search.PatientSearchAgeFilterSheet"
-      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".drugs.selection.entry.CustomPrescriptionEntrySheet"
-      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".bp.entry.BloodPressureEntrySheet"
-      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".scheduleappointment.ScheduleAppointmentSheet"
-      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity
       android:name=".home.overdue.appointmentreminder.AppointmentReminderSheet"
-      android:theme="@style/ClinicTheme.BottomSheetActivity"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
     <activity

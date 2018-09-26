@@ -11,4 +11,11 @@
   <declare-styleable name="ToolbarWithTintedNavIcon">
     <attr name="navigationIconTint" format="color" />
   </declare-styleable>
+
+  <declare-styleable name="PrimarySolidButtonWithFrame">
+    <attr name="frameBackgroundEnabled" format="color"/>
+    <attr name="frameBackgroundDisabled" format="color"/>
+    <attr name="buttonBackgroundEnabled" format="color"/>
+    <attr name="buttonBackgroundDisabled" format="color"/>
+  </declare-styleable>
 </resources>

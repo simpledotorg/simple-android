@@ -8,6 +8,7 @@ import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
 import android.support.v4.content.ContextCompat
+import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -146,3 +147,10 @@ fun View.locationRectOnScreen(): Rect {
 
 val View.marginLayoutParams: ViewGroup.MarginLayoutParams
   get() = layoutParams as ViewGroup.MarginLayoutParams
+
+fun dpToPx(dp: Float): Float {
+  val metrics = Resources.getSystem().displayMetrics
+  return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
+}
+
+fun dpToPx(dp: Int) = dpToPx(dp.toFloat())

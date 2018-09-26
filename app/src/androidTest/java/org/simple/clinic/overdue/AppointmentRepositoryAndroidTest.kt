@@ -260,8 +260,9 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointments.first().remindOn).isNull()
 
     val uuid = appointments[0].uuid
-    val reminderDate = LocalDate.now().plusDays(10)
+    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
 
+    val reminderDate = LocalDate.now().plusDays(10)
     repository.createReminder(uuid, reminderDate).blockingGet()
 
     val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -285,7 +286,7 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointments.first().agreedToVisit).isNull()
 
     val uuid = appointments[0].uuid
-
+    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
     repository.markAsAgreedToVisit(uuid).blockingGet()
 
     val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -294,6 +295,52 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.remindOn).isEqualTo(LocalDate.now().plusDays(30))
       assertThat(this.agreedToVisit).isTrue()
+    }
+  }
+
+  @Test
+  fun when_removing_appointment_from_list_then_appointment_status_and_cancel_reason_should_be_updated() {
+    val patientId = UUID.randomUUID()
+    val appointmentDate = LocalDate.now()
+    repository.schedule(patientId, appointmentDate).blockingAwait()
+
+    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(appointments).hasSize(1)
+    assertThat(appointments.first().cancelReason).isNull()
+
+    val uuid = appointments[0].uuid
+    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    repository.cancelWithReason(uuid, Appointment.CancelReason.PATIENT_NOT_RESPONDING).blockingGet()
+
+    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(updatedList).hasSize(1)
+    updatedList[0].apply {
+      assertThat(this.uuid).isEqualTo(uuid)
+      assertThat(this.cancelReason).isEqualTo(Appointment.CancelReason.PATIENT_NOT_RESPONDING)
+      assertThat(this.status).isEqualTo(Appointment.Status.CANCELLED)
+    }
+  }
+
+  @Test
+  fun when_removing_appointment_with_reason_as_patient_already_visited_then_appointment_should_be_marked_as_visited() {
+    val patientId = UUID.randomUUID()
+    val appointmentDate = LocalDate.now()
+    repository.schedule(patientId, appointmentDate).blockingAwait()
+
+    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(appointments).hasSize(1)
+    assertThat(appointments.first().status).isEqualTo(Appointment.Status.SCHEDULED)
+
+    val uuid = appointments[0].uuid
+    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    repository.markAsVisited(uuid).blockingGet()
+
+    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(updatedList).hasSize(1)
+    updatedList[0].apply {
+      assertThat(this.uuid).isEqualTo(uuid)
+      assertThat(this.cancelReason).isNull()
+      assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
     }
   }
 }

@@ -45,7 +45,7 @@ class RemoveAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, and reason is "already visited", then repository should update and sheet should close`() {
-    whenever(repository.markAppointmentAsVisited(appointmentUuid)).thenReturn(Completable.complete())
+    whenever(repository.markAsVisited(appointmentUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
@@ -56,17 +56,17 @@ class RemoveAppointmentSheetControllerTest {
     uiEvents.onNext(AlreadyVisitedReasonClicked)
     uiEvents.onNext(RemoveReasonDoneClicked)
 
-    verify(repository, never()).cancelAppointmentWithReason(any(), any())
+    verify(repository, never()).cancelWithReason(any(), any())
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(5)).enableDoneButton()
-    inOrder.verify(repository).markAppointmentAsVisited(appointmentUuid)
+    inOrder.verify(repository).markAsVisited(appointmentUuid)
     inOrder.verify(sheet).closeSheet()
   }
 
   @Test
   fun `when done is clicked, and a cancel reason is selected, then repository should update and sheet should close`() {
-    whenever(repository.cancelAppointmentWithReason(appointmentUuid, Appointment.CancelReason.DEAD)).thenReturn(Completable.complete())
+    whenever(repository.cancelWithReason(appointmentUuid, Appointment.CancelReason.DEAD)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
@@ -76,11 +76,11 @@ class RemoveAppointmentSheetControllerTest {
     uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.DEAD))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
-    verify(repository, never()).markAppointmentAsVisited(any())
+    verify(repository, never()).markAsVisited(any())
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
-    inOrder.verify(repository).cancelAppointmentWithReason(appointmentUuid, Appointment.CancelReason.DEAD)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, Appointment.CancelReason.DEAD)
     inOrder.verify(sheet).closeSheet()
   }
 }

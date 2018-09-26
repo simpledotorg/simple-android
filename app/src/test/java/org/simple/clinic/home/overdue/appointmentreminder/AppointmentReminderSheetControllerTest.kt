@@ -113,13 +113,13 @@ class AppointmentReminderSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.createReminderForAppointment(any(), any())).thenReturn(Completable.complete())
+    whenever(repository.createReminder(any(), any())).thenReturn(Completable.complete())
 
     val current = AppointmentReminder("2 weeks", 2, ChronoUnit.WEEKS)
     uiEvents.onNext(AppointmentReminderSheetCreated(3, appointmentUuid))
     uiEvents.onNext(ReminderCreated(current))
 
-    verify(repository).createReminderForAppointment(appointmentUuid, LocalDate.now(ZoneOffset.UTC).plus(2L, ChronoUnit.WEEKS))
+    verify(repository).createReminder(appointmentUuid, LocalDate.now(ZoneOffset.UTC).plus(2L, ChronoUnit.WEEKS))
     verify(sheet).closeSheet()
   }
 }

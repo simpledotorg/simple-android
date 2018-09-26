@@ -91,6 +91,17 @@
     <item name="android:textColor">@color/blue1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Subtitle1Center">
+    <item name="android:textSize">16sp</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
+    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:gravity">center</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Subtitle1Center.Grey2">
+    <item name="android:textColor">@color/grey2</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body2Left">
     <item name="android:textSize">14sp</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.02</item>
@@ -187,6 +198,10 @@
 
   <style name="Clinic.V2.TextAppearance.H6.Grey2">
     <item name="android:textColor">@color/grey2</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.H6.Grey1">
+    <item name="android:textColor">@color/grey1</item>
   </style>
 
   <!-- Screen/feature specific styles start here. -->

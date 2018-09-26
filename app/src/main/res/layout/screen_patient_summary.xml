@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.summary.PatientSummaryScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.summary.PatientSummaryScreen android:id="@+id/patientsummary_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/patientsummary_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -19,21 +20,21 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_margin="@dimen/spacing_12"
-      android:padding="@dimen/spacing_4"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
+      android:padding="@dimen/spacing_4"
       android:src="@drawable/ic_arrow_back_24dp"
       android:tint="@color/white" />
 
     <LinearLayout
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:layout_marginStart="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_16"
-      android:paddingTop="@dimen/spacing_12"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_weight="1"
+      android:orientation="vertical"
       android:paddingBottom="@dimen/spacing_12"
-      android:orientation="vertical">
+      android:paddingTop="@dimen/spacing_12">
 
       <TextView
         android:id="@+id/patientsummary_fullname"
@@ -71,13 +72,20 @@
     android:layout_below="@+id/patientsummary_header"
     android:clipToPadding="false" />
 
-  <FrameLayout
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/patientsummary_done"
-    style="@style/Clinic.DoneFrame"
-    android:layout_alignParentBottom="true">
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:layout_alignParentBottom="true"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
 
-    <Button
-      style="@style/Clinic.DoneButton"
-      android:text="@string/patientsummary_finish_saving_patient" />
-  </FrameLayout>
+    <org.simple.clinic.widgets.PrimarySolidButton
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsummary_finish_saving_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.summary.PatientSummaryScreen>

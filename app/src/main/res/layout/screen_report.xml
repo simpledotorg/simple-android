@@ -15,23 +15,18 @@
     tools:ignore="ContentDescription" />
 
   <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:fontFamily="sans-serif-medium"
-    android:text="@string/reports_come_back_later"
-    android:textColor="@color/grey1"
-    android:textSize="@dimen/textsize_20" />
+    android:text="@string/reports_come_back_later" />
 
   <TextView
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey2"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_12"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginStart="@dimen/spacing_24"
     android:layout_marginTop="@dimen/spacing_12"
-    android:gravity="center"
-    android:lineSpacingExtra="4dp"
-    android:text="@string/reports_you_will_be_able_to_see"
-    android:textColor="@color/grey2"
-    android:textSize="@dimen/textsize_16" />
+    android:text="@string/reports_you_will_be_able_to_see" />
 </org.simple.clinic.home.report.ReportsScreen>

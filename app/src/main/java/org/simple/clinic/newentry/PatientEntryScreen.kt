@@ -38,6 +38,7 @@ import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
@@ -87,7 +88,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val districtInputLayout by bindView<TextInputLayout>(R.id.patiententry_district_inputlayout)
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
   private val stateInputLayout by bindView<TextInputLayout>(R.id.patiententry_state_inputlayout)
-  private val saveButton by bindView<View>(R.id.patiententry_save)
+  private val saveButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patiententry_save)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -160,7 +161,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private fun saveClicks(): Observable<UiEvent> {
     val stateImeClicks = RxTextView.editorActions(stateEditText) { it == EditorInfo.IME_ACTION_DONE }
 
-    return RxView.clicks(saveButton)
+    return RxView.clicks(saveButtonFrame.button)
         .mergeWith(stateImeClicks)
         .map { PatientEntrySaveClicked() }
   }

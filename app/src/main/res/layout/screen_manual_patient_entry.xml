@@ -297,13 +297,20 @@
     </LinearLayout>
   </ScrollView>
 
-  <FrameLayout
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/patiententry_save"
-    style="@style/Clinic.DoneFrame"
-    android:layout_alignParentBottom="true">
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:layout_alignParentBottom="true"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
 
-    <Button
-      style="@style/Clinic.DoneButton"
-      android:text="@string/patiententry_save_patient" />
-  </FrameLayout>
+    <org.simple.clinic.widgets.PrimarySolidButton
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/patiententry_save_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.newentry.PatientEntryScreen>

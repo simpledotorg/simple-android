@@ -12,7 +12,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
@@ -29,6 +28,7 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreen
+import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -58,8 +58,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patientsearch_dateofbirth_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patientsearch_dateofbirth_and_age_separator)
   private val ageOrDateOfBirthErrorTextView by bindView<TextView>(R.id.patientsearch_age_or_dateofbirth_error)
-  private val searchButton by bindView<Button>(R.id.patientsearch_search)
-  private val searchButtonFrame by bindView<ViewGroup>(R.id.patientsearch_search_frame)
+  private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsearch_search_frame)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -106,19 +105,17 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
 
     return RxView
-        .clicks(searchButton)
+        .clicks(searchButtonFrame.button)
         .mergeWith(imeSearchClicks)
         .map { SearchClicked() }
   }
 
   fun showSearchButtonAsEnabled() {
-    searchButton.setBackgroundResource(R.color.patientsearch_search_button_enabled)
-    searchButtonFrame.setBackgroundResource(R.color.patientsearch_search_button_frame_enabled)
+    searchButtonFrame.isEnabled = true
   }
 
   fun showSearchButtonAsDisabled() {
-    searchButton.setBackgroundResource(R.color.patientsearch_search_button_disabled)
-    searchButtonFrame.setBackgroundResource(R.color.patientsearch_search_button_frame_disabled)
+    searchButtonFrame.isEnabled = false
   }
 
   fun openPatientEntryScreen() {

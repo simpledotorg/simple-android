@@ -1,7 +1,6 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.RectF
@@ -9,7 +8,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.AppCompatButton
 import android.util.AttributeSet
-import android.util.DisplayMetrics
 import org.simple.clinic.R
 
 /**
@@ -56,17 +54,14 @@ class PrimarySolidButton(context: Context, attrs: AttributeSet?) : AppCompatButt
   }
 
   override fun onDraw(canvas: Canvas) {
-    canvas.drawRoundRect(shapeBounds, cornerRadiusPx, cornerRadiusPx, backgroundColorPaint)
+    canvas.drawRoundRect(shapeBounds, cornerRadiusPx, cornerRadiusPx, requireBackgroundColorPaint())
     super.onDraw(canvas)
   }
 
   private fun requireBackgroundColorPaint(): Paint {
-    backgroundColorPaint = Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+    if (backgroundColorPaint == null) {
+      backgroundColorPaint = Paint(android.graphics.Paint.ANTI_ALIAS_FLAG)
+    }
     return backgroundColorPaint!!
-  }
-
-  private fun dpToPx(dp: Int): Float {
-    val metrics = Resources.getSystem().displayMetrics
-    return dp * (metrics.densityDpi.toFloat() / DisplayMetrics.DENSITY_DEFAULT)
   }
 }

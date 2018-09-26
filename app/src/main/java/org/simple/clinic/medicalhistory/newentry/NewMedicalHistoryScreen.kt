@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
@@ -79,14 +78,19 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun answerToggles(): ObservableSource<UiEvent> {
+  private fun answerToggles(): Observable<UiEvent> {
+    val toggles = { view: MedicalHistoryQuestionView ->
+      view.checkedChanges()
+          .map { NewMedicalHistoryAnswerToggled(view.question, view.isSelected) }
+    }
+
     return Observable.mergeArray(
-        heartAttackQuestionView.toggles,
-        strokeQuestionView.toggles,
-        kidneyDiseaseQuestionView.toggles,
-        hypertensionQuestionView.toggles,
-        diabetesQuestionView.toggles,
-        noneQuestionView.toggles)
+        toggles(heartAttackQuestionView),
+        toggles(strokeQuestionView),
+        toggles(kidneyDiseaseQuestionView),
+        toggles(hypertensionQuestionView),
+        toggles(diabetesQuestionView),
+        toggles(noneQuestionView))
   }
 
   private fun saveClicks() =
@@ -95,15 +99,15 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
           .map { SaveMedicalHistoryClicked() }
 
   fun unSelectNoneAnswer() {
-    noneQuestionView.checkBox.isChecked = false
+    noneQuestionView.isChecked = false
   }
 
   fun unSelectAllAnswersExceptNone() {
-    heartAttackQuestionView.checkBox.isChecked = false
-    strokeQuestionView.checkBox.isChecked = false
-    kidneyDiseaseQuestionView.checkBox.isChecked = false
-    hypertensionQuestionView.checkBox.isChecked = false
-    diabetesQuestionView.checkBox.isChecked = false
+    heartAttackQuestionView.isChecked = false
+    strokeQuestionView.isChecked = false
+    kidneyDiseaseQuestionView.isChecked = false
+    hypertensionQuestionView.isChecked = false
+    diabetesQuestionView.isChecked = false
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -27,4 +28,8 @@ class PatientSummaryBloodPressureClosed(val wasBloodPressureSaved: Boolean) : Ui
 
 class ScheduleAppointmentSheetClosed : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
+}
+
+data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, val selected: Boolean) : UiEvent {
+  override val analyticsName = "Patient Summary:Answer for $question set to $selected"
 }

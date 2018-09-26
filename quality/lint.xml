@@ -24,4 +24,10 @@
 
   <!-- We do not expect vision impaired nurses to use the app for now. -->
   <issue id="ContentDescription" severity="ignore" />
+
+  <!-- Flags all screen event observables because they don't "return" in an obvious way -->
+  <issue id="CheckResult" severity="informational" />
+
+  <!-- No plans to utilize autofill services currently -->
+  <issue id="Autofill" severity="informational" />
 </lint>

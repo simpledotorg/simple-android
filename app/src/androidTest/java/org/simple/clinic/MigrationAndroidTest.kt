@@ -13,6 +13,7 @@ import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_12_13
+import org.simple.clinic.storage.Migration_13_14
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -229,6 +230,63 @@ class MigrationAndroidTest {
       assertThat(it.string("uuid")).isEqualTo("c6834f82-3305-4144-9dc8-5f77c908ebf1")
       assertThat(it.string("scheduledDate")).isEqualTo("2011-12-03")
       assertThat(it.isNull(it.getColumnIndex("cancelReason"))).isTrue()
+    }
+  }
+
+  @Test
+  fun migration_13_to_14() {
+    val db_v13 = helper.createDatabase(TEST_DB_NAME, 13)
+
+    val patientUuid = "ee367a66-f47e-42d8-965b-7a2b5c54f4bd"
+
+    db_v13.execSQL("""
+      INSERT INTO `Patient` VALUES(
+        '$patientUuid',
+        '464bcda8-b26a-484d-bb70-49b3675f4a38',
+        'Ash Kumari','AshokKumar',
+        'FEMALE',
+        NULL,
+        'ACTIVE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'DONE',
+        23,
+        '2018-09-25T11:20:42.008Z',
+        '1995-09-25');
+    """)
+
+    db_v13.execSQL("""
+      INSERT INTO `MedicalHistory` VALUES(
+        'old-uuid',
+        '$patientUuid',
+        0,
+        0,
+        1,
+        0,
+        1,
+        'DONE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z'
+      )
+    """)
+
+    db_v13.query("SELECT * FROM `MedicalHistory` WHERE patientUuid = '$patientUuid'").use {
+      assertThat(it.count).isEqualTo(1)
+    }
+
+    val db_v14 = helper.runMigrationsAndValidate(TEST_DB_NAME, 14, true, Migration_13_14())
+
+    db_v14.query("SELECT * FROM `MedicalHistory` WHERE patientUuid = '$patientUuid'").use {
+      assertThat(it.count).isEqualTo(1)
+      it.moveToFirst()
+
+      val falseAsInt = 0
+      assertThat(it.getString(it.getColumnIndex("uuid"))).isNotEqualTo("old-uuid")
+      assertThat(it.getInt(it.getColumnIndex("hasHadHeartAttack"))).isEqualTo(falseAsInt)
+      assertThat(it.getInt(it.getColumnIndex("hasHadStroke"))).isEqualTo(falseAsInt)
+      assertThat(it.getInt(it.getColumnIndex("hasHadKidneyDisease"))).isEqualTo(falseAsInt)
+      assertThat(it.getInt(it.getColumnIndex("isOnTreatmentForHypertension"))).isEqualTo(falseAsInt)
+      assertThat(it.getInt(it.getColumnIndex("hasDiabetes"))).isEqualTo(falseAsInt)
     }
   }
 }

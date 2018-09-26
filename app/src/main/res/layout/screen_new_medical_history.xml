@@ -19,8 +19,8 @@
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:paddingTop="@dimen/spacing_8"
-      android:orientation="vertical">
+      android:orientation="vertical"
+      android:paddingTop="@dimen/spacing_8">
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
         android:id="@+id/newmedicalhistory_question_heartattack"
@@ -54,16 +54,20 @@
     </LinearLayout>
   </ScrollView>
 
-  <FrameLayout
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/newmedicalhistory_next_frame"
-    style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue2">
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
 
-    <Button
+    <org.simple.clinic.widgets.PrimarySolidButton
       android:id="@+id/newmedicalhistory_save"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:text="@string/newmedicalhistory_next"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
-  </FrameLayout>
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 </org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen>

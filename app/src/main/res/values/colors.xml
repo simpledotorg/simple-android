@@ -16,13 +16,4 @@
 
   <color name="textinputlayout_error">@color/color_error</color>
   <color name="snackbar_action">@color/green2</color>
-
-  <color name="patientsearch_search_button_enabled">@color/color_accent</color>
-  <color name="patientsearch_search_button_disabled">@color/grey2</color>
-
-  <color name="patientsearch_search_button_frame_enabled">@color/blue2</color>
-  <color name="patientsearch_search_button_frame_disabled">@color/grey3</color>
-
-  <color name="newmedicalhistory_save_button_frame_enabled">@color/blue2</color>
-  <color name="newmedicalhistory_save_button_frame_disabled">@color/grey3</color>
 </resources>

@@ -23,6 +23,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -259,6 +260,3 @@ class PatientSummaryScreenController @Inject constructor(
     return afterBackClicks.mergeWith(afterDoneClicks)
   }
 }
-
-// Forces when blocks to be exhaustive.
-private fun Unit.exhaustive() {}

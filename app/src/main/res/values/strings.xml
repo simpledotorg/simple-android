@@ -55,7 +55,7 @@
   <string name="patiententry_colony_or_village">Colony or village</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
-  <string name="patiententry_save_patient">Save patient</string>
+  <string name="patiententry_save_patient">Next</string>
 
   <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
   <string name="patiententry_error_empty_phonenumber">Enter patient’s phone number or choose ‘None’</string>

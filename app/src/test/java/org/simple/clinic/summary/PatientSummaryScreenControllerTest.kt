@@ -21,7 +21,6 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -241,7 +240,7 @@ class PatientSummaryScreenControllerTest {
     whenever(medicalHistoryRepository.update(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
-    uiEvents.onNext(MedicalHistoryAnswerToggled(question, selected = true))
+    uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, selected = true))
 
     val updatedMedicalHistory = medicalHistory.copy(
         hasHadHeartAttack = question == HAS_HAD_A_HEART_ATTACK,

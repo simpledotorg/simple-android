@@ -7,7 +7,6 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistoryAnswerToggled
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -45,17 +44,17 @@ data class SummaryMedicalHistoryItem(
 
     questionViewToQuestions.forEach { (view, question) ->
       view.render(question)
-      view.checkBox.setOnCheckedChangeListener { _, isChecked ->
-        uiEvents.onNext(MedicalHistoryAnswerToggled(question, isChecked))
+      view.setOnCheckedChangeListener { _, isChecked ->
+        uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, isChecked))
       }
     }
 
     holder.apply {
-      heartAttackQuestionView.checkBox.isChecked = medicalHistory.hasHadHeartAttack
-      strokeQuestionView.checkBox.isChecked = medicalHistory.hasHadStroke
-      kidneyDiseaseQuestionView.checkBox.isChecked = medicalHistory.hasHadKidneyDisease
-      hypertensionQuestionView.checkBox.isChecked = medicalHistory.isOnTreatmentForHypertension
-      diabetesQuestionView.checkBox.isChecked = medicalHistory.hasDiabetes
+      heartAttackQuestionView.isChecked = medicalHistory.hasHadHeartAttack
+      strokeQuestionView.isChecked = medicalHistory.hasHadStroke
+      kidneyDiseaseQuestionView.isChecked = medicalHistory.hasHadKidneyDisease
+      hypertensionQuestionView.isChecked = medicalHistory.isOnTreatmentForHypertension
+      diabetesQuestionView.isChecked = medicalHistory.hasDiabetes
     }
   }
 
@@ -68,7 +67,7 @@ data class SummaryMedicalHistoryItem(
     val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diabetes)
 
     init {
-      diabetesQuestionView.divider.visibility = View.GONE
+      diabetesQuestionView.hideDivider()
     }
   }
 }

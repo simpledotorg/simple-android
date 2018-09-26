@@ -44,12 +44,12 @@ class AppointmentRepository @Inject constructor(
         }
         .flatMapCompletable { save(listOf(it)) }
 
-    return markScheduledAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
+    return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
   }
 
-  private fun markScheduledAppointmentsAsVisited(patientId: UUID): Completable {
+  private fun markOlderAppointmentsAsVisited(patientId: UUID): Completable {
     return Completable.fromAction {
-      appointmentDao.markScheduledAppointmentAsVisited(
+      appointmentDao.markOlderAppointmentsAsVisited(
           patientId = patientId,
           updatedStatus = Appointment.Status.VISITED,
           scheduledStatus = Appointment.Status.SCHEDULED,
@@ -57,33 +57,33 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun createReminderForAppointment(appointmentUUID: UUID, reminderDate: LocalDate): Completable {
+  fun createReminder(appointmentUUID: UUID, reminderDate: LocalDate): Completable {
     return Completable.fromAction {
-      appointmentDao.createReminderForAppointment(appointmentUUID, reminderDate)
+      appointmentDao.createReminder(appointmentUUID, reminderDate)
     }
   }
 
-  fun agreedToVisit(appointmentUUID: UUID): Completable {
+  fun markAsAgreedToVisit(appointmentUUID: UUID): Completable {
     return Completable.fromAction {
-      appointmentDao.markAgreedToVisit(
+      appointmentDao.markAsAgreedToVisit(
           appointmentUUID = appointmentUUID,
           reminderDate = LocalDate.now(clock).plusDays(30),
           agreed = true)
     }
   }
 
-  fun markAppointmentAsVisited(appointmentUuid: UUID): Completable {
+  fun markAsVisited(appointmentUuid: UUID): Completable {
     return Completable.fromAction {
-      appointmentDao.markAppointmentAsVisited(
+      appointmentDao.markAsVisited(
           appointmentUuid = appointmentUuid,
           newStatus = Appointment.Status.VISITED,
           newSyncStatus = SyncStatus.PENDING)
     }
   }
 
-  fun cancelAppointmentWithReason(appointmentUuid: UUID, reason: Appointment.CancelReason): Completable {
+  fun cancelWithReason(appointmentUuid: UUID, reason: Appointment.CancelReason): Completable {
     return Completable.fromAction {
-      appointmentDao.cancelAppointmentWithReason(
+      appointmentDao.cancelWithReason(
           appointmentUuid = appointmentUuid,
           cancelReason = reason,
           newStatus = Appointment.Status.CANCELLED,
@@ -130,7 +130,8 @@ class AppointmentRepository @Inject constructor(
 
   override fun mergeWithLocalData(payloads: List<AppointmentPayload>): Completable {
     val newOrUpdatedAppointments = payloads
-        .filter { payload: AppointmentPayload ->
+        .asSequence()
+        .filter { payload ->
           val localCopy = appointmentDao.getOne(payload.uuid)
           localCopy?.syncStatus.canBeOverriddenByServerCopy()
         }

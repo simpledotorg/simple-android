@@ -21,7 +21,7 @@ typealias Ui = OverdueScreen
 typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(
-    private val appointmentRepository: AppointmentRepository
+    private val repository: AppointmentRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
@@ -39,7 +39,7 @@ class OverdueScreenController @Inject constructor(
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
     val dbStream = events
         .ofType<OverdueScreenCreated>()
-        .flatMap { appointmentRepository.overdueAppointments() }
+        .flatMap { repository.overdueAppointments() }
 
     val updateListStream = dbStream
         .map { appointments ->
@@ -118,7 +118,7 @@ class OverdueScreenController @Inject constructor(
   private fun appointmentMarkedAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<AgreedToVisitClicked>()
         .flatMap {
-          appointmentRepository.agreedToVisit(it.appointmentUUID)
+          repository.markAsAgreedToVisit(it.appointmentUUID)
               .toObservable<UiChange>()
         }
   }

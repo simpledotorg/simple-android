@@ -2,7 +2,7 @@ buildscript {
   ext.versions = [
       minSdk              : 21,
       compileSdk          : 27,
-      kotlin              : '1.2.50',
+      kotlin              : '1.2.71',
       supportLib          : '27.1.1',
       supportTest         : '1.0.2',
       timber              : '4.7.0',
@@ -54,7 +54,7 @@ buildscript {
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.4'
+    classpath 'com.android.tools.build:gradle:3.2.0'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentry"
     classpath "com.heapanalytics.android:heap-android-gradle:$versions.heap"

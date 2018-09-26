@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.SyncStatus
@@ -17,6 +18,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 class AppointmentRepository @Inject constructor(
+    private val database: AppDatabase,
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,
@@ -47,47 +49,57 @@ class AppointmentRepository @Inject constructor(
     return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
   }
 
-  private fun markOlderAppointmentsAsVisited(patientId: UUID): Completable {
+  private fun markOlderAppointmentsAsVisited(patientUuid: UUID): Completable {
     return Completable.fromAction {
       appointmentDao.markOlderAppointmentsAsVisited(
-          patientId = patientId,
+          patientUuid = patientUuid,
           updatedStatus = Appointment.Status.VISITED,
           scheduledStatus = Appointment.Status.SCHEDULED,
           newSyncStatus = SyncStatus.PENDING)
     }
   }
 
-  fun createReminder(appointmentUUID: UUID, reminderDate: LocalDate): Completable {
+  fun createReminder(appointmentUuid: UUID, reminderDate: LocalDate): Completable {
     return Completable.fromAction {
-      appointmentDao.createReminder(appointmentUUID, reminderDate)
+      database.runInTransaction {
+        appointmentDao.createReminder(appointmentUuid, reminderDate)
+        appointmentDao.updateSyncStatus(listOf(appointmentUuid), SyncStatus.PENDING)
+      }
     }
   }
 
-  fun markAsAgreedToVisit(appointmentUUID: UUID): Completable {
+  fun markAsAgreedToVisit(appointmentUuid: UUID): Completable {
     return Completable.fromAction {
-      appointmentDao.markAsAgreedToVisit(
-          appointmentUUID = appointmentUUID,
-          reminderDate = LocalDate.now(clock).plusDays(30),
-          agreed = true)
+      database.runInTransaction {
+        appointmentDao.markAsAgreedToVisit(
+            appointmentUUID = appointmentUuid,
+            reminderDate = LocalDate.now(clock).plusDays(30),
+            agreed = true)
+        appointmentDao.updateSyncStatus(listOf(appointmentUuid), SyncStatus.PENDING)
+      }
     }
   }
 
   fun markAsVisited(appointmentUuid: UUID): Completable {
     return Completable.fromAction {
-      appointmentDao.markAsVisited(
-          appointmentUuid = appointmentUuid,
-          newStatus = Appointment.Status.VISITED,
-          newSyncStatus = SyncStatus.PENDING)
+      database.runInTransaction {
+        appointmentDao.markAsVisited(
+            appointmentUuid = appointmentUuid,
+            newStatus = Appointment.Status.VISITED)
+        appointmentDao.updateSyncStatus(listOf(appointmentUuid), SyncStatus.PENDING)
+      }
     }
   }
 
   fun cancelWithReason(appointmentUuid: UUID, reason: Appointment.CancelReason): Completable {
     return Completable.fromAction {
-      appointmentDao.cancelWithReason(
-          appointmentUuid = appointmentUuid,
-          cancelReason = reason,
-          newStatus = Appointment.Status.CANCELLED,
-          newSyncStatus = SyncStatus.PENDING)
+      database.runInTransaction {
+        appointmentDao.cancelWithReason(
+            appointmentUuid = appointmentUuid,
+            cancelReason = reason,
+            newStatus = Appointment.Status.CANCELLED)
+        appointmentDao.updateSyncStatus(listOf(appointmentUuid), SyncStatus.PENDING)
+      }
     }
   }
 

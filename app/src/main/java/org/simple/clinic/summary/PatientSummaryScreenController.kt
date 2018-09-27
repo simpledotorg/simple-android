@@ -194,6 +194,12 @@ class PatientSummaryScreenController @Inject constructor(
         .startWith(PatientSummaryBloodPressureClosed(false))
         .map { it.wasBloodPressureSaved }
 
+    val bloodPressureSaveRestores = events
+        .ofType<PatientSummaryRestoredWithBPSaved>()
+        .map { it.wasBloodPressureSaved }
+
+    val mergedBpSaves = Observable.merge(bloodPressureSaves, bloodPressureSaveRestores)
+
     val backClicks = events
         .ofType<PatientSummaryBackClicked>()
 
@@ -201,12 +207,12 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val doneOrBackClicksWithBpSaved = Observable.merge(doneClicks, backClicks)
-        .withLatestFrom(bloodPressureSaves, patientUuids)
+        .withLatestFrom(mergedBpSaves, patientUuids)
         .filter { (_, saved, _) -> saved }
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
     val backClicksWithBpNotSaved = backClicks
-        .withLatestFrom(bloodPressureSaves, callers)
+        .withLatestFrom(mergedBpSaves, callers)
         .filter { (_, saved, _) -> saved.not() }
         .map { (_, _, caller) ->
           { ui: Ui ->
@@ -218,7 +224,7 @@ class PatientSummaryScreenController @Inject constructor(
         }
 
     val doneClicksWithBpNotSaved = doneClicks
-        .withLatestFrom(bloodPressureSaves)
+        .withLatestFrom(mergedBpSaves)
         .filter { (_, saved) -> saved.not() }
         .map { { ui: Ui -> ui.goBackToHome() } }
 

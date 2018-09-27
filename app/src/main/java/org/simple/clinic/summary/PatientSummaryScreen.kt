@@ -21,6 +21,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
+import kotlinx.android.parcel.Parcelize
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -79,18 +80,24 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val bloodPressureSection = Section()
   private val medicalHistorySection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
+  private val bpWasSavedEvents = PublishSubject.create<UiEvent>()
 
   private var bpEntrySheetAlreadyShownOnStart: Boolean = false
+  private var bloodPressureWasSaved: Boolean = false
 
   override fun onSaveInstanceState(): Parcelable {
     return PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
-        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart)
+        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart,
+        bloodPressureWasSaved = bloodPressureWasSaved)
   }
 
   override fun onRestoreInstanceState(state: Parcelable) {
-    val (superSavedState, bpEntryShownOnStart) = state as PatientSummaryScreenSavedState
+    val (superSavedState, bpEntryShownOnStart, bpWasSaved) = state as PatientSummaryScreenSavedState
     bpEntrySheetAlreadyShownOnStart = bpEntryShownOnStart
+
+    bpWasSavedEvents.onNext(PatientSummaryRestoredWithBPSaved(bpWasSaved))
+
     super.onRestoreInstanceState(superSavedState)
   }
 
@@ -110,6 +117,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             doneClicks(),
             adapterUiEvents,
             bloodPressureSaves(),
+            bpWasSavedEvents,
             appointmentScheduleSheetClosed())
         .observeOn(io())
         .compose(controller)
@@ -145,7 +153,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun bloodPressureSaves() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_BP_SAVED && it.succeeded() }
-      .map { PatientSummaryBloodPressureClosed(BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!)) }
+      .map {BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!)}
+      .doOnNext { saved -> bloodPressureWasSaved = saved }
+      .map { saved -> PatientSummaryBloodPressureClosed(saved) }
 
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
@@ -255,3 +265,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
   }
 }
+
+@Parcelize
+data class PatientSummaryScreenSavedState(
+    val superSavedState: Parcelable,
+    val bpEntryShownOnStart: Boolean,
+    val bloodPressureWasSaved: Boolean
+) : Parcelable

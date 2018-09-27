@@ -189,8 +189,29 @@ class PatientSummaryScreenControllerTest {
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
+      verify(screen, never()).goBackToHome()
     } else {
       verify(screen).goBackToHome()
+      verify(screen, never()).showScheduleAppointmentSheet(any())
+    }
+  }
+
+  @Test
+  @Parameters(method = "bpSavedAndPatientSummaryCallers")
+  fun `when summary screen is restored, and bp was saved earlier, schedule appointment sheet should open, on clicking back or done`(
+      wasBloodPressureSaved: Boolean,
+      patientSummaryCaller: PatientSummaryCaller
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller))
+    uiEvents.onNext(PatientSummaryRestoredWithBPSaved(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    if (wasBloodPressureSaved) {
+      verify(screen).showScheduleAppointmentSheet(patientUuid)
+      verify(screen, never()).goBackToHome()
+    } else {
+      verify(screen).goBackToHome()
+      verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }
 
@@ -227,7 +248,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   @Parameters(method = "medicalHistoryQuestions")
-  fun `when answers for medical history questions are toggled then the updated medical history should be saved`(
+  fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
       question: MedicalHistoryQuestion
   ) {
     val medicalHistory = PatientMocker.medicalHistory(

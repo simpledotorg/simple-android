@@ -18,6 +18,7 @@ import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -40,6 +41,9 @@ class AppointmentRepositoryAndroidTest {
 
   @Inject
   lateinit var faker: Faker
+
+  @Inject
+  lateinit var clock: Clock
 
   @get:Rule
   val authenticationRule = AuthenticationRule()
@@ -277,7 +281,7 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun when_marking_appointment_as_agreed_to_visit_reminder_for_30_days_should_be_set() {
     val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now()
+    val appointmentDate = LocalDate.now(clock)
     repository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -293,7 +297,7 @@ class AppointmentRepositoryAndroidTest {
     assertThat(updatedList).hasSize(1)
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
-      assertThat(this.remindOn).isEqualTo(LocalDate.now().plusDays(30))
+      assertThat(this.remindOn).isEqualTo(LocalDate.now(clock).plusDays(30))
       assertThat(this.agreedToVisit).isTrue()
     }
   }

@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -53,10 +54,13 @@ class NewMedicalHistoryScreenController @Inject constructor(
   private fun enableSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<NewMedicalHistoryAnswerToggled>()
-        .scan(0) { selectedAnswersCount, toggleEvent ->
-          if (toggleEvent.selected) selectedAnswersCount + 1 else selectedAnswersCount - 1
+        .scan(setOf<MedicalHistoryQuestion>()) { selections, toggleEvent ->
+          when {
+            toggleEvent.selected -> selections + toggleEvent.question
+            else -> selections - toggleEvent.question
+          }
         }
-        .map { selectedAnswersCount -> selectedAnswersCount > 0 }
+        .map { it.isNotEmpty() }
         .distinctUntilChanged()
         .map { hasAnswers -> { ui: Ui -> ui.setSaveButtonEnabled(hasAnswers) } }
   }

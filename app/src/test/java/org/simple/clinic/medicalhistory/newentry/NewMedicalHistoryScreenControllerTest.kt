@@ -120,6 +120,9 @@ class NewMedicalHistoryScreenControllerTest {
   fun `save button should remain enabled only when atleast one answer is selected`() {
     val answers = MedicalHistoryQuestion.values()
     answers.forEach {
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
+    }
+    answers.forEach {
       uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = true))
       uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
     }

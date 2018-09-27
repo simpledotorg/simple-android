@@ -9,10 +9,11 @@
     android:id="@+id/onboarding_logo_container"
     style="@style/Clinic.LoginLogoContainer">
 
-    <TextView
+    <ImageView
       android:id="@+id/onboarding_logo"
-      style="@style/Clinic.V2.LoginLogo.Large"
-      android:text="@string/app_name" />
+      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_gravity="center_horizontal"
+      tools:ignore="ContentDescription" />
   </FrameLayout>
 
   <View

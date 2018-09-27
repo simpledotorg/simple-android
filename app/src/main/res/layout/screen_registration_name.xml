@@ -14,11 +14,13 @@
     <ImageButton
       android:id="@+id/registrationname_back"
       style="@style/Clinic.LoginBackButton"
-      android:src="@drawable/ic_arrow_back_24dp" />
+      android:src="@drawable/ic_arrow_back_24dp"
+      tools:ignore="ContentDescription" />
 
-    <TextView
-      style="@style/Clinic.V2.LoginLogo.Large"
-      android:text="@string/app_name" />
+    <ImageView
+      style="@style/Clinic.V2.LogoWithType.Large"
+      android:layout_gravity="center_horizontal"
+      tools:ignore="ContentDescription" />
   </FrameLayout>
 
   <View

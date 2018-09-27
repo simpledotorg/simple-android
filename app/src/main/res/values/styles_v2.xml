@@ -168,6 +168,16 @@
     <item name="android:background">@color/blue1</item>
   </style>
 
+  <style name="Clinic.V2.Button.WithIcon" />
+
+  <style name="Clinic.V2.Button.WithIcon.Blue2">
+    <item name="android:background">#e0f0ff</item>
+    <item name="android:textColor">?colorAccent</item>
+    <item name="android:paddingTop">0dp</item>
+    <item name="android:paddingBottom">0dp</item>
+    <item name="android:drawablePadding">8dp</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Button1" parent="TextAppearance.AppCompat.Widget.Button">
     <item name="android:textAllCaps">true</item>
     <item name="android:fontFamily">sans-serif-medium</item>

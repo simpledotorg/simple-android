@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -8,34 +7,12 @@
   android:background="@color/white"
   tools:ignore="MissingPrefix">
 
-  <RelativeLayout
+  <org.simple.clinic.widgets.OmegaCenterIconButton
+    android:id="@+id/patientsummary_item_newbp"
+    style="@style/Clinic.V2.Button.WithIcon.Blue2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingEnd="@dimen/spacing_24"
-    android:paddingStart="@dimen/spacing_24"
-    android:paddingTop="@dimen/spacing_24">
-
-    <Button
-      android:id="@+id/patientsummary_item_newbp"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_24"
-      app:backgroundTint="?colorAccent" />
-
-    <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignBottom="@+id/patientsummary_item_newbp"
-      android:layout_alignTop="@+id/patientsummary_item_newbp"
-      android:layout_centerHorizontal="true"
-      android:layout_gravity="center_horizontal"
-      android:drawablePadding="@dimen/spacing_8"
-      android:drawableStart="@drawable/ic_new_bp_17dp"
-      android:elevation="8dp"
-      android:gravity="center_vertical"
-      android:text="@string/patientsummary_bp_add_new"
-      android:textAppearance="@style/Base.TextAppearance.AppCompat.Button"
-      android:textColor="@color/white"
-      tools:ignore="UnusedAttribute" />
-  </RelativeLayout>
+    android:layout_margin="@dimen/spacing_24"
+    android:drawableStart="@drawable/ic_new_bp"
+    android:text="@string/patientsummary_bp_add_new" />
 </android.support.v7.widget.CardView>

@@ -9,11 +9,11 @@
 
   <android.support.v7.widget.Toolbar
     android:id="@+id/home_toolbar"
+    style="Clinic.V2.ToolbarStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="Clinic.V2.ToolbarStyle"
     android:elevation="0dp"
-    app:title="@string/app_name"
+    app:logo="@drawable/logo_regular"
     tools:targetApi="lollipop" />
 
   <android.support.v4.view.ViewPager
@@ -28,10 +28,10 @@
       android:layout_height="wrap_content"
       android:background="?colorPrimary"
       android:elevation="@dimen/elevation_toolbar"
-      app:tabIndicatorHeight="3dp"
-      app:tabIndicatorColor="@color/white"
-      app:tabSelectedTextColor="@color/white"
-      app:tabTextColor="@color/white_opacity_60"
+      app:tabIndicatorColor="@color/green2"
+      app:tabIndicatorHeight="4dp"
+      app:tabSelectedTextColor="@color/white100"
+      app:tabTextColor="@color/white48"
       tools:ignore="UnusedAttribute" />
 
   </android.support.v4.view.ViewPager>

@@ -4,8 +4,8 @@ import android.content.Context
 import android.support.v4.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -31,7 +31,7 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
   @Inject
   lateinit var controller: OnboardingScreenController
 
-  private val appLogoTextView by bindView<TextView>(R.id.onboarding_logo)
+  private val appLogoImageView by bindView<ImageView>(R.id.onboarding_logo)
   private val scrollView by bindView<NestedScrollView>(R.id.onboarding_scrolling_container)
   private val getStartedButton by bindView<Button>(R.id.onboarding_get_started)
 
@@ -56,9 +56,9 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
   private fun fadeLogoWithContentScroll() {
     scrollView.setOnScrollChangeListener { _: NestedScrollView, _: Int, scrollY: Int, _: Int, _: Int ->
-      val distanceBetweenLogoAndScrollTop = appLogoTextView.top - scrollY.toFloat()
-      val opacity = (distanceBetweenLogoAndScrollTop / appLogoTextView.top).clamp(0F, 1F)
-      appLogoTextView.alpha = opacity
+      val distanceBetweenLogoAndScrollTop = appLogoImageView.top - scrollY.toFloat()
+      val opacity = (distanceBetweenLogoAndScrollTop / appLogoImageView.top).clamp(0F, 1F)
+      appLogoImageView.alpha = opacity
     }
   }
 

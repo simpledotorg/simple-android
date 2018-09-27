@@ -17,12 +17,12 @@
       android:src="@drawable/ic_arrow_back_24dp"
       tools:ignore="ContentDescription" />
 
-    <TextView
+    <ImageView
       android:id="@+id/registrationconfirmpin_applogo"
-      style="@style/Clinic.V2.LoginLogo.Compact"
+      style="@style/Clinic.V2.LogoWithType.Large"
       android:layout_alignTop="@+id/registrationconfirmpin_back"
       android:layout_centerHorizontal="true"
-      android:text="@string/app_name" />
+      tools:ignore="ContentDescription" />
 
     <TextView
       android:id="@+id/registrationconfirmpin_user_fullname"
@@ -59,9 +59,9 @@
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/registrationconfirmpin_pin"
         style="@style/Clinic.StaggeredEditText.Pin"
-        android:maxLength="4"
         android:layout_marginTop="@dimen/spacing_8"
-        android:imeOptions="actionDone">
+        android:imeOptions="actionDone"
+        android:maxLength="4">
 
         <requestFocus />
       </org.simple.clinic.widgets.StaggeredEditText>

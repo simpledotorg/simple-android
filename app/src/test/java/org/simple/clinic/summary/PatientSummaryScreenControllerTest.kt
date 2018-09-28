@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -144,7 +145,9 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
-    verify(screen).showBloodPressureEntrySheet(patientUuid)
+    verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
+    verify(screen, never()).showBloodPressureEntrySheetIfNotShownAlready(any())
+
   }
 
   @Test
@@ -152,7 +155,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
-    verify(screen).showBloodPressureEntrySheetIfNotShownAlready(any())
+    verify(screen, times(1)).showBloodPressureEntrySheetIfNotShownAlready(any())
     verify(screen, never()).showBloodPressureEntrySheet(any())
   }
 

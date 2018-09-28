@@ -63,6 +63,7 @@ class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, Ov
 
 data class OverdueListItem(
     val appointmentUuid: UUID,
+    val patientUuid: UUID,
     val name: String,
     val gender: Gender,
     val age: Int,
@@ -75,7 +76,7 @@ data class OverdueListItem(
 
 class OverdueListViewHolder(
     itemView: View,
-    eventStream: PublishSubject<UiEvent>
+    private val eventStream: PublishSubject<UiEvent>
 ) : RecyclerView.ViewHolder(itemView) {
 
   private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
@@ -107,7 +108,13 @@ class OverdueListViewHolder(
 
   fun toggleBottomLayoutVisibility() {
     val isVisible = actionsContainer.visibility == View.VISIBLE
-    actionsContainer.visibility = if (isVisible) View.GONE else View.VISIBLE
+    actionsContainer.visibility =
+        if (isVisible) {
+          View.GONE
+        } else {
+          eventStream.onNext(AppointmentExpanded(appointment.patientUuid))
+          View.VISIBLE
+        }
   }
 
   fun togglePhoneNumberViewVisibility() {

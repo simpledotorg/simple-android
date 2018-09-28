@@ -20,9 +20,10 @@ data class AgreedToVisitClicked(val appointmentUUID: UUID) : UiEvent {
 
 data class RemindToCallLaterClicked(val appointmentUUID: UUID) : UiEvent {
   override val analyticsName = "Overdue Screen:Remind To Call Later clicked"
-
 }
 
 data class RemoveFromListClicked(val appointmentUUID: UUID) : UiEvent {
   override val analyticsName = "Overdue Screen:Remove From List clicked"
 }
+
+data class AppointmentExpanded(val patientUuid: UUID): UiEvent

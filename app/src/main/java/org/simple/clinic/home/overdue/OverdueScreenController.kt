@@ -5,6 +5,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.util.RuntimePermissionResult
@@ -33,7 +34,14 @@ class OverdueScreenController @Inject constructor(
         patientCalls(replayedEvents),
         appointmentMarkedAgreedToVisit(replayedEvents),
         appointmentReminderSheetOpens(replayedEvents),
-        removeAppointmentSheetOpens(replayedEvents))
+        removeAppointmentSheetOpens(replayedEvents),
+        reportViewedPatientEvent(replayedEvents))
+  }
+
+  private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<AppointmentExpanded>()
+        .doOnNext { (patientUuid) -> Analytics.reportViewedPatient(patientUuid, OverdueScreenKey().analyticsName) }
+        .flatMap { Observable.empty<UiChange>() }
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
@@ -46,6 +54,7 @@ class OverdueScreenController @Inject constructor(
           appointments.map {
             OverdueListItem(
                 appointmentUuid = it.appointment.uuid,
+                patientUuid = it.appointment.patientUuid,
                 name = it.fullName,
                 gender = it.gender,
                 age = getAge(it.dateOfBirth, it.age),

@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -13,6 +14,8 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RuntimePermissionResult
@@ -25,6 +28,7 @@ class OverdueScreenControllerTest {
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
+  private val reporter = MockReporter()
 
   lateinit var controller: OverdueScreenController
 
@@ -33,6 +37,8 @@ class OverdueScreenControllerTest {
     controller = OverdueScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+
+    Analytics.addReporter(reporter)
   }
 
   @Test
@@ -101,6 +107,18 @@ class OverdueScreenControllerTest {
     uiEvents.onNext(AgreedToVisitClicked(appointmentUuid))
 
     verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when the screen is opened, the viewed patient analytics event must be sent`() {
+    val patientUuid = UUID.randomUUID()
+    uiEvents.onNext(AppointmentExpanded(patientUuid))
+
+    val expectedEvent = MockReporter.Event("ViewedPatient", mapOf(
+        "patientId" to patientUuid.toString(),
+        "from" to "Overdue"
+    ))
+    assertThat(reporter.receivedEvents).contains(expectedEvent)
   }
 
   fun `params for permission-result dialer-method`(): Array<Array<Any>> {

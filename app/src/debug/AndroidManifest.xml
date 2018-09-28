@@ -4,7 +4,7 @@
   package="org.simple.clinic">
 
   <application
-    android:icon="@mipmap/ic_launcher_debug"
+    android:icon="@mipmap/ic_launcher"
     android:name=".DebugClinicApp"
     tools:replace="android:name,android:icon">
 

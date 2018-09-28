@@ -95,6 +95,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   override fun onRestoreInstanceState(state: Parcelable) {
     val (superSavedState, bpEntryShownOnStart, bpWasSaved) = state as PatientSummaryScreenSavedState
     bpEntrySheetAlreadyShownOnStart = bpEntryShownOnStart
+    bloodPressureWasSaved = bpWasSaved
 
     bpWasSavedEvents.onNext(PatientSummaryRestoredWithBPSaved(bpWasSaved))
 

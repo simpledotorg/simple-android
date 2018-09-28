@@ -111,6 +111,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     setupSummaryList()
 
+    controller.disposeOnDetach(this)
+
     Observable
         .mergeArray(
             screenCreates(),

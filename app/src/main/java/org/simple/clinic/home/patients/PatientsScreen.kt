@@ -80,7 +80,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun activityStarts() = activityLifecycle.ofType<TheActivityLifecycle.Resumed>()
 
-  private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked() }
+  private fun searchButtonClicks() = RxView.clicks(searchButton).map { NewPatientClicked }
 
   private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
 

@@ -56,7 +56,7 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events.ofType(NewPatientClicked::class.java)
+    return events.ofType<NewPatientClicked>()
         .map { { ui: PatientsScreen -> ui.openNewPatientScreen() } }
   }
 

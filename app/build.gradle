@@ -46,7 +46,6 @@ android {
       minifyEnabled false
       useProguard false
       shrinkResources false
-      buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
     release {
@@ -61,7 +60,6 @@ android {
         shrinkResources false
         useProguard false
       }
-      buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
   }
 
@@ -74,6 +72,7 @@ android {
       versionNameSuffix "-qa"
       buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + qaHeapId + "\""
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
     staging {
@@ -82,12 +81,14 @@ android {
       versionNameSuffix "-staging"
       buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + stagingHeapId + "\""
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
     production {
       dimension 'track'
       buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + productionHeapId + "\""
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
   }
 

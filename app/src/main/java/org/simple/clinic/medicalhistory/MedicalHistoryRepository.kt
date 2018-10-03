@@ -20,9 +20,9 @@ class MedicalHistoryRepository @Inject constructor(
 
   fun historyForPatient(patientUuid: PatientUuid): Observable<MedicalHistory> {
     return dao.historyForPatient(patientUuid)
-        .map { patients ->
+        .map { histories ->
           when {
-            patients.isNotEmpty() -> patients.first()
+            histories.isNotEmpty() -> histories.first()
             else -> throw AssertionError("Medical History isn't present for $patientUuid")
           }
         }
@@ -36,6 +36,7 @@ class MedicalHistoryRepository @Inject constructor(
         hasHadHeartAttack = historyEntry.hasHadHeartAttack,
         hasHadStroke = historyEntry.hasHadStroke,
         hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
+        diagnosedWithHypertension = historyEntry.diagnosedWithHypertension,
         isOnTreatmentForHypertension = historyEntry.isOnTreatmentForHypertension,
         hasDiabetes = historyEntry.hasDiabetes,
         syncStatus = SyncStatus.PENDING,
@@ -98,6 +99,7 @@ class MedicalHistoryRepository @Inject constructor(
           hasHadHeartAttack = hasHadHeartAttack,
           hasHadStroke = hasHadStroke,
           hasHadKidneyDisease = hasHadKidneyDisease,
+          diagnosedWithHypertension = diagnosedWithHypertension,
           isOnTreatmentForHypertension = isOnTreatmentForHypertension,
           hasDiabetes = hasDiabetes,
           syncStatus = syncStatus,

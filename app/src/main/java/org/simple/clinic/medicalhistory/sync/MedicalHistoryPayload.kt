@@ -23,6 +23,12 @@ data class MedicalHistoryPayload(
     @Json(name = "chronic_kidney_disease")
     val hasHadKidneyDisease: Boolean,
 
+    // TODO: the API hasn't been updated to include this field.
+    // Remove this default value once that happens.
+    // https://www.pivotaltracker.com/n/projects/2184102/stories/160867969
+    @Json(name = "diagnosed_with_hypertension")
+    val diagnosedWithHypertension: Boolean = false,
+
     @Json(name = "receiving_treatment_for_hypertension")
     val isOnTreatmentForHypertension: Boolean,
 

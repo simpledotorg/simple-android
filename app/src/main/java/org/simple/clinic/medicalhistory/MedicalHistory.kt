@@ -21,6 +21,7 @@ data class MedicalHistory(
     val hasHadHeartAttack: Boolean,
     val hasHadStroke: Boolean,
     val hasHadKidneyDisease: Boolean,
+    val diagnosedWithHypertension: Boolean,
     val isOnTreatmentForHypertension: Boolean,
     val hasDiabetes: Boolean,
     val syncStatus: SyncStatus,

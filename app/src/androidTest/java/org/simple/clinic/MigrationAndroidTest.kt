@@ -15,6 +15,7 @@ import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_12_13
 import org.simple.clinic.storage.Migration_13_14
 import org.simple.clinic.storage.Migration_14_15
+import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -322,4 +323,23 @@ class MigrationAndroidTest {
       assertThat(it.getString(it.getColumnIndex("diagnosedWithHypertension"))).isEqualTo("0")
     }
   }
+
+  @Test
+  fun migration_15_to_16() {
+    val db_v15 = helper.createDatabase(TEST_DB_NAME, 15)
+
+    // We need to do this here because Room does not create virtual tables for us.
+    db_v15.execSQL("""CREATE VIRTUAL TABLE "PatientFuzzySearch" USING spellfix1""")
+
+    db_v15.query("""SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='PatientFuzzySearch'""").use {
+      assertThat(it.count).isEqualTo(1)
+    }
+
+    val db_v16 = helper.runMigrationsAndValidate(TEST_DB_NAME, 16, true, Migration_15_16())
+
+    db_v16.query("""SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='PatientFuzzySearch'""").use {
+      assertThat(it.count).isEqualTo(0)
+    }
+  }
 }
+

@@ -157,15 +157,9 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun savePatient(patient: Patient): Completable {
-    return Completable.fromAction { database.patientDao().save(patient) }
-        .andThen(database.fuzzyPatientSearchDao().updateTableForPatients(listOf(patient.uuid)))
-  }
+  private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
 
-  private fun savePatients(patients: List<Patient>): Completable {
-    return Completable.fromAction { database.patientDao().save(patients) }
-        .andThen(database.fuzzyPatientSearchDao().updateTableForPatients(patients.map { it.uuid }))
-  }
+  private fun savePatients(patients: List<Patient>): Completable = Completable.fromAction { database.patientDao().save(patients) }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
     return database.patientDao()
@@ -354,7 +348,6 @@ class PatientRepository @Inject constructor(
         database.patientDao().clear()
         database.phoneNumberDao().clear()
         database.addressDao().clear()
-        database.fuzzyPatientSearchDao().clearAll()
         database.bloodPressureDao().clearData()
         database.prescriptionDao().clearData()
         database.appointmentDao().clear()

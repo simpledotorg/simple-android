@@ -4,7 +4,6 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -84,10 +83,10 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = patientRepository.search("lakshman").blockingFirst()
+    val search1 = patientRepository.search("lakshman", includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = patientRepository.search("ashok").blockingFirst()
+    val search2 = patientRepository.search("ashok", includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(1)
     assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
@@ -116,19 +115,6 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_saving_an_ongoing_patient_entry_to_the_database_it_should_also_update_the_fuzzy_search_table() {
-    val patientEntry = testData.ongoingPatientEntry(fullName = "Riya Puri")
-
-    patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .blockingGet()
-
-    val savedEntries = database.fuzzyPatientSearchDao().savedEntries().blockingGet()
-    assertThat(savedEntries.size).isEqualTo(1)
-    assertThat(savedEntries.first().word).isEqualTo("RiyaPuri")
-  }
-
-  @Test
   fun when_a_patient_without_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Jeevan Bima", phone = null)
 
@@ -152,10 +138,10 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search1 = patientRepository.search("lakshman").blockingFirst()
+    val search1 = patientRepository.search("lakshman", includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search1).isEmpty()
 
-    val search2 = patientRepository.search("ashok").blockingFirst()
+    val search2 = patientRepository.search("ashok", includeFuzzyNameSearch = false).blockingFirst()
     val patient = search2[0]
     assertThat(patient.fullName).isEqualTo(patientEntry.personalDetails!!.fullName)
     assertThat(patient.dateOfBirth).isNull()
@@ -186,7 +172,7 @@ class PatientRepositoryAndroidTest {
           .blockingGet()
 
       val (query, shouldFindInDb) = searches[index]
-      val search = patientRepository.search(query).blockingFirst()
+      val search = patientRepository.search(query, includeFuzzyNameSearch = false).blockingFirst()
 
       if (shouldFindInDb) {
         assertThat(search).hasSize(1)
@@ -328,16 +314,6 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_merging_patient_data_locally_it_should_also_add_them_to_the_fuzzy_search_table() {
-    val patientPayloads = listOf(testData.patientPayload(fullName = "Abhaya Kumari"))
-
-    patientRepository.mergeWithLocalData(patientPayloads).blockingAwait()
-    val searchResult = database.fuzzyPatientSearchDao().getEntriesForPatientIds(patientPayloads.map { it.uuid }).blockingGet()
-    assertThat(searchResult.size).isEqualTo(1)
-    assertThat(searchResult[0].word).isEqualTo("AbhayaKumari")
-  }
-
-  @Test
   fun when_the_patient_data_is_cleared_all_patient_data_must_be_cleared() {
     val facilityPayloads = listOf(testData.facilityPayload())
     val facilityUuid = facilityPayloads.first().uuid
@@ -375,7 +351,6 @@ class PatientRepositoryAndroidTest {
     assertThat(database.patientDao().patientCount().blockingFirst()).isGreaterThan(0)
     assertThat(database.addressDao().count()).isGreaterThan(0)
     assertThat(database.phoneNumberDao().count()).isGreaterThan(0)
-    assertThat(database.fuzzyPatientSearchDao().count()).isGreaterThan(0)
     assertThat(database.bloodPressureDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.prescriptionDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
@@ -390,7 +365,6 @@ class PatientRepositoryAndroidTest {
     assertThat(database.patientDao().patientCount().blockingFirst()).isEqualTo(0)
     assertThat(database.addressDao().count()).isEqualTo(0)
     assertThat(database.phoneNumberDao().count()).isEqualTo(0)
-    assertThat(database.fuzzyPatientSearchDao().count()).isEqualTo(0)
     assertThat(database.bloodPressureDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.prescriptionDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
@@ -455,10 +429,5 @@ class PatientRepositoryAndroidTest {
 
     val resultsWithAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false, assumedAge = 20).blockingFirst()
     runAssertions(resultsWithAgeFilter)
-  }
-
-  @After
-  fun tearDown() {
-    PatientFuzzySearch.clearTable(database.openHelper.writableDatabase)
   }
 }

@@ -70,11 +70,11 @@ class NewMedicalHistoryScreenController @Inject constructor(
     val updateEntry = { entry: OngoingMedicalHistoryEntry, toggleEvent: NewMedicalHistoryAnswerToggled ->
       toggleEvent.run {
         when (question) {
+          DIAGNOSED_WITH_HYPERTENSION -> entry.copy(diagnosedWithHypertension = selected)
+          IS_ON_TREATMENT_FOR_HYPERTENSION -> entry.copy(isOnTreatmentForHypertension = selected)
           HAS_HAD_A_HEART_ATTACK -> entry.copy(hasHadHeartAttack = selected)
           HAS_HAD_A_STROKE -> entry.copy(hasHadStroke = selected)
           HAS_HAD_A_KIDNEY_DISEASE -> entry.copy(hasHadKidneyDisease = selected)
-          DIAGNOSED_WITH_HYPERTENSION -> entry.copy(diagnosedWithHypertension = selected)
-          IS_ON_TREATMENT_FOR_HYPERTENSION -> entry.copy(isOnTreatmentForHypertension = selected)
           HAS_DIABETES -> entry.copy(hasDiabetes = selected)
           NONE -> entry
         }

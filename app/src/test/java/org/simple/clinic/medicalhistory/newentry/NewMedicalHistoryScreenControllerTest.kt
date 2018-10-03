@@ -21,6 +21,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_F
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
+import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.ScreenCreated
@@ -41,8 +44,24 @@ class NewMedicalHistoryScreenControllerTest {
     controller = NewMedicalHistoryScreenController(medicalHistoryRepository, patientRepository)
 
     whenever(medicalHistoryRepository.save(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+  }
+
+  @Test
+  fun `when screen is started then the patient's name should be shown on the toolbar`() {
+    val patientName = "Ashok Kumar"
+    val patientEntry = OngoingPatientEntry(personalDetails = PersonalDetails(
+        fullName = patientName,
+        dateOfBirth = null,
+        age = "20",
+        gender = Gender.TRANSGENDER))
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).setPatientName(patientName)
   }
 
   @Test

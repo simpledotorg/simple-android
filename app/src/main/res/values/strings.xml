@@ -245,7 +245,6 @@
   <string name="reports_you_will_be_able_to_see">You will be able to see hypertension reports for your clinic here.</string>
 
   <!-- Medical History -->
-  <string name="newmedicalhistory_screen_title">Cardiovascular history</string>
   <!--suppress UnusedResources used in enum -->
   <string name="medicalhistory_question_heartattack">Heart attack in last 3 years</string>
   <!--suppress UnusedResources -->

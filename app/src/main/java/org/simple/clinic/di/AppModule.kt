@@ -1,10 +1,8 @@
 package org.simple.clinic.di
 
 import android.app.Application
-import android.arch.persistence.db.SupportSQLiteDatabase
 import android.arch.persistence.db.SupportSQLiteOpenHelper
 import android.arch.persistence.room.Room
-import android.arch.persistence.room.RoomDatabase
 import android.content.Context
 import android.os.Vibrator
 import androidx.work.WorkManager
@@ -14,7 +12,6 @@ import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.LoginModule
-import org.simple.clinic.patient.PatientFuzzySearch
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.storage.Migration_10_11
@@ -22,6 +19,7 @@ import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_12_13
 import org.simple.clinic.storage.Migration_13_14
 import org.simple.clinic.storage.Migration_14_15
+import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_3_4
 import org.simple.clinic.storage.Migration_4_5
 import org.simple.clinic.storage.Migration_5_6
@@ -63,13 +61,6 @@ open class AppModule(
             allowMainThreadQueries()
           }
         }
-        .addCallback(object : RoomDatabase.Callback() {
-          // We need to create it here on a fresh install because we can't
-          // define an Entity for a virtual table and Room will never create it.
-          override fun onCreate(db: SupportSQLiteDatabase) {
-            PatientFuzzySearch.createTable(db)
-          }
-        })
         .addMigrations(
             Migration_3_4(),
             Migration_4_5(),
@@ -82,7 +73,8 @@ open class AppModule(
             Migration_11_12(),
             Migration_12_13(),
             Migration_13_14(),
-            Migration_14_15())
+            Migration_14_15(),
+            Migration_15_16())
         .build()
   }
 

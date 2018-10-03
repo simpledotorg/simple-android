@@ -18,11 +18,11 @@ data class MedicalHistory(
     @PrimaryKey
     val uuid: UUID,
     val patientUuid: UUID,
+    val diagnosedWithHypertension: Boolean,
+    val isOnTreatmentForHypertension: Boolean,
     val hasHadHeartAttack: Boolean,
     val hasHadStroke: Boolean,
     val hasHadKidneyDisease: Boolean,
-    val diagnosedWithHypertension: Boolean,
-    val isOnTreatmentForHypertension: Boolean,
     val hasDiabetes: Boolean,
     val syncStatus: SyncStatus,
     val createdAt: Instant,

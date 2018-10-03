@@ -14,15 +14,6 @@ data class MedicalHistoryPayload(
     @Json(name = "patient_id")
     val patientUuid: UUID,
 
-    @Json(name = "prior_heart_attack")
-    val hasHadHeartAttack: Boolean,
-
-    @Json(name = "prior_stroke")
-    val hasHadStroke: Boolean,
-
-    @Json(name = "chronic_kidney_disease")
-    val hasHadKidneyDisease: Boolean,
-
     // TODO: the API hasn't been updated to include this field.
     // Remove this default value once that happens.
     // https://www.pivotaltracker.com/n/projects/2184102/stories/160867969
@@ -31,6 +22,15 @@ data class MedicalHistoryPayload(
 
     @Json(name = "receiving_treatment_for_hypertension")
     val isOnTreatmentForHypertension: Boolean,
+
+    @Json(name = "prior_heart_attack")
+    val hasHadHeartAttack: Boolean,
+
+    @Json(name = "prior_stroke")
+    val hasHadStroke: Boolean,
+
+    @Json(name = "chronic_kidney_disease")
+    val hasHadKidneyDisease: Boolean,
 
     @Json(name = "diabetes")
     val hasDiabetes: Boolean,

@@ -26,6 +26,7 @@
       android:id="@+id/patientsummary_medicalhistory_last_update_timestamp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_24"
       android:layout_marginStart="@dimen/spacing_24"
       android:layout_marginTop="@dimen/spacing_4"
@@ -33,9 +34,16 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      android:id="@+id/patientsummary_medicalhistory_question_diagnosed_for_hypertension"
+      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
+
+    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      android:id="@+id/patientsummary_medicalhistory_question_treatment_for_hypertension"
+      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
+
+    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
       android:id="@+id/patientsummary_medicalhistory_question_heartattack"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion"
-      android:layout_marginTop="@dimen/spacing_8" />
+      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
       android:id="@+id/patientsummary_medicalhistory_question_stroke"
@@ -43,14 +51,6 @@
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
       android:id="@+id/patientsummary_medicalhistory_question_kidney"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_diagnosed_for_hypertension"
-      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
-
-    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_treatment_for_hypertension"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView

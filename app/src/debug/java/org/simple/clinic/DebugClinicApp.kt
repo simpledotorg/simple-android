@@ -48,7 +48,6 @@ class DebugClinicApp : ClinicApp() {
     keepUserIdUpdatedInAnalytics()
 
     Timber.plant(Timber.DebugTree())
-    Traceur.enableLogging()
     Stetho.initializeWithDefaults(this)
     syncScheduler.schedule().subscribe()
     showDebugNotification()

@@ -14,6 +14,7 @@ import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_12_13
 import org.simple.clinic.storage.Migration_13_14
+import org.simple.clinic.storage.Migration_14_15
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -287,6 +288,38 @@ class MigrationAndroidTest {
       assertThat(it.getInt(it.getColumnIndex("hasHadKidneyDisease"))).isEqualTo(falseAsInt)
       assertThat(it.getInt(it.getColumnIndex("isOnTreatmentForHypertension"))).isEqualTo(falseAsInt)
       assertThat(it.getInt(it.getColumnIndex("hasDiabetes"))).isEqualTo(falseAsInt)
+    }
+  }
+
+  @Test
+  fun migration_14_to_15() {
+    val db_14 = helper.createDatabase(TEST_DB_NAME, 14)
+
+    db_14.query("SELECT * FROM `MedicalHistory`").use {
+      assertThat(it.columnCount).isEqualTo(10)
+    }
+
+    db_14.execSQL("""
+      INSERT OR REPLACE INTO `MedicalHistory` VALUES(
+        '464bcda8-b26a-484d-bb70-49b3675f4a38',
+        'ee367a66-f47e-42d8-965b-7a2b5c54f4bd',
+        0,
+        1,
+        0,
+        1,
+        0,
+        'IN_FLIGHT',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_v15 = helper.runMigrationsAndValidate(TEST_DB_NAME, 15, true, Migration_14_15())
+    db_v15.query("SELECT * FROM `MedicalHistory`").use {
+      assertThat(it.columnCount).isEqualTo(11)
+
+      it.moveToFirst()
+      assertThat(it.getString(it.getColumnIndex("uuid"))).isEqualTo("464bcda8-b26a-484d-bb70-49b3675f4a38")
+      assertThat(it.getString(it.getColumnIndex("diagnosedWithHypertension"))).isEqualTo("0")
     }
   }
 }

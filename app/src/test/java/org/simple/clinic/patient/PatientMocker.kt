@@ -236,6 +236,7 @@ object PatientMocker {
       hasHadHeartAttack: Boolean = true,
       hasHadStroke: Boolean = false,
       hasHadKidneyDisease: Boolean = true,
+      diagnosedWithHypertension: Boolean = false,
       isOnTreatmentForHypertension: Boolean = false,
       hasDiabetes: Boolean = true,
       updatedAt: Instant = Instant.now()
@@ -246,6 +247,7 @@ object PatientMocker {
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
+        diagnosedWithHypertension = diagnosedWithHypertension,
         isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasDiabetes = hasDiabetes,
         syncStatus = SyncStatus.PENDING,

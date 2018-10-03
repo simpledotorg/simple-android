@@ -74,6 +74,20 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
+  fun `when screen is created with an already present address, the already present address must be used for prefilling`() {
+    val address = OngoingPatientEntry.Address(
+        colonyOrVillage = "colony 1",
+        district = "district 2",
+        state = "state 3"
+    )
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(address = address)))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).preFillFields(OngoingPatientEntry(address = address))
+  }
+
+  @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)

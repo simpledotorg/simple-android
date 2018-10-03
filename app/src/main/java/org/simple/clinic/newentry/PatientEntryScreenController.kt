@@ -107,10 +107,11 @@ class PatientEntryScreenController @Inject constructor(
               facilityRepository.currentFacility(userSession).firstOrError())
         }
         .map { (entry, facility) ->
-          entry.copy(address = OngoingPatientEntry.Address(
-              colonyOrVillage = null,
-              district = facility.district,
-              state = facility.state))
+          entry.takeIf { it.address != null }
+              ?: entry.copy(address = OngoingPatientEntry.Address(
+                  colonyOrVillage = null,
+                  district = facility.district,
+                  state = facility.state))
         }
         .map { { ui: Ui -> ui.preFillFields(it) } }
   }

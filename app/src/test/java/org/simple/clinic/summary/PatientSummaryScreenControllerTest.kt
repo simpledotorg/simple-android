@@ -23,6 +23,7 @@ import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -250,15 +251,16 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "medicalHistoryQuestions")
+  @Parameters(method = "medicalHistoryQuestionsWithoutNone")
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
       question: MedicalHistoryQuestion
   ) {
     val medicalHistory = PatientMocker.medicalHistory(
+        diagnosedWithHypertension = false,
+        isOnTreatmentForHypertension = false,
         hasHadHeartAttack = false,
         hasHadStroke = false,
         hasHadKidneyDisease = false,
-        isOnTreatmentForHypertension = false,
         hasDiabetes = false,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(medicalHistory))
@@ -268,22 +270,17 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, selected = true))
 
     val updatedMedicalHistory = medicalHistory.copy(
+        diagnosedWithHypertension = question == DIAGNOSED_WITH_HYPERTENSION,
+        isOnTreatmentForHypertension = question == IS_ON_TREATMENT_FOR_HYPERTENSION,
         hasHadHeartAttack = question == HAS_HAD_A_HEART_ATTACK,
         hasHadStroke = question == HAS_HAD_A_STROKE,
         hasHadKidneyDisease = question == HAS_HAD_A_KIDNEY_DISEASE,
-        isOnTreatmentForHypertension = question == IS_ON_TREATMENT_FOR_HYPERTENSION,
         hasDiabetes = question == HAS_DIABETES)
     verify(medicalHistoryRepository).update(updatedMedicalHistory)
   }
 
   @Suppress("unused")
-  fun medicalHistoryQuestions() = arrayOf(
-      HAS_HAD_A_HEART_ATTACK,
-      HAS_HAD_A_STROKE,
-      HAS_HAD_A_KIDNEY_DISEASE,
-      IS_ON_TREATMENT_FOR_HYPERTENSION,
-      HAS_DIABETES
-  )
+  fun medicalHistoryQuestionsWithoutNone() = MedicalHistoryQuestion.values().filter { it != MedicalHistoryQuestion.NONE }
 
   @After
   fun tearDown() {

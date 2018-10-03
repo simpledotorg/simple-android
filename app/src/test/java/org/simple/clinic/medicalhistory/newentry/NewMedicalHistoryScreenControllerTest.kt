@@ -12,6 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -86,10 +87,11 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
+            diagnosedWithHypertension = selectedAnswers.contains(DIAGNOSED_WITH_HYPERTENSION),
+            isOnTreatmentForHypertension = selectedAnswers.contains(IS_ON_TREATMENT_FOR_HYPERTENSION),
             hasHadHeartAttack = selectedAnswers.contains(HAS_HAD_A_HEART_ATTACK),
             hasHadStroke = selectedAnswers.contains(HAS_HAD_A_STROKE),
             hasHadKidneyDisease = selectedAnswers.contains(HAS_HAD_A_KIDNEY_DISEASE),
-            isOnTreatmentForHypertension = selectedAnswers.contains(IS_ON_TREATMENT_FOR_HYPERTENSION),
             hasDiabetes = selectedAnswers.contains(HAS_DIABETES)))
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
   }
@@ -108,10 +110,11 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
+            diagnosedWithHypertension = false,
+            isOnTreatmentForHypertension = false,
             hasHadHeartAttack = false,
             hasHadStroke = false,
             hasHadKidneyDisease = false,
-            isOnTreatmentForHypertension = false,
             hasDiabetes = false))
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
   }

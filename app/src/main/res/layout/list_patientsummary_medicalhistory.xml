@@ -46,7 +46,11 @@
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-      android:id="@+id/patientsummary_medicalhistory_question_hypertension"
+      android:id="@+id/patientsummary_medicalhistory_question_diagnosed_for_hypertension"
+      style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
+
+    <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+      android:id="@+id/patientsummary_medicalhistory_question_treatment_for_hypertension"
       style="@style/Clinic.V2.SummaryMedicalHistoryQuestion" />
 
     <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView

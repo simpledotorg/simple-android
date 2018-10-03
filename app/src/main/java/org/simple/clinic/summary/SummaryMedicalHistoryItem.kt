@@ -37,11 +37,11 @@ data class SummaryMedicalHistoryItem(
         lastUpdatedAt.displayText(context).toLowerCase(ENGLISH))
 
     val questionViewToQuestions = mapOf(
+        holder.diagnosedForHypertensionQuestionView to DIAGNOSED_WITH_HYPERTENSION,
+        holder.treatmentForHypertensionQuestionView to IS_ON_TREATMENT_FOR_HYPERTENSION,
         holder.heartAttackQuestionView to HAS_HAD_A_HEART_ATTACK,
         holder.strokeQuestionView to HAS_HAD_A_STROKE,
         holder.kidneyDiseaseQuestionView to HAS_HAD_A_KIDNEY_DISEASE,
-        holder.diagnosedForHypertensionQuestionView to DIAGNOSED_WITH_HYPERTENSION,
-        holder.treatmentForHypertensionQuestionView to IS_ON_TREATMENT_FOR_HYPERTENSION,
         holder.diabetesQuestionView to HAS_DIABETES)
 
     questionViewToQuestions.forEach { (view, question) ->
@@ -52,22 +52,22 @@ data class SummaryMedicalHistoryItem(
     }
 
     holder.apply {
+      diagnosedForHypertensionQuestionView.isChecked = medicalHistory.diagnosedWithHypertension
+      treatmentForHypertensionQuestionView.isChecked = medicalHistory.isOnTreatmentForHypertension
       heartAttackQuestionView.isChecked = medicalHistory.hasHadHeartAttack
       strokeQuestionView.isChecked = medicalHistory.hasHadStroke
       kidneyDiseaseQuestionView.isChecked = medicalHistory.hasHadKidneyDisease
-      diagnosedForHypertensionQuestionView.isChecked = medicalHistory.diagnosedWithHypertension
-      treatmentForHypertensionQuestionView.isChecked = medicalHistory.isOnTreatmentForHypertension
       diabetesQuestionView.isChecked = medicalHistory.hasDiabetes
     }
   }
 
   class HistoryViewHolder(rootView: View) : ViewHolder(rootView) {
     val lastUpdatedAtTextView by bindView<TextView>(R.id.patientsummary_medicalhistory_last_update_timestamp)
+    val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diagnosed_for_hypertension)
+    val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_treatment_for_hypertension)
     val heartAttackQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_heartattack)
     val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_stroke)
     val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_kidney)
-    val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diagnosed_for_hypertension)
-    val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_treatment_for_hypertension)
     val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diabetes)
 
     init {

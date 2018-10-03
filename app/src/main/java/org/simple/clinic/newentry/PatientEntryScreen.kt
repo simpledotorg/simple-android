@@ -276,6 +276,22 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
   }
 
+  fun showLengthTooShortPhoneNumberError(show: Boolean) {
+    if (show) {
+      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_less)
+    } else {
+      phoneNumberInputLayout.error = null
+    }
+  }
+
+  fun showLengthTooLongPhoneNumberError(show: Boolean) {
+    if (show) {
+      phoneNumberInputLayout.error = context.getString(R.string.patiententry_error_phonenumber_length_more)
+    } else {
+      phoneNumberInputLayout.error = null
+    }
+  }
+
   fun showMissingGenderError(show: Boolean) {
     if (show) {
       genderErrorTextView.visibility = View.VISIBLE

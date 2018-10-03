@@ -13,6 +13,8 @@ import org.simple.clinic.registration.FindUserResult.NetworkError
 import org.simple.clinic.registration.FindUserResult.NotFound
 import org.simple.clinic.registration.FindUserResult.UnexpectedError
 import org.simple.clinic.registration.SaveUserLocallyResult
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -49,7 +51,7 @@ class RegistrationPhoneScreenController @Inject constructor(
     // yet. This just ensures the local stored user is cleared to restart the flow.
     val clearLocallyStoredUser = events
         .ofType<RegistrationPhoneScreenCreated>()
-        .flatMap { _ ->
+        .flatMap {
           userSession.clearLoggedInUser().andThen(Observable.empty<UiChange>())
         }
 
@@ -82,11 +84,10 @@ class RegistrationPhoneScreenController @Inject constructor(
         .ofType<RegistrationPhoneNumberTextChanged>()
         .map { it.phoneNumber }
 
-    return events
-        .ofType<RegistrationPhoneDoneClicked>()
+    return events.ofType<RegistrationPhoneDoneClicked>()
         .withLatestFrom(phoneNumberTextChanges)
-        .map { (_, number) -> numberValidator.isValid(number) }
-        .filter { isValidNumber -> isValidNumber.not() }
+        .map { (_, number) -> numberValidator.validate(number, MOBILE) }
+        .filter { it != VALID }
         .map { { ui: Ui -> ui.showInvalidNumberError() } }
   }
 
@@ -102,7 +103,7 @@ class RegistrationPhoneScreenController @Inject constructor(
 
     return doneClicks
         .withLatestFrom(phoneNumberTextChanges)
-        .filter { (_, number) -> numberValidator.isValid(number) }
+        .filter { (_, number) -> numberValidator.validate(number, MOBILE) == VALID }
         .flatMap { (_, number) ->
           val cachedUserFindResult = userSession.findExistingUser(number)
               .cache()

@@ -66,6 +66,8 @@
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>
   <string name="patiententry_error_invalid_dateofbirth">Enter patient’s date of birth in DD/MM/YYYY</string>
   <string name="patiententry_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
+  <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than 6 digits</string>
+  <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than 12 digits</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

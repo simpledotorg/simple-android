@@ -14,8 +14,15 @@ import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 
 /**
  * Represents user input on the UI, which is why every field is a String.
@@ -28,7 +35,7 @@ data class OngoingPatientEntry(
     val phoneNumber: PhoneNumber? = null
 ) {
 
-  fun validationErrors(dobValidator: DateOfBirthFormatValidator): ArrayList<PatientEntryValidationError> {
+  fun validationErrors(dobValidator: DateOfBirthFormatValidator, numberValidator: PhoneNumberValidator): ArrayList<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {
@@ -58,8 +65,13 @@ data class OngoingPatientEntry(
       }
     }
 
-    if (phoneNumber != null && phoneNumber.number.isBlank()) {
-      errors += PHONE_NUMBER_NON_NULL_BUT_BLANK
+    if (phoneNumber != null) {
+      errors += when (numberValidator.validate(phoneNumber.number, LANDLINE_OR_MOBILE)) {
+        BLANK -> listOf(PHONE_NUMBER_NON_NULL_BUT_BLANK)
+        LENGTH_TOO_SHORT -> listOf(PHONE_NUMBER_LENGTH_TOO_SHORT)
+        LENGTH_TOO_LONG -> listOf(PHONE_NUMBER_LENGTH_TOO_LONG)
+        PhoneNumberValidator.Result.VALID -> listOf()
+      }
     }
 
     if (address == null) {

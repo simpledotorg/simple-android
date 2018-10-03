@@ -73,42 +73,20 @@ class PatientSyncAndroidTest {
     val withDOB = Observable.range(0, count)
         .flatMapCompletable {
           repository.saveOngoingEntry(
-              OngoingPatientEntry(
-                  personalDetails = OngoingPatientEntry.PersonalDetails(
-                      faker.name.name(),
-                      oldDateFormatter.format(faker.date.between("1947-08-15", "2001-02-25")),
-                      null,
-                      genders.first()),
-                  address = OngoingPatientEntry.Address(
-                      faker.address.streetAddress(),
-                      faker.address.city(),
-                      faker.address.state()),
-                  phoneNumber = OngoingPatientEntry.PhoneNumber(
-                      faker.phoneNumber.cellPhone(),
-                      PatientPhoneNumberType.LANDLINE,
-                      faker.bool.bool(0.77f)
-                  ))
+              testData.ongoingPatientEntry(
+                  dateOfBirth = oldDateFormatter.format(faker.date.between("1947-08-15", "2001-02-25")),
+                  age = null
+              )
           ).andThen(repository.saveOngoingEntryAsPatient().toCompletable())
         }
 
     val withoutDOB = Observable.range(0, count)
         .flatMapCompletable {
           repository
-              .saveOngoingEntry(OngoingPatientEntry(
-                  personalDetails = OngoingPatientEntry.PersonalDetails(
-                      faker.name.name(),
-                      null,
-                      faker.number.number(2).toString(),
-                      genders.first()),
-                  address = OngoingPatientEntry.Address(
-                      faker.address.streetAddress(),
-                      faker.address.city(),
-                      faker.address.state()),
-                  phoneNumber = OngoingPatientEntry.PhoneNumber(
-                      faker.phoneNumber.cellPhone(),
-                      PatientPhoneNumberType.MOBILE,
-                      faker.bool.bool(0.77f)
-                  )))
+              .saveOngoingEntry(testData.ongoingPatientEntry(
+                  dateOfBirth = null,
+                  age = faker.number.number(2).toString()
+              ))
               .andThen(repository.saveOngoingEntryAsPatient().toCompletable())
         }
 

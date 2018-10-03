@@ -14,6 +14,7 @@ import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -37,7 +38,8 @@ class PatientRepository @Inject constructor(
     private val database: AppDatabase,
     private val dobValidator: DateOfBirthFormatValidator,
     private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val numberValidator: PhoneNumberValidator
 ) {
 
   private val ageFuzziness: Int = 5
@@ -219,7 +221,7 @@ class PatientRepository @Inject constructor(
 
     val validation = cachedOngoingEntry
         .flatMapCompletable {
-          val validationErrors = it.validationErrors(dobValidator)
+          val validationErrors = it.validationErrors(dobValidator, numberValidator)
           if (validationErrors.isEmpty()) {
             Completable.complete()
           } else {

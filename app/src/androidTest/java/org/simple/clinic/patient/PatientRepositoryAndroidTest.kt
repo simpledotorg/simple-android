@@ -71,7 +71,7 @@ class PatientRepositoryAndroidTest {
   fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.TRANSGENDER)
-    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber(number = "2277", type = PatientPhoneNumberType.LANDLINE)
+    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber(number = "227788", type = PatientPhoneNumberType.LANDLINE)
 
     val personalDetailsOnlyEntry = OngoingPatientEntry(personalDetails = ongoingPersonalDetails)
 
@@ -91,7 +91,7 @@ class PatientRepositoryAndroidTest {
     assertThat(search2.first().age).isNull()
     assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
     assertThat(search2.first().phoneNumber).isNotEmpty()
-    assertThat(search2.first().phoneNumber).isEqualTo("2277")
+    assertThat(search2.first().phoneNumber).isEqualTo("227788")
   }
 
   @Test
@@ -211,7 +211,7 @@ class PatientRepositoryAndroidTest {
   fun when_patients_with_date_of_birth_are_present_and_age_filter_is_applied_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.TRANSGENDER)
     val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
+    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPatientEntry = OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
     patientRepository.saveOngoingEntry(ongoingPatientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -219,7 +219,7 @@ class PatientRepositoryAndroidTest {
 
     val opd2 = OngoingPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.TRANSGENDER)
     val opa2 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn2 = OngoingPatientEntry.PhoneNumber("34159", PatientPhoneNumberType.MOBILE, active = true)
+    val opn2 = OngoingPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.MOBILE, active = true)
     val ope2 = OngoingPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -227,7 +227,7 @@ class PatientRepositoryAndroidTest {
 
     val opd3 = OngoingPatientEntry.PersonalDetails("Abhishek Kumar", "1/01/1949", null, Gender.TRANSGENDER)
     val opa3 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn3 = OngoingPatientEntry.PhoneNumber("99159", PatientPhoneNumberType.MOBILE, active = true)
+    val opn3 = OngoingPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingPatientEntry(opd3, opa3, opn3)
     patientRepository.saveOngoingEntry(ope3)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -249,7 +249,7 @@ class PatientRepositoryAndroidTest {
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
-    assertThat(person1.phoneNumber).isEqualTo("34159")
+    assertThat(person1.phoneNumber).isEqualTo("3418959")
 
     val search2 = patientRepository.search("ab", 68, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(3)
@@ -265,7 +265,7 @@ class PatientRepositoryAndroidTest {
   fun when_patients_with_age_are_present_and_age_filter_is_applied_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails("Abhay Kumar", null, "20", Gender.TRANSGENDER)
     val ongoingAddress = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("3.14159", PatientPhoneNumberType.MOBILE, active = true)
+    val ongoingPhoneNumber = OngoingPatientEntry.PhoneNumber("34314159", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPatientEntry = OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
     patientRepository.saveOngoingEntry(ongoingPatientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -273,7 +273,7 @@ class PatientRepositoryAndroidTest {
 
     val opd2 = OngoingPatientEntry.PersonalDetails("Alok Kumar", null, "17", Gender.FEMALE)
     val opa2 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn2 = OngoingPatientEntry.PhoneNumber("34159", PatientPhoneNumberType.MOBILE, active = true)
+    val opn2 = OngoingPatientEntry.PhoneNumber("3413459", PatientPhoneNumberType.MOBILE, active = true)
     val ope2 = OngoingPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -281,7 +281,7 @@ class PatientRepositoryAndroidTest {
 
     val opd3 = OngoingPatientEntry.PersonalDetails("Abhishek Kumar", null, "26", Gender.FEMALE)
     val opa3 = OngoingPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn3 = OngoingPatientEntry.PhoneNumber("99159", PatientPhoneNumberType.MOBILE, active = true)
+    val opn3 = OngoingPatientEntry.PhoneNumber("9913459", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingPatientEntry(opd3, opa3, opn3)
     patientRepository.saveOngoingEntry(ope3)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -303,7 +303,7 @@ class PatientRepositoryAndroidTest {
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Abhishek Kumar")
     assertThat(person1.age!!.value).isEqualTo(26)
-    assertThat(person1.phoneNumber).isEqualTo("99159")
+    assertThat(person1.phoneNumber).isEqualTo("9913459")
 
     val search2 = patientRepository.search("ab", 18, includeFuzzyNameSearch = false).blockingFirst()
     assertThat(search2).hasSize(2)

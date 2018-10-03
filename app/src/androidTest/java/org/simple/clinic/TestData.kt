@@ -348,7 +348,7 @@ class TestData @Inject constructor(private val faker: Faker) {
       colony: String = faker.address.streetName(),
       district: String = faker.address.city(),
       state: String = faker.address.state(),
-      phone: String? = faker.phoneNumber.phoneNumber()
+      phone: String? = faker.number.number(10)
   ): OngoingPatientEntry {
     val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
     val ongoingAddress = OngoingPatientEntry.Address(colony, district, state)

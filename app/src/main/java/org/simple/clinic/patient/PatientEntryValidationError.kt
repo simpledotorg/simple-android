@@ -5,6 +5,8 @@ enum class PatientEntryValidationError(val analyticsName: String) {
   FULL_NAME_EMPTY("Patient Entry:Name is empty"),
   PHONE_NUMBER_NON_NULL_BUT_BLANK("Patient Entry:Phone Number is empty"),
   PHONE_NUMBER_EMPTY("Patient Entry:Phone Number is empty"),
+  PHONE_NUMBER_LENGTH_TOO_SHORT("Patient Entry:Phone Number is less than 6 digits"),
+  PHONE_NUMBER_LENGTH_TOO_LONG("Patient Entry:Phone Number is more than 12 digits"),
   BOTH_DATEOFBIRTH_AND_AGE_ABSENT("Patient Entry:Age and DOB are both absent"),
   BOTH_DATEOFBIRTH_AND_AGE_PRESENT("Patient Entry:Age and DOB are both present"),
   INVALID_DATE_OF_BIRTH("Patient Entry:Invalid DOB"),

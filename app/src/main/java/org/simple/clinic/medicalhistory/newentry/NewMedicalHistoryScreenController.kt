@@ -17,6 +17,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -32,10 +33,21 @@ class NewMedicalHistoryScreenController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
+        showPatientName(replayedEvents),
         unSelectAllOnNoneSelection(replayedEvents),
         unSelectNone(replayedEvents),
         enableSaveButton(replayedEvents),
         saveMedicalHistoryAndShowSummary(replayedEvents))
+  }
+
+  private fun showPatientName(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScreenCreated>()
+        .flatMapSingle { _ ->
+          patientRepository.ongoingEntry()
+              .map { it.personalDetails!!.fullName }
+              .map { { ui: Ui -> ui.setPatientName(it) } }
+        }
   }
 
   private fun unSelectAllOnNoneSelection(events: Observable<UiEvent>): Observable<UiChange> {

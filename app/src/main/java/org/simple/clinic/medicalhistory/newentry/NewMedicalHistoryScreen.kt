@@ -123,4 +123,8 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
     nextButtonFrame.isEnabled = enabled
     nextButton.isEnabled = enabled
   }
+
+  fun setPatientName(patientName: String) {
+    toolbar.title = patientName
+  }
 }

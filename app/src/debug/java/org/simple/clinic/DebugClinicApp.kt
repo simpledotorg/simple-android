@@ -18,7 +18,6 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
-import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
@@ -87,11 +86,6 @@ class DebugClinicApp : ClinicApp() {
           @Provides
           override fun registrationConfig(): Single<RegistrationConfig> {
             return Single.just(RegistrationConfig(retryBackOffDelayInMinutes = 1))
-          }
-
-          @Provides
-          override fun phoneNumberValidator(): PhoneNumberValidator {
-            return DebugPhoneNumberValidator()
           }
         })
         .build()

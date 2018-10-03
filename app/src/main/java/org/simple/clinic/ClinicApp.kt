@@ -2,6 +2,7 @@ package org.simple.clinic
 
 import android.app.Application
 import com.gabrielittner.threetenbp.LazyThreeTen
+import com.tspoon.traceur.Traceur
 import io.reactivex.schedulers.Schedulers
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
@@ -27,6 +28,7 @@ abstract class ClinicApp : Application() {
       throw AssertionError("API endpoint cannot be null!")
     }
 
+    Traceur.enableLogging()
     LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()

@@ -44,7 +44,7 @@ class PatientFuzzySearch {
       return Single.fromCallable {
         val searchQuery = SimpleSQLiteQuery("""
           SELECT "Patient"."uuid", editdist3('$query', "Patient"."searchableName") "score"
-          FROM "Patient" WHERE "score" < 1000
+          FROM "Patient" WHERE "score" < 750
           ORDER BY "score"
         """.trimIndent())
 

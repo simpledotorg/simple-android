@@ -42,11 +42,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   lateinit var screenRouter: ScreenRouter
 
   private val toolbar by bindView<Toolbar>(R.id.newmedicalhistory_toolbar)
+  private val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diagnosed_for_hypertension)
+  private val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_treatment_for_hypertension)
   private val heartAttackQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_heartattack)
   private val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_stroke)
   private val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_kidney)
-  private val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diagnosed_for_hypertension)
-  private val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_treatment_for_hypertension)
   private val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diabetes)
   private val noneQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_none)
   private val nextButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.newmedicalhistory_next_frame)
@@ -63,11 +63,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
       screenRouter.pop()
     }
 
+    diagnosedForHypertensionQuestionView.render(DIAGNOSED_WITH_HYPERTENSION)
+    treatmentForHypertensionQuestionView.render(IS_ON_TREATMENT_FOR_HYPERTENSION)
     heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK)
     strokeQuestionView.render(HAS_HAD_A_STROKE)
     kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE)
-    diagnosedForHypertensionQuestionView.render(DIAGNOSED_WITH_HYPERTENSION)
-    treatmentForHypertensionQuestionView.render(IS_ON_TREATMENT_FOR_HYPERTENSION)
     diabetesQuestionView.render(HAS_DIABETES)
     noneQuestionView.render(NONE)
 
@@ -88,11 +88,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
     }
 
     return Observable.mergeArray(
+        toggles(diagnosedForHypertensionQuestionView),
+        toggles(treatmentForHypertensionQuestionView),
         toggles(heartAttackQuestionView),
         toggles(strokeQuestionView),
         toggles(kidneyDiseaseQuestionView),
-        toggles(diagnosedForHypertensionQuestionView),
-        toggles(treatmentForHypertensionQuestionView),
         toggles(diabetesQuestionView),
         toggles(noneQuestionView))
   }
@@ -107,11 +107,11 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   fun unSelectAllAnswersExceptNone() {
+    diagnosedForHypertensionQuestionView.isChecked = false
+    treatmentForHypertensionQuestionView.isChecked = false
     heartAttackQuestionView.isChecked = false
     strokeQuestionView.isChecked = false
     kidneyDiseaseQuestionView.isChecked = false
-    diagnosedForHypertensionQuestionView.isChecked = false
-    treatmentForHypertensionQuestionView.isChecked = false
     diabetesQuestionView.isChecked = false
   }
 

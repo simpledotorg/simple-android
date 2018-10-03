@@ -150,11 +150,11 @@ class PatientSummaryScreenController @Inject constructor(
 
     val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, selected: Boolean ->
       when (question) {
+        DIAGNOSED_WITH_HYPERTENSION -> medicalHistory.copy(diagnosedWithHypertension = selected)
+        IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = selected)
         HAS_HAD_A_HEART_ATTACK -> medicalHistory.copy(hasHadHeartAttack = selected)
         HAS_HAD_A_STROKE -> medicalHistory.copy(hasHadStroke = selected)
         HAS_HAD_A_KIDNEY_DISEASE -> medicalHistory.copy(hasHadKidneyDisease = selected)
-        DIAGNOSED_WITH_HYPERTENSION -> medicalHistory.copy(diagnosedWithHypertension = selected)
-        IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = selected)
         HAS_DIABETES -> medicalHistory.copy(hasDiabetes = selected)
         NONE -> throw AssertionError("There's no none question in summary")
       }

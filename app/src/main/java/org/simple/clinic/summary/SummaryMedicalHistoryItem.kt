@@ -7,6 +7,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
@@ -39,7 +40,8 @@ data class SummaryMedicalHistoryItem(
         holder.heartAttackQuestionView to HAS_HAD_A_HEART_ATTACK,
         holder.strokeQuestionView to HAS_HAD_A_STROKE,
         holder.kidneyDiseaseQuestionView to HAS_HAD_A_KIDNEY_DISEASE,
-        holder.hypertensionQuestionView to IS_ON_TREATMENT_FOR_HYPERTENSION,
+        holder.diagnosedForHypertensionQuestionView to DIAGNOSED_WITH_HYPERTENSION,
+        holder.treatmentForHypertensionQuestionView to IS_ON_TREATMENT_FOR_HYPERTENSION,
         holder.diabetesQuestionView to HAS_DIABETES)
 
     questionViewToQuestions.forEach { (view, question) ->
@@ -53,7 +55,8 @@ data class SummaryMedicalHistoryItem(
       heartAttackQuestionView.isChecked = medicalHistory.hasHadHeartAttack
       strokeQuestionView.isChecked = medicalHistory.hasHadStroke
       kidneyDiseaseQuestionView.isChecked = medicalHistory.hasHadKidneyDisease
-      hypertensionQuestionView.isChecked = medicalHistory.isOnTreatmentForHypertension
+      diagnosedForHypertensionQuestionView.isChecked = medicalHistory.diagnosedWithHypertension
+      treatmentForHypertensionQuestionView.isChecked = medicalHistory.isOnTreatmentForHypertension
       diabetesQuestionView.isChecked = medicalHistory.hasDiabetes
     }
   }
@@ -63,7 +66,8 @@ data class SummaryMedicalHistoryItem(
     val heartAttackQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_heartattack)
     val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_stroke)
     val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_kidney)
-    val hypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_hypertension)
+    val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diagnosed_for_hypertension)
+    val treatmentForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_treatment_for_hypertension)
     val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.patientsummary_medicalhistory_question_diabetes)
 
     init {

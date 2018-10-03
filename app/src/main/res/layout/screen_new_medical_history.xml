@@ -38,7 +38,12 @@
         android:layout_height="wrap_content" />
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
-        android:id="@+id/newmedicalhistory_question_hypertension"
+        android:id="@+id/newmedicalhistory_question_diagnosed_for_hypertension"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+      <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
+        android:id="@+id/newmedicalhistory_question_treatment_for_hypertension"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

@@ -21,6 +21,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import java.util.UUID
 
@@ -38,12 +39,13 @@ class PatientRepositoryTest {
   private val dobValidator = mock<DateOfBirthFormatValidator>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val numberValidator = mock<PhoneNumberValidator>()
 
   @Before
   fun setUp() {
     database = mock()
     mockPatientSearchResultDao = mock()
-    repository = PatientRepository(database, dobValidator, facilityRepository, userSession)
+    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

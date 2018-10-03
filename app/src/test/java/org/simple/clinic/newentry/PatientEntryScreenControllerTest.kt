@@ -26,6 +26,11 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -41,9 +46,10 @@ class PatientEntryScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
   private val dobValidator = mock<DateOfBirthFormatValidator>()
+  private val numberValidator = mock<PhoneNumberValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator)
+  private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator, numberValidator)
   private val reporter = MockReporter()
 
   private lateinit var errorConsumer: (Throwable) -> Unit
@@ -57,6 +63,7 @@ class PatientEntryScreenControllerTest {
     uiEvents
         .compose(controller)
         .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
+
     Analytics.addReporter(reporter)
   }
 
@@ -91,6 +98,7 @@ class PatientEntryScreenControllerTest {
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
+    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -177,6 +185,7 @@ class PatientEntryScreenControllerTest {
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
+    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
@@ -225,14 +234,24 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, times(4)).showEmptyFullNameError(true)
+    whenever(numberValidator.validate("1234", LANDLINE_OR_MOBILE)).thenReturn(LENGTH_TOO_SHORT)
+    uiEvents.onNext(PatientPhoneNumberTextChanged("1234"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    whenever(numberValidator.validate("1234567890987654", LANDLINE_OR_MOBILE)).thenReturn(LENGTH_TOO_LONG)
+    uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890987654"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    verify(screen, times(6)).showEmptyFullNameError(true)
     verify(screen, times(4)).showEmptyPhoneNumberError(true)
     verify(screen, times(2)).showEmptyDateOfBirthAndAgeError(true)
-    verify(screen).showInvalidDateOfBirthError(true)
-    verify(screen, times(4)).showMissingGenderError(true)
-    verify(screen, times(4)).showEmptyColonyOrVillageError(true)
-    verify(screen, times(4)).showEmptyDistrictError(true)
-    verify(screen, times(4)).showEmptyStateError(true)
+    verify(screen, times(3)).showInvalidDateOfBirthError(true)
+    verify(screen, times(6)).showMissingGenderError(true)
+    verify(screen, times(6)).showEmptyColonyOrVillageError(true)
+    verify(screen, times(6)).showEmptyDistrictError(true)
+    verify(screen, times(6)).showEmptyStateError(true)
+    verify(screen, times(1)).showLengthTooShortPhoneNumberError(true)
+    verify(screen, times(1)).showLengthTooLongPhoneNumberError(true)
   }
 
   @Test

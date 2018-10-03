@@ -15,6 +15,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
@@ -147,6 +149,7 @@ class AppointmentRepositoryAndroidTest {
 
     val patient2 = UUID.randomUUID()
     val address2 = UUID.randomUUID()
+    val phoneNumber2 = UUID.randomUUID()
     database.addressDao().save(
         PatientAddress(
             address2,
@@ -173,9 +176,21 @@ class AppointmentRepositoryAndroidTest {
             syncStatus = SyncStatus.DONE
         )
     )
+    database.phoneNumberDao().save(listOf(
+        PatientPhoneNumber(
+            uuid = phoneNumber2,
+            patientUuid = patient2,
+            number = "983374583",
+            phoneType = PatientPhoneNumberType.MOBILE,
+            active = false,
+            createdAt = Instant.now(),
+            updatedAt = Instant.now()
+        ))
+    )
 
     val patient3 = UUID.randomUUID()
     val address3 = UUID.randomUUID()
+    val phoneNumber3 = UUID.randomUUID()
     val date3 = LocalDate.now().minusDays(10)
     val bp30 = UUID.randomUUID()
     val bp31 = UUID.randomUUID()
@@ -204,6 +219,17 @@ class AppointmentRepositoryAndroidTest {
             Instant.now(),
             SyncStatus.DONE
         )
+    )
+    database.phoneNumberDao().save(listOf(
+        PatientPhoneNumber(
+            uuid = phoneNumber3,
+            patientUuid = patient3,
+            number = "983374583",
+            phoneType = PatientPhoneNumberType.MOBILE,
+            active = true,
+            createdAt = Instant.now(),
+            updatedAt = Instant.now()
+        ))
     )
     database.bloodPressureDao().save(listOf(
         BloodPressureMeasurement(
@@ -236,15 +262,9 @@ class AppointmentRepositoryAndroidTest {
         .blockingGet()
 
     val overdueAppts = repository.overdueAppointments().blockingFirst()
-    assertThat(overdueAppts).hasSize(2)
+    assertThat(overdueAppts).hasSize(1)
+
     overdueAppts[0].apply {
-      assertThat(this.appointment.patientUuid).isEqualTo(patient1)
-      assertThat(this.appointment.scheduledDate).isEqualTo(date1)
-      assertThat(this.appointment.status).isEqualTo(Appointment.Status.SCHEDULED)
-      assertThat(this.appointment.cancelReason).isEqualTo(null)
-      assertThat(this.bloodPressure.uuid).isEqualTo(bp1)
-    }
-    overdueAppts[1].apply {
       assertThat(this.appointment.patientUuid).isEqualTo(patient3)
       assertThat(this.appointment.scheduledDate).isEqualTo(date3)
       assertThat(this.appointment.status).isEqualTo(Appointment.Status.SCHEDULED)

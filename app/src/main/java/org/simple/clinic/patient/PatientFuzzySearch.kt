@@ -73,16 +73,16 @@ class PatientFuzzySearch {
     """.trimIndent()
 
     private fun resultsFromCursor(cursor: Cursor) =
-        cursor.use {
-          val uuid = it.getColumnIndex("uuid")
-          val rowId = it.getColumnIndex("rowid")
-          val word = it.getColumnIndex("word")
-          val rank = it.getColumnIndex("rank")
-          val distance = it.getColumnIndex("distance")
-          val score = it.getColumnIndex("score")
-          val matchLength = it.getColumnIndex("matchlen")
-          val scope = it.getColumnIndex("scope")
-          generateSequence { it.takeIf { it.moveToNext() } }
+        cursor.use { _ ->
+          val uuid = cursor.getColumnIndex("uuid")
+          val rowId = cursor.getColumnIndex("rowid")
+          val word = cursor.getColumnIndex("word")
+          val rank = cursor.getColumnIndex("rank")
+          val distance = cursor.getColumnIndex("distance")
+          val score = cursor.getColumnIndex("score")
+          val matchLength = cursor.getColumnIndex("matchlen")
+          val scope = cursor.getColumnIndex("scope")
+          generateSequence { cursor.takeIf { it.moveToNext() } }
               .map {
                 FuzzySearchResult(
                     rowId = it.getLong(rowId),
@@ -128,24 +128,25 @@ class PatientFuzzySearch {
       }
     }
 
-    private fun patientUuidsMatching(query: String) =
-        Single.fromCallable {
-          val searchQuery = SimpleSQLiteQuery("""
-            SELECT "P"."uuid", "PFS"."score"
-            FROM "Patient" "P" INNER JOIN "PatientFuzzySearch" "PFS"
-            ON "P"."rowid"="PFS"."rowid" WHERE "PFS"."word" MATCH '$query' AND "top"=5
-            """.trimIndent())
+    private fun patientUuidsMatching(query: String): Single<List<UuidToScore>> {
+      return Single.fromCallable {
+        val searchQuery = SimpleSQLiteQuery("""
+          SELECT "Patient"."uuid", editdist3('$query', "Patient"."searchableName") "score"
+          FROM "Patient" WHERE "score" < 1000
+          ORDER BY "score"
+        """.trimIndent())
 
-          sqLiteOpenHelper.readableDatabase.query(searchQuery)
-              .use { cursor ->
-                val uuidIndex = cursor.getColumnIndex("uuid")
-                val scoreIndex = cursor.getColumnIndex("score")
+        sqLiteOpenHelper.readableDatabase.query(searchQuery)
+            .use { cursor ->
+              val uuidIndex = cursor.getColumnIndex("uuid")
+              val scoreIndex = cursor.getColumnIndex("score")
 
-                generateSequence { cursor.takeIf { it.moveToNext() } }
-                    .map { UuidToScore(UUID.fromString(it.getString(uuidIndex)), it.getInt(scoreIndex)) }
-                    .toList()
-              }
-        }
+              generateSequence { cursor.takeIf { it.moveToNext() } }
+                  .map { UuidToScore(UUID.fromString(it.getString(uuidIndex)), it.getInt(scoreIndex)) }
+                  .toList()
+            }
+      }
+    }
 
     private fun sortPatientSearchResultsByScore(uuidsSortedByScore: List<UuidToScore>) =
         SingleTransformer<List<PatientSearchResult>, List<PatientSearchResult>> { upstream ->

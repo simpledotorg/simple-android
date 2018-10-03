@@ -55,7 +55,7 @@ data class OverdueAppointment(
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
-          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :dateNow
+          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :dateNow AND PPN.number IS NOT NULL
           AND (A.remindOn < :dateNow OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)

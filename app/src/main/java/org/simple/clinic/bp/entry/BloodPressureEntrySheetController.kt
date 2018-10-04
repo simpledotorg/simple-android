@@ -28,23 +28,21 @@ class BloodPressureEntrySheetController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.merge(
-        systolicTextChanges(replayedEvents),
+        automaticDiastolicFocusChanges(replayedEvents),
         validationErrorResets(replayedEvents),
         bpValidationsAndSaves(replayedEvents))
   }
 
-  private fun systolicTextChanges(events: Observable<UiEvent>): Observable<UiChange> {
-    // TODO: This needs unit tests
-    return events
-        .ofType<BloodPressureSystolicTextChanged>()
-        .distinctUntilChanged()
+  private fun automaticDiastolicFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<BloodPressureSystolicTextChanged>()
         .filter { shouldFocusDiastolic(it.systolic) }
+        .distinctUntilChanged()
         .map { { ui: Ui -> ui.changeFocusToDiastolic() } }
   }
 
   private fun shouldFocusDiastolic(systolicText: String): Boolean {
-    return (systolicText.length == 3 && systolicText.matches("^[12].*$".toRegex()))
-        || (systolicText.length == 2 && systolicText.matches("^[3-9].*$".toRegex()))
+    return (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))
+        || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
   }
 
   private fun validationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {

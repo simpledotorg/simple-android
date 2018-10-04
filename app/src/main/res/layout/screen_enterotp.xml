@@ -34,7 +34,7 @@
       android:text="@string/enterotp_check_sms_sent_to"
       android:textColor="@color/white_opacity_70"
       android:textSize="@dimen/textsize_14"
-      android:textStyle="bold" />
+      android:fontFamily="sans-serif" />
 
     <TextView
       android:id="@+id/enterotp_phonenumber"

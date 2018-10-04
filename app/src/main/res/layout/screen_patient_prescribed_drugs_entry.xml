@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.drugs.selection.PrescribedDrugsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+<org.simple.clinic.drugs.selection.PrescribedDrugsScreen android:id="@+id/prescribeddrugs_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:id="@+id/prescribeddrugs_root"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:orientation="vertical">
@@ -17,11 +17,11 @@
     android:id="@+id/prescribeddrugs_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_weight="1"
     android:layout_above="@+id/prescribeddrugs_done"
     android:layout_below="@+id/prescribeddrugs_toolbar"
-    android:paddingBottom="@dimen/textsize_18"
-    android:clipToPadding="false" />
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/textsize_18" />
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/prescribeddrugs_done"

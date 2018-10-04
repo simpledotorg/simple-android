@@ -95,6 +95,11 @@
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
   <string name="bloodpressureentry_input_hint" translatable="false">•••</string>
+  <string name="bloodpressureentry_error_systolic_more">Systolic should be more than diastolic</string>
+  <string name="bloodpressureentry_error_systolic_70">Systolic cannot be less than 70</string>
+  <string name="bloodpressureentry_error_systolic_300">Systolic cannot be more than 300</string>
+  <string name="bloodpressureentry_error_diastolic_40">Diastolic cannot be less than 40</string>
+  <string name="bloodpressureentry_error_diastolic_180">Diastolic cannot be more than 180</string>
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string> <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->

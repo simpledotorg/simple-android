@@ -137,7 +137,7 @@ class PatientSummaryScreenController @Inject constructor(
     return Observables.combineLatest(prescriptionItems, bloodPressureItems, medicalHistoryItems)
         .map { (prescriptions, bp, history) ->
           { ui: Ui ->
-            ui.populateList(prescriptions, bp, history)
+            ui.populateList(prescriptions, emptyList(), bp, history)
           }
         }
   }

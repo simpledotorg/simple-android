@@ -3,6 +3,6 @@
   xmlns:tools="http://schemas.android.com/tools">
 
   <application
-    android:icon="@mipmap/ic_launcher_staging"
+    android:icon="@mipmap/ic_launcher"
     tools:replace="android:icon" />
 </manifest>

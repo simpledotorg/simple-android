@@ -5,7 +5,6 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <!-- TODO: Tint the nav icon with grey1 -->
   <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
     android:id="@+id/patientsearchresults_toolbar"
     android:layout_width="match_parent"
@@ -13,9 +12,9 @@
     android:background="@color/white100"
     app:contentInsetStartWithNavigation="64dp"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:navigationIconTint="@color/grey1"
+    app:navigationIconTint="@color/grey0"
     app:title="Anish Acharya with a really long surname"
-    app:titleTextColor="@color/black" />
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.SearchResultsTitle" />
 
   <RelativeLayout
     android:id="@+id/patientsearchresults_empty_state"

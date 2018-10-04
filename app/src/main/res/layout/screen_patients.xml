@@ -4,7 +4,8 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:background="@color/white100">
 
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/patients_search_patients"
@@ -12,7 +13,7 @@
     android:layout_height="56dp"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_48"
+    android:layout_marginTop="@dimen/spacing_16"
     android:background="@drawable/button_outline_ripple"
     android:drawablePadding="@dimen/spacing_8"
     android:drawableStart="@drawable/ic_search_24dp"
@@ -26,25 +27,15 @@
     app:drawableTint="?colorAccent"
     tools:ignore="MissingPrefix,RtlSymmetry" />
 
-  <!-- We don't currently have a center color for the background gradient
-  so we can't adjust the centerY of the background. This lets us have a
-  different centerY because we can freely adjust the height of this view.
-   -->
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@id/patients_search_patients"
-    android:layout_marginTop="@dimen/spacing_48"
-    android:background="@drawable/background_patients" />
-
   <ImageView
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_below="@id/patients_search_patients"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="@dimen/spacing_48"
     android:src="@drawable/register_illustration"
-    tools:ignore="ContentDescription" />
+    tools:ignore="ContentDescription"
+    android:scaleType="centerCrop"/>
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
     android:id="@+id/patients_user_status_viewflipper"

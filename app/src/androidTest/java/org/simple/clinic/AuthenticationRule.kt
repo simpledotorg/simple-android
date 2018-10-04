@@ -1,10 +1,14 @@
 package org.simple.clinic
 
 import com.google.common.truth.Truth.assertThat
+import io.bloco.faker.Faker
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import org.simple.clinic.login.LoginResult
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilitySyncApiV1
+import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -18,6 +22,15 @@ class AuthenticationRule : TestRule {
 
   @Inject
   lateinit var testData: TestData
+
+  @Inject
+  lateinit var facilityApi: FacilitySyncApiV1
+
+  @Inject
+  lateinit var facilityDao: Facility.RoomDao
+
+  @Inject
+  lateinit var faker: Faker
 
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
@@ -33,7 +46,7 @@ class AuthenticationRule : TestRule {
         try {
           // Login also needs to happen inside this try block so that in case
           // of a failure, logout() still gets called to reset all app data.
-          login()
+          register()
           base.evaluate()
 
         } finally {
@@ -43,11 +56,28 @@ class AuthenticationRule : TestRule {
     }
   }
 
-  private fun login() {
-    val loginResult = userSession.saveOngoingLoginEntry(testData.qaOngoingLoginEntry())
-        .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
+  private fun register() {
+    val facilities = facilityApi.pull(10)
+        .map { it.facilities }
+        .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
-    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
+    facilityDao.save(facilities)
+
+    while (true) {
+      val registrationEntry = testData.ongoingRegistrationEntry(
+          phoneNumber = faker.number.number(10),
+          pin = testData.qaUserPin(),
+          facilities = facilities)
+
+      val registrationResult = userSession.saveOngoingRegistrationEntry(registrationEntry)
+          .andThen(userSession.loginFromOngoingRegistrationEntry())
+          .andThen(userSession.register())
+          .blockingGet()
+
+      if (registrationResult is RegistrationResult.Success) {
+        break
+      }
+    }
 
     val (accessToken) = userSession.accessToken()
     assertThat(accessToken).isNotNull()

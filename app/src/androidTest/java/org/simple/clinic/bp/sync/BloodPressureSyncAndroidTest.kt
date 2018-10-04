@@ -139,7 +139,7 @@ class BloodPressureSyncAndroidTest {
 
   @Test
   fun when_pulling_measurements_then_paginate_till_the_server_does_not_have_anymore_measurements() {
-    lastPullTimestamp.set(Just(Instant.now().minusMillis(100)))
+    lastPullTimestamp.set(Just(Instant.EPOCH))
 
     val measurementsToInsert = 2 * configProvider.blockingGet().batchSize + 7
 

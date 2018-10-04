@@ -1,6 +1,7 @@
 package org.simple.clinic.medicalhistory
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
@@ -18,6 +19,9 @@ class MedicalHistoryRepositoryAndroidTest {
   lateinit var repository: MedicalHistoryRepository
 
   @Inject
+  lateinit var dao: MedicalHistory.RoomDao
+
+  @Inject
   lateinit var testData: TestData
 
   @Inject
@@ -28,8 +32,13 @@ class MedicalHistoryRepositoryAndroidTest {
     TestClinicApp.appComponent().inject(this)
   }
 
+  @After
+  fun tearDown() {
+    dao.clear()
+  }
+
   @Test
-  fun when_creating_new_medical_history_then_the_medical_history_should_be_saved() {
+  fun when_creating_new_medical_history_from_ongoing_entry_then_the_medical_history_should_be_saved() {
     val patientUuid = UUID.randomUUID()
     val historyEntry = OngoingMedicalHistoryEntry(
         hasHadHeartAttack = true,
@@ -40,7 +49,7 @@ class MedicalHistoryRepositoryAndroidTest {
 
     repository.save(patientUuid, historyEntry).blockingAwait()
 
-    val savedHistory = repository.historyForPatient(patientUuid).blockingFirst()
+    val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 
     assertThat(savedHistory.hasHadHeartAttack).isTrue()
     assertThat(savedHistory.hasHadStroke).isTrue()
@@ -48,6 +57,19 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(savedHistory.isOnTreatmentForHypertension).isFalse()
     assertThat(savedHistory.hasDiabetes).isFalse()
     assertThat(savedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
+  }
+
+  @Test
+  fun when_creating_new_medical_history_then_the_medical_history_should_be_saved() {
+    val patientUuid = UUID.randomUUID()
+    val historyToSave = testData.medicalHistory(patientUuid = patientUuid)
+
+    repository.save(historyToSave).blockingAwait()
+
+    val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
+    val expectedSavedHistory = historyToSave.copy(syncStatus = SyncStatus.PENDING, updatedAt = Instant.now(clock))
+
+    assertThat(savedHistory).isEqualTo(expectedSavedHistory)
   }
 
   @Test
@@ -62,12 +84,24 @@ class MedicalHistoryRepositoryAndroidTest {
     repository.save(listOf(oldHistory)).blockingAwait()
 
     val newHistory = oldHistory.copy(hasHadHeartAttack = true)
-    repository.update(newHistory).blockingAwait()
+    repository.save(newHistory).blockingAwait()
 
-    val updatedHistory = repository.historyForPatient(patientUuid).blockingFirst()
+    val updatedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 
     assertThat(updatedHistory.hasHadHeartAttack).isTrue()
     assertThat(updatedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
     assertThat(updatedHistory.updatedAt).isEqualTo(clock.instant())
+  }
+
+  @Test
+  fun when_medical_history_isnt_present_for_a_patient_then_an_empty_value_should_be_returned() {
+    val emptyHistory = repository.historyForPatientOrDefault(UUID.randomUUID()).blockingFirst()
+
+    assertThat(emptyHistory.hasHadHeartAttack).isFalse()
+    assertThat(emptyHistory.hasHadStroke).isFalse()
+    assertThat(emptyHistory.hasHadKidneyDisease).isFalse()
+    assertThat(emptyHistory.isOnTreatmentForHypertension).isFalse()
+    assertThat(emptyHistory.hasDiabetes).isFalse()
+    assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 }

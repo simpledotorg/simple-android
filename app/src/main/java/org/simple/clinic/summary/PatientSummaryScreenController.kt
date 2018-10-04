@@ -124,7 +124,7 @@ class PatientSummaryScreenController @Inject constructor(
         }
 
     val medicalHistoryItems = patientUuids
-        .flatMap { medicalHistoryRepository.historyForPatient(it) }
+        .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
         .map { history ->
           val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt)
           SummaryMedicalHistoryItem(history, lastSyncTimestamp)
@@ -146,7 +146,7 @@ class PatientSummaryScreenController @Inject constructor(
         .map { it.patientUuid }
 
     val medicalHistories = patientUuids
-        .flatMap { medicalHistoryRepository.historyForPatient(it) }
+        .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
 
     val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, selected: Boolean ->
       when (question) {
@@ -167,7 +167,7 @@ class PatientSummaryScreenController @Inject constructor(
         }
         .flatMap {
           medicalHistoryRepository
-              .update(it)
+              .save(it)
               .andThen(Observable.never<UiChange>())
         }
   }

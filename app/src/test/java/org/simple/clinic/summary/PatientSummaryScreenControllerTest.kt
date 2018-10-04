@@ -22,6 +22,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockReporter
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -71,7 +72,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.never())
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -101,7 +102,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
@@ -116,7 +117,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
@@ -134,7 +135,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
 
     val medicalHistory = PatientMocker.medicalHistory(updatedAt = Instant.now())
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(medicalHistory))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
@@ -263,8 +264,8 @@ class PatientSummaryScreenControllerTest {
         hasHadKidneyDisease = false,
         hasDiabetes = false,
         updatedAt = Instant.now())
-    whenever(medicalHistoryRepository.historyForPatient(patientUuid)).thenReturn(Observable.just(medicalHistory))
-    whenever(medicalHistoryRepository.update(any())).thenReturn(Completable.complete())
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
+    whenever(medicalHistoryRepository.save(any<MedicalHistory>())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, selected = true))
@@ -276,7 +277,7 @@ class PatientSummaryScreenControllerTest {
         hasHadStroke = question == HAS_HAD_A_STROKE,
         hasHadKidneyDisease = question == HAS_HAD_A_KIDNEY_DISEASE,
         hasDiabetes = question == HAS_DIABETES)
-    verify(medicalHistoryRepository).update(updatedMedicalHistory)
+    verify(medicalHistoryRepository).save(updatedMedicalHistory)
   }
 
   @Suppress("unused")

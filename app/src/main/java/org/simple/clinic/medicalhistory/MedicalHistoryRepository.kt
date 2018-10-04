@@ -18,15 +18,36 @@ class MedicalHistoryRepository @Inject constructor(
     private val clock: Clock
 ) : SynceableRepository<MedicalHistory, MedicalHistoryPayload> {
 
-  fun historyForPatient(patientUuid: PatientUuid): Observable<MedicalHistory> {
+  fun historyForPatientOrDefault(patientUuid: PatientUuid): Observable<MedicalHistory> {
+    val defaultValue = MedicalHistory(
+        uuid = UUID.randomUUID(),
+        patientUuid = patientUuid,
+        hasHadHeartAttack = false,
+        hasHadStroke = false,
+        hasHadKidneyDisease = false,
+        diagnosedWithHypertension = false,
+        isOnTreatmentForHypertension = false,
+        hasDiabetes = false,
+        syncStatus = SyncStatus.DONE,
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock))
+
     return dao.historyForPatient(patientUuid)
+        .toObservable()
         .map { histories ->
-          when {
-            histories.isNotEmpty() -> histories.first()
-            else -> throw AssertionError("Medical History isn't present for $patientUuid")
+          if (histories.size > 1) {
+            throw AssertionError("Multiple histories are present for $patientUuid: $histories")
+          }
+          if (histories.isEmpty()) {
+            // This patient's MedicalHistory hasn't synced yet. We're okay with overriding
+            // the values with an empty history instead of say, not showing the medical
+            // history at all in patient summary.
+            defaultValue
+
+          } else {
+            histories.first()
           }
         }
-        .toObservable()
   }
 
   fun save(patientUuid: UUID, historyEntry: OngoingMedicalHistoryEntry): Completable {
@@ -45,12 +66,12 @@ class MedicalHistoryRepository @Inject constructor(
     return save(listOf(medicalHistory))
   }
 
-  fun update(history: MedicalHistory): Completable {
+  fun save(history: MedicalHistory): Completable {
     return Completable.fromAction {
       val dirtyHistory = history.copy(
           syncStatus = SyncStatus.PENDING,
           updatedAt = Instant.now(clock))
-      dao.update(dirtyHistory)
+      dao.save(dirtyHistory)
     }
   }
 

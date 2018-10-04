@@ -207,6 +207,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun populateList(
       prescribedDrugsItem: SummaryPrescribedDrugsItem,
+      measurementPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       measurementItems: List<SummaryBloodPressureListItem>,
       medicalHistoryItem: SummaryMedicalHistoryItem
   ) {

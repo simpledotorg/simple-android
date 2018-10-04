@@ -20,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockReporter
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -110,7 +111,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
-    verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any(), any())
+    verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any(), any(), any())
   }
 
   @Test
@@ -127,10 +128,90 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen).populateList(
         any(),
+        any(),
         check {
           it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
         },
         any())
+  }
+
+  @Test
+  @Parameters(method = "params for placeholder bp items")
+  fun `the placeholder blood pressure items must be shown`(
+      bloodPressureMeasurements: List<BloodPressureMeasurement>,
+      expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
+      expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
+  ) {
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
+
+    verify(screen).populateList(
+        prescribedDrugsItem = any(),
+        measurementPlaceholderItems = eq(expectedPlaceholderItems),
+        measurementItems = check {
+          it.forEachIndexed { index, item -> assertThat(item.measurement).isEqualTo(expectedBloodPressureMeasurementItems[index].measurement) }
+        },
+        medicalHistoryItem = any()
+    )
+  }
+
+  @Suppress("Unused")
+  private fun `params for placeholder bp items`(): Array<Array<Any>> {
+    val bpsForTest2 = listOf(PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85))
+    val bpsForTest3 = listOf(
+        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
+        PatientMocker.bp(patientUuid, systolic = 130, diastolic = 75)
+    )
+    val bpsForTest4 = listOf(
+        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
+        PatientMocker.bp(patientUuid, systolic = 130, diastolic = 75),
+        PatientMocker.bp(patientUuid, systolic = 140, diastolic = 90)
+    )
+
+    // We won't be verifying the relative timestamps in the test this is used in,
+    // so we can just set it to a static value.
+
+    return arrayOf(
+        arrayOf<Any>(
+            emptyList<BloodPressureMeasurement>(),
+            listOf(
+                SummaryBloodPressurePlaceholderListItem(1, true),
+                SummaryBloodPressurePlaceholderListItem(2),
+                SummaryBloodPressurePlaceholderListItem(3)
+            ),
+            emptyList<SummaryBloodPressureListItem>()
+        ),
+        arrayOf<Any>(
+            bpsForTest2,
+            listOf(
+                SummaryBloodPressurePlaceholderListItem(1),
+                SummaryBloodPressurePlaceholderListItem(2)
+            ),
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest2[0], timestamp = Today)
+            )
+        ),
+        arrayOf<Any>(
+            bpsForTest3,
+            listOf(SummaryBloodPressurePlaceholderListItem(1)),
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest3[0], timestamp = Today),
+                SummaryBloodPressureListItem(measurement = bpsForTest3[1], timestamp = Today)
+            )
+        ),
+        arrayOf<Any>(
+            bpsForTest4,
+            emptyList<SummaryBloodPressurePlaceholderListItem>(),
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest4[0], timestamp = Today),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[1], timestamp = Today),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[2], timestamp = Today)
+            )
+        )
+    )
   }
 
   @Test
@@ -143,7 +224,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
-    verify(screen).populateList(any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today)))
+    verify(screen).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today)))
   }
 
   @Test
@@ -153,7 +234,6 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
     verify(screen, never()).showBloodPressureEntrySheetIfNotShownAlready(any())
-
   }
 
   @Test

@@ -8,13 +8,17 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class BloodPressureEntrySheetControllerTest {
 
   private val sheet = mock<BloodPressureEntrySheet>()
@@ -31,6 +35,24 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
+  }
+
+  @Test
+  @Parameters(value = [
+    "90|true",
+    "120|true",
+    "300|true",
+    "66|false",
+    "44|false"
+  ])
+  fun `when valid systolic value is entered, move cursor to diastolic field automatically`(sampleSystolicBp: String, shouldMove: Boolean) {
+    uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
+    uiEvents.onNext(BloodPressureSystolicTextChanged(sampleSystolicBp))
+
+    when (shouldMove) {
+      true -> verify(sheet).changeFocusToDiastolic()
+      false -> verify(sheet, never()).changeFocusToDiastolic()
+    }
   }
 
   @Test
@@ -90,6 +112,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Test
   fun `when systolic or diastolic values change, hide the error message`() {
+    uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
     uiEvents.onNext(BloodPressureSystolicTextChanged("12"))
     uiEvents.onNext(BloodPressureSystolicTextChanged("120"))
     uiEvents.onNext(BloodPressureSystolicTextChanged("130"))

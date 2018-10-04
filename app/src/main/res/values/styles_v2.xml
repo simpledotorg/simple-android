@@ -139,16 +139,9 @@
 
   <style name="Clinic.V2.ToolbarStyle" parent="Widget.AppCompat.Toolbar">
     <item name="android:background">?colorPrimary</item>
-    <item name="titleTextColor">@color/white</item>
     <item name="contentInsetStartWithNavigation">64dp</item>
     <item name="android:elevation" tools:ignore="NewApi">@dimen/elevation_toolbar</item>
-    <item name="titleTextAppearance">@style/Clinic.V2.TextAppearance.ToolbarTitle</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.ToolbarTitle">
-    <item name="android:textSize">@dimen/textsize_18</item>
-    <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
-    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="titleTextAppearance">@style/Clinic.V2.TextAppearance.H6.White100</item>
   </style>
 
   <style name="Clinic.V2.Button">
@@ -200,7 +193,6 @@
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
     <item name="android:lineSpacingExtra">8sp</item>
-    <item name="android:textColor">@color/grey2</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.H6.Grey0">
@@ -213,6 +205,18 @@
 
   <style name="Clinic.V2.TextAppearance.H6.Grey1">
     <item name="android:textColor">@color/grey1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.H6.White100">
+    <item name="android:textColor">@color/white100</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.SearchResultsTitle">
+    <item name="android:textSize">@dimen/textsize_18</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:textColor">@color/grey0</item>
   </style>
 
   <!-- Screen/feature specific styles start here. -->

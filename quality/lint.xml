@@ -14,6 +14,17 @@
     <!-- Heap analytics plugin adds these resources dynamically. -->
     <ignore regexp="com.heapanalytics.android.*" />
   </issue>
+
+  <!-- Ignore this for now due to time constraints. Switch to static images later. -->
+  <issue id="VectorPath">
+    <ignore path="src/main/res/drawable/logo_large.xml" />
+    <ignore path="src/main/res/drawable/logo_regular.xml" />
+    <ignore path="src/debug/res/drawable/logo_large.xml" />
+    <ignore path="src/debug/res/drawable/logo_regular.xml" />
+    <ignore path="src/staging/res/drawable/logo_large.xml" />
+    <ignore path="src/staging/res/drawable/logo_regular.xml" />
+  </issue>
+
   <issue id="ParcelCreator" severity="informational" />
   <issue id="GradleDependency" severity="informational" />
 

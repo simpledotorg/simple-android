@@ -6,6 +6,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
@@ -20,9 +21,9 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
-import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -36,18 +37,25 @@ private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
 }
 
 @AppScope
-class TestData @Inject constructor(private val faker: Faker) {
+class TestData @Inject constructor(
+    private val faker: Faker,
+    private val facilityRepository: FacilityRepository,
+    private val userSession: UserSession
+) {
 
-  fun qaUserUuid() = UUID.fromString("c6834f82-3305-4144-9dc8-5f77c908ebf1")
+  fun qaUserUuid(): UUID =
+      userSession.requireLoggedInUser()
+          .map { it.uuid }
+          .blockingFirst()
 
-  fun qaUserOtp(): String = "000000"
+  fun qaUserPin() = "1712"
 
-  fun qaOngoingLoginEntry() = OngoingLoginEntry(qaUserUuid(), phoneNumber = "0000", pin = "0000")
+  fun qaUserOtp() = "000000"
 
-  @Deprecated(message = "Get real facilities from the server instead. Look at UserSessionAndroidTest for examples.")
-  fun qaUserFacilityUuid(): UUID {
-    return UUID.fromString("43dad34c-139e-4e5f-976e-a3ef1d9ac977")
-  }
+  fun qaUserFacilityUuid(): UUID =
+      facilityRepository.currentFacility(userSession)
+          .map { it.uuid }
+          .blockingFirst()
 
   fun patientPayload(
       fullName: String = faker.name.name(),
@@ -161,11 +169,14 @@ class TestData @Inject constructor(private val faker: Faker) {
         loggedInStatus = loggedInStatus)
   }
 
-  fun ongoingRegistrationEntry(facilities: List<Facility>): OngoingRegistrationEntry {
-    val pin = faker.number.number(4)
+  fun ongoingRegistrationEntry(
+      phoneNumber: String = faker.number.number(10),
+      pin: String = qaUserPin(),
+      facilities: List<Facility>
+  ): OngoingRegistrationEntry {
     return OngoingRegistrationEntry(
         uuid = UUID.randomUUID(),
-        phoneNumber = faker.number.number(10),
+        phoneNumber = phoneNumber,
         fullName = faker.name.name(),
         pin = pin,
         pinConfirmation = pin,
@@ -355,7 +366,7 @@ class TestData @Inject constructor(private val faker: Faker) {
     val ongoingPhoneNumber = phone?.let {
       OngoingPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.MOBILE, active = true)
     }
-    return OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
 
+    return OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
   }
 }

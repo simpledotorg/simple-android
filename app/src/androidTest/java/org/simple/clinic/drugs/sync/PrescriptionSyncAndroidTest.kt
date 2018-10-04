@@ -143,7 +143,7 @@ class PrescriptionSyncAndroidTest {
 
   @Test
   fun when_pulling_prescriptions_then_paginate_till_the_server_does_not_have_anymore_prescriptions() {
-    lastPullTimestamp.set(Just(Instant.now().minusMillis(100)))
+    lastPullTimestamp.set(Just(Instant.EPOCH))
 
     val prescriptionsToInsert = 2 * configProvider.blockingGet().batchSize + 7
     insertDummyPrescriptions(count = prescriptionsToInsert).blockingAwait()

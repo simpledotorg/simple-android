@@ -1,11 +1,14 @@
 package org.simple.clinic.bp.entry
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
+import android.widget.TextView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -27,6 +30,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditText>(R.id.bloodpressureentry_diastolic)
+  private val errorTextView by bindView<TextView>(R.id.bloodpressureentry_error)
 
   private val onDestroys = PublishSubject.create<Any>()
 
@@ -43,6 +47,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     }
   }
 
+  @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -103,4 +108,32 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     finish()
   }
 
+  fun hideErrorMessage() {
+    errorTextView.visibility = View.GONE
+  }
+
+  fun showSystolicLessThanDiastolicError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_more)
+    errorTextView.visibility = View.VISIBLE
+  }
+
+  fun showSystolicLowError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_70)
+    errorTextView.visibility = View.VISIBLE
+  }
+
+  fun showSystolicHighError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_300)
+    errorTextView.visibility = View.VISIBLE
+  }
+
+  fun showDiastolicLowError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_40)
+    errorTextView.visibility = View.VISIBLE
+  }
+
+  fun showDiastolicHighError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_180)
+    errorTextView.visibility = View.VISIBLE
+  }
 }

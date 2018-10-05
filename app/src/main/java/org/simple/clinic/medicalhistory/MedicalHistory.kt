@@ -55,7 +55,18 @@ data class MedicalHistory(
     @Query("DELETE FROM MedicalHistory")
     fun clear()
 
-    @Query("SELECT * FROM MedicalHistory WHERE patientUuid = :patientUuid")
+    /**
+     * The last updated medical history is returned because it's possible
+     * to have multiple medical histories present for the same patient.
+     * See [MedicalHistoryRepository.historyForPatientOrDefault] to
+     * understand when this will happen.
+     */
+    @Query("""
+      SELECT * FROM MedicalHistory
+      WHERE patientUuid = :patientUuid
+      ORDER BY updatedAt DESC
+      LIMIT 1
+    """)
     fun historyForPatient(patientUuid: PatientUuid): Flowable<List<MedicalHistory>>
   }
 }

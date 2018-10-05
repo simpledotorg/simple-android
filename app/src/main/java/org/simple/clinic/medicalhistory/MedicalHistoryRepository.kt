@@ -3,7 +3,6 @@ package org.simple.clinic.medicalhistory
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
@@ -37,11 +36,7 @@ class MedicalHistoryRepository @Inject constructor(
         .toObservable()
         .map { histories ->
           if (histories.size > 1) {
-            if (BuildConfig.DEBUG) {
-              throw AssertionError("Multiple histories are present for $patientUuid: $histories")
-            } else {
-              throw AssertionError("Multiple histories are present")
-            }
+            throw AssertionError("DAO shouldn't have returned multiple histories for the same patient")
           }
           if (histories.isEmpty()) {
             // This patient's MedicalHistory hasn't synced yet. We're okay with overriding
@@ -71,11 +66,11 @@ class MedicalHistoryRepository @Inject constructor(
     return save(listOf(medicalHistory))
   }
 
-  fun save(history: MedicalHistory): Completable {
+  fun save(history: MedicalHistory, updateTime: () -> Instant = { Instant.now(clock) }): Completable {
     return Completable.fromAction {
       val dirtyHistory = history.copy(
           syncStatus = SyncStatus.PENDING,
-          updatedAt = Instant.now(clock))
+          updatedAt = updateTime())
       dao.save(dirtyHistory)
     }
   }

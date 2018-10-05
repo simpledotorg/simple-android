@@ -230,7 +230,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       recyclerViewAdapter.add(prescriptionSection)
     }
 
-    bloodPressureSection.update(measurementItems)
+    bloodPressureSection.update(measurementItems + measurementPlaceholderItems)
     if (isFirstUpdate) {
       recyclerViewAdapter.add(bloodPressureSection)
     }

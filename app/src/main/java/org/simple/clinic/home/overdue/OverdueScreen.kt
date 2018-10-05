@@ -118,8 +118,8 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     activity.startActivity(intent)
   }
 
-  fun showRemovePatientReasonSheet(appointmentUuid: UUID) {
-    val intent = RemoveAppointmentSheet.intent(context, appointmentUuid)
+  fun showRemovePatientReasonSheet(appointmentUuid: UUID, patientUuid: UUID) {
+    val intent = RemoveAppointmentSheet.intent(context, appointmentUuid, patientUuid)
     activity.startActivity(intent)
   }
 

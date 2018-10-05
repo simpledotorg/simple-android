@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -24,11 +25,13 @@ class RemoveAppointmentSheetControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val appointmentUuid = UUID.randomUUID()
 
+  private val patientRepository = mock<PatientRepository>()
+
   lateinit var controller: RemoveAppointmentSheetController
 
   @Before
   fun setUp() {
-    controller = RemoveAppointmentSheetController(repository)
+    controller = RemoveAppointmentSheetController(repository, patientRepository)
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
   }
 
@@ -65,22 +68,44 @@ class RemoveAppointmentSheetControllerTest {
   }
 
   @Test
-  fun `when done is clicked, and a cancel reason is selected, then repository should update and sheet should close`() {
+  fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`(){
     whenever(repository.cancelWithReason(appointmentUuid, Appointment.CancelReason.DEAD)).thenReturn(Completable.complete())
+    val patientUuid = UUID.randomUUID()
+    whenever(patientRepository.updatePatientStatusToDead(patientUuid)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    uiEvents.onNext(AlreadyVisitedReasonClicked)
+    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.PATIENT_NOT_RESPONDING))
+    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.DEAD))
+    uiEvents.onNext(PatientDeadClicked(patientUuid))
+    uiEvents.onNext(RemoveReasonDoneClicked)
+
+    verify(repository, never()).markAsVisited(any())
+
+    val inOrder = inOrder(sheet, repository, patientRepository)
+    inOrder.verify(sheet, times(4)).enableDoneButton()
+    inOrder.verify(patientRepository).updatePatientStatusToDead(patientUuid)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid,Appointment.CancelReason.DEAD)
+    inOrder.verify(sheet).closeSheet()
+  }
+
+  @Test
+  fun `when done is clicked, and a cancel reason is selected, then repository should update and sheet should close`() {
+    whenever(repository.cancelWithReason(appointmentUuid, Appointment.CancelReason.MOVED)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
     uiEvents.onNext(AlreadyVisitedReasonClicked)
     uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.PATIENT_NOT_RESPONDING))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.DEAD))
+    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.MOVED))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
     verify(repository, never()).markAsVisited(any())
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
-    inOrder.verify(repository).cancelWithReason(appointmentUuid, Appointment.CancelReason.DEAD)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, Appointment.CancelReason.MOVED)
     inOrder.verify(sheet).closeSheet()
   }
 }

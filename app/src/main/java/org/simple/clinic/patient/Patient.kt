@@ -93,5 +93,8 @@ data class Patient constructor(
 
     @Query("DELETE FROM patient")
     fun clear()
+
+    @Query("UPDATE patient SET status = :newStatus WHERE uuid = :uuid")
+    fun updatePatientStatus(uuid: UUID, newStatus: PatientStatus)
   }
 }

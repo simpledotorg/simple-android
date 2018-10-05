@@ -14,9 +14,12 @@ import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
+import java.util.Random
 import java.util.UUID
 
 object PatientMocker {
+
+  private val random = Random()
 
   fun patient(
       uuid: UUID = UUID.randomUUID(),
@@ -54,8 +57,8 @@ object PatientMocker {
   fun bp(
       uuid: UUID = mock(),
       patientUuid: UUID = mock(),
-      systolic: Int = 164,
-      diastolic: Int = 90,
+      systolic: Int = random.nextInt(100) + 100,
+      diastolic: Int = random.nextInt(100),
       syncStatus: SyncStatus = mock()
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(

@@ -139,6 +139,6 @@ class OverdueScreenController @Inject constructor(
 
   private fun removeAppointmentSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<RemoveFromListClicked>()
-        .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUUID) } }
+        .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUUID, it.patientUuid) } }
   }
 }

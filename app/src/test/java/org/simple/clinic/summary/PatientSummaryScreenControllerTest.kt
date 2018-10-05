@@ -159,24 +159,24 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for placeholder bp items`(): Array<Array<Any>> {
-    val bpsForTest2 = listOf(PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85))
+  private fun `params for placeholder bp items`(): List<List<Any>> {
+    val bpsForTest1 = emptyList<BloodPressureMeasurement>()
+    val bpsForTest2 = listOf(PatientMocker.bp(patientUuid))
     val bpsForTest3 = listOf(
-        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
-        PatientMocker.bp(patientUuid, systolic = 130, diastolic = 75)
+        PatientMocker.bp(patientUuid),
+        PatientMocker.bp(patientUuid)
     )
     val bpsForTest4 = listOf(
-        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
-        PatientMocker.bp(patientUuid, systolic = 130, diastolic = 75),
-        PatientMocker.bp(patientUuid, systolic = 140, diastolic = 90)
+        PatientMocker.bp(patientUuid),
+        PatientMocker.bp(patientUuid),
+        PatientMocker.bp(patientUuid)
     )
 
     // We won't be verifying the relative timestamps in the test this is used in,
     // so we can just set it to a static value.
-
-    return arrayOf(
-        arrayOf<Any>(
-            emptyList<BloodPressureMeasurement>(),
+    return listOf(
+        listOf<Any>(
+            bpsForTest1,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1, true),
                 SummaryBloodPressurePlaceholderListItem(2),
@@ -184,7 +184,7 @@ class PatientSummaryScreenControllerTest {
             ),
             emptyList<SummaryBloodPressureListItem>()
         ),
-        arrayOf<Any>(
+        listOf<Any>(
             bpsForTest2,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -194,7 +194,7 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest2[0], timestamp = Today)
             )
         ),
-        arrayOf<Any>(
+        listOf<Any>(
             bpsForTest3,
             listOf(SummaryBloodPressurePlaceholderListItem(1)),
             listOf(
@@ -202,7 +202,7 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest3[1], timestamp = Today)
             )
         ),
-        arrayOf<Any>(
+        listOf<Any>(
             bpsForTest4,
             emptyList<SummaryBloodPressurePlaceholderListItem>(),
             listOf(

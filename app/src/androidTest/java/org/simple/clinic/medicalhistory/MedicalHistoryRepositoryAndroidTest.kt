@@ -104,4 +104,26 @@ class MedicalHistoryRepositoryAndroidTest {
     assertThat(emptyHistory.hasDiabetes).isFalse()
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
+
+  @Test
+  fun when_multiple_medical_histories_are_present_for_a_patient_then_only_the_last_edited_one_should_be_returned() {
+    val patientUuid = UUID.randomUUID()
+
+    val olderHistory = testData.medicalHistory(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minusMillis(100),
+        updatedAt = Instant.now(clock).minusMillis(100))
+
+    val newerHistory = testData.medicalHistory(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minusMillis(100),
+        updatedAt = Instant.now(clock))
+
+    repository.save(olderHistory, updateTime = {olderHistory.updatedAt})
+        .andThen(repository.save(newerHistory, updateTime = {newerHistory.updatedAt}))
+        .blockingAwait()
+
+    val foundHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
+    assertThat(foundHistory.uuid).isEqualTo(newerHistory.uuid)
+  }
 }

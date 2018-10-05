@@ -36,7 +36,9 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
+import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -48,6 +50,7 @@ class PatientSummaryScreenControllerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val patientUuid = UUID.randomUUID()
+  private val clock = Clock.fixed(Instant.now(), UTC)
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockReporter()
@@ -62,7 +65,8 @@ class PatientSummaryScreenControllerTest {
         bpRepository,
         prescriptionRepository,
         medicalHistoryRepository,
-        timestampGenerator)
+        timestampGenerator,
+        clock)
 
     uiEvents
         .compose(controller)
@@ -265,7 +269,7 @@ class PatientSummaryScreenControllerTest {
         hasDiabetes = false,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
-    whenever(medicalHistoryRepository.save(any<MedicalHistory>())).thenReturn(Completable.complete())
+    whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, selected = true))
@@ -277,7 +281,7 @@ class PatientSummaryScreenControllerTest {
         hasHadStroke = question == HAS_HAD_A_STROKE,
         hasHadKidneyDisease = question == HAS_HAD_A_KIDNEY_DISEASE,
         hasDiabetes = question == HAS_DIABETES)
-    verify(medicalHistoryRepository).save(updatedMedicalHistory)
+    verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
   }
 
   @Suppress("unused")

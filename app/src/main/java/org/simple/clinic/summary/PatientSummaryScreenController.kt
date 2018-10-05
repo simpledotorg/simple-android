@@ -28,6 +28,7 @@ import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
 import javax.inject.Inject
 
 typealias Ui = PatientSummaryScreen
@@ -38,7 +39,8 @@ class PatientSummaryScreenController @Inject constructor(
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val timestampGenerator: RelativeTimestampGenerator
+    private val timestampGenerator: RelativeTimestampGenerator,
+    private val clock: Clock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private lateinit var disposable: Disposable

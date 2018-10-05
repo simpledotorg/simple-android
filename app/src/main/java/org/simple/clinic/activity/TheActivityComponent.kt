@@ -41,6 +41,7 @@ import org.simple.clinic.search.PatientSearchModule
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -94,7 +95,7 @@ interface TheActivityComponent {
   }
 }
 
-@Module(includes = [OnboardingModule::class, PatientsModule::class, PatientSearchModule::class])
+@Module(includes = [OnboardingModule::class, PatientsModule::class, PatientSearchModule::class, PatientSummaryModule::class])
 class TheActivityModule {
 
   @Provides

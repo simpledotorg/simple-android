@@ -34,15 +34,14 @@ import javax.inject.Inject
 typealias Ui = PatientSummaryScreen
 typealias UiChange = (Ui) -> Unit
 
-const val numBpPlaceholders = 3
-
 class PatientSummaryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
-    private val clock: Clock
+    private val clock: Clock,
+    private val config: PatientSummaryConfig
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private lateinit var disposable: Disposable
@@ -134,9 +133,10 @@ class PatientSummaryScreenController @Inject constructor(
     val bloodPressurePlaceholders = bloodPressures
         .map { it.size }
         .map { numberOfBloodPressures ->
+          val numberOfPlaceholders = config.numberOfBpPlaceholders
           when {
-            numberOfBloodPressures >= numBpPlaceholders -> emptyList()
-            else -> (0 until numBpPlaceholders - numberOfBloodPressures).map { placeholderIndex ->
+            numberOfBloodPressures >= numberOfPlaceholders -> emptyList()
+            else -> (0 until numberOfPlaceholders - numberOfBloodPressures).map { placeholderIndex ->
               val shouldShowHint = numberOfBloodPressures == 0 && placeholderIndex == 0
               SummaryBloodPressurePlaceholderListItem(placeholderIndex + 1, shouldShowHint)
             }

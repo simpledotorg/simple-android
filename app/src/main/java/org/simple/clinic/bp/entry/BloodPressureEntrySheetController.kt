@@ -7,8 +7,10 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_EMPTY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_TOO_HIGH
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_TOO_LOW
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_EMPTY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_LESS_THAN_DIASTOLIC
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_HIGH
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_LOW
@@ -84,7 +86,10 @@ class BloodPressureEntrySheetController @Inject constructor(
               ERROR_SYSTOLIC_TOO_LOW -> ui.showSystolicLowError()
               ERROR_DIASTOLIC_TOO_HIGH -> ui.showDiastolicHighError()
               ERROR_DIASTOLIC_TOO_LOW -> ui.showDiastolicLowError()
-              SUCCESS -> { // Nothing to do here, SUCCESS handled below separately!
+              ERROR_SYSTOLIC_EMPTY -> ui.showSystolicEmptyError()
+              ERROR_DIASTOLIC_EMPTY -> ui.showDiastolicEmptyError()
+              SUCCESS -> {
+                // Nothing to do here, SUCCESS handled below separately!
               }
             }.exhaustive()
           }
@@ -104,8 +109,15 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun validateInput(systolic: String, diastolic: String): Validation {
-    val systolicNumber = systolic.toInt()
-    val diastolicNumber = diastolic.toInt()
+    if (systolic.isBlank()) {
+      return ERROR_SYSTOLIC_EMPTY
+    }
+    if (diastolic.isBlank()) {
+      return ERROR_DIASTOLIC_EMPTY
+    }
+
+    val systolicNumber = systolic.trim().toInt()
+    val diastolicNumber = diastolic.trim().toInt()
 
     return when {
       systolicNumber < 70 -> ERROR_SYSTOLIC_TOO_LOW
@@ -119,6 +131,8 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   enum class Validation {
     SUCCESS,
+    ERROR_SYSTOLIC_EMPTY,
+    ERROR_DIASTOLIC_EMPTY,
     ERROR_SYSTOLIC_TOO_HIGH,
     ERROR_SYSTOLIC_TOO_LOW,
     ERROR_DIASTOLIC_TOO_HIGH,

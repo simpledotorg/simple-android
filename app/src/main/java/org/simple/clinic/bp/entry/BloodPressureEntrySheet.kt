@@ -136,4 +136,14 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_180)
     errorTextView.visibility = View.VISIBLE
   }
+
+  fun showSystolicEmptyError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_empty)
+    errorTextView.visibility = View.VISIBLE
+  }
+
+  fun showDiastolicEmptyError() {
+    errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_empty)
+    errorTextView.visibility = View.VISIBLE
+  }
 }

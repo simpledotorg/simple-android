@@ -111,6 +111,28 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
+  fun `when systolic is empty, show error`() {
+    uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
+    uiEvents.onNext(BloodPressureSystolicTextChanged(""))
+    uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
+    uiEvents.onNext(BloodPressureSaveClicked())
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(sheet).showSystolicEmptyError()
+  }
+
+  @Test
+  fun `when diastolic is empty, show error`() {
+    uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
+    uiEvents.onNext(BloodPressureSystolicTextChanged("120"))
+    uiEvents.onNext(BloodPressureDiastolicTextChanged(""))
+    uiEvents.onNext(BloodPressureSaveClicked())
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(sheet).showDiastolicEmptyError()
+  }
+
+  @Test
   fun `when systolic or diastolic values change, hide the error message`() {
     uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
     uiEvents.onNext(BloodPressureSystolicTextChanged("12"))
@@ -123,10 +145,17 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
-  fun `when save is clicked but input is invalid then blood pressure measurement should not be saved`() {
+  @Parameters(value = [
+    ",",
+    "1,1"
+  ])
+  fun `when save is clicked but input is invalid then blood pressure measurement should not be saved`(
+      systolic: String,
+      diastolic: String
+  ) {
     uiEvents.onNext(BloodPressureEntrySheetCreated(patientUuid))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("1"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("1"))
+    uiEvents.onNext(BloodPressureSystolicTextChanged(systolic))
+    uiEvents.onNext(BloodPressureDiastolicTextChanged(diastolic))
     uiEvents.onNext(BloodPressureSaveClicked())
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())

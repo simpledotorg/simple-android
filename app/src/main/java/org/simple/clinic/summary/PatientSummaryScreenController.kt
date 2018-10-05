@@ -116,12 +116,34 @@ class PatientSummaryScreenController @Inject constructor(
         .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
         .map(::SummaryPrescribedDrugsItem)
 
-    val bloodPressureItems = patientUuids
+    val bloodPressures = patientUuids
         .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
+        .replay(1)
+        .refCount()
+
+    val bloodPressureItems = bloodPressures
         .map { measurements ->
           measurements.map { measurement ->
             val timestamp = timestampGenerator.generate(measurement.updatedAt)
             SummaryBloodPressureListItem(measurement, timestamp)
+          }
+        }
+
+    val bloodPressurePlaceholders = bloodPressures
+        .map { it.size }
+        .map { numberOfBloodPressures ->
+          when (numberOfBloodPressures) {
+            0 -> listOf(
+                SummaryBloodPressurePlaceholderListItem(1, showHint = true),
+                SummaryBloodPressurePlaceholderListItem(2),
+                SummaryBloodPressurePlaceholderListItem(3)
+            )
+            1 -> listOf(
+                SummaryBloodPressurePlaceholderListItem(1),
+                SummaryBloodPressurePlaceholderListItem(2)
+            )
+            2 -> listOf(SummaryBloodPressurePlaceholderListItem(1))
+            else -> emptyList()
           }
         }
 
@@ -134,12 +156,13 @@ class PatientSummaryScreenController @Inject constructor(
 
     // combineLatest() is important here so that the first data-set for the list
     // is dispatched in one go instead of them appearing one after another on the UI.
-    return Observables.combineLatest(prescriptionItems, bloodPressureItems, medicalHistoryItems)
-        .map { (prescriptions, bp, history) ->
-          { ui: Ui ->
-            ui.populateList(prescriptions, emptyList(), bp, history)
-          }
-        }
+    return Observables.combineLatest(
+        prescriptionItems,
+        bloodPressureItems,
+        medicalHistoryItems,
+        bloodPressurePlaceholders) { prescriptions, bp, history, placeHolders ->
+      { ui: Ui -> ui.populateList(prescriptions, placeHolders, bp, history) }
+    }
   }
 
   private fun updateMedicalHistory(events: Observable<UiEvent>): Observable<UiChange> {

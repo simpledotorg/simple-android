@@ -34,6 +34,8 @@ import javax.inject.Inject
 typealias Ui = PatientSummaryScreen
 typealias UiChange = (Ui) -> Unit
 
+const val numBpPlaceholders = 3
+
 class PatientSummaryScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val bpRepository: BloodPressureRepository,
@@ -132,18 +134,12 @@ class PatientSummaryScreenController @Inject constructor(
     val bloodPressurePlaceholders = bloodPressures
         .map { it.size }
         .map { numberOfBloodPressures ->
-          when (numberOfBloodPressures) {
-            0 -> listOf(
-                SummaryBloodPressurePlaceholderListItem(1, showHint = true),
-                SummaryBloodPressurePlaceholderListItem(2),
-                SummaryBloodPressurePlaceholderListItem(3)
-            )
-            1 -> listOf(
-                SummaryBloodPressurePlaceholderListItem(1),
-                SummaryBloodPressurePlaceholderListItem(2)
-            )
-            2 -> listOf(SummaryBloodPressurePlaceholderListItem(1))
-            else -> emptyList()
+          when {
+            numberOfBloodPressures >= numBpPlaceholders -> emptyList()
+            else -> (0 until numBpPlaceholders - numberOfBloodPressures).map { placeholderIndex ->
+              val shouldShowHint = numberOfBloodPressures == 0 && placeholderIndex == 0
+              SummaryBloodPressurePlaceholderListItem(placeholderIndex + 1, shouldShowHint)
+            }
           }
         }
 

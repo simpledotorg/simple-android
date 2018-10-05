@@ -6,7 +6,9 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.overdue.Appointment.CancelReason.DEAD
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -14,7 +16,8 @@ typealias Ui = RemoveAppointmentSheet
 typealias UiChange = (Ui) -> Unit
 
 class RemoveAppointmentSheetController @Inject constructor(
-    private val repository: AppointmentRepository
+    private val appointmentRepository: AppointmentRepository,
+    private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(event: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -28,7 +31,8 @@ class RemoveAppointmentSheetController @Inject constructor(
   private fun reasonClicks(events: Observable<UiEvent>): Observable<UiChange> {
     val mergedReasons = Observable.merge(
         events.ofType<AlreadyVisitedReasonClicked>(),
-        events.ofType<CancelReasonClicked>())
+        events.ofType<CancelReasonClicked>(),
+        events.ofType<PatientDeadClicked>())
 
     return mergedReasons
         .distinctUntilChanged()
@@ -41,9 +45,10 @@ class RemoveAppointmentSheetController @Inject constructor(
 
     val alreadyVisitedClicks = events.ofType<AlreadyVisitedReasonClicked>()
     val cancelReasonClicks = events.ofType<CancelReasonClicked>()
+    val diedReasonClicks = events.ofType<PatientDeadClicked>()
 
     val mergedReasons = Observable.merge(alreadyVisitedClicks
-        , cancelReasonClicks)
+        , cancelReasonClicks, diedReasonClicks)
 
     val doneWithLatestFromReasons = events.ofType<RemoveReasonDoneClicked>()
         .withLatestFrom(appointmentUuids, mergedReasons)
@@ -51,17 +56,26 @@ class RemoveAppointmentSheetController @Inject constructor(
     val markAsVisitedStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is AlreadyVisitedReasonClicked }
         .flatMap { (_, uuid, _) ->
-          repository.markAsVisited(uuid)
+          appointmentRepository.markAsVisited(uuid)
+              .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
+        }
+
+    val markPatientStatusDeadStream = doneWithLatestFromReasons
+        .filter { (_, _, reason) -> reason is PatientDeadClicked }
+        .flatMap { (_, uuid, reason) ->
+          patientRepository.updatePatientStatusToDead((reason as PatientDeadClicked).patientUuid)
+              .andThen(appointmentRepository.cancelWithReason(uuid, DEAD))
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
     val cancelWithReasonStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is CancelReasonClicked }
         .flatMap { (_, uuid, reason) ->
-          repository.cancelWithReason(uuid, (reason as CancelReasonClicked).selectedReason)
+          appointmentRepository.cancelWithReason(uuid, (reason as CancelReasonClicked).selectedReason)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
-    return Observable.merge(markAsVisitedStream, cancelWithReasonStream)
+
+    return Observable.merge(markAsVisitedStream, cancelWithReasonStream, markPatientStatusDeadStream)
   }
 }

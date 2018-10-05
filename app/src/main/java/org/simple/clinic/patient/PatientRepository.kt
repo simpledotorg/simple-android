@@ -175,6 +175,14 @@ class PatientRepository @Inject constructor(
         }
   }
 
+  fun updatePatientStatusToDead(patientUuid: UUID): Completable{
+    return Completable.fromAction {
+      database.patientDao()
+          .updatePatientStatus(patientUuid, PatientStatus.DEAD)
+      updatePatientsSyncStatus(listOf(patientUuid), PENDING)
+    }
+  }
+
   fun mergeWithLocalData(serverPayloads: List<PatientPayload>): Completable {
     return serverPayloads
         .toObservable()

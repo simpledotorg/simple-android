@@ -12,7 +12,6 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.overdue.Appointment.CancelReason.DEAD
 import org.simple.clinic.overdue.Appointment.CancelReason.MOVED
 import org.simple.clinic.overdue.Appointment.CancelReason.OTHER
 import org.simple.clinic.overdue.Appointment.CancelReason.PATIENT_NOT_RESPONDING
@@ -26,10 +25,12 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_APPOINTMENT_UUID = "KEY_APPOINTMENT_UUID"
+    private const val KEY_PATIENT_UUID = "KEY_PATIENT_UUID"
 
-    fun intent(context: Context, appointmentUuid: UUID) =
+    fun intent(context: Context, appointmentUuid: UUID, patientUuid: UUID) =
         Intent(context, RemoveAppointmentSheet::class.java)
-            .putExtra(RemoveAppointmentSheet.KEY_APPOINTMENT_UUID, appointmentUuid)!!
+            .putExtra(RemoveAppointmentSheet.KEY_APPOINTMENT_UUID, appointmentUuid)
+            .putExtra(KEY_PATIENT_UUID, patientUuid)!!
   }
 
   @Inject
@@ -50,7 +51,7 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_remove_appointment)
     TheActivity.component.inject(this)
 
-    Observable.merge(sheetCreates(), alreadyVisitedClicks(), cancelReasonClicks(), doneClicks())
+    Observable.mergeArray(sheetCreates(), alreadyVisitedClicks(), cancelReasonClicks(), doneClicks(), patientDiedClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -67,13 +68,17 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
 
   private fun alreadyVisitedClicks() = RxView.clicks(alreadyVisitedRadioButton).map { AlreadyVisitedReasonClicked }
 
+  private fun patientDiedClicks() = RxView.clicks(diedRadioButton).map {
+    PatientDeadClicked(patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
+    )
+  }
+
   private fun cancelReasonClicks(): Observable<UiEvent> {
     val movedOutStream = RxView.clicks(movedOutRadioButton).map { CancelReasonClicked(MOVED) }
     val notRespondingStream = RxView.clicks(notRespondingRadioButton).map { CancelReasonClicked(PATIENT_NOT_RESPONDING) }
-    val deathStream = RxView.clicks(diedRadioButton).map { CancelReasonClicked(DEAD) }
     val otherStream = RxView.clicks(otherReasonRadioButton).map { CancelReasonClicked(OTHER) }
 
-    return Observable.merge(movedOutStream, notRespondingStream, deathStream, otherStream)
+    return Observable.merge(movedOutStream, notRespondingStream, otherStream)
   }
 
   fun closeSheet() = finish()

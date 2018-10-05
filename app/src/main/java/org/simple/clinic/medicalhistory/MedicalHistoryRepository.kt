@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
@@ -36,7 +37,11 @@ class MedicalHistoryRepository @Inject constructor(
         .toObservable()
         .map { histories ->
           if (histories.size > 1) {
-            throw AssertionError("Multiple histories are present for $patientUuid: $histories")
+            if (BuildConfig.DEBUG) {
+              throw AssertionError("Multiple histories are present for $patientUuid: $histories")
+            } else {
+              throw AssertionError("Multiple histories are present")
+            }
           }
           if (histories.isEmpty()) {
             // This patient's MedicalHistory hasn't synced yet. We're okay with overriding

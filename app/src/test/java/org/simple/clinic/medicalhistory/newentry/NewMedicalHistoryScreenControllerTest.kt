@@ -43,7 +43,7 @@ class NewMedicalHistoryScreenControllerTest {
   fun setUp() {
     controller = NewMedicalHistoryScreenController(medicalHistoryRepository, patientRepository)
 
-    whenever(medicalHistoryRepository.save(any(), any())).thenReturn(Completable.complete())
+    whenever(medicalHistoryRepository.save(any<UUID>(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }

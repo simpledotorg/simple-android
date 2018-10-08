@@ -56,12 +56,14 @@ class PatientSummaryScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val reporter = MockReporter()
 
-  // If the placeholder count is changed, the `params for placeholder bp items`
-  // method will also need to be changed to account for the change in the
-  // number of placeholder.
-
-  // TODO: Change the method to generate test inputs dynamically based on
-  // the number of placeholders declared.
+  /**
+   * If the placeholder count is changed, the `params for placeholder bp items`
+   * method will also need to be changed to account for the change in the
+   * number of placeholder.
+   *
+   * TODO: Change the method to generate test inputs dynamically based on
+   * the number of placeholders declared.
+   */
   private val config = PatientSummaryConfig(numberOfBpPlaceholders = 3)
 
   private lateinit var controller: PatientSummaryScreenController

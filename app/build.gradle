@@ -127,6 +127,20 @@ android {
     exclude 'lib/mips64/libsqlite3x.so'
     exclude 'lib/armeabi/libsqlite3x.so'
   }
+
+  // We don't obfuscate (only minify) using proguard. Gradle plugin 3.2.0 (and greater?) generates
+  // an empty mappings.txt file. This caused an issue where the CI deploy to play store task tries
+  // to upload the empty mapping file, which causes the Play Store api to complain.
+  task deleteProguardMappings(type: Delete) {
+    delete fileTree(buildDir).matching {
+      include "outputs/mapping/**/mapping.txt"
+    }
+  }
+
+  afterEvaluate {
+    tasks.findAll { it.name in ["assembleStagingRelease", "assembleProductionRelease"] }
+        .forEach { it.finalizedBy deleteProguardMappings }
+  }
 }
 
 dependencies {
@@ -196,7 +210,7 @@ dependencies {
   implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuth"
   // Adding an explicit dependency on this because the qrreader lib exposes an older dependency
   implementation "com.google.android.gms:play-services-vision:$versions.playServicesVision"
-  implementation ("com.github.nisrulz:qreader:$versions.qrReader") {
+  implementation("com.github.nisrulz:qreader:$versions.qrReader") {
     exclude group: 'com.google.android.gms', module: 'play-services-vision'
   }
   implementation "io.github.inflationx:viewpump:$versions.viewPump"

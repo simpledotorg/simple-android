@@ -11,6 +11,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.summary.SummaryListAdapterIds.PRESCRIBED_DRUGS
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTopMargin
@@ -18,7 +19,7 @@ import timber.log.Timber
 
 data class SummaryPrescribedDrugsItem(
     val prescriptions: List<PrescribedDrug>
-) : GroupieItemWithUiEvents<SummaryPrescribedDrugsItem.DrugsSummaryViewHolder>(adapterId = 0) {
+) : GroupieItemWithUiEvents<SummaryPrescribedDrugsItem.DrugsSummaryViewHolder>(adapterId = PRESCRIBED_DRUGS) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

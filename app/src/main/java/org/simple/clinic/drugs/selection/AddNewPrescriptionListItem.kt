@@ -7,9 +7,10 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.summary.SummaryListAdapterIds.ADD_PRESCRIPTION
 import org.simple.clinic.widgets.UiEvent
 
-class AddNewPrescriptionListItem : GroupieItemWithUiEvents<AddNewPrescriptionListItem.AddNewViewHolder>(adapterId = -99) {
+class AddNewPrescriptionListItem : GroupieItemWithUiEvents<AddNewPrescriptionListItem.AddNewViewHolder>(adapterId = ADD_PRESCRIPTION) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 

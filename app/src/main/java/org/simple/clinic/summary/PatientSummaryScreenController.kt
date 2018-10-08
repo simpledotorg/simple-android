@@ -133,13 +133,11 @@ class PatientSummaryScreenController @Inject constructor(
     val bloodPressurePlaceholders = bloodPressures
         .map { it.size }
         .map { numberOfBloodPressures ->
-          val numberOfPlaceholders = config.numberOfBpPlaceholders
-          when {
-            numberOfBloodPressures >= numberOfPlaceholders -> emptyList()
-            else -> (0 until numberOfPlaceholders - numberOfBloodPressures).map { placeholderIndex ->
-              val shouldShowHint = numberOfBloodPressures == 0 && placeholderIndex == 0
-              SummaryBloodPressurePlaceholderListItem(placeholderIndex + 1, shouldShowHint)
-            }
+          val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
+
+          (1..numberOfPlaceholders).map { placeholderNumber ->
+            val shouldShowHint = numberOfBloodPressures == 0 && placeholderNumber == 1
+            SummaryBloodPressurePlaceholderListItem(placeholderNumber, shouldShowHint)
           }
         }
 

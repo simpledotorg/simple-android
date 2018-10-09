@@ -127,18 +127,18 @@ class OverdueScreenController @Inject constructor(
   private fun appointmentMarkedAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<AgreedToVisitClicked>()
         .flatMap {
-          repository.markAsAgreedToVisit(it.appointmentUUID)
+          repository.markAsAgreedToVisit(it.appointmentUuid)
               .toObservable<UiChange>()
         }
   }
 
   private fun appointmentReminderSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<RemindToCallLaterClicked>()
-        .map { { ui: Ui -> ui.showAppointmentReminderSheet(it.appointmentUUID) } }
+        .map { { ui: Ui -> ui.showAppointmentReminderSheet(it.appointmentUuid) } }
   }
 
   private fun removeAppointmentSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<RemoveFromListClicked>()
-        .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUUID, it.patientUuid) } }
+        .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUuid, it.patientUuid) } }
   }
 }

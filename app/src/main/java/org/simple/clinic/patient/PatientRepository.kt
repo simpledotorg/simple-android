@@ -50,7 +50,7 @@ class PatientRepository @Inject constructor(
     val searchableName = nameToSearchableForm(name)
 
     val substringSearch = database.patientSearchDao()
-        .search(searchableName)
+        .search(searchableName, PatientStatus.ACTIVE)
         .toObservable()
 
     return if (includeFuzzyNameSearch.not()) {
@@ -78,7 +78,7 @@ class PatientRepository @Inject constructor(
     val searchableName = nameToSearchableForm(name)
 
     val substringSearch = database.patientSearchDao()
-        .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()
 
     return if (includeFuzzyNameSearch.not()) {

@@ -25,7 +25,8 @@ object PatientMocker {
       uuid: UUID = UUID.randomUUID(),
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = "name",
-      syncStatus: SyncStatus = mock()
+      syncStatus: SyncStatus = mock(),
+      status: PatientStatus = PatientStatus.ACTIVE
   ): Patient {
     return Patient(
         uuid = uuid,
@@ -35,7 +36,7 @@ object PatientMocker {
         gender = mock(),
         dateOfBirth = mock(),
         age = mock(),
-        status = mock(),
+        status = status,
         createdAt = mock(),
         updatedAt = mock(),
         syncStatus = syncStatus)
@@ -218,7 +219,7 @@ object PatientMocker {
         gender = mock(),
         dateOfBirth = null,
         age = mock(),
-        status = mock(),
+        status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
         address = PatientMocker.address(),

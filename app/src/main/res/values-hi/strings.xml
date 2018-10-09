@@ -21,7 +21,6 @@
     <string name="patiententry_state">राज्य</string>
     <string name="patiententry_save_patient">रोगी की जानकारी सहेजें</string>
     <string name="patiententry_error_empty_fullname">नाम खाली नहीं हो सकता है</string>
-    <string name="patiententry_error_empty_phonenumber">फोन नंबर खाली नहीं हो सकता है</string>
     <string name="patiententry_error_empty_gender">लिंग खाली नहीं हो सकता है</string>
     <string name="patiententry_error_empty_colony_or_village">कॉलोनी या गांव खाली नहीं हो सकता है</string>
     <string name="patiententry_error_empty_district">जिला खाली नहीं हो सकता है</string>

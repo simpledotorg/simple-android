@@ -68,7 +68,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patiententry_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
   private val phoneNumberInputLayout by bindView<TextInputLayout>(R.id.patiententry_phone_number_inputlayout)
-  private val noPhoneNumberCheckBox by bindView<CheckBox>(R.id.patiententry_phone_number_none)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patiententry_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patiententry_date_of_birth_container)
@@ -134,7 +133,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     return Observable.mergeArray(
         fullNameEditText.textChanges(::PatientFullNameTextChanged),
         phoneNumberEditText.textChanges(::PatientPhoneNumberTextChanged),
-        RxCompoundButton.checkedChanges(noPhoneNumberCheckBox).map(::PatientNoPhoneNumberToggled),
         dateOfBirthEditText.textChanges(::PatientDateOfBirthTextChanged),
         dateOfBirthEditText.focusChanges.map(::PatientDateOfBirthFocusChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
@@ -189,10 +187,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     screenRouter.push(NewMedicalHistoryScreen.KEY)
   }
 
-  fun resetPhoneNumberField() {
-    phoneNumberEditText.text = null
-  }
-
   fun resetColonyOrVillageField() {
     colonyOrVillageEditText.text = null
   }
@@ -230,21 +224,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     dateOfBirthInputLayout.hint = resources.getString(labelRes)
   }
 
-  fun setNoPhoneNumberCheckboxVisible(visible: Boolean) {
-    TransitionManager.beginDelayedTransition(this, Fade()
-        .addTarget(noPhoneNumberCheckBox)
-        .setDuration(100)
-        .setInterpolator(FastOutSlowInInterpolator()))
-
-    noPhoneNumberCheckBox.visibility = when (visible) {
-      true -> View.VISIBLE
-      else -> View.GONE
-    }
-    if (!visible) {
-      noPhoneNumberCheckBox.isChecked = visible
-    }
-  }
-
   fun setNoVillageOrColonyCheckboxVisible(visible: Boolean) {
     TransitionManager.beginDelayedTransition(this, Fade()
         .addTarget(noColonyOrVillageCheckBox)
@@ -265,14 +244,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       fullNameInputLayout.error = resources.getString(R.string.patiententry_error_empty_fullname)
     } else {
       fullNameInputLayout.error = null
-    }
-  }
-
-  fun showEmptyPhoneNumberError(show: Boolean) {
-    if (show) {
-      phoneNumberInputLayout.error = resources.getString(R.string.patiententry_error_empty_phonenumber)
-    } else {
-      phoneNumberInputLayout.error = null
     }
   }
 

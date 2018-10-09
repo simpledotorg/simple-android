@@ -13,10 +13,6 @@ data class PatientPhoneNumberTextChanged(val phoneNumber: String) : UiEvent {
   override val analyticsName = "Create Patient Entry:Phone Number Text Changed"
 }
 
-data class PatientNoPhoneNumberToggled(val noneSelected: Boolean) : UiEvent {
-  override val analyticsName = "Create Patient Entry:No Phone Number Toggled"
-}
-
 data class PatientNoColonyOrVillageToggled(val noneSelected: Boolean) : UiEvent {
   override val analyticsName = "Create Patient Entry:No Colony Or Village Toggled"
 }

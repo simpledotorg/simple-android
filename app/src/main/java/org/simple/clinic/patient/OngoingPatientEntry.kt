@@ -6,7 +6,7 @@ import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID_PATT
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.VALID
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
+import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.patient.PatientEntryValidationError.DISTRICT_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.EMPTY_ADDRESS_DETAILS
@@ -80,7 +80,7 @@ data class OngoingPatientEntry(
 
     address?.apply {
       if (colonyOrVillage != null && colonyOrVillage.isBlank()) {
-        errors += COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK
+        errors += COLONY_OR_VILLAGE_EMPTY
       }
       if (district.isBlank()) {
         errors += DISTRICT_EMPTY
@@ -101,5 +101,6 @@ data class OngoingPatientEntry(
 
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
 
+  // TODO: Make colonyOrVillage non-null
   data class Address(val colonyOrVillage: String?, val district: String, val state: String)
 }

@@ -238,15 +238,12 @@
             android:inputType="textPostalAddress|textCapSentences" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.v7.widget.AppCompatCheckBox
-          android:id="@+id/patiententry_colony_or_village_none"
+        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+          style="@style/Clinic.Button.ClearEditText"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="end"
-          android:layout_marginEnd="8dp"
-          android:layout_marginTop="@dimen/spacing_16"
-          android:text="@string/patiententry_none"
-          android:textColor="@color/gray_600" />
+          app:cleareableField="@id/patiententry_colony_or_village" />
       </FrameLayout>
 
       <LinearLayout

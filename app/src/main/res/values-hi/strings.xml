@@ -8,7 +8,6 @@
     <string name="patiententry_contentdescription_up_button">खोज पर वापस जाओ</string>
     <string name="patiententry_full_name">रोगी का नाम</string>
     <string name="patiententry_phone_number">रोगी का फोन नंबर</string>
-    <string name="patiententry_none">कुछ नहीं</string>
     <string name="patiententry_date_of_birth_unfocused">जन्म-तिथि</string>
     <string name="patiententry_date_of_birth_focused">दिनांक / महीना / वर्ष</string>
     <string name="patiententry_dateofbirth_and_age_separator">या</string>

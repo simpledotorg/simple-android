@@ -2,6 +2,7 @@ package org.simple.clinic.newentry
 
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -105,35 +106,16 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
     verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
         personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingPatientEntry.Address(colonyOrVillage = null, district = "district", state = "state"),
+        address = OngoingPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
-  }
-
-  @Test
-  fun `when none is selected then their associated fields should be reset`() {
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
-
-    verify(screen).resetColonyOrVillageField()
-  }
-
-  @Test
-  fun `none checkboxes should only be visible while their associated fields are empty`() {
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("C"))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged("Co"))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-
-    verify(screen, times(2)).setNoVillageOrColonyCheckboxVisible(true)
-    verify(screen, times(1)).setNoVillageOrColonyCheckboxVisible(false)
   }
 
   @Test
@@ -181,8 +163,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
 
@@ -190,7 +171,7 @@ class PatientEntryScreenControllerTest {
 
     verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
         personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingPatientEntry.Address(colonyOrVillage = null, district = "district", state = "state"),
+        address = OngoingPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
     ))
   }
@@ -203,7 +184,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(None))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientDistrictTextChanged(""))
     uiEvents.onNext(PatientStateTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
@@ -233,7 +213,7 @@ class PatientEntryScreenControllerTest {
     verify(screen, times(2)).showEmptyDateOfBirthAndAgeError(true)
     verify(screen, times(3)).showInvalidDateOfBirthError(true)
     verify(screen, times(6)).showMissingGenderError(true)
-    verify(screen, times(6)).showEmptyColonyOrVillageError(true)
+    verify(screen, atLeastOnce()).showEmptyColonyOrVillageError(true)
     verify(screen, times(6)).showEmptyDistrictError(true)
     verify(screen, times(6)).showEmptyStateError(true)
     verify(screen, times(1)).showLengthTooShortPhoneNumberError(true)
@@ -248,7 +228,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientGenderChanged(None))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientDistrictTextChanged(""))
     uiEvents.onNext(PatientStateTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
@@ -278,7 +257,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
@@ -286,7 +264,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
 
     verify(screen).showEmptyFullNameError(false)
@@ -294,7 +271,7 @@ class PatientEntryScreenControllerTest {
     verify(screen, times(2)).showInvalidDateOfBirthError(false)
     verify(screen, times(2)).showDateOfBirthIsInFutureError(false)
     verify(screen).showMissingGenderError(false)
-    verify(screen, times(4)).showEmptyColonyOrVillageError(false)
+    verify(screen, atLeastOnce()).showEmptyColonyOrVillageError(false)
     verify(screen).showEmptyDistrictError(false)
     verify(screen).showEmptyStateError(false)
   }
@@ -311,7 +288,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged("20"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.MALE)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
 
@@ -331,7 +307,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged("20"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.MALE)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = false))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
 
@@ -351,7 +326,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged("20"))
     uiEvents.onNext(PatientGenderChanged(None))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
 
@@ -370,8 +344,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.FEMALE)))
-    uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("Colony"))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
 
@@ -401,7 +374,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientAgeTextChanged("20"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-    uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
     uiEvents.onNext(PatientDistrictTextChanged(""))
     uiEvents.onNext(PatientStateTextChanged(""))
 

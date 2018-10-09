@@ -82,7 +82,7 @@ class PatientEntryScreenController @Inject constructor(
         .map { (entry, facility) ->
           entry.takeIf { it.address != null }
               ?: entry.copy(address = Address(
-                  colonyOrVillage = null,
+                  colonyOrVillage = "",
                   district = facility.district,
                   state = facility.state))
         }

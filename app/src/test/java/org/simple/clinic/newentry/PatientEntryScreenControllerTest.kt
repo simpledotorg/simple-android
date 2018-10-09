@@ -76,7 +76,7 @@ class PatientEntryScreenControllerTest {
 
     verify(screen).preFillFields(OngoingPatientEntry(
         address = OngoingPatientEntry.Address(
-            colonyOrVillage = null,
+            colonyOrVillage = "",
             district = "district",
             state = "state")))
   }

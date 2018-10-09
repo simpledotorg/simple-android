@@ -6,7 +6,7 @@
   <color name="color_accent_ripple">@color/blue1_opacity_26</color>
   <color name="color_error">@color/red1</color>
 
-  <color name="window_background">#FAFAFA</color>
+  <color name="window_background">@color/grey4</color>
   <color name="window_background_auth">#EBEFF0</color>
 
   <color name="patientsummary_high_or_worse_blood_pressure">#c70000</color>

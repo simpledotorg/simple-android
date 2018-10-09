@@ -29,13 +29,13 @@ import java.util.UUID
 class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
-  private lateinit var database: AppDatabase
-  private lateinit var mockPatientSearchResultDao: PatientSearchResult.RoomDao
 
-  private val mockPatientDao = mock<Patient.RoomDao>()
-  private val mockPatientAddressDao = mock<PatientAddress.RoomDao>()
-  private val mockPatientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
-  private val mockFuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
+  private val database = mock<AppDatabase>()
+  private val patientSearchResultDao = mock<PatientSearchResult.RoomDao>()
+  private val patientDao = mock<Patient.RoomDao>()
+  private val patientAddressDao = mock<PatientAddress.RoomDao>()
+  private val patientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
+  private val fuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
   private val dobValidator = mock<DateOfBirthFormatValidator>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
@@ -43,8 +43,6 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    database = mock()
-    mockPatientSearchResultDao = mock()
     repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator)
 
     val user = PatientMocker.loggedInUser()
@@ -69,25 +67,25 @@ class PatientRepositoryTest {
       remoteFullName: String,
       expectedSearchableName: String
   ) {
-    whenever(database.patientDao()).thenReturn(mockPatientDao)
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+    whenever(database.patientDao()).thenReturn(patientDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
-    val patientUUID = UUID.randomUUID()
-    val addressUUID = UUID.randomUUID()
+    val patientUuid = UUID.randomUUID()
+    val addressUuid = UUID.randomUUID()
 
-    val localPatientCopy = PatientMocker.patient(uuid = patientUUID, fullName = localFullName, addressUuid = addressUUID, syncStatus = SyncStatus.DONE)
-    whenever(mockPatientDao.getOne(patientUUID)).thenReturn(localPatientCopy)
+    val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, fullName = localFullName, syncStatus = SyncStatus.DONE)
+    whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
-    val serverAddress = PatientMocker.address(addressUUID).toPayload()
+    val serverAddress = PatientMocker.address(addressUuid).toPayload()
     val serverPatientWithoutPhone = PatientPayload(
-        uuid = patientUUID,
+        uuid = patientUuid,
         fullName = remoteFullName,
         gender = mock(),
         dateOfBirth = mock(),
         age = 0,
         ageUpdatedAt = mock(),
-        status = mock(),
+        status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
         address = serverAddress,
@@ -95,7 +93,7 @@ class PatientRepositoryTest {
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
-    verify(mockPatientDao).save(argThat<List<Patient>> { first().searchableName == expectedSearchableName })
+    verify(patientDao).save(argThat<List<Patient>> { first().searchableName == expectedSearchableName })
   }
 
   @Test
@@ -109,28 +107,28 @@ class PatientRepositoryTest {
       query: String,
       expectedSearchQuery: String
   ) {
-    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
-    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(emptyList()))
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
+    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(emptyList()))
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
 
     repository.search(query).blockingFirst()
 
-    verify(mockPatientSearchResultDao).search(eq(expectedSearchQuery))
+    verify(patientSearchResultDao).search(eq(expectedSearchQuery), any())
   }
 
   @Test
   fun `when searching for patients with age bound, strip the search query of any whitespace or punctuation`() {
-    whenever(mockPatientSearchResultDao.search(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
-    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
+    whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
 
     repository.search("Name   Surname", 40).blockingFirst()
 
-    verify(mockPatientSearchResultDao).search(eq("NameSurname"), any(), any())
+    verify(patientSearchResultDao).search(eq("NameSurname"), any(), any(), any())
   }
 
   @Test
@@ -139,10 +137,10 @@ class PatientRepositoryTest {
 
     val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
     val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()))
-    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(actualResults))
-    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(actualResults))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
     repository.search("test")
         .firstOrError()
@@ -157,10 +155,10 @@ class PatientRepositoryTest {
     val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), actualResults[0])
 
     val expected = listOf(fuzzyResults[0], fuzzyResults[1], actualResults[1])
-    whenever(mockPatientSearchResultDao.search(any())).thenReturn(Flowable.just(actualResults))
-    whenever(mockFuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
-    whenever(database.patientSearchDao()).thenReturn(mockPatientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(actualResults))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
     repository.search("test")
         .firstOrError()
@@ -178,15 +176,15 @@ class PatientRepositoryTest {
       syncStatusOfLocalCopy: SyncStatus,
       serverRecordExpectedToBeSaved: Boolean
   ) {
-    whenever(database.patientDao()).thenReturn(mockPatientDao)
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+    whenever(database.patientDao()).thenReturn(patientDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
     val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
-    whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
+    whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
     val serverAddress = PatientMocker.address(uuid = addressUuid).toPayload()
     val serverPatientWithoutPhone = PatientPayload(
@@ -196,7 +194,7 @@ class PatientRepositoryTest {
         dateOfBirth = mock(),
         age = 0,
         ageUpdatedAt = mock(),
-        status = mock(),
+        status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
         address = serverAddress,
@@ -205,12 +203,12 @@ class PatientRepositoryTest {
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {
-      verify(mockPatientDao).save(argThat<List<Patient>> { isNotEmpty() })
-      verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
+      verify(patientDao).save(argThat<List<Patient>> { isNotEmpty() })
+      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
 
     } else {
-      verify(mockPatientDao).save(argThat<List<Patient>> { isEmpty() })
-      verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
+      verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
+      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
     }
   }
 
@@ -224,16 +222,16 @@ class PatientRepositoryTest {
       syncStatusOfLocalCopy: SyncStatus,
       serverRecordExpectedToBeSaved: Boolean
   ) {
-    whenever(database.patientDao()).thenReturn(mockPatientDao)
-    whenever(database.addressDao()).thenReturn(mockPatientAddressDao)
-    whenever(database.phoneNumberDao()).thenReturn(mockPatientPhoneNumberDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(mockFuzzyPatientSearchDao)
+    whenever(database.patientDao()).thenReturn(patientDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
 
     val localPatientCopy = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, syncStatus = syncStatusOfLocalCopy)
-    whenever(mockPatientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
+    whenever(patientDao.getOne(patientUuid)).thenReturn(localPatientCopy)
 
     val serverAddress = PatientMocker.address(uuid = addressUuid).toPayload()
     val serverPatientWithPhone = PatientPayload(
@@ -243,24 +241,23 @@ class PatientRepositoryTest {
         dateOfBirth = mock(),
         age = 0,
         ageUpdatedAt = mock(),
-        status = mock(),
+        status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
-
         address = serverAddress,
         phoneNumbers = listOf(PatientPhoneNumberPayload(UUID.randomUUID(), "1232", mock(), false, mock(), mock())))
 
     repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
 
     if (serverRecordExpectedToBeSaved) {
-      verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
-      verify(mockPatientDao).save(argThat<List<Patient>> { isNotEmpty() })
-      verify(mockPatientPhoneNumberDao).save(argThat { isNotEmpty() })
+      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
+      verify(patientDao).save(argThat<List<Patient>> { isNotEmpty() })
+      verify(patientPhoneNumberDao).save(argThat { isNotEmpty() })
 
     } else {
-      verify(mockPatientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
-      verify(mockPatientDao).save(argThat<List<Patient>> { isEmpty() })
-      verify(mockPatientPhoneNumberDao, never()).save(any())
+      verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
+      verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
+      verify(patientPhoneNumberDao, never()).save(any())
     }
   }
 }

@@ -430,4 +430,21 @@ class PatientRepositoryAndroidTest {
     val resultsWithAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false, assumedAge = 20).blockingFirst()
     runAssertions(resultsWithAgeFilter)
   }
+
+  @Test
+  fun when_patient_is_marked_dead_they_should_not_show_in_search_results(){
+    val patient =
+    patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
+
+    val searchResult = patientRepository.search("Ashok").blockingFirst()
+    val patientFirst = patientRepository.patient(patient.uuid).blockingFirst()
+
+    assertThat(patientRepository.patientCount().blockingGet()).isEqualTo(1)
+    assertThat(patientFirst).isNotNull()
+    assertThat(searchResult).isEmpty()
+  }
 }

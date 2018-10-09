@@ -14,15 +14,15 @@ data class CallPhonePermissionChanged(val result: RuntimePermissionResult) : UiE
   override val analyticsName = "Overdue Screen:Call Phone Permission:$result"
 }
 
-data class AgreedToVisitClicked(val appointmentUUID: UUID) : UiEvent {
+data class AgreedToVisitClicked(val appointmentUuid: UUID) : UiEvent {
   override val analyticsName = "Overdue Screen:Mark patient as 'agreed to visit' clicked"
 }
 
-data class RemindToCallLaterClicked(val appointmentUUID: UUID) : UiEvent {
+data class RemindToCallLaterClicked(val appointmentUuid: UUID) : UiEvent {
   override val analyticsName = "Overdue Screen:Remind To Call Later clicked"
 }
 
-data class RemoveFromListClicked(val appointmentUUID: UUID, val patientUuid: UUID) : UiEvent {
+data class RemoveFromListClicked(val appointmentUuid: UUID, val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Overdue Screen:Remove From List clicked"
 }
 

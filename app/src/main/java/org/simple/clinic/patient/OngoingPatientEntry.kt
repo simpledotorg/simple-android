@@ -79,7 +79,7 @@ data class OngoingPatientEntry(
     }
 
     address?.apply {
-      if (colonyOrVillage != null && colonyOrVillage.isBlank()) {
+      if (colonyOrVillage.isBlank()) {
         errors += COLONY_OR_VILLAGE_EMPTY
       }
       if (district.isBlank()) {
@@ -101,6 +101,5 @@ data class OngoingPatientEntry(
 
   data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
 
-  // TODO: Make colonyOrVillage non-null
-  data class Address(val colonyOrVillage: String?, val district: String, val state: String)
+  data class Address(val colonyOrVillage: String, val district: String, val state: String)
 }

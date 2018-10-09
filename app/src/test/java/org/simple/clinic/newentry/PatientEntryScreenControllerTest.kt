@@ -101,7 +101,6 @@ class PatientEntryScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
@@ -121,27 +120,17 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when none is selected then their associated fields should be reset`() {
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
 
-    verify(screen).resetPhoneNumberField()
     verify(screen).resetColonyOrVillageField()
   }
 
   @Test
   fun `none checkboxes should only be visible while their associated fields are empty`() {
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("1"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged("12"))
-    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("C"))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("Co"))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
-
-    verify(screen, times(2)).setNoPhoneNumberCheckboxVisible(true)
-    verify(screen, times(1)).setNoPhoneNumberCheckboxVisible(false)
 
     verify(screen, times(2)).setNoVillageOrColonyCheckboxVisible(true)
     verify(screen, times(1)).setNoVillageOrColonyCheckboxVisible(false)
@@ -188,7 +177,6 @@ class PatientEntryScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
@@ -210,7 +198,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when save is clicked then user input should be validated`() {
     uiEvents.onNext(PatientFullNameTextChanged(""))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged(""))
@@ -243,7 +230,6 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientEntrySaveClicked())
 
     verify(screen, times(6)).showEmptyFullNameError(true)
-    verify(screen, times(4)).showEmptyPhoneNumberError(true)
     verify(screen, times(2)).showEmptyDateOfBirthAndAgeError(true)
     verify(screen, times(3)).showInvalidDateOfBirthError(true)
     verify(screen, times(6)).showMissingGenderError(true)
@@ -257,7 +243,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `when input validation fails, the errors must be sent to analytics`() {
     uiEvents.onNext(PatientFullNameTextChanged(""))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged(""))
@@ -290,7 +275,6 @@ class PatientEntryScreenControllerTest {
   @Test
   fun `validation errors should be cleared on every input change`() {
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
@@ -300,14 +284,12 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientStateTextChanged("state"))
 
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
     uiEvents.onNext(PatientNoColonyOrVillageToggled(noneSelected = true))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
 
     verify(screen).showEmptyFullNameError(false)
-    verify(screen, times(4)).showEmptyPhoneNumberError(false)
     verify(screen, times(3)).showEmptyDateOfBirthAndAgeError(false)
     verify(screen, times(2)).showInvalidDateOfBirthError(false)
     verify(screen, times(2)).showDateOfBirthIsInFutureError(false)
@@ -324,7 +306,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
@@ -345,7 +326,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = false))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
@@ -366,7 +346,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
@@ -387,7 +366,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
@@ -418,7 +396,6 @@ class PatientEntryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
-    uiEvents.onNext(PatientNoPhoneNumberToggled(noneSelected = true))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))

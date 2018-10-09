@@ -15,7 +15,9 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.PatientEntryValidationError
+import org.simple.clinic.patient.OngoingPatientEntry.Address
+import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
+import org.simple.clinic.patient.OngoingPatientEntry.PhoneNumber
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -27,7 +29,6 @@ import org.simple.clinic.patient.PatientEntryValidationError.FULL_NAME_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.patient.PatientEntryValidationError.MISSING_GENDER
 import org.simple.clinic.patient.PatientEntryValidationError.PERSONAL_DETAILS_EMPTY
-import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_EMPTY
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
@@ -73,33 +74,18 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun noneCheckBoxBehaviors(events: Observable<UiEvent>): Observable<UiChange> {
-    val noPhoneNumberUnchecks = events
-        .ofType<PatientPhoneNumberTextChanged>()
-        .map { it.phoneNumber.isNotBlank() }
-        .distinctUntilChanged()
-        .map { hasPhone -> { ui: Ui -> ui.setNoPhoneNumberCheckboxVisible(!hasPhone) } }
-
     val noVillageOrColonyUnchecks = events
         .ofType<PatientColonyOrVillageTextChanged>()
         .map { it.colonyOrVillage.isNotBlank() }
         .distinctUntilChanged()
         .map { hasVillageOrColony -> { ui: Ui -> ui.setNoVillageOrColonyCheckboxVisible(!hasVillageOrColony) } }
 
-    val phoneNumberResets = events
-        .ofType<PatientNoPhoneNumberToggled>()
-        .filter { event -> event.noneSelected }
-        .map { { ui: Ui -> ui.resetPhoneNumberField() } }
-
     val colonyOrVillageResets = events
         .ofType<PatientNoColonyOrVillageToggled>()
         .filter { event -> event.noneSelected }
         .map { { ui: Ui -> ui.resetColonyOrVillageField() } }
 
-    return Observable.mergeArray(
-        phoneNumberResets,
-        colonyOrVillageResets,
-        noPhoneNumberUnchecks,
-        noVillageOrColonyUnchecks)
+    return Observable.merge(colonyOrVillageResets, noVillageOrColonyUnchecks)
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -112,7 +98,7 @@ class PatientEntryScreenController @Inject constructor(
         }
         .map { (entry, facility) ->
           entry.takeIf { it.address != null }
-              ?: entry.copy(address = OngoingPatientEntry.Address(
+              ?: entry.copy(address = Address(
                   colonyOrVillage = null,
                   district = facility.district,
                   state = facility.state))
@@ -175,24 +161,12 @@ class PatientEntryScreenController @Inject constructor(
 
     val personDetailChanges = Observables.combineLatest(nameChanges, dateOfBirthChanges, ageChanges, genderChanges)
     { name, dateOfBirth, age, gender ->
-      OngoingPatientEntry.PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender.toNullable())
+      PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender.toNullable())
     }
 
-    val phoneNumberChanges = Observables
-        .combineLatest(
-            events
-                .ofType<PatientNoPhoneNumberToggled>()
-                .map { it.noneSelected },
-            events
-                .ofType<PatientPhoneNumberTextChanged>()
-                .map { it.phoneNumber })
-        .map { (noneSelected, phoneNumber) ->
-          when {
-            noneSelected -> None
-            phoneNumber.isBlank() -> None
-            else -> Just(OngoingPatientEntry.PhoneNumber(phoneNumber!!))
-          }
-        }
+    val phoneNumberChanges = events
+        .ofType<PatientPhoneNumberTextChanged>()
+        .map { (phoneNumber) -> if (phoneNumber.isBlank()) None else Just(PhoneNumber(phoneNumber)) }
 
     val colonyOrVillageChanges = Observables
         .combineLatest(
@@ -219,7 +193,7 @@ class PatientEntryScreenController @Inject constructor(
 
     val addressChanges = Observables.combineLatest(colonyOrVillageChanges, districtChanges, stateChanges)
     { colonyOrVillage, district, state ->
-      OngoingPatientEntry.Address(colonyOrVillage.toNullable().nullIfBlank(), district, state)
+      Address(colonyOrVillage.toNullable().nullIfBlank(), district, state)
     }
 
     return Observables.combineLatest(personDetailChanges, phoneNumberChanges, addressChanges)
@@ -238,19 +212,6 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun showValidationErrorsOnSaveClick(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberChanges = events.ofType<PatientPhoneNumberTextChanged>().map { it.phoneNumber }
-    val noPhoneToggles = events.ofType<PatientNoPhoneNumberToggled>().map { it.noneSelected }
-
-    val phoneNumberErrors: Observable<List<PatientEntryValidationError>> = events
-        .ofType<PatientEntrySaveClicked>()
-        .withLatestFrom(phoneNumberChanges, noPhoneToggles)
-        .map { (_, phoneNumber, isNoneSelected) ->
-          when {
-            (phoneNumber.isBlank() && !isNoneSelected) -> listOf(PHONE_NUMBER_EMPTY)
-            else -> listOf()
-          }
-        }
-
     val colonyChanges = events.ofType<PatientColonyOrVillageTextChanged>().map { it.colonyOrVillage }
     val noColonyToggles = events.ofType<PatientNoColonyOrVillageToggled>().map { it.noneSelected }
 
@@ -269,8 +230,8 @@ class PatientEntryScreenController @Inject constructor(
         .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
         .map { (_, ongoingEntry) -> ongoingEntry.validationErrors(dobValidator, numberValidator) }
 
-    val errors = Observables.zip(phoneNumberErrors, colonyErrors, errorsFromDataValidation) { phoneError, colonyError, otherErrors ->
-      phoneError + colonyError + otherErrors
+    val errors = Observables.zip(colonyErrors, errorsFromDataValidation) { colonyError, otherErrors ->
+      colonyError + otherErrors
     }
 
     val showErrors = errors
@@ -279,7 +240,6 @@ class PatientEntryScreenController @Inject constructor(
         .map {
           val change: UiChange = when (it) {
             FULL_NAME_EMPTY -> { ui: Ui -> ui.showEmptyFullNameError(true) }
-            PHONE_NUMBER_EMPTY -> { ui: Ui -> ui.showEmptyPhoneNumberError(true) }
             PHONE_NUMBER_LENGTH_TOO_SHORT -> { ui: Ui -> ui.showLengthTooShortPhoneNumberError(true) }
             PHONE_NUMBER_LENGTH_TOO_LONG -> { ui: Ui -> ui.showLengthTooLongPhoneNumberError(true) }
             BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> { ui: Ui -> ui.showEmptyDateOfBirthAndAgeError(true) }
@@ -330,16 +290,10 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<PatientGenderChanged>()
         .map { { ui: Ui -> ui.showMissingGenderError(false) } }
 
-    val noPhoneErrorResets = Observable
-        .merge(events.ofType<PatientPhoneNumberTextChanged>(), events.ofType<PatientNoPhoneNumberToggled>())
-        .map { { ui: Ui -> ui.showEmptyPhoneNumberError(false) } }
-
-    val lessPhoneLengthResets = Observable
-        .merge(events.ofType<PatientPhoneNumberTextChanged>(), events.ofType<PatientNoPhoneNumberToggled>())
+    val lessPhoneLengthResets = events.ofType<PatientPhoneNumberTextChanged>()
         .map { { ui: Ui -> ui.showLengthTooShortPhoneNumberError(false) } }
 
-    val morePhoneLengthResets = Observable
-        .merge(events.ofType<PatientPhoneNumberTextChanged>(), events.ofType<PatientNoPhoneNumberToggled>())
+    val morePhoneLengthResets = events.ofType<PatientPhoneNumberTextChanged>()
         .map { { ui: Ui -> ui.showLengthTooLongPhoneNumberError(false) } }
 
     val colonyErrorResets = Observable
@@ -359,7 +313,6 @@ class PatientEntryScreenController @Inject constructor(
         dateOfBirthErrorResets,
         ageErrorResets,
         genderErrorResets,
-        noPhoneErrorResets,
         lessPhoneLengthResets,
         morePhoneLengthResets,
         colonyErrorResets,
@@ -368,15 +321,8 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun savePatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val phoneNumberChanges = events.ofType<PatientPhoneNumberTextChanged>().map { it.phoneNumber }
-    val noPhoneToggles = events.ofType<PatientNoPhoneNumberToggled>().map { it.noneSelected }
     val colonyChanges = events.ofType<PatientColonyOrVillageTextChanged>().map { it.colonyOrVillage }
     val noColonyToggles = events.ofType<PatientNoColonyOrVillageToggled>().map { it.noneSelected }
-
-    val isPhoneNumberValid = events
-        .ofType<PatientEntrySaveClicked>()
-        .withLatestFrom(phoneNumberChanges, noPhoneToggles)
-        .map { (_, phoneNumber, isNoneSelected) -> phoneNumber.isNotBlank() || isNoneSelected }
 
     val isColonyValid = events
         .ofType<PatientEntrySaveClicked>()
@@ -390,9 +336,8 @@ class PatientEntryScreenController @Inject constructor(
     val canPatientBeSaved = Observables
         .combineLatest(
             ongoingEntryChanges.map { it.validationErrors(dobValidator, numberValidator).isEmpty() },
-            isPhoneNumberValid,
             isColonyValid)
-        .map { it.first.and(it.second).and(it.third) }
+        .map { it.first.and(it.second) }
 
     return events
         .ofType<PatientEntrySaveClicked>()

@@ -11,7 +11,6 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -19,7 +18,6 @@ import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
-import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -82,7 +80,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val genderErrorTextView by bindView<TextView>(R.id.patiententry_gender_validation_error)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
   private val colonyOrVillageInputLayout by bindView<TextInputLayout>(R.id.patiententry_colony_or_village_inputlayout)
-  private val noColonyOrVillageCheckBox by bindView<CheckBox>(R.id.patiententry_colony_or_village_none)
   private val districtEditText by bindView<EditText>(R.id.patiententry_district)
   private val districtInputLayout by bindView<TextInputLayout>(R.id.patiententry_district_inputlayout)
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
@@ -137,7 +134,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         dateOfBirthEditText.focusChanges.map(::PatientDateOfBirthFocusChanged),
         ageEditText.textChanges(::PatientAgeTextChanged),
         colonyOrVillageEditText.textChanges(::PatientColonyOrVillageTextChanged),
-        RxCompoundButton.checkedChanges(noColonyOrVillageCheckBox).map(::PatientNoColonyOrVillageToggled),
         districtEditText.textChanges(::PatientDistrictTextChanged),
         stateEditText.textChanges(::PatientStateTextChanged),
         genderChanges())
@@ -187,10 +183,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     screenRouter.push(NewMedicalHistoryScreen.KEY)
   }
 
-  fun resetColonyOrVillageField() {
-    colonyOrVillageEditText.text = null
-  }
-
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
     val transition = TransitionSet()
         .addTransition(ChangeBounds())
@@ -222,21 +214,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       false -> R.string.patiententry_date_of_birth_unfocused
     }
     dateOfBirthInputLayout.hint = resources.getString(labelRes)
-  }
-
-  fun setNoVillageOrColonyCheckboxVisible(visible: Boolean) {
-    TransitionManager.beginDelayedTransition(this, Fade()
-        .addTarget(noColonyOrVillageCheckBox)
-        .setDuration(100)
-        .setInterpolator(FastOutSlowInInterpolator()))
-
-    noColonyOrVillageCheckBox.visibility = when (visible) {
-      true -> View.VISIBLE
-      else -> View.GONE
-    }
-    if (!visible) {
-      noColonyOrVillageCheckBox.isChecked = visible
-    }
   }
 
   fun showEmptyFullNameError(show: Boolean) {

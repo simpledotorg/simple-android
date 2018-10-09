@@ -14,7 +14,6 @@ enum class PatientEntryValidationError(val analyticsName: String) {
 
   EMPTY_ADDRESS_DETAILS("Patient Entry:Empty address details"),
   COLONY_OR_VILLAGE_EMPTY("Patient Entry:Colony or village empty"),
-  COLONY_OR_VILLAGE_NON_NULL_BUT_BLANK("Patient Entry:Colony or village empty"),
   DISTRICT_EMPTY("Patient Entry:District empty"),
   STATE_EMPTY("Patient Entry:State empty")
 }

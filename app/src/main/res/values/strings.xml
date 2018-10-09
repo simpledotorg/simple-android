@@ -44,7 +44,6 @@
   <string name="patiententry_contentdescription_up_button">Go back to search</string>
   <string name="patiententry_full_name">Patient\'s name</string>
   <string name="patiententry_phone_number">Phone number</string>
-  <string name="patiententry_none">None</string>
   <string name="patiententry_date_of_birth_unfocused">Date of birth</string>
   <string name="patiententry_date_of_birth_focused">D.O.B: DD/MM/YYYY</string>
   <string name="patiententry_dateofbirth_and_age_separator">Or</string>
@@ -59,7 +58,7 @@
 
   <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
   <string name="patiententry_error_empty_gender">Choose patient’s gender</string>
-  <string name="patiententry_error_empty_colony_or_village">Enter patient’s village or colony or choose ‘None’</string>
+  <string name="patiententry_error_empty_colony_or_village">Enter village or colony</string>
   <string name="patiententry_error_empty_district">Enter patient’s home district</string>
   <string name="patiententry_error_state_empty">Enter patient’s home state</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>

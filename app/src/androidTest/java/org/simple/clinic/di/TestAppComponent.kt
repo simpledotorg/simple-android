@@ -17,6 +17,7 @@ import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTes
 import org.simple.clinic.overdue.communication.CommunicationSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
+import org.simple.clinic.summary.RelativeTimestampGeneratorAndroidTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
 
@@ -41,4 +42,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: AuthenticationRule)
   fun inject(target: MedicalHistorySyncAndroidTest)
   fun inject(target: MedicalHistoryRepositoryAndroidTest)
+  fun inject(target: RelativeTimestampGeneratorAndroidTest)
 }

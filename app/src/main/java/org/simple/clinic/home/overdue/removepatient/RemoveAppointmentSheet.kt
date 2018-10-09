@@ -69,8 +69,7 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   private fun alreadyVisitedClicks() = RxView.clicks(alreadyVisitedRadioButton).map { AlreadyVisitedReasonClicked }
 
   private fun patientDiedClicks() = RxView.clicks(diedRadioButton).map {
-    PatientDeadClicked(patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
-    )
+    PatientDeadClicked(patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID)
   }
 
   private fun cancelReasonClicks(): Observable<UiEvent> {

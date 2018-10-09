@@ -11,7 +11,10 @@ import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.CancelReason.DEAD
+import org.simple.clinic.overdue.Appointment.CancelReason.MOVED
+import org.simple.clinic.overdue.Appointment.CancelReason.OTHER
+import org.simple.clinic.overdue.Appointment.CancelReason.PATIENT_NOT_RESPONDING
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
@@ -52,10 +55,10 @@ class RemoveAppointmentSheetControllerTest {
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.DEAD))
+    uiEvents.onNext(CancelReasonClicked(DEAD))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.PATIENT_NOT_RESPONDING))
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.OTHER))
+    uiEvents.onNext(CancelReasonClicked(PATIENT_NOT_RESPONDING))
+    uiEvents.onNext(CancelReasonClicked(OTHER))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
     uiEvents.onNext(RemoveReasonDoneClicked)
 
@@ -69,14 +72,14 @@ class RemoveAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`(){
-    whenever(repository.cancelWithReason(appointmentUuid, Appointment.CancelReason.DEAD)).thenReturn(Completable.complete())
+    whenever(repository.cancelWithReason(appointmentUuid, DEAD)).thenReturn(Completable.complete())
     val patientUuid = UUID.randomUUID()
     whenever(patientRepository.updatePatientStatusToDead(patientUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.PATIENT_NOT_RESPONDING))
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.DEAD))
+    uiEvents.onNext(CancelReasonClicked(PATIENT_NOT_RESPONDING))
+    uiEvents.onNext(CancelReasonClicked(DEAD))
     uiEvents.onNext(PatientDeadClicked(patientUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
@@ -85,27 +88,27 @@ class RemoveAppointmentSheetControllerTest {
     val inOrder = inOrder(sheet, repository, patientRepository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
     inOrder.verify(patientRepository).updatePatientStatusToDead(patientUuid)
-    inOrder.verify(repository).cancelWithReason(appointmentUuid,Appointment.CancelReason.DEAD)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, DEAD)
     inOrder.verify(sheet).closeSheet()
   }
 
   @Test
   fun `when done is clicked, and a cancel reason is selected, then repository should update and sheet should close`() {
-    whenever(repository.cancelWithReason(appointmentUuid, Appointment.CancelReason.MOVED)).thenReturn(Completable.complete())
+    whenever(repository.cancelWithReason(appointmentUuid, MOVED)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.PATIENT_NOT_RESPONDING))
+    uiEvents.onNext(CancelReasonClicked(PATIENT_NOT_RESPONDING))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(Appointment.CancelReason.MOVED))
+    uiEvents.onNext(CancelReasonClicked(MOVED))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
     verify(repository, never()).markAsVisited(any())
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
-    inOrder.verify(repository).cancelWithReason(appointmentUuid, Appointment.CancelReason.MOVED)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, MOVED)
     inOrder.verify(sheet).closeSheet()
   }
 }

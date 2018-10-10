@@ -96,5 +96,20 @@ data class Patient constructor(
 
     @Query("UPDATE patient SET status = :newStatus WHERE uuid = :uuid")
     fun updatePatientStatus(uuid: UUID, newStatus: PatientStatus)
+
+    @Query("""
+      SELECT P.uuid patient_uuid, P.addressUuid patient_addressUuid, P.fullName patient_fullName, P.searchableName patient_searchableName,
+       P.gender patient_gender, P.dateOfBirth patient_dateOfBirth, P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt,
+       P.age_computedDateOfBirth patient_age_computedDateOfBirth, P.status patient_status, P.createdAt patient_createdAt,
+       P.updatedAt patient_updatedAt, P.syncStatus patient_syncStatus, PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage,
+       PA.district addr_district, PA.state addr_state, PA.country addr_country, PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
+       PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
+       PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt
+      FROM Patient P
+      INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
+      LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid
+      WHERE P.syncStatus == :syncStatus
+    """)
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
   }
 }

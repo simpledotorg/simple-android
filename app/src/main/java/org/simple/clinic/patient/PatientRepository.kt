@@ -14,6 +14,7 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -39,7 +40,7 @@ class PatientRepository @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator
-) {
+) : SynceableRepository<PatientSaveModel, PatientPayload> {
 
   private val ageFuzziness: Int = 5
 
@@ -172,7 +173,7 @@ class PatientRepository @Inject constructor(
         }
   }
 
-  fun updatePatientStatusToDead(patientUuid: UUID): Completable{
+  fun updatePatientStatusToDead(patientUuid: UUID): Completable {
     return Completable.fromAction {
       database.patientDao()
           .updatePatientStatus(patientUuid, PatientStatus.DEAD)
@@ -180,9 +181,51 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun mergeWithLocalData(serverPayloads: List<PatientPayload>): Completable {
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PatientSaveModel>> {
+    return database.patientDao()
+        .recordsWithSyncStatus(syncStatus)
+        .firstOrError()
+        .map { results ->
+          results.asSequence()
+              .groupBy { it.patient.uuid }
+              .map { (_, patientQueryModels) ->
+                val phoneNumbers = when {
+                  // Patient has either no phone numbers or one phone number saved, which is
+                  // indicated by whether the Patient phone number in the query model instance is
+                  // null or not.
+                  patientQueryModels.size == 1 -> {
+                    patientQueryModels.first()
+                        .phoneNumber
+                        ?.let { listOf(it) } ?: emptyList()
+                  }
+                  patientQueryModels.size > 1 -> patientQueryModels.map { it.phoneNumber!! }
+                  else -> throw AssertionError("Patient query models is empty!")
+                }
+
+                PatientSaveModel(
+                    patient = patientQueryModels.first().patient,
+                    address = patientQueryModels.first().address,
+                    phoneNumbers = phoneNumbers
+                )
+              }.toList()
+        }
+  }
+
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
+    return Completable.fromAction { database.patientDao().updateSyncStatus(from, to) }
+  }
+
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+    return Completable.fromAction { database.patientDao().updateSyncStatus(ids, to) }
+  }
+
+  override fun recordCount(): Single<Int> {
+    return database.patientDao().patientCount().firstOrError()
+  }
+
+  override fun mergeWithLocalData(payloads: List<PatientPayload>): Completable {
     return Single.fromCallable {
-      serverPayloads.asSequence()
+      payloads.asSequence()
           .filter { payload ->
             database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
           }
@@ -191,7 +234,7 @@ class PatientRepository @Inject constructor(
     }.flatMapCompletable(::save)
   }
 
-  private fun save(records: List<PatientSaveModel>): Completable {
+  override fun save(records: List<PatientSaveModel>): Completable {
     return Completable.fromAction {
       database.addressDao().save(records.map { it.address })
       database.patientDao().save(records.map { it.patient })

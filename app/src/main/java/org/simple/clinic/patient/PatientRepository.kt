@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.toObservable
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
@@ -161,8 +160,6 @@ class PatientRepository @Inject constructor(
 
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
 
-  private fun savePatients(patients: List<Patient>): Completable = Completable.fromAction { database.patientDao().save(patients) }
-
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
     return database.patientDao()
         .patient(uuid)
@@ -184,34 +181,30 @@ class PatientRepository @Inject constructor(
   }
 
   fun mergeWithLocalData(serverPayloads: List<PatientPayload>): Completable {
-    return serverPayloads
-        .toObservable()
-        .filter { payload ->
-          val localCopy = database.patientDao().getOne(payload.uuid)
-          localCopy?.syncStatus.canBeOverriddenByServerCopy()
-        }
-        .toList()
-        .flatMapCompletable { payloads ->
-          val saveAddresses = Completable.fromAction {
-            val newOrUpdatedAddresses = payloads.map { it.address.toDatabaseModel() }
-            database.addressDao().save(newOrUpdatedAddresses)
+    return Single.fromCallable {
+      serverPayloads.asSequence()
+          .filter { payload ->
+            database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
           }
+          .map(::payloadToPatientSaveModel)
+          .toList()
+    }.flatMapCompletable(::save)
+  }
 
-          val savePatients = savePatients(payloads.map { it.toDatabaseModel(newStatus = DONE) })
+  private fun save(records: List<PatientSaveModel>): Completable {
+    return Completable.fromAction {
+      database.addressDao().save(records.map { it.address })
+      database.patientDao().save(records.map { it.patient })
+      database.phoneNumberDao().save(records.filter { it.phoneNumbers.isNotEmpty() }.flatMap { it.phoneNumbers })
+    }
+  }
 
-          val savePhoneNumbers = Completable.fromAction {
-            val newOrUpdatedPhoneNumbers = payloads
-                .filter { it.phoneNumbers != null }
-                .flatMap { patientPayload ->
-                  patientPayload.phoneNumbers!!.map { it.toDatabaseModel(patientPayload.uuid) }
-                }
-            if (newOrUpdatedPhoneNumbers.isNotEmpty()) {
-              database.phoneNumberDao().save(newOrUpdatedPhoneNumbers)
-            }
-          }
-
-          saveAddresses.andThen(savePatients).andThen(savePhoneNumbers)
-        }
+  private fun payloadToPatientSaveModel(patientPayload: PatientPayload): PatientSaveModel {
+    return PatientSaveModel(
+        patient = patientPayload.toDatabaseModel(newStatus = DONE),
+        address = patientPayload.address.toDatabaseModel(),
+        phoneNumbers = patientPayload.phoneNumbers?.map { it.toDatabaseModel(patientPayload.uuid) } ?: emptyList()
+    )
   }
 
   fun ongoingEntry(): Single<OngoingPatientEntry> {

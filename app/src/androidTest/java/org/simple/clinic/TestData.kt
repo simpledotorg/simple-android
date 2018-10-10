@@ -58,6 +58,7 @@ class TestData @Inject constructor(
           .blockingFirst()
 
   fun patientPayload(
+      uuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
       gender: Gender = randomOfEnum(Gender::class),
       age: Int? = Math.random().times(100).toInt(),
@@ -66,10 +67,10 @@ class TestData @Inject constructor(
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       address: PatientAddressPayload = addressPayload(),
-      phoneNumber: PatientPhoneNumberPayload = phoneNumberPayload()
+      phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload())
   ): PatientPayload {
     return PatientPayload(
-        uuid = UUID.randomUUID(),
+        uuid = uuid,
         fullName = fullName,
         gender = gender,
         dateOfBirth = null,
@@ -79,29 +80,46 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         address = address,
-        phoneNumbers = listOf(phoneNumber)
+        phoneNumbers = phoneNumbers
     )
   }
 
-  fun addressPayload(): PatientAddressPayload {
+  fun addressPayload(
+      uuid: UUID = UUID.randomUUID(),
+      colonyOrVillage: String? = faker.address.streetAddress(),
+      district: String = faker.address.city(),
+      state: String = faker.address.state(),
+      country: String? = faker.address.country(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): PatientAddressPayload {
     return PatientAddressPayload(
-        uuid = UUID.randomUUID(),
-        colonyOrVillage = faker.address.streetAddress(),
-        district = faker.address.city(),
-        state = faker.address.state(),
-        country = faker.address.country(),
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        uuid = uuid,
+        colonyOrVillage = colonyOrVillage,
+        district = district,
+        state = state,
+        country = country,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
   }
 
-  fun phoneNumberPayload(): PatientPhoneNumberPayload {
+  fun phoneNumberPayload(
+      uuid: UUID = UUID.randomUUID(),
+      number: String = faker.phoneNumber.phoneNumber(),
+      type: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
+      active: Boolean = true,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): PatientPhoneNumberPayload {
     return PatientPhoneNumberPayload(
-        uuid = UUID.randomUUID(),
-        number = faker.phoneNumber.phoneNumber(),
-        type = randomOfEnum(PatientPhoneNumberType::class),
-        active = true,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        uuid = uuid,
+        number = number,
+        type = type,
+        active = active,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
   }
 
   /**

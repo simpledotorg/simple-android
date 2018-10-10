@@ -209,15 +209,15 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890987654"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(screen, times(6)).showEmptyFullNameError(true)
-    verify(screen, times(2)).showEmptyDateOfBirthAndAgeError(true)
-    verify(screen, times(3)).showInvalidDateOfBirthError(true)
-    verify(screen, times(6)).showMissingGenderError(true)
+    verify(screen, atLeastOnce()).showEmptyFullNameError(true)
+    verify(screen, atLeastOnce()).showEmptyDateOfBirthAndAgeError(true)
+    verify(screen, atLeastOnce()).showInvalidDateOfBirthError(true)
+    verify(screen, atLeastOnce()).showMissingGenderError(true)
     verify(screen, atLeastOnce()).showEmptyColonyOrVillageError(true)
-    verify(screen, times(6)).showEmptyDistrictError(true)
-    verify(screen, times(6)).showEmptyStateError(true)
-    verify(screen, times(1)).showLengthTooShortPhoneNumberError(true)
-    verify(screen, times(1)).showLengthTooLongPhoneNumberError(true)
+    verify(screen, atLeastOnce()).showEmptyDistrictError(true)
+    verify(screen, atLeastOnce()).showEmptyStateError(true)
+    verify(screen, atLeastOnce()).showLengthTooShortPhoneNumberError(true)
+    verify(screen, atLeastOnce()).showLengthTooLongPhoneNumberError(true)
   }
 
   @Test
@@ -267,9 +267,9 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
 
     verify(screen).showEmptyFullNameError(false)
-    verify(screen, times(3)).showEmptyDateOfBirthAndAgeError(false)
-    verify(screen, times(2)).showInvalidDateOfBirthError(false)
-    verify(screen, times(2)).showDateOfBirthIsInFutureError(false)
+    verify(screen, atLeastOnce()).showEmptyDateOfBirthAndAgeError(false)
+    verify(screen, atLeastOnce()).showInvalidDateOfBirthError(false)
+    verify(screen, atLeastOnce()).showDateOfBirthIsInFutureError(false)
     verify(screen).showMissingGenderError(false)
     verify(screen, atLeastOnce()).showEmptyColonyOrVillageError(false)
     verify(screen).showEmptyDistrictError(false)

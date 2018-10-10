@@ -181,26 +181,12 @@ class PatientEntryScreenController @Inject constructor(
   }
 
   private fun showValidationErrorsOnSaveClick(events: Observable<UiEvent>): Observable<UiChange> {
-    val colonyChanges = events.ofType<PatientColonyOrVillageTextChanged>().map { it.colonyOrVillage }
-
-    val colonyErrors = events
-        .ofType<PatientEntrySaveClicked>()
-        .withLatestFrom(colonyChanges)
-        .map { (_, colony) ->
-          when {
-            colony.isBlank() -> listOf(COLONY_OR_VILLAGE_EMPTY)
-            else -> listOf()
-          }
-        }
-
-    val errorsFromDataValidation = events
+    val errors = events
         .ofType<PatientEntrySaveClicked>()
         .withLatestFrom(events.ofType<OngoingPatientEntryChanged>().map { it.entry })
         .map { (_, ongoingEntry) -> ongoingEntry.validationErrors(dobValidator, numberValidator) }
-
-    val errors = Observables.zip(colonyErrors, errorsFromDataValidation) { colonyError, otherErrors ->
-      colonyError + otherErrors
-    }
+        .replay(1)
+        .refCount()
 
     val showErrors = errors
         .flatMapIterable { it }
@@ -257,10 +243,10 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<PatientGenderChanged>()
         .map { { ui: Ui -> ui.showMissingGenderError(false) } }
 
-    val lessPhoneLengthResets = events.ofType<PatientPhoneNumberTextChanged>()
+    val phoneLengthTooShortResets = events.ofType<PatientPhoneNumberTextChanged>()
         .map { { ui: Ui -> ui.showLengthTooShortPhoneNumberError(false) } }
 
-    val morePhoneLengthResets = events.ofType<PatientPhoneNumberTextChanged>()
+    val phoneLengthTooLongResets = events.ofType<PatientPhoneNumberTextChanged>()
         .map { { ui: Ui -> ui.showLengthTooLongPhoneNumberError(false) } }
 
     val colonyErrorResets = events.ofType<PatientColonyOrVillageTextChanged>()
@@ -279,30 +265,20 @@ class PatientEntryScreenController @Inject constructor(
         dateOfBirthErrorResets,
         ageErrorResets,
         genderErrorResets,
-        lessPhoneLengthResets,
-        morePhoneLengthResets,
+        phoneLengthTooShortResets,
+        phoneLengthTooLongResets,
         colonyErrorResets,
         districtErrorResets,
         stateErrorResets)
   }
 
   private fun savePatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val colonyChanges = events.ofType<PatientColonyOrVillageTextChanged>().map { it.colonyOrVillage }
-
-    val isColonyValid = events
-        .ofType<PatientEntrySaveClicked>()
-        .withLatestFrom(colonyChanges)
-        .map { (_, colony) -> colony.isNotBlank() }
-
     val ongoingEntryChanges = events
         .ofType<OngoingPatientEntryChanged>()
         .map { it.entry }
 
-    val canPatientBeSaved = Observables
-        .combineLatest(
-            ongoingEntryChanges.map { it.validationErrors(dobValidator, numberValidator).isEmpty() },
-            isColonyValid)
-        .map { it.first.and(it.second) }
+    val canPatientBeSaved = ongoingEntryChanges
+        .map { it.validationErrors(dobValidator, numberValidator).isEmpty() }
 
     return events
         .ofType<PatientEntrySaveClicked>()

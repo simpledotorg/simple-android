@@ -58,7 +58,7 @@ data class Facility(
     @Query("SELECT * FROM facility WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): Facility?
 
-    @Query("SELECT * FROM facility")
+    @Query("SELECT * FROM facility ORDER BY name ASC")
     fun facilities(): Flowable<List<Facility>>
 
     @Query("SELECT COUNT(*) FROM facility")

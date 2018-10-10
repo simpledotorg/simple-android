@@ -40,6 +40,21 @@ class FacilityRepositoryAndroidTest {
   }
 
   @Test
+  fun facilities_should_be_ordered_alphabetically() {
+    val facilityB = testData.facility(uuid = UUID.randomUUID(), name = "B")
+    val facilityD = testData.facility(uuid = UUID.randomUUID(), name = "D")
+    val facilityA = testData.facility(uuid = UUID.randomUUID(), name = "A")
+    val facilityC = testData.facility(uuid = UUID.randomUUID(), name = "C")
+
+    val facilitiesToStore = listOf(facilityB, facilityD, facilityA, facilityC)
+    database.facilityDao().save(facilitiesToStore)
+
+    val returnedFacilities = repository.facilities().blockingFirst()
+    val expectedOrdering = listOf(facilityA, facilityB, facilityC, facilityD)
+    assertThat(returnedFacilities).isEqualTo(expectedOrdering)
+  }
+
+  @Test
   fun when_associating_a_user_with_facilities_then_only_one_facility_should_be_set_as_current_facility() {
     val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "facility1")
     val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "facility2")

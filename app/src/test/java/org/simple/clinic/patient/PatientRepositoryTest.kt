@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Flowable
@@ -70,6 +69,7 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
@@ -179,6 +179,7 @@ class PatientRepositoryTest {
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
@@ -257,7 +258,7 @@ class PatientRepositoryTest {
     } else {
       verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
       verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
-      verify(patientPhoneNumberDao, never()).save(any())
+      verify(patientPhoneNumberDao).save(emptyList())
     }
   }
 }

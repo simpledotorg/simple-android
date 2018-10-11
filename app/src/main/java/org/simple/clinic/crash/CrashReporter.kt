@@ -5,4 +5,6 @@ import android.app.Application
 interface CrashReporter {
 
   fun init(appContext: Application)
+
+  fun dropBreadcrumb(breadcrumb: Breadcrumb)
 }

@@ -88,7 +88,7 @@ open class AppModule(
   fun vibrator() = appContext.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
   @Provides
-  fun workManager() = WorkManager.getInstance()!!
+  fun workManager() = WorkManager.getInstance()
 
   @Provides
   @AppScope

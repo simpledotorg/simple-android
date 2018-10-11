@@ -3,6 +3,8 @@ package org.simple.clinic
 import com.tspoon.traceur.Traceur
 import io.reactivex.Single
 import org.simple.clinic.TestClinicApp.Companion.appComponent
+import org.simple.clinic.crash.CrashReporterModule
+import org.simple.clinic.crash.NoOpCrashReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
@@ -58,6 +60,9 @@ class TestClinicApp : ClinicApp() {
           override fun syncConfig(): Single<SyncConfig> {
             return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 10))
           }
+        })
+        .crashReporterModule(object : CrashReporterModule() {
+          override fun crashReporter() = NoOpCrashReporter()
         })
         .build()
   }

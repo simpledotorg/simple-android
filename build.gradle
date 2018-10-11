@@ -48,9 +48,10 @@ buildscript {
 
   repositories {
     google()
-    jcenter()
+    mavenCentral()
     maven { url 'https://jitpack.io' }
     maven { url 'https://heap-maven-public.s3.amazonaws.com/android-testing' }
+    jcenter()
   }
 
   dependencies {
@@ -64,6 +65,7 @@ buildscript {
 allprojects {
   repositories {
     google()
+    mavenCentral()
     jcenter()
   }
 }

@@ -3,6 +3,7 @@ package org.simple.clinic.sync
 import androidx.work.BackoffPolicy
 import androidx.work.Constraints
 import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import io.reactivex.Completable
@@ -38,7 +39,10 @@ class SyncScheduler @Inject constructor(
   }
 
   fun syncImmediately(): Completable {
-    return Completable.fromAction { SyncWorker().doWork() }
+    return Completable.fromAction {
+      val worker = OneTimeWorkRequestBuilder<SyncWorker>().build()
+      workManager.enqueue(worker)
+    }
   }
 
   fun cancelAll() {

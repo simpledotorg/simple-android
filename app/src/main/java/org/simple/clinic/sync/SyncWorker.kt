@@ -1,6 +1,8 @@
 package org.simple.clinic.sync
 
+import android.content.Context
 import androidx.work.Worker
+import androidx.work.WorkerParameters
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
@@ -16,7 +18,7 @@ import timber.log.Timber
 import java.io.IOException
 import javax.inject.Inject
 
-class SyncWorker : Worker() {
+class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
   companion object {
     const val TAG = "patient-sync"
@@ -46,7 +48,7 @@ class SyncWorker : Worker() {
   @Inject
   lateinit var facilitySync: FacilitySync
 
-  override fun doWork(): WorkerResult {
+  override fun doWork(): Result {
     ClinicApp.appComponent.inject(this)
 
     return userSession.loggedInUser()
@@ -55,13 +57,13 @@ class SyncWorker : Worker() {
         .flatMap { isApproved ->
           when {
             isApproved -> sync()
-            else -> Single.just(WorkerResult.SUCCESS)
+            else -> Single.just(Result.SUCCESS)
           }
         }
         .blockingGet()
   }
 
-  private fun sync(): Single<WorkerResult> {
+  private fun sync(): Single<Result> {
     return patientSync.sync()
         .andThen(Completable.mergeArrayDelayError(
             bloodPressureSync.sync(),
@@ -77,6 +79,6 @@ class SyncWorker : Worker() {
           }
         }
         .onErrorComplete()
-        .andThen(Single.just(WorkerResult.SUCCESS))
+        .andThen(Single.just(Result.SUCCESS))
   }
 }

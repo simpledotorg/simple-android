@@ -24,7 +24,6 @@ interface AppComponent {
   fun inject(target: OtpSmsReceiver)
 
   fun activityComponentBuilder(): TheActivityComponent.Builder
-
   fun userSession(): UserSession
   fun facilitySync(): FacilitySync
 }

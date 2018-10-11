@@ -8,7 +8,7 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPushRequest
-import org.simple.clinic.patient.sync.PatientSync2
+import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV1
 import org.simple.clinic.sync.BaseDataSyncAndroidTest
 import org.simple.clinic.util.Optional
@@ -27,7 +27,7 @@ class PatientSyncAndroidTest : BaseDataSyncAndroidTest<PatientSaveModel, Patient
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject
-  lateinit var sync: PatientSync2
+  lateinit var sync: PatientSync
 
   @Inject
   lateinit var syncApi: PatientSyncApiV1

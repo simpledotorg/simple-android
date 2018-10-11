@@ -65,11 +65,12 @@ class TestData @Inject constructor(
 
   fun patientSaveModel(
       patientUuid: UUID = UUID.randomUUID(),
+      patientAddressUuid: UUID = UUID.randomUUID(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): PatientSaveModel {
     return PatientSaveModel(
-        patient = patient(uuid = patientUuid, syncStatus = syncStatus),
-        address = patientAddress(),
+        patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
+        address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = (0 until Math.random().times(10).toInt()).map { patientPhoneNumber(patientUuid = patientUuid) }
     )
   }

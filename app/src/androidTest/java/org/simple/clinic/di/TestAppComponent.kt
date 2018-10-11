@@ -27,7 +27,6 @@ interface TestAppComponent : AppComponent {
 
   fun inject(target: TestClinicApp)
   fun inject(target: UserSessionAndroidTest)
-  fun inject(target: PatientSyncAndroidTest)
   fun inject(target: FacilitySyncAndroidTest)
   fun inject(target: PrescriptionSyncAndroidTest)
   fun inject(target: BloodPressureSyncAndroidTest)
@@ -43,4 +42,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: MedicalHistorySyncAndroidTest)
   fun inject(target: MedicalHistoryRepositoryAndroidTest)
   fun inject(target: RelativeTimestampGeneratorAndroidTest)
+  fun inject(target: PatientSyncAndroidTest)
 }

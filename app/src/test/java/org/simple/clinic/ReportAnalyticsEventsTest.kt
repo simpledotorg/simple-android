@@ -6,8 +6,8 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.MockReporter
-import org.simple.clinic.analytics.MockReporter.Event
+import org.simple.clinic.analytics.MockAnalyticsReporter
+import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.widgets.UiEvent
 
 class ReportAnalyticsEventsTest {
@@ -24,7 +24,7 @@ class ReportAnalyticsEventsTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val reporter = MockReporter()
+  private val reporter = MockAnalyticsReporter()
 
   private lateinit var controller: ReportAnalyticsEvents
 

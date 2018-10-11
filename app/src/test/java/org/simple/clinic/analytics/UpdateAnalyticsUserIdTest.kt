@@ -21,7 +21,7 @@ import org.simple.clinic.util.Optional
 @RunWith(JUnitParamsRunner::class)
 class UpdateAnalyticsUserIdTest {
 
-  private val reporter = MockReporter()
+  private val reporter = MockAnalyticsReporter()
   private val userSession = mock<UserSession>()
   private val updateAnalyticsUserId = UpdateAnalyticsUserId(userSession)
   private val scheduler = Schedulers.trampoline()

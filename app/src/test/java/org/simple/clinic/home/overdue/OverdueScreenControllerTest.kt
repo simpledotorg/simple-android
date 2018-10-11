@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.MockReporter
+import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RuntimePermissionResult
@@ -28,7 +28,7 @@ class OverdueScreenControllerTest {
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
-  private val reporter = MockReporter()
+  private val reporter = MockAnalyticsReporter()
 
   lateinit var controller: OverdueScreenController
 
@@ -114,7 +114,7 @@ class OverdueScreenControllerTest {
     val patientUuid = UUID.randomUUID()
     uiEvents.onNext(AppointmentExpanded(patientUuid))
 
-    val expectedEvent = MockReporter.Event("ViewedPatient", mapOf(
+    val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
         "patientId" to patientUuid.toString(),
         "from" to "Overdue"
     ))

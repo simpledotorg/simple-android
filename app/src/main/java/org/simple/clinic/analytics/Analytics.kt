@@ -4,9 +4,9 @@ import java.util.UUID
 
 object Analytics {
 
-  private var reporters: List<Reporter> = emptyList()
+  private var reporters: List<AnalyticsReporter> = emptyList()
 
-  fun addReporter(vararg reportersToAdd: Reporter) {
+  fun addReporter(vararg reportersToAdd: AnalyticsReporter) {
     reporters += reportersToAdd
   }
 
@@ -14,7 +14,7 @@ object Analytics {
     reporters = emptyList()
   }
 
-  fun removeReporter(reporter: Reporter) {
+  fun removeReporter(reporter: AnalyticsReporter) {
     reporters -= reporter
   }
 

@@ -2,7 +2,7 @@ package org.simple.clinic.analytics
 
 import timber.log.Timber
 
-interface Reporter {
+interface AnalyticsReporter {
 
   fun setUserIdentity(id: String)
 
@@ -14,7 +14,7 @@ interface Reporter {
    * Safely report events so that the app does not crash if any of the
    * reporters fail.
    **/
-  fun safely(message: String = "", block: Reporter.() -> Unit) {
+  fun safely(message: String = "", block: AnalyticsReporter.() -> Unit) {
     try {
       block()
     } catch (e: Exception) {

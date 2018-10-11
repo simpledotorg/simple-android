@@ -38,6 +38,7 @@ abstract class ClinicApp : Application() {
     appComponent.inject(this)
 
     crashReporter.init(this)
+    Timber.plant(CrashBreadcrumbsTimberTree(crashReporter))
   }
 
   abstract fun buildDaggerGraph(): AppComponent

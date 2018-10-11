@@ -20,7 +20,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.MockReporter
+import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
@@ -51,7 +51,7 @@ class PatientEntryScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator, numberValidator)
-  private val reporter = MockReporter()
+  private val reporter = MockAnalyticsReporter()
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 

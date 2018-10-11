@@ -4,7 +4,7 @@ import android.content.Context
 import com.heapanalytics.android.Heap
 import org.simple.clinic.BuildConfig
 
-class HeapReporter(context: Context, debug: Boolean = false) : Reporter {
+class HeapAnalyticsReporter(context: Context, debug: Boolean = false) : AnalyticsReporter {
 
   init {
     Heap.init(context.applicationContext, BuildConfig.HEAP_ID, debug)

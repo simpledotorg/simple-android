@@ -25,7 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.MockReporter
+import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
@@ -65,7 +65,7 @@ class UserSessionTest {
   private val appDatabase = mock<AppDatabase>()
   private val passwordHasher = mock<PasswordHasher>()
   private val userDao = mock<User.RoomDao>()
-  private val reporter = MockReporter()
+  private val reporter = MockAnalyticsReporter()
 
 
   private val moshi = Moshi.Builder().build()

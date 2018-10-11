@@ -3,13 +3,12 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
-import com.tspoon.traceur.Traceur
 import dagger.Provides
 import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.analytics.DebugReporter
+import org.simple.clinic.analytics.DebugAnalyticsReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
@@ -43,7 +42,7 @@ class DebugClinicApp : ClinicApp() {
   override fun onCreate() {
     super.onCreate()
     appComponent().inject(this)
-    Analytics.addReporter(DebugReporter())
+    Analytics.addReporter(DebugAnalyticsReporter())
     keepUserIdUpdatedInAnalytics()
 
     Timber.plant(Timber.DebugTree())

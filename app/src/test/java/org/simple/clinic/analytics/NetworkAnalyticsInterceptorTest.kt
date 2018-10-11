@@ -37,7 +37,7 @@ private fun responseBuilder(
 @RunWith(JUnitParamsRunner::class)
 class NetworkAnalyticsInterceptorTest {
 
-  private val mockReporter = MockReporter()
+  private val mockReporter = MockAnalyticsReporter()
 
   private lateinit var interceptor: NetworkAnalyticsInterceptor
 

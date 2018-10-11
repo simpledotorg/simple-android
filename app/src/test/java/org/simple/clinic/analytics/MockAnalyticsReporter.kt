@@ -1,6 +1,6 @@
 package org.simple.clinic.analytics
 
-class MockReporter : Reporter {
+class MockAnalyticsReporter : AnalyticsReporter {
 
   val setUserIds = mutableListOf<String>()
   val receivedEvents = mutableListOf<Event>()

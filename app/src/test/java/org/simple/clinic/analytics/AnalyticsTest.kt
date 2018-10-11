@@ -3,7 +3,7 @@ package org.simple.clinic.analytics
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
-import org.simple.clinic.analytics.MockReporter.Event
+import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import java.util.UUID
 
 class AnalyticsTest {
@@ -40,43 +40,43 @@ class AnalyticsTest {
 
   @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
-    Analytics.addReporter(FailingReporter())
+    Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportUserInteraction("Test")
   }
 
   @Test
   fun `when a reporter fails when sending screen change events, no error should be thrown`() {
-    Analytics.addReporter(FailingReporter())
+    Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportScreenChange("Screen 1", "Screen 2")
   }
 
   @Test
   fun `when a reporter fails when sending validation error events, no error should be thrown`() {
-    Analytics.addReporter(FailingReporter())
+    Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportInputValidationError("Error")
   }
 
   @Test
   fun `when a reporter fails when setting the user id, no  error should be thrown`() {
-    Analytics.addReporter(FailingReporter())
+    Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.setUserId(UUID.randomUUID())
   }
 
   @Test
   fun `when a reporter fails when sending an audit event, no error should be thrown`() {
-    Analytics.addReporter(FailingReporter())
+    Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
   }
 
   @Test
   fun `when a reporter fails sending a network event, no error should be thrown`() {
-    Analytics.addReporter(FailingReporter())
+    Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportNetworkCall("test", "get", 1, 1, 1)
   }
 
   @Test
   fun `when setting the user id, the property must also be set on the reporters`() {
-    val reporter = MockReporter()
+    val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
 
     val uuid = UUID.randomUUID()
@@ -86,9 +86,9 @@ class AnalyticsTest {
 
   @Test
   fun `when multiple reporters are present and one throws an error, the user id must by set on the others`() {
-    val reporter1 = MockReporter()
-    val reporter2 = FailingReporter()
-    val reporter3 = MockReporter()
+    val reporter1 = MockAnalyticsReporter()
+    val reporter2 = FailingAnalyticsReporter()
+    val reporter3 = MockAnalyticsReporter()
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
     val userId = UUID.randomUUID()
@@ -100,9 +100,9 @@ class AnalyticsTest {
 
   @Test
   fun `when multiple reporters are present and one throws an error, the others should receive the events`() {
-    val reporter1 = MockReporter()
-    val reporter2 = FailingReporter()
-    val reporter3 = MockReporter()
+    val reporter1 = MockAnalyticsReporter()
+    val reporter2 = FailingAnalyticsReporter()
+    val reporter3 = MockAnalyticsReporter()
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
 
@@ -146,7 +146,7 @@ class AnalyticsTest {
     Analytics.clearReporters()
   }
 
-  private class FailingReporter : Reporter {
+  private class FailingAnalyticsReporter : AnalyticsReporter {
 
     override fun setUserIdentity(id: String) {
       throw RuntimeException()

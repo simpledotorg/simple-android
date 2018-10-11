@@ -81,13 +81,13 @@ class PatientSync @Inject constructor(
                 }
               }
               .flatMap { response ->
-                repository.mergeWithLocalData(response.patients)
+                repository.mergeWithLocalData(response.payloads)
                     .observeOn(Schedulers.single())
                     .andThen({ lastPullTimestamp.set(Just(response.processedSinceTimestamp)) }.toCompletable())
                     .andThen(Observable.just(response))
               }
               .repeat()
-              .takeWhile({ response -> response.patients.size >= config.batchSize })
+              .takeWhile({ response -> response.payloads.size >= config.batchSize })
               .ignoreElements()
         }
   }

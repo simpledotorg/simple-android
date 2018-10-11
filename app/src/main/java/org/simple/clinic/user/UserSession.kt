@@ -86,10 +86,12 @@ class UserSession @Inject constructor(
 
   fun loginWithOtp(otp: String): Single<LoginResult> {
     return ongoingLoginEntry()
+        .doOnSubscribe { Timber.i("Logging in with OTP") }
         .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
-          // TODO: Review if this is necessary since Facilities are synced before making the request OTP call
+          // TODO: Review if this is necessary since Facilities
+          // are synced before making the request OTP call
           facilitySync.sync()
               .toSingleDefault(it)
         }
@@ -97,6 +99,7 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(it)
         }
+        .doOnSuccess { Timber.i("Login result: $it") }
         .map { LoginResult.Success() as LoginResult }
         .onErrorReturn { error ->
           when {
@@ -116,6 +119,7 @@ class UserSession @Inject constructor(
   fun requestLoginOtp(): Single<LoginResult> {
     val ongoingEntry = ongoingLoginEntry().cache()
     return ongoingEntry
+        .doOnSubscribe { Timber.i("Requesting login OTP") }
         .flatMap {
           loginApi.requestLoginOtp(it.userId)
               .andThen(Completable.fromAction {
@@ -139,6 +143,7 @@ class UserSession @Inject constructor(
     val ongoingEntry = ongoingRegistrationEntry().cache()
 
     return ongoingEntry
+        .doOnSubscribe { Timber.i("Logging in from ongoing registration entry") }
         .zipWith(ongoingEntry.flatMap { entry -> passwordHasher.hash(entry.pin!!) })
         .flatMapCompletable { (entry, passwordDigest) ->
           val user = User(
@@ -156,6 +161,7 @@ class UserSession @Inject constructor(
   }
 
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {
+    Timber.i("Finding user with phone number")
     return registrationApi.findUser(phoneNumber)
         .map { user -> FindUserResult.Found(user) as FindUserResult }
         .onErrorReturn { e ->
@@ -191,6 +197,7 @@ class UserSession @Inject constructor(
   fun refreshLoggedInUser(): Completable {
     return requireLoggedInUser()
         .firstOrError()
+        .doOnSuccess { Timber.i("Refreshing logged-in user") }
         .flatMapCompletable { loggedInUser ->
           registrationApi.findUser(loggedInUser.phoneNumber)
               .flatMapCompletable { userPayload ->
@@ -222,6 +229,7 @@ class UserSession @Inject constructor(
         .flatMap { facilityRepository.facilityUuidsForUser(it).firstOrError() }
 
     return Singles.zip(user, currentFacility)
+        .doOnSubscribe { Timber.i("Registering user") }
         .map { (user, facilityUuids) -> userToPayload(user, facilityUuids) }
         .map(::RegistrationRequest)
         .flatMap { registrationApi.createUser(it) }
@@ -233,6 +241,7 @@ class UserSession @Inject constructor(
           Timber.e(e)
           RegistrationResult.Error()
         }
+        .doOnSuccess { Timber.i("Registration result: $it") }
   }
 
   private fun userToPayload(user: User, facilityUuids: List<UUID>): LoggedInUserPayload {
@@ -283,6 +292,7 @@ class UserSession @Inject constructor(
       Single.fromCallable { ongoingRegistrationEntry != null }
 
   private fun storeUserAndAccessToken(response: LoginResponse): Completable {
+    Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
     return storeUser(
         userFromPayload(response.loggedInUser, User.LoggedInStatus.LOGGED_IN),
@@ -290,6 +300,7 @@ class UserSession @Inject constructor(
   }
 
   private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {
+    Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
 
     val user = userFromPayload(response.loggedInUser, User.LoggedInStatus.RESET_PIN_REQUESTED)
@@ -297,6 +308,7 @@ class UserSession @Inject constructor(
   }
 
   private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
+    Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
 
     val user = userFromPayload(response.userPayload, User.LoggedInStatus.LOGGED_IN)
@@ -312,6 +324,7 @@ class UserSession @Inject constructor(
   private fun storeUser(user: User, facilityUuids: List<UUID>): Completable {
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
+        .doOnSubscribe { Timber.i("Storing user") }
         .andThen(facilityRepository.associateUserWithFacilities(user, facilityUuids, currentFacility = facilityUuids.first()))
   }
 
@@ -321,6 +334,7 @@ class UserSession @Inject constructor(
   }
 
   fun clearLoggedInUser(): Completable {
+    Timber.i("Clearing logged-in user")
     return loggedInUser()
         .firstOrError()
         .filter { it is Just<User> }
@@ -378,6 +392,8 @@ class UserSession @Inject constructor(
   }
 
   fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
+    Timber.i("Syncing and clearing all patient related data")
+
     return syncScheduler.syncImmediately()
         .subscribeOn(Schedulers.io())
         .retry(syncRetryCount.toLong())
@@ -404,6 +420,7 @@ class UserSession @Inject constructor(
     val resetPasswordCall = passwordHasher.hash(pin)
         .map { ResetPinRequest(it) }
         .flatMap { loginApi.resetPin(it) }
+        .doOnSubscribe { Timber.i("Resetting PIN") }
 
     val updateUserOnSuccess = resetPasswordCall
         .flatMapCompletable { storeUserAndAccessToken(it) }

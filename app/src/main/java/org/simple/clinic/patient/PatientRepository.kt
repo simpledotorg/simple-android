@@ -132,33 +132,6 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun patientCount(): Single<Int> {
-    return database.patientDao()
-        .patientCount()
-        .firstOrError()
-  }
-
-  fun patientsWithSyncStatus(status: SyncStatus): Single<List<PatientSearchResult>> {
-    return database.patientSearchDao()
-        .withSyncStatus(status)
-        .firstOrError()
-  }
-
-  fun updatePatientsSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable {
-    return Completable.fromAction {
-      database.patientDao().updateSyncStatus(oldStatus = oldStatus, newStatus = newStatus)
-    }
-  }
-
-  fun updatePatientsSyncStatus(patientUuids: List<UUID>, newStatus: SyncStatus): Completable {
-    if (patientUuids.isEmpty()) {
-      throw AssertionError()
-    }
-    return Completable.fromAction {
-      database.patientDao().updateSyncStatus(uuids = patientUuids, newStatus = newStatus)
-    }
-  }
-
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {
@@ -177,7 +150,7 @@ class PatientRepository @Inject constructor(
     return Completable.fromAction {
       database.patientDao()
           .updatePatientStatus(patientUuid, PatientStatus.DEAD)
-      updatePatientsSyncStatus(listOf(patientUuid), PENDING)
+      setSyncStatus(listOf(patientUuid), PENDING)
     }
   }
 

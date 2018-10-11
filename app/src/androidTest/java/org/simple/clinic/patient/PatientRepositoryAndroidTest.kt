@@ -432,7 +432,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_patient_is_marked_dead_they_should_not_show_in_search_results(){
+  fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient =
     patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
         .andThen(patientRepository.saveOngoingEntryAsPatient())
@@ -443,7 +443,7 @@ class PatientRepositoryAndroidTest {
     val searchResult = patientRepository.search("Ashok").blockingFirst()
     val patientFirst = patientRepository.patient(patient.uuid).blockingFirst()
 
-    assertThat(patientRepository.patientCount().blockingGet()).isEqualTo(1)
+    assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1)
     assertThat(patientFirst).isNotNull()
     assertThat(searchResult).isEmpty()
   }

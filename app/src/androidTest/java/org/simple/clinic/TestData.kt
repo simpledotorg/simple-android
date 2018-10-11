@@ -13,11 +13,17 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
+import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.patient.PatientSaveModel
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
@@ -56,6 +62,81 @@ class TestData @Inject constructor(
       facilityRepository.currentFacility(userSession)
           .map { it.uuid }
           .blockingFirst()
+
+  fun patientSaveModel(
+      patientUuid: UUID = UUID.randomUUID(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): PatientSaveModel {
+    return PatientSaveModel(
+        patient = patient(uuid = patientUuid, syncStatus = syncStatus),
+        address = patientAddress(),
+        phoneNumbers = (0 until Math.random().times(10).toInt()).map { patientPhoneNumber(patientUuid = patientUuid) }
+    )
+  }
+
+  fun patient(
+      uuid: UUID = UUID.randomUUID(),
+      addressUuid: UUID = UUID.randomUUID(),
+      fullName: String = faker.name.name(),
+      searchableName: String = nameToSearchableForm(fullName),
+      gender: Gender = randomOfEnum(Gender::class),
+      dateOfBirth: LocalDate? = LocalDate.now(),
+      age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now(), computedDateOfBirth = LocalDate.now()),
+      status: PatientStatus = randomOfEnum(PatientStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+  ): Patient {
+    return Patient(
+        uuid = uuid,
+        addressUuid = addressUuid,
+        fullName = fullName,
+        searchableName = searchableName,
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        age = age,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        syncStatus = syncStatus
+    )
+  }
+
+  fun patientPhoneNumber(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      number: String = faker.phoneNumber.phoneNumber(),
+      phoneType: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
+      active: Boolean = faker.bool.bool(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ) = PatientPhoneNumber(
+      uuid = uuid,
+      patientUuid = patientUuid,
+      number = number,
+      phoneType = phoneType,
+      active = active,
+      createdAt = createdAt,
+      updatedAt = updatedAt
+  )
+
+  fun patientAddress(
+      uuid: UUID = UUID.randomUUID(),
+      colonyOrVilage: String? = faker.address.streetAddress(),
+      district: String = faker.address.city(),
+      state: String = faker.address.state(),
+      country: String? = faker.address.country(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ) = PatientAddress(
+      uuid = uuid,
+      colonyOrVillage = colonyOrVilage,
+      district = district,
+      state = state,
+      country = country,
+      createdAt = createdAt,
+      updatedAt = updatedAt
+  )
 
   fun patientPayload(
       uuid: UUID = UUID.randomUUID(),

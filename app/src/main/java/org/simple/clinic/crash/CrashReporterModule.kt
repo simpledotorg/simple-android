@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class CrashReporterModule {
+open class CrashReporterModule {
 
   @Provides
-  fun crashReporter(): CrashReporter = SentryCrashReporter()
+  open fun crashReporter(): CrashReporter = SentryCrashReporter()
 }

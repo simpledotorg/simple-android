@@ -8,3 +8,10 @@ interface CrashReporter {
 
   fun dropBreadcrumb(breadcrumb: Breadcrumb)
 }
+
+class NoOpCrashReporter : CrashReporter {
+
+  override fun init(appContext: Application) {}
+
+  override fun dropBreadcrumb(breadcrumb: Breadcrumb) {}
+}

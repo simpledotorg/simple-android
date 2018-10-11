@@ -11,6 +11,7 @@ import dagger.Provides
 import io.reactivex.Scheduler
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
@@ -38,7 +39,8 @@ import javax.inject.Named
   NetworkModule::class,
   StorageModule::class,
   LoginModule::class,
-  RegistrationModule::class])
+  RegistrationModule::class,
+  CrashReporterModule::class])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

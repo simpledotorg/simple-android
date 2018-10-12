@@ -7,6 +7,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.bp.sync.BloodPressureSync
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
@@ -48,6 +49,9 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
   @Inject
   lateinit var facilitySync: FacilitySync
 
+  @Inject
+  lateinit var crashReporter: CrashReporter
+
   override fun doWork(): Result {
     ClinicApp.appComponent.inject(this)
 
@@ -73,9 +77,10 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
             medicalHistorySync.sync(),
             facilitySync.sync()
         ))
-        .doOnError {
-          if (it !is IOException) {
-            Timber.e(it)
+        .doOnError { e ->
+          if (e !is IOException) {
+            Timber.e(e)
+            crashReporter.report(e)
           }
         }
         .onErrorComplete()

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
@@ -207,11 +208,16 @@ public class OmegaCenterIconButton extends AppCompatButton {
     return isAllCaps() ? longPart.toUpperCase(Locale.getDefault()) : longPart;
   }
 
-  private boolean isAllCaps() {
-    TransformationMethod method = getTransformationMethod();
-    if (method == null) { return false; }
+  @Override
+  public boolean isAllCaps() {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      return super.isAllCaps();
+    } else {
+      TransformationMethod method = getTransformationMethod();
+      if (method == null) { return false; }
 
-    return method.getClass().getSimpleName().equals("AllCapsTransformationMethod");
+      return method.getClass().getSimpleName().equals("AllCapsTransformationMethod");
+    }
   }
 
 }

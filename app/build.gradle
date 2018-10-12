@@ -169,6 +169,8 @@ dependencies {
   testImplementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
   implementation "com.android.support:appcompat-v7:$versions.supportLib"
+  // Needed because play services auth exposes an older dependency
+  implementation "com.android.support:support-v4:$versions.supportLib"
   implementation "com.android.support:recyclerview-v7:$versions.supportLib"
   implementation "com.android.support:design:$versions.supportLib"
   implementation "com.android.support:cardview-v7:$versions.supportLib"

@@ -99,7 +99,6 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(it)
         }
-        .doOnSuccess { Timber.i("Login result: $it") }
         .map { LoginResult.Success() as LoginResult }
         .onErrorReturn { error ->
           when {
@@ -114,6 +113,7 @@ class UserSession @Inject constructor(
             }
           }
         }
+        .doOnSuccess { Timber.i("Login result: $it") }
   }
 
   fun requestLoginOtp(): Single<LoginResult> {

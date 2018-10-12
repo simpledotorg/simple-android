@@ -101,7 +101,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
     // Scroll to end to show newly added prescriptions.
     if (hasNewItems) {
       recyclerView.postDelayed(
-          { recyclerView.smoothScrollToPosition(recyclerView.adapter.itemCount - 1) },
+          { recyclerView.smoothScrollToPosition(recyclerView.adapter!!.itemCount - 1) },
           300)
     }
   }

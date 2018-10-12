@@ -38,4 +38,8 @@ class SentryCrashReporter : CrashReporter {
       ERROR, ASSERT -> SentryBreadcrumbLevel.ERROR
     }
   }
+
+  override fun report(e: Throwable) {
+    Sentry.capture(e)
+  }
 }

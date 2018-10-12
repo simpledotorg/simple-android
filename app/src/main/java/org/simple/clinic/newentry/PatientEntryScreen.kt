@@ -101,7 +101,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     dateOfBirthEditText.imeOptions += EditorInfo.IME_ACTION_NEXT
     dateOfBirthEditText.setOnEditorActionListener { _, actionId, _ ->
       // When date is empty, this will move focus to age field and colony field otherwise.
-      if (!dateOfBirthEditText.text.isBlank() && actionId == EditorInfo.IME_ACTION_NEXT) {
+      if (!dateOfBirthEditText.text!!.isBlank() && actionId == EditorInfo.IME_ACTION_NEXT) {
         colonyOrVillageEditText.requestFocus()
         true
       } else {

@@ -15,9 +15,9 @@ import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import java.util.UUID
 
-class DataSyncTest {
+class SyncCoordinatorTest {
 
-  private lateinit var dataSync: DataSync
+  private lateinit var syncCoordinator: SyncCoordinator
   private lateinit var syncConfig: SyncConfig
   private lateinit var repository: SynceableRepository<Any, Any>
   private lateinit var lastSyncTimestamp: Preference<Optional<Instant>>
@@ -27,7 +27,7 @@ class DataSyncTest {
     repository = mock()
     lastSyncTimestamp = mock()
 
-    dataSync = DataSync(Single.fromCallable { syncConfig })
+    syncCoordinator = SyncCoordinator(Single.fromCallable { syncConfig })
   }
 
   @Test
@@ -36,7 +36,7 @@ class DataSyncTest {
 
     var networkCallMade = false
 
-    dataSync.push(repository) {
+    syncCoordinator.push(repository) {
       networkCallMade = true
       Single.just(DataPushResponse(emptyList()))
     }.blockingAwait()
@@ -61,7 +61,7 @@ class DataSyncTest {
         ValidationErrors(uuid = UUID.randomUUID(), schemaErrorMessages = listOf("error-2"))
     )
 
-    dataSync.push(repository) {
+    syncCoordinator.push(repository) {
       Single.just(DataPushResponse(validationErrors))
     }.blockingAwait()
 

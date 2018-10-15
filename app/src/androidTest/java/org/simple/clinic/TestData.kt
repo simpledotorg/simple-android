@@ -20,7 +20,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
-import org.simple.clinic.patient.PatientSaveModel
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.nameToSearchableForm
@@ -63,12 +63,12 @@ class TestData @Inject constructor(
           .map { it.uuid }
           .blockingFirst()
 
-  fun patientSaveModel(
+  fun patientProfile(
       patientUuid: UUID = UUID.randomUUID(),
       patientAddressUuid: UUID = UUID.randomUUID(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
-  ): PatientSaveModel {
-    return PatientSaveModel(
+  ): PatientProfile {
+    return PatientProfile(
         patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = (0 until Math.random().times(10).toInt()).map { patientPhoneNumber(patientUuid = patientUuid) }

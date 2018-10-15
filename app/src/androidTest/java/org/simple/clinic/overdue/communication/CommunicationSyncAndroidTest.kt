@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.sync.BaseDataSyncAndroidTest
+import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -16,7 +16,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
-class CommunicationSyncAndroidTest: BaseDataSyncAndroidTest<Communication, CommunicationPayload>() {
+class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication, CommunicationPayload>() {
 
   @Inject
   lateinit var repository: CommunicationRepository

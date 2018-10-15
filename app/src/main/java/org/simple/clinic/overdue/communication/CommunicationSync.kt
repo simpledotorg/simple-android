@@ -2,14 +2,14 @@ package org.simple.clinic.overdue.communication
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
 class CommunicationSync @Inject constructor(
-    private val dataSync: DataSync,
+    private val syncCoordinator: SyncCoordinator,
     private val repository: CommunicationRepository,
     private val api: CommunicationSyncApiV1,
     @Named("last_communication_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
@@ -20,11 +20,11 @@ class CommunicationSync @Inject constructor(
   }
 
   fun push(): Completable {
-    return dataSync.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
+    return syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
   }
 
   fun pull(): Completable {
-    return dataSync.pull(
+    return syncCoordinator.pull(
         repository = repository,
         lastPullTimestamp = lastPullTimestamp,
         pullNetworkCall = api::pull)

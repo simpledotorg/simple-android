@@ -40,7 +40,7 @@ class PatientRepository @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator
-) : SynceableRepository<PatientSaveModel, PatientPayload> {
+) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private val ageFuzziness: Int = 5
 
@@ -154,7 +154,7 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PatientSaveModel>> {
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PatientProfile>> {
     return database.patientDao()
         .recordsWithSyncStatus(syncStatus)
         .firstOrError()
@@ -178,12 +178,12 @@ class PatientRepository @Inject constructor(
           .filter { payload ->
             database.patientDao().getOne(payload.uuid)?.syncStatus.canBeOverriddenByServerCopy()
           }
-          .map(::payloadToPatientSaveModel)
+          .map(::payloadToPatientProfile)
           .toList()
     }.flatMapCompletable(::save)
   }
 
-  override fun save(records: List<PatientSaveModel>): Completable {
+  override fun save(records: List<PatientProfile>): Completable {
     return Completable.fromAction {
       database.addressDao().save(records.map { it.address })
       database.patientDao().save(records.map { it.patient })
@@ -191,8 +191,8 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  private fun payloadToPatientSaveModel(patientPayload: PatientPayload): PatientSaveModel {
-    return PatientSaveModel(
+  private fun payloadToPatientProfile(patientPayload: PatientPayload): PatientProfile {
+    return PatientProfile(
         patient = patientPayload.toDatabaseModel(newStatus = DONE),
         address = patientPayload.address.toDatabaseModel(),
         phoneNumbers = patientPayload.phoneNumbers?.map { it.toDatabaseModel(patientPayload.uuid) } ?: emptyList()

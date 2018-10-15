@@ -14,7 +14,7 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 
 // TODO: Use this class for all data sync tests.
-abstract class BaseDataSyncAndroidTest<T, P> {
+abstract class BaseSyncCoordinatorAndroidTest<T, P> {
 
   @get:Rule
   val authenticationRule = AuthenticationRule()

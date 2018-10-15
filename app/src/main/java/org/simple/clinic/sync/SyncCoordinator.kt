@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Inject
 
 // TODO: Use this for syncing all data models.
-class DataSync @Inject constructor(val configProvider: Single<SyncConfig>) {
+class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>) {
 
   fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,

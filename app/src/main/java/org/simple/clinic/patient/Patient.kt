@@ -117,7 +117,7 @@ data class Patient constructor(
     """)
     protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
 
-    fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientSaveModel>> {
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientProfile>> {
       return loadPatientQueryModelsWithSyncStatus(syncStatus)
           .map { results ->
             results.asSequence()
@@ -136,7 +136,7 @@ data class Patient constructor(
                     else -> throw AssertionError("Patient query models is empty!")
                   }
 
-                  PatientSaveModel(
+                  PatientProfile(
                       patient = patientQueryModels.first().patient,
                       address = patientQueryModels.first().address,
                       phoneNumbers = phoneNumbers

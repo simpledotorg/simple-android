@@ -10,14 +10,14 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV1
-import org.simple.clinic.sync.BaseDataSyncAndroidTest
+import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
-class PatientSyncAndroidTest : BaseDataSyncAndroidTest<PatientSaveModel, PatientPayload>() {
+class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, PatientPayload>() {
 
   @Inject
   lateinit var repository: PatientRepository
@@ -46,7 +46,7 @@ class PatientSyncAndroidTest : BaseDataSyncAndroidTest<PatientSaveModel, Patient
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.patientSaveModel(syncStatus = syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.patientProfile(syncStatus = syncStatus)
 
   override fun generatePayload() = testData.patientPayload()
 

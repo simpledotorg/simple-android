@@ -4,8 +4,8 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSaveModel
-import org.simple.clinic.sync.DataSync
+import org.simple.clinic.patient.PatientProfile
+import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class PatientSync @Inject constructor(
-    private val dataSync: DataSync,
+    private val syncCoordinator: SyncCoordinator,
     private val repository: PatientRepository,
     private val api: PatientSyncApiV1,
     @Named("last_patient_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
@@ -21,11 +21,11 @@ class PatientSync @Inject constructor(
 
   override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
-  override fun push() = dataSync.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
+  override fun push() = syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
 
-  override fun pull() = dataSync.pull(repository, lastPullTimestamp, api::pull)
+  override fun pull() = syncCoordinator.pull(repository, lastPullTimestamp, api::pull)
 
-  private fun toRequest(patients: List<PatientSaveModel>): PatientPushRequest {
+  private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(
         patients.map { (patient, address, phoneNumbers) ->
           val numberPayloads = phoneNumbers

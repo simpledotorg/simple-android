@@ -12,7 +12,7 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV1
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.sync.BaseDataSyncAndroidTest
+import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -20,7 +20,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
-class MedicalHistorySyncAndroidTest : BaseDataSyncAndroidTest<MedicalHistory, MedicalHistoryPayload>() {
+class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHistory, MedicalHistoryPayload>() {
 
   @Inject
   @field:Named("last_medicalhistory_pull_timestamp")

@@ -15,25 +15,25 @@ import org.simple.clinic.patient.sync.PatientSync
 class ModelSyncTest {
 
   @Suppress("Unused")
-  private fun `sync models that both push and pull`(): List<(DataSync) -> ModelSync> {
+  private fun `sync models that both push and pull`(): List<(SyncCoordinator) -> ModelSync> {
     return listOf(
-        { dataSync: DataSync -> PatientSync(dataSync, mock(), mock(), mock()) }
+        { syncCoordinator: SyncCoordinator -> PatientSync(syncCoordinator, mock(), mock(), mock()) }
     )
   }
 
   @Test
   @Parameters(method = "sync models that both push and pull")
   fun <T : Any, P : Any> `errors during push should not affect pull`(
-      modelSyncProvider: (DataSync) -> ModelSync
+      modelSyncProvider: (SyncCoordinator) -> ModelSync
   ) {
-    val dataSync = mock<DataSync>()
+    val syncCoordinator = mock<SyncCoordinator>()
     var pullCompleted = false
 
-    whenever(dataSync.push(any<SynceableRepository<T, P>>(), any())).thenReturn(Completable.error(RuntimeException()))
-    whenever(dataSync.pull(any<SynceableRepository<T, P>>(), any(), any()))
+    whenever(syncCoordinator.push(any<SynceableRepository<T, P>>(), any())).thenReturn(Completable.error(RuntimeException()))
+    whenever(syncCoordinator.pull(any<SynceableRepository<T, P>>(), any(), any()))
         .thenReturn(Completable.complete().doOnComplete { pullCompleted = true })
 
-    val modelSync = modelSyncProvider(dataSync)
+    val modelSync = modelSyncProvider(syncCoordinator)
 
     modelSync.sync()
         .test()
@@ -46,9 +46,9 @@ class ModelSyncTest {
   @Test
   @Parameters(method = "sync models that both push and pull")
   fun <T : Any, P : Any> `errors during pull should not affect push`(
-      modelSyncProvider: (DataSync) -> ModelSync
+      modelSyncProvider: (SyncCoordinator) -> ModelSync
   ) {
-    val dataSync = mock<DataSync>()
+    val dataSync = mock<SyncCoordinator>()
     var pushCompleted = false
 
     whenever(dataSync.pull(any<SynceableRepository<T, P>>(), any(), any())).thenReturn(Completable.error(RuntimeException()))

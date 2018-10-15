@@ -35,7 +35,7 @@ fun nameToSearchableForm(string: String) = string.replace(spacePunctuationRegex,
           onUpdate = ForeignKey.CASCADE)
     ],
     indices = [
-      Index("addressUuid", unique = true)
+      Index("addressUuid")
     ])
 data class Patient constructor(
     @PrimaryKey

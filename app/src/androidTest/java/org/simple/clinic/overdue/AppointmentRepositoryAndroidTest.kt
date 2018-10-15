@@ -208,7 +208,7 @@ class AppointmentRepositoryAndroidTest {
     database.patientDao().save(
         Patient(
             patient3,
-            address3,
+            address1,
             faker.name.name(),
             faker.name.name(),
             Gender.MALE,

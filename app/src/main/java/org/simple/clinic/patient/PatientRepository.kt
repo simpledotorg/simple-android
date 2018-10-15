@@ -158,30 +158,6 @@ class PatientRepository @Inject constructor(
     return database.patientDao()
         .recordsWithSyncStatus(syncStatus)
         .firstOrError()
-        .map { results ->
-          results.asSequence()
-              .groupBy { it.patient.uuid }
-              .map { (_, patientQueryModels) ->
-                val phoneNumbers = when {
-                  // Patient has either no phone numbers or one phone number saved, which is
-                  // indicated by whether the Patient phone number in the query model instance is
-                  // null or not.
-                  patientQueryModels.size == 1 -> {
-                    patientQueryModels.first()
-                        .phoneNumber
-                        ?.let { listOf(it) } ?: emptyList()
-                  }
-                  patientQueryModels.size > 1 -> patientQueryModels.map { it.phoneNumber!! }
-                  else -> throw AssertionError("Patient query models is empty!")
-                }
-
-                PatientSaveModel(
-                    patient = patientQueryModels.first().patient,
-                    address = patientQueryModels.first().address,
-                    phoneNumbers = phoneNumbers
-                )
-              }.toList()
-        }
   }
 
   override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {

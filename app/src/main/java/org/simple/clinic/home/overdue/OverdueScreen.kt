@@ -12,6 +12,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
@@ -70,6 +71,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
+        .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
   }
 

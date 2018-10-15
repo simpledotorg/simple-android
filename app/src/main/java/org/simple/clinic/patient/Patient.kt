@@ -64,39 +64,44 @@ data class Patient constructor(
 ) {
 
   @Dao
-  interface RoomDao {
+  abstract class RoomDao {
 
     @Query("SELECT * FROM patient")
-    fun allPatients(): Flowable<List<Patient>>
+    abstract fun allPatients(): Flowable<List<Patient>>
 
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
-    fun getOne(uuid: UUID): Patient?
+    abstract fun getOne(uuid: UUID): Patient?
 
     // Only if Room supported custom adapters, we wouldn't need both getOne() and patient().
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
-    fun patient(uuid: UUID): Flowable<List<Patient>>
+    abstract fun patient(uuid: UUID): Flowable<List<Patient>>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun save(patient: Patient)
+    abstract fun save(patient: Patient)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun save(patient: List<Patient>)
+    abstract fun save(patient: List<Patient>)
 
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
-    fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
+    abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
-    fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
+    abstract fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
     @Query("SELECT COUNT(uuid) FROM patient")
-    fun patientCount(): Flowable<Int>
+    abstract fun patientCount(): Flowable<Int>
 
     @Query("DELETE FROM patient")
-    fun clear()
+    abstract fun clear()
 
     @Query("UPDATE patient SET status = :newStatus WHERE uuid = :uuid")
-    fun updatePatientStatus(uuid: UUID, newStatus: PatientStatus)
+    abstract fun updatePatientStatus(uuid: UUID, newStatus: PatientStatus)
 
+    // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
+    // support loading into constructor parameters and needs a settable property. Room does fix
+    // this limitation in 2.1.0, but it requires migration to AndroidX. For now, we create a
+    // transient query model whose only job is to represent this and process it in memory.
+    // TODO: Remove this when we migrate to Room 2.1.0.
     @Query("""
       SELECT P.uuid patient_uuid, P.addressUuid patient_addressUuid, P.fullName patient_fullName, P.searchableName patient_searchableName,
        P.gender patient_gender, P.dateOfBirth patient_dateOfBirth, P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt,
@@ -110,6 +115,46 @@ data class Patient constructor(
       LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid
       WHERE P.syncStatus == :syncStatus
     """)
-    fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
+    protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
+
+    fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientSaveModel>> {
+      return loadPatientQueryModelsWithSyncStatus(syncStatus)
+          .map { results ->
+            results.asSequence()
+                .groupBy { it.patient.uuid }
+                .map { (_, patientQueryModels) ->
+                  val phoneNumbers = when {
+                    // Patient has either no phone numbers or one phone number saved, which is
+                    // indicated by whether the Patient phone number in the query model instance is
+                    // null or not.
+                    patientQueryModels.size == 1 -> {
+                      patientQueryModels.first()
+                          .phoneNumber
+                          ?.let { listOf(it) } ?: emptyList()
+                    }
+                    patientQueryModels.size > 1 -> patientQueryModels.map { it.phoneNumber!! }
+                    else -> throw AssertionError("Patient query models is empty!")
+                  }
+
+                  PatientSaveModel(
+                      patient = patientQueryModels.first().patient,
+                      address = patientQueryModels.first().address,
+                      phoneNumbers = phoneNumbers
+                  )
+                }.toList()
+          }
+    }
+
+    protected data class PatientQueryModel(
+
+        @Embedded(prefix = "patient_")
+        val patient: Patient,
+
+        @Embedded(prefix = "addr_")
+        val address: PatientAddress,
+
+        @Embedded(prefix = "phone_")
+        val phoneNumber: PatientPhoneNumber?
+    )
   }
 }

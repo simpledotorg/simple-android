@@ -3,7 +3,7 @@ package org.simple.clinic.home.overdue
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
@@ -112,13 +112,13 @@ class OverdueScreenController @Inject constructor(
         .map { it.phoneNumber }
 
     val withoutDialerCalls = callPhonePermissionChanges
-        .filter { it == RuntimePermissionResult.GRANTED }
-        .withLatestFrom(callClicks)
+        .zipWith(callClicks)
+        .filter { (result, _) -> result == RuntimePermissionResult.GRANTED }
         .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientWithoutUsingDialer(phoneNumber) } }
 
     val withDialerCalls = callPhonePermissionChanges
-        .filter { it != RuntimePermissionResult.GRANTED }
-        .withLatestFrom(callClicks)
+        .zipWith(callClicks)
+        .filter { (result, _) -> result != RuntimePermissionResult.GRANTED }
         .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientUsingDialer(phoneNumber) } }
 
     return withDialerCalls.mergeWith(withoutDialerCalls)

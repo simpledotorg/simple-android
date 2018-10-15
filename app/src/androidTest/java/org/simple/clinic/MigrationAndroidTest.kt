@@ -16,6 +16,7 @@ import org.simple.clinic.storage.Migration_12_13
 import org.simple.clinic.storage.Migration_13_14
 import org.simple.clinic.storage.Migration_14_15
 import org.simple.clinic.storage.Migration_15_16
+import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -339,6 +340,55 @@ class MigrationAndroidTest {
 
     db_v16.query("""SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='PatientFuzzySearch'""").use {
       assertThat(it.count).isEqualTo(0)
+    }
+  }
+
+  @Test
+  fun migration_16_to_17() {
+    val db_16 = helper.createDatabase(TEST_DB_NAME, 16)
+
+    val patientUuid1 = "ee367a66-f47e-42d8-965b-7a2b5c54f4bd"
+    val patientUuid2 = "a1d33096-cea6-4beb-8441-82cab2befe2d"
+    val addressUuid = "464bcda8-b26a-484d-bb70-49b3675f4a38"
+
+    db_16.execSQL("""
+      INSERT INTO `Patient` VALUES(
+        '$patientUuid1',
+        '$addressUuid',
+        'Ash Kumari',
+        'AshokKumar',
+        'FEMALE',
+        NULL,
+        'ACTIVE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'DONE',
+        23,
+        '2018-09-25T11:20:42.008Z',
+        '1995-09-25');
+    """)
+
+    val db_17 = helper.runMigrationsAndValidate(TEST_DB_NAME, 17, true, Migration_16_17())
+
+    db_17.execSQL("""
+      INSERT INTO `Patient` VALUES(
+        '$patientUuid2',
+        '$addressUuid',
+        'Ash Kumari',
+        'AshokKumar',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'DONE',
+        25,
+        '2018-09-25T11:20:42.008Z',
+        '1995-09-25');
+    """)
+
+    db_17.query("""SELECT * FROM "Patient"""").use {
+      assertThat(it.count).isEqualTo(2)
     }
   }
 }

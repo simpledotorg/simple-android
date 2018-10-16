@@ -37,6 +37,8 @@
         style="@style/Clinic.BloodPressureInput"
         android:hint="@string/bloodpressureentry_input_hint" />
 
+      <requestFocus />
+
       <View
         android:id="@+id/bloodpressureentry_systolic_underline"
         style="@style/Clinic.BloodPressureInputUnderline" />

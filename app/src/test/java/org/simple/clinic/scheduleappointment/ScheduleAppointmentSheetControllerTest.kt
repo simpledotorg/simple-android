@@ -13,7 +13,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet.ScheduleAppointment
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC

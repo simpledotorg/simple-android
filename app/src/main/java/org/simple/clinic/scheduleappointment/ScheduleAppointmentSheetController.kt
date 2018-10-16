@@ -9,7 +9,6 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 
 typealias Ui = ScheduleAppointmentSheet
@@ -85,15 +84,15 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    val toLocalDate = { amount: Int, unit: ChronoUnit ->
-      LocalDate.now(UTC).plus(amount.toLong(), unit)
+    val toLocalDate = { appointment: ScheduleAppointment ->
+      LocalDate.now(UTC).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
     }
 
     val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated>()
         .map { it.patientUuid }
 
     return events.ofType<AppointmentScheduled>()
-        .map { toLocalDate(it.selectedDateState.timeAmount,it.selectedDateState.chronoUnit) }
+        .map { toLocalDate(it.selectedDateState) }
         .withLatestFrom(patientUuidStream)
         .flatMap { (date, uuid) ->
           repository.schedule(patientUuid = uuid, appointmentDate = date)

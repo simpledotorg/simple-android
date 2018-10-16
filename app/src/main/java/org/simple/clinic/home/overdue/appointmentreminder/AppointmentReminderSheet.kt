@@ -111,4 +111,3 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   }
 }
 
-data class AppointmentReminder(val displayText: String, val timeAmount: Int, val chronoUnit: ChronoUnit)

@@ -117,6 +117,4 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   fun enableDecrementButton(state: Boolean) {
     decrementDateButton.isEnabled = state
   }
-
-  data class ScheduleAppointment(val displayText: String, val timeAmount: Int, val chronoUnit: ChronoUnit)
 }

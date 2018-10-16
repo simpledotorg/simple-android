@@ -85,15 +85,15 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    val toLocalDate = { pair: Pair<Int, ChronoUnit> ->
-      LocalDate.now(UTC).plus(pair.first.toLong(), pair.second)
+    val toLocalDate = { amount: Int, unit: ChronoUnit ->
+      LocalDate.now(UTC).plus(amount.toLong(), unit)
     }
 
     val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated>()
         .map { it.patientUuid }
 
     return events.ofType<AppointmentScheduled>()
-        .map { toLocalDate(it.selectedDateState.second) }
+        .map { toLocalDate(it.selectedDateState.timeAmount,it.selectedDateState.chronoUnit) }
         .withLatestFrom(patientUuidStream)
         .flatMap { (date, uuid) ->
           repository.schedule(patientUuid = uuid, appointmentDate = date)

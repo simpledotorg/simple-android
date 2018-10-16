@@ -1,6 +1,5 @@
 package org.simple.clinic.scheduleappointment
 
-import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet.ScheduleAppointment
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 

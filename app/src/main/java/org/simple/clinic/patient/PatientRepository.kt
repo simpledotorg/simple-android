@@ -19,9 +19,9 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Arrays
 import java.util.Locale
@@ -39,7 +39,8 @@ class PatientRepository @Inject constructor(
     private val dobValidator: DateOfBirthFormatValidator,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
-    private val numberValidator: PhoneNumberValidator
+    private val numberValidator: PhoneNumberValidator,
+    private val clock: Clock
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private val ageFuzziness: Int = 5
@@ -72,8 +73,8 @@ class PatientRepository @Inject constructor(
     val ageUpperBound = assumedAge + ageFuzziness
     val ageLowerBound = assumedAge - ageFuzziness
 
-    val dateOfBirthUpperBound = LocalDate.now(UTC).minusYears(ageUpperBound.toLong()).toString()
-    val dateOfBirthLowerBound = LocalDate.now(UTC).minusYears(ageLowerBound.toLong()).toString()
+    val dateOfBirthUpperBound = LocalDate.now(clock).minusYears(ageUpperBound.toLong()).toString()
+    val dateOfBirthLowerBound = LocalDate.now(clock).minusYears(ageLowerBound.toLong()).toString()
 
     val searchableName = nameToSearchableForm(name)
 
@@ -253,7 +254,7 @@ class PatientRepository @Inject constructor(
                 age = personalDetails.age?.let {
                   Age(value = personalDetails.age.toInt(),
                       updatedAt = Instant.now(),
-                      computedDateOfBirth = LocalDate.now().minusYears(personalDetails.age.toLong()))
+                      computedDateOfBirth = LocalDate.now(clock).minusYears(personalDetails.age.toLong()))
                 },
 
                 addressUuid = addressUuid,

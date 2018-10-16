@@ -22,6 +22,10 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestClock
+import org.threeten.bp.Clock
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -30,6 +34,7 @@ class PatientRepositoryTest {
   private lateinit var repository: PatientRepository
 
   private val database = mock<AppDatabase>()
+  private val clock = TestClock()
   private val patientSearchResultDao = mock<PatientSearchResult.RoomDao>()
   private val patientDao = mock<Patient.RoomDao>()
   private val patientAddressDao = mock<PatientAddress.RoomDao>()
@@ -42,7 +47,7 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator)
+    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

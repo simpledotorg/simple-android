@@ -31,31 +31,27 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   private val possibleDates = listOf(
-      // TODO: Convert this to a data class; move display text to strings.xml
-      ("1 day" to (1 to ChronoUnit.DAYS)),
-      ("2 days" to (2 to ChronoUnit.DAYS)),
-      ("3 days" to (3 to ChronoUnit.DAYS)),
-      ("4 days" to (4 to ChronoUnit.DAYS)),
-      ("5 days" to (5 to ChronoUnit.DAYS)),
-      ("6 days" to (6 to ChronoUnit.DAYS)),
-      ("7 days" to (7 to ChronoUnit.DAYS)),
-      ("2 weeks" to (2 to ChronoUnit.WEEKS)),
-      ("3 weeks" to (3 to ChronoUnit.WEEKS)),
-      ("4 weeks" to (4 to ChronoUnit.WEEKS)),
-      ("5 weeks" to (5 to ChronoUnit.WEEKS)),
-      ("6 weeks" to (6 to ChronoUnit.WEEKS)),
-      ("7 weeks" to (7 to ChronoUnit.WEEKS)),
-      ("2 months" to (2 to ChronoUnit.MONTHS)),
-      ("3 months" to (3 to ChronoUnit.MONTHS)),
-      ("4 months" to (4 to ChronoUnit.MONTHS)),
-      ("5 months" to (5 to ChronoUnit.MONTHS)),
-      ("6 months" to (6 to ChronoUnit.MONTHS)),
-      ("7 months" to (7 to ChronoUnit.MONTHS)),
-      ("8 months" to (8 to ChronoUnit.MONTHS)),
-      ("9 months" to (9 to ChronoUnit.MONTHS)),
-      ("10 months" to (10 to ChronoUnit.MONTHS)),
-      ("11 months" to (11 to ChronoUnit.MONTHS)),
-      ("12 months" to (12 to ChronoUnit.MONTHS))
+      ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+      ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
+      ScheduleAppointment("3 days", 3, ChronoUnit.DAYS),
+      ScheduleAppointment("4 days", 4, ChronoUnit.DAYS),
+      ScheduleAppointment("5 days", 5, ChronoUnit.DAYS),
+      ScheduleAppointment("6 days", 6, ChronoUnit.DAYS),
+      ScheduleAppointment("7 days", 7, ChronoUnit.DAYS),
+      ScheduleAppointment("2 weeks", 2, ChronoUnit.WEEKS),
+      ScheduleAppointment("3 weeks", 3, ChronoUnit.WEEKS),
+      ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS),
+      ScheduleAppointment("2 months", 2, ChronoUnit.MONTHS),
+      ScheduleAppointment("3 months", 3, ChronoUnit.MONTHS),
+      ScheduleAppointment("4 months", 4, ChronoUnit.MONTHS),
+      ScheduleAppointment("5 months", 5, ChronoUnit.MONTHS),
+      ScheduleAppointment("6 months", 6, ChronoUnit.MONTHS),
+      ScheduleAppointment("7 months", 7, ChronoUnit.MONTHS),
+      ScheduleAppointment("8 months", 8, ChronoUnit.MONTHS),
+      ScheduleAppointment("9 months", 9, ChronoUnit.MONTHS),
+      ScheduleAppointment("10 months", 10, ChronoUnit.MONTHS),
+      ScheduleAppointment("11 months", 11, ChronoUnit.MONTHS),
+      ScheduleAppointment("12 months", 12, ChronoUnit.MONTHS)
   )
 
   @Inject
@@ -111,7 +107,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   fun updateDisplayedDate(newIndex: Int) {
     currentIndex = newIndex
-    currentDateTextView.text = possibleDates[currentIndex].first
+    currentDateTextView.text = possibleDates[currentIndex].displayText
   }
 
   fun enableIncrementButton(state: Boolean) {
@@ -121,4 +117,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   fun enableDecrementButton(state: Boolean) {
     decrementDateButton.isEnabled = state
   }
+
+  data class ScheduleAppointment(val displayText: String, val timeAmount: Int, val chronoUnit: ChronoUnit)
 }

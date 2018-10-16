@@ -14,10 +14,9 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -51,7 +50,7 @@ class TestClinicApp : ClinicApp() {
     // but we still have to provide a non-empty name for Room, otherwise it complains.
     return DaggerTestAppComponent.builder()
         .appModule(object : AppModule(this, "ignored-db-name", runDatabaseQueriesOnMainThread = true) {
-          override fun clock() = Clock.fixed(Instant.now(), ZoneOffset.UTC)
+          override fun clock(): Clock = TestClock()
         })
         .storageModule(object : StorageModule() {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)

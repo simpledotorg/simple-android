@@ -90,7 +90,7 @@ open class AppModule(
 
   @Provides
   @AppScope
-  open fun clock() = Clock.systemUTC()!!
+  open fun clock(): Clock = Clock.systemUTC()
 
   @Provides
   @Named("io")

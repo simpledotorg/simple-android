@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,6 +19,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestClock
+import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
@@ -62,9 +65,13 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  @Inject
+  lateinit var clock: Clock
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+    (clock as TestClock).setYear(2018)
   }
 
   @Test
@@ -446,5 +453,10 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1)
     assertThat(patientFirst).isNotNull()
     assertThat(searchResult).isEmpty()
+  }
+
+  @After
+  fun tearDown() {
+    (clock as TestClock).resetToEpoch()
   }
 }

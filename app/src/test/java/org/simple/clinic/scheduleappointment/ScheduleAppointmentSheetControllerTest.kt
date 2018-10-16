@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet.ScheduleAppointment
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -123,11 +124,11 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
     whenever(repository.schedule(any(), any())).thenReturn(Completable.complete())
 
-    val current = "30 days" to (30 to ChronoUnit.DAYS)
+    val current = ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(3, uuid))
     uiEvents.onNext(AppointmentScheduled(current))
 
-    verify(repository).schedule(uuid, LocalDate.now(UTC).plus(30L, ChronoUnit.DAYS))
+    verify(repository).schedule(uuid, LocalDate.now(UTC).plus(1, ChronoUnit.MONTHS))
     verify(sheet).closeSheet()
   }
 }

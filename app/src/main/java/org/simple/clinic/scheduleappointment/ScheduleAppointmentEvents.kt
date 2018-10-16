@@ -1,7 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet.ScheduleAppointment
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
 data class ScheduleAppointmentSheetCreated(val initialIndex: Int, val patientUuid: UUID) : UiEvent
@@ -14,7 +14,7 @@ data class AppointmentDateDecremented(val currentIndex: Int, val size: Int) : Ui
   override val analyticsName = "Schedule Appointment:Decrement appointment due date"
 }
 
-data class AppointmentScheduled(val selectedDateState: Pair<String, Pair<Int, ChronoUnit>>) : UiEvent {
+data class AppointmentScheduled(val selectedDateState: ScheduleAppointment) : UiEvent {
   override val analyticsName = "Schedule Appointment:Appointment scheduled"
 }
 

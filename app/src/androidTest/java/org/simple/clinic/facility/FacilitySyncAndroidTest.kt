@@ -11,6 +11,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -18,6 +19,15 @@ import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
+/**
+ * Facility sync is a special case. We only pull from it, and not push.
+ *
+ * However, [BaseSyncCoordinatorAndroidTest] performs a push operation even in the test for the pull
+ * operation. We can't extend that test over here since facilities aren't supposed to be pushed from
+ * the app at all.
+ *
+ * TODO: Revisit this when making a composite sync android test.
+ **/
 @RunWith(AndroidJUnit4::class)
 class FacilitySyncAndroidTest {
 

@@ -61,7 +61,7 @@ data class Facility(
     @Query("SELECT * FROM facility ORDER BY name ASC")
     fun facilities(): Flowable<List<Facility>>
 
-    @Query("SELECT COUNT(*) FROM facility")
+    @Query("SELECT COUNT(uuid) FROM facility")
     fun count(): Flowable<Int>
   }
 }

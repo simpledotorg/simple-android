@@ -58,7 +58,7 @@ class AuthenticationRule : TestRule {
 
   private fun register() {
     val facilities = facilityApi.pull(10)
-        .map { it.facilities }
+        .map { it.payloads }
         .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
     facilityDao.save(facilities)

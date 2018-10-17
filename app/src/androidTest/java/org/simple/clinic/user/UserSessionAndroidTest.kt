@@ -91,7 +91,7 @@ class UserSessionAndroidTest {
     userSession.logout().blockingAwait()
 
     val facilities = facilityApi.pull(10)
-        .map { it.facilities }
+        .map { it.payloads }
         .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
     appDatabase.facilityDao().save(facilities)
@@ -138,7 +138,7 @@ class UserSessionAndroidTest {
     userSession.logout().blockingAwait()
 
     val facilities = facilityApi.pull(10)
-        .map { it.facilities }
+        .map { it.payloads }
         .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
     appDatabase.facilityDao().save(facilities)

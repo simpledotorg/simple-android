@@ -82,7 +82,7 @@ class LoginPinScreenControllerTest {
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
     whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
 
     uiEvents.onNext(PinTextChanged("0000"))
@@ -101,7 +101,7 @@ class LoginPinScreenControllerTest {
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success()))
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
     whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.error(RuntimeException()))
 
     uiEvents.onNext(PinTextChanged("0000"))
@@ -119,8 +119,8 @@ class LoginPinScreenControllerTest {
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp())
-        .thenReturn(Single.just(LoginResult.NetworkError()))
-        .thenReturn(Single.just(LoginResult.UnexpectedError()))
+        .thenReturn(Single.just(LoginResult.NetworkError))
+        .thenReturn(Single.just(LoginResult.UnexpectedError))
 
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(PinSubmitClicked())

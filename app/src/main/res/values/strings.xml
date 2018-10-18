@@ -77,7 +77,7 @@
   <string name="tab_reports">Reports</string>
 
   <string name="home_search_patient_name_phone">Enter patient\'s name</string>
-  <string name="patients_user_awaiting_approval_title">Awaiting approval</string>
+  <string name="patients_user_awaiting_approval_title">Waiting for approval</string>
   <string name="patients_user_awaiting_approval_message">Once approved, you will have access to patient records from your clinic.</string>
   <string name="patients_user_approved_title">You’ve been approved!</string>
   <string name="patients_awaiting_sms_verification_title">Waiting for SMS verification</string>

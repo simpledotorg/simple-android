@@ -34,20 +34,25 @@
     android:layout_below="@id/patients_search_patients"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="@dimen/spacing_16"
-    android:scaleType="fitXY"
     android:adjustViewBounds="true"
+    android:scaleType="fitXY"
     android:src="@drawable/register_illustration"
     tools:ignore="ContentDescription" />
 
-  <TextView
-    style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
+  <FrameLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/patients_record_bp_illustration"
-    android:layout_marginEnd="@dimen/spacing_56"
-    android:layout_marginStart="@dimen/spacing_56"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:text="@string/patients_record_every_patient" />
+    android:layout_height="match_parent"
+    android:layout_below="@id/patients_record_bp_illustration">
+
+    <TextView
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:layout_marginEnd="@dimen/spacing_56"
+      android:layout_marginStart="@dimen/spacing_56"
+      android:text="@string/patients_record_every_patient" />
+  </FrameLayout>
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
     android:id="@+id/patients_user_status_viewflipper"

@@ -7,5 +7,5 @@ import dagger.Provides
 open class AgeFuzzerModule {
 
   @Provides
-  open fun provideAgeFuzzer(): AgeFuzzer = AbsoluteFuzzer(5)
+  open fun provideAgeFuzzer(): AgeFuzzer = PercentageFuzzer(0.1F)
 }

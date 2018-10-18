@@ -2,11 +2,11 @@ package org.simple.clinic.login
 
 sealed class LoginResult {
 
-  class Success : LoginResult()
+  object Success : LoginResult()
 
-  class NetworkError : LoginResult()
+  object NetworkError : LoginResult()
 
   data class ServerError(val error: String) : LoginResult()
 
-  class UnexpectedError : LoginResult()
+  object UnexpectedError : LoginResult()
 }

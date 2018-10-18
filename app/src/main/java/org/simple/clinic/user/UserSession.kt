@@ -99,17 +99,17 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(it)
         }
-        .map { LoginResult.Success() as LoginResult }
+        .map { LoginResult.Success as LoginResult }
         .onErrorReturn { error ->
           when {
-            error is IOException -> LoginResult.NetworkError()
+            error is IOException -> LoginResult.NetworkError
             error is HttpException && error.code() == 401 -> {
               val errorResponse = readErrorResponseJson(error, LoginErrorResponse::class)
               LoginResult.ServerError(errorResponse.firstError())
             }
             else -> {
               Timber.e(error)
-              LoginResult.UnexpectedError()
+              LoginResult.UnexpectedError
             }
           }
         }
@@ -126,14 +126,14 @@ class UserSession @Inject constructor(
                 appDatabase.userDao()
                     .updateLoggedInStatusForUser(it.userId, User.LoggedInStatus.OTP_REQUESTED)
               })
-              .toSingleDefault(LoginResult.Success() as LoginResult)
+              .toSingleDefault(LoginResult.Success as LoginResult)
         }
         .onErrorReturn { error ->
           when (error) {
-            is IOException -> LoginResult.NetworkError()
+            is IOException -> LoginResult.NetworkError
             else -> {
               Timber.e(error)
-              LoginResult.UnexpectedError()
+              LoginResult.UnexpectedError
             }
           }
         }

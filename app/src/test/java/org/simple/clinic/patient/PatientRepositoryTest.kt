@@ -23,9 +23,6 @@ import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
-import org.threeten.bp.Clock
-import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)

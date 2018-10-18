@@ -10,6 +10,8 @@ import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.TestAppComponent
+import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
+import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
@@ -59,6 +61,9 @@ class TestClinicApp : ClinicApp() {
           override fun syncConfig(): Single<SyncConfig> {
             return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 10))
           }
+        })
+        .ageFuzzerModule(object : AgeFuzzerModule() {
+          override fun provideAgeFuzzer() = AbsoluteFuzzer(5)
         })
         .crashReporterModule(object : CrashReporterModule() {
           override fun crashReporter() = NoOpCrashReporter()

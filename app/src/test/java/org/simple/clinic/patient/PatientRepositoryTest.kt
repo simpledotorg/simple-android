@@ -18,6 +18,8 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
+import org.simple.clinic.patient.fuzzy.AgeFuzzer
+import org.simple.clinic.patient.fuzzy.BoundedAge
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -29,6 +31,7 @@ import java.util.UUID
 class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
+  private lateinit var ageFuzzer: AgeFuzzer
 
   private val database = mock<AppDatabase>()
   private val clock = TestClock()
@@ -44,7 +47,9 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock)
+    ageFuzzer = mock()
+    whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(0, 0))
+    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock, ageFuzzer)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
@@ -131,6 +136,20 @@ class PatientRepositoryTest {
     repository.search("Name   Surname", 40).blockingFirst()
 
     verify(patientSearchResultDao).search(eq("NameSurname"), any(), any(), any())
+  }
+
+  @Test
+  @Parameters(value = ["5", "10", "13", "45"])
+  fun `when searching for patients with age bound, use fuzzy age always`(age: Int) {
+    whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+
+    repository.search("Name   Surname", age).blockingFirst()
+
+    verify(ageFuzzer).bounded(age)
   }
 
   @Test

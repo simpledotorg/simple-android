@@ -12,6 +12,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SynceableRepository
@@ -40,10 +41,9 @@ class PatientRepository @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
-    private val clock: Clock
+    private val clock: Clock,
+    private val ageFuzzer: AgeFuzzer
 ) : SynceableRepository<PatientProfile, PatientPayload> {
-
-  private val ageFuzziness: Int = 5
 
   private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
 
@@ -70,8 +70,7 @@ class PatientRepository @Inject constructor(
   }
 
   fun search(name: String, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
-    val ageUpperBound = assumedAge + ageFuzziness
-    val ageLowerBound = assumedAge - ageFuzziness
+    val (ageLowerBound, ageUpperBound) = ageFuzzer.bounded(assumedAge)
 
     val dateOfBirthUpperBound = LocalDate.now(clock).minusYears(ageUpperBound.toLong()).toString()
     val dateOfBirthLowerBound = LocalDate.now(clock).minusYears(ageLowerBound.toLong()).toString()

@@ -85,7 +85,7 @@ class EnterOtpScreenControllerTest {
       otp: String,
       shouldShowError: Boolean
   ) {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
@@ -110,7 +110,7 @@ class EnterOtpScreenControllerTest {
       otp: String,
       shouldLogin: Boolean
   ) {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(EnterOtpSubmitted(otp))
 
@@ -123,7 +123,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the otp is submitted, the login call must be made`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(EnterOtpSubmitted("111111"))
 
@@ -132,7 +132,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the screen must be closed`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(EnterOtpSubmitted("111111"))
 
@@ -141,7 +141,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call succeeds, the sync must be triggered`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(EnterOtpSubmitted("111111"))
 
@@ -150,7 +150,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the sync fails, the screen must close normally`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.error(RuntimeException()))
 
     uiEvents.onNext(EnterOtpSubmitted("111111"))
@@ -160,7 +160,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails unexpectedly, the generic error must be shown`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(UnexpectedError()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(UnexpectedError))
 
     uiEvents.onNext(EnterOtpSubmitted("111111"))
 
@@ -169,7 +169,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the login call fails with a network error, the network error must be shown`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(NetworkError()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(NetworkError))
 
     uiEvents.onNext(EnterOtpSubmitted("111111"))
 
@@ -195,7 +195,7 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the OTP changes and meets the otp length, the login call should be made`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success()))
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
 
     uiEvents.onNext(EnterOtpTextChanges("1111"))
     uiEvents.onNext(EnterOtpTextChanges("11111"))
@@ -225,10 +225,10 @@ class EnterOtpScreenControllerTest {
   }
 
   fun `params for login call progress test`() = arrayOf<Any>(
-      LoginResult.Success(),
-      LoginResult.NetworkError(),
+      LoginResult.Success,
+      LoginResult.NetworkError,
       LoginResult.ServerError("Test"),
-      LoginResult.UnexpectedError()
+      LoginResult.UnexpectedError
   )
 
   @Test

@@ -13,6 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.storage.Migration_10_11
@@ -41,7 +42,8 @@ import javax.inject.Named
   StorageModule::class,
   LoginModule::class,
   RegistrationModule::class,
-  CrashReporterModule::class])
+  CrashReporterModule::class,
+  AgeFuzzerModule::class])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

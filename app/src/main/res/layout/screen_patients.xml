@@ -34,7 +34,8 @@
     android:layout_below="@id/patients_search_patients"
     android:layout_centerHorizontal="true"
     android:layout_marginTop="@dimen/spacing_16"
-    android:scaleType="centerCrop"
+    android:scaleType="fitXY"
+    android:adjustViewBounds="true"
     android:src="@drawable/register_illustration"
     tools:ignore="ContentDescription" />
 

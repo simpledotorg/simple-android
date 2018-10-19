@@ -16,7 +16,7 @@
     android:id="@+id/overdue_list_empty_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:gravity="center"
     android:orientation="vertical"
     android:paddingEnd="@dimen/spacing_32"
     android:paddingStart="@dimen/spacing_32"

@@ -61,7 +61,7 @@ class PrescriptionSyncTest {
   fun `errors during push should not affect pull`() {
     whenever(repository.prescriptionsWithSyncStatus(any())).thenReturn(Single.error(NullPointerException()))
 
-    val config = SyncConfig(mock(), batchSize = 10)
+    val config = SyncConfig(mock(), mock(), batchSize = 10)
     whenever(syncConfigProvider()).thenReturn(config)
     whenever(lastSyncTimestamp.asObservable()).thenReturn(Observable.just(None))
     whenever(api.pull(config.batchSize)).thenReturn(Single.just(PrescriptionPullResponse(mock(), mock())))

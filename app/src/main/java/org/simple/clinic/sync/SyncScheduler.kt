@@ -24,8 +24,8 @@ class SyncScheduler @Inject constructor(
               .setRequiresBatteryNotLow(true)
               .build()
 
-          PeriodicWorkRequestBuilder<SyncWorker>(config.frequency.toMillis(), TimeUnit.MILLISECONDS)
-              .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 5, TimeUnit.MINUTES)
+          PeriodicWorkRequestBuilder<SyncWorker>(config.frequency.toMinutes(), TimeUnit.MINUTES)
+              .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, config.frequency.toMinutes(), TimeUnit.MINUTES)
               .setConstraints(constraints)
               .addTag(SyncWorker.TAG)
               .build()

@@ -35,7 +35,10 @@ open class SyncModule {
 
   @Provides
   open fun syncConfig(): Single<SyncConfig> {
-    // In the future, this may come from the server.
-    return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 50))
+    return Single.just(
+        SyncConfig(
+            frequency = Duration.ofMinutes(16),
+            backOffDelay = Duration.ofMinutes(5),
+            batchSize = 50))
   }
 }

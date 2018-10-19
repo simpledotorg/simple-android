@@ -59,7 +59,11 @@ class TestClinicApp : ClinicApp() {
         })
         .syncModule(object : SyncModule() {
           override fun syncConfig(): Single<SyncConfig> {
-            return Single.just(SyncConfig(frequency = Duration.ofHours(1), batchSize = 10))
+            return Single.just(
+                SyncConfig(
+                    frequency = Duration.ofMinutes(16),
+                    backOffDelay = Duration.ofMinutes(5),
+                    batchSize = 10))
           }
         })
         .ageFuzzerModule(object : AgeFuzzerModule() {

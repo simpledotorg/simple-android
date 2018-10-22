@@ -3,6 +3,7 @@ package org.simple.clinic.login
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.support.annotation.StringRes
 import android.widget.Toast
 import com.google.android.gms.auth.api.phone.SmsRetriever
@@ -12,7 +13,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
-import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.UserSession
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,15 +31,12 @@ class OtpSmsReceiver : BroadcastReceiver() {
   @Inject
   lateinit var userSession: UserSession
 
-  @Inject
-  lateinit var syncScheduler: SyncScheduler
-
   init {
     ClinicApp.appComponent.inject(this)
   }
 
   override fun onReceive(context: Context, intent: Intent) {
-    val extras = intent.extras
+    val extras: Bundle = intent.extras!!
     val status = extras[SmsRetriever.EXTRA_STATUS] as Status
 
     when (status.statusCode) {
@@ -48,10 +45,8 @@ class OtpSmsReceiver : BroadcastReceiver() {
 
         val otp = message.substring(OTP_START_INDEX, OTP_START_INDEX + OTP_LENGTH)
 
-        // TODO: Schedule call with worker instead of logging in directly
         userSession.loginWithOtp(otp)
             .subscribeOn(io())
-            .flatMap { syncScheduler.syncImmediately().toSingleDefault(it) }
             .observeOn(mainThread())
             .subscribe({
               when (it) {

@@ -9,12 +9,15 @@ import com.nhaarman.mockito_kotlin.doThrow
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import okhttp3.MediaType
@@ -49,7 +52,6 @@ import org.threeten.bp.Instant
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
-import java.net.SocketTimeoutException
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -90,6 +92,9 @@ class UserSessionTest {
 
   @Before
   fun setUp() {
+    // Used for overriding IO scheduler for sync call on login.
+    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
+
     syncScheduler = mock()
     medicalHistoryPullTimestamp = mock()
     communicationPullTimestamp = mock()
@@ -127,53 +132,102 @@ class UserSessionTest {
     Analytics.addReporter(reporter)
   }
 
-  @Test
-  fun `login should correctly map network response to result`() {
-    whenever(loginApi.login(any()))
-        .thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
-        .thenReturn(Single.error(NullPointerException()))
-        .thenReturn(Single.error(unauthorizedHttpError<LoginResponse>()))
-        .thenReturn(Single.error(SocketTimeoutException()))
-
-    val result1 = userSession.loginWithOtp("").blockingGet()
-    assertThat(result1).isInstanceOf(LoginResult.Success::class.java)
-
-    val result2 = userSession.loginWithOtp("").blockingGet()
-    assertThat(result2).isInstanceOf(LoginResult.UnexpectedError::class.java)
-
-    val result3 = userSession.loginWithOtp("").blockingGet()
-    assertThat(result3).isInstanceOf(LoginResult.ServerError::class.java)
-
-    val result4 = userSession.loginWithOtp("").blockingGet()
-    assertThat(result4).isInstanceOf(LoginResult.NetworkError::class.java)
-  }
-
   private fun <T> unauthorizedHttpError(): HttpException {
     val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
   }
 
   @Test
-  fun `when find existing user then the network response should correctly be mapped to results`() {
+  @Parameters(method = "params for mapping network response for login")
+  fun `login should correctly map network response to result`(
+      response: Single<LoginResponse>,
+      expectedResultType: Class<LoginResult>
+  ) {
+    whenever(loginApi.login(any())).thenReturn(response)
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+
+    val result = userSession.loginWithOtp("000000").blockingGet()
+
+    assertThat(result).isInstanceOf(expectedResultType)
+  }
+
+  @Suppress("Unused")
+  private fun `params for mapping network response for login`(): List<List<Any>> {
+    return listOf(
+        listOf(Single.just(LoginResponse("accessToken", loggedInUserPayload)), LoginResult.Success::class.java),
+        listOf(Single.error<LoginResponse>(NullPointerException()), LoginResult.UnexpectedError::class.java),
+        listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), LoginResult.ServerError::class.java),
+        listOf(Single.error<LoginResponse>(IOException()), LoginResult.NetworkError::class.java)
+    )
+  }
+
+  @Test
+  @Parameters(method = "parameters for triggering sync on login")
+  fun `sync should only be triggered on successful login`(
+      response: Single<LoginResponse>,
+      shouldTriggerSync: Boolean
+  ) {
+    var syncInvoked = false
+
+    whenever(loginApi.login(any())).thenReturn(response)
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
+
+    userSession.loginWithOtp("000000").blockingGet()
+
+    if (shouldTriggerSync) {
+      assertThat(syncInvoked).isTrue()
+    } else {
+      verifyZeroInteractions(syncScheduler)
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `parameters for triggering sync on login`(): List<List<Any>> {
+    return listOf(
+        listOf(Single.just(LoginResponse("accessToken", loggedInUserPayload)), true),
+        listOf(Single.error<LoginResponse>(NullPointerException()), false),
+        listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), false),
+        listOf(Single.error<LoginResponse>(IOException()), false)
+    )
+  }
+
+  @Test
+  @Parameters(value = [
+    "true",
+    "false"
+  ])
+  fun `error in sync should not affect login result`(syncWillFail: Boolean) {
+    whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", PatientMocker.loggedInUserPayload())))
+    whenever(syncScheduler.syncImmediately()).thenAnswer {
+      if (syncWillFail) Completable.error(RuntimeException()) else Completable.complete()
+    }
+
+    assertThat(userSession.loginWithOtp("000000").blockingGet()).isEqualTo(LoginResult.Success)
+  }
+
+  @Test
+  @Parameters(method = "params for mapping network response for find user")
+  fun `when find existing user then the network response should correctly be mapped to results`(
+      response: Single<LoggedInUserPayload>,
+      expectedResultType: Class<FindUserResult>
+  ) {
+    whenever(registrationApi.findUser(any())).thenReturn(response)
+
+    val result = userSession.findExistingUser("1234567890").blockingGet()
+    assertThat(result).isInstanceOf(expectedResultType)
+  }
+
+  @Suppress("Unused")
+  private fun `params for mapping network response for find user`(): List<List<Any>> {
     val notFoundHttpError = mock<HttpException>()
     whenever(notFoundHttpError.code()).thenReturn(404)
 
-    whenever(registrationApi.findUser("123")).thenReturn(Single.just(PatientMocker.loggedInUserPayload()))
-    whenever(registrationApi.findUser("456")).thenReturn(Single.error(SocketTimeoutException()))
-    whenever(registrationApi.findUser("789")).thenReturn(Single.error(notFoundHttpError))
-    whenever(registrationApi.findUser("000")).thenReturn(Single.error(NullPointerException()))
-
-    val result1 = userSession.findExistingUser("123").blockingGet()
-    assertThat(result1).isInstanceOf(FindUserResult.Found::class.java)
-
-    val result2 = userSession.findExistingUser("456").blockingGet()
-    assertThat(result2).isInstanceOf(FindUserResult.NetworkError::class.java)
-
-    val result3 = userSession.findExistingUser("789").blockingGet()
-    assertThat(result3).isInstanceOf(FindUserResult.NotFound::class.java)
-
-    val result4 = userSession.findExistingUser("000").blockingGet()
-    assertThat(result4).isInstanceOf(FindUserResult.UnexpectedError::class.java)
+    return listOf(
+        listOf(Single.just(PatientMocker.loggedInUserPayload()), FindUserResult.Found::class.java),
+        listOf(Single.error<LoggedInUserPayload>(IOException()), FindUserResult.NetworkError::class.java),
+        listOf(Single.error<LoggedInUserPayload>(NullPointerException()), FindUserResult.UnexpectedError::class.java),
+        listOf(Single.error<LoggedInUserPayload>(notFoundHttpError), FindUserResult.NotFound::class.java)
+    )
   }
 
   @Test

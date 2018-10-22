@@ -22,7 +22,6 @@ import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -38,15 +37,13 @@ class EnterOtpScreenControllerTest {
   private lateinit var screen: EnterOtpScreen
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
-  private val syncScheduler = mock<SyncScheduler>()
 
   @Before
   fun setUp() {
     userSession = mock()
     screen = mock()
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
 
-    controller = EnterOtpScreenController(userSession, syncScheduler)
+    controller = EnterOtpScreenController(userSession)
 
     uiEvents
         .compose(controller)
@@ -140,25 +137,6 @@ class EnterOtpScreenControllerTest {
   }
 
   @Test
-  fun `when the login call succeeds, the sync must be triggered`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
-
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
-
-    verify(syncScheduler).syncImmediately()
-  }
-
-  @Test
-  fun `when the sync fails, the screen must close normally`() {
-    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(Success))
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.error(RuntimeException()))
-
-    uiEvents.onNext(EnterOtpSubmitted("111111"))
-
-    verify(screen).goBack()
-  }
-
-  @Test
   fun `when the login call fails unexpectedly, the generic error must be shown`() {
     whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(UnexpectedError))
 
@@ -224,6 +202,7 @@ class EnterOtpScreenControllerTest {
     verify(screen).hideProgress()
   }
 
+  @Suppress("Unused")
   fun `params for login call progress test`() = arrayOf<Any>(
       LoginResult.Success,
       LoginResult.NetworkError,

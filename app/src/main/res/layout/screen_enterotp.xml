@@ -30,11 +30,11 @@
       android:layout_marginTop="@dimen/spacing_4"
       android:layout_weight="1"
       android:ellipsize="end"
+      android:fontFamily="sans-serif"
       android:maxLines="1"
       android:text="@string/enterotp_check_sms_sent_to"
       android:textColor="@color/white_opacity_70"
-      android:textSize="@dimen/textsize_14"
-      android:fontFamily="sans-serif" />
+      android:textSize="@dimen/textsize_14" />
 
     <TextView
       android:id="@+id/enterotp_phonenumber"
@@ -78,9 +78,9 @@
         android:id="@+id/enterotp_otp"
         style="@style/Clinic.StaggeredEditText.Otp"
         android:imeOptions="actionDone"
-        app:pinCharacterMask="@null"
         android:inputType="number"
         android:maxLength="6"
+        app:pinCharacterMask="@null"
         tools:text="123456">
 
         <requestFocus />
@@ -88,8 +88,20 @@
 
       <TextView
         android:id="@+id/enterotp_error"
-        style="@style/Clinic.V2.LoginPinErrorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/enterotp_incorrect_code"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Red1"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+      <TextView
+        android:id="@+id/enterotp_sms_sent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/enterotp_sms_sent"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Green0"
+        android:visibility="gone"
         tools:visibility="visible" />
 
       <Button
@@ -98,9 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/enterotp_resend_sms"
-        android:textColor="?colorAccent"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:textColor="?colorAccent" />
     </LinearLayout>
   </android.support.v7.widget.CardView>
 

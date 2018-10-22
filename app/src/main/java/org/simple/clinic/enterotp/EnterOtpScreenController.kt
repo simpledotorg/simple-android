@@ -27,7 +27,8 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
         handleBackClicks(replayedEvents),
         showOtpValidationErrors(replayedEvents),
         makeLoginCall(replayedEvents),
-        closeScreenOnUserLoginInBackground(replayedEvents)
+        closeScreenOnUserLoginInBackground(replayedEvents),
+        resendSms(replayedEvents)
     )
   }
 
@@ -96,5 +97,33 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
         .flatMap { userSession.loggedInUser() }
         .compose(NewlyVerifiedUser())
         .map { { ui: Ui -> ui.goBack() } }
+  }
+
+  private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<EnterOtpResendSmsClicked>()
+        .flatMap { _ ->
+          userSession
+              .requestLoginOtp()
+              .flatMapObservable { loginResult ->
+                Observable.merge(showMessageOnLoginResult(loginResult), hideProgressOnLoginResult(loginResult))
+              }
+              .startWith { ui: Ui ->
+                ui.hideError()
+                ui.showProgress()
+              }
+        }
+  }
+
+  private fun showMessageOnLoginResult(loginResult: LoginResult): Observable<UiChange> {
+    return Single.just(loginResult)
+        .map {
+          when (it) {
+            is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
+            is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
+            is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
+            is LoginResult.Success -> { ui: Ui -> ui.showSmsSentMessage() }
+          }
+        }
+        .toObservable()
   }
 }

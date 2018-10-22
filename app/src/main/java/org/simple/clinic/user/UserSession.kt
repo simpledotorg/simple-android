@@ -90,12 +90,6 @@ class UserSession @Inject constructor(
         .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
-          // TODO: Review if this is necessary since Facilities
-          // are synced before making the request OTP call
-          facilitySync.sync()
-              .toSingleDefault(it)
-        }
-        .flatMap {
           storeUserAndAccessToken(it)
               .toSingleDefault(it)
         }

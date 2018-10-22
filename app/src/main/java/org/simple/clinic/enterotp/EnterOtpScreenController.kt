@@ -4,10 +4,8 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
@@ -19,10 +17,7 @@ typealias UiChange = (Ui) -> Unit
 
 private const val OTP_LENGTH = 6
 
-class EnterOtpScreenController @Inject constructor(
-    private val userSession: UserSession,
-    private val syncScheduler: SyncScheduler
-) : ObservableTransformer<UiEvent, UiChange> {
+class EnterOtpScreenController @Inject constructor(private val userSession: UserSession) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
@@ -70,7 +65,6 @@ class EnterOtpScreenController @Inject constructor(
     return Observable.merge(otpFromSubmitted, otpFromTextChanges)
         .flatMap { otp ->
           userSession.loginWithOtp(otp)
-              .doOnSuccess { syncOnLoginResult(it) }
               .flatMapObservable { loginResult ->
                 Observable.merge(handleLoginResult(loginResult), hideProgressOnLoginResult(loginResult))
               }
@@ -95,12 +89,6 @@ class EnterOtpScreenController @Inject constructor(
     return Single.just(loginResult)
         .map { { ui: Ui -> ui.hideProgress() } }
         .toObservable()
-  }
-
-  private fun syncOnLoginResult(loginResult: LoginResult) {
-    if (loginResult is LoginResult.Success) {
-      syncScheduler.syncImmediately().subscribeOn(io()).onErrorComplete().subscribe()
-    }
   }
 
   private fun closeScreenOnUserLoginInBackground(events: Observable<UiEvent>): Observable<UiChange> {

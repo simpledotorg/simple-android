@@ -107,7 +107,14 @@ class UserSession @Inject constructor(
             }
           }
         }
+        .doOnSuccess(this::syncOnLoginResult)
         .doOnSuccess { Timber.i("Login result: $it") }
+  }
+
+  private fun syncOnLoginResult(loginResult: LoginResult) {
+    if (loginResult is LoginResult.Success) {
+      syncScheduler.syncImmediately().subscribeOn(Schedulers.io()).onErrorComplete().subscribe()
+    }
   }
 
   fun requestLoginOtp(): Single<LoginResult> {

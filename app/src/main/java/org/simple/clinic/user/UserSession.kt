@@ -21,6 +21,7 @@ import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginErrorResponse
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
@@ -59,6 +60,7 @@ class UserSession @Inject constructor(
     private val passwordHasher: PasswordHasher,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     private val syncScheduler: SyncScheduler,
+    private val loginOtpSmsListener: LoginOtpSmsListener,
     @Named("last_patient_pull_timestamp") private val patientSyncPullTimestamp: Preference<Optional<Instant>>,
     @Named("last_bp_pull_timestamp") private val bpSyncPullTimestamp: Preference<Optional<Instant>>,
     @Named("last_prescription_pull_timestamp") private val prescriptionSyncPullTimestamp: Preference<Optional<Instant>>,
@@ -125,6 +127,14 @@ class UserSession @Inject constructor(
     val ongoingEntry = ongoingLoginEntry().cache()
     return ongoingEntry
         .doOnSubscribe { Timber.i("Requesting login OTP") }
+        .flatMap {
+          loginOtpSmsListener.listenForLoginOtp()
+              .onErrorComplete()
+              // LoginOtpSmsListenerImpl depends on a Google Play Services task
+              // which emits the result on the main thread.
+              .observeOn(Schedulers.io())
+              .toSingleDefault(it)
+        }
         .flatMap {
           loginApi.requestLoginOtp(it.userId)
               .andThen(Completable.fromAction {

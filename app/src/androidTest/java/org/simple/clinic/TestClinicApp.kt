@@ -1,6 +1,8 @@
 package org.simple.clinic
 
+import android.app.Application
 import com.tspoon.traceur.Traceur
+import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.crash.CrashReporterModule
@@ -10,6 +12,8 @@ import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.TestAppComponent
+import org.simple.clinic.login.LoginModule
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
 import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
 import org.simple.clinic.storage.StorageModule
@@ -71,6 +75,13 @@ class TestClinicApp : ClinicApp() {
         })
         .crashReporterModule(object : CrashReporterModule() {
           override fun crashReporter() = NoOpCrashReporter()
+        })
+        .loginModule(object : LoginModule() {
+          override fun loginSmsListener(app: Application): LoginOtpSmsListener {
+            return object : LoginOtpSmsListener {
+              override fun listenForLoginOtp(): Completable = Completable.complete()
+            }
+          }
         })
         .build()
   }

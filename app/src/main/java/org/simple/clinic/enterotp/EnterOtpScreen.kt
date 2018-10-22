@@ -1,11 +1,13 @@
 package org.simple.clinic.enterotp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
@@ -37,9 +39,12 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   private val otpEntryEditText by bindView<StaggeredEditText>(R.id.enterotp_otp)
   private val backButton by bindView<ImageButton>(R.id.enterotp_back)
   private val errorTextView by bindView<TextView>(R.id.enterotp_error)
+  private val smsSentTextView by bindView<TextView>(R.id.enterotp_sms_sent)
   private val validateOtpProgressBar by bindView<ProgressBar>(R.id.enterotp_progress)
   private val otpEntryContainer by bindView<ViewGroup>(R.id.enterotp_otp_container)
+  private val resendSmsButton by bindView<Button>(R.id.enterotp_resendsms)
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -47,7 +52,14 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     }
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), otpSubmits(), otpTextChanges(), backClicks())
+    Observable
+        .mergeArray(
+            screenCreates(),
+            otpSubmits(),
+            otpTextChanges(),
+            backClicks(),
+            resendSmsClicks()
+        )
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(mainThread())
@@ -64,6 +76,9 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   private fun otpSubmits() =
       RxTextView.editorActions(otpEntryEditText) { it == EditorInfo.IME_ACTION_DONE }
           .map { EnterOtpSubmitted(otpEntryEditText.text.toString()) }
+
+  private fun resendSmsClicks() =
+      RxView.clicks(resendSmsButton).map { EnterOtpResendSmsClicked() }
 
   private fun otpTextChanges() =
       RxTextView.textChanges(otpEntryEditText).map { EnterOtpTextChanges(it.toString()) }
@@ -101,6 +116,7 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   }
 
   private fun showError(error: String) {
+    smsSentTextView.visibility = View.GONE
     errorTextView.text = error
     errorTextView.visibility = View.VISIBLE
   }
@@ -120,5 +136,9 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     TransitionManager.beginDelayedTransition(this)
     validateOtpProgressBar.visibility = View.INVISIBLE
     otpEntryContainer.visibility = View.VISIBLE
+  }
+
+  fun showSmsSentMessage() {
+    smsSentTextView.visibility = View.VISIBLE
   }
 }

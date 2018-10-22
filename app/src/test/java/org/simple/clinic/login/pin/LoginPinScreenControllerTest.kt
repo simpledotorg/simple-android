@@ -13,7 +13,6 @@ import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
@@ -27,7 +26,6 @@ class LoginPinScreenControllerTest {
 
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
-  private val loginSmsListener = mock<LoginOtpSmsListener>()
   private val passwordHasher = mock<PasswordHasher>()
   private val localUser = PatientMocker.loggedInUser(pinDigest = "digest")
 
@@ -39,7 +37,7 @@ class LoginPinScreenControllerTest {
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-    controller = LoginPinScreenController(userSession, loginSmsListener, passwordHasher)
+    controller = LoginPinScreenController(userSession, passwordHasher)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
@@ -67,7 +65,7 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(PinSubmitClicked())
 
     verify(screen).showIncorrectPinError()
-    verify(loginSmsListener, never()).listenForLoginOtp()
+    verify(userSession, never()).requestLoginOtp()
   }
 
   @Test
@@ -83,32 +81,14 @@ class LoginPinScreenControllerTest {
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
-    whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
 
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(PinSubmitClicked())
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingLoginEntry.userId, phoneNumber = "9999", pin = "0000"))
-    verify(loginSmsListener).listenForLoginOtp()
     verify(userSession).requestLoginOtp()
     verify(screen).showProgressBar()
     verify(screen).openHomeScreen()
-  }
-
-  @Test
-  fun `if pin is not empty and submit is clicked, if the sms listener fails, then show the error screen`() {
-    val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
-    whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.error(RuntimeException()))
-
-    uiEvents.onNext(PinTextChanged("0000"))
-    uiEvents.onNext(PinSubmitClicked())
-
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingLoginEntry.userId, phoneNumber = "9999", pin = "0000"))
-    verify(screen).showUnexpectedError()
   }
 
   @Test
@@ -117,7 +97,6 @@ class LoginPinScreenControllerTest {
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(loginSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp())
         .thenReturn(Single.just(LoginResult.NetworkError))
         .thenReturn(Single.just(LoginResult.UnexpectedError))

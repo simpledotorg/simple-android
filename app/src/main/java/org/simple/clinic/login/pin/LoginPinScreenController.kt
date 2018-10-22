@@ -5,9 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
@@ -22,7 +20,6 @@ typealias UiChange = (Ui) -> Unit
 
 class LoginPinScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val loginOtpSmsListener: LoginOtpSmsListener,
     private val passwordHasher: PasswordHasher
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -65,13 +62,7 @@ class LoginPinScreenController @Inject constructor(
               .cache()
 
           val cachedRequestOtp = pinEnteredSuccessfully
-              .flatMapSingle {
-                loginOtpSmsListener.listenForLoginOtp()
-                    // LoginOtpSmsListener depends on a Google Play Services task
-                    // which emits the result on the main thread
-                    .observeOn(Schedulers.io())
-                    .andThen(userSession.requestLoginOtp())
-              }
+              .flatMapSingle { userSession.requestLoginOtp() }
               .cache()
 
           val showProgressOnPinValidation = pinValidation

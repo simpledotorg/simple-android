@@ -35,6 +35,7 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApiV1
+import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
@@ -89,12 +90,14 @@ class UserSessionTest {
   private lateinit var prescriptionPullTimestamp: Preference<Optional<Instant>>
   private lateinit var bpPullTimestamp: Preference<Optional<Instant>>
   private lateinit var patientPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var loginOtpSmsListener: LoginOtpSmsListener
 
   @Before
   fun setUp() {
     // Used for overriding IO scheduler for sync call on login.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
+    loginOtpSmsListener = mock()
     syncScheduler = mock()
     medicalHistoryPullTimestamp = mock()
     communicationPullTimestamp = mock()
@@ -114,6 +117,7 @@ class UserSessionTest {
         passwordHasher = passwordHasher,
         accessTokenPreference = accessTokenPref,
         syncScheduler = syncScheduler,
+        loginOtpSmsListener = loginOtpSmsListener,
         patientSyncPullTimestamp = patientPullTimestamp,
         bpSyncPullTimestamp = bpPullTimestamp,
         prescriptionSyncPullTimestamp = prescriptionPullTimestamp,
@@ -320,6 +324,7 @@ class UserSessionTest {
 
   @Test
   fun `when requesting login otp fails, the local logged in status must not be updated`() {
+    whenever(loginOtpSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
     whenever(loginApi.requestLoginOtp(any()))
         .thenReturn(
             Completable.error(RuntimeException()),
@@ -331,6 +336,34 @@ class UserSessionTest {
 
     userSession.requestLoginOtp().blockingGet()
     verify(userDao, never()).updateLoggedInStatusForUser(any(), any())
+  }
+
+  @Test
+  fun `when requesting for login otp, the sms received event must be listened to`() {
+    var listenedForSms = false
+
+    whenever(loginOtpSmsListener.listenForLoginOtp())
+        .thenReturn(Completable.complete().doOnComplete { listenedForSms = true })
+
+    whenever(loginApi.requestLoginOtp(any()))
+        .thenReturn(Completable.complete())
+
+    userSession.requestLoginOtp().blockingGet()
+
+    assertThat(listenedForSms).isTrue()
+  }
+
+  @Test
+  fun `when listening for sms fails, the request otp call must still be made`() {
+    whenever(loginOtpSmsListener.listenForLoginOtp()).thenReturn(Completable.error(RuntimeException()))
+
+    var loginCallMade = false
+    whenever(loginApi.requestLoginOtp(any()))
+        .thenReturn(Completable.complete().doOnComplete { loginCallMade = true })
+
+    userSession.requestLoginOtp().blockingGet()
+
+    assertThat(loginCallMade).isTrue()
   }
 
   @Test

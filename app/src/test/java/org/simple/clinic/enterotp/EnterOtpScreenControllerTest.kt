@@ -1,5 +1,6 @@
 package org.simple.clinic.enterotp
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -235,5 +236,120 @@ class EnterOtpScreenControllerTest {
     } else {
       Mockito.verify(screen, never()).goBack()
     }
+  }
+
+  @Test
+  fun `when resend sms is clicked, the request otp flow should be triggered`() {
+    var otpRequested = false
+    whenever(userSession.requestLoginOtp())
+        .thenReturn(Single.just(LoginResult.Success as LoginResult).doOnSuccess { otpRequested = true })
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    assertThat(otpRequested).isTrue()
+  }
+
+  @Test
+  fun `when the resend sms call is made, the progress must be shown`() {
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    verify(screen).showProgress()
+  }
+
+  @Test
+  fun `when the resend sms call is made, any error must be hidden`() {
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    verify(screen).hideError()
+  }
+
+  @Test
+  @Parameters(method = "params for hiding progress on request otp")
+  fun `when the resend sms call completes, the progress must be hidden`(
+      result: Single<LoginResult>
+  ) {
+    whenever(userSession.requestLoginOtp()).thenReturn(result)
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    verify(screen).hideProgress()
+  }
+
+
+  @Suppress("Unused")
+  private fun `params for hiding progress on request otp`(): List<List<Any>> {
+    return listOf(
+        listOf(Single.just(LoginResult.Success)),
+        listOf(Single.just(LoginResult.NetworkError)),
+        listOf(Single.just(LoginResult.ServerError("error"))),
+        listOf(Single.just(LoginResult.UnexpectedError))
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for showing SMS sent message")
+  fun `when the resend sms call succeeds, the sms sent message must be shown`(
+      result: Single<LoginResult>,
+      shouldShowMessage: Boolean
+  ) {
+    whenever(userSession.requestLoginOtp()).thenReturn(result)
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    if (shouldShowMessage) {
+      verify(screen).showSmsSentMessage()
+    } else {
+      verify(screen, never()).showSmsSentMessage()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for showing SMS sent message`(): List<List<Any>> {
+    return listOf(
+        listOf(Single.just(LoginResult.Success), true),
+        listOf(Single.just(LoginResult.NetworkError), false),
+        listOf(Single.just(LoginResult.ServerError("error")), false),
+        listOf(Single.just(LoginResult.UnexpectedError), false)
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for show error on request otp")
+  fun `when the resend sms call completes, the error must be shown`(
+      result: Single<LoginResult>,
+      verification: (Ui) -> Unit
+  ) {
+    whenever(userSession.requestLoginOtp()).thenReturn(result)
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    verification(screen)
+  }
+
+  @Suppress("Unused")
+  private fun `params for show error on request otp`(): List<List<Any>> {
+    return listOf(
+        listOf<Any>(Single.just(LoginResult.Success), { screen: Ui ->
+          verify(screen, never()).showNetworkError()
+          verify(screen, never()).showServerError(any())
+          verify(screen, never()).showUnexpectedError()
+        }),
+        listOf<Any>(Single.just(LoginResult.UnexpectedError), { screen: Ui ->
+          verify(screen).showUnexpectedError()
+        }),
+        listOf<Any>(Single.just(LoginResult.ServerError("Error 1")), { screen: Ui ->
+          verify(screen).showServerError("Error 1")
+        }),
+        listOf<Any>(Single.just(LoginResult.ServerError("Error 2")), { screen: Ui ->
+          verify(screen).showServerError("Error 2")
+        }),
+        listOf<Any>(Single.just(LoginResult.NetworkError), { screen: Ui ->
+          verify(screen).showNetworkError()
+        })
+    )
   }
 }

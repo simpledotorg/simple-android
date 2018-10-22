@@ -271,4 +271,6 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_none">None of the above</string>
   <string name="newmedicalhistory_next">Next</string>
+  <string name="newmedicalhistory_yes">Yes</string>
+  <string name="newmedicalhistory_no">No</string>
 </resources>

@@ -293,6 +293,7 @@
   <!--suppress UnusedResources -->
   <string name="medicalhistory_question_none">None of the above</string>
   <string name="newmedicalhistory_next">Next</string>
+  
   <string name="patient_summary_saved_status">Saved</string>
   <string name="patient_status_summary_saved_scheduled_appointment">Next visit for %s scheduled on</string>
 </resources>

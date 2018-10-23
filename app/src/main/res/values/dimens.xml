@@ -27,8 +27,8 @@
   <dimen name="prescribeddrugs_protocol_drug_selected_padding">16dp</dimen>
   <dimen name="prescribeddrugs_protocol_drug_unselected_padding">0dp</dimen>
 
-  <dimen name="medicalhistory_selected_padding">16dp</dimen>
-  <dimen name="medicalhistory_unselected_padding">8dp</dimen>
+  <dimen name="medicalhistory_selected_padding">10dp</dimen>
+  <dimen name="medicalhistory_unselected_padding">20dp</dimen>
 
   <dimen name="summary_prescriptions_update_when_empty">@dimen/spacing_24</dimen>
   <dimen name="summary_prescriptions_update_when_non_empty">@dimen/spacing_8</dimen>

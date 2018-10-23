@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
@@ -22,12 +23,12 @@ class MedicalHistoryRepository @Inject constructor(
     val defaultValue = MedicalHistory(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,
-        hasHadHeartAttack = false,
-        hasHadStroke = false,
-        hasHadKidneyDisease = false,
-        diagnosedWithHypertension = false,
-        isOnTreatmentForHypertension = false,
-        hasDiabetes = false,
+        hasHadHeartAttack = UNSELECTED,
+        hasHadStroke = UNSELECTED,
+        hasHadKidneyDisease = UNSELECTED,
+        diagnosedWithHypertension = UNSELECTED,
+        isOnTreatmentForHypertension = UNSELECTED,
+        hasDiabetes = UNSELECTED,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(clock),
         updatedAt = Instant.now(clock))
@@ -117,12 +118,12 @@ class MedicalHistoryRepository @Inject constructor(
       MedicalHistory(
           uuid = uuid,
           patientUuid = patientUuid,
-          hasHadHeartAttack = hasHadHeartAttack,
-          hasHadStroke = hasHadStroke,
-          hasHadKidneyDisease = hasHadKidneyDisease,
-          diagnosedWithHypertension = diagnosedWithHypertension,
-          isOnTreatmentForHypertension = isOnTreatmentForHypertension,
-          hasDiabetes = hasDiabetes,
+          hasHadHeartAttack = MedicalHistory.Answer.fromBoolean(hasHadHeartAttack),
+          hasHadStroke = MedicalHistory.Answer.fromBoolean(hasHadStroke),
+          hasHadKidneyDisease = MedicalHistory.Answer.fromBoolean(hasHadKidneyDisease),
+          diagnosedWithHypertension = MedicalHistory.Answer.fromBoolean(diagnosedWithHypertension),
+          isOnTreatmentForHypertension = MedicalHistory.Answer.fromBoolean(isOnTreatmentForHypertension),
+          hasDiabetes = MedicalHistory.Answer.fromBoolean(hasDiabetes),
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt)

@@ -1,10 +1,13 @@
 package org.simple.clinic.medicalhistory
 
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
+
 data class OngoingMedicalHistoryEntry(
-    val hasHadHeartAttack: Boolean = false,
-    val hasHadStroke: Boolean = false,
-    val hasHadKidneyDisease: Boolean = false,
-    val diagnosedWithHypertension: Boolean = false,
-    val isOnTreatmentForHypertension: Boolean = false,
-    val hasDiabetes: Boolean = false
+    val hasHadHeartAttack: Answer = UNSELECTED,
+    val hasHadStroke: Answer = UNSELECTED,
+    val hasHadKidneyDisease: Answer = UNSELECTED,
+    val diagnosedWithHypertension: Answer = UNSELECTED,
+    val isOnTreatmentForHypertension: Answer = UNSELECTED,
+    val hasDiabetes: Answer = UNSELECTED
 )

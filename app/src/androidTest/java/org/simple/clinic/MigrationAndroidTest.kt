@@ -511,4 +511,40 @@ class MigrationAndroidTest {
     db_v18.execSQL(insertBloodPressureStatement(uuid = measurementUuid2, facilityUuid = nonExistentFacilityUuid))
     db_v18.execSQL(insertPrescribedDrugStatement(uuid = prescribedDrugUuid2, facilityUuid = nonExistentFacilityUuid))
   }
+
+
+  @Test
+  fun migration_18_to_19() {
+    val db_18 = helper.createDatabase(version = 17)
+    val historyUuid1 = "464bcda8-b26a-484d-bb70-49b3675f4a38"
+
+    db_18.execSQL("""
+      INSERT OR REPLACE INTO "MedicalHistory" VALUES(
+        '$historyUuid1',
+        'ee367a66-f47e-42d8-965b-7a2b5c54f4bd',
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        'IN_FLIGHT',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_19 = helper.migrateTo( 19, Migration_17_18())
+
+    db_19.query("""SELECT * FROM "MedicalHistory" ORDER BY "createdAt" DESC""").use {
+      assertThat(it.count).isEqualTo(1)
+
+      it.moveToFirst()
+      assertThat(it.getString(it.getColumnIndex("diagnosedWithHypertension"))).isEqualTo("NO")
+      assertThat(it.getString(it.getColumnIndex("isOnTreatmentForHypertension"))).isEqualTo("YES")
+      assertThat(it.getString(it.getColumnIndex("hasHadHeartAttack"))).isEqualTo("NO")
+      assertThat(it.getString(it.getColumnIndex("hasHadStroke"))).isEqualTo("YES")
+      assertThat(it.getString(it.getColumnIndex("hasHadKidneyDisease"))).isEqualTo("NO")
+      assertThat(it.getString(it.getColumnIndex("hasDiabetes"))).isEqualTo("YES")
+    }
+  }
 }

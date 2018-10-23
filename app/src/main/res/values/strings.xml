@@ -97,7 +97,6 @@
   <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
-  <string name="bloodpressureentry_input_hint" translatable="false">•••</string>
   <string name="bloodpressureentry_error_systolic_more">Systolic should be more than diastolic</string>
   <string name="bloodpressureentry_error_systolic_70">Systolic cannot be less than 70</string>
   <string name="bloodpressureentry_error_systolic_300">Systolic cannot be more than 300</string>

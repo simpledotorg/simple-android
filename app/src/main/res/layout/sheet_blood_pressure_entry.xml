@@ -14,10 +14,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_16"
     android:gravity="center_horizontal"
-    android:letterSpacing="0.1"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:text="@string/bloodpressureentry_sheet_title"
-    android:textAllCaps="true"
-    android:textColor="@color/gray_800"
     tools:ignore="UnusedAttribute" />
 
   <LinearLayout
@@ -35,7 +33,9 @@
       <EditText
         android:id="@+id/bloodpressureentry_systolic"
         style="@style/Clinic.BloodPressureInput"
-        android:hint="@string/bloodpressureentry_input_hint" />
+        android:importantForAutofill="no"
+        tools:ignore="UnusedAttribute"
+        tools:text="120"/>
 
       <requestFocus />
 
@@ -46,18 +46,18 @@
       <TextView
         android:id="@+id/bloodpressureentry_systolic_label"
         style="@style/Clinic.BloodPressureInputLabel"
-        android:text="@string/bloodpressureentry_systolic" />
+        android:text="@string/bloodpressureentry_systolic"
+        android:labelFor="@id/bloodpressureentry_systolic"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"/>
     </LinearLayout>
 
     <TextView
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:layout_marginStart="4dp"
-      android:layout_marginTop="-28dp"
-      android:scaleX="0.3"
+      android:fontFamily="sans-serif"
       android:text="/"
-      android:textColor="@color/gray_300"
-      android:textSize="88dp"
+      android:textColor="@color/grey2"
+      android:textSize="40dp"
       tools:ignore="HardcodedText,SpUsage" />
 
     <LinearLayout
@@ -68,7 +68,8 @@
       <EditText
         android:id="@+id/bloodpressureentry_diastolic"
         style="@style/Clinic.BloodPressureInput"
-        android:hint="@string/bloodpressureentry_input_hint" />
+        android:importantForAutofill="no"
+        tools:ignore="UnusedAttribute" />
 
       <View
         android:id="@+id/bloodpressureentry_diastolic_underline"
@@ -77,7 +78,9 @@
       <TextView
         android:id="@+id/bloodpressureentry_diastolic_label"
         style="@style/Clinic.BloodPressureInputLabel"
-        android:text="@string/bloodpressureentry_diastolic" />
+        android:text="@string/bloodpressureentry_diastolic"
+        android:labelFor="@id/bloodpressureentry_diastolic"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"/>
     </LinearLayout>
   </LinearLayout>
 

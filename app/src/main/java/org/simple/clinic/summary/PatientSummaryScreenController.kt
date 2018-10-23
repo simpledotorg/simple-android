@@ -22,7 +22,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_A
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
@@ -182,7 +181,6 @@ class PatientSummaryScreenController @Inject constructor(
         HAS_HAD_A_STROKE -> medicalHistory.copy(hasHadStroke = answer)
         HAS_HAD_A_KIDNEY_DISEASE -> medicalHistory.copy(hasHadKidneyDisease = answer)
         HAS_DIABETES -> medicalHistory.copy(hasDiabetes = answer)
-        NONE -> throw AssertionError("There's no none question in summary")
       }
     }
 

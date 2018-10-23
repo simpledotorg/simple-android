@@ -7,37 +7,74 @@
   android:foreground="?attr/selectableItemBackgroundBorderless"
   tools:parentTag="android.widget.RelativeLayout">
 
-  <CheckBox
-    android:id="@+id/newmedicalhistory_item_checkbox"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_alignBottom="@+id/newmedicalhistory_item_label"
-    android:layout_alignTop="@+id/newmedicalhistory_item_label"
-    android:layout_marginStart="10dp"
-    android:focusable="false"
-    android:focusableInTouchMode="false"
-    android:scaleX="0.8"
-    android:scaleY="0.8"
-    android:theme="@style/Clinic.V2.MedicalHistoryQuestionCheckboxTheme" />
-
-  <TextView
-    android:id="@+id/newmedicalhistory_item_label"
+  <LinearLayout
+    android:id="@+id/newmedicalhistory_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="10dp"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:layout_toEndOf="@+id/newmedicalhistory_item_checkbox"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
-    tools:text="A really long medical history question that shouldn't fit" />
+    android:orientation="horizontal">
+
+    <TextView
+      android:id="@+id/newmedicalhistory_item_label"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_weight="1"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
+      tools:text="A really long medical history question that shouldn't fit" />
+
+    <RadioGroup
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+      <CheckBox
+        android:id="@+id/newmedicalhistory_item_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/selector_medicalhistory_answer"
+        android:button="@null"
+        android:gravity="center"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:paddingStart="@dimen/medicalhistory_unselected_padding"
+        android:drawablePadding="@dimen/spacing_4"
+        android:paddingEnd="@dimen/medicalhistory_unselected_padding"
+        android:textAllCaps="false"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center"
+        android:text="@string/newmedicalhistory_yes" />
+
+      <CheckBox
+        android:id="@+id/newmedicalhistory_item_no"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/spacing_12"
+        android:background="@drawable/selector_medicalhistory_answer"
+        android:button="@null"
+        android:paddingTop="@dimen/spacing_16"
+        android:paddingBottom="@dimen/spacing_16"
+        android:paddingStart="@dimen/medicalhistory_unselected_padding"
+        android:drawablePadding="@dimen/spacing_4"
+        android:paddingEnd="@dimen/medicalhistory_unselected_padding"
+        android:gravity="center"
+        android:textAllCaps="false"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center"
+        android:text="@string/newmedicalhistory_no" />
+    </RadioGroup>
+
+  </LinearLayout>
 
   <View
     android:id="@+id/newmedicalhistory_item_divider"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:layout_alignEnd="@+id/newmedicalhistory_item_label"
-    android:layout_alignStart="@+id/newmedicalhistory_item_label"
-    android:layout_below="@+id/newmedicalhistory_item_label"
+    android:layout_alignEnd="@+id/newmedicalhistory_layout"
+    android:layout_alignStart="@+id/newmedicalhistory_layout"
+    android:layout_below="@+id/newmedicalhistory_layout"
     android:background="@color/grey3" />
 </RelativeLayout>

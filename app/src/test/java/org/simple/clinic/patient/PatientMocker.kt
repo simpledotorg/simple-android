@@ -6,6 +6,9 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
@@ -244,12 +247,12 @@ object PatientMocker {
   }
 
   fun medicalHistory(
-      hasHadHeartAttack: Boolean = true,
-      hasHadStroke: Boolean = false,
-      hasHadKidneyDisease: Boolean = true,
-      diagnosedWithHypertension: Boolean = false,
-      isOnTreatmentForHypertension: Boolean = false,
-      hasDiabetes: Boolean = true,
+      hasHadHeartAttack: Answer = YES,
+      hasHadStroke: Answer = NO,
+      hasHadKidneyDisease: Answer = YES,
+      diagnosedWithHypertension: Answer = NO,
+      isOnTreatmentForHypertension: Answer = YES,
+      hasDiabetes: Answer = YES,
       updatedAt: Instant = Instant.now()
   ): MedicalHistory {
     return MedicalHistory(

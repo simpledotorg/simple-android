@@ -3,7 +3,6 @@ package org.simple.clinic.medicalhistory.newentry
 import android.content.Context
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
-import android.widget.Button
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -18,7 +17,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_A
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
@@ -48,9 +46,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   private val strokeQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_stroke)
   private val kidneyDiseaseQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_kidney)
   private val diabetesQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diabetes)
-  private val noneQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_none)
   private val nextButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.newmedicalhistory_next_frame)
-  private val nextButton by bindView<Button>(R.id.newmedicalhistory_save)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -69,7 +65,8 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
     strokeQuestionView.render(HAS_HAD_A_STROKE)
     kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE)
     diabetesQuestionView.render(HAS_DIABETES)
-    noneQuestionView.render(NONE)
+
+    diabetesQuestionView.hideDivider()
 
     Observable.mergeArray(screenCreates(), answerToggles(), saveClicks())
         .observeOn(io())
@@ -83,8 +80,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   private fun answerToggles(): Observable<UiEvent> {
     val toggles = { view: MedicalHistoryQuestionView ->
-      view.checkedChanges()
-          .map { NewMedicalHistoryAnswerToggled(view.question, view.isChecked) }
+      view.answers().map { answer -> NewMedicalHistoryAnswerToggled(view.question, answer) }
     }
 
     return Observable.mergeArray(
@@ -93,8 +89,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
         toggles(heartAttackQuestionView),
         toggles(strokeQuestionView),
         toggles(kidneyDiseaseQuestionView),
-        toggles(diabetesQuestionView),
-        toggles(noneQuestionView))
+        toggles(diabetesQuestionView))
   }
 
   private fun saveClicks() =
@@ -102,26 +97,8 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
           .clicks(nextButtonFrame.button)
           .map { SaveMedicalHistoryClicked() }
 
-  fun unSelectNoneAnswer() {
-    noneQuestionView.isChecked = false
-  }
-
-  fun unSelectAllAnswersExceptNone() {
-    diagnosedForHypertensionQuestionView.isChecked = false
-    treatmentForHypertensionQuestionView.isChecked = false
-    heartAttackQuestionView.isChecked = false
-    strokeQuestionView.isChecked = false
-    kidneyDiseaseQuestionView.isChecked = false
-    diabetesQuestionView.isChecked = false
-  }
-
   fun openPatientSummaryScreen(patientUuid: UUID) {
     screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT))
-  }
-
-  fun setSaveButtonEnabled(enabled: Boolean) {
-    nextButtonFrame.isEnabled = enabled
-    nextButton.isEnabled = enabled
   }
 
   fun setPatientName(patientName: String) {

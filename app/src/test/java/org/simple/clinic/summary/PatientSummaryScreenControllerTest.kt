@@ -25,6 +25,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.*
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -34,6 +35,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -115,7 +117,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
 
@@ -134,7 +136,7 @@ class PatientSummaryScreenControllerTest {
 
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
@@ -162,7 +164,7 @@ class PatientSummaryScreenControllerTest {
 
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT))
 
@@ -240,7 +242,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
 
-    val medicalHistory = PatientMocker.medicalHistory(updatedAt = Instant.now())
+    val medicalHistory = medicalHistory(updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
@@ -361,27 +363,28 @@ class PatientSummaryScreenControllerTest {
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
       question: MedicalHistoryQuestion
   ) {
-    val medicalHistory = PatientMocker.medicalHistory(
-        diagnosedWithHypertension = false,
-        isOnTreatmentForHypertension = false,
-        hasHadHeartAttack = false,
-        hasHadStroke = false,
-        hasHadKidneyDisease = false,
-        hasDiabetes = false,
+    val medicalHistory = medicalHistory(
+        diagnosedWithHypertension = NO,
+        isOnTreatmentForHypertension = NO,
+        hasHadHeartAttack = NO,
+        hasHadStroke = NO,
+        hasHadKidneyDisease = NO,
+        hasDiabetes = NO,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH))
-    uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, selected = true))
+    uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = YES))
 
     val updatedMedicalHistory = medicalHistory.copy(
-        diagnosedWithHypertension = question == DIAGNOSED_WITH_HYPERTENSION,
-        isOnTreatmentForHypertension = question == IS_ON_TREATMENT_FOR_HYPERTENSION,
-        hasHadHeartAttack = question == HAS_HAD_A_HEART_ATTACK,
-        hasHadStroke = question == HAS_HAD_A_STROKE,
-        hasHadKidneyDisease = question == HAS_HAD_A_KIDNEY_DISEASE,
-        hasDiabetes = question == HAS_DIABETES)
+        diagnosedWithHypertension = MedicalHistory.Answer.fromBoolean(question == DIAGNOSED_WITH_HYPERTENSION),
+        isOnTreatmentForHypertension = MedicalHistory.Answer.fromBoolean(question == IS_ON_TREATMENT_FOR_HYPERTENSION),
+        hasHadHeartAttack = MedicalHistory.Answer.fromBoolean(question == HAS_HAD_A_HEART_ATTACK),
+        hasHadStroke = MedicalHistory.Answer.fromBoolean(question == HAS_HAD_A_STROKE),
+        hasHadKidneyDisease = MedicalHistory.Answer.fromBoolean(question == HAS_HAD_A_KIDNEY_DISEASE),
+        hasDiabetes = MedicalHistory.Answer.fromBoolean(question == HAS_DIABETES)
+    )
     verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
   }
 
@@ -423,7 +426,7 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Suppress("unused")
-  fun medicalHistoryQuestionsWithoutNone() = MedicalHistoryQuestion.values().filter { it != MedicalHistoryQuestion.NONE }
+  fun medicalHistoryQuestionsWithoutNone() = MedicalHistoryQuestion.values().asList()
 
   @After
   fun tearDown() {

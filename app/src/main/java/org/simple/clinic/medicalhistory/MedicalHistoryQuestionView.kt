@@ -10,7 +10,6 @@ import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.TextView
 import io.reactivex.Observable
-import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
@@ -23,94 +22,87 @@ import org.simple.clinic.widgets.setHorizontalPadding
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
-  private val divider by bindView<View>(R.id.newmedicalhistory_item_divider)
-  private val checkBoxYes by bindView<CompoundButton>(R.id.newmedicalhistory_item_yes)
-  private val checkBoxNo by bindView<CompoundButton>(R.id.newmedicalhistory_item_no)
-  private val answerSubject = PublishSubject.create<MedicalHistory.Answer>()
-
-  val answers = answerSubject as Observable<MedicalHistory.Answer>
+  private val dividerView by bindView<View>(R.id.newmedicalhistory_item_divider)
+  private val yesCheckBox by bindView<CompoundButton>(R.id.newmedicalhistory_item_yes)
+  private val noCheckBox by bindView<CompoundButton>(R.id.newmedicalhistory_item_no)
 
   lateinit var question: MedicalHistoryQuestion
+  var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}
 
-  val color: (Int) -> Int = { colorRes -> ContextCompat.getColor(context, colorRes) }
-  val setCheckedState: (CompoundButton) -> Unit = { button ->
-    button.apply {
-      when {
-        isChecked -> {
-          setTextColor(color(R.color.white100))
-          setCompoundDrawableStart(R.drawable.ic_done_16dp)
-          setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
-        }
-        else -> {
-          setTextColor(color(R.color.blue1))
-          setCompoundDrawableStart(null)
-          setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
-        }
-      }
+  var answer: MedicalHistory.Answer = UNSELECTED
+    set(value) {
+      field = value
+      answerChangeListener(value)
+      updateCheckboxesFromAnswer()
     }
-  }
 
-  private val yesListener : (CompoundButton, Boolean) -> Unit = { _ , isChecked ->
-    answer = when{
-      isChecked -> YES
-      else -> UNSELECTED
-    }
-  }
-
-  private val noListener : (CompoundButton, Boolean) -> Unit = { _ , isChecked ->
-    answer = when{
-      isChecked -> NO
+  private val checkboxChangeListener: (CompoundButton, Boolean) -> Unit = { checkBox, checked ->
+    answer = when {
+      checkBox == yesCheckBox && checked -> YES
+      checkBox == noCheckBox && checked -> NO
       else -> UNSELECTED
     }
   }
 
   init {
-    LayoutInflater.from(context).inflate(R.layout.list_medical_history_question2, this, true)
-    
-    checkBoxYes.setOnCheckedChangeListener(yesListener)
-    checkBoxNo.setOnCheckedChangeListener(noListener)
+    LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)
 
-    yesListener(checkBoxYes, false)
-    noListener(checkBoxNo, false)
+    yesCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
+    noCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
+
+    // Force call the setter.
+    answer = answer
   }
 
-  var answer: MedicalHistory.Answer = UNSELECTED
-    set(value) {
-      field = value
-      answerSubject.onNext(field)
-      checkBoxYes.setOnCheckedChangeListener(null)
-      checkBoxNo.setOnCheckedChangeListener(null)
-      when(value){
-        YES -> {
-          checkBoxYes.isChecked = true
-          checkBoxNo.isChecked = false
-        }
-        NO -> {
-          checkBoxYes.isChecked = false
-          checkBoxNo.isChecked = true
-        }
-        UNSELECTED -> {
-          checkBoxYes.isChecked = false
-          checkBoxNo.isChecked = false
+  private fun updateCheckboxesFromAnswer() {
+    yesCheckBox.setOnCheckedChangeListener(null)
+    noCheckBox.setOnCheckedChangeListener(null)
+
+    yesCheckBox.isChecked = answer == YES
+    noCheckBox.isChecked = answer == NO
+
+    yesCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
+    noCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
+
+    arrayOf(yesCheckBox, noCheckBox).forEach { checkBox ->
+      checkBox.run {
+        val color: (Int) -> Int = { colorRes -> ContextCompat.getColor(context, colorRes) }
+
+        when {
+          isChecked -> {
+            setTextColor(color(R.color.white100))
+            setCompoundDrawableStart(R.drawable.ic_done_16dp)
+            setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
+          }
+          else -> {
+            setTextColor(color(R.color.blue1))
+            setCompoundDrawableStart(null)
+            setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
+          }
         }
       }
-      checkBoxYes.setOnCheckedChangeListener(yesListener)
-      checkBoxNo.setOnCheckedChangeListener(noListener)
-
-      setCheckedState(checkBoxYes)
-      setCheckedState(checkBoxNo)
     }
+  }
 
+  // FIXME
   fun setOnCheckedChangeListener(listener: (View, Boolean) -> Unit) {
-   // checkBox.setOnCheckedChangeListener(listener)
+    //     yesCheckBox.setOnCheckedChangeListener(listener)
+    //     noCheckBox.setOnCheckedChangeListener(listener)
   }
 
   fun hideDivider() {
-    divider.visibility = View.GONE
+    dividerView.visibility = View.GONE
   }
 
+  // TODO: Add answer
   fun render(question: MedicalHistoryQuestion) {
     this.question = question
     labelTextView.setText(question.questionRes)
   }
+
+  fun answers() = Observable.create<MedicalHistory.Answer> { emitter ->
+    answerChangeListener = emitter::onNext
+    emitter.onNext(answer)
+    emitter.setCancellable { answerChangeListener = {} }
+  }!!
 }

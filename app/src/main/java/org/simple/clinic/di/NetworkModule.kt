@@ -42,7 +42,7 @@ class NetworkModule {
         }
 
     return Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(MoshiConverterFactory.create(moshi).withNullSerialization())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpBuilder.build())
         .validateEagerly(true)

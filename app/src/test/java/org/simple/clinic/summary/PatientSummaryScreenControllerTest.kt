@@ -11,6 +11,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -55,17 +56,8 @@ class PatientSummaryScreenControllerTest {
   private val clock = Clock.fixed(Instant.now(), UTC)
 
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private val configSubject = BehaviorSubject.create<PatientSummaryConfig>()
   private val reporter = MockAnalyticsReporter()
-
-  /**
-   * If the placeholder count is changed, the `params for placeholder bp items`
-   * method will also need to be changed to account for the change in the
-   * number of placeholder.
-   *
-   * TODO: Change the method to generate test inputs dynamically based on
-   * the number of placeholders declared.
-   */
-  private val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L))
 
   private lateinit var controller: PatientSummaryScreenController
 
@@ -80,7 +72,7 @@ class PatientSummaryScreenControllerTest {
         medicalHistoryRepository,
         timestampGenerator,
         clock,
-        config)
+        configSubject.firstOrError())
 
     uiEvents
         .compose(controller)
@@ -114,6 +106,9 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's prescription summary should be populated`() {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    configSubject.onNext(config)
+
     val prescriptions = listOf(
         PatientMocker.prescription(name = "Amlodipine", dosage = "10mg"),
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
@@ -129,6 +124,9 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's blood pressure history should be populated`() {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    configSubject.onNext(config)
+
     val bloodPressureMeasurements = listOf(
         PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95),
@@ -155,6 +153,9 @@ class PatientSummaryScreenControllerTest {
       expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L))
+    configSubject.onNext(config)
+
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
@@ -229,6 +230,9 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's medical history should be populated`() {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    configSubject.onNext(config)
+
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
 

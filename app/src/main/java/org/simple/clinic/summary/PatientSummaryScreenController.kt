@@ -4,6 +4,7 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.disposables.Disposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
@@ -41,7 +42,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
     private val clock: Clock,
-    private val config: PatientSummaryConfig
+    private val configProvider: Single<PatientSummaryConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private lateinit var disposable: Disposable
@@ -132,7 +133,8 @@ class PatientSummaryScreenController @Inject constructor(
 
     val bloodPressurePlaceholders = bloodPressures
         .map { it.size }
-        .map { numberOfBloodPressures ->
+        .withLatestFrom(configProvider.toObservable())
+        .map { (numberOfBloodPressures, config) ->
           val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
 
           (1..numberOfPlaceholders).map { placeholderNumber ->

@@ -38,6 +38,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
@@ -64,7 +65,7 @@ class PatientSummaryScreenControllerTest {
    * TODO: Change the method to generate test inputs dynamically based on
    * the number of placeholders declared.
    */
-  private val config = PatientSummaryConfig(numberOfBpPlaceholders = 3)
+  private val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L))
 
   private lateinit var controller: PatientSummaryScreenController
 

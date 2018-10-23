@@ -1,3 +1,5 @@
 package org.simple.clinic.summary
 
-data class PatientSummaryConfig(val numberOfBpPlaceholders: Int)
+import org.threeten.bp.Duration
+
+data class PatientSummaryConfig(val numberOfBpPlaceholders: Int, val bpEditableFor: Duration)

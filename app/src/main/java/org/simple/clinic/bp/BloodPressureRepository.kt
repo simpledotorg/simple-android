@@ -96,4 +96,6 @@ class BloodPressureRepository @Inject constructor(
         .newest100ForPatient(patientUuid)
         .toObservable()
   }
+
+  fun findOne(uuid: UUID): Single<BloodPressureMeasurement> = Single.fromCallable { dao.getOne(uuid) }
 }

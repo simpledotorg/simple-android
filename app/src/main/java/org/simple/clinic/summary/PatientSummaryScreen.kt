@@ -250,11 +250,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
-    activity.startActivityForResult(BloodPressureEntrySheet.intent(context, patientUuid), REQCODE_BP_SAVED)
+    val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
+    activity.startActivityForResult(intent, REQCODE_BP_SAVED)
   }
 
   fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
-
+    val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bloodPressureMeasurementUuid)
+    activity.startActivityForResult(intent, REQCODE_BP_SAVED)
   }
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
@@ -262,7 +264,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showScheduleAppointmentSheet(patientUuid: UUID) {
-    activity.startActivityForResult(ScheduleAppointmentSheet.intent(context, patientUuid), REQCODE_SCHEDULE_APPOINTMENT)
+    val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
+    activity.startActivityForResult(intent, REQCODE_SCHEDULE_APPOINTMENT)
   }
 
   fun goBackToPatientSearch() {

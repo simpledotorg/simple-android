@@ -35,12 +35,25 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val onDestroys = PublishSubject.create<Any>()
 
   companion object {
-    private const val KEY_PATIENT_UUID = "patientUuid"
+    private const val KEY_OPEN_AS = "openAs"
+    private const val KEY_UUID = "uuid"
     private const val EXTRA_WAS_BP_SAVED = "wasBpSaved"
 
-    fun intent(context: Context, patientUuid: UUID) =
-        Intent(context, BloodPressureEntrySheet::class.java)
-            .putExtra(KEY_PATIENT_UUID, patientUuid)!!
+    private enum class OpenAs {
+      NEW_BP, UPDATE_BP
+    }
+
+    fun intentForNewBp(context: Context, patientUuid: UUID): Intent {
+      return Intent(context, BloodPressureEntrySheet::class.java)
+          .putExtra(KEY_OPEN_AS, OpenAs.NEW_BP)
+          .putExtra(KEY_UUID, patientUuid)
+    }
+
+    fun intentForUpdateBp(context: Context, bloodPressureMeasurementUuid: UUID): Intent {
+      return Intent(context, BloodPressureEntrySheet::class.java)
+          .putExtra(KEY_OPEN_AS, OpenAs.UPDATE_BP)
+          .putExtra(KEY_UUID, bloodPressureMeasurementUuid)
+    }
 
     fun wasBloodPressureSaved(data: Intent): Boolean {
       return data.getBooleanExtra(EXTRA_WAS_BP_SAVED, false)
@@ -77,7 +90,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
+    val patientUuid = intent.extras.getSerializable(KEY_UUID) as UUID
     return Observable.just(BloodPressureEntrySheetCreated(patientUuid))
   }
 

@@ -6,14 +6,12 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
@@ -34,9 +32,6 @@ class NewMedicalHistoryScreenController @Inject constructor(
 
     return Observable.mergeArray(
         showPatientName(replayedEvents),
-        unSelectAllOnNoneSelection(replayedEvents),
-        unSelectNone(replayedEvents),
-        enableSaveButton(replayedEvents),
         saveMedicalHistoryAndShowSummary(replayedEvents))
   }
 
@@ -50,45 +45,16 @@ class NewMedicalHistoryScreenController @Inject constructor(
         }
   }
 
-  private fun unSelectAllOnNoneSelection(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<NewMedicalHistoryAnswerToggled>()
-        .filter { it.question == NONE && it.selected }
-        .map { { ui: Ui -> ui.unSelectAllAnswersExceptNone() } }
-  }
-
-  private fun unSelectNone(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<NewMedicalHistoryAnswerToggled>()
-        .filter { it.question != NONE && it.selected }
-        .map { { ui: Ui -> ui.unSelectNoneAnswer() } }
-  }
-
-  private fun enableSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<NewMedicalHistoryAnswerToggled>()
-        .scan(setOf<MedicalHistoryQuestion>()) { selections, toggleEvent ->
-          when {
-            toggleEvent.selected -> selections + toggleEvent.question
-            else -> selections - toggleEvent.question
-          }
-        }
-        .map { it.isNotEmpty() }
-        .distinctUntilChanged()
-        .map { hasAnswers -> { ui: Ui -> ui.setSaveButtonEnabled(hasAnswers) } }
-  }
-
   private fun saveMedicalHistoryAndShowSummary(events: Observable<UiEvent>): Observable<UiChange> {
     val updateEntry = { entry: OngoingMedicalHistoryEntry, toggleEvent: NewMedicalHistoryAnswerToggled ->
       toggleEvent.run {
         when (question) {
-          DIAGNOSED_WITH_HYPERTENSION -> entry.copy(diagnosedWithHypertension = selected)
-          IS_ON_TREATMENT_FOR_HYPERTENSION -> entry.copy(isOnTreatmentForHypertension = selected)
-          HAS_HAD_A_HEART_ATTACK -> entry.copy(hasHadHeartAttack = selected)
-          HAS_HAD_A_STROKE -> entry.copy(hasHadStroke = selected)
-          HAS_HAD_A_KIDNEY_DISEASE -> entry.copy(hasHadKidneyDisease = selected)
-          HAS_DIABETES -> entry.copy(hasDiabetes = selected)
-          NONE -> entry
+          DIAGNOSED_WITH_HYPERTENSION -> entry.copy(diagnosedWithHypertension = answer)
+          IS_ON_TREATMENT_FOR_HYPERTENSION -> entry.copy(isOnTreatmentForHypertension = answer)
+          HAS_HAD_A_HEART_ATTACK -> entry.copy(hasHadHeartAttack = answer)
+          HAS_HAD_A_STROKE -> entry.copy(hasHadStroke = answer)
+          HAS_HAD_A_KIDNEY_DISEASE -> entry.copy(hasHadKidneyDisease = answer)
+          HAS_DIABETES -> entry.copy(hasDiabetes = answer)
         }
       }
     }

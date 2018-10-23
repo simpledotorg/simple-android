@@ -3,7 +3,6 @@ package org.simple.clinic.medicalhistory.newentry
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -11,6 +10,10 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -18,7 +21,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_A
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_DISEASE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
-import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
@@ -65,39 +67,20 @@ class NewMedicalHistoryScreenControllerTest {
   }
 
   @Test
-  fun `when any answer is selected except for none then none should be selected`() {
-    val answersMinusNone = MedicalHistoryQuestion.values().filter { it != NONE }
-
-    answersMinusNone.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = true))
-    }
-
-    verify(screen, times(answersMinusNone.size)).unSelectNoneAnswer()
-  }
-
-  @Test
-  fun `when none is selected then all answers should get unselected`() {
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = NONE, selected = true))
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = NONE, selected = false))
-    verify(screen).unSelectAllAnswersExceptNone()
-  }
-
-  @Test
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
-    val answersMinusNone = MedicalHistoryQuestion.values().filter { it != NONE }
+    val answersMinusNone = MedicalHistoryQuestion.values().asList()
     val selectedAnswers = answersMinusNone.shuffled().subList(0, answersMinusNone.size / 2)
     val unselectedAnswers = answersMinusNone.minus(selectedAnswers)
 
     uiEvents.onNext(ScreenCreated())
     selectedAnswers.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, selected = true))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, answer = YES))
     }
     unselectedAnswers.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, selected = false))
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, answer = NO))
     }
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -106,12 +89,13 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = selectedAnswers.contains(DIAGNOSED_WITH_HYPERTENSION),
-            isOnTreatmentForHypertension = selectedAnswers.contains(IS_ON_TREATMENT_FOR_HYPERTENSION),
-            hasHadHeartAttack = selectedAnswers.contains(HAS_HAD_A_HEART_ATTACK),
-            hasHadStroke = selectedAnswers.contains(HAS_HAD_A_STROKE),
-            hasHadKidneyDisease = selectedAnswers.contains(HAS_HAD_A_KIDNEY_DISEASE),
-            hasDiabetes = selectedAnswers.contains(HAS_DIABETES)))
+            diagnosedWithHypertension = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(DIAGNOSED_WITH_HYPERTENSION)),
+            isOnTreatmentForHypertension = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(IS_ON_TREATMENT_FOR_HYPERTENSION)),
+            hasHadHeartAttack = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_HAD_A_HEART_ATTACK)),
+            hasHadStroke = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_HAD_A_STROKE)),
+            hasHadKidneyDisease = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_HAD_A_KIDNEY_DISEASE)),
+            hasDiabetes = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_DIABETES)))
+    )
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
   }
 
@@ -121,7 +105,6 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = NONE, selected = true))
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
@@ -129,26 +112,12 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = false,
-            isOnTreatmentForHypertension = false,
-            hasHadHeartAttack = false,
-            hasHadStroke = false,
-            hasHadKidneyDisease = false,
-            hasDiabetes = false))
+            diagnosedWithHypertension = UNSELECTED,
+            isOnTreatmentForHypertension = UNSELECTED,
+            hasHadHeartAttack = UNSELECTED,
+            hasHadStroke = UNSELECTED,
+            hasHadKidneyDisease = UNSELECTED,
+            hasDiabetes = UNSELECTED))
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
-  }
-
-  @Test
-  fun `save button should remain enabled only when atleast one answer is selected`() {
-    val answers = MedicalHistoryQuestion.values()
-    answers.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
-    }
-    answers.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = true))
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question = it, selected = false))
-    }
-    verify(screen, times(answers.size)).setSaveButtonEnabled(true)
-    verify(screen, times(answers.size + 1)).setSaveButtonEnabled(false)
   }
 }

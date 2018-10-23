@@ -10,5 +10,4 @@ enum class MedicalHistoryQuestion(@StringRes val questionRes: Int) {
   HAS_HAD_A_STROKE(R.string.medicalhistory_question_stroke),
   HAS_HAD_A_KIDNEY_DISEASE(R.string.medicalhistory_question_kidney),
   HAS_DIABETES(R.string.medicalhistory_question_diabetes),
-  NONE(R.string.medicalhistory_question_none)
 }

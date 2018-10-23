@@ -46,18 +46,15 @@ data class SummaryMedicalHistoryItem(
 
     questionViewToQuestions.forEach { (view, question) ->
       view.render(question)
-      view.setOnCheckedChangeListener { _, isChecked ->
-        uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, isChecked))
-      }
     }
 
     holder.apply {
-      diagnosedForHypertensionQuestionView.setCheckedWithoutListener(medicalHistory.diagnosedWithHypertension)
-      treatmentForHypertensionQuestionView.setCheckedWithoutListener(medicalHistory.isOnTreatmentForHypertension)
-      heartAttackQuestionView.setCheckedWithoutListener(medicalHistory.hasHadHeartAttack)
-      strokeQuestionView.setCheckedWithoutListener(medicalHistory.hasHadStroke)
-      kidneyDiseaseQuestionView.setCheckedWithoutListener(medicalHistory.hasHadKidneyDisease)
-      diabetesQuestionView.setCheckedWithoutListener(medicalHistory.hasDiabetes)
+      diagnosedForHypertensionQuestionView.answer = medicalHistory.diagnosedWithHypertension
+      treatmentForHypertensionQuestionView.answer = medicalHistory.isOnTreatmentForHypertension
+      heartAttackQuestionView.answer = medicalHistory.hasHadHeartAttack
+      strokeQuestionView.answer = medicalHistory.hasHadStroke
+      kidneyDiseaseQuestionView.answer = medicalHistory.hasHadKidneyDisease
+      diabetesQuestionView.answer = medicalHistory.hasDiabetes
     }
   }
 

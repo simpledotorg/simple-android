@@ -51,7 +51,7 @@ open class NetworkModule {
   @AppScope
   fun retrofitBuilder(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
     return Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
+        .addConverterFactory(MoshiConverterFactory.create(moshi).withNullSerialization())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpClient)
         .validateEagerly(true)

@@ -18,6 +18,7 @@ import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_17_18
 import org.simple.clinic.storage.Migration_18_19
+import org.simple.clinic.storage.Migration_19_20
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -523,4 +524,38 @@ class MigrationAndroidTest {
     }
   }
 
+  @Test
+  fun migration_19_to_20() {
+    val db_19 = helper.createDatabase(version = 19)
+    val historyUuid1 = "464bcda8-b26a-484d-bb70-49b3675f4a38"
+
+    db_19.execSQL("""
+      INSERT OR REPLACE INTO "MedicalHistory" VALUES(
+        '$historyUuid1',
+        'ee367a66-f47e-42d8-965b-7a2b5c54f4bd',
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        'IN_FLIGHT',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_20 = helper.migrateTo( 20, Migration_19_20())
+
+    db_20.query("""SELECT * FROM "MedicalHistory" ORDER BY "createdAt" DESC""").use {
+      assertThat(it.count).isEqualTo(1)
+
+      it.moveToFirst()
+      assertThat(it.getString(it.getColumnIndex("diagnosedWithHypertension"))).isEqualTo("NO")
+      assertThat(it.getString(it.getColumnIndex("isOnTreatmentForHypertension"))).isEqualTo("YES")
+      assertThat(it.getString(it.getColumnIndex("hasHadHeartAttack"))).isEqualTo("NO")
+      assertThat(it.getString(it.getColumnIndex("hasHadStroke"))).isEqualTo("YES")
+      assertThat(it.getString(it.getColumnIndex("hasHadKidneyDisease"))).isEqualTo("NO")
+      assertThat(it.getString(it.getColumnIndex("hasDiabetes"))).isEqualTo("YES")
+    }
+  }
 }

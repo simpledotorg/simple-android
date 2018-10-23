@@ -12,9 +12,9 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
-import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_12_13
@@ -24,6 +24,7 @@ import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_17_18
 import org.simple.clinic.storage.Migration_18_19
+import org.simple.clinic.storage.Migration_19_20
 import org.simple.clinic.storage.Migration_3_4
 import org.simple.clinic.storage.Migration_4_5
 import org.simple.clinic.storage.Migration_5_6
@@ -86,7 +87,8 @@ open class AppModule(
             Migration_15_16(),
             Migration_16_17(),
             Migration_17_18(),
-            Migration_18_19())
+            Migration_18_19(),
+            Migration_19_20())
         .build()
   }
 

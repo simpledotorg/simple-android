@@ -226,14 +226,14 @@ class PatientSummaryScreenController @Inject constructor(
     val medicalHistories = patientUuids
         .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
 
-    val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, selected: Boolean ->
+    val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, answer: MedicalHistory.Answer ->
       when (question) {
-        DIAGNOSED_WITH_HYPERTENSION -> medicalHistory.copy(diagnosedWithHypertension = selected)
-        IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = selected)
-        HAS_HAD_A_HEART_ATTACK -> medicalHistory.copy(hasHadHeartAttack = selected)
-        HAS_HAD_A_STROKE -> medicalHistory.copy(hasHadStroke = selected)
-        HAS_HAD_A_KIDNEY_DISEASE -> medicalHistory.copy(hasHadKidneyDisease = selected)
-        HAS_DIABETES -> medicalHistory.copy(hasDiabetes = selected)
+        DIAGNOSED_WITH_HYPERTENSION -> medicalHistory.copy(diagnosedWithHypertension = answer)
+        IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = answer)
+        HAS_HAD_A_HEART_ATTACK -> medicalHistory.copy(hasHadHeartAttack = answer)
+        HAS_HAD_A_STROKE -> medicalHistory.copy(hasHadStroke = answer)
+        HAS_HAD_A_KIDNEY_DISEASE -> medicalHistory.copy(hasHadKidneyDisease = answer)
+        HAS_DIABETES -> medicalHistory.copy(hasDiabetes = answer)
         NONE -> throw AssertionError("There's no none question in summary")
       }
     }
@@ -241,7 +241,7 @@ class PatientSummaryScreenController @Inject constructor(
     return events.ofType<SummaryMedicalHistoryAnswerToggled>()
         .withLatestFrom(medicalHistories)
         .map { (toggleEvent, medicalHistory) ->
-          updateHistory(medicalHistory, toggleEvent.question, toggleEvent.selected)
+          updateHistory(medicalHistory, toggleEvent.question, toggleEvent.answer)
         }
         .flatMap {
           medicalHistoryRepository

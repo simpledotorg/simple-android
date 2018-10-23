@@ -9,6 +9,7 @@ import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.RoomEnumTypeConverter
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -17,16 +18,42 @@ data class MedicalHistory(
     @PrimaryKey
     val uuid: UUID,
     val patientUuid: UUID,
-    val diagnosedWithHypertension: Boolean,
-    val isOnTreatmentForHypertension: Boolean,
-    val hasHadHeartAttack: Boolean,
-    val hasHadStroke: Boolean,
-    val hasHadKidneyDisease: Boolean,
-    val hasDiabetes: Boolean,
+    val diagnosedWithHypertension: Answer,
+    val isOnTreatmentForHypertension: Answer,
+    val hasHadHeartAttack: Answer,
+    val hasHadStroke: Answer,
+    val hasHadKidneyDisease: Answer,
+    val hasDiabetes: Answer,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
     val updatedAt: Instant
 ) {
+
+  enum class Answer {
+    YES,
+    NO,
+    UNSELECTED;
+
+    class RoomTypeConverter : RoomEnumTypeConverter<Answer>(Answer::class.java)
+
+    companion object {
+      fun fromBoolean(answer: Boolean?): Answer {
+        return when (answer) {
+          true -> YES
+          false -> NO
+          null -> UNSELECTED
+        }
+      }
+
+      fun toBoolean(answer: Answer): Boolean? {
+        return when (answer) {
+          YES -> true
+          NO -> false
+          UNSELECTED -> null
+        }
+      }
+    }
+  }
 
   @Dao
   interface RoomDao {

@@ -3,7 +3,7 @@ package org.simple.clinic.bp.entry
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-data class BloodPressureEntrySheetCreated(val patientUuid: UUID) : UiEvent
+data class BloodPressureEntrySheetCreated(val openAs: OpenAs, val uuid: UUID) : UiEvent
 
 class BloodPressureSystolicTextChanged(val systolic: String) : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Systolic Text Changed"

@@ -15,6 +15,8 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.E
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_HIGH
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_LOW
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.SUCCESS
+import org.simple.clinic.bp.entry.OpenAs.NEW_BP
+import org.simple.clinic.bp.entry.OpenAs.UPDATE_BP
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -32,7 +34,9 @@ class BloodPressureEntrySheetController @Inject constructor(
     return Observable.merge(
         automaticDiastolicFocusChanges(replayedEvents),
         validationErrorResets(replayedEvents),
-        bpValidationsAndSaves(replayedEvents))
+        prefillWhenUpdatingABloodPressure(replayedEvents),
+        bpValidationsAndSaves(replayedEvents)
+    )
   }
 
   private fun automaticDiastolicFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -59,12 +63,31 @@ class BloodPressureEntrySheetController @Inject constructor(
     return Observable.merge(systolicChanges, diastolicChanges)
   }
 
+  private fun prefillWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .filter { it.openAs == UPDATE_BP }
+        .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
+        .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic)} }
+  }
+
   private fun bpValidationsAndSaves(events: Observable<UiEvent>): Observable<UiChange> {
     val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
 
-    val patientUuids = events
+    val patientUuidFromUpdateBp = events
         .ofType<BloodPressureEntrySheetCreated>()
+        .filter { it.openAs == UPDATE_BP }
+        .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
         .map { it.patientUuid }
+        .take(1)
+        .cache()
+
+    val patientUuidFromNewBp = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .filter { it.openAs == NEW_BP }
+        .map { it.uuid }
+
+    val patientUuids = Observable.merge(patientUuidFromNewBp, patientUuidFromUpdateBp)
 
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()

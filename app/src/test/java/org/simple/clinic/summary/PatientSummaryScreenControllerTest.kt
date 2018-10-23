@@ -53,7 +53,7 @@ class PatientSummaryScreenControllerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val patientUuid = UUID.randomUUID()
-  private val clock = Clock.fixed(Instant.now(), UTC)
+  private val clock = Clock.fixed(Instant.EPOCH, UTC)
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = BehaviorSubject.create<PatientSummaryConfig>()
@@ -379,6 +379,44 @@ class PatientSummaryScreenControllerTest {
         hasHadKidneyDisease = question == HAS_HAD_A_KIDNEY_DISEASE,
         hasDiabetes = question == HAS_DIABETES)
     verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
+  }
+
+  @Test
+  @Parameters(method = "params for editing blood pressures")
+  fun `when blood pressure is clicked for editing, only those recorded in a given period must be editable`(
+      bpEditableFor: Duration,
+      bloodPressureMeasurement: BloodPressureMeasurement,
+      shouldBeEditable: Boolean
+  ) {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = bpEditableFor)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
+
+    if (shouldBeEditable) {
+      verify(screen).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
+    } else {
+      verify(screen, never()).showBloodPressureUpdateSheet(any())
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for editing blood pressures`(): List<List<Any>> {
+
+    fun generateBps(bpEditableFor: Duration): List<List<Any>> {
+      val durationAsMillis = bpEditableFor.toMillis()
+      val bpCreatedAt = Instant.now(clock)
+
+      return listOf(
+          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis(durationAsMillis + 1)), false),
+          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis(durationAsMillis * 2)), false),
+          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis((durationAsMillis * 0.5).toLong())), true),
+          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis(durationAsMillis)), true),
+          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt), true)
+      )
+    }
+
+    return generateBps(Duration.ofMinutes(1L)) + generateBps(Duration.ofDays(2L))
   }
 
   @Suppress("unused")

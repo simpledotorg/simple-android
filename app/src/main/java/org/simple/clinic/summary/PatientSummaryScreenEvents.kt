@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -35,4 +36,6 @@ data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuesti
 }
 
 data class PatientSummaryRestoredWithBPSaved(val wasBloodPressureSaved: Boolean) : UiEvent
+
+data class PatientSummaryBpClicked(val bloodPressureMeasurement: BloodPressureMeasurement): UiEvent
 

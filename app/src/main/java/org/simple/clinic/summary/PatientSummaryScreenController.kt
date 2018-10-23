@@ -30,6 +30,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 typealias Ui = PatientSummaryScreen
@@ -74,7 +75,8 @@ class PatientSummaryScreenController @Inject constructor(
         openBloodPressureBottomSheet(replayedEvents),
         openPrescribedDrugsScreen(replayedEvents),
         handleBackAndDoneClicks(replayedEvents),
-        exitScreenAfterSchedulingAppointment(replayedEvents))
+        exitScreenAfterSchedulingAppointment(replayedEvents),
+        openBloodPressureUpdateSheet(replayedEvents))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
@@ -307,5 +309,20 @@ class PatientSummaryScreenController @Inject constructor(
         .map { { ui: Ui -> ui.goBackToHome() } }
 
     return afterBackClicks.mergeWith(afterDoneClicks)
+  }
+
+  private fun openBloodPressureUpdateSheet(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PatientSummaryBpClicked>()
+        .map { it.bloodPressureMeasurement }
+        .withLatestFrom(configProvider.toObservable())
+        .filter { (bloodPressureMeasurement, config) ->
+          val now = Instant.now(clock)
+          val cannotEditAfter = bloodPressureMeasurement.createdAt.plus(config.bpEditableFor)
+
+          now.isBefore(cannotEditAfter) || now == cannotEditAfter
+        }
+        .map { (bloodPressureMeasurement, _) ->
+          { ui: Ui -> ui.showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid) }
+        }
   }
 }

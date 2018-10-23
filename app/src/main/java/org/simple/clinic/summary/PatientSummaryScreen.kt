@@ -253,6 +253,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     activity.startActivityForResult(BloodPressureEntrySheet.intent(context, patientUuid), REQCODE_BP_SAVED)
   }
 
+  fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
+
+  }
+
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
   }

@@ -16,6 +16,11 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
 import java.util.Random
 import java.util.UUID
+import kotlin.reflect.KClass
+
+private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
+  return enumClass.java.enumConstants.asList().shuffled().first()
+}
 
 object PatientMocker {
 
@@ -56,21 +61,25 @@ object PatientMocker {
   }
 
   fun bp(
-      uuid: UUID = mock(),
-      patientUuid: UUID = mock(),
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
       systolic: Int = random.nextInt(100) + 100,
       diastolic: Int = random.nextInt(100),
-      syncStatus: SyncStatus = mock()
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      userUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = UUID.randomUUID()
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
         systolic = systolic,
         diastolic = diastolic,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now(),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
         syncStatus = syncStatus,
-        userUuid = mock(),
-        facilityUuid = mock(),
+        userUuid = userUuid,
+        facilityUuid = facilityUuid,
         patientUuid = patientUuid)
   }
 

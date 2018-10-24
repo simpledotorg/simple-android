@@ -14,6 +14,7 @@ import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
+import org.simple.clinic.widgets.CheckBoxWithSuppressibleListener
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setHorizontalPadding
 import org.simple.clinic.widgets.setTextColorResource
@@ -23,8 +24,9 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
   private val dividerView by bindView<View>(R.id.newmedicalhistory_item_divider)
-  private val yesCheckBox by bindView<CompoundButton>(R.id.newmedicalhistory_item_yes)
-  private val noCheckBox by bindView<CompoundButton>(R.id.newmedicalhistory_item_no)
+  private val yesCheckBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_yes)
+  private val noCheckBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_no)
+  private val containerFrame by bindView<View>(R.id.newmedicalhistory_item_frame)
 
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}
@@ -37,10 +39,10 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     }
 
   private val checkboxChangeListener: (CompoundButton, Boolean) -> Unit = { checkBox, checked ->
-    answer = when {
-      checkBox == yesCheckBox && checked -> YES
-      checkBox == noCheckBox && checked -> NO
-      else -> UNSELECTED
+    answer = when (checkBox) {
+      yesCheckBox -> if (checked) YES else UNSELECTED
+      noCheckBox -> if (checked) NO else UNSELECTED
+      else -> throw AssertionError()
     }
   }
 
@@ -55,14 +57,12 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   }
 
   private fun updateCheckboxesFromAnswer() {
-    yesCheckBox.setOnCheckedChangeListener(null)
-    noCheckBox.setOnCheckedChangeListener(null)
-
-    yesCheckBox.isChecked = answer == YES
-    noCheckBox.isChecked = answer == NO
-
-    yesCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
-    noCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
+    yesCheckBox.runWithoutListener {
+      yesCheckBox.isChecked = answer == YES
+    }
+    noCheckBox.runWithoutListener {
+      noCheckBox.isChecked = answer == NO
+    }
 
     arrayOf(yesCheckBox, noCheckBox).forEach { checkBox ->
       checkBox.run {

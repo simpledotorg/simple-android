@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
+import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
@@ -24,12 +25,18 @@ open class NetworkModule {
   @Provides
   @AppScope
   fun moshi(): Moshi {
-    return Moshi.Builder()
+    val moshi = Moshi.Builder()
         .add(InstantMoshiAdapter())
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
         .add(patientSummaryResultAdapterFactory())
+        .build()
+
+    val medicalHistoryMoshiAdapter = moshi.adapter(MedicalHistoryPayload::class.java).serializeNulls()
+    return moshi
+        .newBuilder()
+        .add(MedicalHistoryPayload::class.java, medicalHistoryMoshiAdapter)
         .build()
   }
 
@@ -60,7 +67,7 @@ open class NetworkModule {
   @AppScope
   fun retrofitBuilder(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
     return Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi).withNullSerialization())
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .client(okHttpClient)
         .validateEagerly(true)

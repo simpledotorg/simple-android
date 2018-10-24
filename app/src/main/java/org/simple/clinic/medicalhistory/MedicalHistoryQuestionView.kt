@@ -26,7 +26,6 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   private val dividerView by bindView<View>(R.id.newmedicalhistory_item_divider)
   private val yesCheckBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_yes)
   private val noCheckBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_no)
-  private val containerFrame by bindView<View>(R.id.newmedicalhistory_item_frame)
 
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}

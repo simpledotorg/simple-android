@@ -25,6 +25,7 @@ import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -48,7 +49,7 @@ class PatientRepositoryTest {
   @Before
   fun setUp() {
     ageFuzzer = mock()
-    whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(0, 0))
+    whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
     repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock, ageFuzzer)
 
     val user = PatientMocker.loggedInUser()

@@ -1,9 +1,12 @@
 package org.simple.clinic.patient.fuzzy
 
+import org.threeten.bp.Clock
+import org.threeten.bp.LocalDate
+
 /**
  * This fuzzes age by a fixed ± value from the passed in age.
  **/
-class AbsoluteFuzzer(private val fuzziness: Int) : AgeFuzzer {
+class AbsoluteFuzzer(private val clock: Clock, private val fuzziness: Int): AgeFuzzer {
 
   init {
     if (fuzziness < 0) {
@@ -15,6 +18,11 @@ class AbsoluteFuzzer(private val fuzziness: Int) : AgeFuzzer {
     if (age < 0) {
       throw AssertionError("Age cannot be negative")
     }
-    return BoundedAge((age - fuzziness).coerceAtLeast(0), age + fuzziness)
+    val today = LocalDate.now(clock)
+
+    val dateLowerBound = today.minusYears((age + fuzziness).toLong())
+    val dateUpperBound = today.minusYears((age - fuzziness).toLong())
+
+    return BoundedAge(lower = dateLowerBound, upper = dateUpperBound)
   }
 }

@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -39,13 +40,14 @@ class PatientSearchResultsControllerTest {
 
   @Before
   fun setUp() {
+    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
     val fixedClock = Clock.fixed(Instant.parse("2018-09-20T10:15:30.000Z"), UTC)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
-    controller = PatientSearchResultsController(patientRepository, userSession, facilityRepository, fixedClock, Schedulers.trampoline())
+    controller = PatientSearchResultsController(patientRepository, userSession, facilityRepository, fixedClock)
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 

@@ -4,7 +4,7 @@ import android.content.Context
 import android.support.v7.widget.AppCompatCheckBox
 import android.util.AttributeSet
 
-class CheckBoxWithSuppressibleListener(context: Context, attrs: AttributeSet) : AppCompatCheckBox(context, attrs) {
+class CheckboxWithSuppressibleListener(context: Context, attrs: AttributeSet) : AppCompatCheckBox(context, attrs) {
 
   private var listener: OnCheckedChangeListener? = null
 
@@ -13,10 +13,11 @@ class CheckBoxWithSuppressibleListener(context: Context, attrs: AttributeSet) : 
     this.listener = listener
   }
 
-  fun runWithoutListener(runner: () -> Unit) {
+  fun runWithoutListener(block: () -> Unit) {
     val copy = listener
     setOnCheckedChangeListener(null)
-    runner()
+
+    block()
     setOnCheckedChangeListener(copy)
   }
 }

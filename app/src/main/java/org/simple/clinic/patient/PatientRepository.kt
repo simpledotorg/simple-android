@@ -70,10 +70,9 @@ class PatientRepository @Inject constructor(
   }
 
   fun search(name: String, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
-    val (ageLowerBound, ageUpperBound) = ageFuzzer.bounded(assumedAge)
-
-    val dateOfBirthUpperBound = LocalDate.now(clock).minusYears(ageUpperBound.toLong()).toString()
-    val dateOfBirthLowerBound = LocalDate.now(clock).minusYears(ageLowerBound.toLong()).toString()
+    val ageBounds = ageFuzzer.bounded(assumedAge)
+    val dateOfBirthLowerBound = ageBounds.upper.toString()
+    val dateOfBirthUpperBound = ageBounds.lower.toString()
 
     val searchableName = nameToSearchableForm(name)
 

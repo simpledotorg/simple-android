@@ -121,9 +121,9 @@ class BloodPressureEntrySheetController @Inject constructor(
     val saves = triples
         .filter { (_, systolic, diastolic) -> validateInput(systolic, diastolic) == SUCCESS }
         .distinctUntilChanged()
-        .flatMap { (uuid, systolic, diastolic) ->
+        .flatMap { (patientUuid, systolic, diastolic) ->
           bloodPressureRepository
-              .saveMeasurement(uuid, systolic.toInt(), diastolic.toInt())
+              .saveMeasurement(patientUuid, systolic.toInt(), diastolic.toInt())
               .toCompletable()
               .andThen(Observable.just({ ui: Ui -> ui.setBPSavedResultAndFinish() }))
         }

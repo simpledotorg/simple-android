@@ -64,6 +64,8 @@ data class SummaryBloodPressureListItem(
     for (textView in arrayOf(holder.readingsTextView, holder.levelTextView)) {
       textView.setTextColor(levelTextColor)
     }
+
+    holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
   }
 
   override fun isSameAs(other: Item<*>?): Boolean {

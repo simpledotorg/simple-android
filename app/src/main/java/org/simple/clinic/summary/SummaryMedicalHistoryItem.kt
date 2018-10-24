@@ -7,6 +7,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -36,28 +37,20 @@ data class SummaryMedicalHistoryItem(
         R.string.patientsummary_medicalhistory_last_updated,
         lastUpdatedAt.displayText(context).toLowerCase(ENGLISH))
 
-    val questionViewToQuestions = mapOf(
-        holder.diagnosedForHypertensionQuestionView to DIAGNOSED_WITH_HYPERTENSION,
-        holder.treatmentForHypertensionQuestionView to IS_ON_TREATMENT_FOR_HYPERTENSION,
-        holder.heartAttackQuestionView to HAS_HAD_A_HEART_ATTACK,
-        holder.strokeQuestionView to HAS_HAD_A_STROKE,
-        holder.kidneyDiseaseQuestionView to HAS_HAD_A_KIDNEY_DISEASE,
-        holder.diabetesQuestionView to HAS_DIABETES)
-
-    questionViewToQuestions.forEach { (view, question) ->
-      view.render(question)
-      view.setOnCheckedChangeListener { _, _ ->
-        uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, view.answer))
+    val renderQuestionView = { view: MedicalHistoryQuestionView, question: MedicalHistoryQuestion, answer: MedicalHistory.Answer ->
+      view.render(question, answer)
+      view.answerChangeListener = { newAnswer ->
+        uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))
       }
     }
 
-    holder.apply {
-      diagnosedForHypertensionQuestionView.answer = medicalHistory.diagnosedWithHypertension
-      treatmentForHypertensionQuestionView.answer = medicalHistory.isOnTreatmentForHypertension
-      heartAttackQuestionView.answer = medicalHistory.hasHadHeartAttack
-      strokeQuestionView.answer = medicalHistory.hasHadStroke
-      kidneyDiseaseQuestionView.answer = medicalHistory.hasHadKidneyDisease
-      diabetesQuestionView.answer = medicalHistory.hasDiabetes
+    holder.run {
+      renderQuestionView(diagnosedForHypertensionQuestionView, DIAGNOSED_WITH_HYPERTENSION, medicalHistory.diagnosedWithHypertension)
+      renderQuestionView(treatmentForHypertensionQuestionView, IS_ON_TREATMENT_FOR_HYPERTENSION, medicalHistory.isOnTreatmentForHypertension)
+      renderQuestionView(heartAttackQuestionView, HAS_HAD_A_HEART_ATTACK, medicalHistory.hasHadHeartAttack)
+      renderQuestionView(strokeQuestionView, HAS_HAD_A_STROKE, medicalHistory.hasHadStroke)
+      renderQuestionView(kidneyDiseaseQuestionView, HAS_HAD_A_KIDNEY_DISEASE, medicalHistory.hasHadKidneyDisease)
+      renderQuestionView(diabetesQuestionView, HAS_DIABETES, medicalHistory.hasDiabetes)
     }
   }
 

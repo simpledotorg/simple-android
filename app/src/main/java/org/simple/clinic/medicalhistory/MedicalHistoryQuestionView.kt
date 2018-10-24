@@ -84,25 +84,30 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     }
   }
 
-  // FIXME
-  fun setOnCheckedChangeListener(listener: (View, Boolean) -> Unit) {
-    //     yesCheckBox.setOnCheckedChangeListener(listener)
-    //     noCheckBox.setOnCheckedChangeListener(listener)
-  }
-
   fun hideDivider() {
     dividerView.visibility = View.GONE
   }
 
-  // TODO: Add answer
-  fun render(question: MedicalHistoryQuestion) {
+  fun render(question: MedicalHistoryQuestion, answer: MedicalHistory.Answer) {
     this.question = question
+    setAnswerWithoutListener(answer)
     labelTextView.setText(question.questionRes)
   }
 
   fun answers() = Observable.create<MedicalHistory.Answer> { emitter ->
     answerChangeListener = emitter::onNext
-    emitter.onNext(answer)
     emitter.setCancellable { answerChangeListener = {} }
+
+    // Default value.
+    emitter.onNext(answer)
   }!!
+
+  private fun setAnswerWithoutListener(answer: MedicalHistory.Answer) {
+    val listenerCopy = answerChangeListener
+    answerChangeListener = {}
+
+    this.answer = answer
+
+    answerChangeListener = listenerCopy
+  }
 }

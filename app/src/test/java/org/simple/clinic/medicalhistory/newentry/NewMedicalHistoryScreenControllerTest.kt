@@ -11,9 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -71,16 +69,13 @@ class NewMedicalHistoryScreenControllerTest {
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
     whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
 
-    val answersMinusNone = MedicalHistoryQuestion.values().asList()
-    val selectedAnswers = answersMinusNone.shuffled().subList(0, answersMinusNone.size / 2)
-    val unselectedAnswers = answersMinusNone.minus(selectedAnswers)
+    val questionsAndAnswers = MedicalHistoryQuestion.values()
+        .map { it to randomAnswer() }
+        .toMap()
 
     uiEvents.onNext(ScreenCreated())
-    selectedAnswers.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, answer = YES))
-    }
-    unselectedAnswers.forEach {
-      uiEvents.onNext(NewMedicalHistoryAnswerToggled(it, answer = NO))
+    questionsAndAnswers.forEach { (question, answer) ->
+      uiEvents.onNext(NewMedicalHistoryAnswerToggled(question, answer))
     }
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
@@ -89,14 +84,18 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(DIAGNOSED_WITH_HYPERTENSION)),
-            isOnTreatmentForHypertension = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(IS_ON_TREATMENT_FOR_HYPERTENSION)),
-            hasHadHeartAttack = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_HAD_A_HEART_ATTACK)),
-            hasHadStroke = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_HAD_A_STROKE)),
-            hasHadKidneyDisease = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_HAD_A_KIDNEY_DISEASE)),
-            hasDiabetes = MedicalHistory.Answer.fromBoolean(selectedAnswers.contains(HAS_DIABETES)))
+            diagnosedWithHypertension = questionsAndAnswers[DIAGNOSED_WITH_HYPERTENSION]!!,
+            isOnTreatmentForHypertension = questionsAndAnswers[IS_ON_TREATMENT_FOR_HYPERTENSION]!!,
+            hasHadHeartAttack = questionsAndAnswers[HAS_HAD_A_HEART_ATTACK]!!,
+            hasHadStroke = questionsAndAnswers[HAS_HAD_A_STROKE]!!,
+            hasHadKidneyDisease = questionsAndAnswers[HAS_HAD_A_KIDNEY_DISEASE]!!,
+            hasDiabetes = questionsAndAnswers[HAS_DIABETES]!!)
     )
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
+  }
+
+  private fun randomAnswer(): MedicalHistory.Answer {
+    return MedicalHistory.Answer::class.java.enumConstants.asList().shuffled().first()
   }
 
   @Test

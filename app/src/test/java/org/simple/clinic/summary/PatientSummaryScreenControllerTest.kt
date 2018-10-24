@@ -25,7 +25,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.*
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -364,33 +364,37 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "medicalHistoryQuestionsWithoutNone")
+  @Parameters(method = "medicalHistoryQuestionsAndAnswers")
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
-      question: MedicalHistoryQuestion
+      question: MedicalHistoryQuestion,
+      newAnswer: MedicalHistory.Answer
   ) {
     val medicalHistory = medicalHistory(
-        diagnosedWithHypertension = NO,
-        isOnTreatmentForHypertension = NO,
-        hasHadHeartAttack = NO,
-        hasHadStroke = NO,
-        hasHadKidneyDisease = NO,
-        hasDiabetes = NO,
+        diagnosedWithHypertension = UNSELECTED,
+        isOnTreatmentForHypertension = UNSELECTED,
+        hasHadHeartAttack = UNSELECTED,
+        hasHadStroke = UNSELECTED,
+        hasHadKidneyDisease = UNSELECTED,
+        hasDiabetes = UNSELECTED,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = YES))
+    uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
-        diagnosedWithHypertension = MedicalHistory.Answer.fromBoolean(question == DIAGNOSED_WITH_HYPERTENSION),
-        isOnTreatmentForHypertension = MedicalHistory.Answer.fromBoolean(question == IS_ON_TREATMENT_FOR_HYPERTENSION),
-        hasHadHeartAttack = MedicalHistory.Answer.fromBoolean(question == HAS_HAD_A_HEART_ATTACK),
-        hasHadStroke = MedicalHistory.Answer.fromBoolean(question == HAS_HAD_A_STROKE),
-        hasHadKidneyDisease = MedicalHistory.Answer.fromBoolean(question == HAS_HAD_A_KIDNEY_DISEASE),
-        hasDiabetes = MedicalHistory.Answer.fromBoolean(question == HAS_DIABETES)
-    )
+        diagnosedWithHypertension = if (question == DIAGNOSED_WITH_HYPERTENSION) newAnswer else UNSELECTED,
+        isOnTreatmentForHypertension = if (question == IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else UNSELECTED,
+        hasHadHeartAttack = if (question == HAS_HAD_A_HEART_ATTACK) newAnswer else UNSELECTED,
+        hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else UNSELECTED,
+        hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else UNSELECTED,
+        hasDiabetes = if (question == HAS_DIABETES) newAnswer else UNSELECTED)
     verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
+  }
+
+  private fun randomAnswer(): MedicalHistory.Answer {
+    return MedicalHistory.Answer::class.java.enumConstants.asList().shuffled().first()
   }
 
   @Test
@@ -516,7 +520,13 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Suppress("unused")
-  fun medicalHistoryQuestionsWithoutNone() = MedicalHistoryQuestion.values().asList()
+  fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
+    val questions = MedicalHistoryQuestion.values().asList()
+    return questions
+        .asSequence()
+        .map { question -> listOf(question, randomAnswer()) }
+        .toList()
+  }
 
   @After
   fun tearDown() {

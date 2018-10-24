@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection
 
-import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.TextView
@@ -14,6 +13,7 @@ import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setPadding
+import org.simple.clinic.widgets.setTextColorResource
 
 data class ProtocolDrugSelectionListItem(
     val id: Int,
@@ -75,17 +75,16 @@ data class ProtocolDrugSelectionListItem(
     holder.dosage1Button.setOnCheckedChangeListener(dosage1CheckedChangeListener)
     holder.dosage2Button.setOnCheckedChangeListener(dosage2CheckedChangeListener)
 
-    val color: (Int) -> Int = { colorRes -> ContextCompat.getColor(holder.itemView.context, colorRes) }
     val setCheckedState: (CompoundButton) -> Unit = {
       it.apply {
         when {
           isChecked -> {
-            setTextColor(color(R.color.prescribeddrugs_protocol_drug_selected))
+            setTextColorResource(R.color.prescribeddrugs_protocol_drug_selected)
             setCompoundDrawableStart(R.drawable.ic_done_16dp)
             setPadding(R.dimen.prescribeddrugs_protocol_drug_selected_padding)
           }
           else -> {
-            setTextColor(color(R.color.prescribeddrugs_protocol_drug_unselected))
+            setTextColorResource(R.color.prescribeddrugs_protocol_drug_unselected)
             setCompoundDrawableStart(null)
             setPadding(R.dimen.prescribeddrugs_protocol_drug_unselected_padding)
           }

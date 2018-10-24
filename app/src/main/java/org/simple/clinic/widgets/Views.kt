@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.support.annotation.ColorRes
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
@@ -54,6 +55,11 @@ fun View.setTopMargin(@DimenRes topMarginRes: Int) {
   val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
   marginLayoutParams.topMargin = resources.getDimensionPixelSize(topMarginRes)
   layoutParams = marginLayoutParams
+}
+
+fun TextView.setTextColorResource(@ColorRes colorRes: Int) {
+  val colorInt = ContextCompat.getColor(context, colorRes)
+  setTextColor(colorInt)
 }
 
 fun TextView.setCompoundDrawableStart(@DrawableRes drawableRes: Int) {

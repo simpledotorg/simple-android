@@ -2,7 +2,6 @@ package org.simple.clinic.medicalhistory
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -17,6 +16,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setHorizontalPadding
+import org.simple.clinic.widgets.setTextColorResource
 
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
@@ -66,16 +66,14 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
     arrayOf(yesCheckBox, noCheckBox).forEach { checkBox ->
       checkBox.run {
-        val color: (Int) -> Int = { colorRes -> ContextCompat.getColor(context, colorRes) }
-
         when {
           isChecked -> {
-            setTextColor(color(R.color.white100))
+            setTextColorResource(R.color.white100)
             setCompoundDrawableStart(R.drawable.ic_done_16dp)
             setHorizontalPadding(R.dimen.medicalhistory_selected_padding)
           }
           else -> {
-            setTextColor(color(R.color.blue1))
+            setTextColorResource(R.color.blue1)
             setCompoundDrawableStart(null)
             setHorizontalPadding(R.dimen.medicalhistory_unselected_padding)
           }

@@ -127,7 +127,6 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
 
   fun showProgress() {
     TransitionManager.beginDelayedTransition(this)
-    otpEntryContainer.hideKeyboard()
     validateOtpProgressBar.visibility = View.VISIBLE
     otpEntryContainer.visibility = View.INVISIBLE
   }

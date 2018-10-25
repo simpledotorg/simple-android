@@ -15,6 +15,9 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
@@ -433,9 +436,9 @@ class AppointmentRepositoryAndroidTest {
 
     fun savePatientAndAppointment(
         fullName: String,
-        hasHadStroke: Boolean = false,
-        hasDiabetes: Boolean = false,
-        hasHadKidneyDisease: Boolean = false,
+        hasHadStroke: MedicalHistory.Answer = NO,
+        hasDiabetes: MedicalHistory.Answer = NO,
+        hasHadKidneyDisease: MedicalHistory.Answer = NO,
         age: String = "30",
         vararg bpMeasurements: BP
     ) {
@@ -459,50 +462,50 @@ class AppointmentRepositoryAndroidTest {
     savePatientAndAppointment(
         fullName = "Normal + older",
         bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = false)
+        hasHadStroke = NO)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Normal + recent",
         bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = false)
+        hasHadStroke = NO)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "With stroke",
         bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = true)
+        hasHadStroke = YES)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Age > 60, last BP > 160/100 and diabetes",
         age = "61",
         bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
-        hasDiabetes = true)
+        hasDiabetes = YES)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Age == 60, last BP == 160/100 and kidney disease",
         age = "60",
         bpMeasurements = *arrayOf(BP(systolic = 160, diastolic = 100)),
-        hasHadKidneyDisease = true,
-        hasHadStroke = false)
+        hasHadKidneyDisease = YES,
+        hasHadStroke = NO)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Age > 60, second last BP > 160/100 and kidney disease",
         age = "61",
         bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120), BP(100, 100)),
-        hasHadKidneyDisease = true,
-        hasHadStroke = false)
+        hasHadKidneyDisease = YES,
+        hasHadStroke = NO)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Age < 60, last BP > 160/100 and kidney disease",
         age = "31",
         bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
-        hasHadKidneyDisease = true,
-        hasHadStroke = false)
+        hasHadKidneyDisease = YES,
+        hasHadStroke = NO)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     val appointments = appointmentRepository.overdueAppointments().blockingFirst()

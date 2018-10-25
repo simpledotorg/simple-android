@@ -20,6 +20,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_marginEnd="@dimen/spacing_16"
       android:paddingTop="@dimen/spacing_8">
 
       <org.simple.clinic.medicalhistory.MedicalHistoryQuestionView

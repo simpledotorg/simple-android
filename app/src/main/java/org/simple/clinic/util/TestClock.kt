@@ -1,6 +1,7 @@
 package org.simple.clinic.util
 
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -28,6 +29,10 @@ class TestClock : Clock() {
         .toInstant(UTC)
 
     clock = fixed(fixedInstant, UTC)
+  }
+
+  fun advanceBy(duration: Duration) {
+    clock = Clock.offset(clock, duration)
   }
 
   fun resetToEpoch() {

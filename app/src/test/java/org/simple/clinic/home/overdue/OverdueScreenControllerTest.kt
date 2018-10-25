@@ -18,6 +18,8 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.phone.Caller
+import org.simple.clinic.phone.MaskedPhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -28,13 +30,16 @@ class OverdueScreenControllerTest {
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
+  private val maskedPhoneCaller = mock<MaskedPhoneCaller>()
   private val reporter = MockAnalyticsReporter()
 
   lateinit var controller: OverdueScreenController
 
   @Before
   fun setUp() {
-    controller = OverdueScreenController(repository)
+    whenever(maskedPhoneCaller.maskAndCall(any(), any())).thenReturn(Completable.complete())
+
+    controller = OverdueScreenController(repository, maskedPhoneCaller)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
@@ -77,15 +82,15 @@ class OverdueScreenControllerTest {
       shouldUseDialer: Boolean
   ) {
     whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf()))
-    val phone = "99999"
+    val number = "99999"
 
-    uiEvents.onNext(CallPatientClicked(phone))
+    uiEvents.onNext(CallPatientClicked(number))
     uiEvents.onNext(CallPhonePermissionChanged(result))
 
     verify(screen).requestCallPermission()
     when (shouldUseDialer) {
-      true -> verify(screen).callPatientUsingDialer(phone)
-      false -> verify(screen).callPatientWithoutUsingDialer(phone)
+      true -> verify(maskedPhoneCaller).maskAndCall(number, Caller.UsingDialer)
+      false -> verify(maskedPhoneCaller).maskAndCall(number, Caller.WithoutDialer)
     }
     verifyNoMoreInteractions(screen)
   }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
 
   <style name="Clinic.V2" />
 
@@ -338,6 +338,8 @@
     <item name="android:layout_height">wrap_content</item>
     <item name="android:paddingEnd">@dimen/spacing_8</item>
     <item name="android:paddingStart">@dimen/spacing_8</item>
+    <item name="startPadding">@dimen/spacing_8</item>
+    <item name="endPadding">@dimen/spacing_4</item>
   </style>
 
   <style name="Clinic.V2.LogoWithType" />

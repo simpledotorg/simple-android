@@ -43,7 +43,7 @@
       android:layout_gravity="center_horizontal"
       android:textColor="@color/white"
       android:textSize="@dimen/textsize_20"
-      tools:text="+911111111111" />
+      tools:text="+91 1111111111" />
   </LinearLayout>
 
   <View
@@ -67,12 +67,14 @@
 
     <LinearLayout
       android:id="@+id/enterotp_otp_container"
-      style="@style/Clinic.CardContentContainer.Login">
+      style="@style/Clinic.CardContentContainer.EnterOtp">
 
       <TextView
-        style="@style/Clinic.LoginPinLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:labelFor="@+id/applock_pin"
-        android:text="@string/enterotp_enter_verification_code" />
+        android:text="@string/enterotp_enter_verification_code"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
       <org.simple.clinic.widgets.StaggeredEditText
         android:id="@+id/enterotp_otp"
@@ -109,7 +111,9 @@
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
         android:text="@string/enterotp_resend_sms"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
         android:textColor="?colorAccent" />
     </LinearLayout>
   </android.support.v7.widget.CardView>

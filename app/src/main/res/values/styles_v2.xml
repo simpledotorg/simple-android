@@ -239,6 +239,20 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Button2">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:textSize">14sp</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:letterSpacing">0.07</item>
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textAllCaps">true</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Button2.Blue1">
+    <item name="android:textColor">@color/blue1</item>
+  </style>
+
   <!-- Screen/feature specific styles start here. -->
 
   <style name="Clinic.V2.BottomAlignedButtonFrame">

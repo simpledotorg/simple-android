@@ -1,10 +1,7 @@
 package org.simple.clinic.home.overdue
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.support.transition.TransitionManager
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -104,17 +101,6 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     RuntimePermissions.request(activity, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
   }
 
-  fun callPatientUsingDialer(phoneNumber: String) {
-    val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null))
-    activity.startActivity(intent)
-  }
-
-  @SuppressLint("MissingPermission")
-  fun callPatientWithoutUsingDialer(phoneNumber: String) {
-    val intent = Intent(Intent.ACTION_CALL, Uri.fromParts("tel", phoneNumber, null))
-    activity.startActivity(intent)
-  }
-
   fun showAppointmentReminderSheet(appointmentUuid: UUID) {
     val intent = AppointmentReminderSheet.intent(context, appointmentUuid)
     activity.startActivity(intent)
@@ -124,5 +110,4 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     val intent = RemoveAppointmentSheet.intent(context, appointmentUuid, patientUuid)
     activity.startActivity(intent)
   }
-
 }

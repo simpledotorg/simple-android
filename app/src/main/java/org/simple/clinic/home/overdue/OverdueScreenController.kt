@@ -8,6 +8,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
+import org.simple.clinic.phone.Caller
+import org.simple.clinic.phone.MaskedPhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -22,7 +24,8 @@ typealias Ui = OverdueScreen
 typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(
-    private val repository: AppointmentRepository
+    private val repository: AppointmentRepository,
+    private val maskedPhoneCaller: MaskedPhoneCaller
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
@@ -114,12 +117,20 @@ class OverdueScreenController @Inject constructor(
     val withoutDialerCalls = callPhonePermissionChanges
         .zipWith(callClicks)
         .filter { (result, _) -> result == RuntimePermissionResult.GRANTED }
-        .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientWithoutUsingDialer(phoneNumber) } }
+        .flatMap { (_, phoneNumber) ->
+          maskedPhoneCaller
+              .maskAndCall(phoneNumber, caller = Caller.WithoutDialer)
+              .andThen(Observable.empty<UiChange>())
+        }
 
     val withDialerCalls = callPhonePermissionChanges
         .zipWith(callClicks)
         .filter { (result, _) -> result != RuntimePermissionResult.GRANTED }
-        .map { (_, phoneNumber) -> { ui: Ui -> ui.callPatientUsingDialer(phoneNumber) } }
+        .flatMap { (_, phoneNumber) ->
+          maskedPhoneCaller
+              .maskAndCall(phoneNumber, caller = Caller.UsingDialer)
+              .andThen(Observable.empty<UiChange>())
+        }
 
     return withDialerCalls.mergeWith(withoutDialerCalls)
   }

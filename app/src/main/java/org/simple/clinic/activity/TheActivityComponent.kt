@@ -28,6 +28,7 @@ import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
+import org.simple.clinic.phone.PhoneModule
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
@@ -40,8 +41,8 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchModule
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
-import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.PatientSummaryModule
+import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -95,7 +96,12 @@ interface TheActivityComponent {
   }
 }
 
-@Module(includes = [OnboardingModule::class, PatientsModule::class, PatientSearchModule::class, PatientSummaryModule::class])
+@Module(includes = [
+  OnboardingModule::class,
+  PatientsModule::class,
+  PatientSearchModule::class,
+  PatientSummaryModule::class,
+  PhoneModule::class])
 class TheActivityModule {
 
   @Provides

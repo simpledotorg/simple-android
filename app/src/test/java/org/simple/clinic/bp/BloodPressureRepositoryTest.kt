@@ -16,6 +16,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestClock
+import org.threeten.bp.Clock
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -24,12 +26,13 @@ class BloodPressureRepositoryTest {
   private val dao = mock<BloodPressureMeasurement.RoomDao>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val testClock = TestClock()
 
   private lateinit var repository: BloodPressureRepository
 
   @Before
   fun setUp() {
-    repository = BloodPressureRepository(dao, userSession, facilityRepository)
+    repository = BloodPressureRepository(dao, userSession, facilityRepository, testClock)
   }
 
   @Test

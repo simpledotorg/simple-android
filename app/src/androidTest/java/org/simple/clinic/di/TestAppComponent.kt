@@ -4,6 +4,7 @@ import dagger.Component
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.FakerModule
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
@@ -43,4 +44,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: MedicalHistoryRepositoryAndroidTest)
   fun inject(target: RelativeTimestampGeneratorAndroidTest)
   fun inject(target: PatientSyncAndroidTest)
+  fun inject(target: BloodPressureRepositoryAndroidTest)
 }

@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -68,19 +69,21 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs == UPDATE_BP }
         .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
-        .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic)} }
+        .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic) } }
   }
 
   private fun bpValidationsAndSaves(events: Observable<UiEvent>): Observable<UiChange> {
     val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
 
-    val patientUuidFromUpdateBp = events
+    val bloodPressureFromUpdateBp = events
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs == UPDATE_BP }
         .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
-        .map { it.patientUuid }
         .take(1)
         .cache()
+
+    val patientUuidFromUpdateBp = bloodPressureFromUpdateBp
+        .map { it.patientUuid }
 
     val patientUuidFromNewBp = events
         .ofType<BloodPressureEntrySheetCreated>()
@@ -118,14 +121,33 @@ class BloodPressureEntrySheetController @Inject constructor(
           }
         }
 
+    val openedAs = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+
     val saves = triples
         .filter { (_, systolic, diastolic) -> validateInput(systolic, diastolic) == SUCCESS }
         .distinctUntilChanged()
-        .flatMap { (patientUuid, systolic, diastolic) ->
-          bloodPressureRepository
-              .saveMeasurement(patientUuid, systolic.toInt(), diastolic.toInt())
-              .toCompletable()
-              .andThen(Observable.just({ ui: Ui -> ui.setBPSavedResultAndFinish() }))
+        .withLatestFrom(openedAs)
+        .flatMap { (triple, openedAs) ->
+          val (patientUuid, systolic, diastolic) = triple
+
+          val saveBp: Completable = when (openedAs) {
+            NEW_BP -> {
+              bloodPressureRepository
+                  .saveMeasurement(patientUuid, systolic.toInt(), diastolic.toInt())
+                  .toCompletable()
+            }
+            UPDATE_BP -> {
+              bloodPressureFromUpdateBp
+                  .map { it.copy(systolic = systolic.toInt(), diastolic = diastolic.toInt()) }
+                  .flatMapCompletable { bloodPressureMeasurement -> bloodPressureRepository.updateMeasurement(bloodPressureMeasurement) }
+            }
+            // Needed because of Java interop.
+            else -> throw AssertionError("Opened as cannot be null!!")
+          }
+
+          saveBp.andThen(Observable.just({ ui: Ui -> ui.setBPSavedResultAndFinish() }))
         }
 
     return Observable.merge(errors, saves)

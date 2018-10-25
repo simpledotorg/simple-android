@@ -17,6 +17,7 @@ import org.simple.clinic.storage.Migration_14_15
 import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_17_18
+import org.simple.clinic.storage.Migration_18_19
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -515,7 +516,7 @@ class MigrationAndroidTest {
 
   @Test
   fun migration_18_to_19() {
-    val db_18 = helper.createDatabase(version = 17)
+    val db_18 = helper.createDatabase(version = 18)
     val historyUuid1 = "464bcda8-b26a-484d-bb70-49b3675f4a38"
 
     db_18.execSQL("""
@@ -533,7 +534,7 @@ class MigrationAndroidTest {
         '2018-09-25T11:20:42.008Z')
     """)
 
-    val db_19 = helper.migrateTo( 19, Migration_17_18())
+    val db_19 = helper.migrateTo( 19, Migration_18_19())
 
     db_19.query("""SELECT * FROM "MedicalHistory" ORDER BY "createdAt" DESC""").use {
       assertThat(it.count).isEqualTo(1)

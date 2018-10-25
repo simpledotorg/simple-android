@@ -13,9 +13,14 @@
   </declare-styleable>
 
   <declare-styleable name="PrimarySolidButtonWithFrame">
-    <attr name="frameBackgroundEnabled" format="color"/>
-    <attr name="frameBackgroundDisabled" format="color"/>
-    <attr name="buttonBackgroundEnabled" format="color"/>
-    <attr name="buttonBackgroundDisabled" format="color"/>
+    <attr name="frameBackgroundEnabled" format="color" />
+    <attr name="frameBackgroundDisabled" format="color" />
+    <attr name="buttonBackgroundEnabled" format="color" />
+    <attr name="buttonBackgroundDisabled" format="color" />
+  </declare-styleable>
+
+  <declare-styleable name="MedicalHistoryQuestionView">
+    <attr name="startPadding" format="dimension" />
+    <attr name="endPadding" format="dimension" />
   </declare-styleable>
 </resources>

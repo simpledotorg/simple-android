@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.TextView
@@ -26,6 +27,8 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   private val dividerView by bindView<View>(R.id.newmedicalhistory_item_divider)
   private val yesCheckBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_yes)
   private val noCheckBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_no)
+  private val containerFrame by bindView<ViewGroup>(R.id.newmedicalhistory_item_frame)
+  private val contentLayout by bindView<ViewGroup>(R.id.newmedicalhistory_layout)
 
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}
@@ -47,6 +50,13 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   init {
     LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)
+
+    val attributes = context.obtainStyledAttributes(attrs, R.styleable.MedicalHistoryQuestionView)
+    val startPadding = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_startPadding, 0)
+    val endPadding = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_endPadding, 0)
+    attributes.recycle()
+
+    contentLayout.setPadding(startPadding, paddingTop, endPadding, paddingBottom)
 
     yesCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
     noCheckBox.setOnCheckedChangeListener(checkboxChangeListener)

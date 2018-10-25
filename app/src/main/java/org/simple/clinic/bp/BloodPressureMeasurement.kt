@@ -62,8 +62,7 @@ data class BloodPressureMeasurement constructor(
     @Query("UPDATE bloodpressuremeasurement SET syncStatus = :newStatus WHERE uuid IN (:uuids)")
     fun updateSyncStatus(uuids: List<UUID>, newStatus: SyncStatus)
 
-    // FIXME: Conflic strategy should be REPLACE everywhere.
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(newMeasurements: List<BloodPressureMeasurement>)
 
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid LIMIT 1")

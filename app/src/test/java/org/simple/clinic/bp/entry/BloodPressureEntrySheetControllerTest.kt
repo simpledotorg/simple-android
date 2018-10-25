@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -171,11 +172,14 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       bpUuid: UUID?
   ) {
+    var alreadyPresentBp: BloodPressureMeasurement? = null
     if (openAs == UPDATE_BP) {
-      whenever(bloodPressureRepository.findOne(bpUuid!!)).thenReturn(Single.just(PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid)))
+      alreadyPresentBp = PatientMocker.bp(uuid = bpUuid!!, patientUuid = patientUuid, systolic = 120, diastolic = 80)
+      whenever(bloodPressureRepository.findOne(bpUuid)).thenReturn(Single.just(alreadyPresentBp))
+      whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
+    } else {
+      whenever(bloodPressureRepository.saveMeasurement(patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
     }
-
-    whenever(bloodPressureRepository.saveMeasurement(patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs, if (openAs == NEW_BP) patientUuid else bpUuid!!))
     uiEvents.onNext(BloodPressureSystolicTextChanged("142"))
@@ -184,7 +188,13 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked())
     uiEvents.onNext(BloodPressureSaveClicked())
 
-    verify(bloodPressureRepository, times(1)).saveMeasurement(patientUuid, 142, 80)
+    if(openAs == NEW_BP) {
+      verify(bloodPressureRepository).saveMeasurement(patientUuid, 142, 80)
+      verify(bloodPressureRepository, never()).updateMeasurement(any())
+    } else {
+      verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+      verify(bloodPressureRepository).updateMeasurement(alreadyPresentBp!!.copy(systolic = 142, diastolic = 80))
+    }
     verify(sheet).setBPSavedResultAndFinish()
   }
 

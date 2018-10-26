@@ -2,7 +2,6 @@ package org.simple.clinic.drugs
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
@@ -10,7 +9,6 @@ import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -19,19 +17,7 @@ import java.util.UUID
  * Drugs prescribed to a patient. This may have been picked
  * from a [ProtocolDrug] or entered manually.
  */
-@Entity(
-    foreignKeys = [
-      ForeignKey(
-          entity = Facility::class,
-          parentColumns = ["uuid"],
-          childColumns = ["facilityUuid"],
-          onDelete = ForeignKey.CASCADE,
-          onUpdate = ForeignKey.CASCADE)
-    ],
-    indices = [
-      Index("patientUuid", unique = false),
-      Index("facilityUuid", unique = false)
-    ])
+@Entity(indices = [Index("patientUuid", unique = false)])
 data class PrescribedDrug(
     @PrimaryKey
     val uuid: UUID,

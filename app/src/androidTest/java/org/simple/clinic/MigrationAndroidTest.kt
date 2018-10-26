@@ -1,11 +1,13 @@
 package org.simple.clinic
 
 import android.database.Cursor
+import android.database.sqlite.SQLiteConstraintException
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
@@ -14,6 +16,7 @@ import org.simple.clinic.storage.Migration_13_14
 import org.simple.clinic.storage.Migration_14_15
 import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_16_17
+import org.simple.clinic.storage.Migration_17_18
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -28,6 +31,10 @@ class MigrationAndroidTest {
   @Rule
   @JvmField
   val helper = MigrationTestHelperWithForeignConstraints()
+
+  @Rule
+  @JvmField
+  val expectedException = ExpectedException.none()
 
   @Test
   fun migration_6_to_7_with_an_existing_user() {
@@ -406,5 +413,102 @@ class MigrationAndroidTest {
       assertThat(it.count).isEqualTo(2)
     }
   }
-}
 
+  @Test
+  fun migration_17_to_18() {
+    val db_v17 = helper.createDatabase(version = 17)
+
+    val nonExistentFacilityUuid = "non-existent-facility-uuid"
+    val existentFacilityUuid = "464bcda8-b26a-484d-bb70-49b3675f4a38"
+
+    val measurementUuid1 = "ee367a66-f47e-42d8-965b-7a2b5c54f4bd"
+    val prescribedDrugUuid1 = "814132f2-f440-40cb-991c-43861c295815"
+
+    val measurementUuid2 = "fe367a66-f47e-42d8-965b-7a2b5c54f4bd"
+    val prescribedDrugUuid2 = "124132f2-f440-40cb-991c-43861c295815"
+
+    val userUuid = "a1d33096-cea6-4beb-8441-82cab2befe2d"
+    val patientUuid = "464bcda8-b26a-484d-bb70-59b3675f4a38"
+
+    fun insertFacilityStatement(uuid: String, name: String) = """
+      INSERT INTO "Facility" VALUES (
+        '$uuid',
+        '$name',
+        'Facility type',
+        'Street address',
+        'Village or colony',
+        'District',
+        'State',
+        'Country',
+        'Pin code',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'PENDING')
+    """
+
+    fun insertBloodPressureStatement(uuid: String, facilityUuid: String) = """
+      INSERT INTO "BloodPressureMeasurement" VALUES(
+        '$uuid',
+        120,
+        110,
+        'IN_FLIGHT',
+        '$userUuid',
+        '$facilityUuid',
+        '$patientUuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """
+
+    fun insertPrescribedDrugStatement(uuid: String, facilityUuid: String) = """
+      INSERT INTO "PrescribedDrug" VALUES(
+        '$uuid',
+        'Drug name',
+        'Dosage',
+        'rxNormCode',
+        0,
+        1,
+        '$patientUuid',
+        '$facilityUuid',
+        'PENDING',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """
+
+    db_v17.execSQL(insertFacilityStatement(uuid = existentFacilityUuid, name = "Facility name"))
+    db_v17.execSQL(insertBloodPressureStatement(uuid = measurementUuid1, facilityUuid = existentFacilityUuid))
+    db_v17.execSQL(insertPrescribedDrugStatement(uuid = prescribedDrugUuid1, facilityUuid = existentFacilityUuid))
+
+    var thrownException: Throwable? = null
+    try {
+      db_v17.execSQL(insertBloodPressureStatement(uuid = measurementUuid2, facilityUuid = nonExistentFacilityUuid))
+      db_v17.execSQL(insertPrescribedDrugStatement(uuid = prescribedDrugUuid2, facilityUuid = nonExistentFacilityUuid))
+
+    } catch (e: Throwable) {
+      thrownException = e
+    }
+    assertThat(thrownException).isNotNull()
+    assertThat(thrownException).isInstanceOf(SQLiteConstraintException::class.java)
+
+    val db_v18 = helper.migrateTo(18, Migration_17_18())
+
+    db_v18.execSQL("""DELETE FROM "Facility" WHERE "uuid" = '$existentFacilityUuid'""")
+
+    db_v18.query("""SELECT * FROM "BloodPressureMeasurement"""").use {
+      it.moveToNext()
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.columnCount).isEqualTo(9)
+      assertThat(it.string("uuid")).isEqualTo(measurementUuid1)
+    }
+
+    db_v18.query("""SELECT * FROM "PrescribedDrug"""").use {
+      it.moveToNext()
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.columnCount).isEqualTo(11)
+      assertThat(it.string("uuid")).isEqualTo(prescribedDrugUuid1)
+    }
+
+    // Inserting records for a non-existent facility should now not fail.
+    db_v18.execSQL(insertBloodPressureStatement(uuid = measurementUuid2, facilityUuid = nonExistentFacilityUuid))
+    db_v18.execSQL(insertPrescribedDrugStatement(uuid = prescribedDrugUuid2, facilityUuid = nonExistentFacilityUuid))
+  }
+}

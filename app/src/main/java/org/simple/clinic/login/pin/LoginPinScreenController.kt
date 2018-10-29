@@ -8,8 +8,8 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.applock.PasswordHasher
-import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
-import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
+import org.simple.clinic.login.applock.ComparisonResult.DIFFERENT
+import org.simple.clinic.login.applock.ComparisonResult.SAME
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent

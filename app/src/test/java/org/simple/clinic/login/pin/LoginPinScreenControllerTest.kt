@@ -14,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.applock.ComparisonResult
 import org.simple.clinic.login.applock.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingLoginEntry
@@ -57,7 +58,7 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `if pin is incorrect and submit is clicked, show an error`() {
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.DIFFERENT))
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(ComparisonResult.DIFFERENT))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID())))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
@@ -77,7 +78,7 @@ class LoginPinScreenControllerTest {
   @Test
   fun `when PIN is submitted, request login otp and open home screen`() {
     val ongoingLoginEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999232323")
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
@@ -94,7 +95,7 @@ class LoginPinScreenControllerTest {
   @Test
   fun `if request otp api call throws any errors, show errors`() {
     val ongoingEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999323232")
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
+    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp())

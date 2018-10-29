@@ -71,7 +71,7 @@ data class BloodPressureMeasurement constructor(
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
     fun count(): Flowable<Int>
 
-    @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid ORDER BY updatedAt DESC LIMIT 100")
+    @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid ORDER BY createdAt DESC LIMIT 100")
     fun newest100ForPatient(patientUuid: UUID): Flowable<List<BloodPressureMeasurement>>
 
     @Query("DELETE FROM bloodpressuremeasurement")

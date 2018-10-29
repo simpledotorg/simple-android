@@ -95,7 +95,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
     // but Groupie doesn't seem to have a better option.
     newAdapterItems.forEach { it.uiEvents = adapterUiEvents }
 
-    val hasNewItems = groupieAdapter.itemCount < newAdapterItems.size
+    val hasNewItems = (groupieAdapter.itemCount == 0).not() && groupieAdapter.itemCount < newAdapterItems.size
     groupieAdapter.update(newAdapterItems)
 
     // Scroll to end to show newly added prescriptions.

@@ -13,6 +13,6 @@ class BCryptPasswordHasherTest {
     bcryptHasher.hash(password)
         .flatMap { bcryptHasher.compare(it, password) }
         .test()
-        .assertValue { it == PasswordHasher.ComparisonResult.SAME }
+        .assertValue { it == ComparisonResult.SAME }
   }
 }

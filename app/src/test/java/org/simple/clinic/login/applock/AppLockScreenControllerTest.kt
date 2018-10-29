@@ -13,8 +13,8 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.DIFFERENT
-import org.simple.clinic.login.applock.PasswordHasher.ComparisonResult.SAME
+import org.simple.clinic.login.applock.ComparisonResult.DIFFERENT
+import org.simple.clinic.login.applock.ComparisonResult.SAME
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just

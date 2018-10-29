@@ -121,11 +121,9 @@ object PatientMocker {
       dosages: List<String> = listOf("5mg", "10mg")
   ): ProtocolDrug {
     return ProtocolDrug(
-        UUID.fromString("feab6950-86fe-4b70-95c9-f21620140068"),
         name = name,
         rxNormCode = "rxnormcode-1",
-        dosages = dosages,
-        protocolUUID = mock())
+        dosages = dosages)
   }
 
   fun appointment(): Appointment {

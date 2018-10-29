@@ -15,23 +15,37 @@ class ProtocolRepository @Inject constructor() {
         name = "Dummy protocol",
         drugs = listOf(
             ProtocolDrug(
-                UUID.fromString("feab6950-86fe-4b70-95c9-f21620140068"),
                 name = "Amlodipine",
                 rxNormCode = "rxnormcode-1",
-                dosages = listOf("5mg", "10mg"),
-                protocolUUID = protocolUuid),
+                dosages = listOf("5mg", "10mg")),
             ProtocolDrug(
-                UUID.fromString("f951b82d-2198-4fed-a55c-e2be67894009"),
                 name = "Telmisartan",
                 rxNormCode = "rxnormcode-2",
-                dosages = listOf("40mg", "80mg"),
-                protocolUUID = protocolUuid),
+                dosages = listOf("40mg", "80mg")),
             ProtocolDrug(
-                UUID.fromString("43f7ea6d-4002-4aa8-b440-c5b4798fb78c"),
                 name = "Chlorthalidone",
                 rxNormCode = "rxnormcode-3",
-                dosages = listOf("12.5mg", "25mg"),
-                protocolUUID = protocolUuid)
+                dosages = listOf("12.5mg", "25mg")),
+            ProtocolDrug(
+                name = "Losartan",
+                rxNormCode = "rxnormcode-4",
+                dosages = listOf("50mg", "100mg")),
+            ProtocolDrug(
+                name = "Atenolol",
+                rxNormCode = "rxnormcode-5",
+                dosages = listOf("25mg", "50mg")),
+            ProtocolDrug(
+                name = "Hydrochlorothiazide",
+                rxNormCode = "rxnormcode-6",
+                dosages = listOf("12.5mg", "25mg")),
+            ProtocolDrug(
+                name = "Aspirin",
+                rxNormCode = "rxnormcode-7",
+                dosages = listOf("75mg", "81mg")),
+            ProtocolDrug(
+                name = "Enalapril",
+                rxNormCode = "rxnormcode-8",
+                dosages = listOf("20mg", "40mg"))
         )
     ))
   }

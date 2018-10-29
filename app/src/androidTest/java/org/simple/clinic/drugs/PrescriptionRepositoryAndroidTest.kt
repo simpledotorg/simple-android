@@ -100,7 +100,7 @@ class PrescriptionRepositoryAndroidTest {
         ))
 
     val protocolUuid = UUID.randomUUID()
-    val amlodipine = ProtocolDrug(UUID.randomUUID(), "Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"), protocolUUID = protocolUuid)
+    val amlodipine = ProtocolDrug("Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"))
 
     repository.savePrescription(patientUuid, amlodipine, "5mg").blockingAwait()
 
@@ -120,7 +120,7 @@ class PrescriptionRepositoryAndroidTest {
     val protocolUUID = UUID.randomUUID()
     val patientUUID = UUID.randomUUID()
 
-    val drug = ProtocolDrug(UUID.randomUUID(), name = "Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"), protocolUUID = protocolUUID)
+    val drug = ProtocolDrug(name = "Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"))
 
     repository.savePrescription(patientUUID, drug, "5mg").blockingAwait()
 

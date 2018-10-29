@@ -1,6 +1,5 @@
 package org.simple.clinic.bp.entry
 
-import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -32,12 +31,13 @@ class BloodPressureEntrySheetController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         automaticDiastolicFocusChanges(replayedEvents),
         validationErrorResets(replayedEvents),
         prefillWhenUpdatingABloodPressure(replayedEvents),
-        bpValidationsAndSaves(replayedEvents)
-    )
+        bpValidations(replayedEvents),
+        saveNewBp(replayedEvents),
+        updateBp(replayedEvents))
   }
 
   private fun automaticDiastolicFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -72,25 +72,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic) } }
   }
 
-  private fun bpValidationsAndSaves(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun bpValidations(events: Observable<UiEvent>): Observable<UiChange> {
     val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
-
-    val bloodPressureFromUpdateBp = events
-        .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs == UPDATE_BP }
-        .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
-        .take(1)
-        .cache()
-
-    val patientUuidFromUpdateBp = bloodPressureFromUpdateBp
-        .map { it.patientUuid }
-
-    val patientUuidFromNewBp = events
-        .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs == NEW_BP }
-        .map { it.uuid }
-
-    val patientUuids = Observable.merge(patientUuidFromNewBp, patientUuidFromUpdateBp)
 
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()
@@ -100,11 +83,9 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureDiastolicTextChanged>()
         .map { it.diastolic }
 
-    val triples = imeDoneClicks
-        .withLatestFrom(patientUuids, systolicChanges, diastolicChanges) { _, uuid, systolic, diastolic -> Triple(uuid, systolic, diastolic) }
-
-    val errors = triples
-        .map { (_, systolic, diastolic) ->
+    return imeDoneClicks
+        .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
+        .map { (systolic, diastolic) ->
           { ui: Ui ->
             when (validateInput(systolic, diastolic)) {
               ERROR_SYSTOLIC_LESS_THAN_DIASTOLIC -> ui.showSystolicLessThanDiastolicError()
@@ -120,37 +101,75 @@ class BloodPressureEntrySheetController @Inject constructor(
             }.exhaustive()
           }
         }
+  }
 
-    val openedAs = events
+  private fun saveNewBp(events: Observable<UiEvent>): Observable<UiChange> {
+    val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
+
+    val systolicChanges = events
+        .ofType<BloodPressureSystolicTextChanged>()
+        .map { it.systolic }
+
+    val diastolicChanges = events
+        .ofType<BloodPressureDiastolicTextChanged>()
+        .map { it.diastolic }
+
+    val validBpEntry = imeDoneClicks
+        .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
+        .map { (systolic, diastolic) -> Triple(systolic, diastolic, validateInput(systolic, diastolic)) }
+        .filter { (_, _, validation) -> validation == SUCCESS }
+        .map { (systolic, diastolic, _) -> systolic to diastolic }
+
+    val patientUuid = events
         .ofType<BloodPressureEntrySheetCreated>()
-        .map { it.openAs }
+        .filter { it.openAs == NEW_BP }
+        .map { it.uuid }
 
-    val saves = triples
-        .filter { (_, systolic, diastolic) -> validateInput(systolic, diastolic) == SUCCESS }
+    return imeDoneClicks
+        .withLatestFrom(validBpEntry, patientUuid) { _, (systolic, diastolic), patientId -> Triple(patientId, systolic, diastolic) }
         .distinctUntilChanged()
-        .withLatestFrom(openedAs)
-        .flatMap { (triple, openedAs) ->
-          val (patientUuid, systolic, diastolic) = triple
-
-          val saveBp: Completable = when (openedAs) {
-            NEW_BP -> {
-              bloodPressureRepository
-                  .saveMeasurement(patientUuid, systolic.toInt(), diastolic.toInt())
-                  .toCompletable()
-            }
-            UPDATE_BP -> {
-              bloodPressureFromUpdateBp
-                  .map { it.copy(systolic = systolic.toInt(), diastolic = diastolic.toInt()) }
-                  .flatMapCompletable { bloodPressureMeasurement -> bloodPressureRepository.updateMeasurement(bloodPressureMeasurement) }
-            }
-            // Needed because of Java interop.
-            else -> throw AssertionError("Opened as cannot be null!!")
-          }
-
-          saveBp.andThen(Observable.just({ ui: Ui -> ui.setBPSavedResultAndFinish() }))
+        .flatMapSingle { (patientId, systolic, diastolic) ->
+          bloodPressureRepository
+              .saveMeasurement(
+                  patientUuid = patientId,
+                  systolic = systolic.toInt(),
+                  diastolic = diastolic.toInt()
+              )
         }
+        .map { { ui: Ui -> ui.setBPSavedResultAndFinish() } }
+  }
 
-    return Observable.merge(errors, saves)
+  private fun updateBp(events: Observable<UiEvent>): Observable<UiChange> {
+    val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
+
+    val systolicChanges = events
+        .ofType<BloodPressureSystolicTextChanged>()
+        .map { it.systolic }
+
+    val diastolicChanges = events
+        .ofType<BloodPressureDiastolicTextChanged>()
+        .map { it.diastolic }
+
+    val validBpEntry = imeDoneClicks
+        .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
+        .map { (systolic, diastolic) -> Triple(systolic, diastolic, validateInput(systolic, diastolic)) }
+        .filter { (_, _, validation) -> validation == SUCCESS }
+        .map { (systolic, diastolic, _) -> systolic to diastolic }
+
+    val bloodPressure = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .filter { it.openAs == UPDATE_BP }
+        .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
+        .take(1)
+
+    return imeDoneClicks
+        .withLatestFrom(validBpEntry, bloodPressure) { _, (systolic, diastolic), savedBp -> Triple(savedBp, systolic, diastolic) }
+        .distinctUntilChanged()
+        .map { (savedBp, systolic, diastolic) -> savedBp.copy(systolic = systolic.toInt(), diastolic = diastolic.toInt()) }
+        .flatMapSingle { bloodPressureMeasurement ->
+          bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
+              .toSingleDefault({ ui: Ui -> ui.setBPSavedResultAndFinish() })
+        }
   }
 
   private fun validateInput(systolic: String, diastolic: String): Validation {

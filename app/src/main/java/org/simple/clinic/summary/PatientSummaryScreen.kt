@@ -104,6 +104,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    if(isInEditMode) {
+      return
+    }
     TheActivity.component.inject(this)
 
     // Not sure why but the keyboard stays visible when coming from search.

@@ -154,6 +154,11 @@
     <item name="android:paddingBottom">18dp</item>
   </style>
 
+  <style name="Clinic.V2.RoundedClearButton">
+    <item name="android:background">@drawable/background_rounded_clearbutton</item>
+    <item name="android:foreground">?attr/selectableItemBackgroundBorderless</item>
+  </style>
+
   <!-- PSA: To be used with PrimarySolidButton.kt -->
   <style name="Clinic.V2.Button.Solid">
     <item name="android:stateListAnimator" tools:ignore="NewApi">@null</item>
@@ -251,6 +256,10 @@
 
   <style name="Clinic.V2.TextAppearance.Button2.Blue1">
     <item name="android:textColor">@color/blue1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Button2.White100">
+    <item name="android:textColor">@color/white100</item>
   </style>
 
   <!-- Screen/feature specific styles start here. -->

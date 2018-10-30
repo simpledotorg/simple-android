@@ -22,6 +22,7 @@ import org.simple.clinic.storage.Migration_14_15
 import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_17_18
+import org.simple.clinic.storage.Migration_18_19
 import org.simple.clinic.storage.Migration_3_4
 import org.simple.clinic.storage.Migration_4_5
 import org.simple.clinic.storage.Migration_5_6
@@ -79,7 +80,8 @@ open class AppModule(
             Migration_14_15(),
             Migration_15_16(),
             Migration_16_17(),
-            Migration_17_18())
+            Migration_17_18(),
+            Migration_18_19())
         .build()
   }
 

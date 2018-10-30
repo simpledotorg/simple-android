@@ -17,6 +17,7 @@ import org.simple.clinic.storage.Migration_14_15
 import org.simple.clinic.storage.Migration_15_16
 import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_17_18
+import org.simple.clinic.storage.Migration_18_19
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -511,4 +512,15 @@ class MigrationAndroidTest {
     db_v18.execSQL(insertBloodPressureStatement(uuid = measurementUuid2, facilityUuid = nonExistentFacilityUuid))
     db_v18.execSQL(insertPrescribedDrugStatement(uuid = prescribedDrugUuid2, facilityUuid = nonExistentFacilityUuid))
   }
+
+  @Test
+  fun migration_18_to_19() {
+    helper.createDatabase(version = 18)
+    val db_v19 = helper.migrateTo(19, Migration_18_19())
+
+    db_v19.query("""SELECT * FROM "OngoingLoginEntry" """).use {
+      assertThat(it.columnCount).isEqualTo(3)
+    }
+  }
+
 }

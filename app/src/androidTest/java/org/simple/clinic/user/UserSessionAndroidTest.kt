@@ -52,7 +52,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_correct_login_params_are_given_then_login_should_happen_and_session_data_should_be_persisted() {
     val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(userId = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
+        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
     val lawgon = userSession
@@ -118,7 +118,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_user_is_logged_out_then_all_app_data_should_get_cleared() {
     val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(userId = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
+        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
     userSession
@@ -160,7 +160,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_saving_a_user_locally_it_should_save_the_user_locally_with_a_status_of_not_signed_in() {
     val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(userId = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
+        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
     val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber).blockingGet()
@@ -183,7 +183,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_logged_in_user_is_cleared_the_local_saved_user_must_be_removed_from_database() {
     val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(userId = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
+        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
     val lawgon = userSession
@@ -205,7 +205,7 @@ class UserSessionAndroidTest {
   @Test
   fun when_login_otp_is_requested_successfully_it_must_update_the_logged_in_status_of_the_user() {
     val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(userId = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
+        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
     val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber).blockingGet()

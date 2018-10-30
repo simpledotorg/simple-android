@@ -198,7 +198,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = userId, phoneNumber = inputNumber))
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = inputNumber))
     verify(userSession).syncFacilityAndSaveUser(mockUser)
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openLoginPinEntryScreen()
@@ -227,7 +227,7 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession, times(2)).saveOngoingLoginEntry(OngoingLoginEntry(userId = userId, phoneNumber = inputNumber))
+    verify(userSession, times(2)).saveOngoingLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = inputNumber))
     verify(userSession, times(2)).syncFacilityAndSaveUser(mockUser)
     verify(userSession, times(2)).clearOngoingRegistrationEntry()
     verify(screen, never()).openLoginPinEntryScreen()

@@ -209,6 +209,7 @@
     <item name="android:textSize">14sp</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.02</item>
     <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:fontFamily">sans-serif</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Left.Grey0">
@@ -231,12 +232,20 @@
     <item name="android:textColor">@color/white100</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body2Left.White72">
+    <item name="android:textColor">@color/white72</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body2Left.Numeric">
     <item name="android:letterSpacing" tools:ignore="NewApi">0.05</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1">
     <item name="android:textColor">@color/grey1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body2Left.Numeric.White72">
+    <item name="android:textColor">@color/white72</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Center">
@@ -500,6 +509,10 @@
   <style name="Clinic.V2.TextAppearance.PatientSummary.BloodPressure.High">
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:textColor">@color/red1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.PatientSummary.PatientName" parent="Clinic.V2.TextAppearance.H6.White100">
+    <item name="android:maxLines">1</item>
   </style>
 
   <style name="Clinic.V2.AppointmentRemovalReason">

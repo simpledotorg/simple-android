@@ -7,81 +7,81 @@
   android:layout_height="match_parent"
   android:orientation="vertical">
 
-  <LinearLayout
+  <RelativeLayout
     android:id="@+id/patientsummary_header"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?colorPrimary"
     android:elevation="@dimen/elevation_toolbar"
+    android:padding="@dimen/spacing_16"
     tools:ignore="UnusedAttribute">
 
     <ImageButton
       android:id="@+id/patientsummary_back"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_margin="@dimen/spacing_12"
+      android:layout_alignParentStart="true"
+      android:layout_alignParentTop="true"
       android:background="?attr/selectableItemBackgroundBorderless"
       android:contentDescription="@string/patientsummary_contentdescription_up_button"
       android:padding="@dimen/spacing_4"
       android:src="@drawable/ic_arrow_back_24dp"
       android:tint="@color/white" />
 
-    <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_weight="0.5"
-      android:orientation="vertical"
-      android:paddingBottom="@dimen/spacing_12"
-      android:paddingTop="@dimen/spacing_12">
-
-      <TextView
-        android:id="@+id/patientsummary_fullname"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-        android:textColor="@color/white"
-        tools:text="Anish Acharya" />
-
-      <TextView
-        android:id="@+id/patientsummary_byline1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:lineSpacingExtra="4dp"
-        android:textColor="@color/white"
-        tools:text="Male, 32  •  9886619365" />
-
-      <TextView
-        android:id="@+id/patientsummary_byline2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:lineSpacingExtra="4dp"
-        android:textColor="@color/white"
-        tools:text="Colony 3, Hoshiarpur, Punjab" />
-    </LinearLayout>
-
     <Button
       android:id="@+id/patientsummary_edit"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_alignParentEnd="true"
+      android:layout_alignTop="@id/patientsummary_back"
       android:background="@drawable/background_rounded_clearbutton"
       android:foreground="?attr/selectableItemBackgroundBorderless"
       android:minHeight="0dp"
       android:minWidth="0dp"
       android:paddingBottom="2dp"
+      android:layout_marginTop="4dp"
       android:paddingEnd="@dimen/spacing_8"
       android:paddingStart="@dimen/spacing_8"
       android:paddingTop="2dp"
       android:text="@string/patientsummary_edit"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
-      tools:ignore="UnusedAttribute" />
+      tools:ignore="RelativeOverlap,UnusedAttribute" />
 
-  </LinearLayout>
+    <TextView
+      android:id="@+id/patientsummary_fullname"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignParentStart="true"
+      android:layout_below="@id/patientsummary_back"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.PatientSummary.PatientName"
+      tools:text="Anish Acharya, M, 43" />
+
+    <TextView
+      android:id="@+id/patientsummary_address"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignStart="@id/patientsummary_fullname"
+      android:layout_below="@id/patientsummary_fullname"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.White72"
+      tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda, Punjab" />
+
+    <TextView
+      android:id="@+id/patientsummary_contact"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignStart="@id/patientsummary_address"
+      android:layout_below="@id/patientsummary_address"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:drawablePadding="@dimen/spacing_4"
+      android:drawableStart="@drawable/ic_call_16dp"
+      android:drawableTint="@color/white72"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.White72"
+      android:visibility="gone"
+      tools:text="1111111111"
+      tools:visibility="visible" />
+  </RelativeLayout>
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/patientsummary_recyclerview"

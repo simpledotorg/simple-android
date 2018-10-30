@@ -131,6 +131,10 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  fun updatePatient(patient: Patient, patientAddress: PatientAddress, patientPhoneNumber: PatientPhoneNumber? = null): Completable {
+    TODO()
+  }
+
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

@@ -19,9 +19,13 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import javax.inject.Inject
 
 class PatientRepositoryAndroidTest {
@@ -441,9 +445,9 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient =
-    patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .blockingGet()
+        patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
+            .andThen(patientRepository.saveOngoingEntryAsPatient())
+            .blockingGet()
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
@@ -453,6 +457,107 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1)
     assertThat(patientFirst).isNotNull()
     assertThat(searchResult).isEmpty()
+  }
+
+  @Test
+  fun when_a_patient_without_phone_number_and_with_date_of_birth_is_updated_it_should_be_saved() {
+    val ongoingPatientEntry = testData.ongoingPatientEntry(
+        fullName = "Old Name",
+        phone = null,
+        gender = Gender.MALE,
+        dateOfBirth = "16/01/1990",
+        age = null,
+        colony = "Old Colony",
+        state = "Old State",
+        district = "Old District"
+    )
+
+    val patient = patientRepository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    val (address) = patientRepository.address(patient.addressUuid).blockingFirst() as Just<PatientAddress>
+
+    (clock as TestClock).advanceBy(Duration.ofDays(30L))
+
+    patientRepository.updatePatient(
+        patient.copy(
+            fullName = "New Name",
+            gender = Gender.TRANSGENDER,
+            dateOfBirth = LocalDate.parse("1995/03/16")
+        ),
+        address.copy(
+            colonyOrVillage = "New Colony",
+            state = "New State",
+            district = "New District"
+        )
+    ).blockingAwait()
+
+    val (updatedPatient) = patientRepository.patient(patient.uuid).blockingFirst() as Just<Patient>
+    assertThat(updatedPatient.fullName).isEqualTo("New Name")
+    assertThat(updatedPatient.gender).isEqualTo(Gender.TRANSGENDER)
+    assertThat(updatedPatient.dateOfBirth).isEqualTo(LocalDate.of(1990, Month.MARCH, 16))
+    assertThat(updatedPatient.age!!.value).isEqualTo(23)
+
+    assertThat(updatedPatient.updatedAt).isEqualTo(Instant.now(clock))
+    assertThat(updatedPatient.createdAt).isNotEqualTo(updatedPatient.updatedAt)
+    assertThat(updatedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+
+    val (updatedAddress) = patientRepository.address(patient.addressUuid).blockingFirst() as Just<PatientAddress>
+    assertThat(updatedAddress.colonyOrVillage).isEqualTo("New Colony")
+    assertThat(updatedAddress.state).isEqualTo("New State")
+    assertThat(updatedAddress.district).isEqualTo("New District")
+    assertThat(updatedAddress.updatedAt).isEqualTo(Instant.now(clock))
+  }
+
+  @Test
+  fun when_a_patient_without_phone_number_and_with_age_is_updated_it_should_be_saved() {
+    val ongoingPatientEntry = testData.ongoingPatientEntry(
+        fullName = "Old Name",
+        phone = null,
+        gender = Gender.MALE,
+        dateOfBirth = null,
+        age = "40",
+        colony = "Old Colony",
+        state = "Old State",
+        district = "Old District"
+    )
+
+    val patient = patientRepository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    val (address) = patientRepository.address(patient.addressUuid).blockingFirst() as Just<PatientAddress>
+
+    (clock as TestClock).advanceBy(Duration.ofDays(30L))
+
+    patientRepository.updatePatient(
+        patient.copy(
+            fullName = "New Name",
+            gender = Gender.TRANSGENDER,
+            age = patient.age!!.copy(value = 45)
+        ),
+        address.copy(
+            colonyOrVillage = "New Colony",
+            state = "New State",
+            district = "New District"
+        )
+    ).blockingAwait()
+
+    val (updatedPatient) = patientRepository.patient(patient.uuid).blockingFirst() as Just<Patient>
+    assertThat(updatedPatient.fullName).isEqualTo("New Name")
+    assertThat(updatedPatient.gender).isEqualTo(Gender.TRANSGENDER)
+    assertThat(updatedPatient.dateOfBirth).isEqualTo(LocalDate.of(1978, Month.JANUARY, 1))
+    assertThat(updatedPatient.age!!.value).isEqualTo(45)
+
+    assertThat(updatedPatient.updatedAt).isEqualTo(Instant.now(clock))
+    assertThat(updatedPatient.createdAt).isNotEqualTo(updatedPatient.updatedAt)
+    assertThat(updatedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+
+    val (updatedAddress) = patientRepository.address(patient.addressUuid).blockingFirst() as Just<PatientAddress>
+    assertThat(updatedAddress.colonyOrVillage).isEqualTo("New Colony")
+    assertThat(updatedAddress.state).isEqualTo("New State")
+    assertThat(updatedAddress.district).isEqualTo("New District")
   }
 
   @After

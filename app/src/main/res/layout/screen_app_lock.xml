@@ -57,10 +57,9 @@
 
       <Button
         android:id="@+id/applock_logout"
+        style="@style/Clinic.V2.RoundedClearButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_applock_logout"
-        android:foreground="?attr/selectableItemBackgroundBorderless"
         android:minHeight="0dp"
         android:minWidth="0dp"
         android:paddingBottom="2dp"
@@ -68,7 +67,7 @@
         android:paddingStart="@dimen/spacing_8"
         android:paddingTop="2dp"
         android:text="@string/applock_logout"
-        android:textColor="@color/white"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
         tools:ignore="UnusedAttribute" />
     </LinearLayout>
   </LinearLayout>

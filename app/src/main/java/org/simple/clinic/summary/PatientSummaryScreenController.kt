@@ -11,6 +11,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -30,6 +31,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
@@ -126,10 +128,11 @@ class PatientSummaryScreenController @Inject constructor(
         .refCount()
 
     val bloodPressureItems = bloodPressures
-        .map { measurements ->
+        .withLatestFrom(configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
+        .map { (measurements, bpEditableFor) ->
           measurements.map { measurement ->
             val timestamp = timestampGenerator.generate(measurement.updatedAt)
-            SummaryBloodPressureListItem(measurement, timestamp)
+            SummaryBloodPressureListItem(measurement, timestamp, isEditable = isBpEditable(measurement, bpEditableFor))
           }
         }
 
@@ -315,14 +318,16 @@ class PatientSummaryScreenController @Inject constructor(
     return events.ofType<PatientSummaryBpClicked>()
         .map { it.bloodPressureMeasurement }
         .withLatestFrom(configProvider.toObservable())
-        .filter { (bloodPressureMeasurement, config) ->
-          val now = Instant.now(clock)
-          val cannotEditAfter = bloodPressureMeasurement.createdAt.plus(config.bpEditableFor)
-
-          now.isBefore(cannotEditAfter) || now == cannotEditAfter
-        }
+        .filter { (bloodPressureMeasurement, config) -> isBpEditable(bloodPressureMeasurement, config.bpEditableFor) }
         .map { (bloodPressureMeasurement, _) ->
           { ui: Ui -> ui.showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid) }
         }
+  }
+
+  private fun isBpEditable(bloodPressureMeasurement: BloodPressureMeasurement, bpEditableFor: Duration): Boolean {
+    val now = Instant.now(clock)
+    val editExpiresAt = bloodPressureMeasurement.createdAt.plus(bpEditableFor)
+
+    return now <= editExpiresAt
   }
 }

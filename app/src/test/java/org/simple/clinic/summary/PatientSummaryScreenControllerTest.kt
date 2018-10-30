@@ -128,9 +128,10 @@ class PatientSummaryScreenControllerTest {
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
-        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85),
-        PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95),
-        PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90))
+        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85, createdAt = Instant.now(clock).minusSeconds(15L)),
+        PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, createdAt = Instant.now(clock).minusSeconds(30L)),
+        PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, createdAt = Instant.now(clock).minusSeconds(45L)))
+
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(PatientMocker.medicalHistory()))
@@ -142,6 +143,9 @@ class PatientSummaryScreenControllerTest {
         any(),
         check {
           it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
+          assertThat(it[0].isEditable).isTrue()
+          assertThat(it[1].isEditable).isTrue()
+          assertThat(it[2].isEditable).isFalse()
         },
         any())
   }

@@ -253,6 +253,10 @@
     <item name="android:textColor">@color/blue1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Button2.White100">
+    <item name="android:textColor">@color/white100</item>
+  </style>
+
   <!-- Screen/feature specific styles start here. -->
 
   <style name="Clinic.V2.BottomAlignedButtonFrame">

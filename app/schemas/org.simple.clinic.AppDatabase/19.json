@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 19,
-    "identityHash": "4f527e7c8514a7cd8fea9690a9db844d",
+    "identityHash": "b8489c728569a65436e5f2df9c7137fd",
     "entities": [
       {
         "tableName": "Patient",
@@ -853,11 +853,11 @@
       },
       {
         "tableName": "OngoingLoginEntry",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`userId` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `pin` TEXT NOT NULL, PRIMARY KEY(`userId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`uuid` TEXT NOT NULL, `phoneNumber` TEXT NOT NULL, `pin` TEXT, PRIMARY KEY(`uuid`))",
         "fields": [
           {
-            "fieldPath": "userId",
-            "columnName": "userId",
+            "fieldPath": "uuid",
+            "columnName": "uuid",
             "affinity": "TEXT",
             "notNull": true
           },
@@ -871,12 +871,12 @@
             "fieldPath": "pin",
             "columnName": "pin",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
           "columnNames": [
-            "userId"
+            "uuid"
           ],
           "autoGenerate": false
         },
@@ -886,7 +886,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"4f527e7c8514a7cd8fea9690a9db844d\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"b8489c728569a65436e5f2df9c7137fd\")"
     ]
   }
 }

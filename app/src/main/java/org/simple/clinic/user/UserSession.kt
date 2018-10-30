@@ -87,7 +87,7 @@ class UserSession @Inject constructor(
   fun loginWithOtp(otp: String): Single<LoginResult> {
     return ongoingLoginEntry()
         .doOnSubscribe { Timber.i("Logging in with OTP") }
-        .map { LoginRequest(UserPayload(it.phoneNumber, it.pin, otp)) }
+        .map { LoginRequest(UserPayload(it.phoneNumber, it.pin!!, otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
           storeUserAndAccessToken(it)
@@ -134,10 +134,10 @@ class UserSession @Inject constructor(
               .toSingleDefault(it)
         }
         .flatMap {
-          loginApi.requestLoginOtp(it.userId)
+          loginApi.requestLoginOtp(it.uuid)
               .andThen(Completable.fromAction {
                 appDatabase.userDao()
-                    .updateLoggedInStatusForUser(it.userId, User.LoggedInStatus.OTP_REQUESTED)
+                    .updateLoggedInStatusForUser(it.uuid, User.LoggedInStatus.OTP_REQUESTED)
               })
               .toSingleDefault(LoginResult.Success as LoginResult)
         }

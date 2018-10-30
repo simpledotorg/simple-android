@@ -142,7 +142,7 @@ class RegistrationPhoneScreenController @Inject constructor(
 
   private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found): Observable<UiChange> {
     return userSession
-        .saveOngoingLoginEntry(OngoingLoginEntry(userId = foundUser.user.uuid, phoneNumber = foundUser.user.phoneNumber))
+        .saveOngoingLoginEntry(OngoingLoginEntry(uuid = foundUser.user.uuid, phoneNumber = foundUser.user.phoneNumber))
         .andThen(userSession.clearOngoingRegistrationEntry())
         .andThen(
             userSession

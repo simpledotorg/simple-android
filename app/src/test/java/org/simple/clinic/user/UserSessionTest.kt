@@ -69,6 +69,7 @@ class UserSessionTest {
   private val passwordHasher = mock<PasswordHasher>()
   private val userDao = mock<User.RoomDao>()
   private val reporter = MockAnalyticsReporter()
+  private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
 
 
   private val moshi = Moshi.Builder().build()
@@ -123,8 +124,10 @@ class UserSessionTest {
         prescriptionSyncPullTimestamp = prescriptionPullTimestamp,
         appointmentSyncPullTimestamp = appointmentPullTimestamp,
         communicationSyncPullTimestamp = communicationPullTimestamp,
-        medicalHistorySyncPullTimestamp = medicalHistoryPullTimestamp
+        medicalHistorySyncPullTimestamp = medicalHistoryPullTimestamp,
+        ongoingLoginEntryRepository = ongoingLoginEntryRepository
     )
+    whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())
     userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
@@ -132,6 +135,8 @@ class UserSessionTest {
     whenever(appDatabase.userDao()).thenReturn(userDao)
 
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
+
+    whenever(ongoingLoginEntryRepository.entry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "982312441")))
 
     Analytics.addReporter(reporter)
   }
@@ -360,7 +365,6 @@ class UserSessionTest {
     var loginCallMade = false
     whenever(loginApi.requestLoginOtp(any()))
         .thenReturn(Completable.complete().doOnComplete { loginCallMade = true })
-
     userSession.requestLoginOtp().blockingGet()
 
     assertThat(loginCallMade).isTrue()

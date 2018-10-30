@@ -60,6 +60,7 @@ class UserSession @Inject constructor(
     private val passwordHasher: PasswordHasher,
     private val syncScheduler: SyncScheduler,
     private val loginOtpSmsListener: LoginOtpSmsListener,
+    private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_timestamp") private val patientSyncPullTimestamp: Preference<Optional<Instant>>,
     @Named("last_bp_pull_timestamp") private val bpSyncPullTimestamp: Preference<Optional<Instant>>,
@@ -69,21 +70,18 @@ class UserSession @Inject constructor(
     @Named("last_medicalhistory_pull_timestamp") private val medicalHistorySyncPullTimestamp: Preference<Optional<Instant>>
 ) {
 
-  private var ongoingLoginEntry: OngoingLoginEntry? = null
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
 
   fun saveOngoingLoginEntry(entry: OngoingLoginEntry): Completable {
-    return Completable.fromAction {
-      this.ongoingLoginEntry = entry
-    }
+    return ongoingLoginEntryRepository.saveLoginEntry(entry)
   }
 
   fun ongoingLoginEntry(): Single<OngoingLoginEntry> {
-    return Single.fromCallable { ongoingLoginEntry }
+    return ongoingLoginEntryRepository.entry()
   }
 
   fun clearOngoingLoginEntry(): Completable {
-    return Completable.fromAction { ongoingLoginEntry = null }
+    return ongoingLoginEntryRepository.clearLoginEntry()
   }
 
   fun loginWithOtp(otp: String): Single<LoginResult> {

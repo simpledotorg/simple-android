@@ -11,9 +11,9 @@ import java.util.UUID
 
 @Entity(tableName = "OngoingLoginEntry")
 data class OngoingLoginEntry(
-    @PrimaryKey val userId: UUID,
+    @PrimaryKey val uuid: UUID,
     val phoneNumber: String = "",
-    val pin: String = ""
+    val pin: String? = ""
 ) {
 
   @Dao
@@ -27,6 +27,5 @@ data class OngoingLoginEntry(
 
     @Query("DELETE FROM OngoingLoginEntry")
     fun delete()
-
   }
 }

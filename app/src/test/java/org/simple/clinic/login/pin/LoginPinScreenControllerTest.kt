@@ -47,21 +47,21 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when screen starts, show phone number`() {
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "123")))
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9977228833")))
 
     uiEvents.onNext(PinScreenCreated())
 
     verify(userSession).ongoingLoginEntry()
-    verify(screen).showPhoneNumber("123")
+    verify(screen).showPhoneNumber("9977228833")
   }
 
   @Test
   fun `if pin is incorrect and submit is clicked, show an error`() {
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.DIFFERENT))
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(userId = UUID.randomUUID())))
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID())))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PinTextChanged("1234"))
+    uiEvents.onNext(PinTextChanged("1234123412"))
     uiEvents.onNext(PinSubmitClicked())
 
     verify(screen).showIncorrectPinError()
@@ -76,7 +76,7 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when PIN is submitted, request login otp and open home screen`() {
-    val ongoingLoginEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "9999")
+    val ongoingLoginEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999232323")
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
@@ -85,7 +85,7 @@ class LoginPinScreenControllerTest {
     uiEvents.onNext(PinTextChanged("0000"))
     uiEvents.onNext(PinSubmitClicked())
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(userId = ongoingLoginEntry.userId, phoneNumber = "9999", pin = "0000"))
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(uuid = ongoingLoginEntry.uuid, phoneNumber = "9999232323", pin = "0000"))
     verify(userSession).requestLoginOtp()
     verify(screen).showProgressBar()
     verify(screen).openHomeScreen()
@@ -93,7 +93,7 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `if request otp api call throws any errors, show errors`() {
-    val ongoingEntry = OngoingLoginEntry(userId = UUID.randomUUID(), phoneNumber = "99999")
+    val ongoingEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999323232")
     whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(PasswordHasher.ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())

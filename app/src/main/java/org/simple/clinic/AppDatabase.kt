@@ -20,6 +20,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.LoggedInUserFacilityMapping
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantRoomTypeConverter
@@ -38,8 +39,9 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       LoggedInUserFacilityMapping::class,
       Appointment::class,
       Communication::class,
-      MedicalHistory::class],
-    version = 18,
+      MedicalHistory::class,
+      OngoingLoginEntry::class],
+    version = 19,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -88,4 +90,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun overdueAppointmentDao(): OverdueAppointment.RoomDao
 
   abstract fun medicalHistoryDao(): MedicalHistory.RoomDao
+
+  abstract fun ongoingLoginEntryDao(): OngoingLoginEntry.RoomDao
 }

@@ -6,9 +6,11 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.login.applock.BCryptPasswordHasher
 import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -50,4 +52,9 @@ open class LoginModule {
 
   @Provides
   open fun loginSmsListener(app: Application): LoginOtpSmsListener = LoginOtpSmsListenerImpl(app)
+
+  @Provides
+  fun ongoingLoginEntryDao(appDatabase: AppDatabase): OngoingLoginEntry.RoomDao {
+    return appDatabase.ongoingLoginEntryDao()
+  }
 }

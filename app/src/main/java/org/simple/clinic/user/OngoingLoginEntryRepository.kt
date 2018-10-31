@@ -15,7 +15,12 @@ class OngoingLoginEntryRepository @Inject constructor(
   }
 
   fun entry(): Single<OngoingLoginEntry> {
-    return dao.getEntry().firstOrError()
+    return dao.getEntry()
+        .firstOrError()
+        .map { entry ->
+          if (entry.isEmpty()) throw IllegalStateException("User not present") else entry.first()
+        }
+
   }
 
   fun clearLoginEntry(): Completable {
@@ -23,6 +28,4 @@ class OngoingLoginEntryRepository @Inject constructor(
       dao.delete()
     }
   }
-
-
 }

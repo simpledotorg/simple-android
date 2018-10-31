@@ -15,8 +15,6 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.E
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_HIGH
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_LOW
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.SUCCESS
-import org.simple.clinic.bp.entry.OpenAs.NEW_BP
-import org.simple.clinic.bp.entry.OpenAs.UPDATE_BP
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -67,8 +65,9 @@ class BloodPressureEntrySheetController @Inject constructor(
   private fun prefillWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs == UPDATE_BP }
-        .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .flatMapSingle { bloodPressureRepository.findOne(it.bpUuid) }
         .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic) } }
   }
 
@@ -122,8 +121,8 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val patientUuid = events
         .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs == NEW_BP }
-        .map { it.uuid }
+        .filter { it.openAs is OpenAs.New }
+        .map { (it.openAs as OpenAs.New).patientUuid }
 
     return imeDoneClicks
         .withLatestFrom(validBpEntry, patientUuid) { _, (systolic, diastolic), patientId -> Triple(patientId, systolic, diastolic) }
@@ -158,8 +157,9 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val bloodPressure = events
         .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs == UPDATE_BP }
-        .flatMapSingle { bloodPressureRepository.findOne(it.uuid) }
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .flatMapSingle { bloodPressureRepository.findOne(it.bpUuid) }
         .take(1)
 
     return imeDoneClicks

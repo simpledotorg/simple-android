@@ -26,7 +26,7 @@ import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
-import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1

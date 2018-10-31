@@ -8,8 +8,8 @@ import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.login.applock.BCryptPasswordHasher
-import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.security.BCryptPasswordHasher
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

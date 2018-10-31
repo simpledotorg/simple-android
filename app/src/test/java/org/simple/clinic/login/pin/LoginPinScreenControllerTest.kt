@@ -14,8 +14,8 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.login.applock.ComparisonResult
-import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.security.ComparisonResult
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession

@@ -1,4 +1,4 @@
-package org.simple.clinic.login.applock
+package org.simple.clinic.security
 
 import org.junit.Test
 

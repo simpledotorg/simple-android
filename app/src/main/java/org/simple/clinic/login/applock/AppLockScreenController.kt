@@ -5,11 +5,8 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.login.applock.ComparisonResult.DIFFERENT
-import org.simple.clinic.login.applock.ComparisonResult.SAME
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -23,7 +20,6 @@ typealias UiChange = (Ui) -> Unit
 
 class AppLockScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val passwordHasher: PasswordHasher,
     private val facilityRepository: FacilityRepository,
     @Named("should_lock_after") private val lockAfterTimestamp: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -34,8 +30,7 @@ class AppLockScreenController @Inject constructor(
     return Observable.mergeArray(
         populateFullName(replayedEvents),
         populateFacilityName(replayedEvents),
-        resetValidationError(replayedEvents),
-        validatePin(replayedEvents),
+        unlockOnAuthentication(replayedEvents),
         exitOnBackClick(replayedEvents),
         openFacilityChangeScreen(replayedEvents),
         showConfirmResetPinDialog(replayedEvents)
@@ -61,58 +56,22 @@ class AppLockScreenController @Inject constructor(
         .map { { ui: Ui -> ui.setFacilityName(it.name) } }
   }
 
-  private fun resetValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun unlockOnAuthentication(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<AppLockScreenPinTextChanged>()
-        .map { { ui: Ui -> ui.setIncorrectPinErrorVisible(false) } }
-  }
-
-  private fun validatePin(events: Observable<UiEvent>): Observable<UiChange> {
-    val pinTextChanges = events
-        .ofType<AppLockScreenPinTextChanged>()
-        .map { it.pin }
-
-    return events
-        .ofType<AppLockScreenSubmitClicked>()
-        .withLatestFrom(pinTextChanges)
-        .flatMap { (_, enteredPin) ->
-          val cachedPinValidation = userSession.loggedInUser()
-              .map { (it as Just).value }
-              .map { it.pinDigest }
-              .firstOrError()
-              .flatMap { pinDigest -> passwordHasher.compare(pinDigest, enteredPin) }
-
-          val validationResultUiChange = cachedPinValidation
-              .map {
-                when (it) {
-                  SAME -> { ui: Ui -> ui.restorePreviousScreen() }
-                  DIFFERENT -> { ui: Ui ->
-                    ui.setIncorrectPinErrorVisible(true)
-                  }
-                }
-              }
-              .toObservable()
-
-          val progressUiChanges = cachedPinValidation
-              .filter { it == DIFFERENT }
-              .map { { ui: Ui -> ui.setProgressVisible(false) } }
-              .toObservable()
-              .startWith { ui: Ui -> ui.setProgressVisible(true) }
-
-          val recordLastLock = cachedPinValidation
-              .filter { it == SAME }
-              .flatMapObservable {
-                lockAfterTimestamp.delete()
-                Observable.empty<UiChange>()
-              }
-
-          Observable.mergeArray(progressUiChanges, recordLastLock, validationResultUiChange)
+        .ofType<AppLockPinAuthenticated>()
+        .doOnNext {
+          // It is important that lockAfterTimestamp is cleared before
+          // the app is unlocked. Otherwise, exiting the lockscreen will
+          // dispose the controller and the timestamp will never get
+          // cleared.
+          lockAfterTimestamp.delete()
         }
+        .map { { ui: Ui -> ui.restorePreviousScreen() } }
   }
 
   private fun exitOnBackClick(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<AppLockScreenBackClicked>()
+        .ofType<AppLockBackClicked>()
         .map { { ui: Ui -> ui.exitApp() } }
   }
 

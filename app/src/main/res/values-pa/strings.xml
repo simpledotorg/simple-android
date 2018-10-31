@@ -57,7 +57,6 @@
     <string name="loginpin_pin_number_hint">ਤੁਹਾਡੀ ਸੁਰੱਖਿਆ ਪਿੰਨ</string>
     <string name="loginpin_go_back">ਵਾਪਸ ਫੋਨ ਨੰਬਰ ਦੇ ਪਰਦੇ ਤੇ ਜਾਓ</string>
     <string name="loginpin_error_check_internet_connection">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ.</string>
-    <string name="applock_error_incorrect_pin">ਪਿੰਨ ਅਸਲੀ ਪਿੰਨ ਨਾਲ਼ ਰਲ਼ਦੀ ਨਹੀਂ</string>
   <string name="tab_patient">ਨਵਾਂ ਬੀ ਪੀ</string>
     <string name="tab_overdue">ਕਾਲ ਸੂਚੀ</string>
     <string name="tab_reports">ਰਿਪੋਰਟ</string>

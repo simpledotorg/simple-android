@@ -460,10 +460,9 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_a_patient_without_phone_number_and_with_date_of_birth_is_updated_it_should_be_saved() {
+  fun when_a_patient_with_date_of_birth_is_updated_it_should_be_saved() {
     val ongoingPatientEntry = testData.ongoingPatientEntry(
         fullName = "Old Name",
-        phone = null,
         gender = Gender.MALE,
         dateOfBirth = "16/01/1990",
         age = null,
@@ -480,11 +479,11 @@ class PatientRepositoryAndroidTest {
 
     (clock as TestClock).advanceBy(Duration.ofDays(30L))
 
-    patientRepository.updatePatient(
+    patientRepository.updatePatientAndAddress(
         patient.copy(
             fullName = "New Name",
             gender = Gender.TRANSGENDER,
-            dateOfBirth = LocalDate.parse("1995/03/16")
+            dateOfBirth = LocalDate.parse("1995-03-16")
         ),
         address.copy(
             colonyOrVillage = "New Colony",
@@ -495,6 +494,7 @@ class PatientRepositoryAndroidTest {
 
     val (updatedPatient) = patientRepository.patient(patient.uuid).blockingFirst() as Just<Patient>
     assertThat(updatedPatient.fullName).isEqualTo("New Name")
+    assertThat(updatedPatient.searchableName).isEqualTo("NewName")
     assertThat(updatedPatient.gender).isEqualTo(Gender.TRANSGENDER)
     assertThat(updatedPatient.dateOfBirth).isEqualTo(LocalDate.of(1990, Month.MARCH, 16))
     assertThat(updatedPatient.age!!.value).isEqualTo(23)
@@ -511,10 +511,9 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_a_patient_without_phone_number_and_with_age_is_updated_it_should_be_saved() {
+  fun when_a_patient_with_age_is_updated_it_should_be_saved() {
     val ongoingPatientEntry = testData.ongoingPatientEntry(
         fullName = "Old Name",
-        phone = null,
         gender = Gender.MALE,
         dateOfBirth = null,
         age = "40",
@@ -531,7 +530,7 @@ class PatientRepositoryAndroidTest {
 
     (clock as TestClock).advanceBy(Duration.ofDays(30L))
 
-    patientRepository.updatePatient(
+    patientRepository.updatePatientAndAddress(
         patient.copy(
             fullName = "New Name",
             gender = Gender.TRANSGENDER,
@@ -546,6 +545,7 @@ class PatientRepositoryAndroidTest {
 
     val (updatedPatient) = patientRepository.patient(patient.uuid).blockingFirst() as Just<Patient>
     assertThat(updatedPatient.fullName).isEqualTo("New Name")
+    assertThat(updatedPatient.searchableName).isEqualTo("NewName")
     assertThat(updatedPatient.gender).isEqualTo(Gender.TRANSGENDER)
     assertThat(updatedPatient.dateOfBirth).isEqualTo(LocalDate.of(1978, Month.JANUARY, 1))
     assertThat(updatedPatient.age!!.value).isEqualTo(45)

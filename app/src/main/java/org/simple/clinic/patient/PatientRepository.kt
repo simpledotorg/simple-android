@@ -131,8 +131,22 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun updatePatient(patient: Patient, patientAddress: PatientAddress, patientPhoneNumber: PatientPhoneNumber? = null): Completable {
-    TODO()
+  fun updatePatientAndAddress(patient: Patient, patientAddress: PatientAddress): Completable {
+    return Completable
+        .fromAction {
+          val updatedPatient = patient.copy(
+              syncStatus = PENDING,
+              updatedAt = Instant.now(clock),
+              searchableName = nameToSearchableForm(patient.fullName)
+          )
+
+          database.patientDao().save(updatedPatient)
+        }
+        .andThen(Completable.fromAction {
+          val updatedAddress = patientAddress.copy(updatedAt = Instant.now(clock))
+
+          database.addressDao().save(updatedAddress)
+        })
   }
 
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }

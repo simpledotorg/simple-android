@@ -4,11 +4,12 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.pin.PinEntryCardView.State
 import org.simple.clinic.security.ComparisonResult
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.pin.PinEntryCardView.State
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -22,7 +23,10 @@ class PinEntryCardController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.replay().refCount()
+    val replayedEvents = events
+        .compose(ReportAnalyticsEvents())
+        .replay()
+        .refCount()
 
     val transformedEvents = events
         .mergeWith(autoSubmitPin(replayedEvents))

@@ -1,4 +1,4 @@
-package org.simple.clinic.login.applock
+package org.simple.clinic.security
 
 enum class ComparisonResult {
   SAME,

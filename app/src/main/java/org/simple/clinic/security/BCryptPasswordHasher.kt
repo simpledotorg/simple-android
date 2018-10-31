@@ -1,9 +1,9 @@
-package org.simple.clinic.login.applock
+package org.simple.clinic.security
 
 import io.reactivex.Single
 import org.mindrot.jbcrypt.BCrypt
-import org.simple.clinic.login.applock.ComparisonResult.DIFFERENT
-import org.simple.clinic.login.applock.ComparisonResult.SAME
+import org.simple.clinic.security.ComparisonResult.DIFFERENT
+import org.simple.clinic.security.ComparisonResult.SAME
 import javax.inject.Inject
 
 class BCryptPasswordHasher @Inject constructor() : PasswordHasher {

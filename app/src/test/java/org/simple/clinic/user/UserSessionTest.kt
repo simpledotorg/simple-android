@@ -154,6 +154,7 @@ class UserSessionTest {
   ) {
     whenever(loginApi.login(any())).thenReturn(response)
     whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
 
     val result = userSession.loginWithOtp("000000").blockingGet()
 
@@ -210,6 +211,7 @@ class UserSessionTest {
     whenever(syncScheduler.syncImmediately()).thenAnswer {
       if (syncWillFail) Completable.error(RuntimeException()) else Completable.complete()
     }
+    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
 
     assertThat(userSession.loginWithOtp("000000").blockingGet()).isEqualTo(LoginResult.Success)
   }
@@ -674,6 +676,37 @@ class UserSessionTest {
     return arrayOf(
         arrayOf<Any?>(null, ForgotPinResult.Success),
         arrayOf<Any?>(exception, ForgotPinResult.UnexpectedError(exception))
+    )
+  }
+
+  @Test
+  @Parameters(method = "parameters for clearing login entry")
+  fun `ongoing login entry should be cleared only on successful login`(
+      response: Single<LoginResponse>,
+      shouldClearLoginEntry: Boolean
+  ) {
+    var entryCleared = false
+
+    whenever(loginApi.login(any())).thenReturn(response)
+    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete().doOnComplete { entryCleared = true })
+
+    userSession.loginWithOtp("000000").blockingGet()
+
+    if (shouldClearLoginEntry) {
+      assertThat(entryCleared).isTrue()
+    } else {
+      assertThat(entryCleared).isFalse()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `parameters for clearing login entry`(): List<List<Any>> {
+    return listOf(
+        listOf(Single.just(LoginResponse("accessToken", loggedInUserPayload)), true),
+        listOf(Single.error<LoginResponse>(NullPointerException()), false),
+        listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), false),
+        listOf(Single.error<LoginResponse>(IOException()), false)
     )
   }
 

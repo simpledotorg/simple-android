@@ -23,7 +23,7 @@ data class OngoingLoginEntry(
     fun save(loginEntry: OngoingLoginEntry)
 
     @Query("SELECT * FROM OngoingLoginEntry")
-    fun getEntry(): Flowable<OngoingLoginEntry>
+    fun getEntry(): Flowable<List<OngoingLoginEntry>>
 
     @Query("DELETE FROM OngoingLoginEntry")
     fun delete()

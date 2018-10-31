@@ -39,19 +39,16 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_OPEN_AS = "openAs"
-    private const val KEY_UUID = "uuid"
     private const val EXTRA_WAS_BP_SAVED = "wasBpSaved"
 
     fun intentForNewBp(context: Context, patientUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
-          .putExtra(KEY_OPEN_AS, OpenAs.NEW_BP)
-          .putExtra(KEY_UUID, patientUuid)
+          .putExtra(KEY_OPEN_AS, OpenAs.New(patientUuid))
     }
 
     fun intentForUpdateBp(context: Context, bloodPressureMeasurementUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
-          .putExtra(KEY_OPEN_AS, OpenAs.UPDATE_BP)
-          .putExtra(KEY_UUID, bloodPressureMeasurementUuid)
+          .putExtra(KEY_OPEN_AS, OpenAs.Update(bloodPressureMeasurementUuid))
     }
 
     fun wasBloodPressureSaved(data: Intent): Boolean {
@@ -89,10 +86,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val patientUuid = intent.extras!!.getSerializable(KEY_UUID) as UUID
-    val openAs = intent.extras!!.getSerializable(KEY_OPEN_AS) as OpenAs
+    val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs
     return Observable
-        .just(BloodPressureEntrySheetCreated(openAs, patientUuid))
+        .just(BloodPressureEntrySheetCreated(openAs))
         // This delay stops the race condition (?) that happens frequently with replay().refCount()
         // in the controller. Temporary workaround until we figure out what exactly is going on.
         .delay(100L, TimeUnit.MILLISECONDS)

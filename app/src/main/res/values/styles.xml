@@ -107,7 +107,7 @@
     <item name="android:paddingTop">@dimen/spacing_24</item>
   </style>
 
-  <style name="Clinic.CardContentContainer.AppLock">
+  <style name="Clinic.CardContentContainer.PinEntry">
     <item name="android:paddingBottom">@dimen/spacing_12</item>
     <item name="android:paddingEnd">@dimen/spacing_24</item>
     <item name="android:paddingStart">@dimen/spacing_24</item>

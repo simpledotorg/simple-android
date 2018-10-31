@@ -1,20 +1,15 @@
 package org.simple.clinic.login.applock
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.login.applock.ComparisonResult.DIFFERENT
-import org.simple.clinic.login.applock.ComparisonResult.SAME
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -25,7 +20,6 @@ class AppLockScreenControllerTest {
 
   private val screen = mock<AppLockScreen>()
   private val userSession = mock<UserSession>()
-  private val passwordHashser = mock<PasswordHasher>()
   private val facilityRepository = mock<FacilityRepository>()
   private val lastUnlockTimestamp = mock<Preference<Instant>>()
 
@@ -36,7 +30,7 @@ class AppLockScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = AppLockScreenController(userSession, passwordHashser, facilityRepository, lastUnlockTimestamp)
+    controller = AppLockScreenController(userSession, facilityRepository, lastUnlockTimestamp)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
 
     uiEvents
@@ -45,43 +39,18 @@ class AppLockScreenControllerTest {
   }
 
   @Test
-  fun `when submit is clicked with a correct pin, the app should be unlocked`() {
-    whenever(passwordHashser.compare(loggedInUser.pinDigest, "0000")).thenReturn(Single.just(SAME))
+  fun `when PIN is authenticated, the last-unlock-timestamp should be updated and then the app should be unlocked`() {
+    uiEvents.onNext(AppLockPinAuthenticated())
 
-    uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
-    uiEvents.onNext(AppLockScreenSubmitClicked())
-
-    val inOrder = inOrder(screen)
-    inOrder.verify(screen).setProgressVisible(true)
+    val inOrder = inOrder(lastUnlockTimestamp, screen)
+    inOrder.verify(lastUnlockTimestamp).delete()
     inOrder.verify(screen).restorePreviousScreen()
-    verify(screen, never()).setProgressVisible(false)
-  }
-
-  @Test
-  fun `when app is unlocked then the last-unlock-timestamp should be updated`() {
-    whenever(passwordHashser.compare(any(), any())).thenReturn(Single.just(SAME))
-
-    uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
-    uiEvents.onNext(AppLockScreenSubmitClicked())
-
-    verify(lastUnlockTimestamp).delete()
-  }
-
-  @Test
-  fun `when an incorrect pin is entered, an error should be shown`() {
-    whenever(passwordHashser.compare(loggedInUser.pinDigest, "0000")).thenReturn(Single.just(DIFFERENT))
-
-    uiEvents.onNext(AppLockScreenPinTextChanged("0000"))
-    uiEvents.onNext(AppLockScreenSubmitClicked())
-
-    val inOrder = inOrder(screen)
-    inOrder.verify(screen).setProgressVisible(true)
-    inOrder.verify(screen).setProgressVisible(false)
-    inOrder.verify(screen).setIncorrectPinErrorVisible(true)
   }
 
   @Test
   fun `On start, the logged in user's full name should be shown`() {
+    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.never())
+
     uiEvents.onNext(AppLockScreenCreated())
     verify(screen).setUserFullName(loggedInUser.fullName)
   }
@@ -95,12 +64,6 @@ class AppLockScreenControllerTest {
     uiEvents.onNext(AppLockScreenCreated())
     verify(screen).setFacilityName(facility1.name)
     verify(screen).setFacilityName(facility2.name)
-  }
-
-  @Test
-  fun `any existing errors should be reset when the user starts typing again`() {
-    uiEvents.onNext(AppLockScreenPinTextChanged("0"))
-    verify(screen).setIncorrectPinErrorVisible(false)
   }
 
   @Test

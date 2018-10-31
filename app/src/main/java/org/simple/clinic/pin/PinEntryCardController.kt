@@ -4,10 +4,10 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.login.applock.ComparisonResult
-import org.simple.clinic.login.applock.ComparisonResult.DIFFERENT
-import org.simple.clinic.login.applock.ComparisonResult.SAME
-import org.simple.clinic.login.applock.PasswordHasher
+import org.simple.clinic.security.ComparisonResult
+import org.simple.clinic.security.ComparisonResult.DIFFERENT
+import org.simple.clinic.security.ComparisonResult.SAME
+import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.pin.PinEntryCardView.State
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent

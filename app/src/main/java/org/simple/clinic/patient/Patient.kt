@@ -76,7 +76,7 @@ data class Patient constructor(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     abstract fun patient(uuid: UUID): Flowable<List<Patient>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun save(patient: Patient)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

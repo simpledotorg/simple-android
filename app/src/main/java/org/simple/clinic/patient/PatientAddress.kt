@@ -45,7 +45,7 @@ data class PatientAddress(
   @Dao
   interface RoomDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(address: PatientAddress)
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

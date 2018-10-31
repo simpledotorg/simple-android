@@ -76,48 +76,11 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_alignTop="@+id/applock_card"
+    android:layout_alignTop="@+id/applock_pin_entry_card"
     android:background="?colorPrimary" />
 
-  <android.support.v7.widget.CardView
-    android:id="@+id/applock_card"
+  <org.simple.clinic.pin.PinEntryCardView
+    android:id="@+id/applock_pin_entry_card"
     style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/applock_logo_container">
-
-    <ProgressBar
-      android:id="@+id/applock_progress"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:visibility="invisible" />
-
-    <LinearLayout
-      android:id="@+id/applock_pin_container"
-      style="@style/Clinic.CardContentContainer.AppLock">
-
-      <TextView
-        style="@style/Clinic.LoginPinLabel"
-        android:labelFor="@+id/applock_pin"
-        android:text="@string/loginpin_pin_number_hint" />
-
-      <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/applock_pin"
-        style="@style/Clinic.StaggeredEditText.Pin"
-        android:maxLength="4" />
-
-      <TextView
-        android:id="@+id/applock_error"
-        style="@style/Clinic.V2.LoginPinErrorText"
-        android:text="@string/applock_error_incorrect_pin"
-        tools:visibility="visible" />
-
-      <Button
-        android:id="@+id/applock_forgotpin"
-        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/applock_forgotpin" />
-
-    </LinearLayout>
-  </android.support.v7.widget.CardView>
+    android:layout_below="@+id/applock_logo_container" />
 </org.simple.clinic.login.applock.AppLockScreen>

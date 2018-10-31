@@ -154,15 +154,17 @@
   <string name="loginpin_error_incorrect_pin">PIN doesn\'t match the original PIN</string>
 
   <!-- App lock -->
-  <string name="applock_error_incorrect_pin">PIN doesn\'t match the original PIN</string>
   <string name="applock_logout">Not you?</string>
-  <string name="applock_forgotpin">Forgot PIN?</string>
   <string name="applock_reset_pin_alert_title">Reset Security PIN?</string>
   <string name="applock_reset_pin_alert_message">Are you sure you want to reset your security PIN?</string>
   <string name="applock_reset_pin_alert_confirm">Reset</string>
   <string name="applock_reset_pin_alert_cancel">Cancel</string>
 
-  <!-- TODO: Get reviewed by Daniel -->
+  <!-- PIN entry -->
+  <string name="pinentry_forgotpin">Forgot PIN?</string>
+  <string name="pinentry_error_incorrect_pin">PIN doesn’t match the original PIN</string>
+  <string name="pinentry_pin_number_hint">Your security PIN</string>
+
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">Your phone number</string>
   <string name="registrationphone_error_invalid_number">Check phone number. It looks like it is too short.</string>

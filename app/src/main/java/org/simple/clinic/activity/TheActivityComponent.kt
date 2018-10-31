@@ -28,6 +28,7 @@ import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
+import org.simple.clinic.pin.PinEntryCardView
 import org.simple.clinic.phone.PhoneModule
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
@@ -82,6 +83,7 @@ interface TheActivityComponent {
   fun inject(target: AppointmentReminderSheet)
   fun inject(target: RemoveAppointmentSheet)
   fun inject(target: NewMedicalHistoryScreen)
+  fun inject(target: PinEntryCardView)
 
   @Subcomponent.Builder
   interface Builder {

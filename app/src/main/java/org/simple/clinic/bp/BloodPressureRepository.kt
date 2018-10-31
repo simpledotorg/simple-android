@@ -110,5 +110,5 @@ class BloodPressureRepository @Inject constructor(
         .toObservable()
   }
 
-  fun findOne(uuid: UUID): Single<BloodPressureMeasurement> = Single.fromCallable { dao.getOne(uuid) }
+  fun measurement(uuid: UUID): Single<BloodPressureMeasurement> = Single.fromCallable { dao.getOne(uuid) }
 }

@@ -67,7 +67,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs is OpenAs.Update }
         .map { it.openAs as OpenAs.Update }
-        .flatMapSingle { bloodPressureRepository.findOne(it.bpUuid) }
+        .flatMapSingle { bloodPressureRepository.measurement(it.bpUuid) }
         .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic) } }
   }
 
@@ -159,7 +159,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs is OpenAs.Update }
         .map { it.openAs as OpenAs.Update }
-        .flatMapSingle { bloodPressureRepository.findOne(it.bpUuid) }
+        .flatMapSingle { bloodPressureRepository.measurement(it.bpUuid) }
         .take(1)
 
     return imeDoneClicks

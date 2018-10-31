@@ -406,7 +406,6 @@ class PatientSummaryScreenControllerTest {
 
   @Suppress("Unused")
   private fun `params for editing blood pressures`(): List<List<Any>> {
-
     fun generateBps(bpEditableFor: Duration): List<List<Any>> {
       val durationAsMillis = bpEditableFor.toMillis()
       val bpCreatedAt = Instant.now(clock)

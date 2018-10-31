@@ -173,7 +173,7 @@ class BloodPressureEntrySheetControllerTest {
       val bpUuid = openAs.bpUuid
 
       alreadyPresentBp = PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid, systolic = 120, diastolic = 80)
-      whenever(bloodPressureRepository.findOne(bpUuid)).thenReturn(Single.just(alreadyPresentBp))
+      whenever(bloodPressureRepository.measurement(bpUuid)).thenReturn(Single.just(alreadyPresentBp))
       whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
 
     } else if (openAs is OpenAs.New) {
@@ -209,7 +209,7 @@ class BloodPressureEntrySheetControllerTest {
       bloodPressureMeasurement: BloodPressureMeasurement?
   ) {
     if (openAs is OpenAs.Update) {
-      whenever(bloodPressureRepository.findOne(any())).thenReturn(Single.just(bloodPressureMeasurement!!))
+      whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(bloodPressureMeasurement!!))
     }
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))

@@ -91,9 +91,10 @@ class UserSession @Inject constructor(
         .flatMap { loginApi.login(it) }
         .flatMap {
           storeUserAndAccessToken(it)
-              .toSingleDefault(it)
+              .toSingleDefault(LoginResult.Success as LoginResult)
         }
-        .map { LoginResult.Success as LoginResult }
+        .doOnSuccess { syncOnLoginResult() }
+        .doOnSuccess { clearOngoingLoginEntry().subscribe()}
         .onErrorReturn { error ->
           when {
             error is IOException -> LoginResult.NetworkError
@@ -107,18 +108,15 @@ class UserSession @Inject constructor(
             }
           }
         }
-        .doOnSuccess(this::syncOnLoginResult)
         .doOnSuccess { Timber.i("Login result: $it") }
   }
 
-  private fun syncOnLoginResult(loginResult: LoginResult) {
-    if (loginResult is LoginResult.Success) {
-      syncScheduler
-          .syncImmediately()
-          .subscribeOn(Schedulers.io())
-          .onErrorComplete()
-          .subscribe()
-    }
+  private fun syncOnLoginResult() {
+    syncScheduler
+        .syncImmediately()
+        .subscribeOn(Schedulers.io())
+        .onErrorComplete()
+        .subscribe()
   }
 
   fun requestLoginOtp(): Single<LoginResult> {

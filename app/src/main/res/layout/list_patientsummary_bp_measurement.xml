@@ -3,7 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/white">
+  android:background="@color/white100">
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -14,16 +14,23 @@
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_16">
 
+    <ImageView
+      android:id="@+id/patientsummary_bp_reading_heart"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_vertical"
+      android:src="@drawable/ic_favorite_20dp"
+      android:tint="@color/patientsummary_bp_reading_normal"
+      tools:ignore="ContentDescription" />
+
     <org.simple.clinic.widgets.TintableCompoundDrawableTextView
       android:id="@+id/patientsummary_item_bp_readings"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      android:drawablePadding="@dimen/spacing_8"
-      android:drawableStart="@drawable/ic_heart_20dp"
-      android:minEms="5"
-      android:textSize="@dimen/textsize_18"
-      tools:text="164/95" />
+      android:layout_marginStart="@dimen/spacing_12"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.PatientSummary.BloodPressure.Normal"
+      tools:text="164 / 95" />
 
     <TextView
       android:id="@+id/patientsummary_item_bp_level"
@@ -33,15 +40,16 @@
       android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginStart="@dimen/spacing_16"
       android:layout_weight="1"
-      android:textSize="@dimen/textsize_12"
-      tools:text="Extreme" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
+      tools:text="High" />
 
     <TextView
       android:id="@+id/patientsummary_item_bp_timestamp"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_vertical"
-      tools:text="30 days ago" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+      tools:text="Edit \u2022 Today" />
   </LinearLayout>
 
   <View

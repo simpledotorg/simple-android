@@ -325,4 +325,23 @@
     <item name="android:visibility">gone</item>
     <item name="android:layout_marginTop">@dimen/spacing_4</item>
   </style>
+
+  <style name="Clinic.V2.TextAppearance.PatientSummary" />
+
+  <style name="Clinic.V2.TextAppearance.PatientSummary.BloodPressure">
+    <item name="android:textSize">@dimen/textsize_20</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:letterSpacing">0.05</item>
+    <item name="android:lineSpacingExtra">4sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.PatientSummary.BloodPressure.Normal">
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.PatientSummary.BloodPressure.High">
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textColor">@color/red1</item>
+  </style>
 </resources>

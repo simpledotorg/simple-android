@@ -29,7 +29,7 @@ object DebugNotification {
         0,
         Intent(context, DebugNotificationActionReceiver::class.java),
         PendingIntent.FLAG_CANCEL_CURRENT)
-    val syncAction = NotificationCompat.Action(R.drawable.ic_heart_20dp, "Sync data", syncPendingIntent)
+    val syncAction = NotificationCompat.Action(R.drawable.ic_favorite_20dp, "Sync data", syncPendingIntent)
 
     val notif = NotificationCompat.Builder(context, NOTIF_CHANNEL_ID)
         .setSmallIcon(R.mipmap.ic_launcher)

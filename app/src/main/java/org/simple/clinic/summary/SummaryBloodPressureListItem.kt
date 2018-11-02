@@ -75,6 +75,7 @@ data class SummaryBloodPressureListItem(
     holder.heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
 
     holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
+    holder.itemView.isClickable = isEditable
   }
 
   override fun isSameAs(other: Item<*>?): Boolean {

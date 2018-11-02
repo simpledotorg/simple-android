@@ -37,8 +37,6 @@
     <string name="patientsummary_finish_saving_patient">सम्पन्न</string>
     <string name="bloodpressure_level_low">कम</string>
     <string name="bloodpressure_level_moderately_high">अधिक</string>
-    <string name="bloodpressure_level_very_high">बहुत ऊँचा</string>
-    <string name="bloodpressure_level_extremely_high">अत्यधिक ऊँचा</string>
     <string name="timestamp_today">आज</string>
     <string name="timestamp_yesterday">कल</string>
     <string name="timestamp_days">%d दिन पहले</string>

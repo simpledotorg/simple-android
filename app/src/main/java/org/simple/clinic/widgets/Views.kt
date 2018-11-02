@@ -4,9 +4,11 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.support.annotation.DimenRes
 import android.support.annotation.DrawableRes
 import android.support.annotation.IdRes
+import android.support.annotation.StyleRes
 import android.support.v4.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.View
@@ -154,3 +156,12 @@ fun dpToPx(dp: Float): Float {
 }
 
 fun dpToPx(dp: Int) = dpToPx(dp.toFloat())
+
+fun TextView.setTextAppearanceCompat(@StyleRes resourceId: Int) {
+  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+    setTextAppearance(resourceId)
+  } else {
+    @Suppress("DEPRECATION")
+    setTextAppearance(context, resourceId)
+  }
+}

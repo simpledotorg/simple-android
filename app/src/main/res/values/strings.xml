@@ -115,6 +115,8 @@
   <string name="patientsummary_medicalhistory_title">Cardiovascular History</string>
   <string name="patientsummary_medicalhistory_last_updated">Updated %s</string>
   <string name="patientsummary_bp_none_added">No blood pressures added</string>
+  <string name="patientsummary_bp_reading">%1$d / %2$d</string>
+  <string name="patientsummary_bp_edit">Edit</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->

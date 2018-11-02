@@ -36,8 +36,6 @@
     <string name="patientsummary_bp_add_new">ਨਵਾਂ ਬੀ ਪੀ</string>
     <string name="patientsummary_finish_saving_patient">ਹੋ ਗਿਆ</string>
     <string name="bloodpressure_level_moderately_high">ਉੱਚ</string>
-    <string name="bloodpressure_level_very_high">ਬਹੁਤ ਉੱਚਾ</string>
-    <string name="bloodpressure_level_extremely_high">ਬਹੁਤ ਜ਼ਿਆਦਾ ਉੱਚੇ</string>
     <string name="bloodpressure_level_low">ਘੱਟ</string>
     <string name="timestamp_today">ਅੱਜ</string>
     <string name="timestamp_yesterday">ਕੱਲ੍ਹ</string>

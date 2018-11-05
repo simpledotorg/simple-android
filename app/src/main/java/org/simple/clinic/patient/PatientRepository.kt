@@ -294,7 +294,17 @@ class PatientRepository @Inject constructor(
   }
 
   fun updatePatient(patient: Patient): Completable {
-    TODO()
+    return Completable.fromAction {
+
+      database.patientDao().updatePatient(
+          patientUuid = patient.uuid,
+          fullName = patient.fullName,
+          searchableName = nameToSearchableForm(patient.fullName),
+          gender = patient.gender,
+          updatedAt = Instant.now(clock),
+          syncStatus = PENDING
+      )
+    }
   }
 
   fun updateAddressForPatient(patientUuid: UUID, patientAddress: PatientAddress): Completable {

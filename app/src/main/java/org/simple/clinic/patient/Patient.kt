@@ -84,6 +84,21 @@ data class Patient constructor(
       upsert(patients)
     }
 
+    @Query("""
+      UPDATE Patient
+      SET fullName = :fullName, searchableName = :searchableName, gender = :gender,
+        updatedAt = :updatedAt, syncStatus = :syncStatus
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun updatePatient(
+        patientUuid: UUID,
+        fullName: String,
+        searchableName: String,
+        gender: Gender,
+        updatedAt: Instant,
+        syncStatus: SyncStatus
+    )
+
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)
 

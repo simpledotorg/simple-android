@@ -607,6 +607,110 @@ class PatientRepositoryAndroidTest {
     assertThat(savedPhoneNumbers).isEqualTo(patientProfile.phoneNumbers)
   }
 
+  @Test
+  fun when_phone_number_is_updated_it_should_be_saved() {
+    val addressToSave = testData.patientAddress()
+
+    val originalSavedPatient = testData.patient(
+        syncStatus = SyncStatus.DONE,
+        addressUuid = addressToSave.uuid
+    )
+
+    val patientProfile = PatientProfile(
+        patient = originalSavedPatient,
+        address = addressToSave,
+        phoneNumbers = listOf(
+            testData.patientPhoneNumber(
+                patientUuid = originalSavedPatient.uuid,
+                number = "111111111",
+                phoneType = PatientPhoneNumberType.LANDLINE,
+                createdAt = Instant.now(clock),
+                updatedAt = Instant.now(clock)
+            ),
+            testData.patientPhoneNumber(
+                patientUuid = originalSavedPatient.uuid,
+                number = "2222222222",
+                phoneType = PatientPhoneNumberType.MOBILE,
+                createdAt = Instant.now(clock),
+                updatedAt = Instant.now(clock)
+            )
+        )
+    )
+
+    patientRepository.save(listOf(patientProfile))
+        .blockingAwait()
+
+    val updatedAfter = Duration.ofDays(1L)
+    (clock as TestClock).advanceBy(updatedAfter)
+
+    val phoneNumberToUpdate = patientProfile.phoneNumbers[1].copy(number = "12345678", phoneType = PatientPhoneNumberType.LANDLINE)
+
+    patientRepository.updatePhoneNumberForPatient(originalSavedPatient.uuid, phoneNumberToUpdate).blockingAwait()
+
+    val phoneNumbersSaved = database.phoneNumberDao().phoneNumber(originalSavedPatient.uuid).firstOrError().blockingGet()
+
+    val phoneNumber = phoneNumbersSaved.find { it.uuid == phoneNumberToUpdate.uuid }
+
+    assertThat(phoneNumber).isNotNull()
+    assertThat(phoneNumber!!.number).isEqualTo("12345678")
+    assertThat(phoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.LANDLINE)
+    assertThat(phoneNumber.updatedAt).isEqualTo(patientProfile.phoneNumbers[1].updatedAt.plus(updatedAfter))
+    assertThat(phoneNumber.updatedAt).isNotEqualTo(phoneNumber.createdAt)
+  }
+
+  @Test
+  fun phone_number_should_be_saved_properly() {
+    val addressToSave = testData.patientAddress()
+
+    val originalSavedPatient = testData.patient(
+        syncStatus = SyncStatus.DONE,
+        addressUuid = addressToSave.uuid
+    )
+
+    val patientProfile = PatientProfile(
+        patient = originalSavedPatient,
+        address = addressToSave,
+        phoneNumbers = listOf(
+            testData.patientPhoneNumber(
+                patientUuid = originalSavedPatient.uuid,
+                number = "111111111",
+                phoneType = PatientPhoneNumberType.LANDLINE,
+                createdAt = Instant.now(clock),
+                updatedAt = Instant.now(clock)
+            )
+        )
+    )
+
+    patientRepository.save(listOf(patientProfile))
+        .blockingAwait()
+
+    val updatedAfter = Duration.ofDays(1L)
+    (clock as TestClock).advanceBy(updatedAfter)
+
+    patientRepository.savePhoneNumberForPatient(
+        patientUuid = originalSavedPatient.uuid,
+        number = "2222222222",
+        phoneNumberType = PatientPhoneNumberType.MOBILE,
+        active = true
+    ).blockingAwait()
+
+    val phoneNumbersSaved = database.phoneNumberDao().phoneNumber(originalSavedPatient.uuid).firstOrError().blockingGet()
+
+    assertThat(phoneNumbersSaved.size).isEqualTo(2)
+
+    val savedPhoneNumber = phoneNumbersSaved.find { it != patientProfile.phoneNumbers[0] }!!
+
+    assertThat(savedPhoneNumber.active).isTrue()
+    assertThat(savedPhoneNumber.createdAt).isEqualTo(Instant.now(clock))
+    assertThat(savedPhoneNumber.createdAt).isEqualTo(savedPhoneNumber.updatedAt)
+    assertThat(savedPhoneNumber.number).isEqualTo("2222222222")
+    assertThat(savedPhoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.MOBILE)
+
+    val (patient) = patientRepository.patient(originalSavedPatient.uuid).firstOrError().blockingGet() as Just<Patient>
+
+    assertThat(patient.syncStatus).isEqualTo(SyncStatus.PENDING)
+  }
+
   @After
   fun tearDown() {
     (clock as TestClock).resetToEpoch()

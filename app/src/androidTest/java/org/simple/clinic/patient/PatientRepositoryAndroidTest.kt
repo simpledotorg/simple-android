@@ -626,6 +626,61 @@ class PatientRepositoryAndroidTest {
     assertThat(savedAddress.state).isEqualTo("New State")
   }
 
+  @Test
+  fun when_patient_is_updated_the_patient_must_be_saved() {
+    val addressToSave = testData.patientAddress(
+        colonyOrVilage = "Old Colony",
+        district = "Old District",
+        state = "Old State"
+    )
+
+    val originalSavedPatient = testData.patient(
+        syncStatus = SyncStatus.DONE,
+        addressUuid = addressToSave.uuid,
+        fullName = "Old Name",
+        gender = Gender.MALE,
+        age = Age(value = 30, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        dateOfBirth = LocalDate.now(clock),
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock)
+    )
+
+    val patientProfile = PatientProfile(
+        patient = originalSavedPatient,
+        address = addressToSave,
+        phoneNumbers = listOf(
+            testData.patientPhoneNumber(patientUuid = originalSavedPatient.uuid),
+            testData.patientPhoneNumber(patientUuid = originalSavedPatient.uuid)
+        )
+    )
+
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val updatedAfter = Duration.ofDays(1L)
+    (clock as TestClock).advanceBy(updatedAfter)
+
+    val newPatientToSave = originalSavedPatient.copy(
+        fullName = "New Name",
+        gender = Gender.TRANSGENDER,
+        age = Age(value = 35, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        dateOfBirth = LocalDate.now(clock)
+    )
+
+    patientRepository.updatePatient(newPatientToSave).blockingAwait()
+
+    val savedPatient = patientRepository.patient(newPatientToSave.uuid)
+        .unwrapJust()
+        .blockingFirst()
+
+    assertThat(savedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(savedPatient.updatedAt).isEqualTo(originalSavedPatient.updatedAt.plus(updatedAfter))
+    assertThat(savedPatient.createdAt).isNotEqualTo(savedPatient.updatedAt)
+
+    assertThat(savedPatient.fullName).isEqualTo("New Name")
+    assertThat(savedPatient.searchableName).isEqualTo("NewName")
+    assertThat(savedPatient.gender).isEqualTo(Gender.TRANSGENDER)
+  }
+
   @After
   fun tearDown() {
     (clock as TestClock).resetToEpoch()

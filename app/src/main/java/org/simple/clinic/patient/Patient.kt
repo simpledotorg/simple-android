@@ -76,8 +76,33 @@ data class Patient constructor(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     abstract fun patient(uuid: UUID): Flowable<List<Patient>>
 
+    /**
+     * Saves a new patient in the DB.
+     *
+     * **Note:** Do not change the conflict strategy to [OnConflictStrategy.REPLACE]. This is
+     * because the [PatientPhoneNumber] table has a strong reference to the [Patient] table and using a
+     * replace conflict strategy deletes the patient before saving the updated one which causes
+     * the linked phone number to get deleted as well.
+     *
+     * If you need to update a patient, use [updatePatient] instead.
+     **/
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun save(patient: Patient)
+
+    @Query("""
+      UPDATE Patient
+      SET fullName = :fullName, searchableName = :searchableName, gender = :gender,
+        updatedAt = :updatedAt, syncStatus = :syncStatus
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun updatePatient(
+        patientUuid: UUID,
+        fullName: String,
+        searchableName: String,
+        gender: Gender,
+        updatedAt: Instant,
+        syncStatus: SyncStatus
+    )
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     abstract fun save(patient: List<Patient>)

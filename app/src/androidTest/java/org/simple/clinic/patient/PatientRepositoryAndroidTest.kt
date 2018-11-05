@@ -21,6 +21,8 @@ import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
@@ -567,6 +569,61 @@ class PatientRepositoryAndroidTest {
     assertThat(database.addressDao().count()).isEqualTo(1)
     assertThat(storedAddresses.size).isEqualTo(1)
     assertThat(storedAddresses[0].uuid).isEqualTo(address.uuid)
+  }
+
+  @Test
+  fun when_patient_address_is_updated_the_address_must_be_saved() {
+    val addressToSave = testData.patientAddress(
+        colonyOrVilage = "Old Colony",
+        district = "Old District",
+        state = "Old State",
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock)
+    )
+
+    val patientProfile = PatientProfile(
+        patient = testData.patient(
+            addressUuid = addressToSave.uuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        address = addressToSave,
+        phoneNumbers = emptyList()
+    )
+
+    val patient = patientProfile.patient
+
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val updatedAfter = Duration.ofDays(1L)
+    (clock as TestClock).advanceBy(updatedAfter)
+
+    val oldSavedAddress = patientRepository.address(patient.addressUuid)
+        .unwrapJust()
+        .blockingFirst()
+
+    val newAddressToSave = oldSavedAddress.copy(
+        colonyOrVillage = "New Colony",
+        district = "New District",
+        state = "New State"
+    )
+
+    patientRepository.updateAddressForPatient(patientUuid = patient.uuid, patientAddress = newAddressToSave).blockingAwait()
+
+    val updatedPatient = patientRepository.patient(patient.uuid)
+        .unwrapJust()
+        .blockingFirst()
+
+    assertThat(updatedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+
+    val savedAddress = patientRepository.address(updatedPatient.addressUuid)
+        .unwrapJust()
+        .blockingFirst()
+
+    assertThat(savedAddress.updatedAt).isEqualTo(oldSavedAddress.updatedAt.plus(updatedAfter))
+    assertThat(savedAddress.createdAt).isNotEqualTo(savedAddress.updatedAt)
+    assertThat(savedAddress.colonyOrVillage).isEqualTo("New Colony")
+    assertThat(savedAddress.district).isEqualTo("New District")
+    assertThat(savedAddress.state).isEqualTo("New State")
   }
 
   @After

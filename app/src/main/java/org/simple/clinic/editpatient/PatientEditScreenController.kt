@@ -40,8 +40,8 @@ class PatientEditScreenController @Inject constructor(
           patientRepository
               .address(patient.addressUuid)
               .take(1)
-              .unwrapJust()
         }
+        .unwrapJust()
 
     val preFillPatientProfile = savedPatient
         .map { patient: Patient ->

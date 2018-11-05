@@ -18,7 +18,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 

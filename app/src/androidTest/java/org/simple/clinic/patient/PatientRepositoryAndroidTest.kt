@@ -19,8 +19,11 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
@@ -442,9 +445,9 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient =
-    patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .blockingGet()
+        patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
+            .andThen(patientRepository.saveOngoingEntryAsPatient())
+            .blockingGet()
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
@@ -464,7 +467,7 @@ class PatientRepositoryAndroidTest {
   fun when_searching_with_fuzzy_search_the_results_must_be_limited() {
     val template = testData.patientProfile(syncStatus = SyncStatus.DONE)
 
-    val patientsToSave = (1 .. 1000).map {
+    val patientsToSave = (1..1000).map {
       val addressUuid = UUID.randomUUID()
       val patientUuid = UUID.randomUUID()
 
@@ -487,6 +490,56 @@ class PatientRepositoryAndroidTest {
 
     assertThat(patientRepository.search(name = "Fame", includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
     assertThat(patientRepository.search(name = "Fame", assumedAge = 3, includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
+  }
+
+  @Test
+  fun when_patient_address_is_updated_the_address_must_be_saved() {
+    val addressToSave = testData.patientAddress(
+        colonyOrVilage = "Old Colony",
+        district = "Old District",
+        state = "Old State",
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock)
+    )
+
+    val patientProfile = PatientProfile(
+        patient = testData.patient(
+            addressUuid = addressToSave.uuid,
+            syncStatus = SyncStatus.DONE
+        ),
+        address = addressToSave,
+        phoneNumbers = emptyList()
+    )
+
+    val patient = patientProfile.patient
+
+    patientRepository.save(listOf(patientProfile))
+        .blockingAwait()
+
+    val updatedAfter = Duration.ofDays(1L)
+    (clock as TestClock).advanceBy(updatedAfter)
+
+    val (oldSavedAddress) = patientRepository.address(patient.addressUuid).firstOrError().blockingGet() as Just<PatientAddress>
+
+    val newAddressToSave = oldSavedAddress.copy(
+        colonyOrVillage = "New Colony",
+        district = "New District",
+        state = "New State"
+    )
+
+    patientRepository.updateAddressForPatient(patientUuid = patient.uuid, patientAddress = newAddressToSave).blockingAwait()
+
+    val (updatedPatient) = patientRepository.patient(patient.uuid).blockingFirst() as Just<Patient>
+
+    assertThat(updatedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+
+    val (savedAddress) = patientRepository.address(updatedPatient.addressUuid).firstOrError().blockingGet() as Just<PatientAddress>
+
+    assertThat(savedAddress.updatedAt).isEqualTo(oldSavedAddress.updatedAt.plus(updatedAfter))
+    assertThat(savedAddress.createdAt).isNotEqualTo(savedAddress.updatedAt)
+    assertThat(savedAddress.colonyOrVillage).isEqualTo("New Colony")
+    assertThat(savedAddress.district).isEqualTo("New District")
+    assertThat(savedAddress.state).isEqualTo("New State")
   }
 
   @After

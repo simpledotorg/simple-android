@@ -323,6 +323,39 @@ class PatientRepository @Inject constructor(
         })
   }
 
+  fun updatePhoneNumberForPatient(patientUuid: UUID, phoneNumber: PatientPhoneNumber): Completable {
+    return Completable.fromAction {
+
+      val phoneNumberToSave = phoneNumber.copy(
+          updatedAt = Instant.now(clock)
+      )
+
+      database.phoneNumberDao().save(listOf(phoneNumberToSave))
+    }.andThen(Completable.fromAction {
+      database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
+    })
+  }
+
+  fun savePhoneNumberForPatient(patientUuid: UUID, number: String, phoneNumberType: PatientPhoneNumberType, active: Boolean): Completable {
+    return Completable.fromAction {
+      val now = Instant.now(clock)
+
+      val phoneNumber = PatientPhoneNumber(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientUuid,
+          number = number,
+          phoneType = phoneNumberType,
+          active = active,
+          createdAt = now,
+          updatedAt = Instant.from(now)
+      )
+
+      database.phoneNumberDao().save(listOf(phoneNumber))
+    }.andThen(Completable.fromAction {
+      database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
+    })
+  }
+
   private fun convertToDate(dateOfBirth: String?): LocalDate? {
     return dateOfBirth?.let {
       val formatter = DATE_OF_BIRTH_FORMAT_FOR_UI

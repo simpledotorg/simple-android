@@ -8,6 +8,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -27,6 +28,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
+import org.simple.clinic.editpatient.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -74,6 +76,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
   private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsummary_done)
+  private val editButton by bindView<Button>(R.id.patientsummary_edit)
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val prescriptionSection = Section()
@@ -113,6 +116,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     rootLayout.hideKeyboard()
 
     setupSummaryList()
+    setupEditButtonClicks()
 
     controller.disposeOnDetach(this)
 
@@ -130,6 +134,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+  }
+
+  private fun setupEditButtonClicks() {
+    editButton.setOnClickListener {
+      val key = screenRouter.key<PatientSummaryScreenKey>(this)
+
+      screenRouter.push(PatientEditScreenKey(key.patientUuid))
+    }
   }
 
   private fun screenCreates(): Observable<UiEvent> {

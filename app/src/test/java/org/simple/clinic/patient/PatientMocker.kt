@@ -48,16 +48,22 @@ object PatientMocker {
   }
 
   fun address(
-      uuid: UUID = mock()
+      uuid: UUID = UUID.randomUUID(),
+      colonyOrVillage: String? = "colony/village",
+      district: String = "district",
+      state: String = "state",
+      country: String = "India",
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): PatientAddress {
     return PatientAddress(
         uuid = uuid,
-        colonyOrVillage = "colony/village",
-        district = "district",
-        state = "state",
-        country = "India",
-        createdAt = mock(),
-        updatedAt = mock())
+        colonyOrVillage = colonyOrVillage,
+        district = district,
+        state = state,
+        country = country,
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 
   fun bp(
@@ -265,4 +271,22 @@ object PatientMocker {
         createdAt = Instant.now(),
         updatedAt = updatedAt)
   }
+
+  fun phoneNumber(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      number: String = "1111111111",
+      phoneType: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
+      active: Boolean = true,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ) = PatientPhoneNumber(
+      uuid = uuid,
+      patientUuid = patientUuid,
+      number = number,
+      phoneType = phoneType,
+      active = active,
+      createdAt = createdAt,
+      updatedAt = updatedAt
+  )
 }

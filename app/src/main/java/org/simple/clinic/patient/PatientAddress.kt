@@ -45,8 +45,31 @@ data class PatientAddress(
   @Dao
   interface RoomDao {
 
+    /**
+     * Saves a new patient address in the DB.
+     *
+     * **Note:** Do not change the conflict strategy to [OnConflictStrategy.REPLACE]. This is
+     * because the [Patient] table has a strong reference to the [PatientAddress] table and using a
+     * replace conflict strategy deletes the address table before saving the new one which causes
+     * the linked patient to get deleted as well.
+     *
+     * If you need to update an address, use [updateAddress] instead.
+     **/
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(address: PatientAddress)
+
+    @Query("""
+      UPDATE PatientAddress
+      SET colonyOrVillage = :colonyOrVillage, district = :district, state = :state, updatedAt = :updatedAt
+      WHERE uuid = :addressUuid
+    """)
+    fun updateAddress(
+        addressUuid: UUID,
+        colonyOrVillage: String?,
+        district: String,
+        state: String,
+        updatedAt: Instant
+    )
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun save(address: List<PatientAddress>)

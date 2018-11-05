@@ -231,8 +231,8 @@ class PatientRepository @Inject constructor(
                 colonyOrVillage = address!!.colonyOrVillage,
                 district = address.district,
                 state = address.state,
-                createdAt = Instant.now(),
-                updatedAt = Instant.now())
+                createdAt = Instant.now(clock),
+                updatedAt = Instant.now(clock))
           }
         }
         .flatMapCompletable { address -> saveAddress(address) }
@@ -251,14 +251,14 @@ class PatientRepository @Inject constructor(
                 dateOfBirth = convertToDate(personalDetails.dateOfBirth),
                 age = personalDetails.age?.let {
                   Age(value = personalDetails.age.toInt(),
-                      updatedAt = Instant.now(),
+                      updatedAt = Instant.now(clock),
                       computedDateOfBirth = LocalDate.now(clock).minusYears(personalDetails.age.toLong()))
                 },
 
                 addressUuid = addressUuid,
 
-                createdAt = Instant.now(),
-                updatedAt = Instant.now(),
+                createdAt = Instant.now(clock),
+                updatedAt = Instant.now(clock),
                 syncStatus = PENDING)
           }
         }
@@ -279,8 +279,8 @@ class PatientRepository @Inject constructor(
                   phoneType = type,
                   number = number,
                   active = active,
-                  createdAt = Instant.now(),
-                  updatedAt = Instant.now())
+                  createdAt = Instant.now(clock),
+                  updatedAt = Instant.now(clock))
             }
             savePhoneNumber(number)
           }
@@ -291,6 +291,26 @@ class PatientRepository @Inject constructor(
         .andThen(patientSave)
         .andThen(phoneNumberSave)
         .andThen(sharedPatient)
+  }
+
+  fun updatePatient(patient: Patient): Completable {
+    TODO()
+  }
+
+  fun updateAddressForPatient(patientUuid: UUID, patientAddress: PatientAddress): Completable {
+    return Completable
+        .fromAction {
+          database.addressDao().updateAddress(
+              addressUuid = patientAddress.uuid,
+              colonyOrVillage = patientAddress.colonyOrVillage,
+              district = patientAddress.district,
+              state = patientAddress.state,
+              updatedAt = Instant.now(clock)
+          )
+        }
+        .andThen(Completable.fromAction {
+          database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
+        })
   }
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {

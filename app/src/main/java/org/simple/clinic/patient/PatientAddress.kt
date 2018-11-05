@@ -52,6 +52,19 @@ data class PatientAddress(
       upsert(addresses)
     }
 
+    @Query("""
+      UPDATE PatientAddress
+      SET colonyOrVillage = :colonyOrVillage, district = :district, state = :state, updatedAt = :updatedAt
+      WHERE uuid = :addressUuid
+    """)
+    abstract fun updateAddress(
+        addressUuid: UUID,
+        colonyOrVillage: String?,
+        district: String,
+        state: String,
+        updatedAt: Instant
+    )
+
     @Query("SELECT * FROM patientaddress WHERE uuid = :uuid")
     abstract fun getOne(uuid: UUID): PatientAddress?
 

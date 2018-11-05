@@ -67,6 +67,18 @@
   <string name="patiententry_error_phonenumber_length_less">Phone number cannot be less than 6 digits</string>
   <string name="patiententry_error_phonenumber_length_more">Phone number cannot be more than 12 digits</string>
 
+  <!-- Edit patient -->
+  <string name="patientedit_full_name">@string/patiententry_full_name</string>
+  <string name="patientedit_phone_number">@string/patiententry_phone_number</string>
+  <string name="patientedit_gender_female">@string/gender_female</string>
+  <string name="patientedit_gender_male">@string/gender_male</string>
+  <string name="patientedit_gender_transgender">@string/gender_transgender</string>
+  <string name="patientedit_error_empty_gender">@string/patiententry_error_empty_gender</string>
+  <string name="patientedit_colony_or_village">@string/patiententry_colony_or_village</string>
+  <string name="patientedit_district">@string/patiententry_district</string>
+  <string name="patientedit_state">@string/patiententry_state</string>
+  <string name="patientedit_save_patient">Save</string>
+
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->

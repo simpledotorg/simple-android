@@ -542,6 +542,71 @@ class PatientRepositoryAndroidTest {
     assertThat(savedAddress.state).isEqualTo("New State")
   }
 
+  @Test
+  fun when_patient_is_updated_the_patient_must_be_saved() {
+    val addressToSave = testData.patientAddress(
+        colonyOrVilage = "Old Colony",
+        district = "Old District",
+        state = "Old State"
+    )
+
+    val originalSavedPatient = testData.patient(
+        syncStatus = SyncStatus.DONE,
+        addressUuid = addressToSave.uuid,
+        fullName = "Old Name",
+        gender = Gender.MALE,
+        age = Age(value = 30, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        dateOfBirth = LocalDate.now(clock),
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock)
+    )
+
+    val patientProfile = PatientProfile(
+        patient = originalSavedPatient,
+        address = addressToSave,
+        phoneNumbers = listOf(
+            testData.patientPhoneNumber(patientUuid = originalSavedPatient.uuid),
+            testData.patientPhoneNumber(patientUuid = originalSavedPatient.uuid)
+        )
+    )
+
+    patientRepository.save(listOf(patientProfile))
+        .blockingAwait()
+
+    val updatedAfter = Duration.ofDays(1L)
+    (clock as TestClock).advanceBy(updatedAfter)
+
+    val newPatientToSave = originalSavedPatient.copy(
+        fullName = "New Name",
+        gender = Gender.TRANSGENDER,
+        age = Age(value = 35, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+        dateOfBirth = LocalDate.now(clock)
+    )
+
+    patientRepository.updatePatient(newPatientToSave).blockingAwait()
+
+    val (savedPatient) = patientRepository.patient(newPatientToSave.uuid).firstOrError().blockingGet() as Just<Patient>
+
+    assertThat(savedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(savedPatient.updatedAt).isEqualTo(originalSavedPatient.updatedAt.plus(updatedAfter))
+    assertThat(savedPatient.createdAt).isNotEqualTo(savedPatient.updatedAt)
+
+    assertThat(savedPatient.fullName).isEqualTo("New Name")
+    assertThat(savedPatient.searchableName).isEqualTo("NewName")
+    assertThat(savedPatient.gender).isEqualTo(Gender.TRANSGENDER)
+
+    // We don't update age or date right now, so we verify that the values are still what were
+    // saved earlier.
+    assertThat(savedPatient.age).isEqualTo(originalSavedPatient.age)
+    assertThat(savedPatient.dateOfBirth).isEqualTo(originalSavedPatient.dateOfBirth)
+
+    // Phone numbers have a strong reference to the patient in the database. If we accidentally use
+    // a conflict strategy of replace when saving the patient, we'll end up clearing the phone
+    // numbers. This assertion will be used to catch the case where this happens.
+    val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(savedPatient.uuid).firstOrError().blockingGet()
+    assertThat(savedPhoneNumbers).isEqualTo(patientProfile.phoneNumbers)
+  }
+
   @After
   fun tearDown() {
     (clock as TestClock).resetToEpoch()

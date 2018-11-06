@@ -30,6 +30,8 @@ class BloodPressureSync @Inject constructor(
   }
 
   fun push(): Completable {
+    val recoverStuckRecordsFromPreviousSync = repository.updateMeasurementsSyncStatus(SyncStatus.IN_FLIGHT, SyncStatus.PENDING)
+
     val cachedPendingSyncMeasurements = repository.measurementsWithSyncStatus(SyncStatus.PENDING)
         // Converting to an Observable because Single#filter() returns a Maybe.
         // And Maybe#flatMapSingle() throws a NoSuchElementException on completion.
@@ -60,7 +62,9 @@ class BloodPressureSync @Inject constructor(
               })
         }
 
-    return pendingToInFlight.andThen(networkCall)
+    return recoverStuckRecordsFromPreviousSync
+        .andThen(pendingToInFlight)
+        .andThen(networkCall)
   }
 
   private fun logValidationErrorsIfAny(response: DataPushResponse) {

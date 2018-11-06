@@ -12,13 +12,14 @@ import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
 
-// TODO: Use this for syncing all data models.
 class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>) {
 
   fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,
       pushNetworkCall: (List<T>) -> Single<DataPushResponse>
   ): Completable {
+    val recoverStuckRecordsFromPreviousSync = repository.setSyncStatus(SyncStatus.IN_FLIGHT, SyncStatus.PENDING)
+
     val cachedPendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
         .toObservable()
         .filter { it.isNotEmpty() }
@@ -42,7 +43,9 @@ class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>
               })
         }
 
-    return markAsInFlight.andThen(sendRecords)
+    return recoverStuckRecordsFromPreviousSync
+        .andThen(markAsInFlight)
+        .andThen(sendRecords)
   }
 
   private fun <T : Any> logValidationErrorsIfAny(records: List<T>): Consumer<in DataPushResponse> {

@@ -16,7 +16,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 @Module
-class NetworkModule {
+open class NetworkModule {
 
   @Provides
   fun moshi(): Moshi {
@@ -28,8 +28,8 @@ class NetworkModule {
   }
 
   @Provides
-  fun retrofitBuilder(moshi: Moshi, loggedInInterceptor: LoggedInUserHttpInterceptor): Retrofit.Builder {
-    val okHttpBuilder = OkHttpClient.Builder()
+  open fun okHttpClient(loggedInInterceptor: LoggedInUserHttpInterceptor): OkHttpClient {
+    return OkHttpClient.Builder()
         .apply {
           addInterceptor(loggedInInterceptor)
           addInterceptor(NetworkAnalyticsInterceptor())
@@ -40,11 +40,15 @@ class NetworkModule {
             addInterceptor(loggingInterceptor)
           }
         }
+        .build()
+  }
 
+  @Provides
+  fun retrofitBuilder(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
     return Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .client(okHttpBuilder.build())
+        .client(okHttpClient)
         .validateEagerly(true)
   }
 }

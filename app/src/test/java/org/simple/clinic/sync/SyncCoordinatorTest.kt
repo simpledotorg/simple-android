@@ -28,6 +28,8 @@ class SyncCoordinatorTest {
     lastSyncTimestamp = mock()
 
     syncCoordinator = SyncCoordinator(Single.fromCallable { syncConfig })
+
+    whenever(repository.setSyncStatus(from = SyncStatus.IN_FLIGHT, to = SyncStatus.PENDING)).thenReturn(Completable.complete())
   }
 
   @Test
@@ -68,5 +70,4 @@ class SyncCoordinatorTest {
     verify(repository).setSyncStatus(SyncStatus.PENDING, SyncStatus.IN_FLIGHT)
     verify(repository).setSyncStatus(validationErrors.map { it.uuid }, SyncStatus.INVALID)
   }
-
 }

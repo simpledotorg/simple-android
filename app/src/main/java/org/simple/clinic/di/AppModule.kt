@@ -12,6 +12,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
+import org.simple.clinic.pin.BruteForceProtectionModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.storage.Migration_10_11
@@ -44,6 +45,8 @@ import org.threeten.bp.Clock
   RegistrationModule::class,
   CrashReporterModule::class,
   AgeFuzzerModule::class,
+  AgeFuzzerModule::class,
+  BruteForceProtectionModule::class,
   PatientSummaryModule::class])
 open class AppModule(
     private val appContext: Application,

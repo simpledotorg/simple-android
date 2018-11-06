@@ -78,6 +78,12 @@
   <string name="patientedit_district">@string/patiententry_district</string>
   <string name="patientedit_state">@string/patiententry_state</string>
   <string name="patientedit_save_patient">Save</string>
+  <string name="patientedit_error_empty_fullname">@string/patiententry_error_empty_fullname</string>
+  <string name="patientedit_error_empty_colony_or_village">@string/patiententry_error_empty_colony_or_village</string>
+  <string name="patientedit_error_empty_district">@string/patiententry_error_empty_district</string>
+  <string name="patientedit_error_state_empty">@string/patiententry_error_state_empty</string>
+  <string name="patientedit_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientedit_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

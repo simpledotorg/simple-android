@@ -79,7 +79,7 @@
     android:layout_alignTop="@+id/applock_pin_entry_card"
     android:background="?colorPrimary" />
 
-  <org.simple.clinic.pin.PinEntryCardView
+  <org.simple.clinic.security.pin.PinEntryCardView
     android:id="@+id/applock_pin_entry_card"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/applock_logo_container" />

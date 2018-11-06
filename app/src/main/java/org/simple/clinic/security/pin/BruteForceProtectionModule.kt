@@ -1,4 +1,4 @@
-package org.simple.clinic.pin
+package org.simple.clinic.security.pin
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences

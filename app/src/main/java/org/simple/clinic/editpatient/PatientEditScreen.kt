@@ -92,4 +92,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     genderButton.isChecked = true
   }
+
+  fun showValidationErrors(errors: Set<PatientEditValidationError>) {
+    TODO()
+  }
 }

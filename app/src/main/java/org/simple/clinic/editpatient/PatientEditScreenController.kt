@@ -3,12 +3,16 @@ package org.simple.clinic.editpatient
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
+import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -16,13 +20,20 @@ typealias Ui = PatientEditScreen
 typealias UiChange = (Ui) -> Unit
 
 class PatientEditScreenController @Inject constructor(
-    private val patientRepository: PatientRepository
+    private val patientRepository: PatientRepository,
+    private val numberValidator: PhoneNumberValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return prefillOnStart(replayedEvents)
+    val transformedEvents = replayedEvents.mergeWith(patientDataUpdates(replayedEvents))
+
+    return Observable.merge(
+        prefillOnStart(transformedEvents),
+        showValidationErrorsOnSaveClick(transformedEvents)
+    )
+
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -74,5 +85,56 @@ class PatientEditScreenController @Inject constructor(
         }
 
     return Observable.merge(preFillPatientProfile, preFillPhoneNumber, preFillPatientAddress)
+  }
+
+  private fun patientDataUpdates(events: Observable<UiEvent>): Observable<UiEvent> {
+    val nameChanges = events
+        .ofType<PatientEditPatientNameTextChanged>()
+        .map { it.name }
+
+    val genderChanges = events
+        .ofType<PatientEditGenderChanged>()
+        .map { it.gender }
+
+    val colonyOrVillageChanges = events
+        .ofType<PatientEditColonyOrVillageChanged>()
+        .map { it.colonyOrVillage }
+
+    val districtChanges = events
+        .ofType<PatientEditDistrictTextChanged>()
+        .map { it.district }
+
+    val stateChanges = events
+        .ofType<PatientEditStateTextChanged>()
+        .map { it.state }
+
+    val phoneNumberChanges = events
+        .ofType<PatientEditPhoneNumberTextChanged>()
+        .map { it.phoneNumber }
+
+    return Observables.combineLatest(
+        nameChanges,
+        genderChanges,
+        colonyOrVillageChanges,
+        districtChanges,
+        stateChanges,
+        phoneNumberChanges
+    ) { name, gender, colonyOrVillage, district, state, phoneNumber ->
+      PatientEditDataChanged(PatientData(name, gender, phoneNumber, colonyOrVillage, district, state))
+    }
+  }
+
+  private fun showValidationErrorsOnSaveClick(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientDataChanges = events.ofType<PatientEditDataChanged>()
+
+    val savedPhoneNumber = events.ofType<PatientEditScreenCreated>()
+        .flatMap { patientRepository.phoneNumbers(it.patientUuid) }
+        .take(1)
+
+    return events.ofType<PatientEditSaveClicked>()
+        .withLatestFrom(patientDataChanges, savedPhoneNumber) { _, (patientData), phoneNumber -> patientData to phoneNumber }
+        .map { (patientData, phoneNumber) -> patientData.validate(phoneNumber.toNullable(), numberValidator) }
+        .filter { it.isNotEmpty() }
+        .map { errors -> { ui: Ui -> ui.showValidationErrors(errors) } }
   }
 }

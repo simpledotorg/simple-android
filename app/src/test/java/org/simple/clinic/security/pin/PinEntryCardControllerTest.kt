@@ -1,4 +1,4 @@
-package org.simple.clinic.pin
+package org.simple.clinic.security.pin
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq

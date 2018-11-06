@@ -1,4 +1,4 @@
-package org.simple.clinic.pin
+package org.simple.clinic.security.pin
 
 import org.simple.clinic.widgets.UiEvent
 

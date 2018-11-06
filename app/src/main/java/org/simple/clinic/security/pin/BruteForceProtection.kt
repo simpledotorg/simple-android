@@ -1,12 +1,12 @@
-package org.simple.clinic.pin
+package org.simple.clinic.security.pin
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
-import org.simple.clinic.pin.BruteForceProtection.ProtectedState.Allowed
-import org.simple.clinic.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
+import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional

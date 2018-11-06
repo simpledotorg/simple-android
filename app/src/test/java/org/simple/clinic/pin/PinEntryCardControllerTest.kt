@@ -11,9 +11,9 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.security.ComparisonResult
 import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 
@@ -95,5 +95,15 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinTextChanged("1234"))
 
     verify(screen).hideError()
+  }
+
+  @Test
+  fun `when PIN validation fails then the count of failed attempts should be incremented`() {
+    // TODO
+  }
+
+  @Test
+  fun `when the limit of failed attempts is reached then PIN entry should remain blocked until a fixed duration`() {
+    // TODO
   }
 }

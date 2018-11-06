@@ -30,7 +30,7 @@ import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.phone.PhoneModule
-import org.simple.clinic.pin.PinEntryCardView
+import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.qrscan.AadhaarScanScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen

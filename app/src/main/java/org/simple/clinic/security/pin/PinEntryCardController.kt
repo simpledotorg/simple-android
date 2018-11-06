@@ -1,11 +1,11 @@
-package org.simple.clinic.pin
+package org.simple.clinic.security.pin
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.pin.PinEntryCardView.State
+import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.security.ComparisonResult
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME

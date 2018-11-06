@@ -1,4 +1,4 @@
-package org.simple.clinic.pin
+package org.simple.clinic.security.pin
 
 import android.support.test.annotation.UiThreadTest
 import android.support.test.runner.AndroidJUnit4
@@ -12,8 +12,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.pin.BruteForceProtection.ProtectedState.Allowed
-import org.simple.clinic.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
+import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock

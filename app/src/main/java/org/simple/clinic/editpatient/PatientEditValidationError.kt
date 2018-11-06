@@ -1,18 +1,11 @@
 package org.simple.clinic.editpatient
 
-sealed class PatientEditValidationError(val analyticsName: String) {
-
-  object FullNameEmpty : PatientEditValidationError("Patient Edit:Name is empty")
-
-  object PhoneNumberBlank : PatientEditValidationError("Patient Edit:Phone Number is empty")
-
-  data class PhoneNumberTooShort(val minLength: Int) : PatientEditValidationError("Patient Edit:Phone Number is less than $minLength digits")
-
-  data class PhoneNumberTooLong(val maxLength: Int) : PatientEditValidationError("Patient Edit:Phone Number is more than $maxLength digits")
-
-  object ColonyOrVillageEmpty: PatientEditValidationError("Patient Edit:Colony or village empty")
-
-  object DistrictEmpty: PatientEditValidationError("Patient Edit:District empty")
-
-  object StateEmpty: PatientEditValidationError("Patient Edit:State empty")
+enum class PatientEditValidationError(val analyticsName: String) {
+  FULL_NAME_EMPTY("Patient Edit:Name is empty"),
+  PHONE_NUMBER_EMPTY("Patient Edit:Phone Number is empty"),
+  PHONE_NUMBER_LENGTH_TOO_SHORT("Patient Edit:Phone Number is less than 6 digits"),
+  PHONE_NUMBER_LENGTH_TOO_LONG("Patient Edit:Phone Number is more than 12 digits"),
+  COLONY_OR_VILLAGE_EMPTY("Patient Edit:Colony or village empty"),
+  DISTRICT_EMPTY("Patient Edit:District empty"),
+  STATE_EMPTY("Patient Edit:State empty")
 }

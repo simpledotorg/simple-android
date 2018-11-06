@@ -27,7 +27,6 @@ class PatientEditScreenController @Inject constructor(
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
-
     val patientUuidStream = events.ofType<PatientEditScreenCreated>()
         .map { it.patientUuid }
 
@@ -68,5 +67,29 @@ class PatientEditScreenController @Inject constructor(
             }
           }
         }
+  }
+
+  private fun showValidationErrorsOnSaveClick(events: Observable<UiEvent>): Observable<UiChange> {
+    val nameChanges = events
+        .ofType<PatientEditPatientNameTextChanged>()
+        .map { it.name }
+
+    val genderChanges = events
+        .ofType<PatientEditGenderChanged>()
+        .map { it.gender }
+
+    val colonyOrVillageChanges = events
+        .ofType<PatientEditColonyOrVillageChanged>()
+        .map { it.colonyOrVillage }
+
+    val districtChanges = events
+        .ofType<PatientEditDistrictTextChanged>()
+        .map { it.district }
+
+    val stateChanges = events
+        .ofType<PatientEditStateTextChanged>()
+        .map { it.state}
+
+    return Observable.empty()
   }
 }

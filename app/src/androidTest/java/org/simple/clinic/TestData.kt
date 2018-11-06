@@ -4,6 +4,7 @@ import io.bloco.faker.Faker
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
@@ -301,6 +302,31 @@ class TestData @Inject constructor(
         userUuid = qaUserUuid(),
         facilityUuid = facilytyUuid,
         patientUuid = patientUuid)
+  }
+
+  fun prescription(
+      uuid: UUID = UUID.randomUUID(),
+      name: String = faker.food.dish(),
+      dosage: String = "${faker.number.positive(10, 50)}mg",
+      isProtocolDrug: Boolean = false,
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = UUID.randomUUID(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): PrescribedDrug {
+    return PrescribedDrug(
+        uuid = uuid,
+        name = name,
+        dosage = dosage,
+        rxNormCode = "rx-norm-code",
+        isDeleted = false,
+        isProtocolDrug = isProtocolDrug,
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        syncStatus = syncStatus,
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 
   fun prescriptionPayload(

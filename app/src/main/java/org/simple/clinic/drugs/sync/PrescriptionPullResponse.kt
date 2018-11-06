@@ -2,14 +2,16 @@ package org.simple.clinic.drugs.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.sync.DataPullResponse
 import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
 data class PrescriptionPullResponse(
 
     @Json(name = "prescription_drugs")
-    val prescriptions: List<PrescribedDrugPayload>,
+    override val payloads: List<PrescribedDrugPayload>,
 
     @Json(name = "processed_since")
-    val processedSinceTimestamp: Instant
-)
+    override val processedSinceTimestamp: Instant
+
+) : DataPullResponse<PrescribedDrugPayload>

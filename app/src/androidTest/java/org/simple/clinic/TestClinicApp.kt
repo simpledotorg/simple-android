@@ -1,7 +1,10 @@
 package org.simple.clinic
 
+import android.app.Application
 import com.tspoon.traceur.Traceur
+import io.reactivex.Completable
 import io.reactivex.Single
+import okhttp3.OkHttpClient
 import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.crash.NoOpCrashReporter
@@ -9,13 +12,18 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
+import org.simple.clinic.di.NetworkModule
 import org.simple.clinic.di.TestAppComponent
+import org.simple.clinic.login.LoginModule
+import org.simple.clinic.login.LoginOtpSmsListener
+import org.simple.clinic.network.FailAllNetworkCallsInterceptor
 import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
 import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -71,6 +79,21 @@ class TestClinicApp : ClinicApp() {
         })
         .crashReporterModule(object : CrashReporterModule() {
           override fun crashReporter() = NoOpCrashReporter()
+        })
+        .loginModule(object : LoginModule() {
+          override fun loginSmsListener(app: Application): LoginOtpSmsListener {
+            return object : LoginOtpSmsListener {
+              override fun listenForLoginOtp(): Completable = Completable.complete()
+            }
+          }
+        })
+        .networkModule(object : NetworkModule() {
+          override fun okHttpClient(loggedInInterceptor: LoggedInUserHttpInterceptor): OkHttpClient {
+            return super.okHttpClient(loggedInInterceptor)
+                .newBuilder()
+                .addInterceptor(FailAllNetworkCallsInterceptor)
+                .build()
+          }
         })
         .build()
   }

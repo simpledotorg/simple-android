@@ -11,6 +11,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -22,7 +23,7 @@ class PrescriptionRepository @Inject constructor(
     private val dao: PrescribedDrug.RoomDao,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession
-) {
+) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
   fun savePrescription(patientUuid: UUID, drug: ProtocolDrug, dosage: String): Completable {
     if (drug.dosages.contains(dosage).not()) {
@@ -42,23 +43,25 @@ class PrescriptionRepository @Inject constructor(
         .take(1)
 
     return currentFacility
-        .flatMapCompletable { facility ->
-          Completable.fromAction {
-            val newMeasurement = PrescribedDrug(
-                uuid = UUID.randomUUID(),
-                name = name,
-                dosage = dosage,
-                rxNormCode = rxNormCode,
-                isProtocolDrug = isProtocolDrug,
-                isDeleted = false,
-                syncStatus = SyncStatus.PENDING,
-                patientUuid = patientUuid,
-                facilityUuid = facility.uuid,
-                createdAt = Instant.now(),
-                updatedAt = Instant.now())
-            dao.save(listOf(newMeasurement))
-          }
+        .map { facility ->
+          PrescribedDrug(
+              uuid = UUID.randomUUID(),
+              name = name,
+              dosage = dosage,
+              rxNormCode = rxNormCode,
+              isProtocolDrug = isProtocolDrug,
+              isDeleted = false,
+              syncStatus = SyncStatus.PENDING,
+              patientUuid = patientUuid,
+              facilityUuid = facility.uuid,
+              createdAt = Instant.now(),
+              updatedAt = Instant.now())
         }
+        .flatMapCompletable { save(listOf(it)) }
+  }
+
+  override fun save(records: List<PrescribedDrug>): Completable {
+    return Completable.fromAction { dao.save(records) }
   }
 
   fun softDeletePrescription(prescriptionUuid: UUID): Completable {
@@ -70,29 +73,29 @@ class PrescriptionRepository @Inject constructor(
     }
   }
 
-  fun prescriptionsWithSyncStatus(status: SyncStatus): Single<List<PrescribedDrug>> {
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<PrescribedDrug>> {
     return dao
-        .withSyncStatus(status)
+        .withSyncStatus(syncStatus)
         .firstOrError()
   }
 
-  fun updatePrescriptionsSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable {
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
     return Completable.fromAction {
-      dao.updateSyncStatus(oldStatus = oldStatus, newStatus = newStatus)
+      dao.updateSyncStatus(oldStatus = from, newStatus = to)
     }
   }
 
-  fun updatePrescriptionsSyncStatus(prescriptionUuids: List<UUID>, newStatus: SyncStatus): Completable {
-    if (prescriptionUuids.isEmpty()) {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+    if (ids.isEmpty()) {
       throw AssertionError()
     }
     return Completable.fromAction {
-      dao.updateSyncStatus(uuids = prescriptionUuids, newStatus = newStatus)
+      dao.updateSyncStatus(uuids = ids, newStatus = to)
     }
   }
 
-  fun mergeWithLocalData(serverPayloads: List<PrescribedDrugPayload>): Completable {
-    return serverPayloads
+  override fun mergeWithLocalData(payloads: List<PrescribedDrugPayload>): Completable {
+    return payloads
         .toObservable()
         .filter { payload ->
           val localCopy = dao.getOne(payload.uuid)
@@ -103,7 +106,7 @@ class PrescriptionRepository @Inject constructor(
         .flatMapCompletable { Completable.fromAction { dao.save(it) } }
   }
 
-  fun prescriptionCount(): Single<Int> {
+  override fun recordCount(): Single<Int> {
     return dao.count().firstOrError()
   }
 

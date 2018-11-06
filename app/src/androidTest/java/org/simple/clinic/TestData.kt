@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
@@ -468,5 +469,29 @@ class TestData @Inject constructor(
     }
 
     return OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
+  }
+
+  fun bloodPressureMeasurement(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = qaUserFacilityUuid(),
+      userUuid: UUID = qaUserUuid(),
+      systolic: Int = faker.number.between(0, 299),
+      diastolic: Int = faker.number.between(50, 60),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): BloodPressureMeasurement {
+    return BloodPressureMeasurement(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        systolic = systolic,
+        diastolic = diastolic,
+        syncStatus = syncStatus,
+        userUuid = userUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
   }
 }

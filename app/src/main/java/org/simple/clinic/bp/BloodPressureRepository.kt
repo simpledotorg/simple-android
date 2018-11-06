@@ -10,6 +10,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
+import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -20,7 +21,7 @@ class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository
-) {
+) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
   fun saveMeasurement(patientUuid: UUID, systolic: Int, diastolic: Int): Single<BloodPressureMeasurement> {
     if (systolic < 0 || diastolic < 0) {
@@ -48,35 +49,37 @@ class BloodPressureRepository @Inject constructor(
               updatedAt = Instant.now())
         }
         .flatMap {
-          Completable
-              .fromAction { dao.save(listOf(it)) }
-              .toSingleDefault(it)
+          save(listOf(it)).toSingleDefault(it)
         }
   }
 
-  fun measurementsWithSyncStatus(status: SyncStatus): Single<List<BloodPressureMeasurement>> {
+  override fun save(records: List<BloodPressureMeasurement>): Completable {
+    return Completable.fromAction { dao.save(records) }
+  }
+
+  override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<BloodPressureMeasurement>> {
     return dao
-        .withSyncStatus(status)
+        .withSyncStatus(syncStatus)
         .firstOrError()
   }
 
-  fun updateMeasurementsSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus): Completable {
+  override fun setSyncStatus(from: SyncStatus, to: SyncStatus): Completable {
     return Completable.fromAction {
-      dao.updateSyncStatus(oldStatus = oldStatus, newStatus = newStatus)
+      dao.updateSyncStatus(oldStatus = from, newStatus = to)
     }
   }
 
-  fun updateMeasurementsSyncStatus(measurementUuids: List<UUID>, newStatus: SyncStatus): Completable {
-    if (measurementUuids.isEmpty()) {
+  override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
+    if (ids.isEmpty()) {
       throw AssertionError()
     }
     return Completable.fromAction {
-      dao.updateSyncStatus(uuids = measurementUuids, newStatus = newStatus)
+      dao.updateSyncStatus(uuids = ids, newStatus = to)
     }
   }
 
-  fun mergeWithLocalData(serverPayloads: List<BloodPressureMeasurementPayload>): Completable {
-    return serverPayloads
+  override fun mergeWithLocalData(payloads: List<BloodPressureMeasurementPayload>): Completable {
+    return payloads
         .toObservable()
         .filter { payload ->
           val localCopy = dao.getOne(payload.uuid)
@@ -87,7 +90,7 @@ class BloodPressureRepository @Inject constructor(
         .flatMapCompletable { Completable.fromAction { dao.save(it) } }
   }
 
-  fun measurementCount(): Single<Int> {
+  override fun recordCount(): Single<Int> {
     return dao.count().firstOrError()
   }
 

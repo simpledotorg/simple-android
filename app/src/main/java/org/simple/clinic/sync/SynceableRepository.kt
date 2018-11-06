@@ -5,6 +5,10 @@ import io.reactivex.Single
 import org.simple.clinic.patient.SyncStatus
 import java.util.UUID
 
+/**
+ * @param T Type of local data model.
+ * @param P Type of payload for the local model.
+ */
 interface SynceableRepository<T, P> {
 
   fun save(records: List<T>): Completable

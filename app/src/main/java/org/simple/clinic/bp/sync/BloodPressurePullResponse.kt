@@ -2,14 +2,16 @@ package org.simple.clinic.bp.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.sync.DataPullResponse
 import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
 data class BloodPressurePullResponse(
 
     @Json(name = "blood_pressures")
-    val measurements: List<BloodPressureMeasurementPayload>,
+    override val payloads: List<BloodPressureMeasurementPayload>,
 
     @Json(name = "processed_since")
-    val processedSinceTimestamp: Instant
-)
+    override val processedSinceTimestamp: Instant
+
+) : DataPullResponse<BloodPressureMeasurementPayload>

@@ -52,11 +52,12 @@ class BruteForceProtection @Inject constructor(
         }
   }
 
+  /** Just a proxy function, but the name makes more sense. */
   fun recordSuccessfulAuthentication(): Completable {
     return resetFailedAttempts()
   }
 
-  private fun resetFailedAttempts(): Completable {
+  fun resetFailedAttempts(): Completable {
     return Completable.fromAction {
       failedAuthCountPreference.delete()
       limitReachedAtPreference.delete()

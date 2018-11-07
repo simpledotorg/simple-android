@@ -19,7 +19,7 @@ import javax.inject.Named
 class BruteForceProtection @Inject constructor(
     private val clock: Clock,
     private val configProvider: Single<BruteForceProtectionConfig>,
-    @Named("pin_failed_auth_count") private val failedAuthCountPreference: Preference<Int>,    // TODO:
+    @Named("pin_failed_auth_count") private val failedAuthCountPreference: Preference<Int>,
     @Named("pin_failed_auth_limit_reached_at") private val limitReachedAtPreference: Preference<Optional<Instant>>
 ) {
 
@@ -30,7 +30,7 @@ class BruteForceProtection @Inject constructor(
     fun defaultAttemptsReachedAtTime(): Optional<Instant> = None
   }
 
-  sealed abstract class ProtectedState {
+  sealed class ProtectedState {
     data class Allowed(val attemptsMade: Int, val attemptsRemaining: Int) : ProtectedState()
     data class Blocked(val attemptsMade: Int, val blockedTill: Instant) : ProtectedState()
   }

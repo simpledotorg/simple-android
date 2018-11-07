@@ -33,8 +33,7 @@ class AppLockScreenController @Inject constructor(
         unlockOnAuthentication(replayedEvents),
         exitOnBackClick(replayedEvents),
         openFacilityChangeScreen(replayedEvents),
-        showConfirmResetPinDialog(replayedEvents)
-    )
+        showConfirmResetPinDialog(replayedEvents))
   }
 
   private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {

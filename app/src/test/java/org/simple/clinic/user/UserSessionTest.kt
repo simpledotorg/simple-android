@@ -38,7 +38,6 @@ import org.simple.clinic.login.LoginApiV1
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
@@ -46,6 +45,8 @@ import org.simple.clinic.registration.RegistrationApiV1
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
+import org.simple.clinic.security.PasswordHasher
+import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
@@ -70,7 +71,7 @@ class UserSessionTest {
   private val userDao = mock<User.RoomDao>()
   private val reporter = MockAnalyticsReporter()
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
-
+  private var bruteForceProtection = mock<BruteForceProtection>()
 
   private val moshi = Moshi.Builder().build()
   private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
@@ -119,24 +120,24 @@ class UserSessionTest {
         syncScheduler = syncScheduler,
         loginOtpSmsListener = loginOtpSmsListener,
         accessTokenPreference = accessTokenPref,
+        bruteForceProtection = bruteForceProtection,
         patientSyncPullTimestamp = patientPullTimestamp,
         bpSyncPullTimestamp = bpPullTimestamp,
         prescriptionSyncPullTimestamp = prescriptionPullTimestamp,
         appointmentSyncPullTimestamp = appointmentPullTimestamp,
         communicationSyncPullTimestamp = communicationPullTimestamp,
         medicalHistorySyncPullTimestamp = medicalHistoryPullTimestamp,
-        ongoingLoginEntryRepository = ongoingLoginEntryRepository
-    )
+        ongoingLoginEntryRepository = ongoingLoginEntryRepository)
+
     whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())
-    userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
-
     whenever(appDatabase.userDao()).thenReturn(userDao)
-
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-
     whenever(ongoingLoginEntryRepository.entry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "982312441")))
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
+
+    userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
 
     Analytics.addReporter(reporter)
   }
@@ -474,9 +475,10 @@ class UserSessionTest {
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
-    userSession.syncAndClearData(patientRepository)
-        .test()
-        .await()
+    var bruteForceReset = false
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.fromAction { bruteForceReset = true })
+
+    userSession.syncAndClearData(patientRepository).blockingAwait()
 
     verify(patientPullTimestamp).delete()
     verify(bpPullTimestamp).delete()
@@ -484,6 +486,7 @@ class UserSessionTest {
     verify(communicationPullTimestamp).delete()
     verify(medicalHistoryPullTimestamp).delete()
     verify(prescriptionPullTimestamp).delete()
+    assertThat(bruteForceReset).isTrue()
   }
 
   @Test

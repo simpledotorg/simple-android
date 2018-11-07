@@ -26,7 +26,6 @@ import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
-import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApiV1
@@ -34,6 +33,8 @@ import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
+import org.simple.clinic.security.PasswordHasher
+import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -61,6 +62,7 @@ class UserSession @Inject constructor(
     private val syncScheduler: SyncScheduler,
     private val loginOtpSmsListener: LoginOtpSmsListener,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
+    private val bruteForceProtection: BruteForceProtection,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_timestamp") private val patientSyncPullTimestamp: Preference<Optional<Instant>>,
     @Named("last_bp_pull_timestamp") private val bpSyncPullTimestamp: Preference<Optional<Instant>>,
@@ -419,6 +421,7 @@ class UserSession @Inject constructor(
           communicationSyncPullTimestamp.delete()
           medicalHistorySyncPullTimestamp.delete()
         })
+        .andThen(bruteForceProtection.resetFailedAttempts())
         .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
           // TODO: Move this to a separate method which can be called from wherever
           Completable.fromAction {

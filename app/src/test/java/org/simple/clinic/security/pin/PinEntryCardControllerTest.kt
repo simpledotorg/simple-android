@@ -90,14 +90,14 @@ class PinEntryCardControllerTest {
     verify(screen).moveToState(State.Progress)
   }
 
-    @Test
-    fun `when PIN validation fails then the progress should be hidden`() {
-      whenever(passwordHasher.compare(any(), eq("1234"))).thenReturn(Single.just(ComparisonResult.DIFFERENT))
+  @Test
+  fun `when PIN validation fails then the progress should be hidden`() {
+    whenever(passwordHasher.compare(any(), eq("1234"))).thenReturn(Single.just(ComparisonResult.DIFFERENT))
 
-      uiEvents.onNext(PinTextChanged("1234"))
+    uiEvents.onNext(PinTextChanged("1234"))
 
-      verify(screen).moveToState(PinEntryCardView.State.PinEntry)
-    }
+    verify(screen).moveToState(PinEntryCardView.State.PinEntry)
+  }
 
   @Test
   fun `when PIN validation fails then the PIN should be cleared`() {
@@ -147,7 +147,9 @@ class PinEntryCardControllerTest {
     val blockedTill = Instant.now(clock) + Duration.ofMinutes(19) + Duration.ofSeconds(42)
 
     whenever(bruteForceProtection.protectedStateChanges())
-        .thenReturn(Observable.just(ProtectedState.Allowed, ProtectedState.Blocked(blockedTill = blockedTill)))
+        .thenReturn(Observable.just(
+            ProtectedState.Allowed(attemptsRemaining = 2, attemptsMade = 3),
+            ProtectedState.Blocked(attemptsMade = 5, blockedTill = blockedTill)))
 
     uiEvents.onNext(PinEntryViewCreated)
 
@@ -168,7 +170,7 @@ class PinEntryCardControllerTest {
     val blockedTill = Instant.now(clock) + Duration.ofMinutes(minutesRemaining) + Duration.ofSeconds(secondsRemaining)
 
     whenever(bruteForceProtection.protectedStateChanges())
-        .thenReturn(Observable.just(ProtectedState.Blocked(blockedTill = blockedTill)))
+        .thenReturn(Observable.just(ProtectedState.Blocked(attemptsMade = 5, blockedTill = blockedTill)))
 
     uiEvents.onNext(PinEntryViewCreated)
 

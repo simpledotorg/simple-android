@@ -2,7 +2,6 @@ package org.simple.clinic.security.pin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.StringRes
 import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -107,9 +106,9 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }
   }
 
-  private fun showError(@StringRes errorRes: Int) {
-    Timber.i("Showing error")
-    errorTextView.setText(errorRes)
+  private fun showError(error: String) {
+    Timber.i("Showing error: error")
+    errorTextView.text = error
     errorTextView.visibility = View.VISIBLE
   }
 
@@ -118,8 +117,16 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     errorTextView.visibility = View.GONE
   }
 
-  fun showIncorrectPinError() {
-    showError(R.string.pinentry_error_incorrect_pin)
+  fun showIncorrectPinErrorForFirstAttempt() {
+    showError(resources.getString(R.string.pinentry_error_incorrect_pin_on_first_attempt))
+  }
+
+  fun showIncorrectPinErrorOnSubsequentAttempts(remaining: Int) {
+    showError(resources.getString(R.string.pinentry_error_incorrect_pin_on_subsequent_attempts, remaining))
+  }
+
+  fun showIncorrectAttemptsLimitReachedError(attemptsMade: Int) {
+    showError(resources.getString(R.string.pinentry_error_incorrect_attempts_limit_reached, attemptsMade))
   }
 
   fun clearPin() {

@@ -40,7 +40,8 @@ class PinEntryCardController @Inject constructor(
     return Observable.merge(
         validatePin(transformedEvents),
         removeErrorOnSubmit(transformedEvents),
-        blockWhenAuthenticationLimitIsReached(transformedEvents))
+        blockWhenAuthenticationLimitIsReached(transformedEvents),
+        showIncorrectPinError(transformedEvents))
   }
 
   private fun autoSubmitPin(events: Observable<UiEvent>): Observable<UiEvent> {
@@ -90,7 +91,7 @@ class PinEntryCardController @Inject constructor(
         .flatMap { bruteForceProtection.protectedStateChanges() }
         .switchMap { state ->
           when (state) {
-            ProtectedState.Allowed -> {
+            is ProtectedState.Allowed -> {
               Observable.just({ ui: Ui -> ui.moveToState(State.PinEntry) })
             }
 
@@ -120,6 +121,26 @@ class PinEntryCardController @Inject constructor(
     val secondsWithPadding = seconds.padStart(2, padChar = '0')
 
     return "$minutesWithPadding:$secondsWithPadding"
+  }
+
+  private fun showIncorrectPinError(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PinEntryViewCreated>()
+        .flatMap { bruteForceProtection.protectedStateChanges() }
+        .map { state ->
+          when (state) {
+            is ProtectedState.Allowed -> {
+              when (state.attemptsMade) {
+                0 -> { ui: Ui -> ui.hideError() }
+                1 -> { ui: Ui -> ui.showIncorrectPinErrorForFirstAttempt() }
+                else -> { ui: Ui -> ui.showIncorrectPinErrorOnSubsequentAttempts(remaining = state.attemptsRemaining) }
+              }
+            }
+
+            is ProtectedState.Blocked -> {
+              { ui: Ui -> ui.showIncorrectAttemptsLimitReachedError(state.attemptsMade) }
+            }
+          }
+        }
   }
 
   private fun removeErrorOnSubmit(events: Observable<UiEvent>): Observable<UiChange> {

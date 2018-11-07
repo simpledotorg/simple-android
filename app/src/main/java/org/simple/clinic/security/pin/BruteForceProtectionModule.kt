@@ -13,10 +13,10 @@ import org.threeten.bp.Instant
 import javax.inject.Named
 
 @Module
-class BruteForceProtectionModule {
+open class BruteForceProtectionModule {
 
   @Provides
-  fun config(): Single<BruteForceProtectionConfig> {
+  open fun config(): Single<BruteForceProtectionConfig> {
     return Single.just(BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
   }
 

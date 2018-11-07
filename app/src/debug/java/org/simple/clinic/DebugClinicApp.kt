@@ -17,12 +17,15 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.security.pin.BruteForceProtectionConfig
+import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.summary.PatientSummaryConfig
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
+import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -96,6 +99,11 @@ class DebugClinicApp : ClinicApp() {
             return super.providesSummaryConfig()
                 .map { it.copy(isPatientEditFeatureEnabled = true) }
           }
+        })
+        .bruteForceProtectionModule(object : BruteForceProtectionModule() {
+          override fun config() = Single.just(BruteForceProtectionConfig(
+              limitOfFailedAttempts = 5,
+              blockDuration = Duration.ofMinutes(1) + Duration.ofSeconds(10)))
         })
         .build()
   }

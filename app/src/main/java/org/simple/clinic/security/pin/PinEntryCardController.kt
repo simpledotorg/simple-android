@@ -5,13 +5,17 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.security.pin.PinEntryCardView.State
-import org.simple.clinic.security.ComparisonResult
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
+import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
+import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 typealias Ui = PinEntryCardView
@@ -19,7 +23,9 @@ typealias UiChange = (Ui) -> Unit
 
 class PinEntryCardController @Inject constructor(
     private val userSession: UserSession,
-    private val passwordHasher: PasswordHasher
+    private val passwordHasher: PasswordHasher,
+    private val clock: Clock,
+    private val bruteForceProtection: BruteForceProtection
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -33,7 +39,8 @@ class PinEntryCardController @Inject constructor(
 
     return Observable.merge(
         validatePin(transformedEvents),
-        removeErrorOnSubmit(transformedEvents))
+        removeErrorOnSubmit(transformedEvents),
+        blockWhenAuthenticationLimitIsReached(transformedEvents))
   }
 
   private fun autoSubmitPin(events: Observable<UiEvent>): Observable<UiEvent> {
@@ -48,33 +55,71 @@ class PinEntryCardController @Inject constructor(
         .map { it.pin }
         .flatMap { pin ->
           val cachedPinValidation = userSession.requireLoggedInUser()
-              .map { it.pinDigest }
-              .firstOrError()
-              .flatMap { pinDigest -> passwordHasher.compare(pinDigest, pin) }
-              .cache()
+              .take(1)
+              .flatMapSingle { user -> passwordHasher.compare(user.pinDigest, pin) }
+              .publish()
+              .refCount()
+
+          val progressUiChanges = cachedPinValidation
+              .filter { it == DIFFERENT }
+              .map { { ui: Ui -> ui.moveToState(State.PinEntry) } }
+              .startWith { ui: Ui -> ui.moveToState(State.Progress) }
+
+          val recordAttempts = cachedPinValidation
+              .switchMap {
+                when (it) {
+                  SAME -> bruteForceProtection.recordSuccessfulAuthentication()
+                  DIFFERENT -> bruteForceProtection.incrementFailedAttempt()
+                }.andThen(Observable.empty<UiChange>())
+              }
 
           val validationResultUiChange = cachedPinValidation
               .map {
-                { ui: Ui ->
-                  when (it) {
-                    SAME -> ui.dispatchAuthenticatedCallback()
-                    DIFFERENT -> {
-                      ui.showIncorrectPinError()
-                      ui.clearPin()
-                    }
-                  }
+                when (it) {
+                  SAME -> { ui: Ui -> ui.dispatchAuthenticatedCallback() }
+                  DIFFERENT -> { ui: Ui -> ui.clearPin() }
                 }
               }
-              .toObservable()
 
-          val progressUiChanges = cachedPinValidation
-              .filter { it == ComparisonResult.DIFFERENT }
-              .map { { ui: Ui -> ui.moveToState(State.PinEntry) } }
-              .toObservable()
-              .startWith { ui: Ui -> ui.moveToState(State.Progress) }
-
-          Observable.mergeArray(progressUiChanges, validationResultUiChange)
+          Observable.mergeArray(progressUiChanges, recordAttempts, validationResultUiChange)
         }
+  }
+
+  private fun blockWhenAuthenticationLimitIsReached(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PinEntryViewCreated>()
+        .flatMap { bruteForceProtection.protectedStateChanges() }
+        .switchMap { state ->
+          when (state) {
+            ProtectedState.Allowed -> {
+              Observable.just({ ui: Ui -> ui.moveToState(State.PinEntry) })
+            }
+
+            is ProtectedState.Blocked -> {
+              Observable.interval(1L, TimeUnit.SECONDS)
+                  .startWith(0L)  // initial item.
+                  .map {
+                    val formattedTimeRemaining = formatTimeRemainingTill(state.blockedTill)
+                    return@map { ui: Ui ->
+                      ui.moveToState(State.BruteForceLocked(formattedTimeRemaining))
+                    }
+                  }
+            }
+          }
+        }
+  }
+
+  private fun formatTimeRemainingTill(futureTime: Instant): String {
+    val secondsRemaining = futureTime.epochSecond - Instant.now(clock).epochSecond
+    val secondsPerHour = Duration.ofHours(1).seconds
+    val secondsPerMinute = Duration.ofMinutes(1).seconds
+
+    val minutes = (secondsRemaining % secondsPerHour / secondsPerMinute).toString()
+    val seconds = (secondsRemaining % secondsPerMinute).toString()
+
+    val minutesWithPadding = minutes.padStart(2, padChar = '0')
+    val secondsWithPadding = seconds.padStart(2, padChar = '0')
+
+    return "$minutesWithPadding:$secondsWithPadding"
   }
 
   private fun removeErrorOnSubmit(events: Observable<UiEvent>): Observable<UiChange> {

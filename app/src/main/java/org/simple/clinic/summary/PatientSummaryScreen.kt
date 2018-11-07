@@ -7,6 +7,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -107,7 +108,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   override fun onFinishInflate() {
     super.onFinishInflate()
-    if(isInEditMode) {
+    if (isInEditMode) {
       return
     }
     TheActivity.component.inject(this)
@@ -171,7 +172,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun bloodPressureSaves() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_BP_SAVED && it.succeeded() }
-      .map {BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!)}
+      .map { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
       .doOnNext { saved -> bloodPressureWasSaved = saved }
       .map { saved -> PatientSummaryBloodPressureClosed(saved) }
 
@@ -289,6 +290,16 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun goBackToHome() {
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
+  }
+
+  fun disableEditPatientFeature() {
+    editButton.isEnabled = false
+    editButton.visibility = View.GONE
+  }
+
+  fun enableEditPatientFeature() {
+    editButton.isEnabled = true
+    editButton.visibility = View.VISIBLE
   }
 }
 

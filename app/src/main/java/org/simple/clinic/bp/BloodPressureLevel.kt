@@ -8,13 +8,13 @@ import org.simple.clinic.util.Optional
 enum class BloodPressureLevel(private val urgency: Int, val displayTextRes: Optional<Int>) {
 
   EXTREMELY_HIGH
-      (4, Just(R.string.bloodpressure_level_moderately_high)),
+      (4, Just(R.string.bloodpressure_level_high)),
 
   VERY_HIGH
-      (3, Just(R.string.bloodpressure_level_moderately_high)),
+      (3, Just(R.string.bloodpressure_level_high)),
 
   MODERATELY_HIGH
-      (2, Just(R.string.bloodpressure_level_moderately_high)),
+      (2, Just(R.string.bloodpressure_level_high)),
 
   MILDLY_HIGH
       (1, None),

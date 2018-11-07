@@ -19,6 +19,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
@@ -69,6 +70,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var activity: TheActivity
+
+  @Inject
+  lateinit var screenConfig: Single<PatientSummaryConfig>
 
   private val rootLayout by bindView<ViewGroup>(R.id.patientsummary_root)
   private val backButton by bindView<ImageButton>(R.id.patientsummary_back)

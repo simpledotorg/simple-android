@@ -3,9 +3,6 @@ package org.simple.clinic.security.pin
 import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.StringRes
-import android.support.transition.Fade
-import android.support.transition.TransitionManager
-import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -13,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -22,9 +20,11 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs) {
@@ -35,14 +35,17 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   val pinEditText by bindView<StaggeredEditText>(R.id.pinentry_pin)
   val forgotPinButton by bindView<Button>(R.id.pinentry_forgotpin)
 
-  private val pinContainer by bindView<ViewGroup>(R.id.pinentry_pin_container)
   private val progressView by bindView<View>(R.id.pinentry_progress)
+  private val contentContainer by bindView<ViewGroup>(R.id.pinentry_content_container)
+  private val pinAndLockViewFlipper by bindView<ViewFlipper>(R.id.pinentry_pin_and_bruteforcelock_viewflipper)
+  private val timeRemainingTillUnlockTextView by bindView<TextView>(R.id.pinentry_bruteforcelock_time_remaining)
   private val errorTextView by bindView<TextView>(R.id.pinentry_error)
   private val successfulAuthSubject = PublishSubject.create<PinAuthenticated>()
 
   sealed class State {
     object PinEntry : State()
     object Progress : State()
+    data class BruteForceLocked(val timeTillUnlock: String) : State()
   }
 
   init {
@@ -58,7 +61,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(pinTextChanges())
+    Observable.mergeArray(viewCreated(), pinTextChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -66,36 +69,52 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
         .subscribe { uiChange -> uiChange(this) }
   }
 
+  private fun viewCreated() = Observable.just(PinEntryViewCreated)
+
   private fun pinTextChanges() =
       pinEditText.textChanges()
           .map(CharSequence::toString)
           .map(::PinTextChanged)
 
   fun moveToState(state: State) {
-    TransitionManager.beginDelayedTransition(pinContainer, Fade()
-        .setDuration(100)
-        .setInterpolator(FastOutSlowInInterpolator()))
+    contentContainer.visibility = when (state) {
+      is State.PinEntry -> View.VISIBLE
+      is State.BruteForceLocked -> View.VISIBLE
+      is State.Progress -> View.INVISIBLE
+    }
+
+    progressView.visibility = when (state) {
+      is State.PinEntry -> View.GONE
+      is State.BruteForceLocked -> View.GONE
+      is State.Progress -> View.VISIBLE
+    }
+
+    // TODO: Use IDs instead of indices.
+    pinAndLockViewFlipper.displayedChild = when (state) {
+      State.PinEntry -> 0
+      State.Progress -> pinAndLockViewFlipper.displayedChild
+      is State.BruteForceLocked -> 1
+    }
 
     when (state) {
-      is State.PinEntry -> {
-        pinContainer.visibility = View.VISIBLE
-        progressView.visibility = View.GONE
-        pinEditText.showKeyboard()
-      }
-      is State.Progress -> {
-        pinContainer.visibility = View.INVISIBLE
-        progressView.visibility = View.VISIBLE
-        pinContainer.hideKeyboard()
-      }
+      is State.PinEntry -> pinEditText.showKeyboard()
+      is State.Progress -> hideKeyboard()
+      is State.BruteForceLocked -> hideKeyboard()
+    }.exhaustive()
+
+    if (state is State.BruteForceLocked) {
+      timeRemainingTillUnlockTextView.text = state.timeTillUnlock
     }
   }
 
   private fun showError(@StringRes errorRes: Int) {
+    Timber.i("Showing error")
     errorTextView.setText(errorRes)
     errorTextView.visibility = View.VISIBLE
   }
 
   fun hideError() {
+    Timber.i("Hiding error")
     errorTextView.visibility = View.GONE
   }
 
@@ -104,6 +123,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   fun clearPin() {
+    Timber.i("Clearing PIN")
     pinEditText.text = null
   }
 

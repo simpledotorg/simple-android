@@ -175,6 +175,7 @@
   <string name="pinentry_forgotpin">Forgot PIN?</string>
   <string name="pinentry_error_incorrect_pin">PIN doesn’t match the original PIN</string>
   <string name="pinentry_pin_number_hint">Your security PIN</string>
+  <string name="pinentry_bruteforcelock_timer_label">Try again after</string>
 
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">Your phone number</string>

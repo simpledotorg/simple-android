@@ -30,9 +30,9 @@ class BruteForceProtection @Inject constructor(
     fun defaultAttemptsReachedAtTime(): Optional<Instant> = None
   }
 
-  sealed class ProtectedState {
-    object Allowed : ProtectedState()
-    data class Blocked(val blockedTill: Instant) : ProtectedState()
+  sealed abstract class ProtectedState {
+    data class Allowed(val attemptsMade: Int, val attemptsRemaining: Int) : ProtectedState()
+    data class Blocked(val attemptsMade: Int, val blockedTill: Instant) : ProtectedState()
   }
 
   fun incrementFailedAttempt(): Completable {
@@ -43,8 +43,10 @@ class BruteForceProtection @Inject constructor(
             failedAuthCountPreference.set(newCount)
 
             val isLimitReached = newCount >= config.limitOfFailedAttempts
-            if (isLimitReached && limitReachedAtPreference.isSet.not()) {
+            if (isLimitReached && limitReachedAtPreference.get() is None) {
               limitReachedAtPreference.set(Just(Instant.now(clock)))
+            } else {
+              limitReachedAtPreference.set(limitReachedAtPreference.get())
             }
           }
         }
@@ -78,13 +80,21 @@ class BruteForceProtection @Inject constructor(
         .flatMapCompletable { resetFailedAttempts() }
         .toObservable<Any>()
 
-    return Observables.combineLatest(configProvider.toObservable(), limitReachedAtPreference.asObservable(), autoResets.startWith(Any()))
+    // Using merge to avoid transient notifications midway during updating
+    // both preferences. RxPreferences doesn't support bulk modifications.
+    val preferenceChanges = Observables.zip(limitReachedAtPreference.asObservable(), failedAuthCountPreference.asObservable())
+
+    return Observables.combineLatest(configProvider.toObservable(), preferenceChanges, autoResets.startWith(Any()))
         .map { (config) ->
           val (blockedAt: Instant?) = limitReachedAtPreference.get()
+          val attemptsMade = failedAuthCountPreference.get()
+
           if (blockedAt == null) {
-            Allowed
+            val attemptsRemaining = Math.max(0, config.limitOfFailedAttempts - attemptsMade)
+            Allowed(attemptsMade = attemptsMade, attemptsRemaining = attemptsRemaining)
+
           } else {
-            Blocked(blockedTill = blockedAt + config.blockDuration)
+            Blocked(attemptsMade = attemptsMade, blockedTill = blockedAt + config.blockDuration)
           }
         }
         .distinctUntilChanged()

@@ -10,6 +10,7 @@ import io.reactivex.Single
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Duration
@@ -41,7 +42,7 @@ class BruteForceProtectionTest {
   @Test
   fun `when incrementing the count of failed attempts and the limit is reached then the blocked-at time should be set`() {
     whenever(failedPinAuthCount.get()).thenReturn(config.limitOfFailedAttempts - 1)
-    whenever(limitReachedAt.isSet).thenReturn(false)
+    whenever(limitReachedAt.get()).thenReturn(None)
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 

@@ -64,7 +64,7 @@ class BruteForceProtectionAndroidTest {
   @Test
   fun when_listening_to_protected_state_changes_then_correct_state_changes_should_be_emitted() {
     val initialState = bruteForceProtection.protectedStateChanges().blockingFirst()
-    assertThat(initialState).isEqualTo(Allowed)
+    assertThat(initialState).isEqualTo(Allowed(attemptsMade = 0, attemptsRemaining = config.limitOfFailedAttempts))
 
     bruteForceProtection.incrementFailedAttempt()
         .repeat(config.limitOfFailedAttempts.toLong())
@@ -72,7 +72,7 @@ class BruteForceProtectionAndroidTest {
 
     val stateAfterLimitReached = bruteForceProtection.protectedStateChanges().blockingFirst()
     val expectedBlockedTill = Instant.now(clock) + config.blockDuration
-    assertThat(stateAfterLimitReached).isEqualTo(Blocked(blockedTill = expectedBlockedTill))
+    assertThat(stateAfterLimitReached).isEqualTo(Blocked(blockedTill = expectedBlockedTill, attemptsMade = config.limitOfFailedAttempts))
   }
 
   /**
@@ -83,15 +83,21 @@ class BruteForceProtectionAndroidTest {
   @Test
   @UiThreadTest
   fun should_unlock_after_block_duration() {
-    failedAttemptsCount.set(config.limitOfFailedAttempts - 1)
+    val attemptsRemainingOnStart = 1
+    val attemptsMadeOnStart = config.limitOfFailedAttempts - attemptsRemainingOnStart
+    failedAttemptsCount.set(attemptsMadeOnStart)
 
     val stateChangeObserver = bruteForceProtection.protectedStateChanges().test()
 
     // Initial state.
-    stateChangeObserver.assertValues(Allowed)
+    stateChangeObserver.assertValues(Allowed(
+        attemptsMade = attemptsMadeOnStart,
+        attemptsRemaining = attemptsRemainingOnStart))
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
-    stateChangeObserver.assertValueAt(1, Blocked(blockedTill = Instant.now(clock) + config.blockDuration))
+    stateChangeObserver.assertValueAt(1, Blocked(
+        attemptsMade = attemptsMadeOnStart + 1,
+        blockedTill = Instant.now(clock) + config.blockDuration))
 
     val advanceTimeByMillis = { millis: Long ->
       testClock.advanceBy(Duration.ofMillis(millis))
@@ -102,13 +108,14 @@ class BruteForceProtectionAndroidTest {
     stateChangeObserver.assertValueCount(2)
 
     advanceTimeByMillis(1)
-    stateChangeObserver.assertValueAt(2, Allowed)
+    stateChangeObserver.assertValueAt(2, Allowed(attemptsMade = 0, attemptsRemaining = config.limitOfFailedAttempts))
     stateChangeObserver.assertValueCount(3)
   }
 
   @After
   fun tearDown() {
     RxJavaPlugins.reset()
+    testClock.resetToEpoch()
     failedAttemptsCount.delete()
     blockedAt.delete()
   }

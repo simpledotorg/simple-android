@@ -106,7 +106,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's prescription summary should be populated`() {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L), isPatientEditFeatureEnabled = false)
     configSubject.onNext(config)
 
     val prescriptions = listOf(
@@ -124,7 +124,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's blood pressure history should be populated`() {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L), isPatientEditFeatureEnabled = false)
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
@@ -157,7 +157,7 @@ class PatientSummaryScreenControllerTest {
       expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L), isPatientEditFeatureEnabled = false)
     configSubject.onNext(config)
 
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -234,7 +234,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's medical history should be populated`() {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L), isPatientEditFeatureEnabled = false)
     configSubject.onNext(config)
 
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
@@ -392,7 +392,7 @@ class PatientSummaryScreenControllerTest {
       bloodPressureMeasurement: BloodPressureMeasurement,
       shouldBeEditable: Boolean
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = bpEditableFor)
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = bpEditableFor, isPatientEditFeatureEnabled = false)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
@@ -420,6 +420,30 @@ class PatientSummaryScreenControllerTest {
     }
 
     return generateBps(Duration.ofMinutes(1L)) + generateBps(Duration.ofDays(2L))
+  }
+
+  @Test
+  @Parameters(value = [
+    "true",
+    "false"
+  ])
+  fun `when the edit patient feature flag is unset, the feature must be disabled on the screen`(isPatientEditFeatureEnabled: Boolean) {
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        bpEditableFor = Duration.ofSeconds(0L),
+        isPatientEditFeatureEnabled = isPatientEditFeatureEnabled
+    )
+
+    configSubject.onNext(config)
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH))
+
+    if (isPatientEditFeatureEnabled) {
+      verify(screen, never()).disableEditPatientFeature()
+      verify(screen).enableEditPatientFeature()
+    } else {
+      verify(screen, never()).enableEditPatientFeature()
+      verify(screen).disableEditPatientFeature()
+    }
   }
 
   @Suppress("unused")

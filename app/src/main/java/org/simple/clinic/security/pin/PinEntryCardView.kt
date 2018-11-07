@@ -2,6 +2,9 @@ package org.simple.clinic.security.pin
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.transition.AutoTransition
+import android.support.transition.TransitionManager
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
@@ -23,7 +26,6 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs) {
@@ -76,6 +78,13 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
           .map(::PinTextChanged)
 
   fun moveToState(state: State) {
+    val transition = AutoTransition()
+        .setOrdering(AutoTransition.ORDERING_TOGETHER)
+        .setDuration(200)
+        .setInterpolator(FastOutSlowInInterpolator())
+        .removeTarget(errorTextView)
+    TransitionManager.beginDelayedTransition(this, transition)
+
     contentContainer.visibility = when (state) {
       is State.PinEntry -> View.VISIBLE
       is State.BruteForceLocked -> View.VISIBLE
@@ -107,13 +116,11 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   private fun showError(error: String) {
-    Timber.i("Showing error: error")
     errorTextView.text = error
     errorTextView.visibility = View.VISIBLE
   }
 
   fun hideError() {
-    Timber.i("Hiding error")
     errorTextView.visibility = View.GONE
   }
 
@@ -130,7 +137,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   fun clearPin() {
-    Timber.i("Clearing PIN")
     pinEditText.text = null
   }
 

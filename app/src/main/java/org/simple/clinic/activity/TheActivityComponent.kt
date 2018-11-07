@@ -100,7 +100,6 @@ interface TheActivityComponent {
   OnboardingModule::class,
   PatientsModule::class,
   PatientSearchModule::class,
-  PatientSummaryModule::class,
   PhoneModule::class])
 class TheActivityModule {
 

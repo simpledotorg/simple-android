@@ -31,6 +31,7 @@ import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
 import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.StorageModule
+import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
 import org.threeten.bp.Clock
 
@@ -42,7 +43,8 @@ import org.threeten.bp.Clock
   LoginModule::class,
   RegistrationModule::class,
   CrashReporterModule::class,
-  AgeFuzzerModule::class])
+  AgeFuzzerModule::class,
+  PatientSummaryModule::class])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

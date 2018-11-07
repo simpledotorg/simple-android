@@ -7,6 +7,7 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -18,6 +19,7 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
@@ -69,6 +71,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var activity: TheActivity
 
+  @Inject
+  lateinit var screenConfig: Single<PatientSummaryConfig>
+
   private val rootLayout by bindView<ViewGroup>(R.id.patientsummary_root)
   private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
@@ -115,6 +120,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // Not sure why but the keyboard stays visible when coming from search.
     rootLayout.hideKeyboard()
 
+    enableEditPatientFeature()
     setupSummaryList()
     setupEditButtonClicks()
 
@@ -134,6 +140,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+  }
+
+  private fun enableEditPatientFeature() {
+    val isPatientEditFeatureEnabled = screenConfig.blockingGet().isPatientEditFeatureEnabled
+
+    editButton.isEnabled = isPatientEditFeatureEnabled
+    editButton.visibility = if(isPatientEditFeatureEnabled) View.VISIBLE else View.GONE
   }
 
   private fun setupEditButtonClicks() {

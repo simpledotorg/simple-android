@@ -10,6 +10,7 @@ import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
+import org.simple.clinic.util.MoshiOptionalAdapterFactory
 import org.simple.clinic.util.UuidMoshiAdapter
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -24,6 +25,7 @@ open class NetworkModule {
         .add(InstantMoshiAdapter())
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
+        .add(MoshiOptionalAdapterFactory())
         .build()
   }
 

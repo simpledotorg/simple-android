@@ -14,10 +14,10 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilityChangeScreen
-import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -91,8 +91,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   private fun pinAuthentications() =
       pinEntryCardView
-          .successfulAuthentication()
-          .toObservable()
+          .successfulAuthentications
           .map { AppLockPinAuthenticated() }
 
   fun setUserFullName(fullName: String) {

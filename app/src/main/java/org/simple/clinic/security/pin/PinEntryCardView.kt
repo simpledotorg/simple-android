@@ -15,7 +15,6 @@ import android.widget.TextView
 import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
@@ -41,7 +40,9 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   private val pinAndLockViewFlipper by bindView<ViewFlipper>(R.id.pinentry_pin_and_bruteforcelock_viewflipper)
   private val timeRemainingTillUnlockTextView by bindView<TextView>(R.id.pinentry_bruteforcelock_time_remaining)
   private val errorTextView by bindView<TextView>(R.id.pinentry_error)
+
   private val successfulAuthSubject = PublishSubject.create<PinAuthenticated>()
+  val successfulAuthentications: Observable<PinAuthenticated> = successfulAuthSubject.hide()
 
   sealed class State {
     object PinEntry : State()
@@ -145,9 +146,5 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
 
   fun dispatchAuthenticatedCallback() {
     successfulAuthSubject.onNext(PinAuthenticated())
-  }
-
-  fun successfulAuthentication(): Single<PinAuthenticated> {
-    return successfulAuthSubject.firstOrError()
   }
 }

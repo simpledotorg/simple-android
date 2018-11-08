@@ -12,6 +12,6 @@ data class PinSubmitClicked(val pin: String) : UiEvent {
   override val analyticsName = "PIN submitted"
 }
 
-class PinAuthenticated : UiEvent {
+data class PinAuthenticated(val pin: String) : UiEvent {
   override val analyticsName = "PIN authenticated"
 }

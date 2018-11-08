@@ -52,7 +52,6 @@
     <string name="customprescription_delete_cancel">नहीं</string>
     <string name="customprescription_delete_confirm">हाँ</string>
     <string name="patientsummary_prescriptions_add">नई दवा</string>
-    <string name="loginpin_pin_number_hint">आपका सुरक्षा पिन</string>
     <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>
     <string name="loginpin_error_check_internet_connection">कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
   <string name="tab_patient">नया बी. पी.</string>

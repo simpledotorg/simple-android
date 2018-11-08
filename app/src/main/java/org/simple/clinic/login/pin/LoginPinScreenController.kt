@@ -4,23 +4,18 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.security.PasswordHasher
-import org.simple.clinic.security.ComparisonResult.DIFFERENT
-import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = LoginPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class LoginPinScreenController @Inject constructor(
-    private val userSession: UserSession,
-    private val passwordHasher: PasswordHasher
+    private val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -29,8 +24,7 @@ class LoginPinScreenController @Inject constructor(
     return Observable.merge(
         screenSetups(replayedEvents),
         submitClicks(replayedEvents),
-        backClicks(replayedEvents),
-        resetPinValidationError(replayedEvents))
+        backClicks(replayedEvents))
   }
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
@@ -42,61 +36,27 @@ class LoginPinScreenController @Inject constructor(
   }
 
   private fun submitClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    val pinChanges = events.ofType<PinTextChanged>()
+    return events.ofType<LoginPinAuthenticated>()
         .map { it.pin }
+        .flatMapSingle { pin ->
+          Timber.i("Requesting OTP")
 
-    return events.ofType<PinSubmitClicked>()
-        .withLatestFrom(pinChanges) { _, pin -> pin }
-        .flatMap { enteredPin ->
-
-          val pinValidation = userSession.loggedInUser()
-              .map { (it as Just).value }
-              .map { it.pinDigest }
-              .firstOrError()
-              .flatMap { pinDigest -> passwordHasher.compare(pinDigest, enteredPin) }
-              .cache()
-
-          val pinEnteredSuccessfully = pinValidation
-              .toObservable()
-              .filter { it == SAME }
-              .cache()
-
-          val cachedRequestOtp = pinEnteredSuccessfully
-              .flatMapSingle { userSession.requestLoginOtp() }
-              .cache()
-
-          val showProgressOnPinValidation = pinValidation
-              .map {
-                when (it) {
-                  SAME -> { ui: Ui -> ui.showProgressBar() }
-                  DIFFERENT -> { ui: Ui -> ui.showIncorrectPinError() }
-                }
-              }
-              .toObservable()
-
-          val uiChanges = cachedRequestOtp
-              .map {
-                when (it) {
+          val uiChanges = userSession.requestLoginOtp()
+              .map { result ->
+                when (result) {
                   is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
                   is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
                   else -> { ui: Ui -> ui.showUnexpectedError() }
                 }
               }
-              // This handles the case where listening for SMS fails
+              // This handles the case where listening for SMS fails.
               .onErrorReturn { { ui: Ui -> ui.showUnexpectedError() } }
-              .mergeWith(showProgressOnPinValidation)
 
           userSession.ongoingLoginEntry()
-              .map { entry -> entry.copy(pin = enteredPin) }
+              .map { entry -> entry.copy(pin = pin) }
               .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
               .andThen(uiChanges)
         }
-  }
-
-  private fun resetPinValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PinTextChanged>()
-        .map { { ui: Ui -> ui.hideError() } }
   }
 
   private fun backClicks(events: Observable<UiEvent>): Observable<UiChange> {

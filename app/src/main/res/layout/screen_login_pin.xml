@@ -3,8 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:background="@color/window_background_auth"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:background="@color/window_background_auth">
 
   <FrameLayout
     android:id="@+id/loginpin_logo_container"
@@ -27,43 +27,11 @@
   <View
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:layout_alignTop="@+id/loginpin_card"
+    android:layout_alignTop="@+id/loginpin_pin_entry_card"
     android:background="?colorPrimary" />
 
-  <android.support.v7.widget.CardView
-    android:id="@+id/loginpin_card"
+  <org.simple.clinic.security.pin.PinEntryCardView
+    android:id="@+id/loginpin_pin_entry_card"
     style="@style/Clinic.LoginCard"
-    android:layout_below="@+id/loginpin_logo_container"
-    android:animateLayoutChanges="true">
-
-    <ProgressBar
-      android:id="@+id/loginpin_progress"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:visibility="invisible" />
-
-    <LinearLayout
-      android:id="@+id/loginpin_form"
-      style="@style/Clinic.CardContentContainer.Login">
-
-      <TextView
-        style="@style/Clinic.LoginPinLabel"
-        android:labelFor="@+id/loginpin_pin"
-        android:text="@string/loginpin_pin_number_hint" />
-
-      <org.simple.clinic.widgets.StaggeredEditText
-        android:id="@+id/loginpin_pin"
-        style="@style/Clinic.StaggeredEditText.Pin"
-        android:maxLength="4"
-        android:imeOptions="actionDone">
-
-        <requestFocus />
-      </org.simple.clinic.widgets.StaggeredEditText>
-
-      <TextView
-        android:id="@+id/loginpin_error"
-        style="@style/Clinic.V2.LoginPinErrorText" />
-    </LinearLayout>
-  </android.support.v7.widget.CardView>
+    android:layout_below="@+id/loginpin_logo_container" />
 </org.simple.clinic.login.pin.LoginPinScreen>

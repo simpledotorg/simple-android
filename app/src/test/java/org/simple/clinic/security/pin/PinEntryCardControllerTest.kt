@@ -109,7 +109,7 @@ class PinEntryCardControllerTest {
 
     uiEvents.onNext(PinTextChanged("1234"))
 
-    verify(screen).dispatchAuthenticatedCallback()
+    verify(screen).dispatchAuthenticatedCallback("1234")
   }
 
   @Test

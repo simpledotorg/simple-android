@@ -1,9 +1,7 @@
 package org.simple.clinic.security.pin
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
@@ -13,16 +11,14 @@ import org.junit.Test
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
 class BruteForceProtectionTest {
 
-  private val failedPinAuthCount = mock<Preference<Int>>()
-  private val limitReachedAt = mock<Preference<Optional<Instant>>>()
   private val clock = TestClock()
+  private val state = mock<Preference<BruteForceProtectionState>>()
   private lateinit var config: BruteForceProtectionConfig
 
   private lateinit var bruteForceProtection: BruteForceProtection
@@ -30,18 +26,24 @@ class BruteForceProtectionTest {
   @Before
   fun setup() {
     config = BruteForceProtectionConfig(isEnabled = true, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20))
-    bruteForceProtection = BruteForceProtection(clock, Single.fromCallable { config }, failedPinAuthCount, limitReachedAt)
+    bruteForceProtection = BruteForceProtection(clock, Single.fromCallable { config }, state)
   }
 
   @Test
   fun `when feature flag is disabled then brute force protection should remain disabled`() {
-    whenever(failedPinAuthCount.get()).thenReturn(0).thenReturn(1).thenReturn(2)
-    whenever(failedPinAuthCount.asObservable()).thenReturn(Observable.just(0, 1, 2))
+    config = config.copy(isEnabled = false, limitOfFailedAttempts = 1)
+    val initialState = BruteForceProtectionState(limitReachedAt = None)
 
-    whenever(limitReachedAt.get()).thenReturn(None).thenReturn(None).thenReturn(None)
-    whenever(limitReachedAt.asObservable()).thenReturn(Observable.just(None, None, None))
+    whenever(state.get())
+        .thenReturn(initialState.copy(failedAuthCount = 0))
+        .thenReturn(initialState.copy(failedAuthCount = 1))
+        .thenReturn(initialState.copy(failedAuthCount = 2))
 
-    config = config.copy(isEnabled = false)
+    whenever(state.asObservable())
+        .thenReturn(Observable.just(
+            initialState.copy(failedAuthCount = 0),
+            initialState.copy(failedAuthCount = 1),
+            initialState.copy(failedAuthCount = 2)))
 
     val stateChangesObserver = bruteForceProtection.protectedStateChanges().test()
 
@@ -57,40 +59,46 @@ class BruteForceProtectionTest {
 
   @Test
   fun `when incrementing the count of failed attempts then the count should correctly be updated`() {
-    whenever(failedPinAuthCount.get()).thenReturn(3)
+    whenever(state.get()).thenReturn(BruteForceProtectionState(failedAuthCount = 3))
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
-    verify(failedPinAuthCount).set(4)
+    verify(state).set(BruteForceProtectionState(failedAuthCount = 4))
   }
 
   @Test
   fun `when incrementing the count of failed attempts and the limit is reached then the blocked-at time should be set`() {
-    whenever(failedPinAuthCount.get()).thenReturn(config.limitOfFailedAttempts - 1)
-    whenever(limitReachedAt.get()).thenReturn(None)
+    whenever(state.get()).thenReturn(BruteForceProtectionState(
+        failedAuthCount = config.limitOfFailedAttempts - 1,
+        limitReachedAt = None))
 
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
-    verify(failedPinAuthCount).set(config.limitOfFailedAttempts)
-    verify(limitReachedAt).set(Just(Instant.now(clock)))
+    verify(state).set(BruteForceProtectionState(
+        failedAuthCount = config.limitOfFailedAttempts,
+        limitReachedAt = Just(Instant.now(clock))))
   }
 
   @Test
   fun `when incrementing the count of failed attempts and the limit was already reached then the blocked-at time should not be updated`() {
-    whenever(failedPinAuthCount.get()).thenReturn(config.limitOfFailedAttempts)
-    whenever(limitReachedAt.isSet).thenReturn(true)
+    val timeOfLastAttempt = Instant.now(clock)
 
+    whenever(state.get()).thenReturn(BruteForceProtectionState(
+        failedAuthCount = config.limitOfFailedAttempts,
+        limitReachedAt = Just(timeOfLastAttempt)))
+
+    clock.advanceBy(Duration.ofMinutes(2))
     bruteForceProtection.incrementFailedAttempt().blockingAwait()
 
-    verify(failedPinAuthCount).set(config.limitOfFailedAttempts + 1)
-    verify(limitReachedAt, never()).set(any())
+    verify(state).set(BruteForceProtectionState(
+        failedAuthCount = config.limitOfFailedAttempts + 1,
+        limitReachedAt = Just(timeOfLastAttempt)))
   }
 
   @Test
   fun `when recording a successful login then all state should be cleared`() {
     bruteForceProtection.recordSuccessfulAuthentication().blockingAwait()
 
-    verify(limitReachedAt).delete()
-    verify(failedPinAuthCount).delete()
+    verify(state).delete()
   }
 }

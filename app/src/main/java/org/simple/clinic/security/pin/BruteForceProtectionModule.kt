@@ -2,15 +2,11 @@ package org.simple.clinic.security.pin
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
-import org.simple.clinic.util.InstantRxPreferencesConverter
-import org.simple.clinic.util.Optional
-import org.simple.clinic.util.OptionalRxPreferencesConverter
 import org.threeten.bp.Duration
-import org.threeten.bp.Instant
-import javax.inject.Named
 
 @Module
 open class BruteForceProtectionModule {
@@ -21,15 +17,8 @@ open class BruteForceProtectionModule {
   }
 
   @Provides
-  @Named("pin_failed_auth_count")
-  fun failedPinAuthenticationCount(rxSharedPrefs: RxSharedPreferences): Preference<Int> {
-    return rxSharedPrefs.getInteger("pin_failed_auth_count", BruteForceProtection.defaultFailedAttemptsCount())
-  }
-
-  @Provides
-  @Named("pin_failed_auth_limit_reached_at")
-  fun attemptsReachedAtPreference(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
-    val converter = OptionalRxPreferencesConverter(InstantRxPreferencesConverter())
-    return rxSharedPrefs.getObject("pin_failed_auth_limit_reached_at", BruteForceProtection.defaultAttemptsReachedAtTime(), converter)
+  fun state(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<BruteForceProtectionState> {
+    val typeConverter = BruteForceProtectionState.RxPreferencesConverter(moshi)
+    return rxSharedPrefs.getObject("brute_force_state", BruteForceProtectionState(), typeConverter)
   }
 }

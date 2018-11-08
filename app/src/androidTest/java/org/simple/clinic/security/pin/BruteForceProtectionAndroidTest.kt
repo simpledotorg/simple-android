@@ -14,14 +14,12 @@ import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
 class BruteForceProtectionAndroidTest {
@@ -36,12 +34,7 @@ class BruteForceProtectionAndroidTest {
   lateinit var configProvider: Single<BruteForceProtectionConfig>
 
   @Inject
-  @field:Named("pin_failed_auth_count")
-  lateinit var failedAttemptsCount: Preference<Int>
-
-  @Inject
-  @field:Named("pin_failed_auth_limit_reached_at")
-  lateinit var blockedAt: Preference<Optional<Instant>>
+  lateinit var state: Preference<BruteForceProtectionState>
 
   private val testClock
     get() = clock as TestClock
@@ -57,8 +50,7 @@ class BruteForceProtectionAndroidTest {
 
     RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
 
-    failedAttemptsCount.delete()
-    blockedAt.delete()
+    state.delete()
   }
 
   @Test
@@ -85,7 +77,8 @@ class BruteForceProtectionAndroidTest {
   fun should_unlock_after_block_duration() {
     val attemptsRemainingOnStart = 1
     val attemptsMadeOnStart = config.limitOfFailedAttempts - attemptsRemainingOnStart
-    failedAttemptsCount.set(attemptsMadeOnStart)
+
+    state.set(BruteForceProtectionState(failedAuthCount = attemptsMadeOnStart))
 
     val stateChangeObserver = bruteForceProtection.protectedStateChanges().test()
 
@@ -116,7 +109,6 @@ class BruteForceProtectionAndroidTest {
   fun tearDown() {
     RxJavaPlugins.reset()
     testClock.resetToEpoch()
-    failedAttemptsCount.delete()
-    blockedAt.delete()
+    state.delete()
   }
 }

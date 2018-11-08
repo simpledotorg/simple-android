@@ -9,26 +9,16 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowe
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class BruteForceProtection @Inject constructor(
     private val clock: Clock,
     private val configProvider: Single<BruteForceProtectionConfig>,
-    @Named("pin_failed_auth_count") private val failedAuthCountPreference: Preference<Int>,
-    @Named("pin_failed_auth_limit_reached_at") private val limitReachedAtPreference: Preference<Optional<Instant>>
+    private val statePreference: Preference<BruteForceProtectionState>
 ) {
-
-  companion object {
-
-    fun defaultFailedAttemptsCount() = 0
-
-    fun defaultAttemptsReachedAtTime(): Optional<Instant> = None
-  }
 
   sealed class ProtectedState {
     data class Allowed(val attemptsMade: Int, val attemptsRemaining: Int) : ProtectedState()
@@ -39,15 +29,17 @@ class BruteForceProtection @Inject constructor(
     return configProvider
         .flatMapCompletable { config ->
           Completable.fromAction {
-            val newCount = failedAuthCountPreference.get() + 1
-            failedAuthCountPreference.set(newCount)
+            val state = statePreference.get()
+            val newFailedAuthCount = state.failedAuthCount + 1
 
-            val isLimitReached = newCount >= config.limitOfFailedAttempts
-            if (isLimitReached && limitReachedAtPreference.get() is None) {
-              limitReachedAtPreference.set(Just(Instant.now(clock)))
-            } else {
-              limitReachedAtPreference.set(limitReachedAtPreference.get())
+            var updatedState = state.copy(failedAuthCount = newFailedAuthCount)
+
+            val isLimitReached = newFailedAuthCount >= config.limitOfFailedAttempts
+            if (isLimitReached && state.limitReachedAt is None) {
+              updatedState = updatedState.copy(limitReachedAt = Just(Instant.now(clock)))
             }
+
+            statePreference.set(updatedState)
           }
         }
   }
@@ -58,16 +50,15 @@ class BruteForceProtection @Inject constructor(
   }
 
   fun resetFailedAttempts(): Completable {
-    return Completable.fromAction {
-      failedAuthCountPreference.delete()
-      limitReachedAtPreference.delete()
-    }
+    return Completable.fromAction { statePreference.delete() }
   }
 
   fun protectedStateChanges(): Observable<ProtectedState> {
-    val autoResets = Observables.combineLatest(configProvider.toObservable(), limitReachedAtPreference.asObservable())
+    val autoResets = Observables.combineLatest(configProvider.toObservable(), statePreference.asObservable())
         .switchMap { (config) ->
-          val (blockedAt: Instant?) = limitReachedAtPreference.get()
+          val state = statePreference.get()
+          val (blockedAt: Instant?) = state.limitReachedAt
+
           if (blockedAt == null) {
             Observable.empty()
 
@@ -86,19 +77,15 @@ class BruteForceProtection @Inject constructor(
         .toObservable<Any>()
 
     val alwaysAllowWhenDisabled = Observables
-        .combineLatest(configProvider.toObservable(), failedAuthCountPreference.asObservable())
+        .combineLatest(configProvider.toObservable(), statePreference.asObservable())
         .filter { (config) -> config.isEnabled.not() }
-        .map { Allowed(attemptsMade = Math.min(1, failedAuthCountPreference.get()), attemptsRemaining = 1) }
+        .map { (_, state) -> Allowed(attemptsMade = Math.min(1, state.failedAuthCount), attemptsRemaining = 1) }
 
-    // Using zip to avoid transient notifications midway during updating
-    // both preferences. RxPreferences doesn't support bulk modifications.
-    val preferenceChanges = Observables.zip(limitReachedAtPreference.asObservable(), failedAuthCountPreference.asObservable())
-
-    return Observables.combineLatest(configProvider.toObservable(), preferenceChanges, autoResets.startWith(Any()))
+    return Observables.combineLatest(configProvider.toObservable(), statePreference.asObservable(), autoResets.startWith(Any()))
         .filter { (config) -> config.isEnabled }
-        .map { (config) ->
-          val (blockedAt: Instant?) = limitReachedAtPreference.get()
-          val attemptsMade = failedAuthCountPreference.get()
+        .map { (config, state) ->
+          val (blockedAt: Instant?) = state.limitReachedAt
+          val attemptsMade = state.failedAuthCount
 
           if (blockedAt == null) {
             val attemptsRemaining = Math.max(0, config.limitOfFailedAttempts - attemptsMade)

@@ -174,4 +174,22 @@ class PinEntryCardControllerTest {
     val timerDuration = TimerDuration(minutes = minutesWithPadding, seconds = secondsWithPadding)
     verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = timerDuration))
   }
+
+  @Test
+  fun `when a PIN is validated then update the error`() {
+    whenever(bruteForceProtection.protectedStateChanges())
+        .thenReturn(Observable.just(
+            ProtectedState.Allowed(attemptsMade = 0, attemptsRemaining = 3),
+            ProtectedState.Allowed(attemptsMade = 1, attemptsRemaining = 2),
+            ProtectedState.Allowed(attemptsMade = 2, attemptsRemaining = 1),
+            ProtectedState.Blocked(attemptsMade = 3, blockedTill = Instant.now(clock) + Duration.ofSeconds(5))
+        ))
+
+    uiEvents.onNext(PinEntryViewCreated)
+
+    verify(screen).hideError()
+    verify(screen).showIncorrectPinErrorForFirstAttempt()
+    verify(screen).showIncorrectPinErrorOnSubsequentAttempts(1)
+    verify(screen).showIncorrectAttemptsLimitReachedError(3)
+  }
 }

@@ -119,7 +119,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }
   }
 
-  private fun showError(error: String) {
+  fun showError(error: String) {
     errorTextView.text = error
     errorTextView.visibility = View.VISIBLE
   }
@@ -144,7 +144,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     pinEditText.text = null
   }
 
-  fun dispatchAuthenticatedCallback() {
-    successfulAuthSubject.onNext(PinAuthenticated())
+  fun dispatchAuthenticatedCallback(enteredPin: String) {
+    successfulAuthSubject.onNext(PinAuthenticated(enteredPin))
   }
 }

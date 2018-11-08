@@ -2,7 +2,6 @@ package org.simple.clinic.login.pin
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -14,8 +13,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.login.LoginResult
-import org.simple.clinic.security.ComparisonResult
-import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
@@ -27,18 +24,16 @@ class LoginPinScreenControllerTest {
 
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
-  private val passwordHasher = mock<PasswordHasher>()
   private val localUser = PatientMocker.loggedInUser(pinDigest = "digest")
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private lateinit var controller: LoginPinScreenController
 
-
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-    controller = LoginPinScreenController(userSession, passwordHasher)
+    controller = LoginPinScreenController(userSession)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
@@ -57,54 +52,30 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `if pin is incorrect and submit is clicked, show an error`() {
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(ComparisonResult.DIFFERENT))
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID())))
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-
-    uiEvents.onNext(PinTextChanged("1234123412"))
-    uiEvents.onNext(PinSubmitClicked())
-
-    verify(screen).showIncorrectPinError()
-    verify(userSession, never()).requestLoginOtp()
-  }
-
-  @Test
-  fun `any existing errors should be hidden when the user starts typing again`() {
-    uiEvents.onNext(PinTextChanged("0"))
-    verify(screen).hideError()
-  }
-
-  @Test
   fun `when PIN is submitted, request login otp and open home screen`() {
     val ongoingLoginEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999232323")
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
 
-    uiEvents.onNext(PinTextChanged("0000"))
-    uiEvents.onNext(PinSubmitClicked())
+    uiEvents.onNext(LoginPinAuthenticated("0000"))
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(uuid = ongoingLoginEntry.uuid, phoneNumber = "9999232323", pin = "0000"))
     verify(userSession).requestLoginOtp()
-    verify(screen).showProgressBar()
     verify(screen).openHomeScreen()
   }
 
   @Test
   fun `if request otp api call throws any errors, show errors`() {
     val ongoingEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999323232")
-    whenever(passwordHasher.compare(any(), any())).thenReturn(Single.just(ComparisonResult.SAME))
     whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.requestLoginOtp())
         .thenReturn(Single.just(LoginResult.NetworkError))
         .thenReturn(Single.just(LoginResult.UnexpectedError))
 
-    uiEvents.onNext(PinTextChanged("0000"))
-    uiEvents.onNext(PinSubmitClicked())
-    uiEvents.onNext(PinSubmitClicked())
+    uiEvents.onNext(LoginPinAuthenticated("0000"))
+    uiEvents.onNext(LoginPinAuthenticated("0000"))
 
     verify(screen).showNetworkError()
     verify(screen).showUnexpectedError()
@@ -122,6 +93,7 @@ class LoginPinScreenControllerTest {
   @Test
   fun `when back is clicked, the local ongoing login entry must be cleared`() {
     whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.clearOngoingLoginEntry()).thenReturn(Completable.complete())
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PinBackClicked())

@@ -41,7 +41,7 @@ class PinEntryCardController @Inject constructor(
         validatePin(transformedEvents),
         removeErrorOnSubmit(transformedEvents),
         blockWhenAuthenticationLimitIsReached(transformedEvents),
-        showIncorrectPinError(transformedEvents))
+        updateIncorrectPinError(transformedEvents))
   }
 
   private fun autoSubmitPin(events: Observable<UiEvent>): Observable<UiEvent> {
@@ -123,7 +123,7 @@ class PinEntryCardController @Inject constructor(
     return TimerDuration(minutesWithPadding, secondsWithPadding)
   }
 
-  private fun showIncorrectPinError(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun updateIncorrectPinError(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PinEntryViewCreated>()
         .flatMap { bruteForceProtection.protectedStateChanges() }
         .map { state ->

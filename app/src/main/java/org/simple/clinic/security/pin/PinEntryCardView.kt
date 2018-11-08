@@ -122,6 +122,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   fun showError(error: String) {
     errorTextView.text = error
     errorTextView.visibility = View.VISIBLE
+    clearPin()
   }
 
   fun hideError() {

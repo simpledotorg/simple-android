@@ -178,6 +178,7 @@
   <string name="pinentry_error_incorrect_attempts_limit_reached" tools:ignore="PluralsCandidate">You have made %d incorrect attempts</string>
   <string name="pinentry_pin_number_hint">Your security PIN</string>
   <string name="pinentry_bruteforcelock_timer_label">Try again after</string>
+  <string name="pinentry_bruteforcelock_timer">%1$s:%2$s</string> <!-- minutes:seconds -->
 
   <!-- Registration -->
   <string name="registrationphone_phone_number_label">Your phone number</string>

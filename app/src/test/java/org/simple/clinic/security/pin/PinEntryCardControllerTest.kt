@@ -149,7 +149,7 @@ class PinEntryCardControllerTest {
     uiEvents.onNext(PinEntryViewCreated)
 
     verify(screen).moveToState(State.PinEntry)
-    verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = "19:42"))
+    verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = TimerDuration(minutes = "19", seconds = "42")))
   }
 
   @Test
@@ -171,6 +171,7 @@ class PinEntryCardControllerTest {
 
     val minutesWithPadding = minutesRemaining.toString().padStart(2, padChar = '0')
     val secondsWithPadding = secondsRemaining.toString().padStart(2, padChar = '0')
-    verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = "$minutesWithPadding:$secondsWithPadding"))
+    val timerDuration = TimerDuration(minutes = minutesWithPadding, seconds = secondsWithPadding)
+    verify(screen).moveToState(State.BruteForceLocked(timeTillUnlock = timerDuration))
   }
 }

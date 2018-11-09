@@ -9,6 +9,13 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
+import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
+import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -31,7 +38,8 @@ class PatientEditScreenController @Inject constructor(
 
     return Observable.merge(
         prefillOnStart(transformedEvents),
-        showValidationErrorsOnSaveClick(transformedEvents)
+        showValidationErrorsOnSaveClick(transformedEvents),
+        hideValidationErrorsOnInput(transformedEvents)
     )
   }
 
@@ -140,5 +148,39 @@ class PatientEditScreenController @Inject constructor(
         }
         .filter { it.isNotEmpty() }
         .map { errors -> { ui: Ui -> ui.showValidationErrors(errors) } }
+  }
+
+  private fun hideValidationErrorsOnInput(events: Observable<UiEvent>): Observable<UiChange> {
+    val errorsFromPhoneNumber = events
+        .ofType<PatientEditPhoneNumberTextChanged>()
+        .map { setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_LONG, PHONE_NUMBER_LENGTH_TOO_SHORT) }
+
+    val errorsFromName = events
+        .ofType<PatientEditPatientNameTextChanged>()
+        .map { setOf(FULL_NAME_EMPTY) }
+
+    val errorsFromColonyOrVillage = events
+        .ofType<PatientEditColonyOrVillageChanged>()
+        .map { setOf(COLONY_OR_VILLAGE_EMPTY) }
+
+    val errorsFromState = events
+        .ofType<PatientEditStateTextChanged>()
+        .map { setOf(STATE_EMPTY) }
+
+    val errorsFromDistrict = events
+        .ofType<PatientEditDistrictTextChanged>()
+        .map { setOf(DISTRICT_EMPTY) }
+
+    return Observable
+        .mergeArray(
+            errorsFromPhoneNumber,
+            errorsFromName,
+            errorsFromColonyOrVillage,
+            errorsFromState,
+            errorsFromDistrict
+        )
+        .map { errors ->
+          { ui: Ui -> ui.hideValidationErrors(errors) }
+        }
   }
 }

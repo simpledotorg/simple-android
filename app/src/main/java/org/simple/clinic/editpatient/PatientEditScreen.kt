@@ -193,6 +193,34 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
+  fun hideValidationErrors(errors: Set<PatientEditValidationError>) {
+    errors.forEach {
+      when(it) {
+        FULL_NAME_EMPTY -> {
+          showEmptyFullNameError(false)
+        }
+
+        PHONE_NUMBER_EMPTY,
+        PHONE_NUMBER_LENGTH_TOO_SHORT,
+        PHONE_NUMBER_LENGTH_TOO_LONG -> {
+          showLengthTooShortPhoneNumberError(false)
+        }
+
+        COLONY_OR_VILLAGE_EMPTY -> {
+          showEmptyColonyOrVillageError(false)
+        }
+
+        DISTRICT_EMPTY -> {
+          showEmptyDistrictError(false)
+        }
+
+        STATE_EMPTY -> {
+          showEmptyStateError(false)
+        }
+      }
+    }
+  }
+
   private fun showEmptyColonyOrVillageError(showError: Boolean) {
     colonyOrVillageInputLayout.error = when {
       showError -> resources.getString(R.string.patientedit_error_empty_colony_or_village)

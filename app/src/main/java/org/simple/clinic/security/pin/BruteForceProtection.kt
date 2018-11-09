@@ -85,11 +85,17 @@ class BruteForceProtection @Inject constructor(
         .flatMapCompletable { resetFailedAttempts() }
         .toObservable<Any>()
 
-    // Using merge to avoid transient notifications midway during updating
+    val alwaysAllowWhenDisabled = Observables
+        .combineLatest(configProvider.toObservable(), failedAuthCountPreference.asObservable())
+        .filter { (config) -> config.isEnabled.not() }
+        .map { Allowed(attemptsMade = Math.min(1, failedAuthCountPreference.get()), attemptsRemaining = 1) }
+
+    // Using zip to avoid transient notifications midway during updating
     // both preferences. RxPreferences doesn't support bulk modifications.
     val preferenceChanges = Observables.zip(limitReachedAtPreference.asObservable(), failedAuthCountPreference.asObservable())
 
     return Observables.combineLatest(configProvider.toObservable(), preferenceChanges, autoResets.startWith(Any()))
+        .filter { (config) -> config.isEnabled }
         .map { (config) ->
           val (blockedAt: Instant?) = limitReachedAtPreference.get()
           val attemptsMade = failedAuthCountPreference.get()
@@ -103,5 +109,6 @@ class BruteForceProtection @Inject constructor(
           }
         }
         .distinctUntilChanged()
+        .mergeWith(alwaysAllowWhenDisabled)
   }
 }

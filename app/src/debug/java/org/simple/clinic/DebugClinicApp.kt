@@ -101,9 +101,11 @@ class DebugClinicApp : ClinicApp() {
           }
         })
         .bruteForceProtectionModule(object : BruteForceProtectionModule() {
-          override fun config() = Single.just(BruteForceProtectionConfig(
-              limitOfFailedAttempts = 5,
-              blockDuration = Duration.ofMinutes(1) + Duration.ofSeconds(10)))
+          override fun config(): Single<BruteForceProtectionConfig> {
+            return super.config().map {
+              it.copy(blockDuration = Duration.ofMinutes(1) + Duration.ofSeconds(10))
+            }
+          }
         })
         .build()
   }

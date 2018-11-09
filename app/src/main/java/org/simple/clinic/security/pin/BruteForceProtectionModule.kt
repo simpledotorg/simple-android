@@ -17,7 +17,7 @@ open class BruteForceProtectionModule {
 
   @Provides
   open fun config(): Single<BruteForceProtectionConfig> {
-    return Single.just(BruteForceProtectionConfig(limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
+    return Single.just(BruteForceProtectionConfig(isEnabled = false, limitOfFailedAttempts = 5, blockDuration = Duration.ofMinutes(20)))
   }
 
   @Provides

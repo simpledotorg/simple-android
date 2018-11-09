@@ -3,7 +3,6 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.support.design.widget.TextInputLayout
 import android.util.AttributeSet
-import android.view.View
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
@@ -32,7 +31,7 @@ import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.topRelativeTo
+import org.simple.clinic.widgets.scrollToChild
 import javax.inject.Inject
 
 class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
@@ -284,20 +283,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
           it.error.isNullOrBlank().not()
         }
         ?.let { firstFieldWithError ->
-          scrollFormTo(firstFieldWithError)
+          formScrollView.scrollToChild(firstFieldWithError, onScrollComplete = { firstFieldWithError.requestFocus() })
         }
-  }
-
-  private fun scrollFormTo(view: View) {
-    val distanceToScrollFromTop = view.topRelativeTo(formScrollView)
-    formScrollView.post {
-      formScrollView.smoothScrollTo(0, distanceToScrollFromTop)
-
-      // Request focus only *after* the form has scrolled.
-      view.postDelayed(
-          { view.requestFocus() },
-          400
-      )
-    }
   }
 }

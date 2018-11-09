@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ScrollView
 import android.widget.TextView
 import timber.log.Timber
 
@@ -157,11 +158,22 @@ fun dpToPx(dp: Float): Float {
 
 fun dpToPx(dp: Int) = dpToPx(dp.toFloat())
 
+
 fun TextView.setTextAppearanceCompat(@StyleRes resourceId: Int) {
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
     setTextAppearance(resourceId)
   } else {
     @Suppress("DEPRECATION")
     setTextAppearance(context, resourceId)
+  }
+}
+
+fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
+  post {
+    val distanceToScrollFromTop = view.topRelativeTo(this)
+
+    smoothScrollTo(0, distanceToScrollFromTop)
+
+    postDelayed(onScrollComplete, 400)
   }
 }

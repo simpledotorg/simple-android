@@ -40,9 +40,9 @@ import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
-import org.simple.clinic.widgets.topRelativeTo
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -321,20 +321,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         }
         .first()
 
-    scrollFormTo(firstFieldWithError)
-  }
-
-  private fun scrollFormTo(view: View) {
-    val distanceToScrollFromTop = view.topRelativeTo(formScrollView)
-    formScrollView.post {
-      formScrollView.smoothScrollTo(0, distanceToScrollFromTop)
-
-      // Request focus only *after* the form has scrolled.
-      view.postDelayed(
-          { view.requestFocus() },
-          400
-      )
-    }
+    formScrollView.scrollToChild(firstFieldWithError, onScrollComplete = { firstFieldWithError.requestFocus() })
   }
 
   fun scrollFormToBottom() {

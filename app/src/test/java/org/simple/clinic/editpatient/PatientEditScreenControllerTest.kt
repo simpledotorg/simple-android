@@ -398,4 +398,46 @@ class PatientEditScreenControllerTest {
         )
     )
   }
+
+  @Test
+  @Parameters(method = "params for hiding errors on text changes")
+  fun `when input changes, errors corresponding to the input must be hidden`(
+      inputChange: UiEvent,
+      expectedErrorsToHide: Set<PatientEditValidationError>
+  ) {
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
+
+    whenever(numberValidator.validate(any(), any())).thenReturn(BLANK)
+
+    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    uiEvents.onNext(inputChange)
+
+    if (expectedErrorsToHide.isNotEmpty()) {
+      verify(screen).hideValidationErrors(expectedErrorsToHide)
+    } else {
+      verify(screen, never()).hideValidationErrors(any())
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for hiding errors on text changes`(): List<List<Any>> {
+    return listOf(
+        listOf(PatientEditPatientNameTextChanged(""), setOf(FULL_NAME_EMPTY)),
+        listOf(PatientEditPatientNameTextChanged("Name"), setOf(FULL_NAME_EMPTY)),
+        listOf(PatientEditPhoneNumberTextChanged(""), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
+        listOf(PatientEditPhoneNumberTextChanged("12345"), setOf(PHONE_NUMBER_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, PHONE_NUMBER_LENGTH_TOO_LONG)),
+        listOf(PatientEditColonyOrVillageChanged(""), setOf(COLONY_OR_VILLAGE_EMPTY)),
+        listOf(PatientEditColonyOrVillageChanged("Colony"), setOf(COLONY_OR_VILLAGE_EMPTY)),
+        listOf(PatientEditStateTextChanged(""), setOf(STATE_EMPTY)),
+        listOf(PatientEditStateTextChanged("State"), setOf(STATE_EMPTY)),
+        listOf(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
+        listOf(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
+        listOf(PatientEditGenderChanged(Gender.TRANSGENDER), emptySet<PatientEditValidationError>())
+    )
+  }
 }

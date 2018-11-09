@@ -58,7 +58,7 @@ class PinEntryCardController @Inject constructor(
           val cachedPinValidation = userSession.requireLoggedInUser()
               .take(1)
               .flatMapSingle { user -> passwordHasher.compare(user.pinDigest, pin) }
-              .publish()
+              .replay()
               .refCount()
 
           val progressUiChanges = cachedPinValidation

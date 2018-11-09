@@ -109,7 +109,7 @@ class PinEntryCardController @Inject constructor(
         }
   }
 
-  private fun formatTimeRemainingTill(futureTime: Instant): String {
+  private fun formatTimeRemainingTill(futureTime: Instant): TimerDuration {
     val secondsRemaining = futureTime.epochSecond - Instant.now(clock).epochSecond
     val secondsPerHour = Duration.ofHours(1).seconds
     val secondsPerMinute = Duration.ofMinutes(1).seconds
@@ -120,7 +120,7 @@ class PinEntryCardController @Inject constructor(
     val minutesWithPadding = minutes.padStart(2, padChar = '0')
     val secondsWithPadding = seconds.padStart(2, padChar = '0')
 
-    return "$minutesWithPadding:$secondsWithPadding"
+    return TimerDuration(minutesWithPadding, secondsWithPadding)
   }
 
   private fun showIncorrectPinError(events: Observable<UiEvent>): Observable<UiChange> {

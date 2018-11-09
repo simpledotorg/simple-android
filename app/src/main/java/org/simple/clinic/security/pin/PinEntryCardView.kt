@@ -46,7 +46,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   sealed class State {
     object PinEntry : State()
     object Progress : State()
-    data class BruteForceLocked(val timeTillUnlock: String) : State()
+    data class BruteForceLocked(val timeTillUnlock: TimerDuration) : State()
   }
 
   init {
@@ -111,7 +111,10 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }.exhaustive()
 
     if (state is State.BruteForceLocked) {
-      timeRemainingTillUnlockTextView.text = state.timeTillUnlock
+      timeRemainingTillUnlockTextView.text = resources.getString(
+          R.string.pinentry_bruteforcelock_timer,
+          state.timeTillUnlock.minutes,
+          state.timeTillUnlock.seconds)
     }
   }
 

@@ -74,6 +74,10 @@ class BruteForceProtection @Inject constructor(
           } else {
             val blockExpiresAt = blockedAt + config.blockDuration
             val now = Instant.now(clock)
+
+            // It's possible that the block duration gets updated by a config update
+            // from the server, potentially resulting in a situation where the expiry
+            // time is now in the past.
             val millisTillExpiry = Math.max(blockExpiresAt.toEpochMilli() - now.toEpochMilli(), 0)
             Observable.timer(millisTillExpiry + 1, TimeUnit.MILLISECONDS)
           }

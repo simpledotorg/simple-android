@@ -86,15 +86,15 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     TransitionManager.beginDelayedTransition(this, transition)
 
     contentContainer.visibility = when (state) {
-      is State.PinEntry -> View.VISIBLE
-      is State.BruteForceLocked -> View.VISIBLE
-      is State.Progress -> View.INVISIBLE
+      is State.PinEntry -> VISIBLE
+      is State.BruteForceLocked -> VISIBLE
+      is State.Progress -> INVISIBLE
     }
 
     progressView.visibility = when (state) {
-      is State.PinEntry -> View.GONE
-      is State.BruteForceLocked -> View.GONE
-      is State.Progress -> View.VISIBLE
+      is State.PinEntry -> GONE
+      is State.BruteForceLocked -> GONE
+      is State.Progress -> VISIBLE
     }
 
     // TODO: Use IDs instead of indices.

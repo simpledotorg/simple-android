@@ -1,6 +1,7 @@
 package org.simple.clinic.editpatient
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -274,8 +275,15 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditSaveClicked())
 
     if (expectedErrors.isNotEmpty()) {
-      verify(screen).showValidationErrors(expectedErrors)
+      // This is order dependent because finding the first field
+      // with error is only possible once the errors are set.
+      val inOrder = inOrder(screen)
+
+      inOrder.verify(screen).showValidationErrors(expectedErrors)
+      inOrder.verify(screen).scrollToFirstFieldWithError()
+
     } else {
+      verify(screen, never()).showValidationErrors(any())
       verify(screen, never()).showValidationErrors(any())
     }
   }

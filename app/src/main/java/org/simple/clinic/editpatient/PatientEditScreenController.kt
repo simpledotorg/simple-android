@@ -147,7 +147,12 @@ class PatientEditScreenController @Inject constructor(
           ongoingEditPatientEntry.validate(phoneNumber.toNullable(), numberValidator)
         }
         .filter { it.isNotEmpty() }
-        .map { errors -> { ui: Ui -> ui.showValidationErrors(errors) } }
+        .map { errors ->
+          { ui: Ui ->
+            ui.showValidationErrors(errors)
+            ui.scrollToFirstFieldWithError()
+          }
+        }
   }
 
   private fun hideValidationErrorsOnInput(events: Observable<UiEvent>): Observable<UiChange> {

@@ -171,11 +171,11 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
         PHONE_NUMBER_EMPTY,
         PHONE_NUMBER_LENGTH_TOO_SHORT -> {
-          showLengthTooShortPhoneNumberError(true)
+          showLengthTooShortPhoneNumberError()
         }
 
         PHONE_NUMBER_LENGTH_TOO_LONG -> {
-          showLengthTooLongPhoneNumberError(true)
+          showLengthTooLongPhoneNumberError()
         }
 
         COLONY_OR_VILLAGE_EMPTY -> {
@@ -188,6 +188,34 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
         STATE_EMPTY -> {
           showEmptyStateError(true)
+        }
+      }
+    }
+  }
+
+  fun hideValidationErrors(errors: Set<PatientEditValidationError>) {
+    errors.forEach {
+      when(it) {
+        FULL_NAME_EMPTY -> {
+          showEmptyFullNameError(false)
+        }
+
+        PHONE_NUMBER_EMPTY,
+        PHONE_NUMBER_LENGTH_TOO_SHORT,
+        PHONE_NUMBER_LENGTH_TOO_LONG -> {
+          hidePhoneNumberError()
+        }
+
+        COLONY_OR_VILLAGE_EMPTY -> {
+          showEmptyColonyOrVillageError(false)
+        }
+
+        DISTRICT_EMPTY -> {
+          showEmptyDistrictError(false)
+        }
+
+        STATE_EMPTY -> {
+          showEmptyStateError(false)
         }
       }
     }
@@ -222,19 +250,15 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
-  private fun showLengthTooShortPhoneNumberError(show: Boolean) {
-    if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_less)
-    } else {
-      phoneNumberInputLayout.error = null
-    }
+  private fun showLengthTooShortPhoneNumberError() {
+    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_less)
   }
 
-  private fun showLengthTooLongPhoneNumberError(show: Boolean) {
-    if (show) {
-      phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more)
-    } else {
-      phoneNumberInputLayout.error = null
-    }
+  private fun showLengthTooLongPhoneNumberError() {
+    phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more)
+  }
+
+  private fun hidePhoneNumberError() {
+    phoneNumberInputLayout.error = null
   }
 }

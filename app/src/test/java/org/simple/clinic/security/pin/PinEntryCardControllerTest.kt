@@ -10,7 +10,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.TestScheduler
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -24,11 +23,10 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset.UTC
 
 @RunWith(JUnitParamsRunner::class)
 class PinEntryCardControllerTest {
@@ -40,9 +38,8 @@ class PinEntryCardControllerTest {
 
   private lateinit var controller: PinEntryCardController
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val clock = Clock.fixed(Instant.now(), UTC)
+  private val clock = TestClock()
   private val loggedInUser = PatientMocker.loggedInUser()
-  private val testScheduler = TestScheduler()
 
   @Before
   fun setUp() {
@@ -51,8 +48,6 @@ class PinEntryCardControllerTest {
     whenever(bruteForceProtection.incrementFailedAttempt()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.recordSuccessfulAuthentication()).thenReturn(Completable.complete())
     whenever(bruteForceProtection.protectedStateChanges()).thenReturn(Observable.never())
-
-    RxJavaPlugins.setComputationSchedulerHandler { testScheduler }
 
     controller = PinEntryCardController(userSession, passwordHasher, clock, bruteForceProtection)
 

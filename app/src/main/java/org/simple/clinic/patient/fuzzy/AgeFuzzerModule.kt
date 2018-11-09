@@ -9,7 +9,7 @@ open class AgeFuzzerModule {
 
   @Provides
   open fun provideAgeFuzzer(clock: Clock): AgeFuzzer {
-    val fuzzinessFactor = 0.1F
+    val fuzzinessFactor = 0.2F
     return PercentageFuzzer(clock, fuzzinessFactor)
   }
 }

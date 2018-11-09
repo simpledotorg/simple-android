@@ -20,6 +20,8 @@ import org.simple.clinic.network.FailAllNetworkCallsInterceptor
 import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
+import org.simple.clinic.security.pin.BruteForceProtectionConfig
+import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
@@ -97,6 +99,13 @@ class TestClinicApp : ClinicApp() {
                 .newBuilder()
                 .addInterceptor(FailAllNetworkCallsInterceptor)
                 .build()
+          }
+        })
+        .bruteForceProtectionModule(object : BruteForceProtectionModule() {
+          override fun config(): Single<BruteForceProtectionConfig> {
+            return super.config().map {
+              it.copy(isEnabled = true)
+            }
           }
         })
         .build()

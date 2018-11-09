@@ -3,10 +3,12 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.support.design.widget.TextInputLayout
 import android.util.AttributeSet
+import android.view.View
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
+import android.widget.ScrollView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -30,6 +32,7 @@ import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.topRelativeTo
 import javax.inject.Inject
 
 class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
@@ -45,6 +48,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  private val formScrollView by bindView<ScrollView>(R.id.patientedit_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patientedit_full_name)
   private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientedit_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patientedit_phone_number)
@@ -195,7 +199,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   fun hideValidationErrors(errors: Set<PatientEditValidationError>) {
     errors.forEach {
-      when(it) {
+      when (it) {
         FULL_NAME_EMPTY -> {
           showEmptyFullNameError(false)
         }
@@ -263,6 +267,37 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
       phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more)
     } else {
       phoneNumberInputLayout.error = null
+    }
+  }
+
+  fun scrollToFirstFieldWithError() {
+    val views = arrayOf(
+        fullNameInputLayout,
+        phoneNumberInputLayout,
+        colonyOrVillageInputLayout,
+        districtInputLayout,
+        stateInputLayout)
+
+
+    views
+        .firstOrNull {
+          it.error.isNullOrBlank().not()
+        }
+        ?.let { firstFieldWithError ->
+          scrollFormTo(firstFieldWithError)
+        }
+  }
+
+  private fun scrollFormTo(view: View) {
+    val distanceToScrollFromTop = view.topRelativeTo(formScrollView)
+    formScrollView.post {
+      formScrollView.smoothScrollTo(0, distanceToScrollFromTop)
+
+      // Request focus only *after* the form has scrolled.
+      view.postDelayed(
+          { view.requestFocus() },
+          400
+      )
     }
   }
 }

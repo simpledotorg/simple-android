@@ -45,7 +45,7 @@ class PatientFuzzySearch {
         val searchQuery = SimpleSQLiteQuery("""
           SELECT "Patient"."uuid", editdist3('$query', "Patient"."searchableName") "score"
           FROM "Patient" WHERE "score" < 750
-          ORDER BY "score"
+          ORDER BY "score" LIMIT 100
         """.trimIndent())
 
         sqLiteOpenHelper.readableDatabase.query(searchQuery)

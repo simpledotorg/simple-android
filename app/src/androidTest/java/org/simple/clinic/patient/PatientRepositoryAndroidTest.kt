@@ -22,6 +22,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
+import java.util.UUID
 import javax.inject.Inject
 
 class PatientRepositoryAndroidTest {
@@ -453,6 +454,39 @@ class PatientRepositoryAndroidTest {
     assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1)
     assertThat(patientFirst).isNotNull()
     assertThat(searchResult).isEmpty()
+  }
+
+  /*
+  * Added to test the case where SQLite's max query param length (999) can be
+  * exceeded during fuzzy name search.
+  **/
+  @Test
+  fun when_searching_with_fuzzy_search_the_results_must_be_limited() {
+    val template = testData.patientProfile(syncStatus = SyncStatus.DONE)
+
+    val patientsToSave = (1 .. 1000).map {
+      val addressUuid = UUID.randomUUID()
+      val patientUuid = UUID.randomUUID()
+
+      template.copy(
+          patient = template.patient.copy(
+              uuid = patientUuid,
+              addressUuid = addressUuid,
+              fullName = "Name",
+              searchableName = "Name",
+              dateOfBirth = LocalDate.now(clock).minusYears(10),
+              status = PatientStatus.ACTIVE
+          ),
+          address = template.address.copy(uuid = addressUuid),
+          phoneNumbers = template.phoneNumbers.map { number -> number.copy(uuid = UUID.randomUUID(), patientUuid = patientUuid) }
+      )
+    }
+
+    patientRepository.save(patientsToSave).blockingAwait()
+    assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1000)
+
+    assertThat(patientRepository.search(name = "Fame", includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
+    assertThat(patientRepository.search(name = "Fame", assumedAge = 3, includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
   }
 
   @After

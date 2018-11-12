@@ -33,7 +33,8 @@ class PatientEditScreenController @Inject constructor(
         .flatMap(patientRepository::patient)
         .take(1)
         .unwrapJust()
-        .cache()
+        .replay()
+        .refCount()
 
     val savedAddress = savedPatient
         .flatMap { patient ->

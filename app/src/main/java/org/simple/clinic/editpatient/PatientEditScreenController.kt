@@ -16,8 +16,11 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -39,8 +42,8 @@ class PatientEditScreenController @Inject constructor(
     return Observable.merge(
         prefillOnStart(transformedEvents),
         showValidationErrorsOnSaveClick(transformedEvents),
-        hideValidationErrorsOnInput(transformedEvents)
-    )
+        hideValidationErrorsOnInput(transformedEvents),
+        savePatientDetails(transformedEvents))
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -138,6 +141,8 @@ class PatientEditScreenController @Inject constructor(
     val savedPhoneNumber = events.ofType<PatientEditScreenCreated>()
         .flatMap { patientRepository.phoneNumbers(it.patientUuid) }
         .take(1)
+        .replay()
+        .refCount()
 
     return events.ofType<PatientEditSaveClicked>()
         .withLatestFrom(ongoingEditPatientEntryChanges, savedPhoneNumber) { _, (ongoingEditPatientEntry), phoneNumber ->
@@ -167,5 +172,85 @@ class PatientEditScreenController @Inject constructor(
         .map { uiEvent -> errorsForEventType[uiEvent::class] ?: emptySet() }
         .filter { it.isNotEmpty() }
         .map { errors -> { ui: Ui -> ui.hideValidationErrors(errors) } }
+  }
+
+  private fun savePatientDetails(events: Observable<UiEvent>): Observable<UiChange> {
+    val saveClicks = events.ofType<PatientEditSaveClicked>()
+
+    val patientUuidStream = events.ofType<PatientEditScreenCreated>()
+        .map { it.patientUuid }
+
+    val entryChanges = events.ofType<OngoingEditPatientEntryChanged>()
+        .map { it.ongoingEditPatientEntry }
+
+    val savedNumbers = patientUuidStream
+        .flatMap { patientRepository.phoneNumbers(it) }
+        .take(1)
+        .replay()
+        .refCount()
+
+    val validEntry = saveClicks
+        .withLatestFrom(entryChanges, savedNumbers)
+        .filter { (_, entry, savedNumber) ->
+          val validationErrors = entry.validate(savedNumber.toNullable(), numberValidator)
+          validationErrors.isEmpty()
+        }
+        .map { (_, entry) -> entry }
+
+    val updateExistingPhoneNumber = validEntry
+        .withLatestFrom(savedNumbers.filterAndUnwrapJust())
+        .map { (entry, savedNumber) -> savedNumber.copy(number = entry.phoneNumber) }
+        .flatMapSingle { updatedNumber ->
+          patientRepository
+              .updatePhoneNumberForPatient(updatedNumber.patientUuid, updatedNumber)
+              //Doing this because Completables are not working properly
+              .toSingleDefault(true)
+        }
+
+    val createNewPhoneNumber = validEntry
+        .withLatestFrom(savedNumbers.ofType<None>(), patientUuidStream)
+        .flatMapSingle { (entry, _, patientUuid) ->
+          patientRepository
+              .createPhoneNumberForPatient(patientUuid, entry.phoneNumber, phoneNumberType = PatientPhoneNumberType.MOBILE, active = true)
+              .toSingleDefault(true)
+        }
+
+    val saveOrUpdatePhoneNumber = Observable.merge(createNewPhoneNumber, updateExistingPhoneNumber)
+
+    val savedPatient = patientUuidStream
+        .flatMap { patientRepository.patient(it).take(1).unwrapJust() }
+        .replay()
+        .refCount()
+
+    val savedPatientAddress = savedPatient
+        .flatMap { patientRepository.address(it.addressUuid).take(1).unwrapJust() }
+        .replay()
+        .refCount()
+
+    val savePatientDetails = validEntry
+        .withLatestFrom(savedPatient, savedPatientAddress)
+        .map { (ongoingEditPatientEntry, patient, patientAddress) ->
+          val updatedPatient = patient.copy(
+              fullName = ongoingEditPatientEntry.name,
+              gender = ongoingEditPatientEntry.gender
+          )
+
+          val updatedAddress = patientAddress.copy(
+              colonyOrVillage = ongoingEditPatientEntry.colonyOrVillage,
+              state = ongoingEditPatientEntry.state,
+              district = ongoingEditPatientEntry.district
+          )
+
+          updatedPatient to updatedAddress
+        }
+        .flatMapSingle { (updatedPatient, updatedPatientAddress) ->
+          patientRepository.updatePatient(updatedPatient)
+              .andThen(patientRepository.updateAddressForPatient(updatedPatient.uuid, updatedPatientAddress))
+              .toSingleDefault(true)
+        }
+
+    return Observables.zip(savePatientDetails, saveOrUpdatePhoneNumber)
+        .filter { (patientSaved, numberSaved) -> patientSaved && numberSaved }
+        .map { (_, _) -> { ui: Ui -> ui.goBack() } }
   }
 }

@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -25,6 +26,8 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
@@ -126,6 +129,11 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
 
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
@@ -152,6 +160,11 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
+
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
@@ -189,6 +202,10 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
@@ -210,6 +227,10 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
@@ -231,6 +252,11 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
@@ -260,6 +286,11 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
+
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
 
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
 
@@ -446,6 +477,222 @@ class PatientEditScreenControllerTest {
         listOf(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
         listOf(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
         listOf(PatientEditGenderChanged(Gender.TRANSGENDER), emptySet<PatientEditValidationError>())
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for saving patient on save clicked")
+  fun `when save is clicked, the patient details must be updated if there are no errors`(
+      savedPatient: Patient,
+      savedAddress: PatientAddress,
+      savedPhoneNumber: PatientPhoneNumber?,
+      numberValidationResult: PhoneNumberValidator.Result,
+      inputEvents: List<UiEvent>,
+      shouldSavePatient: Boolean,
+      expectedSavedPatient: Patient?,
+      expectedSavedPatientAddress: PatientAddress?,
+      expectedSavedPatientPhoneNumber: PatientPhoneNumber?
+  ) {
+    whenever(patientRepository.patient(savedPatient.uuid)).thenReturn(Observable.just(savedPatient.toOptional()))
+    whenever(patientRepository.phoneNumbers(savedPatient.uuid)).thenReturn(Observable.just(savedPhoneNumber.toOptional()))
+    whenever(patientRepository.address(savedAddress.uuid)).thenReturn(Observable.just(savedAddress.toOptional()))
+
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.savePhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+
+    whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
+
+    uiEvents.onNext(PatientEditScreenCreated(savedPatient.uuid))
+
+    inputEvents.forEach { uiEvents.onNext(it) }
+
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    if (shouldSavePatient) {
+      verify(patientRepository).updatePatient(expectedSavedPatient!!)
+      verify(patientRepository).updateAddressForPatient(expectedSavedPatient.uuid, expectedSavedPatientAddress!!)
+
+      if (expectedSavedPatientPhoneNumber != null) {
+        if (savedPhoneNumber == null) {
+          verify(patientRepository).savePhoneNumberForPatient(
+              patientUuid = expectedSavedPatientPhoneNumber.patientUuid,
+              number = expectedSavedPatientPhoneNumber.number,
+              phoneNumberType = PatientPhoneNumberType.MOBILE,
+              active = true
+          )
+        } else {
+          verify(patientRepository).updatePhoneNumberForPatient(expectedSavedPatient.uuid, expectedSavedPatientPhoneNumber)
+        }
+
+      } else {
+        verify(patientRepository, never()).savePhoneNumberForPatient(any(), any(), any(), any())
+        verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
+      }
+      verify(screen).goBack()
+
+    } else {
+      verify(patientRepository, never()).updatePatient(any())
+      verify(patientRepository, never()).updateAddressForPatient(any(), any())
+      verify(patientRepository, never()).updatePhoneNumberForPatient(any(), any())
+      verify(patientRepository, never()).savePhoneNumberForPatient(any(), any(), any(), any())
+      verify(screen, never()).goBack()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for saving patient on save clicked`(): List<List<Any?>> {
+
+    fun generatePatientProfile(shouldAddNumber: Boolean): PatientProfile {
+      val patientUuid = UUID.randomUUID()
+      val addressUuid = UUID.randomUUID()
+
+      return PatientProfile(
+          patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
+          address = PatientMocker.address(uuid = addressUuid),
+          phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList()
+      )
+    }
+
+    fun generateTestData(
+        patientProfile: PatientProfile,
+        numberValidationResult: PhoneNumberValidator.Result,
+        inputEvents: List<UiEvent>,
+        shouldSavePatient: Boolean,
+        createExpectedPatient: (Patient) -> Patient = { it },
+        createExpectedAddress: (PatientAddress) -> PatientAddress = { it },
+        createExpectedPhoneNumber: (UUID, PatientPhoneNumber?) -> PatientPhoneNumber? = { id, phoneNumber -> phoneNumber }
+    ): List<Any?> {
+
+      val expectedPatientPhoneNumber = if (shouldSavePatient) {
+        val alreadySavedPhoneNumber = if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first()
+        createExpectedPhoneNumber(patientProfile.patient.uuid, alreadySavedPhoneNumber)
+
+      } else null
+
+      val preCreateInputEvents = listOf(
+          PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
+          PatientEditDistrictTextChanged(patientProfile.address.district),
+          PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
+          PatientEditStateTextChanged(patientProfile.address.state),
+          PatientEditGenderChanged(patientProfile.patient.gender),
+          PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
+      )
+
+      return listOf(
+          patientProfile.patient,
+          patientProfile.address,
+          if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first(),
+          numberValidationResult,
+          preCreateInputEvents + inputEvents,
+          shouldSavePatient,
+          if (shouldSavePatient) createExpectedPatient(patientProfile.patient) else null,
+          if (shouldSavePatient) createExpectedAddress(patientProfile.address) else null,
+          expectedPatientPhoneNumber
+      )
+    }
+
+    return listOf(
+        generateTestData(
+            patientProfile = generatePatientProfile(false),
+            numberValidationResult = VALID,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditColonyOrVillageChanged("Colony"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(Gender.MALE),
+                PatientEditPhoneNumberTextChanged("12345678")),
+            shouldSavePatient = true,
+            createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.MALE) },
+            createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
+              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
+            }),
+        generateTestData(
+            patientProfile = generatePatientProfile(true),
+            numberValidationResult = VALID,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(Gender.TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456")),
+            shouldSavePatient = true,
+            createExpectedPatient = { it.copy(fullName = "Name", gender = Gender.TRANSGENDER) },
+            createExpectedAddress = { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
+              alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
+            }),
+        generateTestData(
+            patientProfile = generatePatientProfile(true),
+            numberValidationResult = VALID,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(Gender.TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567")),
+            shouldSavePatient = true,
+            createExpectedPatient = { it.copy(fullName = "Name 2", gender = Gender.TRANSGENDER) },
+            createExpectedAddress = { it.copy(district = "District", state = "State 2") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
+              alreadyPresentPhoneNumber?.copy(number = "1234567") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "1234567")
+            }),
+        generateTestData(
+            patientProfile = generatePatientProfile(true),
+            numberValidationResult = LENGTH_TOO_SHORT,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(Gender.TRANSGENDER)),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(false),
+            numberValidationResult = VALID,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(Gender.TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditPatientNameTextChanged("")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(true),
+            numberValidationResult = LENGTH_TOO_LONG,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged(""),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(Gender.TRANSGENDER)),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(true),
+            numberValidationResult = VALID,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged(""),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(Gender.TRANSGENDER)),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(false),
+            numberValidationResult = BLANK,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged(""),
+                PatientEditGenderChanged(Gender.FEMALE)),
+            shouldSavePatient = false)
     )
   }
 }

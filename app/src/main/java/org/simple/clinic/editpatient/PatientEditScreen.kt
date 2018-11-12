@@ -286,4 +286,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
           formScrollView.scrollToChild(firstFieldWithError, onScrollComplete = { firstFieldWithError.requestFocus() })
         }
   }
+
+  fun goBack() {
+    screenRouter.pop()
+  }
 }

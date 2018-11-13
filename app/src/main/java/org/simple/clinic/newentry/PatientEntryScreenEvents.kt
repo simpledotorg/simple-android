@@ -1,7 +1,7 @@
 package org.simple.clinic.newentry
 
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.UiEvent
 
@@ -45,6 +45,6 @@ class PatientEntrySaveClicked : UiEvent {
   override val analyticsName = "Create Patient Entry:Save Clicked"
 }
 
-data class OngoingPatientEntryChanged(val entry: OngoingPatientEntry) : UiEvent {
+data class OngoingPatientEntryChanged(val entry: OngoingNewPatientEntry) : UiEvent {
   override val analyticsName = "Create Patient Entry:Ongoing Patient Entry Changed"
 }

@@ -9,15 +9,15 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
-import org.simple.clinic.patient.OngoingPatientEntry.Address
-import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
-import org.simple.clinic.patient.OngoingPatientEntry.PhoneNumber
+import org.simple.clinic.patient.OngoingNewPatientEntry.Address
+import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
+import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 
 @RunWith(JUnitParamsRunner::class)
-class OngoingPatientEntryTest {
+class OngoingNewPatientEntryTest {
 
   @Test
   @Parameters(method = "values")
@@ -31,7 +31,7 @@ class OngoingPatientEntryTest {
       state: String,
       phoneValidationResult: PhoneNumberValidator.Result
   ) {
-    val entry = OngoingPatientEntry(
+    val entry = OngoingNewPatientEntry(
         personalDetails = PersonalDetails(fullname, dateOfBirth, age, Gender.MALE),
         address = Address(colonyOrVillage, district, state),
         phoneNumber = PhoneNumber(""))
@@ -63,7 +63,7 @@ class OngoingPatientEntryTest {
 
   @Test
   fun `future date-of-birth should not be accepted`() {
-    val entry = OngoingPatientEntry(
+    val entry = OngoingNewPatientEntry(
         personalDetails = PersonalDetails("Ashok", "01/01/3000", "", Gender.MALE),
         address = Address("colony", "district", "state"),
         phoneNumber = PhoneNumber("phone-number"))

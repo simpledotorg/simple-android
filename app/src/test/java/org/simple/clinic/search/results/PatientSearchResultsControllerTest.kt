@@ -15,7 +15,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
@@ -117,7 +117,7 @@ class PatientSearchResultsControllerTest {
   ) {
     whenever(patientRepository.search(any(), any(), any())).thenReturn(Observable.just(listOf()))
 
-    val preFilledEntry = OngoingPatientEntry(OngoingPatientEntry.PersonalDetails(
+    val preFilledEntry = OngoingNewPatientEntry(OngoingNewPatientEntry.PersonalDetails(
         fullName = "name",
         dateOfBirth = dateOfBirth,
         age = age,

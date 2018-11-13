@@ -77,16 +77,16 @@ class AadhaarScanScreenControllerTest {
 //
 //    uiEvents.onNext(QrScanned("qr-code"))
 //
-//    argumentCaptor<OngoingPatientEntry>().apply {
+//    argumentCaptor<OngoingNewPatientEntry>().apply {
 //      verify(repository).saveOngoingEntry(capture())
 //
-//      assert(firstValue == OngoingPatientEntry(
-//          personalDetails = OngoingPatientEntry.PersonalDetails(
+//      assert(firstValue == OngoingNewPatientEntry(
+//          personalDetails = OngoingNewPatientEntry.PersonalDetails(
 //              fullName = aadhaarQrData.fullName!!,
 //              dateOfBirth = aadhaarQrData.dateOfBirth!!,
 //              age = null,
 //              gender = aadhaarQrData.gender),
-//          address = OngoingPatientEntry.Address(
+//          address = OngoingNewPatientEntry.Address(
 //              colonyOrVillage = aadhaarQrData.villageOrTownOrCity!!,
 //              district = aadhaarQrData.district!!,
 //              state = aadhaarQrData.state!!)

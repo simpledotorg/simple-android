@@ -17,7 +17,7 @@ import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
@@ -487,14 +487,14 @@ class TestData @Inject constructor(
       district: String = faker.address.city(),
       state: String = faker.address.state(),
       phone: String? = faker.number.number(10)
-  ): OngoingPatientEntry {
-    val ongoingPersonalDetails = OngoingPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
-    val ongoingAddress = OngoingPatientEntry.Address(colony, district, state)
+  ): OngoingNewPatientEntry {
+    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
+    val ongoingAddress = OngoingNewPatientEntry.Address(colony, district, state)
     val ongoingPhoneNumber = phone?.let {
-      OngoingPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.MOBILE, active = true)
+      OngoingNewPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.MOBILE, active = true)
     }
 
-    return OngoingPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
+    return OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
   }
 
   fun bloodPressureMeasurement(

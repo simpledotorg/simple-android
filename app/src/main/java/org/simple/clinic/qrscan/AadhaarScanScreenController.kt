@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.Vibrator
@@ -103,14 +103,14 @@ class AadhaarScanScreenController @Inject constructor(
     return vibrations.mergeWith(newPatientFlows)
   }
 
-  private fun newPatientEntry(aadhaarQrData: AadhaarQrData): OngoingPatientEntry {
-    return OngoingPatientEntry(
-        personalDetails = OngoingPatientEntry.PersonalDetails(
+  private fun newPatientEntry(aadhaarQrData: AadhaarQrData): OngoingNewPatientEntry {
+    return OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails(
             fullName = aadhaarQrData.fullName.orEmpty(),
             dateOfBirth = aadhaarQrData.dateOfBirth.orEmpty(),
             age = null,
             gender = aadhaarQrData.gender),
-        address = OngoingPatientEntry.Address(
+        address = OngoingNewPatientEntry.Address(
             colonyOrVillage = aadhaarQrData.villageOrTownOrCity.orEmpty(),
             district = aadhaarQrData.district.orEmpty(),
             state = aadhaarQrData.state.orEmpty())

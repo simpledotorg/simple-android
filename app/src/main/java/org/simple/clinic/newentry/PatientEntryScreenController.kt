@@ -14,10 +14,10 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.OngoingPatientEntry.Address
-import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
-import org.simple.clinic.patient.OngoingPatientEntry.PhoneNumber
+import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.Address
+import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
+import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -167,7 +167,7 @@ class PatientEntryScreenController @Inject constructor(
         .combineLatest(colonyOrVillageChanges, districtChanges, stateChanges, ::Address)
 
     return Observables.combineLatest(personDetailChanges, phoneNumberChanges, addressChanges) { personal, phone, address ->
-      OngoingPatientEntryChanged(OngoingPatientEntry(personal, address, phone.toNullable()))
+      OngoingPatientEntryChanged(OngoingNewPatientEntry(personal, address, phone.toNullable()))
     }
   }
 

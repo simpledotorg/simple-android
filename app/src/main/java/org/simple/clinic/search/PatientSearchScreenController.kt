@@ -12,7 +12,7 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.search.PatientSearchValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.search.PatientSearchValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
@@ -212,7 +212,7 @@ class PatientSearchScreenController @Inject constructor(
         .ofType<CreateNewPatientClicked>()
         .withLatestFrom(nameChanges) { _, name -> name }
         .take(1)
-        .map { OngoingPatientEntry(personalDetails = OngoingPatientEntry.PersonalDetails(it, null, null, null)) }
+        .map { OngoingNewPatientEntry(personalDetails = OngoingNewPatientEntry.PersonalDetails(it, null, null, null)) }
         .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
         .andThen(Observable.just { ui: Ui -> ui.openPatientEntryScreen() })
   }

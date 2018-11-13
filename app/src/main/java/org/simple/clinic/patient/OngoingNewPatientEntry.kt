@@ -29,7 +29,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
  * Parsing of user input happens later when this data class is converted
  * into a Patient object in [PatientRepository.saveOngoingEntryAsPatient].
  */
-data class OngoingPatientEntry(
+data class OngoingNewPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
     val phoneNumber: PhoneNumber? = null

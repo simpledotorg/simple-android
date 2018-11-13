@@ -33,7 +33,7 @@ import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISI
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
@@ -160,7 +160,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .map { PatientEntrySaveClicked() }
   }
 
-  fun preFillFields(entry: OngoingPatientEntry) {
+  fun preFillFields(entry: OngoingNewPatientEntry) {
     fullNameEditText.setTextAndCursor(entry.personalDetails?.fullName)
     phoneNumberEditText.setTextAndCursor(entry.phoneNumber?.number)
     dateOfBirthEditText.setTextAndCursor(entry.personalDetails?.dateOfBirth)

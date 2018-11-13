@@ -45,7 +45,7 @@ class PatientRepository @Inject constructor(
     private val ageFuzzer: AgeFuzzer
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
-  private var ongoingPatientEntry: OngoingPatientEntry = OngoingPatientEntry()
+  private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
   fun search(name: String, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val searchableName = nameToSearchableForm(name)
@@ -198,13 +198,13 @@ class PatientRepository @Inject constructor(
     )
   }
 
-  fun ongoingEntry(): Single<OngoingPatientEntry> {
-    return Single.fromCallable { ongoingPatientEntry }
+  fun ongoingEntry(): Single<OngoingNewPatientEntry> {
+    return Single.fromCallable { ongoingNewPatientEntry }
   }
 
-  fun saveOngoingEntry(ongoingEntry: OngoingPatientEntry): Completable {
+  fun saveOngoingEntry(ongoingEntry: OngoingNewPatientEntry): Completable {
     return Completable.fromAction {
-      this.ongoingPatientEntry = ongoingEntry
+      this.ongoingNewPatientEntry = ongoingEntry
     }
   }
 

@@ -10,8 +10,8 @@ import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
-import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
+import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -97,7 +97,7 @@ class PatientSearchResultsController @Inject constructor(
     return events.ofType<CreateNewPatientClicked>()
         .withLatestFrom(screenKey)
         .map { (_, key) ->
-          OngoingPatientEntry(PersonalDetails(
+          OngoingNewPatientEntry(PersonalDetails(
               fullName = key.fullName,
               dateOfBirth = key.dateOfBirth,
               age = key.age,

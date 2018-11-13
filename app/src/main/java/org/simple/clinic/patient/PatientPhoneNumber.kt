@@ -44,7 +44,7 @@ data class PatientPhoneNumber(
   @Dao
   interface RoomDao {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(phoneNumbers: List<PatientPhoneNumber>)
 
     @Query("SELECT * FROM patientphonenumber WHERE patientUuid = :patientUuid")

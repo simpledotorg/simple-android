@@ -2,12 +2,11 @@ package org.simple.clinic.patient
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.patient.sync.PatientAddressPayload
+import org.simple.clinic.storage.DaoWithUpsert
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -43,24 +42,26 @@ data class PatientAddress(
   }
 
   @Dao
-  interface RoomDao {
+  abstract class RoomDao : DaoWithUpsert<PatientAddress>() {
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun save(address: PatientAddress)
+    fun save(address: PatientAddress) {
+      save(listOf(address))
+    }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun save(address: List<PatientAddress>)
+    fun save(addresses: List<PatientAddress>) {
+      upsert(addresses)
+    }
 
     @Query("SELECT * FROM patientaddress WHERE uuid = :uuid")
-    fun getOne(uuid: UUID): PatientAddress?
+    abstract fun getOne(uuid: UUID): PatientAddress?
 
     @Query("SELECT * FROM patientaddress WHERE uuid = :uuid")
-    fun address(uuid: UUID): Flowable<List<PatientAddress>>
+    abstract fun address(uuid: UUID): Flowable<List<PatientAddress>>
 
     @Query("DELETE FROM patientaddress")
-    fun clear()
+    abstract fun clear()
 
     @Query("SELECT COUNT(uuid) FROM PatientAddress")
-    fun count(): Int
+    abstract fun count(): Int
   }
 }

@@ -5,14 +5,14 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
+import org.simple.clinic.storage.DaoWithUpsert
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
+
 
 /**
  * [Regex] for stripping patient names and search queries of white spaces and punctuation
@@ -64,7 +64,7 @@ data class Patient constructor(
 ) {
 
   @Dao
-  abstract class RoomDao {
+  abstract class RoomDao : DaoWithUpsert<Patient>() {
 
     @Query("SELECT * FROM patient")
     abstract fun allPatients(): Flowable<List<Patient>>
@@ -76,11 +76,13 @@ data class Patient constructor(
     @Query("SELECT * FROM patient WHERE uuid = :uuid")
     abstract fun patient(uuid: UUID): Flowable<List<Patient>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun save(patient: Patient)
+    fun save(patient: Patient) {
+      save(listOf(patient))
+    }
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
-    abstract fun save(patient: List<Patient>)
+    fun save(patients: List<Patient>) {
+      upsert(patients)
+    }
 
     @Query("UPDATE patient SET syncStatus = :newStatus WHERE syncStatus = :oldStatus")
     abstract fun updateSyncStatus(oldStatus: SyncStatus, newStatus: SyncStatus)

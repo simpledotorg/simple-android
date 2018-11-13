@@ -442,9 +442,9 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient =
-    patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .blockingGet()
+        patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
+            .andThen(patientRepository.saveOngoingEntryAsPatient())
+            .blockingGet()
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
@@ -456,15 +456,15 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResult).isEmpty()
   }
 
-  /*
-  * Added to test the case where SQLite's max query param length (999) can be
-  * exceeded during fuzzy name search.
-  **/
+  /**
+   * Added to test the case where SQLite's max query param length (999) can be
+   * exceeded during fuzzy name search.
+   */
   @Test
   fun when_searching_with_fuzzy_search_the_results_must_be_limited() {
     val template = testData.patientProfile(syncStatus = SyncStatus.DONE)
 
-    val patientsToSave = (1 .. 1000).map {
+    val patientsToSave = (1..1000).map {
       val addressUuid = UUID.randomUUID()
       val patientUuid = UUID.randomUUID()
 
@@ -487,6 +487,86 @@ class PatientRepositoryAndroidTest {
 
     assertThat(patientRepository.search(name = "Fame", includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
     assertThat(patientRepository.search(name = "Fame", assumedAge = 3, includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
+  }
+
+  @Test
+  fun editing_a_patients_phone_number_should_not_trigger_foreign_key_cascades_action() {
+    database.openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true)
+
+    val patientUuid = UUID.randomUUID()
+    val initialNumber = testData.phoneNumberPayload(number = "123")
+    val initialPatient = testData.patientPayload(uuid = patientUuid, phoneNumbers = listOf(initialNumber))
+    patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
+
+    val updatedNumber = initialNumber.copy(number = "456")
+    val updatedPatient = initialPatient.copy(phoneNumbers = listOf(updatedNumber))
+    patientRepository.mergeWithLocalData(listOf(updatedPatient)).blockingAwait()
+
+    assertThat(database.phoneNumberDao().count()).isEqualTo(1)
+
+    database.patientDao().save(updatedPatient.toDatabaseModel(SyncStatus.DONE))
+
+    val storedNumbers = database.phoneNumberDao().phoneNumber(patientUuid).blockingFirst()
+    assertThat(storedNumbers.size).isEqualTo(1)
+    assertThat(storedNumbers[0].uuid).isEqualTo(updatedNumber.uuid)
+    assertThat(storedNumbers[0].number).isEqualTo(updatedNumber.number)
+
+    assertThat(database.openHelper.writableDatabase.isDatabaseIntegrityOk).isTrue()
+  }
+
+  @Test
+  fun editing_a_patients_address_should_not_trigger_foreign_key_cascades_action() {
+    database.openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true)
+
+    val patientUuid = UUID.randomUUID()
+    val initialAddress = testData.addressPayload(district = "Gotham")
+    val initialPatient = testData.patientPayload(uuid = patientUuid, address = initialAddress)
+    patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
+
+    assertThat(database.addressDao().count()).isEqualTo(1)
+    assertThat(database.patientDao().patientCount().blockingFirst()).isEqualTo(1)
+
+    val updatedAddress = initialAddress.copy(district = "Death Star")
+    database.addressDao().save(updatedAddress.toDatabaseModel())
+
+    assertThat(database.patientDao().patientCount().blockingFirst()).isEqualTo(1)
+
+    val storedPatients = database.patientDao().patient(initialPatient.uuid).blockingFirst()
+    assertThat(storedPatients.size).isEqualTo(1)
+    assertThat(storedPatients[0].uuid).isEqualTo(patientUuid)
+
+    assertThat(database.openHelper.writableDatabase.isDatabaseIntegrityOk).isTrue()
+  }
+
+  @Test
+  fun editing_a_patients_profile_should_not_trigger_foreign_key_cascades_action() {
+    database.openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true)
+
+    val patientUuid = UUID.randomUUID()
+    val address = testData.addressPayload()
+    val number = testData.phoneNumberPayload()
+    val initialPatient = testData.patientPayload(
+        uuid = patientUuid,
+        fullName = "Scarecrow",
+        address = address,
+        phoneNumbers = listOf(number))
+    patientRepository.mergeWithLocalData(listOf(initialPatient)).blockingAwait()
+
+    assertThat(database.phoneNumberDao().count()).isEqualTo(1)
+    assertThat(database.addressDao().count()).isEqualTo(1)
+
+    val updatedPatient = initialPatient.copy()
+    database.patientDao().save(updatedPatient.toDatabaseModel(SyncStatus.DONE))
+
+    val storedNumbers = database.phoneNumberDao().phoneNumber(patientUuid).blockingFirst()
+    assertThat(database.phoneNumberDao().count()).isEqualTo(1)
+    assertThat(storedNumbers.size).isEqualTo(1)
+    assertThat(storedNumbers[0].uuid).isEqualTo(number.uuid)
+
+    val storedAddresses = database.addressDao().address(address.uuid).blockingFirst()
+    assertThat(database.addressDao().count()).isEqualTo(1)
+    assertThat(storedAddresses.size).isEqualTo(1)
+    assertThat(storedAddresses[0].uuid).isEqualTo(address.uuid)
   }
 
   @After

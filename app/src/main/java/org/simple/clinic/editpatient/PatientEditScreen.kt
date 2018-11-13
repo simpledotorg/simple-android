@@ -3,7 +3,9 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.support.design.widget.TextInputLayout
 import android.util.AttributeSet
+import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
@@ -63,6 +65,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
 
+  private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
 
   override fun onFinishInflate() {
@@ -72,6 +75,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
 
     TheActivity.component.inject(this)
+    setupBackClicks()
 
     Observable
         .mergeArray(
@@ -89,6 +93,10 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
+  }
+
+  private fun setupBackClicks() {
+    backButton.setOnClickListener { goBack() }
   }
 
   private fun screenCreates(): Observable<UiEvent> {

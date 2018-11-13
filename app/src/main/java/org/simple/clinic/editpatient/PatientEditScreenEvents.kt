@@ -1,6 +1,7 @@
 package org.simple.clinic.editpatient
 
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 

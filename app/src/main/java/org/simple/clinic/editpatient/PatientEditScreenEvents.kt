@@ -8,31 +8,31 @@ import java.util.UUID
 data class PatientEditScreenCreated(val patientUuid: UUID) : UiEvent
 
 data class PatientEditPatientNameTextChanged(val name: String) : UiEvent {
-  override val analyticsName = "Patient Edit:Patient Name Text Changed"
+  override val analyticsName = "Edit Patient Entry:Patient Name Text Changed"
 }
 
 data class PatientEditPhoneNumberTextChanged(val phoneNumber: String) : UiEvent {
-  override val analyticsName = "Patient Edit:Phone Number Text Changed"
+  override val analyticsName = "Edit Patient Entry:Phone Number Text Changed"
 }
 
 data class PatientEditGenderChanged(val gender: Gender) : UiEvent {
-  override val analyticsName = "Patient Edit:Changed Gender"
+  override val analyticsName = "Edit Patient Entry:Changed Gender"
 }
 
 data class PatientEditColonyOrVillageChanged(val colonyOrVillage: String): UiEvent {
-  override val analyticsName = "Patient Edit:Colony Or Village Text Changed"
+  override val analyticsName = "Edit Patient Entry:Colony Or Village Text Changed"
 }
 
 data class PatientEditDistrictTextChanged(val district: String): UiEvent {
-  override val analyticsName = "Patient Edit:District Text Changed"
+  override val analyticsName = "Edit Patient Entry:District Text Changed"
 }
 
 data class PatientEditStateTextChanged(val state: String): UiEvent {
-  override val analyticsName = "Patient Edit:State Text Changed"
+  override val analyticsName = "Edit Patient Entry:State Text Changed"
 }
 
 data class OngoingEditPatientEntryChanged(val ongoingEditPatientEntry: OngoingEditPatientEntry): UiEvent
 
 class PatientEditSaveClicked: UiEvent {
-  override val analyticsName = "Patient Edit:Save Clicked"
+  override val analyticsName = "Edit Patient Entry:Save Clicked"
 }

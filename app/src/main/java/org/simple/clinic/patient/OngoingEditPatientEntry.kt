@@ -1,5 +1,6 @@
-package org.simple.clinic.editpatient
+package org.simple.clinic.patient
 
+import org.simple.clinic.editpatient.PatientEditValidationError
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
@@ -7,8 +8,6 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type

@@ -117,7 +117,6 @@ class PrescriptionRepositoryAndroidTest {
 
   @Test
   fun soft_delete_prescription_should_update_timestamp_and_sync_status() {
-    val protocolUUID = UUID.randomUUID()
     val patientUUID = UUID.randomUUID()
 
     val drug = ProtocolDrug(name = "Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"))
@@ -136,5 +135,17 @@ class PrescriptionRepositoryAndroidTest {
     assertThat(softDeletedPrescription.updatedAt).isGreaterThan(prescription.updatedAt)
     assertThat(softDeletedPrescription.createdAt).isEqualTo(prescription.createdAt)
     assertThat(softDeletedPrescription.syncStatus).isEqualTo(SyncStatus.PENDING)
+  }
+
+  @Test
+  fun prescriptions_should_be_overridable() {
+    val prescription = testData.prescription(name = "Churro")
+    database.prescriptionDao().save(listOf(prescription))
+
+    val correctedPrescription = prescription.copy(name = "Amlodipine")
+    database.prescriptionDao().save(listOf(correctedPrescription))
+
+    val storedPrescription = database.prescriptionDao().getOne(correctedPrescription.uuid)!!
+    assertThat(storedPrescription.name).isEqualTo(correctedPrescription.name)
   }
 }

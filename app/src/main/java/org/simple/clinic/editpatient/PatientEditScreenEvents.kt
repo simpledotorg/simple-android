@@ -30,7 +30,7 @@ data class PatientEditStateTextChanged(val state: String): UiEvent {
   override val analyticsName = "Patient Edit:State Text Changed"
 }
 
-data class PatientEditDataChanged(val patientData: PatientData): UiEvent
+data class OngoingEditPatientEntryChanged(val ongoingEditPatientEntry: OngoingEditPatientEntry): UiEvent
 
 class PatientEditSaveClicked: UiEvent {
   override val analyticsName = "Patient Edit:Save Clicked"

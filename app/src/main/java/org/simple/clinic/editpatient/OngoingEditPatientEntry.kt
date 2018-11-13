@@ -13,7 +13,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 
-data class PatientData(
+data class OngoingEditPatientEntry(
     val name: String,
     val gender: Gender,
     val phoneNumber: String,

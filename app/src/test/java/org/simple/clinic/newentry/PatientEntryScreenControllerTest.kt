@@ -24,7 +24,7 @@ import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.OngoingPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -70,12 +70,12 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when screen is created then existing data should be pre-filled`() {
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry()))
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).preFillFields(OngoingPatientEntry(
-        address = OngoingPatientEntry.Address(
+    verify(screen).preFillFields(OngoingNewPatientEntry(
+        address = OngoingNewPatientEntry.Address(
             colonyOrVillage = "",
             district = "district",
             state = "state")))
@@ -83,16 +83,16 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when screen is created with an already present address, the already present address must be used for prefilling`() {
-    val address = OngoingPatientEntry.Address(
+    val address = OngoingNewPatientEntry.Address(
         colonyOrVillage = "colony 1",
         district = "district 2",
         state = "state 3"
     )
-    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingPatientEntry(address = address)))
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(address = address)))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).preFillFields(OngoingPatientEntry(address = address))
+    verify(screen).preFillFields(OngoingNewPatientEntry(address = address))
   }
 
   @Test
@@ -111,10 +111,10 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientStateTextChanged("state"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
-        personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
-        phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
+    verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        address = OngoingNewPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
   }
 
@@ -169,10 +169,10 @@ class PatientEntryScreenControllerTest {
 
     uiEvents.onNext(TheActivityLifecycle.Paused())
 
-    verify(patientRepository).saveOngoingEntry(OngoingPatientEntry(
-        personalDetails = OngoingPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
-        phoneNumber = OngoingPatientEntry.PhoneNumber("1234567890")
+    verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
+        personalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        address = OngoingNewPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
   }
 

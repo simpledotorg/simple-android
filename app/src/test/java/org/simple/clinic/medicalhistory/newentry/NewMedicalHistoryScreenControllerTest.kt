@@ -22,8 +22,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.NONE
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.OngoingPatientEntry
-import org.simple.clinic.patient.OngoingPatientEntry.PersonalDetails
+import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.ScreenCreated
@@ -52,7 +52,7 @@ class NewMedicalHistoryScreenControllerTest {
   @Test
   fun `when screen is started then the patient's name should be shown on the toolbar`() {
     val patientName = "Ashok Kumar"
-    val patientEntry = OngoingPatientEntry(personalDetails = PersonalDetails(
+    val patientEntry = OngoingNewPatientEntry(personalDetails = PersonalDetails(
         fullName = patientName,
         dateOfBirth = null,
         age = "20",

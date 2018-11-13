@@ -26,7 +26,10 @@ class FacilityRepositoryAndroidTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var dao: LoggedInUserFacilityMapping.RoomDao
+  lateinit var facilityDao: Facility.RoomDao
+
+  @Inject
+  lateinit var mappingDao: LoggedInUserFacilityMapping.RoomDao
 
   private lateinit var user: User
 
@@ -47,7 +50,7 @@ class FacilityRepositoryAndroidTest {
     val facilityC = testData.facility(uuid = UUID.randomUUID(), name = "C")
 
     val facilitiesToStore = listOf(facilityB, facilityD, facilityA, facilityC)
-    database.facilityDao().save(facilitiesToStore)
+    facilityDao.save(facilitiesToStore)
 
     val returnedFacilities = repository.facilities().blockingFirst()
     val expectedOrdering = listOf(facilityA, facilityB, facilityC, facilityD)
@@ -62,7 +65,7 @@ class FacilityRepositoryAndroidTest {
     val facility4 = testData.facility(uuid = UUID.randomUUID(), name = "facility4")
 
     val facilities = listOf(facility1, facility2, facility3, facility4)
-    database.facilityDao().save(facilities)
+    facilityDao.save(facilities)
 
     val facilityIds = facilities.map { it.uuid }
     repository.associateUserWithFacilities(user, facilityIds).blockingAwait()
@@ -85,14 +88,14 @@ class FacilityRepositoryAndroidTest {
     val facility2 = testData.facility(uuid = UUID.randomUUID())
     val facility3 = testData.facility(uuid = UUID.randomUUID())
     val facilities = listOf(facility1, facility2, facility3)
-    database.facilityDao().save(facilities)
+    facilityDao.save(facilities)
 
     repository.associateUserWithFacilities(user, facilities.map { it.uuid })
         .andThen(repository.setCurrentFacility(user, facility2))
         .andThen(repository.setCurrentFacility(user, facility3))
         .blockingAwait()
 
-    val mappings = dao.mappingsForUser(user.uuid).blockingFirst()
+    val mappings = mappingDao.mappingsForUser(user.uuid).blockingFirst()
 
     val facility3Mapping = mappings.first { it.facilityUuid == facility3.uuid }
     assertThat(facility3Mapping.isCurrentFacility).isTrue()
@@ -104,14 +107,14 @@ class FacilityRepositoryAndroidTest {
     val facility2 = testData.facility(uuid = UUID.randomUUID())
     val facility3 = testData.facility(uuid = UUID.randomUUID())
     val facilities = listOf(facility1, facility2, facility3)
-    database.facilityDao().save(facilities)
+    facilityDao.save(facilities)
 
     repository.associateUserWithFacilities(user, facilities.map { it.uuid })
         .andThen(repository.setCurrentFacility(user, facility2))
         .andThen(repository.setCurrentFacility(user, facility3))
         .blockingAwait()
 
-    val mappings = dao.mappingsForUser(user.uuid).blockingFirst()
+    val mappings = mappingDao.mappingsForUser(user.uuid).blockingFirst()
 
     val facility1Mapping = mappings.first { it.facilityUuid == facility1.uuid }
 
@@ -125,9 +128,21 @@ class FacilityRepositoryAndroidTest {
     val facility1 = testData.facility(uuid = UUID.randomUUID())
     val facility2 = testData.facility(uuid = UUID.randomUUID())
     val facilities = listOf(facility1, facility2)
-    database.facilityDao().save(facilities)
+    facilityDao.save(facilities)
 
     repository.associateUserWithFacility(user, facility1).blockingAwait()
-    dao.changeCurrentFacility(user.uuid, newCurrentFacilityUuid = facility2.uuid)
+    mappingDao.changeCurrentFacility(user.uuid, newCurrentFacilityUuid = facility2.uuid)
+  }
+
+  @Test
+  fun facilities_should_be_overridable() {
+    val facility = testData.facility(uuid = UUID.randomUUID(), name = "Faceeleety")
+    facilityDao.save(listOf(facility))
+
+    val correctedFacility = facility.copy(name = "Facility")
+    facilityDao.save(listOf(correctedFacility))
+
+    val storedFacility = facilityDao.getOne(correctedFacility.uuid)!!
+    assertThat(storedFacility.name).isEqualTo(correctedFacility.name)
   }
 }

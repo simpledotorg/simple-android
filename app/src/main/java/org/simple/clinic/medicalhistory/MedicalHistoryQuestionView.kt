@@ -6,20 +6,20 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.FrameLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.InitialValueObservable
 import com.jakewharton.rxbinding2.widget.RxCompoundButton
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.widgets.CheckBoxWithSuppressibleListener
 
 @SuppressLint("ClickableViewAccessibility")
 class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   private val labelTextView by bindView<TextView>(R.id.newmedicalhistory_item_label)
   private val containerFrame by bindView<ViewGroup>(R.id.newmedicalhistory_item_frame)
-  private val checkBox by bindView<CheckBox>(R.id.newmedicalhistory_item_checkbox)
+  private val checkBox by bindView<CheckBoxWithSuppressibleListener>(R.id.newmedicalhistory_item_checkbox)
   private val divider by bindView<View>(R.id.newmedicalhistory_item_divider)
 
   lateinit var question: MedicalHistoryQuestion
@@ -29,6 +29,12 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     set(value) {
       checkBox.isChecked = value
     }
+
+  fun setCheckedWithoutListener(checked: Boolean) {
+    checkBox.runWithoutListener {
+      checkBox.isChecked = checked
+    }
+  }
 
   init {
     LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)

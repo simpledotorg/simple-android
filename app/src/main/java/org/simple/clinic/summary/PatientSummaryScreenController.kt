@@ -152,8 +152,6 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
         .distinctUntilChanged()
-        .doOnSubscribe { Timber.e("donSubscribe") }
-        .doOnNext { Timber.e("Patient UUID: $it") }
 
     val prescriptionItems = patientUuids
         .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
@@ -357,7 +355,7 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _,_, callers, result -> callers to result  }
+        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _,_, caller, result -> caller to result  }
         .map { (caller, result) ->
           { ui: Ui ->
             when (caller!!) {
@@ -402,13 +400,9 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (appointmentDate, patient) -> Scheduled(patient.fullName, appointmentDate) as PatientSummaryResult }
 
     val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
-        .doOnNext { Timber.e("item changes") }
-        .skip(1)
-        .replay().refCount()
-        .doOnNext { Timber.e("Not first item") }
-        .distinctUntilChanged()
-        .doOnNext { Timber.e("Distinct item") }
         .map { Saved as PatientSummaryResult }
+        .skip(1)
+        .doOnNext { Timber.e("Distinct item") }
 
     return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)
         .doOnNext { Timber.e("Result: $it") }

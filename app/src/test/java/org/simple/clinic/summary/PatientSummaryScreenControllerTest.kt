@@ -296,13 +296,14 @@ class PatientSummaryScreenControllerTest {
   ) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller))
     uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryResultSet(PatientSummaryResult.Saved))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome(any())
+      verify(screen, never()).goBackToHome(PatientSummaryResult.Saved)
     } else {
-      verify(screen).goBackToHome(any())
+      verify(screen).goBackToHome(PatientSummaryResult.Saved)
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }

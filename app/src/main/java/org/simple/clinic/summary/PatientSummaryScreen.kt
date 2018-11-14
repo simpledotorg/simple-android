@@ -2,6 +2,7 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
@@ -35,6 +36,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -49,6 +51,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
+import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -59,6 +62,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     const val REQCODE_BP_SAVED = 1
     const val REQCODE_SCHEDULE_APPOINTMENT = 2
+    const val SUMMARY_SCREEN_RESULT = "summary_screen_result"
   }
 
   @Inject
@@ -129,6 +133,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             adapterUiEvents,
             bloodPressureSaves(),
             bpWasSavedEvents,
+            appointmentScheduledSuccess(),
             appointmentScheduleSheetClosed())
         .observeOn(io())
         .compose(controller)
@@ -180,6 +185,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
       .map { ScheduleAppointmentSheetClosed() }
+
+  private fun appointmentScheduledSuccess() = screenRouter.streamScreenResults()
+      .ofType<ActivityResult>()
+      .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null}
+      .map { it -> ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
+      .filter { it != null }
+      .map { AppointmentScheduled(it) }
 
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
@@ -288,9 +300,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     screenRouter.pop()
   }
 
-  fun goBackToHome() {
-    screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
+  fun goBackToHome(status: PatientSummaryResult) {
+    val bundle = Bundle()
+    bundle.putSerializable(SUMMARY_SCREEN_RESULT,status)
+    Timber.e("Go back to home with $status")
+    screenRouter.clearHistoryAndPushWithResult(HomeScreen.KEY, direction = BACKWARD, result = bundle)
   }
+
 
   fun disableEditPatientFeature() {
     editButton.isEnabled = false

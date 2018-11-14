@@ -124,10 +124,11 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(repository.schedule(any(), any())).thenReturn(Completable.complete())
 
     val current = ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS)
+    val date = LocalDate.now(UTC).plus(1, ChronoUnit.MONTHS)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(3, uuid))
     uiEvents.onNext(AppointmentScheduled(current))
 
-    verify(repository).schedule(uuid, LocalDate.now(UTC).plus(1, ChronoUnit.MONTHS))
-    verify(sheet).closeSheet()
+    verify(repository).schedule(uuid, date)
+    verify(sheet).closeSheetWithResult(date)
   }
 }

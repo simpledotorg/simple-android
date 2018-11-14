@@ -23,8 +23,10 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.StaggeredEditText
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs) {
@@ -98,11 +100,11 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
       is State.Progress -> VISIBLE
     }
 
-    // TODO: Use IDs instead of indices.
-    pinAndLockViewFlipper.displayedChild = when (state) {
-      State.PinEntry -> 0
-      State.Progress -> pinAndLockViewFlipper.displayedChild
-      is State.BruteForceLocked -> 1
+    Timber.i("Moving to state: $state")
+    pinAndLockViewFlipper.displayedChildResId = when (state) {
+      is State.PinEntry -> R.id.pinentry_pin
+      is State.BruteForceLocked -> R.id.pinentry_bruteforcelock
+      is State.Progress -> pinAndLockViewFlipper.displayedChildResId
     }
 
     when (state) {
@@ -149,3 +151,4 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     successfulAuthSubject.onNext(PinAuthenticated(enteredPin))
   }
 }
+

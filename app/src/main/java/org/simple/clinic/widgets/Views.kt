@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.ViewFlipper
 import timber.log.Timber
 
 fun EditText.showKeyboard() {
@@ -158,7 +159,6 @@ fun dpToPx(dp: Float): Float {
 
 fun dpToPx(dp: Int) = dpToPx(dp.toFloat())
 
-
 fun TextView.setTextAppearanceCompat(@StyleRes resourceId: Int) {
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
     setTextAppearance(resourceId)
@@ -177,3 +177,13 @@ fun ScrollView.scrollToChild(view: View, onScrollComplete: () -> Unit = {}) {
     postDelayed(onScrollComplete, 400)
   }
 }
+
+var ViewFlipper.displayedChildResId: Int
+  @IdRes
+  get() = getChildAt(displayedChild).id
+  set(@IdRes id) {
+    val child = findViewById<View>(id)
+    val childIndex = indexOfChild(child)
+    Timber.i("Setting to $displayedChild")
+    displayedChild = childIndex
+  }

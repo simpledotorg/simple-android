@@ -96,7 +96,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .withLatestFrom(patientUuidStream)
         .flatMap { (date, uuid) ->
           repository.schedule(patientUuid = uuid, appointmentDate = date)
-              .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
+              .andThen(Observable.just { ui: Ui -> ui.closeSheetWithResult(date) })
         }
   }
 }

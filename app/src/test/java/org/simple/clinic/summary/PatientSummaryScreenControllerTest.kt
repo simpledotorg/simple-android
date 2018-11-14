@@ -35,6 +35,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_F
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
@@ -280,7 +281,7 @@ class PatientSummaryScreenControllerTest {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
     } else {
       if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
-        verify(screen).goBackToHome()
+        verify(screen).goBackToHome(PatientSummaryResult.NotSaved)
       } else {
         verify(screen).goBackToPatientSearch()
       }
@@ -299,9 +300,9 @@ class PatientSummaryScreenControllerTest {
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome()
+      verify(screen, never()).goBackToHome(any())
     } else {
-      verify(screen).goBackToHome()
+      verify(screen).goBackToHome(any())
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }
@@ -318,9 +319,9 @@ class PatientSummaryScreenControllerTest {
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome()
+      verify(screen, never()).goBackToHome(any())
     } else {
-      verify(screen).goBackToHome()
+      verify(screen).goBackToHome(any())
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }

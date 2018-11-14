@@ -54,7 +54,7 @@ data class WithinSixMonths(private val daysBetween: Long) : RelativeTimestamp() 
   }
 }
 
-class OlderThanSixMonths(private val time: Instant) : RelativeTimestamp() {
+data class OlderThanSixMonths(private val time: Instant) : RelativeTimestamp() {
   override fun displayText(context: Context): String {
     return timestampFormatter.format(time.atZone(ZoneOffset.UTC).toLocalDateTime())
   }

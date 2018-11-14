@@ -2,7 +2,6 @@ package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Bundle
 import android.os.Parcelable
 import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
@@ -62,7 +61,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     const val REQCODE_BP_SAVED = 1
     const val REQCODE_SCHEDULE_APPOINTMENT = 2
-    const val SUMMARY_SCREEN_RESULT = "summary_screen_result"
   }
 
   @Inject
@@ -301,10 +299,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun goBackToHome(status: PatientSummaryResult) {
-    val bundle = Bundle()
-    bundle.putSerializable(SUMMARY_SCREEN_RESULT,status)
     Timber.e("Go back to home with $status")
-    screenRouter.clearHistoryAndPushWithResult(HomeScreen.KEY, direction = BACKWARD, result = bundle)
+    screenRouter.clearHistoryAndPushWithResult(HomeScreen.KEY, direction = BACKWARD, result = status)
   }
 
 

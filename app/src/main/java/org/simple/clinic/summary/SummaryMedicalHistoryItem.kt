@@ -52,12 +52,12 @@ data class SummaryMedicalHistoryItem(
     }
 
     holder.apply {
-      diagnosedForHypertensionQuestionView.isChecked = medicalHistory.diagnosedWithHypertension
-      treatmentForHypertensionQuestionView.isChecked = medicalHistory.isOnTreatmentForHypertension
-      heartAttackQuestionView.isChecked = medicalHistory.hasHadHeartAttack
-      strokeQuestionView.isChecked = medicalHistory.hasHadStroke
-      kidneyDiseaseQuestionView.isChecked = medicalHistory.hasHadKidneyDisease
-      diabetesQuestionView.isChecked = medicalHistory.hasDiabetes
+      diagnosedForHypertensionQuestionView.setCheckedWithoutListener(medicalHistory.diagnosedWithHypertension)
+      treatmentForHypertensionQuestionView.setCheckedWithoutListener(medicalHistory.isOnTreatmentForHypertension)
+      heartAttackQuestionView.setCheckedWithoutListener(medicalHistory.hasHadHeartAttack)
+      strokeQuestionView.setCheckedWithoutListener(medicalHistory.hasHadStroke)
+      kidneyDiseaseQuestionView.setCheckedWithoutListener(medicalHistory.hasHadKidneyDisease)
+      diabetesQuestionView.setCheckedWithoutListener(medicalHistory.hasDiabetes)
     }
   }
 

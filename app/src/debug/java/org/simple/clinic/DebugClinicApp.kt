@@ -103,7 +103,7 @@ class DebugClinicApp : ClinicApp() {
         .bruteForceProtectionModule(object : BruteForceProtectionModule() {
           override fun config(): Single<BruteForceProtectionConfig> {
             return super.config().map {
-              it.copy(blockDuration = Duration.ofMinutes(1) + Duration.ofSeconds(10))
+              it.copy(blockDuration = Duration.ofSeconds(5))
             }
           }
         })

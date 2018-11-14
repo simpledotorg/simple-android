@@ -136,6 +136,11 @@ class ScreenRouter(
     }
   }
 
+  fun clearHistoryAndPushWithResult(screenKey: FullScreenKey, direction: RouterDirection, result: Any) {
+    flow().setHistory(History.single(screenKey), direction.flowDirection)
+    resultBus.send(result)
+  }
+
   private class DefaultKeyParceler : KeyParceler {
 
     override fun toParcelable(key: Any): Parcelable {

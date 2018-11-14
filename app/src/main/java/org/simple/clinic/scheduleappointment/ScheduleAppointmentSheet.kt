@@ -16,6 +16,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
@@ -24,10 +25,16 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_PATIENT_UUID = "patientUuid"
+    private const val EXTRAS_SAVED_APPOINTMENT_DATE = "extras_saved_appointment_date"
 
     fun intent(context: Context, patientUuid: UUID) =
         Intent(context, ScheduleAppointmentSheet::class.java)
             .putExtra(KEY_PATIENT_UUID, patientUuid)!!
+
+    fun appointmentSavedDate(intent: Intent): LocalDate? {
+      val date = intent.extras!!.getString(EXTRAS_SAVED_APPOINTMENT_DATE, null)
+      return LocalDate.parse(date)
+    }
   }
 
   private val possibleDates = listOf(
@@ -102,6 +109,13 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
+    finish()
+  }
+
+  fun closeSheetWithResult(date: LocalDate) {
+    val intent = Intent()
+    intent.putExtra(EXTRAS_SAVED_APPOINTMENT_DATE, date.toString())
+    setResult(Activity.RESULT_OK, intent)
     finish()
   }
 

@@ -300,7 +300,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     screenRouter.clearHistoryAndPushWithResult(HomeScreen.KEY, direction = BACKWARD, result = status)
   }
 
-
   fun disableEditPatientFeature() {
     editButton.isEnabled = false
     editButton.visibility = View.GONE

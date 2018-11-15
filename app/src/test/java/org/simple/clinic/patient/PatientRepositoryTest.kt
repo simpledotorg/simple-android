@@ -119,28 +119,6 @@ class PatientRepositoryTest {
   }
 
   @Test
-  @Parameters(value = [
-    "Name, Name",
-    "Name   Surname, NameSurname",
-    "Name Middle.Surname, NameMiddleSurname",
-    "Name \tSurname, NameSurname"
-  ])
-  fun `when searching for patients without age bound, strip the search query of any whitespace or punctuation`(
-      query: String,
-      expectedSearchQuery: String
-  ) {
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(emptyList()))
-    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-
-    repository.search(query).blockingFirst()
-
-    verify(patientSearchResultDao).search(eq(expectedSearchQuery), any())
-  }
-
-  @Test
   fun `when searching for patients with age bound, strip the search query of any whitespace or punctuation`() {
     whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(emptyList()))
     whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
@@ -173,12 +151,12 @@ class PatientRepositoryTest {
 
     val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
     val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()))
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(actualResults))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
+    whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(actualResults))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(fuzzyResults))
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
-    repository.search("test")
+    repository.search(name = "test", assumedAge = 30)
         .firstOrError()
         .test()
         .assertValue(fuzzyResults + actualResults)
@@ -191,12 +169,12 @@ class PatientRepositoryTest {
     val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), actualResults[0])
 
     val expected = listOf(fuzzyResults[0], fuzzyResults[1], actualResults[1])
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(actualResults))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
+    whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(actualResults))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(fuzzyResults))
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
 
-    repository.search("test")
+    repository.search(name = "test", assumedAge = 30)
         .firstOrError()
         .test()
         .assertValue(expected)

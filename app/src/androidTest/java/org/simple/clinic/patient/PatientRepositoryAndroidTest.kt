@@ -83,23 +83,22 @@ class PatientRepositoryAndroidTest {
 
     val personalDetailsOnlyEntry = OngoingNewPatientEntry(personalDetails = ongoingPersonalDetails)
 
-    patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
+    val savedPatient = patientRepository.saveOngoingEntry(personalDetailsOnlyEntry)
         .andThen(patientRepository.ongoingEntry())
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
         .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
         .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
-    val search1 = patientRepository.search("lakshman", includeFuzzyNameSearch = false).blockingFirst()
-    assertThat(search1).isEmpty()
+    val patient = database.patientDao().getOne(savedPatient.uuid)!!
 
-    val search2 = patientRepository.search("ashok", includeFuzzyNameSearch = false).blockingFirst()
-    assertThat(search2).hasSize(1)
-    assertThat(search2.first().age).isNull()
-    assertThat(search2.first().dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
-    assertThat(search2.first().phoneNumber).isNotEmpty()
-    assertThat(search2.first().phoneNumber).isEqualTo("227788")
+    assertThat(patient.dateOfBirth).isEqualTo(LocalDate.parse("1985-04-08"))
+    assertThat(patient.age).isNull()
+
+    val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
+    assertThat(savedPhoneNumbers).hasSize(1)
+    assertThat(savedPhoneNumbers.first().number).isEqualTo("227788")
   }
 
   @Test
@@ -126,35 +125,36 @@ class PatientRepositoryAndroidTest {
   fun when_a_patient_without_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Jeevan Bima", phone = null)
 
-    patientRepository.saveOngoingEntry(patientEntry)
+    val savedPatient = patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
-    val search1 = patientRepository.search("lakshman").blockingFirst()
-    assertThat(search1).isEmpty()
+    val patient = database.patientDao().patient(savedPatient.uuid)
 
-    val search2 = patientRepository.search("bima").blockingFirst()
-    assertThat(search2).hasSize(1)
-    assertThat(search2.first().phoneNumber).isNull()
+    assertThat(patient).isNotNull()
+
+    val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(savedPatient.uuid).firstOrError().blockingGet()
+    assertThat(savedPhoneNumbers).isEmpty()
   }
 
   @Test
   fun when_a_patient_with_null_dateofbirth_and_nonnull_age_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Ashok Kumar")
 
-    patientRepository.saveOngoingEntry(patientEntry)
+    val savedPatient = patientRepository.saveOngoingEntry(patientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
-    val search1 = patientRepository.search("lakshman", includeFuzzyNameSearch = false).blockingFirst()
-    assertThat(search1).isEmpty()
+    val patient = database.patientDao().getOne(savedPatient.uuid)!!
 
-    val search2 = patientRepository.search("ashok", includeFuzzyNameSearch = false).blockingFirst()
-    val patient = search2[0]
     assertThat(patient.fullName).isEqualTo(patientEntry.personalDetails!!.fullName)
     assertThat(patient.dateOfBirth).isNull()
     assertThat(patient.age!!.value).isEqualTo(patientEntry.personalDetails!!.age!!.toInt())
-    assertThat(patient.phoneNumber!!).isEqualTo(patientEntry.phoneNumber!!.number)
+
+    val savedPhoneNumbers = database.phoneNumberDao().phoneNumber(patient.uuid).firstOrError().blockingGet()
+
+    assertThat(savedPhoneNumbers).hasSize(1)
+    assertThat(savedPhoneNumbers.first().number).isEqualTo(patientEntry.phoneNumber!!.number)
   }
 
   @Test
@@ -173,14 +173,14 @@ class PatientRepositoryAndroidTest {
     val searches = arrayOf("ya p" to true, "bime" to true, "ito" to false)
 
     names.forEachIndexed { index, fullName ->
-      val patientEntry = testData.ongoingPatientEntry(fullName = fullName)
+      val patientEntry = testData.ongoingPatientEntry(fullName = fullName, age = "20")
 
       patientRepository.saveOngoingEntry(patientEntry)
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
 
       val (query, shouldFindInDb) = searches[index]
-      val search = patientRepository.search(query, includeFuzzyNameSearch = false).blockingFirst()
+      val search = patientRepository.search(query, assumedAge = 20, includeFuzzyNameSearch = false).blockingFirst()
 
       if (shouldFindInDb) {
         assertThat(search).hasSize(1)
@@ -199,7 +199,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val combinedPatient = patientRepository.search("kumar")
+    val combinedPatient = patientRepository.search(name = "kumar", assumedAge = 71)
         .blockingFirst()
         .first()
 
@@ -432,9 +432,6 @@ class PatientRepositoryAndroidTest {
       assertThat(searchResults[4].fullName).isEqualTo("Ash Kumari")
     }
 
-    val resultsWithoutAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false).blockingFirst()
-    runAssertions(resultsWithoutAgeFilter)
-
     val resultsWithAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false, assumedAge = 20).blockingFirst()
     runAssertions(resultsWithAgeFilter)
   }
@@ -442,13 +439,13 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient =
-        patientRepository.saveOngoingEntry(testData.ongoingPatientEntry("Ashok Kumar"))
+        patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar", age = "20"))
             .andThen(patientRepository.saveOngoingEntryAsPatient())
             .blockingGet()
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResult = patientRepository.search("Ashok").blockingFirst()
+    val searchResult = patientRepository.search(name = "Ashok", assumedAge = 20).blockingFirst()
     val patientFirst = patientRepository.patient(patient.uuid).blockingFirst()
 
     assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1)
@@ -485,7 +482,6 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(patientsToSave).blockingAwait()
     assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1000)
 
-    assertThat(patientRepository.search(name = "Fame", includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
     assertThat(patientRepository.search(name = "Fame", assumedAge = 3, includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
   }
 

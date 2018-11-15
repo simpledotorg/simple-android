@@ -17,9 +17,9 @@ import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
+import org.simple.clinic.patient.PatientSearchConfig
+import org.simple.clinic.patient.PatientSearchConfigModule
 import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
-import org.simple.clinic.patient.fuzzy.AgeFuzzer
-import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
@@ -77,10 +77,15 @@ class TestClinicApp : ClinicApp() {
                     batchSize = 10))
           }
         })
-        .ageFuzzerModule(object : AgeFuzzerModule() {
-          override fun provideAgeFuzzer(clock: Clock): AgeFuzzer {
-            val numberOfYearsToFuzzBy = 5
-            return AbsoluteFuzzer(clock, numberOfYearsToFuzzBy)
+        .patientSearchConfigModule(object : PatientSearchConfigModule() {
+          override fun providePatientSearchConfig(clock: Clock): Single<PatientSearchConfig> {
+            return super.providePatientSearchConfig(clock)
+                .map {
+                  val numberOfYearsToFuzzBy = 5
+                  val ageFuzzer = AbsoluteFuzzer(clock, numberOfYearsToFuzzBy)
+
+                  it.copy(ageFuzzer = ageFuzzer)
+                }
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

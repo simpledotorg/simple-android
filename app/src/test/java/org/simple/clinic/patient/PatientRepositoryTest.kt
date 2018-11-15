@@ -50,7 +50,21 @@ class PatientRepositoryTest {
   fun setUp() {
     ageFuzzer = mock()
     whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
-    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock, ageFuzzer)
+    repository = PatientRepository(
+        database,
+        dobValidator,
+        facilityRepository,
+        userSession,
+        numberValidator,
+        clock,
+        Single.just(PatientSearchConfig(
+            ageFuzzer = ageFuzzer,
+            fuzzyStringDistanceCutoff = 0F,
+            characterSubstitutionCost = 0F,
+            characterInsertionCost = 0F,
+            characterDeletionCost = 0F
+        ))
+    )
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

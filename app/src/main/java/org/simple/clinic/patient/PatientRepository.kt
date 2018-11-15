@@ -12,7 +12,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SynceableRepository
@@ -42,10 +41,13 @@ class PatientRepository @Inject constructor(
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
-    private val ageFuzzer: AgeFuzzer
+    private val patientSearchConfig: Single<PatientSearchConfig>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
+
+  // TODO: Fix this
+  private val ageFuzzer = patientSearchConfig.blockingGet().ageFuzzer
 
   fun search(name: String, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val searchableName = nameToSearchableForm(name)

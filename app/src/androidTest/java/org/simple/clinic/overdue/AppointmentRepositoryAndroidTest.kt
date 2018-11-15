@@ -37,7 +37,7 @@ import javax.inject.Inject
 class AppointmentRepositoryAndroidTest {
 
   @Inject
-  lateinit var repository: AppointmentRepository
+  lateinit var appointmentRepository: AppointmentRepository
 
   @Inject
   lateinit var patientRepository: PatientRepository
@@ -79,9 +79,9 @@ class AppointmentRepositoryAndroidTest {
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
-    repository.schedule(patientId, appointmentDate).blockingAwait()
+    appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
-    val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
+    val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
     savedAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(appointmentDate)
@@ -96,12 +96,12 @@ class AppointmentRepositoryAndroidTest {
     val patientId = UUID.randomUUID()
 
     val date1 = LocalDate.now(clock)
-    repository.schedule(patientId, date1).blockingAwait()
+    appointmentRepository.schedule(patientId, date1).blockingAwait()
 
     val date2 = LocalDate.now(clock).plusDays(10)
-    repository.schedule(patientId, date2).blockingAwait()
+    appointmentRepository.schedule(patientId, date2).blockingAwait()
 
-    val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(savedAppointment).hasSize(2)
 
     savedAppointment[0].apply {
@@ -276,12 +276,12 @@ class AppointmentRepositoryAndroidTest {
         )
     ))
 
-    repository.schedule(patient1, date1)
-        .andThen(repository.schedule(patient2, LocalDate.now(clock).minusDays(2)))
-        .andThen(repository.schedule(patient3, date3))
+    appointmentRepository.schedule(patient1, date1)
+        .andThen(appointmentRepository.schedule(patient2, LocalDate.now(clock).minusDays(2)))
+        .andThen(appointmentRepository.schedule(patient3, date3))
         .blockingGet()
 
-    val overdueAppts = repository.overdueAppointments().blockingFirst()
+    val overdueAppts = appointmentRepository.overdueAppointments().blockingFirst()
     assertThat(overdueAppts).hasSize(1)
 
     overdueAppts[0].apply {
@@ -297,19 +297,19 @@ class AppointmentRepositoryAndroidTest {
   fun when_setting_appointment_reminder_then_reminder_with_correct_date_should_be_set() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
-    repository.schedule(patientId, appointmentDate).blockingAwait()
+    appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
-    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
     assertThat(appointments.first().remindOn).isNull()
 
     val uuid = appointments[0].uuid
-    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
 
     val reminderDate = LocalDate.now(clock).plusDays(10)
-    repository.createReminder(uuid, reminderDate).blockingGet()
+    appointmentRepository.createReminder(uuid, reminderDate).blockingGet()
 
-    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
@@ -322,18 +322,18 @@ class AppointmentRepositoryAndroidTest {
   fun when_marking_appointment_as_agreed_to_visit_reminder_for_30_days_should_be_set() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
-    repository.schedule(patientId, appointmentDate).blockingAwait()
+    appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
-    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
     assertThat(appointments.first().remindOn).isNull()
     assertThat(appointments.first().agreedToVisit).isNull()
 
     val uuid = appointments[0].uuid
-    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
-    repository.markAsAgreedToVisit(uuid).blockingGet()
+    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    appointmentRepository.markAsAgreedToVisit(uuid).blockingGet()
 
-    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
@@ -346,17 +346,17 @@ class AppointmentRepositoryAndroidTest {
   fun when_removing_appointment_from_list_then_appointment_status_and_cancel_reason_should_be_updated() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
-    repository.schedule(patientId, appointmentDate).blockingAwait()
+    appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
-    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
     assertThat(appointments.first().cancelReason).isNull()
 
     val uuid = appointments[0].uuid
-    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
-    repository.cancelWithReason(uuid, Appointment.CancelReason.PATIENT_NOT_RESPONDING).blockingGet()
+    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    appointmentRepository.cancelWithReason(uuid, Appointment.CancelReason.PATIENT_NOT_RESPONDING).blockingGet()
 
-    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
@@ -369,17 +369,17 @@ class AppointmentRepositoryAndroidTest {
   fun when_removing_appointment_with_reason_as_patient_already_visited_then_appointment_should_be_marked_as_visited() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
-    repository.schedule(patientId, appointmentDate).blockingAwait()
+    appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
-    val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
     assertThat(appointments.first().status).isEqualTo(Appointment.Status.SCHEDULED)
 
     val uuid = appointments[0].uuid
-    repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
-    repository.markAsVisited(uuid).blockingGet()
+    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    appointmentRepository.markAsVisited(uuid).blockingGet()
 
-    val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
@@ -405,7 +405,7 @@ class AppointmentRepositoryAndroidTest {
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
           .uuid
-      repository.schedule(patientUuid1, LocalDate.now(clock).minusDays(2)).blockingAwait()
+      appointmentRepository.schedule(patientUuid1, LocalDate.now(clock).minusDays(2)).blockingAwait()
       bpMeasurements.forEach {
         bpRepository.saveMeasurement(patientUuid1, it.systolic, it.diastolic).blockingGet()
         testClock.advanceBy(Duration.ofSeconds(1))
@@ -467,7 +467,7 @@ class AppointmentRepositoryAndroidTest {
         hasHadStroke = false)
     testClock.advanceBy(Duration.ofSeconds(1))
 
-    val appointments = repository.overdueAppointments().blockingFirst()
+    val appointments = appointmentRepository.overdueAppointments().blockingFirst()
     assertThat(appointments.map { it.fullName }).isEqualTo(listOf(
         "With stroke",
         "Age > 60, last BP > 160/100 and diabetes",

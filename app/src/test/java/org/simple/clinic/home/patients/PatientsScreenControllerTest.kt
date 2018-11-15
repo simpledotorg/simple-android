@@ -9,6 +9,8 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -43,6 +45,10 @@ class PatientsScreenControllerTest {
 
   @Before
   fun setUp() {
+    // This is needed because we manually subscribe to the refresh user status
+    // operation on the IO thread, which was causing flakiness in this test.
+    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
+
     controller = PatientsScreenController(userSession, syncScheduler, approvalStatusApprovedAt, hasUserDismissedApprovedStatus)
 
     uiEvents

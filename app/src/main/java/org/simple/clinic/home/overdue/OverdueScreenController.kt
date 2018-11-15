@@ -62,7 +62,7 @@ class OverdueScreenController @Inject constructor(
                 patientUuid = it.appointment.patientUuid,
                 name = it.fullName,
                 gender = it.gender,
-                age = getAge(it.dateOfBirth, it.age),
+                age = ageFromDateOfBirth(it.dateOfBirth, it.age),
                 phoneNumber = it.phoneNumber?.number,
                 bpSystolic = it.bloodPressure.systolic,
                 bpDiastolic = it.bloodPressure.diastolic,
@@ -79,7 +79,7 @@ class OverdueScreenController @Inject constructor(
     return updateListStream.mergeWith(emptyStateStream)
   }
 
-  private fun getAge(dateOfBirth: LocalDate?, age: Age?): Int {
+  private fun ageFromDateOfBirth(dateOfBirth: LocalDate?, age: Age?): Int {
     return if (age == null) {
       Period.between(dateOfBirth!!, LocalDate.now(UTC)).years
 

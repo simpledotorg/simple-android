@@ -11,10 +11,10 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
-import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
-import org.simple.clinic.security.pin.BruteForceProtectionModule
+import org.simple.clinic.patient.PatientSearchConfigModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.Migration_10_11
 import org.simple.clinic.storage.Migration_11_12
 import org.simple.clinic.storage.Migration_12_13
@@ -44,10 +44,9 @@ import org.threeten.bp.Clock
   LoginModule::class,
   RegistrationModule::class,
   CrashReporterModule::class,
-  AgeFuzzerModule::class,
-  AgeFuzzerModule::class,
   BruteForceProtectionModule::class,
-  PatientSummaryModule::class])
+  PatientSummaryModule::class,
+  PatientSearchConfigModule::class])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

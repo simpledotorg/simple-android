@@ -54,13 +54,30 @@ data class OverdueAppointment(
           INNER JOIN Appointment A ON A.patientUuid = P.uuid
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
+          LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
 
           WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :dateNow AND PPN.number IS NOT NULL
           AND (A.remindOn < :dateNow OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)
-          ORDER BY A.scheduledDate, A.updatedAt ASC
+          ORDER BY
+            ( CASE WHEN MH.hasHadStroke = 1 THEN 0 ELSE 1 END ) ASC,
+            (
+              CASE
+                WHEN BP.systolic > 160 AND BP.diastolic > 100
+                    AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
+                    AND (P.dateOfBirth < :sixtyYearsDateOfBirth OR P.age_computedDateOfBirth < :sixtyYearsDateOfBirth)
+                    THEN 0
+                ELSE 1
+              END
+            ) ASC,
+            A.scheduledDate, A.updatedAt ASC
           """)
-    fun appointmentsForFacility(facilityUuid: UUID, scheduledStatus: Appointment.Status, dateNow: LocalDate): Flowable<List<OverdueAppointment>>
+    fun appointmentsForFacility(
+        facilityUuid: UUID,
+        scheduledStatus: Appointment.Status,
+        dateNow: LocalDate,
+        sixtyYearsDateOfBirth: LocalDate
+    ): Flowable<List<OverdueAppointment>>
   }
 }

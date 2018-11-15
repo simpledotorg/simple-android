@@ -180,7 +180,8 @@ object PatientMocker {
             syncStatus = SyncStatus.PENDING,
             userUuid = mock(),
             facilityUuid = mock(),
-            patientUuid = mock())
+            patientUuid = mock()),
+        isAtHighRisk = false
     )
   }
 

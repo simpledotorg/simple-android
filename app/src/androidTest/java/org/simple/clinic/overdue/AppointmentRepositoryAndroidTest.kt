@@ -58,7 +58,7 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
     val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now()
+    val appointmentDate = LocalDate.now(clock)
     repository.schedule(patientId, appointmentDate).blockingAwait()
 
     val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
@@ -75,10 +75,10 @@ class AppointmentRepositoryAndroidTest {
   fun when_creating_new_appointment_then_all_old_appointments_for_that_patient_should_be_canceled() {
     val patientId = UUID.randomUUID()
 
-    val date1 = LocalDate.now()
+    val date1 = LocalDate.now(clock)
     repository.schedule(patientId, date1).blockingAwait()
 
-    val date2 = LocalDate.now().plusDays(10)
+    val date2 = LocalDate.now(clock).plusDays(10)
     repository.schedule(patientId, date2).blockingAwait()
 
     val savedAppointment = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -111,12 +111,12 @@ class AppointmentRepositoryAndroidTest {
             faker.address.city(),
             faker.address.state(),
             "India",
-            Instant.now(),
-            Instant.now()
+            Instant.now(clock),
+            Instant.now(clock)
         )
     )
     val patient1 = UUID.randomUUID()
-    val date1 = LocalDate.now().minusDays(100)
+    val date1 = LocalDate.now(clock).minusDays(100)
     val bp1 = UUID.randomUUID()
     database.patientDao().save(
         Patient(
@@ -128,8 +128,8 @@ class AppointmentRepositoryAndroidTest {
             LocalDate.parse("1947-08-15"),
             null,
             PatientStatus.ACTIVE,
-            Instant.now(),
-            Instant.now(),
+            Instant.now(clock),
+            Instant.now(clock),
             SyncStatus.DONE
         )
     )
@@ -142,8 +142,8 @@ class AppointmentRepositoryAndroidTest {
             userUuid = testData.qaUserUuid(),
             facilityUuid = testData.qaUserFacilityUuid(),
             patientUuid = patient1,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock)
         )
     ))
 
@@ -157,8 +157,8 @@ class AppointmentRepositoryAndroidTest {
             faker.address.city(),
             faker.address.state(),
             "India",
-            Instant.now(),
-            Instant.now()
+            Instant.now(clock),
+            Instant.now(clock)
         )
     )
     database.patientDao().save(
@@ -171,8 +171,8 @@ class AppointmentRepositoryAndroidTest {
             dateOfBirth = LocalDate.parse("1997-08-15"),
             age = null,
             status = PatientStatus.ACTIVE,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now(),
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock),
             syncStatus = SyncStatus.DONE
         )
     )
@@ -183,15 +183,15 @@ class AppointmentRepositoryAndroidTest {
             number = "983374583",
             phoneType = PatientPhoneNumberType.MOBILE,
             active = false,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock)
         ))
     )
 
     val patient3 = UUID.randomUUID()
     val address3 = UUID.randomUUID()
     val phoneNumber3 = UUID.randomUUID()
-    val date3 = LocalDate.now().minusDays(10)
+    val date3 = LocalDate.now(clock).minusDays(10)
     val bp30 = UUID.randomUUID()
     val bp31 = UUID.randomUUID()
     database.addressDao().save(
@@ -201,8 +201,8 @@ class AppointmentRepositoryAndroidTest {
             faker.address.city(),
             faker.address.state(),
             "India",
-            Instant.now(),
-            Instant.now()
+            Instant.now(clock),
+            Instant.now(clock)
         )
     )
     database.patientDao().save(
@@ -215,8 +215,8 @@ class AppointmentRepositoryAndroidTest {
             LocalDate.parse("1977-11-15"),
             null,
             PatientStatus.MIGRATED,
-            Instant.now(),
-            Instant.now(),
+            Instant.now(clock),
+            Instant.now(clock),
             SyncStatus.DONE
         )
     )
@@ -227,8 +227,8 @@ class AppointmentRepositoryAndroidTest {
             number = "983374583",
             phoneType = PatientPhoneNumberType.MOBILE,
             active = true,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock)
         ))
     )
     database.bloodPressureDao().save(listOf(
@@ -240,8 +240,8 @@ class AppointmentRepositoryAndroidTest {
             userUuid = testData.qaUserUuid(),
             facilityUuid = testData.qaUserFacilityUuid(),
             patientUuid = patient3,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
+            createdAt = Instant.now(clock),
+            updatedAt = Instant.now(clock)
         ),
         BloodPressureMeasurement(
             uuid = bp31,
@@ -251,13 +251,13 @@ class AppointmentRepositoryAndroidTest {
             userUuid = testData.qaUserUuid(),
             facilityUuid = testData.qaUserFacilityUuid(),
             patientUuid = patient3,
-            createdAt = Instant.now().minusSeconds(1000),
-            updatedAt = Instant.now().minusSeconds(1000)
+            createdAt = Instant.now(clock).minusSeconds(1000),
+            updatedAt = Instant.now(clock).minusSeconds(1000)
         )
     ))
 
     repository.schedule(patient1, date1)
-        .andThen(repository.schedule(patient2, LocalDate.now().minusDays(2)))
+        .andThen(repository.schedule(patient2, LocalDate.now(clock).minusDays(2)))
         .andThen(repository.schedule(patient3, date3))
         .blockingGet()
 
@@ -276,7 +276,7 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun when_setting_appointment_reminder_then_reminder_with_correct_date_should_be_set() {
     val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now()
+    val appointmentDate = LocalDate.now(clock)
     repository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -286,7 +286,7 @@ class AppointmentRepositoryAndroidTest {
     val uuid = appointments[0].uuid
     repository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
 
-    val reminderDate = LocalDate.now().plusDays(10)
+    val reminderDate = LocalDate.now(clock).plusDays(10)
     repository.createReminder(uuid, reminderDate).blockingGet()
 
     val updatedList = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -325,7 +325,7 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun when_removing_appointment_from_list_then_appointment_status_and_cancel_reason_should_be_updated() {
     val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now()
+    val appointmentDate = LocalDate.now(clock)
     repository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -348,7 +348,7 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun when_removing_appointment_with_reason_as_patient_already_visited_then_appointment_should_be_marked_as_visited() {
     val patientId = UUID.randomUUID()
-    val appointmentDate = LocalDate.now()
+    val appointmentDate = LocalDate.now(clock)
     repository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()

@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -12,15 +13,21 @@ import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -31,6 +38,15 @@ class AppointmentRepositoryAndroidTest {
 
   @Inject
   lateinit var repository: AppointmentRepository
+
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
+  @Inject
+  lateinit var bpRepository: BloodPressureRepository
+
+  @Inject
+  lateinit var medicalHistoryRepository: MedicalHistoryRepository
 
   @Inject
   lateinit var database: AppDatabase
@@ -47,12 +63,16 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var clock: Clock
 
+  private val testClock: TestClock
+    get() = clock as TestClock
+
   @get:Rule
   val authenticationRule = AuthenticationRule()
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+    testClock.setYear(2018)
   }
 
   @Test
@@ -366,5 +386,102 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.cancelReason).isNull()
       assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
     }
+  }
+
+  @Test
+  @Suppress("ASSIGNING_SINGLE_ELEMENT_TO_VARARG_IN_NAMED_FORM_FUNCTION")
+  fun high_risk_patients_should_be_present_at_the_top() {
+    data class BP(val systolic: Int, val diastolic: Int)
+
+    fun savePatientAndAppointment(
+        fullName: String,
+        hasHadStroke: Boolean = false,
+        hasDiabetes: Boolean = false,
+        hasHadKidneyDisease: Boolean = false,
+        age: String = "30",
+        vararg bpMeasurements: BP
+    ) {
+      val patientUuid1 = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = age))
+          .andThen(patientRepository.saveOngoingEntryAsPatient())
+          .blockingGet()
+          .uuid
+      repository.schedule(patientUuid1, LocalDate.now(clock).minusDays(2)).blockingAwait()
+      bpMeasurements.forEach {
+        bpRepository.saveMeasurement(patientUuid1, it.systolic, it.diastolic).blockingGet()
+        testClock.advanceBy(Duration.ofSeconds(1))
+      }
+      medicalHistoryRepository.save(patientUuid1, OngoingMedicalHistoryEntry(
+          hasHadStroke = hasHadStroke,
+          hasDiabetes = hasDiabetes,
+          hasHadKidneyDisease = hasHadKidneyDisease
+      )).blockingAwait()
+      testClock.advanceBy(Duration.ofSeconds(1))
+    }
+
+    savePatientAndAppointment(
+        fullName = "Normal + older",
+        bpMeasurements = BP(systolic = 100, diastolic = 90),
+        hasHadStroke = false)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    savePatientAndAppointment(
+        fullName = "Normal + recent",
+        bpMeasurements = BP(systolic = 100, diastolic = 90),
+        hasHadStroke = false)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    savePatientAndAppointment(
+        fullName = "With stroke",
+        bpMeasurements = BP(systolic = 100, diastolic = 90),
+        hasHadStroke = true)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    savePatientAndAppointment(
+        fullName = "Age > 60, last BP > 160/100 and diabetes",
+        age = "61",
+        bpMeasurements = BP(systolic = 170, diastolic = 120),
+        hasDiabetes = true)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    savePatientAndAppointment(
+        fullName = "Age > 60, last BP > 160/100 and kidney disease",
+        age = "61",
+        bpMeasurements = BP(systolic = 170, diastolic = 120),
+        hasHadKidneyDisease = true,
+        hasHadStroke = false)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    savePatientAndAppointment(
+        fullName = "Age > 60, second last BP > 160/100 and kidney disease",
+        age = "61",
+        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120), BP(100, 100)),
+        hasHadKidneyDisease = true,
+        hasHadStroke = false)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    savePatientAndAppointment(
+        fullName = "Age < 60, last BP > 160/100 and kidney disease",
+        age = "31",
+        bpMeasurements = BP(systolic = 170, diastolic = 120),
+        hasHadKidneyDisease = true,
+        hasHadStroke = false)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    val appointments = repository.overdueAppointments().blockingFirst()
+    assertThat(appointments.map { it.fullName }).isEqualTo(listOf(
+        "With stroke",
+        "Age > 60, last BP > 160/100 and diabetes",
+        "Age > 60, last BP > 160/100 and kidney disease",
+        "Normal + older",
+        "Normal + recent",
+        "Age > 60, second last BP > 160/100 and kidney disease",
+        "Age < 60, last BP > 160/100 and kidney disease"
+    ))
+  }
+
+  @After
+  fun tearDown() {
+    database.clearAllTables()
+    testClock.resetToEpoch()
   }
 }

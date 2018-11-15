@@ -13,7 +13,6 @@ import org.simple.clinic.user.UserSession
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,8 +40,8 @@ class AppointmentRepository @Inject constructor(
               agreedToVisit = null,
               remindOn = null,
               syncStatus = SyncStatus.PENDING,
-              createdAt = Instant.now(),
-              updatedAt = Instant.now())
+              createdAt = Instant.now(clock),
+              updatedAt = Instant.now(clock))
         }
         .flatMapCompletable { save(listOf(it)) }
 
@@ -117,10 +116,12 @@ class AppointmentRepository @Inject constructor(
     return facilityRepository.currentFacility(userSession)
         .map { it.uuid }
         .flatMap { facilityUuid ->
+          val today = LocalDate.now(clock)
           overdueDao.appointmentsForFacility(
               facilityUuid = facilityUuid,
               scheduledStatus = Appointment.Status.SCHEDULED,
-              dateNow = LocalDate.now(UTC)
+              dateNow = today,
+              sixtyYearsDateOfBirth = today.minusYears(60)
           ).toObservable()
         }
   }

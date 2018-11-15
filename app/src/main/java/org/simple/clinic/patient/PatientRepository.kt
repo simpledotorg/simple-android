@@ -47,28 +47,6 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun search(name: String, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
-    val searchableName = nameToSearchableForm(name)
-
-    val substringSearch = database.patientSearchDao()
-        .search(searchableName, PatientStatus.ACTIVE)
-        .toObservable()
-
-    return if (includeFuzzyNameSearch.not()) {
-      substringSearch.compose(sortByCurrentFacility())
-
-    } else {
-      val fuzzySearch = database.fuzzyPatientSearchDao()
-          .searchForPatientsWithNameLike(searchableName)
-          .toObservable()
-
-      substringSearch
-          .zipWith(fuzzySearch)
-          .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
-          .compose(sortByCurrentFacility())
-    }
-  }
-
   fun search(name: String, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val ageBounds = ageFuzzer.bounded(assumedAge)
     val dateOfBirthLowerBound = ageBounds.upper.toString()

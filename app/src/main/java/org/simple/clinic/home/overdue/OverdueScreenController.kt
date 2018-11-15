@@ -51,6 +51,8 @@ class OverdueScreenController @Inject constructor(
     val dbStream = events
         .ofType<OverdueScreenCreated>()
         .flatMap { repository.overdueAppointments() }
+        .replay()
+        .refCount()
 
     val updateListStream = dbStream
         .map { appointments ->

@@ -169,8 +169,9 @@ dependencies {
   testImplementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
   implementation "com.android.support:appcompat-v7:$versions.supportLib"
-  // Needed because play services auth exposes an older dependency
-  implementation "com.android.support:support-v4:$versions.supportLib"
+  implementation("com.android.support:support-v4:$versions.supportLib") {
+    because "Play Services Auth exposes an older version of this dependency"
+  }
   implementation "com.android.support:recyclerview-v7:$versions.supportLib"
   implementation "com.android.support:design:$versions.supportLib"
   implementation "com.android.support:cardview-v7:$versions.supportLib"
@@ -202,6 +203,9 @@ dependencies {
   implementation "com.tspoon.traceur:traceur:$versions.traceur"
   implementation "ru.egslava:MaskedEditText:$versions.maskedEditText"
   implementation "io.sentry:sentry-android:$versions.sentry"
+  implementation("org.slf4j:slf4j-nop:$versions.slf4j") {
+    because "sentry-android needs this dependency"
+  }
   implementation "com.xwray:groupie:$versions.groupie"
   implementation "com.xwray:groupie-kotlin-android-extensions:$versions.groupie"
   implementation "com.mikepenz:itemanimators:$versions.itemAnimators@aar"
@@ -210,10 +214,11 @@ dependencies {
   implementation "io.requery:sqlite-android:$versions.sqliteAndroid"
 
   implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuth"
-  // Adding an explicit dependency on this because the qrreader lib exposes an older dependency
-  implementation "com.google.android.gms:play-services-vision:$versions.playServicesVision"
   implementation("com.github.nisrulz:qreader:$versions.qrReader") {
     exclude group: 'com.google.android.gms', module: 'play-services-vision'
+  }
+  implementation("com.google.android.gms:play-services-vision:$versions.playServicesVision") {
+    because "com.github.nisrulz.qreader exposes an older version of this dependency"
   }
   implementation "io.github.inflationx:viewpump:$versions.viewPump"
   implementation "com.heapanalytics.android:heap-android-client:$versions.heap"

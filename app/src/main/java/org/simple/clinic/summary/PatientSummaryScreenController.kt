@@ -38,6 +38,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = PatientSummaryScreen

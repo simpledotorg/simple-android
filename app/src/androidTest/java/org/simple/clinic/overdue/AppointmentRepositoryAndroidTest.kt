@@ -468,14 +468,15 @@ class AppointmentRepositoryAndroidTest {
     testClock.advanceBy(Duration.ofSeconds(1))
 
     val appointments = appointmentRepository.overdueAppointments().blockingFirst()
-    assertThat(appointments.map { it.fullName }).isEqualTo(listOf(
-        "With stroke",
-        "Age > 60, last BP > 160/100 and diabetes",
-        "Age > 60, last BP > 160/100 and kidney disease",
-        "Normal + older",
-        "Normal + recent",
-        "Age > 60, second last BP > 160/100 and kidney disease",
-        "Age < 60, last BP > 160/100 and kidney disease"
+
+    assertThat(appointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
+        "With stroke" to true,
+        "Age > 60, last BP > 160/100 and diabetes" to true,
+        "Age > 60, last BP > 160/100 and kidney disease" to true,
+        "Normal + older" to false,
+        "Normal + recent" to false,
+        "Age > 60, second last BP > 160/100 and kidney disease" to false,
+        "Age < 60, last BP > 160/100 and kidney disease" to false
     ))
   }
 

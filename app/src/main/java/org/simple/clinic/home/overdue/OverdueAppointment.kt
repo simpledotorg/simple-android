@@ -30,12 +30,18 @@ data class OverdueAppointment(
     val bloodPressure: BloodPressureMeasurement,
 
     @Embedded(prefix = "phone_")
-    val phoneNumber: PatientPhoneNumber?
+    val phoneNumber: PatientPhoneNumber?,
+
+    val isAtHighRisk: Boolean
 ) {
 
   @Dao
   interface RoomDao {
 
+    /**
+     * FYI: IntelliJ's SQL parser highlights `isAtHighRisk` as an error, but it's not. This is probably
+     * because referencing column aliases in a WHERE clause is not SQL standard, but sqlite allows it.
+     */
     @Query("""
           SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
 
@@ -47,7 +53,18 @@ data class OverdueAppointment(
           A.createdAt appt_createdAt, A.updatedAt appt_updatedAt,
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number, PPN.phoneType phone_phoneType, PPN.active phone_active,
-          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt
+          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt,
+
+          (
+            CASE
+              WHEN MH.hasHadStroke = 1 THEN 1
+              WHEN BP.systolic > 160 AND BP.diastolic > 100
+                  AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
+                  AND (P.dateOfBirth < :sixtyYearsDateOfBirth OR P.age_computedDateOfBirth < :sixtyYearsDateOfBirth)
+                  THEN 1
+              ELSE 0
+            END
+          ) AS isAtHighRisk
 
           FROM Patient P
 
@@ -60,18 +77,7 @@ data class OverdueAppointment(
           AND (A.remindOn < :dateNow OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)
-          ORDER BY
-            ( CASE WHEN MH.hasHadStroke = 1 THEN 0 ELSE 1 END ) ASC,
-            (
-              CASE
-                WHEN BP.systolic > 160 AND BP.diastolic > 100
-                    AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
-                    AND (P.dateOfBirth < :sixtyYearsDateOfBirth OR P.age_computedDateOfBirth < :sixtyYearsDateOfBirth)
-                    THEN 0
-                ELSE 1
-              END
-            ) ASC,
-            A.scheduledDate, A.updatedAt ASC
+          ORDER BY isAtHighRisk DESC, A.scheduledDate, A.updatedAt ASC
           """)
     fun appointmentsForFacility(
         facilityUuid: UUID,

@@ -26,7 +26,6 @@ import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context, attrs) {
@@ -100,7 +99,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
       is State.Progress -> VISIBLE
     }
 
-    Timber.i("Moving to state: $state")
     pinAndLockViewFlipper.displayedChildResId = when (state) {
       is State.PinEntry -> R.id.pinentry_pin
       is State.BruteForceLocked -> R.id.pinentry_bruteforcelock

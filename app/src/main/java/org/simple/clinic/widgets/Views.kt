@@ -184,6 +184,5 @@ var ViewFlipper.displayedChildResId: Int
   set(@IdRes id) {
     val child = findViewById<View>(id)
     val childIndex = indexOfChild(child)
-    Timber.i("Setting to $displayedChild")
     displayedChild = childIndex
   }

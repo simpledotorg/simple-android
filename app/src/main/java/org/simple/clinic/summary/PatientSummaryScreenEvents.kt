@@ -4,10 +4,11 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-data class PatientSummaryScreenCreated(val patientUuid: UUID, val caller: PatientSummaryCaller) : UiEvent
+data class PatientSummaryScreenCreated(val patientUuid: UUID, val caller: PatientSummaryCaller, val screenCreatedTimestamp: Instant) : UiEvent
 
 class PatientSummaryBackClicked : UiEvent {
   override val analyticsName = "Patient Summary:Back Clicked"

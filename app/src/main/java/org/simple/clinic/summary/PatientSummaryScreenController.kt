@@ -358,7 +358,6 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _, _, caller, result -> caller to result }
         .map { (caller, result) ->
           { ui: Ui ->
             when (caller!!) {
@@ -390,6 +389,10 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
+    val screenCreatedTime = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.screenCreatedTimestamp }
+
     val sharedPatients = patientUuid
         .flatMap { patientRepository.patient(it) }
         // We do not expect the patient to get deleted while this screen is already open.
@@ -403,8 +406,9 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (appointmentDate, patient) -> Scheduled(patient.fullName, appointmentDate) as PatientSummaryResult }
 
     val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems }
-        .filter { it.hasItemChangedSince(Instant.now()) }
+        .withLatestFrom(screenCreatedTime)
+        .map { (item, time) -> item.patientSummaryItem to time }
+        .filter { it.first.hasItemChangedSince(it.second) }
         .map { Saved as PatientSummaryResult }
 
     return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)

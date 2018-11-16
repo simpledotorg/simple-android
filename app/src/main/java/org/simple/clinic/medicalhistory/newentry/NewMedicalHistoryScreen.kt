@@ -26,6 +26,7 @@ import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -116,7 +117,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT))
+    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now()))
   }
 
   fun setSaveButtonEnabled(enabled: Boolean) {

@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -65,6 +66,9 @@ class AppointmentRepositoryAndroidTest {
 
   private val testClock: TestClock
     get() = clock as TestClock
+
+  @Inject
+  lateinit var config: Single<AppointmentConfig>
 
   @get:Rule
   val authenticationRule = AuthenticationRule()
@@ -469,15 +473,21 @@ class AppointmentRepositoryAndroidTest {
 
     val appointments = appointmentRepository.overdueAppointments().blockingFirst()
 
-    assertThat(appointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
-        "With stroke" to true,
-        "Age > 60, last BP > 160/100 and diabetes" to true,
-        "Age > 60, last BP > 160/100 and kidney disease" to true,
-        "Normal + older" to false,
-        "Normal + recent" to false,
-        "Age > 60, second last BP > 160/100 and kidney disease" to false,
-        "Age < 60, last BP > 160/100 and kidney disease" to false
-    ))
+    val config = config.blockingGet()
+    if (config.highlightHighRiskPatients.not()) {
+      assertThat(appointments.firstOrNull { it.isAtHighRisk }).isNull()
+
+    } else {
+      assertThat(appointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
+          "With stroke" to true,
+          "Age > 60, last BP > 160/100 and diabetes" to true,
+          "Age > 60, last BP > 160/100 and kidney disease" to true,
+          "Normal + older" to false,
+          "Normal + recent" to false,
+          "Age > 60, second last BP > 160/100 and kidney disease" to false,
+          "Age < 60, last BP > 160/100 and kidney disease" to false
+      ))
+    }
   }
 
   @After

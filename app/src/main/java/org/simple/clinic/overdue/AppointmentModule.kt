@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.util.InstantRxPreferencesConverter
@@ -16,6 +17,11 @@ import javax.inject.Named
 
 @Module
 class AppointmentModule {
+
+  @Provides
+  fun config(): Single<AppointmentConfig> {
+    return Single.just(AppointmentConfig(highlightHighRiskPatients = false))
+  }
 
   @Provides
   fun dao(appDatabase: AppDatabase): Appointment.RoomDao {

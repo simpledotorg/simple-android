@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
@@ -22,7 +23,8 @@ class AppointmentRepository @Inject constructor(
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val clock: Clock
+    private val clock: Clock,
+    private val configProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
@@ -115,14 +117,24 @@ class AppointmentRepository @Inject constructor(
   fun overdueAppointments(): Observable<List<OverdueAppointment>> {
     return facilityRepository.currentFacility(userSession)
         .map { it.uuid }
-        .flatMap { facilityUuid ->
+        .withLatestFrom(configProvider.toObservable())
+        .flatMap { (facilityUuid, config) ->
           val today = LocalDate.now(clock)
-          overdueDao.appointmentsForFacility(
-              facilityUuid = facilityUuid,
-              scheduledStatus = Appointment.Status.SCHEDULED,
-              dateNow = today,
-              sixtyYearsDateOfBirth = today.minusYears(60)
-          ).toObservable()
+          if (config.highlightHighRiskPatients) {
+            overdueDao.appointmentsForFacility(
+                facilityUuid = facilityUuid,
+                scheduledStatus = Appointment.Status.SCHEDULED,
+                dateNow = today,
+                sixtyYearsDateOfBirth = today.minusYears(60)
+            ).toObservable()
+
+          } else {
+            overdueDao.appointmentsForFacility(
+                facilityUuid = facilityUuid,
+                scheduledStatus = Appointment.Status.SCHEDULED,
+                dateNow = today
+            ).toObservable()
+          }
         }
   }
 

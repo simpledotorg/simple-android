@@ -38,7 +38,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = PatientSummaryScreen
@@ -180,20 +179,24 @@ class PatientSummaryScreenController @Inject constructor(
 
     // combineLatest() is important here so that the first data-set for the list
     // is dispatched in one go instead of them appearing one after another on the UI.
-    return Observables.combineLatest(
-        prescriptionItems,
-        bloodPressures,
-        bloodPressureItems,
-        medicalHistoryItems) { prescriptions, bp, bpSummary, history ->
-      Timber.e("PatientSummaryItemChanged")
-      PatientSummaryItemChanged(PatientSummaryItems(prescriptionItems = prescriptions, bloodPressureListItems = bpSummary, medicalHistoryItems = history))
-    }
+    return Observables
+        .combineLatest(
+            prescriptionItems,
+            bloodPressures,
+            bloodPressureItems,
+            medicalHistoryItems) { prescriptions, _, bpSummary, history ->
+          PatientSummaryItemChanged(PatientSummaryItems(
+              prescriptionItems = prescriptions,
+              bloodPressureListItems = bpSummary,
+              medicalHistoryItems = history
+          ))
+        }
         .distinctUntilChanged()
   }
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItem.bloodPressureListItems.size }
+        .map { it.patientSummaryItems.bloodPressureListItems.size }
         .withLatestFrom(configProvider.toObservable())
         .map { (numberOfBloodPressures, config) ->
           val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
@@ -205,7 +208,7 @@ class PatientSummaryScreenController @Inject constructor(
         }
 
     val patientSummaryListItem = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItem }
+        .map { it.patientSummaryItems }
 
     return Observables.combineLatest(
         patientSummaryListItem,
@@ -313,7 +316,7 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
     val backClicksWithBpNotSaved = backClicks
-        .withLatestFrom(mergedBpSaves, callers, patientSummaryResultItem) { _, saves , uuid , result -> Triple(saves, uuid, result) }
+        .withLatestFrom(mergedBpSaves, callers, patientSummaryResultItem) { _, saves, caller, result -> Triple(saves, caller, result) }
         .filter { (saved, _) -> saved.not() }
         .map { (_, caller, result) ->
           { ui: Ui ->
@@ -354,7 +357,7 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _,_, caller, result -> caller to result  }
+        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _, _, caller, result -> caller to result }
         .map { (caller, result) ->
           { ui: Ui ->
             when (caller!!) {
@@ -399,13 +402,11 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (appointmentDate, patient) -> Scheduled(patient.fullName, appointmentDate) as PatientSummaryResult }
 
     val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItem }
+        .map { it.patientSummaryItems }
         .filter { it.hasItemChangedSince(Instant.now()) }
         .map { Saved as PatientSummaryResult }
-        .doOnNext { Timber.e("Distinct item") }
 
     return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)
-        .doOnNext { Timber.e("Result: $it") }
         .map { PatientSummaryResultSet(it) }
         .startWith(PatientSummaryResultSet(PatientSummaryResult.NotSaved))
   }

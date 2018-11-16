@@ -129,6 +129,6 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentScheduled(current))
 
     verify(repository).schedule(uuid, date)
-    verify(sheet).closeSheetWithResult(date)
+    verify(sheet).closeSheet(date)
   }
 }

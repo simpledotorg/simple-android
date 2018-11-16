@@ -19,6 +19,6 @@ open class BruteForceProtectionModule {
   @Provides
   fun state(rxSharedPrefs: RxSharedPreferences, moshi: Moshi): Preference<BruteForceProtectionState> {
     val typeConverter = BruteForceProtectionState.RxPreferencesConverter(moshi)
-    return rxSharedPrefs.getObject("brute_force_state", BruteForceProtectionState(), typeConverter)
+    return rxSharedPrefs.getObject("brute_force_state_v1", BruteForceProtectionState(), typeConverter)
   }
 }

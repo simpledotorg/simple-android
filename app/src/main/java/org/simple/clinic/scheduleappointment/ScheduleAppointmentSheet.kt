@@ -32,8 +32,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             .putExtra(KEY_PATIENT_UUID, patientUuid)!!
 
     fun appointmentSavedDate(intent: Intent): LocalDate? {
-      val date = intent.extras!!.getString(EXTRAS_SAVED_APPOINTMENT_DATE, null)
-      return LocalDate.parse(date)
+      return intent.extras!!.getSerializable(EXTRAS_SAVED_APPOINTMENT_DATE) as LocalDate
     }
   }
 
@@ -112,9 +111,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     finish()
   }
 
-  fun closeSheetWithResult(date: LocalDate) {
+  fun closeSheet(appointmentDate: LocalDate) {
     val intent = Intent()
-    intent.putExtra(EXTRAS_SAVED_APPOINTMENT_DATE, date.toString())
+    intent.putExtra(EXTRAS_SAVED_APPOINTMENT_DATE, appointmentDate)
     setResult(Activity.RESULT_OK, intent)
     finish()
   }

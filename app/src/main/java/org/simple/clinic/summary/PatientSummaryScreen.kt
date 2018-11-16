@@ -50,7 +50,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
-import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
 
@@ -187,8 +186,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun appointmentScheduledSuccess() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null}
-      .map { it -> ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
-      .filter { it != null }
+      .map { ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
       .map { AppointmentScheduled(it) }
 
   @SuppressLint("SetTextI18n")
@@ -299,7 +297,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun goBackToHome(status: PatientSummaryResult) {
-    Timber.e("Go back to home with $status")
     screenRouter.clearHistoryAndPushWithResult(HomeScreen.KEY, direction = BACKWARD, result = status)
   }
 

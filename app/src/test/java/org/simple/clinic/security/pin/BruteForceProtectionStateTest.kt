@@ -11,6 +11,10 @@ class BruteForceProtectionStateTest {
   /**
    * If you're seeing this test fail, it means that you modified
    * [BruteForceProtectionState] without thinking about migration.
+   *
+   * The SharedPreferences key for [BruteForceProtectionState] is
+   * versioned, so the migration can potentially happen when it's
+   * being read from SharedPreferences.
    */
   @Test
   fun `fail when a migration is required`() {

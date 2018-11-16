@@ -17,22 +17,22 @@ class MoshiOptionalAdapterFactory : JsonAdapter.Factory {
     } else null
   }
 
-  private class OptionalAdapter internal constructor(private val moshi: Moshi, private val type: Type) : JsonAdapter<Optional<*>>() {
+  private class OptionalAdapter(val moshi: Moshi, val type: Type) : JsonAdapter<Optional<*>>() {
 
     @Throws(IOException::class)
-    override fun toJson(out: JsonWriter, value: Optional<*>?) {
+    override fun toJson(writer: JsonWriter, value: Optional<*>?) {
       when (value) {
-        is Just -> moshi.adapter<Any>(type).toJson(out, value.value)
-        is None -> out.nullValue()
+        is Just -> moshi.adapter<Any>(type).toJson(writer, value.value)
+        is None -> writer.nullValue()
       }
     }
 
     @Throws(IOException::class)
-    override fun fromJson(`in`: JsonReader): Optional<*>? {
-      return if (`in`.peek() == JsonReader.Token.NULL) {
+    override fun fromJson(reader: JsonReader): Optional<*>? {
+      return if (reader.peek() == JsonReader.Token.NULL) {
         None
       } else {
-        Just(moshi.adapter<Any>(type).fromJson(`in`)!!)
+        Just(moshi.adapter<Any>(type).fromJson(reader)!!)
       }
     }
   }

@@ -8,7 +8,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = LoginPinScreen
@@ -39,8 +38,6 @@ class LoginPinScreenController @Inject constructor(
     return events.ofType<LoginPinAuthenticated>()
         .map { it.pin }
         .flatMapSingle { pin ->
-          Timber.i("Requesting OTP")
-
           val uiChanges = userSession.requestLoginOtp()
               .map { result ->
                 when (result) {

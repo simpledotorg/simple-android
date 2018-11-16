@@ -186,15 +186,14 @@ class PatientSummaryScreenController @Inject constructor(
         bloodPressureItems,
         medicalHistoryItems) { prescriptions, bp, bpSummary, history ->
       Timber.e("PatientSummaryItemChanged")
-      PatientSummaryItemChanged(PatientSummaryItems(prescriptionItems = prescriptions, bloodPressures = bp, bloodPressureListItems = bpSummary, medicalHistoryItems = history))
+      PatientSummaryItemChanged(PatientSummaryItems(prescriptionItems = prescriptions, bloodPressureListItems = bpSummary, medicalHistoryItems = history))
     }
         .distinctUntilChanged()
   }
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
-
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItem.bloodPressures.size }
+        .map { it.patientSummaryItem.bloodPressureListItems.size }
         .withLatestFrom(configProvider.toObservable())
         .map { (numberOfBloodPressures, config) ->
           val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)
@@ -400,8 +399,9 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (appointmentDate, patient) -> Scheduled(patient.fullName, appointmentDate) as PatientSummaryResult }
 
     val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
+        .map { it.patientSummaryItem }
+        .filter { it.hasItemChangedSince(Instant.now()) }
         .map { Saved as PatientSummaryResult }
-        .skip(1)
         .doOnNext { Timber.e("Distinct item") }
 
     return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)

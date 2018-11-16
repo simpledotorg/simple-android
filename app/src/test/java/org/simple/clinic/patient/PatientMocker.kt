@@ -115,7 +115,11 @@ object PatientMocker {
       name: String = "drug name",
       dosage: String? = "dosage",
       isProtocolDrug: Boolean = false,
-      syncStatus: SyncStatus = mock()
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -124,11 +128,11 @@ object PatientMocker {
         rxNormCode = "rx-norm-code",
         isDeleted = false,
         isProtocolDrug = isProtocolDrug,
-        patientUuid = mock(),
-        facilityUuid = mock(),
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
         syncStatus = syncStatus,
-        createdAt = mock(),
-        updatedAt = mock())
+        createdAt = createdAt,
+        updatedAt = updatedAt)
   }
 
   fun protocolDrug(
@@ -256,7 +260,8 @@ object PatientMocker {
       diagnosedWithHypertension: Boolean = false,
       isOnTreatmentForHypertension: Boolean = false,
       hasDiabetes: Boolean = true,
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      syncStatus: SyncStatus = SyncStatus.PENDING
   ): MedicalHistory {
     return MedicalHistory(
         uuid = UUID.randomUUID(),
@@ -267,7 +272,7 @@ object PatientMocker {
         diagnosedWithHypertension = diagnosedWithHypertension,
         isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasDiabetes = hasDiabetes,
-        syncStatus = SyncStatus.PENDING,
+        syncStatus = syncStatus,
         createdAt = Instant.now(),
         updatedAt = updatedAt)
   }

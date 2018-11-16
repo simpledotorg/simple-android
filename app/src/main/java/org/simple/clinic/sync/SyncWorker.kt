@@ -15,8 +15,10 @@ import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.ErrorResolver
+import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.exhaustive
 import timber.log.Timber
-import java.io.IOException
 import javax.inject.Inject
 
 class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
@@ -77,13 +79,19 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
             medicalHistorySync.sync(),
             facilitySync.sync()
         ))
-        .doOnError { e ->
-          if (e !is IOException) {
-            Timber.e(e)
-            crashReporter.report(e)
-          }
-        }
+        .doOnError(logError())
         .onErrorComplete()
         .andThen(Single.just(Result.SUCCESS))
+  }
+
+  private fun logError() = { e: Throwable ->
+    val resolvedError = ErrorResolver.resolve(e)
+    when (resolvedError) {
+      is ResolvedError.Unexpected -> crashReporter.report(resolvedError.actualCause)
+      is ResolvedError.NetworkRelated -> {
+        // Connectivity issues are expected.
+      }
+    }.exhaustive()
+    Timber.e(e)
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.overdue
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
+import io.reactivex.Single
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
@@ -11,7 +12,9 @@ import javax.inject.Named
 class AppointmentSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: AppointmentRepository,
-    private val api: AppointmentSyncApiV1,
+    private val apiV1: AppointmentSyncApiV1,
+    private val apiV2: AppointmentSyncApiV2,
+    private val configProvider: Single<AppointmentConfig>,
     @Named("last_appointment_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
@@ -20,14 +23,25 @@ class AppointmentSync @Inject constructor(
   }
 
   fun push(): Completable {
-    return syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
+    return configProvider
+        .flatMapCompletable { config ->
+          if (config.v2ApiEnabled) {
+            syncCoordinator.push(repository) { apiV2.push(toRequest(it)) }
+          } else {
+            syncCoordinator.push(repository) { apiV1.push(toRequest(it)) }
+          }
+        }
   }
 
   fun pull(): Completable {
-    return syncCoordinator.pull(
-        repository = repository,
-        lastPullTimestamp = lastPullTimestamp,
-        pullNetworkCall = api::pull)
+    return configProvider
+        .flatMapCompletable { config ->
+          if (config.v2ApiEnabled) {
+            syncCoordinator.pull(repository, lastPullTimestamp, apiV2::pull)
+          } else {
+            syncCoordinator.pull(repository, lastPullTimestamp, apiV1::pull)
+          }
+        }
   }
 
   private fun toRequest(appointments: List<Appointment>): AppointmentPushRequest {
@@ -47,7 +61,6 @@ class AppointmentSync @Inject constructor(
                 updatedAt = updatedAt)
           }
         }
-        .toList()
     return AppointmentPushRequest(payloads)
   }
 }

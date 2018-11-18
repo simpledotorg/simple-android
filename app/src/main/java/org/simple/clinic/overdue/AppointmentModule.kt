@@ -20,7 +20,7 @@ class AppointmentModule {
 
   @Provides
   fun config(): Single<AppointmentConfig> {
-    return Single.just(AppointmentConfig(highlightHighRiskPatients = false))
+    return Single.just(AppointmentConfig(highlightHighRiskPatients = false, v2ApiEnabled = false))
   }
 
   @Provides
@@ -34,8 +34,13 @@ class AppointmentModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): AppointmentSyncApiV1 {
+  fun syncApiV1(retrofit: Retrofit): AppointmentSyncApiV1 {
     return retrofit.create(AppointmentSyncApiV1::class.java)
+  }
+
+  @Provides
+  fun syncApiV2(retrofit: Retrofit): AppointmentSyncApiV2 {
+    return retrofit.create(AppointmentSyncApiV2::class.java)
   }
 
   @Provides

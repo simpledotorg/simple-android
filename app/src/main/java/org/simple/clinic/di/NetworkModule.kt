@@ -56,4 +56,13 @@ open class NetworkModule {
         .client(okHttpClient)
         .validateEagerly(true)
   }
+
+  @Provides
+  @AppScope
+  fun retrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
+    val baseUrl = BuildConfig.API_ENDPOINT
+    return commonRetrofitBuilder
+        .baseUrl(baseUrl)
+        .build()
+  }
 }

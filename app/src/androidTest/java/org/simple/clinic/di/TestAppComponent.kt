@@ -12,6 +12,7 @@ import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
+import org.simple.clinic.overdue.AppointmentAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentSyncAndroidTest
 import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTest
@@ -51,4 +52,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: OngoingLoginEntryRepositoryTest)
   fun inject(target: BruteForceProtectionAndroidTest)
   fun inject(target: DaoWithUpsertAndroidTest)
+  fun inject(target: AppointmentAndroidTest)
 }

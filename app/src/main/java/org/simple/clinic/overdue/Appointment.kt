@@ -48,8 +48,12 @@ data class Appointment(
     @Json(name = "not_responding")
     PATIENT_NOT_RESPONDING,
 
-    @Json(name = "moved")
-    MOVED,
+    @Json(name = "phone_does_not_work")
+    PHONE_DOES_NOT_WORK,
+
+    TRANSFERRED_TO_ANOTHER_PUBLIC_FACILITY,
+
+    MOVED_TO_PRIVATE_PRACTITIONER,
 
     @Json(name = "dead")
     DEAD,

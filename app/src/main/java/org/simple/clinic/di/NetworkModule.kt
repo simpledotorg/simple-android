@@ -20,6 +20,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 open class NetworkModule {
 
   @Provides
+  @AppScope
   fun moshi(): Moshi {
     return Moshi.Builder()
         .add(InstantMoshiAdapter())
@@ -30,6 +31,7 @@ open class NetworkModule {
   }
 
   @Provides
+  @AppScope
   open fun okHttpClient(loggedInInterceptor: LoggedInUserHttpInterceptor): OkHttpClient {
     return OkHttpClient.Builder()
         .apply {
@@ -46,6 +48,7 @@ open class NetworkModule {
   }
 
   @Provides
+  @AppScope
   fun retrofitBuilder(moshi: Moshi, okHttpClient: OkHttpClient): Retrofit.Builder {
     return Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))

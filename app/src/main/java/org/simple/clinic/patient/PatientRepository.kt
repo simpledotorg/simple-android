@@ -12,6 +12,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.patient.filter.SearchPatientByName
+import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SynceableRepository
@@ -41,13 +43,11 @@ class PatientRepository @Inject constructor(
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
-    private val patientSearchConfig: Single<PatientSearchConfig>
+    private val ageFuzzer: AgeFuzzer,
+    private val searchPatientByName: SearchPatientByName
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
-
-  // TODO: Fix this
-  private val ageFuzzer = patientSearchConfig.blockingGet().ageFuzzer
 
   fun search(name: String, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
     val ageBounds = ageFuzzer.bounded(assumedAge)
@@ -73,6 +73,18 @@ class PatientRepository @Inject constructor(
           .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
           .compose(sortByCurrentFacility())
     }
+  }
+
+  fun search2(name: String, assumedAge: Int): Observable<List<PatientSearchResult>> {
+    val ageBounds = ageFuzzer.bounded(assumedAge)
+    val dateOfBirthLowerBound = ageBounds.upper.toString()
+    val dateOfBirthUpperBound = ageBounds.lower.toString()
+
+    return database.patientSearchDao()
+        .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
+        .toObservable()
+        .flatMapSingle { searchPatientByName.search(name, it) }
+        .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.ACTIVE) }
   }
 
   // TODO: Get user from caller.

@@ -35,9 +35,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_F
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.NotSaved
 import org.simple.clinic.patient.PatientSummaryResult.Saved
-import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -47,6 +47,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -452,18 +453,18 @@ class PatientSummaryScreenControllerTest {
     }
   }
 
-  @Parameters(value = [
-  "PENDING",
-  "DONE"
-  ])
+  @Parameters(method = "params for patient item changed")
   @Test
-  fun `when anything is changed on the screen and save or back is clicked, home screen should be called with correct result`(status: SyncStatus){
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now()))
+  fun `when anything is changed on the screen and save or back is clicked, home screen should be called with correct result`(
+      status: SyncStatus,
+      screenCreated: Instant,
+      hasChanged: Boolean
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, screenCreated))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(status)))
-
     uiEvents.onNext(PatientSummaryDoneClicked())
 
-    if(SyncStatus.PENDING == status) {
+    if (hasChanged) {
       verify(screen).goBackToHome(Saved)
     } else {
       verify(screen).goBackToHome(NotSaved)
@@ -471,17 +472,38 @@ class PatientSummaryScreenControllerTest {
   }
 
 
-//  @Test
-//  fun `when an appointment is scheduled and save or back is clicked, home screen should be called with scheduled result`(){
-//    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now()))
-////    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(SyncStatus.PENDING)))
-//    val date = LocalDate.now(UTC)
-//    uiEvents.onNext(AppointmentScheduled(date))
-//    uiEvents.onNext(ScheduleAppointmentSheetClosed())
-//    uiEvents.onNext(PatientSummaryDoneClicked())
-//
-//    verify(screen).goBackToHome(Scheduled("Anish",date))
-//  }
+  @Test
+  fun `when an appointment is scheduled and save or back is clicked, home screen should be called with scheduled result`() {
+    val addressUuid = UUID.randomUUID()
+    val fullName = "Anish"
+    val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, fullName = fullName)
+    val address = PatientMocker.address(uuid = addressUuid)
+    val phoneNumber = None
+    val appointmentDate = LocalDate.now(UTC)
+
+    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
+    whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
+    whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now()))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+    uiEvents.onNext(AppointmentScheduled(appointmentDate))
+    uiEvents.onNext(ScheduleAppointmentSheetClosed())
+
+    verify(screen).goBackToHome(PatientSummaryResult.Scheduled(fullName, appointmentDate))
+  }
+
+  @Test
+  fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`(){
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(SyncStatus.PENDING)))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+    uiEvents.onNext(AppointmentScheduled)
+    uiEvents.onNext(ScheduleAppointmentSheetClosed())
+
+    verify(screen).goBackToHome(Scheduled(patientUuid))
+  }
 
   private fun patientSummaryItem(syncStatus: SyncStatus): PatientSummaryItems {
     return PatientSummaryItems(prescriptionItems = SummaryPrescribedDrugsItem(
@@ -491,6 +513,15 @@ class PatientSummaryScreenControllerTest {
         bloodPressureListItems = listOf(SummaryBloodPressureListItem(PatientMocker.bp(syncStatus = syncStatus), Today, false)
         ),
         medicalHistoryItems = SummaryMedicalHistoryItem(PatientMocker.medicalHistory(syncStatus = syncStatus), Today)
+    )
+  }
+
+  fun `params for patient item changed`(): Array<Array<Any>> {
+    return arrayOf(
+        arrayOf("PENDING", Instant.now(), true),
+        arrayOf("PENDING", Instant.now().plus(1, ChronoUnit.MINUTES), false),
+        arrayOf("DONE", Instant.now(), false),
+        arrayOf("DONE", Instant.now().plus(1, ChronoUnit.MINUTES), false)
     )
   }
 

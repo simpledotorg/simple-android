@@ -33,7 +33,6 @@ import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -385,31 +384,18 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun patientSummaryResultChanged(events: Observable<UiEvent>): Observable<PatientSummaryResultSet> {
-    val patientUuid = events
+    val screenCreates = events
         .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
-
-    val screenCreatedTime = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.screenCreatedTimestamp }
-
-    val sharedPatients = patientUuid
-        .flatMap { patientRepository.patient(it) }
-        // We do not expect the patient to get deleted while this screen is already open.
-        .unwrapJust()
-        .replay(1)
-        .refCount()
 
     val appointmentScheduled = events.ofType<AppointmentScheduled>()
-        .map { it.appointmentDate }
-        .withLatestFrom(sharedPatients)
-        .map { (appointmentDate, patient) -> Scheduled(patient.fullName, appointmentDate) as PatientSummaryResult }
+        .withLatestFrom(screenCreates)
+        .map { (_, createdEvent) -> Scheduled(createdEvent.patientUuid) as PatientSummaryResult }
 
     val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
-        .withLatestFrom(screenCreatedTime)
-        .map { (item, time) -> item.patientSummaryItems to time }
-        .filter { it.first.hasItemChangedSince(it.second) }
-        .map { Saved as PatientSummaryResult }
+        .map { it.patientSummaryItems }
+        .withLatestFrom(screenCreates)
+        .filter { (item, createdEvent) -> item.hasItemChangedSince(createdEvent.screenCreatedTimestamp) }
+        .map { (_, createdEvent) -> Saved(createdEvent.patientUuid) as PatientSummaryResult }
 
     return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)
         .map { PatientSummaryResultSet(it) }

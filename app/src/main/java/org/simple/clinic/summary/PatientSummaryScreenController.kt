@@ -38,7 +38,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = PatientSummaryScreen
@@ -358,6 +357,7 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
+        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _, _, caller, result -> caller to result }
         .map { (caller, result) ->
           { ui: Ui ->
             when (caller!!) {
@@ -407,7 +407,7 @@ class PatientSummaryScreenController @Inject constructor(
 
     val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
         .withLatestFrom(screenCreatedTime)
-        .map { (item, time) -> item.patientSummaryItem to time }
+        .map { (item, time) -> item.patientSummaryItems to time }
         .filter { it.first.hasItemChangedSince(it.second) }
         .map { Saved as PatientSummaryResult }
 

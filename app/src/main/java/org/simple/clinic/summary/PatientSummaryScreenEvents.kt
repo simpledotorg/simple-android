@@ -5,7 +5,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
 import java.util.UUID
 
 data class PatientSummaryScreenCreated(val patientUuid: UUID, val caller: PatientSummaryCaller, val screenCreatedTimestamp: Instant) : UiEvent
@@ -34,8 +33,8 @@ class ScheduleAppointmentSheetClosed : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-class AppointmentScheduled(val appointmentDate : LocalDate) : UiEvent {
-  override val analyticsName = "Patient Summary:Appointment scheduled for $appointmentDate"
+class AppointmentScheduled : UiEvent {
+  override val analyticsName = "Patient Summary:Appointment scheduled successfully"
 }
 
 data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, val selected: Boolean) : UiEvent {

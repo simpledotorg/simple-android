@@ -1,13 +1,13 @@
 package org.simple.clinic.patient
 
-import org.threeten.bp.LocalDate
 import java.io.Serializable
+import java.util.UUID
 
 sealed class PatientSummaryResult : Serializable {
 
-  object Saved : PatientSummaryResult()
+  data class Saved(val patientUuid: UUID) : PatientSummaryResult()
 
   object NotSaved : PatientSummaryResult()
 
-  data class Scheduled(val patientName: String, val appointmentDate: LocalDate) : PatientSummaryResult()
+  data class Scheduled(val patientUuid: UUID) : PatientSummaryResult()
 }

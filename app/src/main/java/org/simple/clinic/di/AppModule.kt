@@ -11,7 +11,7 @@ import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
-import org.simple.clinic.patient.PatientSearchConfigModule
+import org.simple.clinic.patient.PatientSearchModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
@@ -46,7 +46,7 @@ import org.threeten.bp.Clock
   CrashReporterModule::class,
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,
-  PatientSearchConfigModule::class])
+  PatientSearchModule::class])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

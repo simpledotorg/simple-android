@@ -18,6 +18,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.newentry.DateOfBirthFormatValidator
+import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.BoundedAge
 import org.simple.clinic.patient.sync.PatientPayload
@@ -33,6 +34,7 @@ class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
   private lateinit var ageFuzzer: AgeFuzzer
+  private lateinit var searchPatientByName: SearchPatientByName
 
   private val database = mock<AppDatabase>()
   private val clock = TestClock()
@@ -50,6 +52,8 @@ class PatientRepositoryTest {
   fun setUp() {
     ageFuzzer = mock()
     whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
+    searchPatientByName = mock()
+
     repository = PatientRepository(
         database,
         dobValidator,
@@ -57,14 +61,8 @@ class PatientRepositoryTest {
         userSession,
         numberValidator,
         clock,
-        Single.just(PatientSearchConfig(
-            ageFuzzer = ageFuzzer,
-            fuzzyStringDistanceCutoff = 0F,
-            characterSubstitutionCost = 0F,
-            characterInsertionCost = 0F,
-            characterDeletionCost = 0F
-        ))
-    )
+        ageFuzzer,
+        searchPatientByName)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

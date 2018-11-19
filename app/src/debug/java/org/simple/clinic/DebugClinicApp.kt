@@ -19,8 +19,6 @@ import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
-import org.simple.clinic.summary.PatientSummaryConfig
-import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
@@ -93,12 +91,6 @@ class DebugClinicApp : ClinicApp() {
         })
         .crashReporterModule(object : CrashReporterModule() {
           override fun crashReporter() = NoOpCrashReporter()
-        })
-        .patientSummaryModule(object : PatientSummaryModule() {
-          override fun providesSummaryConfig(): Single<PatientSummaryConfig> {
-            return super.providesSummaryConfig()
-                .map { it.copy(isPatientEditFeatureEnabled = true) }
-          }
         })
         .bruteForceProtectionModule(object : BruteForceProtectionModule() {
           override fun config(): Single<BruteForceProtectionConfig> {

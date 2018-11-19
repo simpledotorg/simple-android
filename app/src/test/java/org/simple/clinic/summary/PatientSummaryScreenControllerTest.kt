@@ -45,7 +45,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
@@ -301,14 +300,14 @@ class PatientSummaryScreenControllerTest {
   ) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now()))
     uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryResultSet(Saved))
+    uiEvents.onNext(PatientSummaryResultSet(Saved(patientUuid)))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome(Saved)
+      verify(screen, never()).goBackToHome(Saved(patientUuid))
     } else {
-      verify(screen).goBackToHome(Saved)
+      verify(screen).goBackToHome(Saved(patientUuid))
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }
@@ -465,7 +464,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     if (hasChanged) {
-      verify(screen).goBackToHome(Saved)
+      verify(screen).goBackToHome(Saved(patientUuid))
     } else {
       verify(screen).goBackToHome(NotSaved)
     }
@@ -474,24 +473,12 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when an appointment is scheduled and save or back is clicked, home screen should be called with scheduled result`() {
-    val addressUuid = UUID.randomUUID()
-    val fullName = "Anish"
-    val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid, fullName = fullName)
-    val address = PatientMocker.address(uuid = addressUuid)
-    val phoneNumber = None
-    val appointmentDate = LocalDate.now(UTC)
-
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
-    whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
-
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now()))
     uiEvents.onNext(PatientSummaryDoneClicked())
-    uiEvents.onNext(AppointmentScheduled(appointmentDate))
+    uiEvents.onNext(AppointmentScheduled())
     uiEvents.onNext(ScheduleAppointmentSheetClosed())
 
-    verify(screen).goBackToHome(PatientSummaryResult.Scheduled(fullName, appointmentDate))
+    verify(screen).goBackToHome(PatientSummaryResult.Scheduled(patientUuid))
   }
 
   @Test

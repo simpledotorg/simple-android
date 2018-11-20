@@ -24,6 +24,7 @@ import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -42,6 +43,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   @Inject
   lateinit var controller: PatientSearchResultsController
+
+  @Inject
+  lateinit var clock: Clock
 
   private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsearchresults_results)
@@ -101,7 +105,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.SEARCH, Instant.now()))
+    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
   }
 
   fun openPatientEntryScreen() {

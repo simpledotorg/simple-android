@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByTotalSumOfDistances
+import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.PercentageFuzzer
@@ -25,5 +26,5 @@ open class PatientSearchModule {
       characterDeletionCost = 100F,
       characterInsertionCost = 100F,
 
-      resultsComparator = SortByTotalSumOfDistances())
+      resultsComparator = SortByWeightedNameParts())
 }

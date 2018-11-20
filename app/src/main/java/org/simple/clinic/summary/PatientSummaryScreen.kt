@@ -187,7 +187,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null}
       .map { ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
-      .map { AppointmentScheduled() }
+      .map { AppointmentScheduled }
 
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {

@@ -26,6 +26,7 @@ import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -41,6 +42,9 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var clock: Clock
 
   private val toolbar by bindView<Toolbar>(R.id.newmedicalhistory_toolbar)
   private val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diagnosed_for_hypertension)
@@ -117,7 +121,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now()))
+    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
   }
 
   fun setSaveButtonEnabled(enabled: Boolean) {

@@ -10,6 +10,7 @@
   android:paddingEnd="@dimen/spacing_24"
   android:paddingStart="@dimen/spacing_16"
   android:paddingTop="@dimen/spacing_12"
+  tools:ignore = "Overdraw"
   tools:showIn="@layout/screen_patients">
 
   <LinearLayout

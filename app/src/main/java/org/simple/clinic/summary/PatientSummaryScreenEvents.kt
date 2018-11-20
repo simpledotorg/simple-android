@@ -33,9 +33,7 @@ class ScheduleAppointmentSheetClosed : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-class AppointmentScheduled : UiEvent {
-  override val analyticsName = "Patient Summary:Appointment scheduled successfully"
-}
+object AppointmentScheduled : UiEvent
 
 data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, val selected: Boolean) : UiEvent {
   override val analyticsName = "Patient Summary:Answer for $question set to $selected"

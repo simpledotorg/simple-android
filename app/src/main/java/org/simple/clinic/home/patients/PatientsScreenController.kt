@@ -10,6 +10,8 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User
@@ -21,6 +23,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
@@ -35,6 +38,8 @@ typealias UiChange = (Ui) -> Unit
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
     private val syncScheduler: SyncScheduler,
+    private val patientRepository: PatientRepository,
+    private val appointmentRepository: AppointmentRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -150,19 +155,31 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun showSummarySavedNotification(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+    val savedStream = events
         .ofType<PatientSummaryResultReceived>()
-        .map { it.result }
-        .map {
-          when (it) {
-            is PatientSummaryResult.Saved -> {
-              { ui: Ui -> ui.showStatusPatientSummarySaved() }
-            }
-            is PatientSummaryResult.Scheduled -> {
-              { ui: Ui -> ui.showStatusPatientAppointmentSaved() }
-            }
-            PatientSummaryResult.NotSaved -> { _: Ui -> }
-          }
-        }
+        .filter { it.result is PatientSummaryResult.Saved }
+        .map { it.result as PatientSummaryResult.Saved }
+        .flatMap { patientRepository.patient(it.patientUuid).take(1).unwrapJust() }
+        .map { { ui: Ui -> ui.showStatusPatientSummarySaved(it.fullName) } }
+
+    val scheduledResult = events
+        .ofType<PatientSummaryResultReceived>()
+        .filter { it.result is PatientSummaryResult.Scheduled }
+        .map { it.result as PatientSummaryResult.Scheduled }
+
+    val patientNameFromScheduled = scheduledResult
+        .flatMap { patientRepository.patient(it.patientUuid).take(1).unwrapJust() }
+        .map { it.fullName }
+
+    val appointmentDate = scheduledResult
+        .flatMap { appointmentRepository.scheduledAppointmentForPatient(it.patientUuid) }
+        .map { it.scheduledDate }
+
+    val scheduledStream = Observables
+        .zip(patientNameFromScheduled, appointmentDate)
+        .map { (name, appointmentDate) -> { ui: Ui -> ui.showStatusPatientAppointmentSaved(name, appointmentDate) } }
+
+    return Observable.merge(savedStream, scheduledStream)
   }
+
 }

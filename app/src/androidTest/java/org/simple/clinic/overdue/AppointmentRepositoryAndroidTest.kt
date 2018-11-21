@@ -92,7 +92,7 @@ class AppointmentRepositoryAndroidTest {
     savedAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(appointmentDate)
-      assertThat(this.status).isEqualTo(SCHEDULED)
+      assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
       assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
@@ -114,7 +114,7 @@ class AppointmentRepositoryAndroidTest {
     savedAppointment[0].apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(date1)
-      assertThat(this.status).isEqualTo(VISITED)
+      assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
       assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
@@ -494,24 +494,24 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_fetching_appointment_for_patient_it_should_return_scheduled_appointment_only() {
-    val patientId = UUID.randomUUID()
-    val appointmentDate1 = LocalDate.now()
-    val appointmentDate2 = LocalDate.now().plusDays(1)
-    appointmentRepository.schedule(patientId, appointmentDate1).blockingAwait()
-    appointmentRepository.schedule(patientId, appointmentDate2).blockingAwait()
+      val patientId = UUID.randomUUID()
+      val appointmentDate1 = LocalDate.now()
+      val appointmentDate2 = LocalDate.now().plusDays(1)
+      appointmentRepository.schedule(patientId, appointmentDate1).blockingAwait()
+      appointmentRepository.schedule(patientId, appointmentDate2).blockingAwait()
 
-    val appointment = appointmentRepository.scheduledAppointmentForPatient(patientId).blockingFirst()
-    assertThat(appointment).isNotNull()
-    assertThat(appointment.patientUuid).isEqualTo(patientId)
-    assertThat(appointment.status).isEqualTo(SCHEDULED)
-    assertThat(appointment.scheduledDate).isEqualTo(appointmentDate2)
+      val appointment = appointmentRepository.scheduledAppointmentForPatient(patientId).blockingFirst()
+      assertThat(appointment).isNotNull()
+      assertThat(appointment.patientUuid).isEqualTo(patientId)
+      assertThat(appointment.status).isEqualTo(SCHEDULED)
+      assertThat(appointment.scheduledDate).isEqualTo(appointmentDate2)
+    }
+
+    @After
+    fun tearDown() {
+      database.clearAllTables()
+      testClock.resetToEpoch()
+    }
+
+
   }
-
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-    testClock.resetToEpoch()
-  }
-
-
-}

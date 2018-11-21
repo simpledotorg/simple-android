@@ -23,6 +23,7 @@ import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.indexOfChildId
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -121,10 +122,10 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
   }
 
-  fun showStatusPatientSummarySaved() {
+  fun showStatusPatientSummarySaved(patientName: String){
   }
 
-  fun showStatusPatientAppointmentSaved() {
+  fun showStatusPatientAppointmentSaved(patientName: String, appointmentDate: LocalDate){
   }
 
   fun hideUserAccountStatus() {

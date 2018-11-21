@@ -121,11 +121,10 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
   }
 
-  fun showStatusPatientSummarySaved(){
+  fun showStatusPatientSummarySaved() {
   }
 
-  fun showStatusPatientAppointmentSaved(){
-
+  fun showStatusPatientAppointmentSaved() {
   }
 
   fun hideUserAccountStatus() {

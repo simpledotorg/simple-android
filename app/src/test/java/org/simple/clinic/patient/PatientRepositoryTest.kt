@@ -56,7 +56,7 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    config = PatientConfig(isFuzzySearchV2Enabled = false)
+    config = PatientConfig(isFuzzySearchV2Enabled = false, limitOfSearchResults = 100)
     database = mock()
     patientSearchResultDao = mock()
     patientDao = mock()

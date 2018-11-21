@@ -172,25 +172,18 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun patient_search_should_ignore_spaces_and_whitespace_characters() {
-    val names = arrayOf("Riya Puri", "Manabi    Mehra", "Amit:Sodhi")
-    val searches = arrayOf("ya p" to true, "bime" to true, "ito" to false)
+    val names = arrayOf("Riya Puri" to "ya p", "Manabi    Mehra" to "bime", "Amit:Sodhi" to "ito")
 
-    names.forEachIndexed { index, fullName ->
+    names.forEach { (fullName, query) ->
       val patientEntry = testData.ongoingPatientEntry(fullName = fullName, age = "20")
 
       patientRepository.saveOngoingEntry(patientEntry)
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
 
-      val (query, shouldFindInDb) = searches[index]
-      val search = patientRepository.search(query, assumedAge = 20, includeFuzzyNameSearch = false).blockingFirst()
+      val search = patientRepository.search(query, assumedAge = 20).blockingFirst()
 
-      if (shouldFindInDb) {
-        assertThat(search).hasSize(1)
-        assertThat(search.first().fullName).isEqualTo(fullName)
-      } else {
-        assertThat(search).isEmpty()
-      }
+      assertThat(search.any { it.fullName == fullName }).isTrue()
     }
   }
 
@@ -252,17 +245,17 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search0 = patientRepository.search("kumar", 12, includeFuzzyNameSearch = false).blockingFirst()
+    val search0 = patientRepository.search("kumar", 12).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = patientRepository.search("kumar", 77, includeFuzzyNameSearch = false).blockingFirst()
+    val search1 = patientRepository.search("kumar", 77).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search("ab", 68, includeFuzzyNameSearch = false).blockingFirst()
+    val search2 = patientRepository.search("ab", 68).blockingFirst()
     assertThat(search2).hasSize(3)
     assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
     assertThat(search2[0].dateOfBirth).isEqualTo(LocalDate.parse("1950-08-15"))
@@ -306,17 +299,17 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val search0 = patientRepository.search("kumar", 50, includeFuzzyNameSearch = false).blockingFirst()
+    val search0 = patientRepository.search("kumar", 50).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = patientRepository.search("kumar", 28, includeFuzzyNameSearch = false).blockingFirst()
+    val search1 = patientRepository.search("kumar", 28).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Abhishek Kumar")
     assertThat(person1.age!!.value).isEqualTo(26)
     assertThat(person1.phoneNumber).isEqualTo("9913459")
 
-    val search2 = patientRepository.search("ab", 18, includeFuzzyNameSearch = false).blockingFirst()
+    val search2 = patientRepository.search("ab", 18).blockingFirst()
     assertThat(search2).hasSize(2)
     assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
     assertThat(search2[0].age!!.value).isEqualTo(20)
@@ -428,14 +421,26 @@ class PatientRepositoryAndroidTest {
 
     val runAssertions = { searchResults: List<PatientSearchResult> ->
       assertThat(searchResults).hasSize(5)
-      assertThat(searchResults[0].fullName).isEqualTo("Ashok Kumari")
-      assertThat(searchResults[1].fullName).isEqualTo("Kumar Ashok")
-      assertThat(searchResults[2].fullName).isEqualTo("Ashoka Kumar")
-      assertThat(searchResults[3].fullName).isEqualTo("Ashoka")
-      assertThat(searchResults[4].fullName).isEqualTo("Ash Kumari")
+
+      val (inCurrentFacility, inOtherFacility) = searchResults.partition { currentFacility.uuid == it.lastBp?.takenAtFacilityUuid }
+
+      val expectedResultIndicesInCurrentFacility = setOf(0, 1, 2)
+      val expectedResultIndicesInOtherFacility = setOf(3, 4)
+
+      val actualPatientsInCurrentFacility = inCurrentFacility.map { it.fullName }.toSet()
+      val actualPatientsInOtherFacility = inOtherFacility.map { it.fullName }.toSet()
+      val actualResultIndicesInCurrentFacility = actualPatientsInCurrentFacility.map { patientName ->
+        searchResults.indexOfFirst { it.fullName == patientName }
+      }.toSet()
+      val actualResultIndicesOfOtherFacility = actualPatientsInOtherFacility.map { patientName ->
+        searchResults.indexOfFirst { it.fullName == patientName }
+      }.toSet()
+
+      assertThat(actualResultIndicesInCurrentFacility).isEqualTo(expectedResultIndicesInCurrentFacility)
+      assertThat(actualResultIndicesOfOtherFacility).isEqualTo(expectedResultIndicesInOtherFacility)
     }
 
-    val resultsWithAgeFilter = patientRepository.search("ash", includeFuzzyNameSearch = false, assumedAge = 20).blockingFirst()
+    val resultsWithAgeFilter = patientRepository.search("ash", assumedAge = 20).blockingFirst()
     runAssertions(resultsWithAgeFilter)
   }
 
@@ -485,7 +490,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(patientsToSave).blockingAwait()
     assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1000)
 
-    assertThat(patientRepository.search(name = "Fame", assumedAge = 3, includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
+    assertThat(patientRepository.search(name = "Fame", assumedAge = 3).blockingFirst().size).isEqualTo(100)
   }
 
   @Test

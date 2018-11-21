@@ -19,7 +19,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.NotSaved
 import org.simple.clinic.patient.PatientSummaryResult.Saved
@@ -29,10 +31,14 @@ import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
 import java.util.UUID
@@ -45,9 +51,13 @@ class PatientsScreenControllerTest {
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val syncScheduler = mock<SyncScheduler>()
+  private val patientRepository = mock<PatientRepository>()
+  private val appointmentRepository = mock<AppointmentRepository>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
+  private val patientUuid = UUID.randomUUID()
+  private val clock = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)
 
   @Before
   fun setUp() {
@@ -55,7 +65,7 @@ class PatientsScreenControllerTest {
     // operation on the IO thread, which was causing flakiness in this test.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    controller = PatientsScreenController(userSession, syncScheduler, approvalStatusApprovedAt, hasUserDismissedApprovedStatus)
+    controller = PatientsScreenController(userSession, syncScheduler, patientRepository, appointmentRepository, approvalStatusApprovedAt, hasUserDismissedApprovedStatus)
 
     uiEvents
         .compose(controller)
@@ -342,21 +352,26 @@ class PatientsScreenControllerTest {
     }
   }
 
-  @Parameters(
-      method = "params for testing summary result"
-  )
+  @Parameters(method = "params for testing summary result")
   @Test
   fun `when patient summary sends result, appropriate notification should be shown`(result: PatientSummaryResult) {
+    whenever(patientRepository.patient(any()))
+        .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid, fullName = "Anish Acharya").toOptional()))
+
+    val appointment = PatientMocker.appointment(patientUuid = patientUuid, scheduledDate = LocalDate.now(ZoneOffset.UTC))
+    whenever(appointmentRepository.scheduledAppointmentForPatient(patientUuid))
+        .thenReturn(Observable.just(appointment))
+
     uiEvents.onNext(PatientSummaryResultReceived(result))
+
     when (result) {
-      is Scheduled -> verify(screen).showStatusPatientAppointmentSaved()
-      is Saved -> verify(screen).showStatusPatientSummarySaved()
+      is Saved -> verify(screen).showStatusPatientSummarySaved("Anish Acharya")
+      is Scheduled -> verify(screen).showStatusPatientAppointmentSaved("Anish Acharya", LocalDate.now(clock))
       else -> verifyZeroInteractions(screen)
     }
   }
 
   private fun `params for testing summary result`(): Array<PatientSummaryResult> {
-    val patientUuid = UUID.randomUUID()
     return arrayOf(
         Saved(patientUuid),
         Scheduled(patientUuid),

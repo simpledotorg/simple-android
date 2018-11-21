@@ -14,6 +14,7 @@ import org.simple.clinic.user.UserStatus
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
+import org.threeten.bp.ZoneOffset.UTC
 import java.util.Random
 import java.util.UUID
 import kotlin.reflect.KClass
@@ -145,19 +146,31 @@ object PatientMocker {
         dosages = dosages)
   }
 
-  fun appointment(): Appointment {
+  fun appointment(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      scheduledDate: LocalDate = LocalDate.now(UTC),
+      facilityUuid: UUID = UUID.randomUUID(),
+      status: Appointment.Status = Appointment.Status.SCHEDULED,
+      cancelReason: Appointment.CancelReason = Appointment.CancelReason.PATIENT_NOT_RESPONDING,
+      syncStatus: SyncStatus = SyncStatus.PENDING,
+      agreedToVisit: Boolean? = null,
+      remindOn: LocalDate? = LocalDate.now(UTC).minusDays(2),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
+  ): Appointment {
     return Appointment(
-        uuid = mock(),
-        patientUuid = mock(),
-        scheduledDate = LocalDate.now(ZoneOffset.UTC).minusDays(10),
-        facilityUuid = mock(),
-        status = Appointment.Status.SCHEDULED,
-        cancelReason = Appointment.CancelReason.PATIENT_NOT_RESPONDING,
-        syncStatus = mock(),
-        agreedToVisit = null,
-        remindOn = LocalDate.now(ZoneOffset.UTC).minusDays(2),
-        createdAt = mock(),
-        updatedAt = mock()
+        uuid = uuid,
+        patientUuid = patientUuid,
+        scheduledDate = scheduledDate,
+        facilityUuid = facilityUuid,
+        status = status,
+        cancelReason = cancelReason,
+        syncStatus = syncStatus,
+        agreedToVisit = agreedToVisit,
+        remindOn = remindOn,
+        createdAt = createdAt,
+        updatedAt = updatedAt
     )
   }
 

@@ -60,7 +60,7 @@ class PatientSearchResultsController @Inject constructor(
               .requireLoggedInUser()
               .switchMap { facilityRepository.currentFacility(it) }
 
-          val searchResults = patientRepository.search(name, computedAge, includeFuzzyNameSearch = true)
+          val searchResults = patientRepository.search(name, computedAge)
 
           Observables.combineLatest(searchResults, facilities)
               // We can't understand why, but search is occasionally

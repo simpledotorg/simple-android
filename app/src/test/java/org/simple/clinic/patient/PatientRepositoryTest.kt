@@ -1,5 +1,6 @@
 package org.simple.clinic.patient
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.atLeastOnce
@@ -340,7 +341,8 @@ class PatientRepositoryTest {
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
     whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
-    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(patientSearchResultDao.searchByIds(any(), any()))
+        .thenReturn(Single.just(filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }))
     whenever(database.patientSearchDao().nameWithDobBounds(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
 
     repository.search("name", 10).blockingFirst()
@@ -358,5 +360,46 @@ class PatientRepositoryTest {
         listOf(listOf(UUID.randomUUID()), true),
         listOf(listOf(UUID.randomUUID(), UUID.randomUUID()), true),
         listOf(emptyList<UUID>(), false))
+  }
+
+  @Test
+  @Parameters(method = "params for sorting results for v2 fuzzy search")
+  fun `when the fuzzySearchV2 is enabled and the filter by name returns results, the results must be sorted in the same order as the filtered ids`(
+      filteredUuids: List<UUID>,
+      results: List<PatientSearchResult>,
+      expectedResults: List<PatientSearchResult>
+  ) {
+    config = config.copy(isFuzzySearchV2Enabled = true)
+
+    whenever(database.patientDao()).thenReturn(patientDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
+    whenever(database.patientSearchDao().nameWithDobBounds(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+
+    val actualResults = repository.search("name", 10).blockingFirst()
+
+    assertThat(actualResults).isEqualTo(expectedResults)
+  }
+
+  @Suppress("Unused")
+  private fun `params for sorting results for v2 fuzzy search`(): List<List<Any>> {
+    fun generateTestData(numberOfResults: Int): List<Any> {
+      val filteredUuids = (1..numberOfResults).map { UUID.randomUUID() }
+      val results = filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }.shuffled()
+      val expectedResults = filteredUuids.map { uuid -> results.find { it.uuid == uuid }!! }
+
+      assertThat(results.map { it.uuid }).isNotEqualTo(filteredUuids)
+      assertThat(expectedResults.map { it.uuid }).isEqualTo(filteredUuids)
+
+      return listOf(filteredUuids, results, expectedResults)
+    }
+
+    return listOf(
+        generateTestData(6),
+        generateTestData(10))
   }
 }

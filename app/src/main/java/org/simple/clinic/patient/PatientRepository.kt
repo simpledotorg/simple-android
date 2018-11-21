@@ -94,10 +94,17 @@ class PatientRepository @Inject constructor(
           // Added because SQLite has a maximum query parameter length of 999
           it.take(100)
         }
-        .flatMapSingle { uuidsOfMatchingPatients ->
+        .flatMapSingle { matchingUuidsSortedByScore ->
           when {
-            uuidsOfMatchingPatients.isEmpty() -> Single.just(emptyList())
-            else -> database.patientSearchDao().searchByIds(uuidsOfMatchingPatients, PatientStatus.ACTIVE)
+            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
+            else -> {
+              database.patientSearchDao()
+                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
+                  .map { results ->
+                    val resultsByUuid = results.associateBy { it.uuid }
+                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
+                  }
+            }
           }
         }
         .compose(sortByCurrentFacility())

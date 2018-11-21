@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -19,6 +20,10 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientSummaryResult
+import org.simple.clinic.patient.PatientSummaryResult.NotSaved
+import org.simple.clinic.patient.PatientSummaryResult.Saved
+import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
@@ -30,6 +35,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientsScreenControllerTest {
@@ -334,6 +340,28 @@ class PatientsScreenControllerTest {
     } else {
       verify(screen, never()).hideUserAccountStatus()
     }
+  }
+
+  @Parameters(
+      method = "params for testing summary result"
+  )
+  @Test
+  fun `when patient summary sends result, appropriate notification should be shown`(result: PatientSummaryResult) {
+    uiEvents.onNext(PatientSummaryResultReceived(result))
+    when (result) {
+      is Scheduled -> verify(screen).showStatusPatientAppointmentSaved()
+      is Saved -> verify(screen).showStatusPatientSummarySaved()
+      else -> verifyZeroInteractions(screen)
+    }
+  }
+
+  private fun `params for testing summary result`(): Array<PatientSummaryResult> {
+    val patientUuid = UUID.randomUUID()
+    return arrayOf(
+        Saved(patientUuid),
+        Scheduled(patientUuid),
+        NotSaved
+    )
   }
 
   @Test

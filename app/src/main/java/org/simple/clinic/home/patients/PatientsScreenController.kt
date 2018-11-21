@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -46,7 +47,8 @@ class PatientsScreenController @Inject constructor(
         newPatientClicks(replayedEvents),
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
-        dismissApprovalStatus(replayedEvents))
+        dismissApprovalStatus(replayedEvents),
+        showSummarySavedNotification(replayedEvents))
   }
 
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -144,6 +146,23 @@ class PatientsScreenController @Inject constructor(
         .flatMap {
           hasUserDismissedApprovedStatusPref.set(true)
           Observable.never<UiChange>()
+        }
+  }
+
+  private fun showSummarySavedNotification(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientSummaryResultReceived>()
+        .map { it.result }
+        .map {
+          when (it) {
+            is PatientSummaryResult.Saved -> {
+              { ui: Ui -> ui.showStatusPatientSummarySaved() }
+            }
+            is PatientSummaryResult.Scheduled -> {
+              { ui: Ui -> ui.showStatusPatientAppointmentSaved() }
+            }
+            PatientSummaryResult.NotSaved -> { _: Ui -> }
+          }
         }
   }
 }

@@ -57,11 +57,11 @@ class PatientSearchResultsControllerTest {
   @Test
   fun `when screen is created with age then patients matching the search query should be shown`() {
     val searchResults = listOf(PatientMocker.patientSearchResult(), PatientMocker.patientSearchResult())
-    whenever(patientRepository.search(any(), any(), any())).thenReturn(Observable.just(searchResults))
+    whenever(patientRepository.search(any(), any())).thenReturn(Observable.just(searchResults))
 
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey("name", age = "23", dateOfBirth = "")))
 
-    verify(patientRepository).search("name", 23, true)
+    verify(patientRepository).search("name", 23)
     verify(screen).updateSearchResults(searchResults, currentFacility)
     verify(screen).setEmptyStateVisible(false)
   }
@@ -71,7 +71,7 @@ class PatientSearchResultsControllerTest {
     "25,",
     ",20/09/1993"])
   fun `when screen is created then the computed age should be shown`(age: String, dateOfBirth: String) {
-    whenever(patientRepository.search(any(), any(), any())).thenReturn(Observable.never())
+    whenever(patientRepository.search(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey("name", age = age, dateOfBirth = dateOfBirth)))
 
@@ -81,7 +81,7 @@ class PatientSearchResultsControllerTest {
   @Test
   fun `when screen is created with date of birth then patients matching the search query should be shown`() {
     val searchResults = listOf(PatientMocker.patientSearchResult(), PatientMocker.patientSearchResult())
-    whenever(patientRepository.search(any(), any(), any())).thenReturn(Observable.just(searchResults))
+    whenever(patientRepository.search(any(), any())).thenReturn(Observable.just(searchResults))
 
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey("name", age = "", dateOfBirth = "20/09/1993")))
 
@@ -93,11 +93,11 @@ class PatientSearchResultsControllerTest {
   @Test
   fun `when screen is created and no matching patients are available then the empty state should be shown`() {
     val emptyResults = listOf<PatientSearchResult>()
-    whenever(patientRepository.search(any(), any(), any())).thenReturn(Observable.just(emptyResults))
+    whenever(patientRepository.search(any(), any())).thenReturn(Observable.just(emptyResults))
 
     uiEvents.onNext(PatientSearchResultsScreenCreated(PatientSearchResultsScreenKey("name", age = "23", dateOfBirth = "")))
 
-    verify(patientRepository).search("name", 23, true)
+    verify(patientRepository).search("name", 23)
     verify(screen).updateSearchResults(emptyResults, currentFacility)
     verify(screen).setEmptyStateVisible(true)
   }
@@ -118,7 +118,7 @@ class PatientSearchResultsControllerTest {
       age: String,
       dateOfBirth: String
   ) {
-    whenever(patientRepository.search(any(), any(), any())).thenReturn(Observable.just(listOf()))
+    whenever(patientRepository.search(any(), any())).thenReturn(Observable.just(listOf()))
 
     val preFilledEntry = OngoingNewPatientEntry(OngoingNewPatientEntry.PersonalDetails(
         fullName = "name",

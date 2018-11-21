@@ -138,6 +138,12 @@ class AppointmentRepository @Inject constructor(
         }
   }
 
+  fun scheduledAppointmentForPatient(patientUuid: UUID): Observable<Appointment> {
+    return appointmentDao
+        .getScheduledFromPatientUUID(patientUuid, Appointment.Status.SCHEDULED)
+        .toObservable()
+  }
+
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Appointment>> {
     return appointmentDao.recordsWithSyncStatus(syncStatus).firstOrError()
   }

@@ -4,6 +4,7 @@ import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Ignore
@@ -72,6 +73,12 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var clock: Clock
+
+  @Inject
+  lateinit var configProvider: Single<PatientConfig>
+
+  val config: PatientConfig
+    get() = configProvider.blockingGet()
 
   @Before
   fun setUp() {
@@ -470,10 +477,10 @@ class PatientRepositoryAndroidTest {
    * exceeded during fuzzy name search.
    */
   @Test
-  fun when_searching_with_fuzzy_search_the_results_must_be_limited() {
+  fun when_searching_with_fuzzy_search_the_results_must_be_limited_to_the_value_set_in_the_config() {
     val template = testData.patientProfile(syncStatus = SyncStatus.DONE)
 
-    val patientsToSave = (1..1000).map {
+    val patientsToSave = (1..maximumSqliteQueryLimit).map {
       val addressUuid = UUID.randomUUID()
       val patientUuid = UUID.randomUUID()
 
@@ -496,7 +503,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(patientsToSave).blockingAwait()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1000)
 
-    assertThat(patientRepository.search(name = "ame", assumedAge = 3).blockingFirst().size).isEqualTo(100)
+    assertThat(patientRepository.search(name = "ame", assumedAge = 3).blockingFirst().size).isEqualTo(config.limitOfSearchResults)
   }
 
   @Test

@@ -78,6 +78,9 @@ data class Appointment(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(appointments: List<Appointment>)
 
+    @Query("SELECT * FROM Appointment WHERE patientUuid = :patientUuid AND status = :status")
+    fun getScheduledFromPatientUUID(patientUuid: UUID, status: Status): Flowable<Appointment>
+
     @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Flowable<Int>
 

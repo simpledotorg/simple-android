@@ -44,7 +44,7 @@ class PatientRepository @Inject constructor(
     private val ageFuzzer: AgeFuzzer,
     @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter,
     private val searchPatientByName: SearchPatientByName,
-    private val config: Single<PatientConfig>
+    private val configProvider: Single<PatientConfig>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -54,7 +54,7 @@ class PatientRepository @Inject constructor(
     val dateOfBirthLowerBound = ageBounds.upper.toString()
     val dateOfBirthUpperBound = ageBounds.lower.toString()
 
-    return config.flatMapObservable { (isFuzzySearchV2Enabled) ->
+    return configProvider.flatMapObservable { (isFuzzySearchV2Enabled) ->
       if (isFuzzySearchV2Enabled) {
         searchV2(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
       } else {
@@ -75,10 +75,12 @@ class PatientRepository @Inject constructor(
         .searchForPatientsWithNameLikeAndAgeWithin(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
         .toObservable()
 
-    return substringSearch
-        .zipWith(fuzzySearch)
-        .map { (results, fuzzyResults) ->
-          (fuzzyResults + results).distinctBy { it.uuid }.take(100)
+    return Observables.zip(substringSearch, fuzzySearch, configProvider.toObservable())
+        .map { (results, fuzzyResults, config) ->
+          // Fuzzy search has an internal limit, but the substring search also can return more than
+          // a thousand results which can fail when we sort on the current facility since it
+          // queries the blood pressure table with an IN clause which can cause an exception.
+          (fuzzyResults + results).distinctBy { it.uuid }.take(config.limitOfSearchResults)
         }
         .compose(sortByCurrentFacility())
   }
@@ -88,11 +90,8 @@ class PatientRepository @Inject constructor(
         .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()
         .flatMapSingle { searchPatientByName.search(name, it) }
-        .map {
-          //TODO: Read this via the config (?)
-          // Added because SQLite has a maximum query parameter length of 999
-          it.take(100)
-        }
+        .zipWith(configProvider.toObservable())
+        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
         .flatMapSingle { matchingUuidsSortedByScore ->
           when {
             matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())

@@ -49,7 +49,7 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun search(name: String, assumedAge: Int, includeFuzzyNameSearch: Boolean = true): Observable<List<PatientSearchResult>> {
+  fun search(name: String, assumedAge: Int): Observable<List<PatientSearchResult>> {
     val ageBounds = ageFuzzer.bounded(assumedAge)
     val dateOfBirthLowerBound = ageBounds.upper.toString()
     val dateOfBirthUpperBound = ageBounds.lower.toString()
@@ -60,19 +60,14 @@ class PatientRepository @Inject constructor(
         .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()
 
-    return if (includeFuzzyNameSearch.not()) {
-      substringSearch.compose(sortByCurrentFacility())
+    val fuzzySearch = database.fuzzyPatientSearchDao()
+        .searchForPatientsWithNameLikeAndAgeWithin(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
+        .toObservable()
 
-    } else {
-      val fuzzySearch = database.fuzzyPatientSearchDao()
-          .searchForPatientsWithNameLikeAndAgeWithin(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
-          .toObservable()
-
-      substringSearch
-          .zipWith(fuzzySearch)
-          .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
-          .compose(sortByCurrentFacility())
-    }
+    return substringSearch
+        .zipWith(fuzzySearch)
+        .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
+        .compose(sortByCurrentFacility())
   }
 
   fun search2(name: String, assumedAge: Int): Observable<List<PatientSearchResult>> {

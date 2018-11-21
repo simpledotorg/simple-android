@@ -64,6 +64,7 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  @Deprecated(message = "replaced by search v2")
   private fun searchV1(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
     val searchableName = nameToSearchableForm(name)
 
@@ -77,7 +78,9 @@ class PatientRepository @Inject constructor(
 
     return substringSearch
         .zipWith(fuzzySearch)
-        .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
+        .map { (results, fuzzyResults) ->
+          (fuzzyResults + results).distinctBy { it.uuid }.take(100)
+        }
         .compose(sortByCurrentFacility())
   }
 
@@ -86,7 +89,18 @@ class PatientRepository @Inject constructor(
         .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()
         .flatMapSingle { searchPatientByName.search(name, it) }
-        .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.ACTIVE) }
+        .map {
+          //TODO: Read this via the config (?)
+          // Added because SQLite has a maximum query parameter length of 999
+          it.take(100)
+        }
+        .flatMapSingle { uuidsOfMatchingPatients ->
+          when {
+            uuidsOfMatchingPatients.isEmpty() -> Single.just(emptyList())
+            else -> database.patientSearchDao().searchByIds(uuidsOfMatchingPatients, PatientStatus.ACTIVE)
+          }
+        }
+        .compose(sortByCurrentFacility())
   }
 
   // TODO: Get user from caller.

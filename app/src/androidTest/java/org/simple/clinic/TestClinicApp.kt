@@ -17,6 +17,7 @@ import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.filter.SearchPatientByName
@@ -89,11 +90,16 @@ class TestClinicApp : ClinicApp() {
           override fun provideFilterPatientByName(): SearchPatientByName {
             return object : SearchPatientByName {
               override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): Single<List<UUID>> {
-                val results = names.filter { it.fullName.toLowerCase() == searchTerm.toLowerCase() }
+                val results = names.filter { it.fullName.contains(searchTerm, ignoreCase = true) }
                     .map { it.uuid }
                 return Single.just(results)
               }
             }
+          }
+
+          override fun providePatientConfig(): Single<PatientConfig> {
+            return super.providePatientConfig()
+                .map { it.copy(isFuzzySearchV2Enabled = true) }
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

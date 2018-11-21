@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
+import com.nhaarman.mockito_kotlin.atLeastOnce
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -37,23 +38,34 @@ class PatientRepositoryTest {
   private lateinit var ageFuzzer: AgeFuzzer
   private lateinit var searchPatientByName: SearchPatientByName
 
-  private val database = mock<AppDatabase>()
   private val clock = TestClock()
-  private val patientSearchResultDao = mock<PatientSearchResult.RoomDao>()
-  private val patientDao = mock<Patient.RoomDao>()
-  private val patientAddressDao = mock<PatientAddress.RoomDao>()
-  private val patientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
-  private val fuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
-  private val dobValidator = mock<DateOfBirthFormatValidator>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val numberValidator = mock<PhoneNumberValidator>()
+
+  lateinit var database: AppDatabase
+  lateinit var patientSearchResultDao: PatientSearchResult.RoomDao
+  lateinit var patientDao: Patient.RoomDao
+  lateinit var patientAddressDao: PatientAddress.RoomDao
+  lateinit var patientPhoneNumberDao: PatientPhoneNumber.RoomDao
+  lateinit var fuzzyPatientSearchDao: PatientFuzzySearch.PatientFuzzySearchDao
+  lateinit var dobValidator: DateOfBirthFormatValidator
+  lateinit var userSession: UserSession
+  lateinit var facilityRepository: FacilityRepository
+  lateinit var numberValidator: PhoneNumberValidator
 
   lateinit var config: PatientConfig
 
   @Before
   fun setUp() {
     config = PatientConfig(isFuzzySearchV2Enabled = false)
+    database = mock()
+    patientSearchResultDao = mock()
+    patientDao = mock()
+    patientAddressDao = mock()
+    patientPhoneNumberDao = mock()
+    fuzzyPatientSearchDao = mock()
+    dobValidator = mock()
+    userSession = mock()
+    facilityRepository = mock()
+    numberValidator = mock()
 
     ageFuzzer = mock()
     whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
@@ -301,9 +313,9 @@ class PatientRepositoryTest {
 
     repository.search("name", 10).blockingFirst()
 
-    if(isFuzzySearchV2Enabled) {
-      verify(patientSearchResultDao).nameWithDobBounds(any(), any(), any())
-      verify(searchPatientByName).search(any(), any())
+    if (isFuzzySearchV2Enabled) {
+      verify(patientSearchResultDao, atLeastOnce()).nameWithDobBounds(any(), any(), any())
+      verify(searchPatientByName, atLeastOnce()).search(any(), any())
       verify(fuzzyPatientSearchDao, never()).searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())
       verify(patientSearchResultDao, never()).search(any(), any(), any(), any())
     } else {
@@ -312,5 +324,39 @@ class PatientRepositoryTest {
       verify(fuzzyPatientSearchDao).searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())
       verify(patientSearchResultDao).search(any(), any(), any(), any())
     }
+  }
+
+  @Test
+  @Parameters(method = "params for querying results for v2 fuzzy search")
+  fun `when the fuzzySearchV2 is enabled and the filter by name returns results, the database must be queried for the complete information`(
+      filteredUuids: List<UUID>,
+      shouldQueryFilteredIds: Boolean
+  ) {
+    config = config.copy(isFuzzySearchV2Enabled = true)
+
+    whenever(database.patientDao()).thenReturn(patientDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(filteredUuids))
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(database.patientSearchDao().nameWithDobBounds(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+
+    repository.search("name", 10).blockingFirst()
+
+    if (shouldQueryFilteredIds) {
+      verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.ACTIVE)
+    } else {
+      verify(patientSearchResultDao, never()).searchByIds(filteredUuids, PatientStatus.ACTIVE)
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for querying results for v2 fuzzy search`(): List<List<Any>> {
+    return listOf(
+        listOf(listOf(UUID.randomUUID()), true),
+        listOf(listOf(UUID.randomUUID(), UUID.randomUUID()), true),
+        listOf(emptyList<UUID>(), false))
   }
 }

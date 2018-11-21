@@ -29,5 +29,5 @@ open class PatientModule {
       resultsComparator = SortByTotalSumOfDistances())
 
   @Provides
-  open fun providePatientConfig(): Single<PatientConfig> = Single.just(PatientConfig(isFuzzySearchV2Enabled = false))
+  open fun providePatientConfig(): Single<PatientConfig> = Single.just(PatientConfig(isFuzzySearchV2Enabled = false, limitOfSearchResults = 100))
 }

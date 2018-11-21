@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Flowable
@@ -48,8 +49,12 @@ class PatientRepositoryTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val numberValidator = mock<PhoneNumberValidator>()
 
+  lateinit var config: PatientConfig
+
   @Before
   fun setUp() {
+    config = PatientConfig(isFuzzySearchV2Enabled = false)
+
     ageFuzzer = mock()
     whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
     searchPatientByName = mock()
@@ -62,7 +67,8 @@ class PatientRepositoryTest {
         numberValidator,
         clock,
         ageFuzzer,
-        searchPatientByName)
+        searchPatientByName,
+        Single.fromCallable { config })
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
@@ -271,6 +277,40 @@ class PatientRepositoryTest {
       verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
       verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
       verify(patientPhoneNumberDao).save(emptyList())
+    }
+  }
+
+  @Test
+  @Parameters(value = [
+    "true",
+    "false"
+  ])
+  fun `when the fuzzySearchV2 is enabled, searching for patient should use the new flow`(isFuzzySearchV2Enabled: Boolean) {
+    config = config.copy(isFuzzySearchV2Enabled = isFuzzySearchV2Enabled)
+
+    whenever(database.patientDao()).thenReturn(patientDao)
+    whenever(database.addressDao()).thenReturn(patientAddressDao)
+    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
+    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+    whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
+    whenever(database.patientSearchDao().nameWithDobBounds(any(), any(), any())).thenReturn(Flowable.just(emptyList()))
+
+    repository.search("name", 10).blockingFirst()
+
+    if(isFuzzySearchV2Enabled) {
+      verify(patientSearchResultDao).nameWithDobBounds(any(), any(), any())
+      verify(searchPatientByName).search(any(), any())
+      verify(fuzzyPatientSearchDao, never()).searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())
+      verify(patientSearchResultDao, never()).search(any(), any(), any(), any())
+    } else {
+      verify(patientSearchResultDao, never()).nameWithDobBounds(any(), any(), any())
+      verify(searchPatientByName, never()).search(any(), any())
+      verify(fuzzyPatientSearchDao).searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())
+      verify(patientSearchResultDao).search(any(), any(), any(), any())
     }
   }
 }

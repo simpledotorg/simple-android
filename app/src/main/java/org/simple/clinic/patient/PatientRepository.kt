@@ -44,7 +44,8 @@ class PatientRepository @Inject constructor(
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
     private val ageFuzzer: AgeFuzzer,
-    private val searchPatientByName: SearchPatientByName
+    private val searchPatientByName: SearchPatientByName,
+    private val config: Single<PatientConfig>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -54,6 +55,16 @@ class PatientRepository @Inject constructor(
     val dateOfBirthLowerBound = ageBounds.upper.toString()
     val dateOfBirthUpperBound = ageBounds.lower.toString()
 
+    return config.flatMapObservable { (isFuzzySearchV2Enabled) ->
+      if (isFuzzySearchV2Enabled) {
+        searchV2(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
+      } else {
+        searchV1(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
+      }
+    }
+  }
+
+  private fun searchV1(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
     val searchableName = nameToSearchableForm(name)
 
     val substringSearch = database.patientSearchDao()
@@ -70,11 +81,7 @@ class PatientRepository @Inject constructor(
         .compose(sortByCurrentFacility())
   }
 
-  fun search2(name: String, assumedAge: Int): Observable<List<PatientSearchResult>> {
-    val ageBounds = ageFuzzer.bounded(assumedAge)
-    val dateOfBirthLowerBound = ageBounds.upper.toString()
-    val dateOfBirthUpperBound = ageBounds.lower.toString()
-
+  private fun searchV2(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
     return database.patientSearchDao()
         .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()

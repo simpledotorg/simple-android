@@ -15,6 +15,8 @@ import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.patient.PatientConfig
+import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
@@ -97,6 +99,12 @@ class DebugClinicApp : ClinicApp() {
             return super.config().map {
               it.copy(blockDuration = Duration.ofSeconds(5))
             }
+          }
+        })
+        .patientModule(object : PatientModule() {
+          override fun providePatientConfig(): Single<PatientConfig> {
+            return super.providePatientConfig()
+                .map { it.copy(isFuzzySearchV2Enabled = true) }
           }
         })
         .build()

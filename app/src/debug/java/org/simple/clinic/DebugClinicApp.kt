@@ -101,12 +101,6 @@ class DebugClinicApp : ClinicApp() {
             }
           }
         })
-        .patientModule(object : PatientModule() {
-          override fun providePatientConfig(): Single<PatientConfig> {
-            return super.providePatientConfig()
-                .map { it.copy(isFuzzySearchV2Enabled = true) }
-          }
-        })
         .build()
   }
 }

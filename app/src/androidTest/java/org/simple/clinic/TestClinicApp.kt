@@ -19,7 +19,9 @@ import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
 import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
-import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
+import org.simple.clinic.patient.PatientModule
+import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
@@ -31,6 +33,7 @@ import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import timber.log.Timber
+import java.util.UUID
 import javax.inject.Inject
 
 /**
@@ -77,10 +80,22 @@ class TestClinicApp : ClinicApp() {
                     batchSize = 10))
           }
         })
-        .ageFuzzerModule(object : AgeFuzzerModule() {
+        .patientModule(object : PatientModule() {
           override fun provideAgeFuzzer(clock: Clock): AgeFuzzer {
             val numberOfYearsToFuzzBy = 5
             return AbsoluteFuzzer(clock, numberOfYearsToFuzzBy)
+          }
+
+          override fun provideFilterPatientByName(): SearchPatientByName {
+            return object : SearchPatientByName {
+              override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): Single<List<UUID>> {
+                val results = names
+                    .filter { it.fullName.contains(other = searchTerm, ignoreCase = true) }
+                    .map { it.uuid }
+
+                return Single.just(results)
+              }
+            }
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

@@ -17,6 +17,8 @@ import org.simple.clinic.editpatient.PatientEditConfig
 import org.simple.clinic.editpatient.PatientEditModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
+import org.simple.clinic.patient.PatientConfig
+import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
@@ -105,6 +107,12 @@ class DebugClinicApp : ClinicApp() {
           override fun providePatientEditConfig(): Single<PatientEditConfig> {
             return super.providePatientEditConfig()
                 .map { it.copy(isEditAgeAndDobEnabled = true) }
+          }
+        })
+        .patientModule(object : PatientModule() {
+          override fun providePatientConfig(): Single<PatientConfig> {
+            return super.providePatientConfig()
+                .map { it.copy(isFuzzySearchV2Enabled = true) }
           }
         })
         .build()

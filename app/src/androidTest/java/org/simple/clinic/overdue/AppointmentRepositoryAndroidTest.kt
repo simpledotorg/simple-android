@@ -393,7 +393,6 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  @Suppress("ASSIGNING_SINGLE_ELEMENT_TO_VARARG_IN_NAMED_FORM_FUNCTION")
   fun high_risk_patients_should_be_present_at_the_top() {
     data class BP(val systolic: Int, val diastolic: Int)
 
@@ -405,16 +404,16 @@ class AppointmentRepositoryAndroidTest {
         age: String = "30",
         vararg bpMeasurements: BP
     ) {
-      val patientUuid1 = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = age))
+      val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = age))
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
           .uuid
-      appointmentRepository.schedule(patientUuid1, LocalDate.now(clock).minusDays(2)).blockingAwait()
+      appointmentRepository.schedule(patientUuid, LocalDate.now(clock).minusDays(2)).blockingAwait()
       bpMeasurements.forEach {
-        bpRepository.saveMeasurement(patientUuid1, it.systolic, it.diastolic).blockingGet()
+        bpRepository.saveMeasurement(patientUuid, it.systolic, it.diastolic).blockingGet()
         testClock.advanceBy(Duration.ofSeconds(1))
       }
-      medicalHistoryRepository.save(patientUuid1, OngoingMedicalHistoryEntry(
+      medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
           hasHadStroke = hasHadStroke,
           hasDiabetes = hasDiabetes,
           hasHadKidneyDisease = hasHadKidneyDisease
@@ -424,33 +423,33 @@ class AppointmentRepositoryAndroidTest {
 
     savePatientAndAppointment(
         fullName = "Normal + older",
-        bpMeasurements = BP(systolic = 100, diastolic = 90),
+        bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = false)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Normal + recent",
-        bpMeasurements = BP(systolic = 100, diastolic = 90),
+        bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = false)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "With stroke",
-        bpMeasurements = BP(systolic = 100, diastolic = 90),
+        bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
         hasHadStroke = true)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Age > 60, last BP > 160/100 and diabetes",
         age = "61",
-        bpMeasurements = BP(systolic = 170, diastolic = 120),
+        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
         hasDiabetes = true)
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
         fullName = "Age > 60, last BP > 160/100 and kidney disease",
         age = "61",
-        bpMeasurements = BP(systolic = 170, diastolic = 120),
+        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
         hasHadKidneyDisease = true,
         hasHadStroke = false)
     testClock.advanceBy(Duration.ofSeconds(1))
@@ -466,7 +465,7 @@ class AppointmentRepositoryAndroidTest {
     savePatientAndAppointment(
         fullName = "Age < 60, last BP > 160/100 and kidney disease",
         age = "31",
-        bpMeasurements = BP(systolic = 170, diastolic = 120),
+        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
         hasHadKidneyDisease = true,
         hasHadStroke = false)
     testClock.advanceBy(Duration.ofSeconds(1))

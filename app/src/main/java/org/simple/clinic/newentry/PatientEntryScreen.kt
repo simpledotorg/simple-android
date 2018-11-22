@@ -93,7 +93,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
     TheActivity.component.inject(this)
 
-    fullNameEditText.showKeyboard()
+    phoneNumberEditText.showKeyboard()
     backButton.setOnClickListener { screenRouter.pop() }
 
     // Not sure why, but setting android:nextFocusDown in XML isn't working,

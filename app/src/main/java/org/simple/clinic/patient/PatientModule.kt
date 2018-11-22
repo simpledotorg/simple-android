@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByTotalSumOfDistances
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
@@ -26,4 +27,7 @@ open class PatientModule {
       characterInsertionCost = 100F,
 
       resultsComparator = SortByTotalSumOfDistances())
+
+  @Provides
+  open fun providePatientConfig(): Single<PatientConfig> = Single.just(PatientConfig(isFuzzySearchV2Enabled = false))
 }

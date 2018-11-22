@@ -97,6 +97,14 @@ data class PatientSearchResult(
 
     @Query("$mainQuery WHERE P.syncStatus == :status")
     fun withSyncStatus(status: SyncStatus): Flowable<List<PatientSearchResult>>
+
+    @Query("""
+      SELECT Patient.uuid, Patient.fullName
+        FROM Patient
+        WHERE Patient.status = :status
+        AND ((Patient.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound) OR (Patient.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
+    """)
+    fun nameWithDobBounds(dobUpperBound: String, dobLowerBound: String, status: PatientStatus): Flowable<List<PatientNameAndId>>
   }
 
   fun toPayload(): PatientPayload {
@@ -127,6 +135,8 @@ data class PatientSearchResult(
 
     return payload
   }
+
+  data class PatientNameAndId(val uuid: UUID, val fullName: String)
 
   data class LastBp(
       val takenOn: Instant,

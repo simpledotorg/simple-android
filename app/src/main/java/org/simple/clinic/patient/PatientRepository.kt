@@ -90,10 +90,10 @@ class PatientRepository @Inject constructor(
     return database.patientSearchDao()
         .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()
-        .flatMapSingle { searchPatientByName.search(name, it) }
+        .switchMapSingle { searchPatientByName.search(name, it) }
         .zipWith(configProvider.toObservable())
         .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
-        .flatMapSingle { matchingUuidsSortedByScore ->
+        .switchMapSingle { matchingUuidsSortedByScore ->
           when {
             matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
             else -> {

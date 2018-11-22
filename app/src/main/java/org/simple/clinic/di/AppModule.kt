@@ -13,7 +13,7 @@ import org.simple.clinic.ageanddateofbirth.DateFormatterModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.editpatient.PatientEditModule
 import org.simple.clinic.login.LoginModule
-import org.simple.clinic.patient.fuzzy.AgeFuzzerModule
+import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
@@ -47,12 +47,12 @@ import org.threeten.bp.Clock
   LoginModule::class,
   RegistrationModule::class,
   CrashReporterModule::class,
-  AgeFuzzerModule::class,
-  AgeFuzzerModule::class,
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,
   PatientEditModule::class,
-  DateFormatterModule::class])
+  DateFormatterModule::class,
+  PatientModule::class
+])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

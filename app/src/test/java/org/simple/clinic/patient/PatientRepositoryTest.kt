@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.BoundedAge
 import org.simple.clinic.patient.sync.PatientPayload
@@ -25,6 +25,7 @@ import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -34,6 +35,7 @@ class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
   private lateinit var ageFuzzer: AgeFuzzer
+  private lateinit var searchPatientByName: SearchPatientByName
 
   private val database = mock<AppDatabase>()
   private val clock = TestClock()
@@ -52,7 +54,18 @@ class PatientRepositoryTest {
   fun setUp() {
     ageFuzzer = mock()
     whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
-    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock, ageFuzzer, dateOfBirthFormat)
+    searchPatientByName = mock()
+
+    repository = PatientRepository(
+        database,
+        dobValidator,
+        facilityRepository,
+        userSession,
+        numberValidator,
+        clock,
+        ageFuzzer,
+        dateOfBirthFormat,
+        searchPatientByName)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

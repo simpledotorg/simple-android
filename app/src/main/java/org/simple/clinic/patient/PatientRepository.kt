@@ -11,6 +11,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -41,7 +42,8 @@ class PatientRepository @Inject constructor(
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
     private val ageFuzzer: AgeFuzzer,
-    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter
+    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter,
+    private val searchPatientByName: SearchPatientByName
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()

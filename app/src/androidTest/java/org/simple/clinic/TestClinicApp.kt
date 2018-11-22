@@ -17,11 +17,12 @@ import org.simple.clinic.di.TestAppComponent
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
-import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
-import org.simple.clinic.patient.fuzzy.AgeFuzzer
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.filter.SearchPatientByName
+import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
+import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
@@ -96,6 +97,11 @@ class TestClinicApp : ClinicApp() {
                 return Single.just(results)
               }
             }
+          }
+
+          override fun providePatientConfig(): Single<PatientConfig> {
+            return super.providePatientConfig()
+                .map { it.copy(isFuzzySearchV2Enabled = true) }
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

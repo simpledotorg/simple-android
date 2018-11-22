@@ -43,7 +43,8 @@ class PatientRepository @Inject constructor(
     private val clock: Clock,
     private val ageFuzzer: AgeFuzzer,
     @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter,
-    private val searchPatientByName: SearchPatientByName
+    private val searchPatientByName: SearchPatientByName,
+    private val config: Single<PatientConfig>
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -53,6 +54,17 @@ class PatientRepository @Inject constructor(
     val dateOfBirthLowerBound = ageBounds.upper.toString()
     val dateOfBirthUpperBound = ageBounds.lower.toString()
 
+    return config.flatMapObservable { (isFuzzySearchV2Enabled) ->
+      if (isFuzzySearchV2Enabled) {
+        searchV2(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
+      } else {
+        searchV1(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
+      }
+    }
+  }
+
+  @Deprecated(message = "replaced by search v2")
+  private fun searchV1(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
     val searchableName = nameToSearchableForm(name)
 
     val substringSearch = database.patientSearchDao()
@@ -65,7 +77,35 @@ class PatientRepository @Inject constructor(
 
     return substringSearch
         .zipWith(fuzzySearch)
-        .map { (results, fuzzyResults) -> (fuzzyResults + results).distinctBy { it.uuid } }
+        .map { (results, fuzzyResults) ->
+          (fuzzyResults + results).distinctBy { it.uuid }.take(100)
+        }
+        .compose(sortByCurrentFacility())
+  }
+
+  private fun searchV2(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
+    return database.patientSearchDao()
+        .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
+        .toObservable()
+        .flatMapSingle { searchPatientByName.search(name, it) }
+        .map {
+          //TODO: Read this via the config (?)
+          // Added because SQLite has a maximum query parameter length of 999
+          it.take(100)
+        }
+        .flatMapSingle { matchingUuidsSortedByScore ->
+          when {
+            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
+            else -> {
+              database.patientSearchDao()
+                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
+                  .map { results ->
+                    val resultsByUuid = results.associateBy { it.uuid }
+                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
+                  }
+            }
+          }
+        }
         .compose(sortByCurrentFacility())
   }
 

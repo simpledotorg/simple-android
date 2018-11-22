@@ -6,6 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.AppDatabase
@@ -171,6 +172,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  @Ignore("deprecated because of search v2")
   fun patient_search_should_ignore_spaces_and_whitespace_characters() {
     val names = arrayOf("Riya Puri" to "ya p", "Manabi    Mehra" to "bime", "Amit:Sodhi" to "ito")
 
@@ -217,9 +219,9 @@ class PatientRepositoryAndroidTest {
     val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
-    patientRepository.saveOngoingEntry(ongoingPatientEntry)
+    val abhayKumar = patientRepository.saveOngoingEntry(ongoingPatientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
     val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.TRANSGENDER)
     val opa2 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
@@ -227,23 +229,23 @@ class PatientRepositoryAndroidTest {
     val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
     val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", "01/01/1949", null, Gender.TRANSGENDER)
     val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
-    patientRepository.saveOngoingEntry(ope3)
+    val abhishekKumar = patientRepository.saveOngoingEntry(ope3)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
     val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", "12/10/1951", null, Gender.TRANSGENDER)
     val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
-    patientRepository.saveOngoingEntry(ope4)
+    val abshotKumar = patientRepository.saveOngoingEntry(ope4)
         .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
+        .blockingGet()
 
     val search0 = patientRepository.search("kumar", 12).blockingFirst()
     assertThat(search0).hasSize(0)
@@ -256,13 +258,15 @@ class PatientRepositoryAndroidTest {
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
     val search2 = patientRepository.search("ab", 68).blockingFirst()
-    assertThat(search2).hasSize(3)
-    assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
-    assertThat(search2[0].dateOfBirth).isEqualTo(LocalDate.parse("1950-08-15"))
-    assertThat(search2[1].fullName).isEqualTo("Abhishek Kumar")
-    assertThat(search2[1].dateOfBirth).isEqualTo(LocalDate.parse("1949-01-01"))
-    assertThat(search2[2].fullName).isEqualTo("Abshot Kumar")
-    assertThat(search2[2].dateOfBirth).isEqualTo(LocalDate.parse("1951-10-12"))
+    val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
+
+    assertThat(search2).hasSize(expectedResultsInSearch2.size)
+    search2.forEach { searchResult ->
+      val expectedPatient = expectedResultsInSearch2.find { it.fullName == searchResult.fullName }!!
+
+      assertThat(searchResult.fullName).isEqualTo(expectedPatient.fullName)
+      assertThat(searchResult.dateOfBirth).isEqualTo(expectedPatient.dateOfBirth)
+    }
   }
 
   @Test
@@ -483,14 +487,16 @@ class PatientRepositoryAndroidTest {
               status = PatientStatus.ACTIVE
           ),
           address = template.address.copy(uuid = addressUuid),
-          phoneNumbers = template.phoneNumbers.map { number -> number.copy(uuid = UUID.randomUUID(), patientUuid = patientUuid) }
+          phoneNumbers = template.phoneNumbers
+              .map { number -> number.copy(uuid = UUID.randomUUID(), patientUuid = patientUuid) }
+              .take(1)
       )
     }
 
     patientRepository.save(patientsToSave).blockingAwait()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1000)
 
-    assertThat(patientRepository.search(name = "Fame", assumedAge = 3).blockingFirst().size).isEqualTo(100)
+    assertThat(patientRepository.search(name = "ame", assumedAge = 3).blockingFirst().size).isEqualTo(100)
   }
 
   @Test

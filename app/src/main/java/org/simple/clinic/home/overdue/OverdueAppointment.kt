@@ -59,13 +59,17 @@ data class OverdueAppointment(
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
-          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :dateNow AND PPN.number IS NOT NULL
-          AND (A.remindOn < :dateNow OR A.remindOn IS NULL)
+          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :appointmentScheduledBefore AND PPN.number IS NOT NULL
+          AND (A.remindOn < :appointmentScheduledBefore OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)
           ORDER BY A.scheduledDate, A.updatedAt ASC
           """)
-    fun appointmentsForFacility(facilityUuid: UUID, scheduledStatus: Appointment.Status, dateNow: LocalDate): Flowable<List<OverdueAppointment>>
+    fun appointmentsForFacility(
+        facilityUuid: UUID,
+        scheduledStatus: Appointment.Status,
+        appointmentScheduledBefore: LocalDate
+    ): Flowable<List<OverdueAppointment>>
 
     /**
      * FYI: IntelliJ's SQL parser highlights `isAtHighRisk` as an error, but it's not. This is probably
@@ -89,7 +93,7 @@ data class OverdueAppointment(
               WHEN MH.hasHadStroke = 1 THEN 1
               WHEN BP.systolic > 160 AND BP.diastolic > 100
                   AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
-                  AND (P.dateOfBirth < :sixtyYearsDateOfBirth OR P.age_computedDateOfBirth < :sixtyYearsDateOfBirth)
+                  AND (P.dateOfBirth < :bornBefore OR P.age_computedDateOfBirth < :bornBefore)
                   THEN 1
               ELSE 0
             END
@@ -102,8 +106,8 @@ data class OverdueAppointment(
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
 
-          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :dateNow AND PPN.number IS NOT NULL
-          AND (A.remindOn < :dateNow OR A.remindOn IS NULL)
+          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :scheduledBefore AND PPN.number IS NOT NULL
+          AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)
           ORDER BY isAtHighRisk DESC, A.scheduledDate, A.updatedAt ASC
@@ -111,8 +115,8 @@ data class OverdueAppointment(
     fun appointmentsForFacility(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
-        dateNow: LocalDate,
-        sixtyYearsDateOfBirth: LocalDate
+        scheduledBefore: LocalDate,
+        bornBefore: LocalDate
     ): Flowable<List<OverdueAppointment>>
   }
 }

@@ -29,5 +29,5 @@ open class PatientModule {
       resultsComparator = SortByWeightedNameParts())
 
   @Provides
-  open fun providePatientConfig(): Single<PatientConfig> = Single.just(PatientConfig(isFuzzySearchV2Enabled = false, limitOfSearchResults = 100))
+  open fun providePatientConfig(): Single<PatientConfig> = Single.just(PatientConfig(isFuzzySearchV2Enabled = true, limitOfSearchResults = 100))
 }

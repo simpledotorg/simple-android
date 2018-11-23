@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -21,7 +22,6 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.*
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -51,13 +51,15 @@ class PatientEditScreenControllerTest {
   private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var controller: PatientEditScreenController
 
+  var config = PatientEditConfig(isEditAgeAndDobEnabled = false)
+
   @Before
   fun setUp() {
     screen = mock()
     patientRepository = mock()
     numberValidator = mock()
 
-    controller = PatientEditScreenController(patientRepository, numberValidator)
+    controller = PatientEditScreenController(patientRepository, numberValidator, Single.fromCallable { config })
 
     uiEvents
         .compose(controller)
@@ -690,5 +692,22 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(FEMALE)),
             shouldSavePatient = false)
     )
+  }
+
+  @Test
+  @Parameters(value = ["true", "false"])
+  fun `when the edit age & dob feature flag is set, the feature on the screen must be enabled`(editAgeAndDateOfBirthEnabled: Boolean) {
+    config = config.copy(isEditAgeAndDobEnabled = editAgeAndDateOfBirthEnabled)
+
+    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+
+    if(editAgeAndDateOfBirthEnabled) {
+      verify(screen).enableEditAgeAndDateOfBirthFeature()
+    } else {
+      verify(screen).disableEditAgeAndDateOfBirthFeature()
+    }
   }
 }

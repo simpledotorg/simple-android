@@ -26,6 +26,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
@@ -34,6 +35,8 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.scrollToChild
+import org.simple.clinic.widgets.setTextAndCursor
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
@@ -65,6 +68,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
   private val ageAndDateOfBirthContainer by bindView<View>(R.id.patientedit_age_and_dob_container)
+  private val ageEditext by bindView<EditText>(R.id.patientedit_age)
+  private val dateOfBirthEditText by bindView<EditText>(R.id.patientedit_date_of_birth)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
 
@@ -144,23 +149,23 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   fun setPatientName(name: String) {
-    fullNameEditText.setText(name)
+    fullNameEditText.setTextAndCursor(name)
   }
 
   fun setPatientPhoneNumber(number: String) {
-    phoneNumberEditText.setText(number)
+    phoneNumberEditText.setTextAndCursor(number)
   }
 
   fun setColonyOrVillage(colonyOrVillage: String) {
-    colonyEditText.setText(colonyOrVillage)
+    colonyEditText.setTextAndCursor(colonyOrVillage)
   }
 
   fun setDistrict(district: String) {
-    districtEditText.setText(district)
+    districtEditText.setTextAndCursor(district)
   }
 
   fun setState(state: String) {
-    stateEditText.setText(state)
+    stateEditText.setTextAndCursor(state)
   }
 
   fun setGender(gender: Gender) {
@@ -171,6 +176,14 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
 
     genderButton.isChecked = true
+  }
+
+  fun setPatientAge(age: Int) {
+    ageEditext.setTextAndCursor(age.toString())
+  }
+
+  fun setPatientDateofBirth(dateOfBirth: LocalDate) {
+    dateOfBirthEditText.setTextAndCursor(DATE_OF_BIRTH_FORMAT_FOR_UI.format(dateOfBirth))
   }
 
   fun showValidationErrors(errors: Set<PatientEditValidationError>) {

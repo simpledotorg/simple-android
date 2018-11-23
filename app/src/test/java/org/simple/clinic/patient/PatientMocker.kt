@@ -30,20 +30,25 @@ object PatientMocker {
       uuid: UUID = UUID.randomUUID(),
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = "name",
-      syncStatus: SyncStatus = mock(),
-      status: PatientStatus = PatientStatus.ACTIVE
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      status: PatientStatus = PatientStatus.ACTIVE,
+      gender: Gender = randomOfEnum(Gender::class),
+      dateOfBirth: LocalDate? = LocalDate.now(ZoneOffset.UTC),
+      age: Age? = null,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): Patient {
     return Patient(
         uuid = uuid,
         addressUuid = addressUuid,
         fullName = fullName,
         searchableName = fullName,
-        gender = mock(),
-        dateOfBirth = mock(),
-        age = mock(),
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        age = age,
         status = status,
-        createdAt = mock(),
-        updatedAt = mock(),
+        createdAt = createdAt,
+        updatedAt = updatedAt,
         syncStatus = syncStatus)
   }
 

@@ -22,7 +22,10 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.patient.Gender.*
+import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Gender.FEMALE
+import org.simple.clinic.patient.Gender.MALE
+import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
@@ -37,20 +40,23 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_T
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEditScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
+  val clock: TestClock = TestClock()
 
   private lateinit var screen: PatientEditScreen
   private lateinit var patientRepository: PatientRepository
   private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var controller: PatientEditScreenController
-
   var config = PatientEditConfig(isEditAgeAndDobEnabled = false)
 
   @Before
@@ -59,7 +65,7 @@ class PatientEditScreenControllerTest {
     patientRepository = mock()
     numberValidator = mock()
 
-    controller = PatientEditScreenController(patientRepository, numberValidator, Single.fromCallable { config })
+    controller = PatientEditScreenController(patientRepository, numberValidator, Single.fromCallable { config }, clock)
 
     uiEvents
         .compose(controller)
@@ -75,7 +81,9 @@ class PatientEditScreenControllerTest {
       address: PatientAddress,
       shouldSetColonyOrVillage: Boolean,
       phoneNumber: PatientPhoneNumber?,
-      shouldSetPhoneNumber: Boolean
+      shouldSetPhoneNumber: Boolean,
+      shouldSetAge: Boolean,
+      shouldSetDateOfBirth: Boolean
   ) {
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
@@ -99,12 +107,32 @@ class PatientEditScreenControllerTest {
     } else {
       verify(screen, never()).setPatientPhoneNumber(any())
     }
+
+    if (shouldSetAge) {
+      verify(screen).setPatientAge(any())
+    } else {
+      verify(screen, never()).setPatientAge(any())
+    }
+
+    if (shouldSetDateOfBirth) {
+      verify(screen).setPatientDateofBirth(patient.dateOfBirth!!)
+    } else {
+      verify(screen, never()).setPatientDateofBirth(any())
+    }
   }
 
   @Suppress("Unused")
   private fun `params for prefilling fields on screen created`(): List<List<Any?>> {
-    fun generateTestData(colonyOrVillage: String?, phoneNumber: String?): List<Any?> {
-      val patientToReturn = PatientMocker.patient()
+    fun generateTestDataWithAge(
+        colonyOrVillage: String?,
+        phoneNumber: String?,
+        age: Int
+    ): List<Any?> {
+      val patientToReturn = PatientMocker.patient(age = Age(
+          value = age,
+          updatedAt = Instant.now(clock),
+          computedDateOfBirth = LocalDate.now(clock)
+      ), dateOfBirth = null)
       val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
       val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
 
@@ -113,16 +141,36 @@ class PatientEditScreenControllerTest {
           addressToReturn,
           colonyOrVillage.isNullOrBlank().not(),
           phoneNumberToReturn,
-          phoneNumberToReturn != null
-      )
+          phoneNumberToReturn != null,
+          true,
+          false)
+    }
+
+    fun generateTestDataWithDateOfBirth(
+        colonyOrVillage: String?,
+        phoneNumber: String?,
+        dateOfBirth: LocalDate
+    ): List<Any?> {
+      val patientToReturn = PatientMocker.patient(dateOfBirth = dateOfBirth, age = null)
+      val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
+      val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
+
+      return listOf(
+          patientToReturn,
+          addressToReturn,
+          colonyOrVillage.isNullOrBlank().not(),
+          phoneNumberToReturn,
+          phoneNumberToReturn != null,
+          false,
+          true)
     }
 
     return listOf(
-        generateTestData("Colony", phoneNumber = "1111111111"),
-        generateTestData(null, phoneNumber = "1111111111"),
-        generateTestData("", phoneNumber = "1111111111"),
-        generateTestData(colonyOrVillage = "Colony", phoneNumber = null)
-    )
+        generateTestDataWithAge(colonyOrVillage = "Colony", phoneNumber = "1111111111", age = 23),
+        generateTestDataWithAge(colonyOrVillage = null, phoneNumber = "1111111111", age = 23),
+        generateTestDataWithAge(colonyOrVillage = "", phoneNumber = "1111111111", age = 23),
+        generateTestDataWithAge(colonyOrVillage = "Colony", phoneNumber = null, age = 23),
+        generateTestDataWithDateOfBirth(colonyOrVillage = "Colony", phoneNumber = null, dateOfBirth = LocalDate.parse("1995-11-28")))
   }
 
   @Test
@@ -704,7 +752,7 @@ class PatientEditScreenControllerTest {
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
-    if(editAgeAndDateOfBirthEnabled) {
+    if (editAgeAndDateOfBirthEnabled) {
       verify(screen).enableEditAgeAndDateOfBirthFeature()
     } else {
       verify(screen).disableEditAgeAndDateOfBirthFeature()

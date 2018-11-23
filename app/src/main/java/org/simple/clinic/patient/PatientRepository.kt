@@ -32,7 +32,7 @@ import javax.inject.Inject
 typealias PatientUuid = UUID
 typealias FacilityUuid = UUID
 
-val DATE_OF_BIRTH_FORMAT_FOR_UI = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)!!
+val DATE_OF_BIRTH_FORMAT_FOR_UI = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)!!
 
 @AppScope
 class PatientRepository @Inject constructor(

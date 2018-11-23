@@ -236,7 +236,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", "1/01/1949", null, Gender.TRANSGENDER)
+    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", "01/01/1949", null, Gender.TRANSGENDER)
     val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)

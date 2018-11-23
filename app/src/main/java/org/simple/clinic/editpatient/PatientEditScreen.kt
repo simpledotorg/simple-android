@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.support.design.widget.TextInputLayout
 import android.util.AttributeSet
+import android.view.View
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioButton
@@ -63,7 +64,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val maleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_male)
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
-
+  private val ageAndDateOfBirthContainer by bindView<View>(R.id.patientedit_age_and_dob_container)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
 
@@ -292,10 +293,10 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   fun enableEditAgeAndDateOfBirthFeature() {
-    // TODO: After adding the fields
+    ageAndDateOfBirthContainer.visibility = VISIBLE
   }
 
   fun disableEditAgeAndDateOfBirthFeature() {
-    // TODO: After adding the fields
+    ageAndDateOfBirthContainer.visibility = GONE
   }
 }

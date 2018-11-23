@@ -90,6 +90,89 @@
           app:cleareableField="@id/patientedit_phone_number" />
       </FrameLayout>
 
+      <LinearLayout
+        android:id="@+id/patientedit_age_and_dob_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <!-- A background is intentionally set on these Views
+             to avoid overlapping when they animate -->
+        <FrameLayout
+          android:id="@+id/patientedit_age_container"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="0.6">
+
+          <android.support.design.widget.TextInputLayout
+            android:id="@+id/patientedit_age_inputlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+            <android.support.design.widget.TextInputEditText
+              android:id="@+id/patientedit_age"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/patientedit_age"
+              android:imeOptions="flagNoFullscreen"
+              android:inputType="number"
+              android:maxLength="3" />
+          </android.support.design.widget.TextInputLayout>
+
+          <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+            style="@style/Clinic.Button.ClearEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:cleareableField="@id/patientedit_age" />
+        </FrameLayout>
+
+        <TextView
+          android:id="@+id/patientedit_dateofbirth_and_age_separator"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/spacing_16"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:layout_marginTop="@dimen/spacing_24"
+          android:background="@color/window_background"
+          android:text="@string/patientedit_dateofbirth_and_age_separator"
+          android:textAllCaps="true" />
+
+        <FrameLayout
+          android:id="@+id/patientedit_date_of_birth_container"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1">
+
+          <android.support.design.widget.TextInputLayout
+            android:id="@+id/patientedit_date_of_birth_inputlayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
+
+            <org.simple.clinic.newentry.DateOfBirthEditText
+              android:id="@+id/patientedit_date_of_birth"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:hint="@string/patientedit_date_of_birth_unfocused"
+              android:imeOptions="flagNoFullscreen"
+              android:inputType="number"
+              app:allowed_chars="1234567890"
+              app:mask="##/##/####" />
+          </android.support.design.widget.TextInputLayout>
+
+          <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+            style="@style/Clinic.Button.ClearEditText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            app:cleareableField="@id/patientedit_date_of_birth" />
+        </FrameLayout>
+      </LinearLayout>
+
       <RadioGroup
         android:id="@+id/patientedit_gender_radiogroup"
         android:layout_width="match_parent"

@@ -3,7 +3,6 @@ package org.simple.clinic.editpatient
 import android.content.Context
 import android.support.design.widget.TextInputLayout
 import android.util.AttributeSet
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioButton
@@ -290,5 +289,13 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   fun goBack() {
     screenRouter.pop()
+  }
+
+  fun enableEditAgeAndDateOfBirthFeature() {
+    // TODO: After adding the fields
+  }
+
+  fun disableEditAgeAndDateOfBirthFeature() {
+    // TODO: After adding the fields
   }
 }

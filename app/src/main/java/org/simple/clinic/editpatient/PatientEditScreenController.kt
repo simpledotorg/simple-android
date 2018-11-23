@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
@@ -19,7 +20,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
@@ -31,7 +31,8 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientEditScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
-    private val numberValidator: PhoneNumberValidator
+    private val numberValidator: PhoneNumberValidator,
+    private val configProvider: Single<PatientEditConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -39,11 +40,27 @@ class PatientEditScreenController @Inject constructor(
 
     val transformedEvents = replayedEvents.mergeWith(ongoingEntryPatientEntryChanges(replayedEvents))
 
-    return Observable.merge(
+    return Observable.mergeArray(
         prefillOnStart(transformedEvents),
         showValidationErrorsOnSaveClick(transformedEvents),
         hideValidationErrorsOnInput(transformedEvents),
-        savePatientDetails(transformedEvents))
+        savePatientDetails(transformedEvents),
+        toggleEditAgeAndDateofBirthFeature(transformedEvents))
+  }
+
+  private fun toggleEditAgeAndDateofBirthFeature(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientEditScreenCreated>()
+        .flatMapSingle { configProvider }
+        .map { (isEditAgeAndDobEnabled) ->
+          { ui: Ui ->
+            if (isEditAgeAndDobEnabled) {
+              ui.enableEditAgeAndDateOfBirthFeature()
+            } else {
+              ui.disableEditAgeAndDateOfBirthFeature()
+            }
+          }
+        }
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {

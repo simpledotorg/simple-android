@@ -7,10 +7,12 @@ import android.util.AttributeSet
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.RelativeLayout
+import android.widget.TextView
 import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
@@ -24,6 +26,9 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.indexOfChildId
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -45,6 +50,12 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
   private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
   private val enterOtpManuallyButton by bindView<Button>(R.id.patients_enter_code)
+  private val nameInStatusSavedText by bindView<TextView>(R.id.patients_summary_saved_name)
+  private val nameInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_name)
+  private val dateInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_date)
+
+  @IdRes
+  private var currentStatusView: Int = R.id.patients_user_status_hidden
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -98,7 +109,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     screenRouter.push(PatientSearchScreen.KEY)
   }
 
-  private fun showUserAccountStatus(@IdRes statusViewId: Int) {
+  private fun showStatus(@IdRes statusViewId: Int) {
     approvalStatusViewFlipper.apply {
       val statusViewIndex = indexOfChildId(statusViewId)
 
@@ -108,6 +119,26 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         displayedChild = statusViewIndex
       }
     }
+  }
+
+  private fun showUserAccountStatus(@IdRes statusViewId: Int) {
+    showStatus(statusViewId)
+    currentStatusView = approvalStatusViewFlipper.currentView.id
+  }
+
+  private var disposable = Disposables.empty()
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    disposable.dispose()
+  }
+
+  private fun showSummaryStatus(@IdRes statusViewId: Int) {
+    showStatus(statusViewId)
+    disposable = Observable.timer(2500L, TimeUnit.MILLISECONDS, mainThread())
+        .subscribe {
+          showUserAccountStatus(currentStatusView)
+        }
   }
 
   fun showUserStatusAsWaiting() {
@@ -122,10 +153,15 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
   }
 
-  fun showStatusPatientSummarySaved(patientName: String){
+  fun showStatusPatientSummarySaved(patientName: String) {
+    nameInStatusSavedText.text = patientName
+    showSummaryStatus(R.id.patient_status_summary_saved)
   }
 
-  fun showStatusPatientAppointmentSaved(patientName: String, appointmentDate: LocalDate){
+  fun showStatusPatientAppointmentSaved(patientName: String, appointmentDate: LocalDate) {
+    nameInAppointmentSavedText.text = context.getString(R.string.patient_status_summary_saved_scheduled_appointment, patientName)
+    dateInAppointmentSavedText.text = appointmentDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH))
+    showSummaryStatus(R.id.patients_summary_appointment_saved)
   }
 
   fun hideUserAccountStatus() {

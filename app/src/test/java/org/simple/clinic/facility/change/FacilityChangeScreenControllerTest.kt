@@ -2,7 +2,6 @@ package org.simple.clinic.facility.change
 
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -42,7 +41,8 @@ class FacilityChangeScreenControllerTest {
 
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = ""))
 
-    verify(screen, times(2)).updateFacilities(listOf(facility1, facility2))
+    verify(screen).updateFacilities(listOf(facility1, facility2), isFirstUpdate = true)
+    verify(screen).updateFacilities(listOf(facility1, facility2), isFirstUpdate = false)
   }
 
   @Test

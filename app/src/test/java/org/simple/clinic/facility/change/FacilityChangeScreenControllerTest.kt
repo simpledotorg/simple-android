@@ -13,7 +13,6 @@ import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
 class FacilityChangeScreenControllerTest {
@@ -41,9 +40,27 @@ class FacilityChangeScreenControllerTest {
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
 
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = ""))
 
     verify(screen, times(2)).updateFacilities(listOf(facility1, facility2))
+  }
+
+  @Test
+  fun `when search query is changed then the query should be used for fetching filtered facilities`() {
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilities("F")).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.facilities("Fa")).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.facilities("Fac")).thenReturn(Observable.just(facilities))
+
+    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "F"))
+    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fa"))
+    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fac"))
+
+    verify(facilityRepository).facilities("F")
+    verify(facilityRepository).facilities("Fa")
+    verify(facilityRepository).facilities("Fac")
   }
 
   @Test

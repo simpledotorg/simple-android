@@ -9,12 +9,26 @@
   android:orientation="vertical"
   tools:ignore="Overdraw">
 
-  <android.support.v7.widget.Toolbar
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
     android:id="@+id/facilitychange_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:elevation="3dp"
+    android:background="@color/white100"
+    app:contentInsetStartWithNavigation="58dp"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/facilitychange_screen_title" />
+    app:navigationIconTint="@color/grey1">
+
+    <EditText
+      android:id="@+id/facilitychange_search"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@null"
+      android:hint="@string/facilitychange_search_hint"
+      android:importantForAutofill="no"
+      android:inputType="textPostalAddress"
+      tools:ignore="UnusedAttribute" />
+  </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
 
   <android.support.v7.widget.RecyclerView
     android:id="@+id/facilitychange_list"

@@ -92,9 +92,9 @@ data class OverdueAppointment(
           (
             CASE
               WHEN MH.hasHadStroke = 1 THEN 1
-              WHEN BP.systolic > 160 AND BP.diastolic > 100
+              WHEN BP.systolic >= 160 AND BP.diastolic >= 100
                   AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
-                  AND (P.dateOfBirth < :patientBornBefore OR P.age_computedDateOfBirth < :patientBornBefore)
+                  AND (P.dateOfBirth <= :patientBornBefore OR P.age_computedDateOfBirth <= :patientBornBefore)
                   THEN 1
               ELSE 0
             END

@@ -19,7 +19,6 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.enterotp.EnterOtpScreenKey
-import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.widgets.ScreenCreated
@@ -72,9 +71,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             activityStarts(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
-            enterCodeManuallyClicks(),
-            streamSummaryResults()
-        )
+            enterCodeManuallyClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -99,11 +96,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
 
   private fun enterCodeManuallyClicks() = RxView.clicks(enterOtpManuallyButton).map { PatientsEnterCodeManuallyClicked() }
-
-  private fun streamSummaryResults() =
-      screenRouter.streamScreenResults()
-          .ofType<PatientSummaryResult>()
-          .map { PatientSummaryResultReceived(it) }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreen.KEY)

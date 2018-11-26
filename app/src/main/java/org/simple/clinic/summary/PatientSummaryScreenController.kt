@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import com.f2prateek.rx.preferences2.Preference
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -38,6 +39,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientSummaryScreen
 typealias UiChange = (Ui) -> Unit
@@ -49,7 +51,8 @@ class PatientSummaryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
     private val clock: Clock,
-    private val configProvider: Single<PatientSummaryConfig>
+    private val configProvider: Single<PatientSummaryConfig>,
+    @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val disposables = CompositeDisposable()
@@ -79,23 +82,18 @@ class PatientSummaryScreenController @Inject constructor(
 
     val transformedEvents = Observable.merge(replayedEvents, dataset)
 
-    val changes = patientSummaryResultChanged(transformedEvents)
-        .replay()
-        .autoConnect(1) { d -> disposables += d }
-
-    val againTransformedEvents = Observable.merge(transformedEvents, changes)
-
     return Observable.mergeArray(
-        populateList(againTransformedEvents),
-        togglePatientEditFeature(againTransformedEvents),
-        reportViewedPatientEvent(againTransformedEvents),
-        populatePatientProfile(againTransformedEvents),
-        updateMedicalHistory(againTransformedEvents),
-        openBloodPressureBottomSheet(againTransformedEvents),
-        openPrescribedDrugsScreen(againTransformedEvents),
-        handleBackAndDoneClicks(againTransformedEvents),
-        exitScreenAfterSchedulingAppointment(againTransformedEvents),
-        openBloodPressureUpdateSheet(againTransformedEvents))
+        populateList(transformedEvents),
+        togglePatientEditFeature(transformedEvents),
+        reportViewedPatientEvent(transformedEvents),
+        populatePatientProfile(transformedEvents),
+        updateMedicalHistory(transformedEvents),
+        openBloodPressureBottomSheet(transformedEvents),
+        openPrescribedDrugsScreen(transformedEvents),
+        handleBackAndDoneClicks(transformedEvents),
+        exitScreenAfterSchedulingAppointment(transformedEvents),
+        openBloodPressureUpdateSheet(transformedEvents),
+        patientSummaryResultChanged(transformedEvents))
   }
 
   private fun togglePatientEditFeature(events: Observable<UiEvent>): Observable<UiChange> {
@@ -300,9 +298,6 @@ class PatientSummaryScreenController @Inject constructor(
 
     val mergedBpSaves = Observable.merge(bloodPressureSaves, bloodPressureSaveRestores)
 
-    val patientSummaryResultItem = events.ofType<PatientSummaryResultSet>()
-        .map { it.result }
-
     val backClicks = events
         .ofType<PatientSummaryBackClicked>()
 
@@ -315,22 +310,21 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
     val backClicksWithBpNotSaved = backClicks
-        .withLatestFrom(mergedBpSaves, callers, patientSummaryResultItem) { _, saves, caller, result -> Triple(saves, caller, result) }
-        .filter { (saved, _) -> saved.not() }
-        .map { (_, caller, result) ->
+        .withLatestFrom(mergedBpSaves, callers)
+        .filter { (_, saved, _) -> saved.not() }
+        .map { (_, _, caller) ->
           { ui: Ui ->
             when (caller!!) {
               SEARCH -> ui.goBackToPatientSearch()
-              NEW_PATIENT -> ui.goBackToHome(result)
+              NEW_PATIENT -> ui.goBackToHome()
             }.exhaustive()
           }
         }
 
     val doneClicksWithBpNotSaved = doneClicks
-        .withLatestFrom(mergedBpSaves, patientSummaryResultItem)
+        .withLatestFrom(mergedBpSaves)
         .filter { (_, saved) -> saved.not() }
-        .map { (_, _, result) -> result }
-        .map { { ui: Ui -> ui.goBackToHome(it) } }
+        .map { { ui: Ui -> ui.goBackToHome() } }
 
     return Observable.mergeArray(
         doneOrBackClicksWithBpSaved,
@@ -343,9 +337,6 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.caller }
 
-    val patientSummaryResultItem = events.ofType<PatientSummaryResultSet>()
-        .map { it.result }
-
     val scheduleAppointmentCloses = events
         .ofType<ScheduleAppointmentSheetClosed>()
 
@@ -356,19 +347,19 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks, callers, patientSummaryResultItem) { _, _, caller, result -> caller to result }
-        .map { (caller, result) ->
+        .withLatestFrom(backClicks, callers)
+        .map { (_, _, caller) ->
           { ui: Ui ->
             when (caller!!) {
               SEARCH -> ui.goBackToPatientSearch()
-              NEW_PATIENT -> ui.goBackToHome(result)
+              NEW_PATIENT -> ui.goBackToHome()
             }.exhaustive()
           }
         }
 
     val afterDoneClicks = scheduleAppointmentCloses
-        .withLatestFrom(patientSummaryResultItem, doneClicks)
-        .map { (_, item, _) -> { ui: Ui -> ui.goBackToHome(item) } }
+        .withLatestFrom(doneClicks)
+        .map { { ui: Ui -> ui.goBackToHome() } }
 
     return afterBackClicks.mergeWith(afterDoneClicks)
   }
@@ -383,7 +374,7 @@ class PatientSummaryScreenController @Inject constructor(
         }
   }
 
-  private fun patientSummaryResultChanged(events: Observable<UiEvent>): Observable<PatientSummaryResultSet> {
+  private fun patientSummaryResultChanged(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreates = events
         .ofType<PatientSummaryScreenCreated>()
 
@@ -398,8 +389,10 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (_, createdEvent) -> Saved(createdEvent.patientUuid) as PatientSummaryResult }
 
     return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)
-        .map { PatientSummaryResultSet(it) }
-        .startWith(PatientSummaryResultSet(PatientSummaryResult.NotSaved))
+        .flatMap {
+          patientSummaryResult.set(it)
+          Observable.never<UiChange>()
+        }
   }
 
   private fun isBpEditable(bloodPressureMeasurement: BloodPressureMeasurement, bpEditableFor: Duration): Boolean {

@@ -41,7 +41,8 @@ class PatientsScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
-    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
+    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
+    @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -155,17 +156,20 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun showSummarySavedNotification(events: Observable<UiEvent>): Observable<UiChange> {
-    val savedStream = events
-        .ofType<PatientSummaryResultReceived>()
-        .filter { it.result is PatientSummaryResult.Saved }
-        .map { it.result as PatientSummaryResult.Saved }
+    val result = events
+        .ofType<ScreenCreated>()
+        .map { patientSummaryResult.get() }
+
+    val savedStream = result
+        .filter { it is PatientSummaryResult.Saved }
+        .map { it as PatientSummaryResult.Saved }
         .flatMap { patientRepository.patient(it.patientUuid).take(1).unwrapJust() }
+        .doOnNext { patientSummaryResult.delete() }
         .map { { ui: Ui -> ui.showStatusPatientSummarySaved(it.fullName) } }
 
-    val scheduledResult = events
-        .ofType<PatientSummaryResultReceived>()
-        .filter { it.result is PatientSummaryResult.Scheduled }
-        .map { it.result as PatientSummaryResult.Scheduled }
+    val scheduledResult = result
+        .filter { it is PatientSummaryResult.Scheduled }
+        .map { it as PatientSummaryResult.Scheduled }
 
     val patientNameFromScheduled = scheduledResult
         .flatMap { patientRepository.patient(it.patientUuid).take(1).unwrapJust() }
@@ -177,7 +181,10 @@ class PatientsScreenController @Inject constructor(
 
     val scheduledStream = Observables
         .zip(patientNameFromScheduled, appointmentDate)
-        .map { (name, appointmentDate) -> { ui: Ui -> ui.showStatusPatientAppointmentSaved(name, appointmentDate) } }
+        .doOnNext { patientSummaryResult.delete() }
+        .map { (name, appointmentDate) ->
+          { ui: Ui -> ui.showStatusPatientAppointmentSaved(name, appointmentDate) }
+        }
 
     return Observable.merge(savedStream, scheduledStream)
   }

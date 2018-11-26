@@ -44,17 +44,19 @@ class FacilityRepositoryAndroidTest {
 
   @Test
   fun facilities_should_be_ordered_alphabetically() {
-    val facilityB = testData.facility(uuid = UUID.randomUUID(), name = "B")
-    val facilityD = testData.facility(uuid = UUID.randomUUID(), name = "D")
-    val facilityA = testData.facility(uuid = UUID.randomUUID(), name = "A")
-    val facilityC = testData.facility(uuid = UUID.randomUUID(), name = "C")
+    val facilityB = testData.facility(uuid = UUID.randomUUID(), name = "Facility B")
+    val facilityD = testData.facility(uuid = UUID.randomUUID(), name = "Phacility D")
+    val facilityA = testData.facility(uuid = UUID.randomUUID(), name = "Facility A")
+    val facilityC = testData.facility(uuid = UUID.randomUUID(), name = "Phacility C")
 
     val facilitiesToStore = listOf(facilityB, facilityD, facilityA, facilityC)
     facilityDao.save(facilitiesToStore)
 
-    val returnedFacilities = repository.facilities().blockingFirst()
-    val expectedOrdering = listOf(facilityA, facilityB, facilityC, facilityD)
-    assertThat(returnedFacilities).isEqualTo(expectedOrdering)
+    val allStoredFacilities = repository.facilities().blockingFirst()
+    assertThat(allStoredFacilities).isEqualTo(listOf(facilityA, facilityB, facilityC, facilityD))
+
+    val allFilteredFacilities = repository.facilities(searchQuery = "Pha").blockingFirst()
+    assertThat(allFilteredFacilities).isEqualTo(listOf(facilityC, facilityD))
   }
 
   @Test
@@ -144,5 +146,39 @@ class FacilityRepositoryAndroidTest {
 
     val storedFacility = facilityDao.getOne(correctedFacility.uuid)!!
     assertThat(storedFacility.name).isEqualTo(correctedFacility.name)
+  }
+
+  @Test
+  fun when_filter_query_is_blank_then_all_facilities_should_be_fetched() {
+    val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
+    val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 2")
+    val facilities = listOf(facility1, facility2)
+    facilityDao.save(facilities)
+
+    val filteredFacilities = repository.facilities(searchQuery = "").blockingFirst()
+    assertThat(filteredFacilities).isEqualTo(facilities)
+  }
+
+  @Test
+  fun when_filter_query_is_not_blank_then_filtered_facilities_should_be_fetched() {
+    val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
+    val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 2")
+    val facility3 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 3")
+    val facility4 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 4")
+    facilityDao.save(listOf(facility1, facility2, facility3, facility4))
+
+    val filteredFacilities = repository.facilities(searchQuery = "hac").blockingFirst()
+    assertThat(filteredFacilities).isEqualTo(listOf(facility2, facility4))
+  }
+
+  @Test
+  fun filtering_of_facilities_should_be_case_insensitive() {
+    val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
+    val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 2")
+    val facilities = listOf(facility1, facility2)
+    facilityDao.save(facilities)
+
+    val filteredFacilities = repository.facilities(searchQuery = "fac").blockingFirst()
+    assertThat(filteredFacilities).isEqualTo(listOf(facility1))
   }
 }

@@ -236,6 +236,7 @@
   <string name="overduelist_remind_call_later">Remind to call later…</string>
   <string name="overduelist_remove_from_list">Remove from overdue list…</string>
   <string name="overduelist_result_of_call">Result of call</string>
+  <string name="overduelist_high_risk">High risk</string>
 
   <!-- Appointment reminder -->
   <string name="appointmentreminder_call_later_in">Call later in</string>

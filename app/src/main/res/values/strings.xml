@@ -208,7 +208,8 @@
   <string name="registrationlocation_permission_rationale_title">Find your clinic faster</string>
   <string name="registrationlocation_allow_access">Allow location access</string>
 
-  <string name="registrationfacilities_screen_title">Select your clinic</string>
+  <string name="registrationfacilities_screen_title" tools:ignore="UnusedResources">Select your clinic</string>
+  <string name="registrationfacilities_search_hint">Search for your clinic</string>
   <string name="registrationfacilities_facility_address_without_street">%s, %s</string>   <!-- District, State -->
   <string name="registrationfacilities_facility_address_with_street">%s, %s, %s</string>  <!-- Street, District, State -->
   <string name="registrationfacilities_error_unexpected_title">Something went wrong</string>

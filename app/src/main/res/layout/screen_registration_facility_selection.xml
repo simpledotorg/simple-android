@@ -8,12 +8,26 @@
   android:background="@color/white"
   android:orientation="vertical">
 
-  <android.support.v7.widget.Toolbar
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
     android:id="@+id/registrationfacilities_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/white100"
+    android:elevation="3dp"
+    app:contentInsetStartWithNavigation="58dp"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/registrationfacilities_screen_title" />
+    app:navigationIconTint="@color/grey1">
+
+    <EditText
+      android:id="@+id/registrationfacilities_search"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:background="@null"
+      android:hint="@string/registrationfacilities_search_hint"
+      android:importantForAutofill="no"
+      android:inputType="textPostalAddress"
+      tools:ignore="UnusedAttribute" />
+  </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
 
   <include
     android:id="@+id/registrationfacilities_progress"

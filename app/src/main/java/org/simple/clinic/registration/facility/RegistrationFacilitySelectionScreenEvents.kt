@@ -10,3 +10,7 @@ class RegistrationFacilitySelectionRetryClicked : UiEvent {
 data class RegistrationFacilityClicked(val facility: Facility) : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Done Clicked"
 }
+
+data class RegistrationFacilitySearchQueryChanged(val query: String): UiEvent {
+  override val analyticsName = "Registration:Facility Selection:Search Query Changed"
+}

@@ -54,7 +54,7 @@ class FacilityChangeScreenControllerTest {
     whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(FacilityClicked(newFacility))
+    uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     val inOrder = inOrder(facilityRepository, screen)
     inOrder.verify(facilityRepository).associateUserWithFacility(user, newFacility)

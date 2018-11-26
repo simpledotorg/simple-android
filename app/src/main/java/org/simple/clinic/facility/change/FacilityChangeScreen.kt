@@ -65,7 +65,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun facilityClicks() = recyclerViewAdapter.facilityClicks.map(::FacilityClicked)
+  private fun facilityClicks() = recyclerViewAdapter.facilityClicks.map(::FacilityChangeClicked)
 
   fun updateFacilities(facilityItems: List<Facility>) {
     recyclerViewAdapter.submitList(facilityItems)

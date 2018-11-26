@@ -59,7 +59,14 @@ data class Facility(
     fun getOne(uuid: UUID): Facility?
 
     @Query("SELECT * FROM facility ORDER BY name ASC")
-    fun facilities(): Flowable<List<Facility>>
+    fun all(): Flowable<List<Facility>>
+
+    @Query("""
+      SELECT * FROM facility
+      WHERE name LIKE '%' || :filterQuery || '%'
+      ORDER BY name ASC
+    """)
+    fun filtered(filterQuery: String): Flowable<List<Facility>>
 
     @Query("SELECT COUNT(uuid) FROM facility")
     fun count(): Flowable<Int>

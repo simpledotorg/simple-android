@@ -20,8 +20,12 @@ class FacilityRepository @Inject constructor(
     val userFacilityMappingDao: LoggedInUserFacilityMapping.RoomDao
 ) : SynceableRepository<Facility, FacilityPayload> {
 
-  fun facilities(): Observable<List<Facility>> {
-    return facilityDao.facilities().toObservable()
+  fun facilities(searchQuery: String = ""): Observable<List<Facility>> {
+    return if (searchQuery.isBlank()) {
+      facilityDao.all().toObservable()
+    } else {
+      facilityDao.filtered(searchQuery).toObservable()
+    }
   }
 
   fun associateUserWithFacilities(user: User, facilityIds: List<UUID>, currentFacility: UUID): Completable {

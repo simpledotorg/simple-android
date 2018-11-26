@@ -36,7 +36,7 @@ class FacilityChangeScreenController @Inject constructor(
 
   private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<FacilityClicked>()
+        .ofType<FacilityChangeClicked>()
         .map { it.facility }
         .flatMap { facility ->
           userSession.requireLoggedInUser()

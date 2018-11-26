@@ -35,7 +35,6 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -296,8 +295,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     screenRouter.pop()
   }
 
-  fun goBackToHome(status: PatientSummaryResult) {
-    screenRouter.clearHistoryAndPushWithResult(HomeScreen.KEY, direction = BACKWARD, result = status)
+  fun goBackToHome() {
+    screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
   }
 
   fun disableEditPatientFeature() {

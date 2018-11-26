@@ -447,9 +447,9 @@ class AppointmentRepositoryAndroidTest {
     testClock.advanceBy(Duration.ofSeconds(1))
 
     savePatientAndAppointment(
-        fullName = "Age > 60, last BP > 160/100 and kidney disease",
-        age = "61",
-        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
+        fullName = "Age == 60, last BP == 160/100 and kidney disease",
+        age = "60",
+        bpMeasurements = *arrayOf(BP(systolic = 160, diastolic = 100)),
         hasHadKidneyDisease = true,
         hasHadStroke = false)
     testClock.advanceBy(Duration.ofSeconds(1))
@@ -480,7 +480,7 @@ class AppointmentRepositoryAndroidTest {
       assertThat(appointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
           "With stroke" to true,
           "Age > 60, last BP > 160/100 and diabetes" to true,
-          "Age > 60, last BP > 160/100 and kidney disease" to true,
+          "Age == 60, last BP == 160/100 and kidney disease" to true,
           "Normal + older" to false,
           "Normal + recent" to false,
           "Age > 60, second last BP > 160/100 and kidney disease" to false,

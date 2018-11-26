@@ -1,12 +1,15 @@
 package org.simple.clinic.facility.change
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
+import android.widget.EditText
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -34,9 +37,11 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private val toolbar by bindView<Toolbar>(R.id.facilitychange_toolbar)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.facilitychange_list)
+  private val searchEditText by bindView<EditText>(R.id.facilitychange_search)
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -44,7 +49,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), facilityClicks())
+    Observable.mergeArray(screenCreates(), searchQueryChanges(), facilityClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -65,7 +70,15 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  private fun facilityClicks() = recyclerViewAdapter.facilityClicks.map(::FacilityChangeClicked)
+  private fun searchQueryChanges() =
+      RxTextView
+          .textChanges(searchEditText)
+          .map { text -> FacilityChangeSearchQueryChanged(text.toString()) }
+
+  private fun facilityClicks() =
+      recyclerViewAdapter
+          .facilityClicks
+          .map(::FacilityChangeClicked)
 
   fun updateFacilities(facilityItems: List<Facility>) {
     recyclerViewAdapter.submitList(facilityItems)

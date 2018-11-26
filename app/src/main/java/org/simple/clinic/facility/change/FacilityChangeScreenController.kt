@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -29,8 +28,9 @@ class FacilityChangeScreenController @Inject constructor(
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<ScreenCreated>()
-        .flatMap { facilityRepository.facilities() }
+        .ofType<FacilityChangeSearchQueryChanged>()
+        .map { it.query }
+        .switchMap { query -> facilityRepository.facilities(query) }
         .map { { ui: Ui -> ui.updateFacilities(it) } }
   }
 

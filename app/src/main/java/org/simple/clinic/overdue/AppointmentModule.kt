@@ -20,7 +20,7 @@ class AppointmentModule {
 
   @Provides
   fun config(): Single<AppointmentConfig> {
-    return Single.just(AppointmentConfig(highlightHighRiskPatients = false))
+    return Single.just(AppointmentConfig(highlightHighRiskPatients = true))
   }
 
   @Provides

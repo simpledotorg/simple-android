@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
@@ -8,6 +9,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -36,7 +38,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
-import org.simple.clinic.patient.PatientSummaryResult.*
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -58,6 +59,8 @@ class PatientSummaryScreenControllerTest {
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val patientUuid = UUID.randomUUID()
   private val clock = Clock.fixed(Instant.EPOCH, UTC)
+  private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
+
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = BehaviorSubject.create<PatientSummaryConfig>()
@@ -76,7 +79,8 @@ class PatientSummaryScreenControllerTest {
         medicalHistoryRepository,
         timestampGenerator,
         clock,
-        configSubject.firstOrError())
+        configSubject.firstOrError(),
+        patientSummaryResult)
 
     uiEvents
         .compose(controller)
@@ -284,7 +288,7 @@ class PatientSummaryScreenControllerTest {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
     } else {
       if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
-        verify(screen).goBackToHome(NotSaved)
+        verify(screen).goBackToHome()
       } else {
         verify(screen).goBackToPatientSearch()
       }
@@ -299,14 +303,13 @@ class PatientSummaryScreenControllerTest {
   ) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryResultSet(Saved(patientUuid)))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome(Saved(patientUuid))
+      verify(screen, never()).goBackToHome()
     } else {
-      verify(screen).goBackToHome(Saved(patientUuid))
+      verify(screen).goBackToHome()
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }
@@ -323,9 +326,9 @@ class PatientSummaryScreenControllerTest {
 
     if (wasBloodPressureSaved) {
       verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome(any())
+      verify(screen, never()).goBackToHome()
     } else {
-      verify(screen).goBackToHome(NotSaved)
+      verify(screen).goBackToHome()
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
   }
@@ -453,20 +456,21 @@ class PatientSummaryScreenControllerTest {
 
   @Parameters(method = "params for patient item changed")
   @Test
-  fun `when anything is changed on the screen and save or back is clicked, home screen should be called with correct result`(
+  fun `when anything is changed on the screen, assert that patient result preference is updated`(
       status: SyncStatus,
       screenCreated: Instant,
       hasChanged: Boolean
   ) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, screenCreated))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(status)))
-    uiEvents.onNext(PatientSummaryDoneClicked())
 
     if (hasChanged) {
-      verify(screen).goBackToHome(Saved(patientUuid))
+      verify(patientSummaryResult).set(any())
     } else {
-      verify(screen).goBackToHome(NotSaved)
+      verify(patientSummaryResult, never()).set(any())
     }
+
+    verifyZeroInteractions(screen)
   }
 
   @Suppress("unused")
@@ -480,24 +484,22 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when an appointment is scheduled and save or back is clicked, home screen should be called with scheduled result`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryDoneClicked())
+  fun `when an appointment is scheduled, patient result should be set`() {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
     uiEvents.onNext(AppointmentScheduled)
-    uiEvents.onNext(ScheduleAppointmentSheetClosed())
 
-    verify(screen).goBackToHome(Scheduled(patientUuid))
+    verify(patientSummaryResult).set(any())
+    verifyZeroInteractions(screen)
   }
 
   @Test
-  fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`(){
+  fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`() {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(SyncStatus.PENDING)))
-    uiEvents.onNext(PatientSummaryDoneClicked())
     uiEvents.onNext(AppointmentScheduled)
-    uiEvents.onNext(ScheduleAppointmentSheetClosed())
 
-    verify(screen).goBackToHome(Scheduled(patientUuid))
+    verify(patientSummaryResult, times(2)).set(any())
+    verifyZeroInteractions(screen)
   }
 
   private fun patientSummaryItem(syncStatus: SyncStatus): PatientSummaryItems {

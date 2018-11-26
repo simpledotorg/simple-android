@@ -339,6 +339,7 @@ class UserSession @Inject constructor(
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
         .doOnSubscribe { Timber.i("Storing user") }
         .andThen(facilityRepository.associateUserWithFacilities(user, facilityUuids, currentFacility = facilityUuids.first()))
+        .doOnError { Timber.e(it) }
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {

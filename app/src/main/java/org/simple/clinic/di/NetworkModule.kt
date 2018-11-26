@@ -1,12 +1,14 @@
 package org.simple.clinic.di
 
 import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
+import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
@@ -27,7 +29,14 @@ open class NetworkModule {
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
+        .add(polymorphic())
         .build()
+  }
+
+  private fun polymorphic(): PolymorphicJsonAdapterFactory<PatientSummaryResult> {
+    return PolymorphicJsonAdapterFactory.of(PatientSummaryResult::class.java, "patient_summary_result")
+        .withSubtype(PatientSummaryResult.Scheduled::class.java, "result_scheduled")
+        .withSubtype(PatientSummaryResult.Saved::class.java, "result_saved")
   }
 
   @Provides

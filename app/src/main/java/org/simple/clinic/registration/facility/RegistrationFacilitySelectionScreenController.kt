@@ -46,8 +46,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .flatMap {
           facilitySync.pullWithResult()
               .toObservable()
-              .flatMap {
-                when (it) {
+              .flatMap { result ->
+                when (result) {
                   is FacilityPullResult.Success -> Observable.just({ ui: Ui -> ui.hideProgressIndicator() })
                   is FacilityPullResult.NetworkError -> Observable.just(
                       { ui: Ui -> ui.hideProgressIndicator() },
@@ -62,11 +62,10 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val facilitiesStream = events
-        .ofType<ScreenCreated>()
-        .flatMap { facilityRepository.facilities() }
-
-    return facilitiesStream
+    return events
+        .ofType<RegistrationFacilitySearchQueryChanged>()
+        .map { it.query }
+        .switchMap { query -> facilityRepository.facilities(query) }
         .map { { ui: Ui -> ui.updateFacilities(it) } }
   }
 

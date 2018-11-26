@@ -70,6 +70,25 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
+  fun `when search query is changed then the query should be used for fetching filtered facilities`() {
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilities("F")).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.facilities("Fa")).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.facilities("Fac")).thenReturn(Observable.just(facilities))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "F"))
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fa"))
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fac"))
+
+    verify(facilityRepository).facilities("F")
+    verify(facilityRepository).facilities("Fa")
+    verify(facilityRepository).facilities("Fac")
+  }
+
+  @Test
   fun `when fetching facilities fails then an error should be shown`() {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
     whenever(facilitySync.pullWithResult())
@@ -77,6 +96,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         .thenReturn(Single.just(FacilityPullResult.NetworkError()))
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
 
     verify(screen).showNetworkError()
@@ -104,6 +124,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
 
     verify(screen, times(2)).updateFacilities(listOf(facility1, facility2))
   }

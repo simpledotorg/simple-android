@@ -145,6 +145,10 @@
     <item name="android:textColor">@color/red1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body2Left.White100">
+    <item name="android:textColor">@color/white100</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body2Left.Numeric">
     <item name="android:letterSpacing" tools:ignore="NewApi">0.05</item>
   </style>

@@ -67,7 +67,8 @@ class OverdueScreenController @Inject constructor(
                 bpSystolic = it.bloodPressure.systolic,
                 bpDiastolic = it.bloodPressure.diastolic,
                 bpDaysAgo = calculateDaysAgoFromInstant(it.bloodPressure.updatedAt),
-                overdueDays = calculateOverdueDays(it.appointment.scheduledDate))
+                overdueDays = calculateOverdueDays(it.appointment.scheduledDate),
+                isAtHighRisk = it.isAtHighRisk)
           }
         }
         .map { { ui: Ui -> ui.updateList(it) } }

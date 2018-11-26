@@ -59,21 +59,22 @@ data class OverdueAppointment(
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
 
-          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :appointmentScheduledBefore AND PPN.number IS NOT NULL
-          AND (A.remindOn < :appointmentScheduledBefore OR A.remindOn IS NULL)
+          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :scheduledBefore AND PPN.number IS NOT NULL
+          AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)
           ORDER BY A.scheduledDate, A.updatedAt ASC
           """)
-    fun appointmentsForFacility(
+    @Deprecated(message = "Will be removed soon")
+    fun appointmentsForFacilityOld(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
-        appointmentScheduledBefore: LocalDate
+        scheduledBefore: LocalDate
     ): Flowable<List<OverdueAppointment>>
 
     /**
      * FYI: IntelliJ's SQL parser highlights `isAtHighRisk` as an error, but it's not. This is probably
-     * because referencing column aliases in a WHERE clause is not SQL standard, but sqlite allows it.
+     * because referencing column aliases in a WHERE clause is not SQL standard, but sqlite still allows it.
      */
     @Query("""
           SELECT P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
@@ -93,7 +94,7 @@ data class OverdueAppointment(
               WHEN MH.hasHadStroke = 1 THEN 1
               WHEN BP.systolic > 160 AND BP.diastolic > 100
                   AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
-                  AND (P.dateOfBirth < :bornBefore OR P.age_computedDateOfBirth < :bornBefore)
+                  AND (P.dateOfBirth < :patientBornBefore OR P.age_computedDateOfBirth < :patientBornBefore)
                   THEN 1
               ELSE 0
             END
@@ -116,7 +117,7 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
-        bornBefore: LocalDate
+        patientBornBefore: LocalDate
     ): Flowable<List<OverdueAppointment>>
   }
 }

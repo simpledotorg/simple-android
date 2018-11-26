@@ -5,6 +5,8 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -71,7 +73,8 @@ data class OverdueListItem(
     val bpSystolic: Int,
     val bpDiastolic: Int,
     val bpDaysAgo: Int,
-    val overdueDays: Int
+    val overdueDays: Int,
+    val isAtHighRisk: Boolean
 )
 
 class OverdueListViewHolder(
@@ -82,6 +85,7 @@ class OverdueListViewHolder(
   private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
   private val patientBPTextView by bindView<TextView>(R.id.overdue_patient_bp)
   private val overdueDaysTextView by bindView<TextView>(R.id.overdue_days)
+  private val isAtHighRiskTextView by bindView<TextView>(R.id.overdue_high_risk_label)
   private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
   private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
   private val phoneNumberTextView by bindView<TextView>(R.id.overdue_patient_phone_number)
@@ -107,22 +111,22 @@ class OverdueListViewHolder(
   }
 
   fun toggleBottomLayoutVisibility() {
-    val isVisible = actionsContainer.visibility == View.VISIBLE
+    val isVisible = actionsContainer.visibility == VISIBLE
     actionsContainer.visibility =
         if (isVisible) {
-          View.GONE
+          GONE
         } else {
           eventStream.onNext(AppointmentExpanded(appointment.patientUuid))
-          View.VISIBLE
+          VISIBLE
         }
   }
 
   fun togglePhoneNumberViewVisibility() {
-    val isVisible = phoneNumberTextView.visibility == View.VISIBLE
+    val isVisible = phoneNumberTextView.visibility == VISIBLE
     if (!isVisible && appointment.phoneNumber != null) {
-      phoneNumberTextView.visibility = View.VISIBLE
+      phoneNumberTextView.visibility = VISIBLE
     } else {
-      phoneNumberTextView.visibility = View.GONE
+      phoneNumberTextView.visibility = GONE
     }
   }
 
@@ -140,13 +144,10 @@ class OverdueListViewHolder(
         appointment.bpDaysAgo
     )
 
-    if (appointment.phoneNumber == null) {
-      callButton.visibility = View.GONE
-    } else {
-      callButton.visibility = View.VISIBLE
-    }
-
+    callButton.visibility = if (appointment.phoneNumber == null) GONE else VISIBLE
     phoneNumberTextView.text = appointment.phoneNumber
+
+    isAtHighRiskTextView.visibility = if (appointment.isAtHighRisk) VISIBLE else GONE
 
     overdueDaysTextView.text = context.resources.getQuantityString(
         R.plurals.overdue_list_item_overdue_days,

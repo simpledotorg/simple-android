@@ -2,6 +2,7 @@ package org.simple.clinic.facility.change
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -10,6 +11,7 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
+import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -80,7 +82,17 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
           .facilityClicks
           .map(::FacilityChangeClicked)
 
-  fun updateFacilities(facilityItems: List<Facility>) {
+  fun updateFacilities(facilityItems: List<Facility>, isFirstUpdate: Boolean) {
+    // Avoid animating the items on their first entry.
+    if (isFirstUpdate) {
+      facilityRecyclerView.itemAnimator = null
+    } else {
+      facilityRecyclerView.itemAnimator = SlideUpAlphaAnimator()
+          .withInterpolator(FastOutSlowInInterpolator())
+          .apply { moveDuration = 200 }
+    }
+
+    facilityRecyclerView.scrollToPosition(0)
     recyclerViewAdapter.submitList(facilityItems)
   }
 

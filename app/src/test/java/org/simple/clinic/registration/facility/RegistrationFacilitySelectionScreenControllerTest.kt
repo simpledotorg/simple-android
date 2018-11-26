@@ -4,7 +4,6 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -126,7 +125,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
 
-    verify(screen, times(2)).updateFacilities(listOf(facility1, facility2))
+    verify(screen).updateFacilities(listOf(facility1, facility2), isFirstUpdate = true)
+    verify(screen).updateFacilities(listOf(facility1, facility2), isFirstUpdate = false)
   }
 
   @Test

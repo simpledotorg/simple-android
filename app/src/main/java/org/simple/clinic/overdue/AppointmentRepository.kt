@@ -125,14 +125,14 @@ class AppointmentRepository @Inject constructor(
                 facilityUuid = facilityUuid,
                 scheduledStatus = Appointment.Status.SCHEDULED,
                 scheduledBefore = today,
-                bornBefore = today.minusYears(60)
+                patientBornBefore = today.minusYears(60)
             ).toObservable()
 
           } else {
-            overdueDao.appointmentsForFacility(
+            overdueDao.appointmentsForFacilityOld(
                 facilityUuid = facilityUuid,
                 scheduledStatus = Appointment.Status.SCHEDULED,
-                appointmentScheduledBefore = today
+                scheduledBefore = today
             ).toObservable()
           }
         }

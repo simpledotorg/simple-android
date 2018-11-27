@@ -8,33 +8,50 @@
   android:background="@color/white"
   android:orientation="vertical">
 
-  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/registrationfacilities_toolbar"
+  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+    android:id="@+id/registrationfacilities_toolbar_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white100"
-    android:elevation="3dp"
-    app:contentInsetStartWithNavigation="58dp"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:navigationIconTint="@color/grey1">
+    android:animateFirstView="false"
+    android:inAnimation="@anim/registrationfacilities_toolbar_entry"
+    android:outAnimation="@anim/registrationfacilities_toolbar_exit"
+    app:debug_displayedChild="0">
 
-    <EditText
-      android:id="@+id/registrationfacilities_search"
-      android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+      android:id="@+id/registrationfacilities_toolbar_without_search"
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:background="@null"
-      android:hint="@string/registrationfacilities_search_hint"
-      android:importantForAutofill="no"
-      android:inputType="textPostalAddress"
-      tools:ignore="UnusedAttribute" />
-  </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:title="@string/registrationfacilities_screen_title" />
+
+    <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+      android:id="@+id/registrationfacilities_toolbar_with_search"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@color/white100"
+      android:elevation="3dp"
+      app:contentInsetStartWithNavigation="58dp"
+      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      app:navigationIconTint="@color/grey1">
+
+      <EditText
+        android:id="@+id/registrationfacilities_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:hint="@string/registrationfacilities_search_hint"
+        android:importantForAutofill="no"
+        android:inputType="textPostalAddress"
+        tools:ignore="UnusedAttribute" />
+    </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 
   <include
     android:id="@+id/registrationfacilities_progress"
     layout="@layout/screen_registration_facility_selection_progress_state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/registrationfacilities_toolbar"
+    android:layout_below="@+id/registrationfacilities_toolbar_container"
     android:visibility="gone" />
 
   <android.support.v7.widget.RecyclerView
@@ -42,7 +59,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/registrationfacilities_done"
-    android:layout_below="@+id/registrationfacilities_toolbar"
+    android:layout_below="@+id/registrationfacilities_toolbar_container"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical"
     tools:listitem="@layout/list_facility_selection" />

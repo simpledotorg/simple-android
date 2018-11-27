@@ -451,7 +451,7 @@ class PatientRepositoryAndroidTest {
     val searchResult = patientRepository.search(name = "Ashok", assumedAge = 20).blockingFirst()
     val patientFirst = patientRepository.patient(patient.uuid).blockingFirst()
 
-    assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1)
+    assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(patientFirst).isNotNull()
     assertThat(searchResult).isEmpty()
   }
@@ -483,7 +483,7 @@ class PatientRepositoryAndroidTest {
     }
 
     patientRepository.save(patientsToSave).blockingAwait()
-    assertThat(patientRepository.recordCount().blockingGet()).isEqualTo(1000)
+    assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1000)
 
     assertThat(patientRepository.search(name = "Fame", assumedAge = 3, includeFuzzyNameSearch = true).blockingFirst().size).isEqualTo(100)
   }

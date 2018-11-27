@@ -45,8 +45,8 @@ class CommunicationRepository @Inject constructor(
     }
   }
 
-  override fun recordCount(): Single<Int> {
-    return dao.count().firstOrError()
+  override fun recordCount(): Observable<Int> {
+    return dao.count().toObservable()
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Communication>> {

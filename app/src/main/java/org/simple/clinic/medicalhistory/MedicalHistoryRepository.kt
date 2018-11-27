@@ -108,8 +108,8 @@ class MedicalHistoryRepository @Inject constructor(
     return Completable.fromAction { dao.save(newOrUpdatedHistories) }
   }
 
-  override fun recordCount(): Single<Int> {
-    return dao.count().firstOrError()
+  override fun recordCount(): Observable<Int> {
+    return dao.count().toObservable()
   }
 
   private fun toDatabaseModel(payload: MedicalHistoryPayload, syncStatus: SyncStatus): MedicalHistory {

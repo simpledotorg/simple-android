@@ -103,8 +103,8 @@ class BloodPressureRepository @Inject constructor(
         .flatMapCompletable { Completable.fromAction { dao.save(it) } }
   }
 
-  override fun recordCount(): Single<Int> {
-    return dao.count().firstOrError()
+  override fun recordCount(): Observable<Int> {
+    return dao.count().toObservable()
   }
 
   fun newest100MeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {

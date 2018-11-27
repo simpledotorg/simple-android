@@ -32,6 +32,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     return Observable.mergeArray(
         fetchFacilities(replayedEvents),
         showFacilities(replayedEvents),
+        toggleSearchFieldInToolbar(replayedEvents),
         proceedOnFacilityClicks(replayedEvents))
   }
 
@@ -82,6 +83,21 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     return Observable.merge(firstUpdate, subsequentUpdates)
         .map { (facilities, updateType) ->
           { ui: Ui -> ui.updateFacilities(facilities, updateType) }
+        }
+  }
+
+  private fun toggleSearchFieldInToolbar(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScreenCreated>()
+        .flatMap { facilityRepository.recordCount() }
+        .map { count -> count > 0 }
+        .distinctUntilChanged()
+        .map { hasFacilities ->
+          if (hasFacilities) {
+            { ui: Ui -> ui.showToolbarWithSearchField() }
+          } else {
+            { ui: Ui -> ui.showToolbarWithoutSearchField() }
+          }
         }
   }
 

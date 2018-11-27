@@ -12,6 +12,7 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
@@ -48,7 +49,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when screen is started then facilities should be fetched if they are empty`() {
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
+    val facilities = emptyList<Facility>()
+    whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
 
     uiEvents.onNext(ScreenCreated())
@@ -60,7 +63,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when screen is started then facilities should not be fetched if they are already available`() {
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(listOf(PatientMocker.facility())))
+    val facilities = listOf(PatientMocker.facility())
+    whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
 
     uiEvents.onNext(ScreenCreated())
@@ -76,8 +81,10 @@ class RegistrationFacilitySelectionScreenControllerTest {
         PatientMocker.facility(name = "Facility 1"),
         PatientMocker.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
 
+    uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "F"))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fa"))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fac"))
@@ -90,6 +97,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   @Test
   fun `when fetching facilities fails then an error should be shown`() {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0))
     whenever(facilitySync.pullWithResult())
         .thenReturn(Single.just(FacilityPullResult.UnexpectedError()))
         .thenReturn(Single.just(FacilityPullResult.NetworkError()))
@@ -121,6 +129,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facility2 = PatientMocker.facility(name = "Facility 2")
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
@@ -151,5 +160,17 @@ class RegistrationFacilitySelectionScreenControllerTest {
     inOrder.verify(registrationScheduler).schedule()
     inOrder.verify(screen).openHomeScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityIds = listOf(facility1.uuid)))
+  }
+
+  @Test
+  fun `search field should only be shown when facilities are available`() {
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.never())
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
+
+    uiEvents.onNext(ScreenCreated())
+
+    val inOrder = inOrder(screen)
+    inOrder.verify(screen).showToolbarWithoutSearchField()
+    inOrder.verify(screen).showToolbarWithSearchField()
   }
 }

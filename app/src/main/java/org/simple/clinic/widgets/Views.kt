@@ -19,6 +19,8 @@ import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.ViewFlipper
+import com.jakewharton.rxbinding2.widget.RxTextView
+import io.reactivex.Observable
 import timber.log.Timber
 
 fun EditText.showKeyboard() {
@@ -186,3 +188,9 @@ var ViewFlipper.displayedChildResId: Int
     val childIndex = indexOfChild(child)
     displayedChild = childIndex
   }
+
+fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {
+  return RxTextView.textChanges(this)
+      .map { it.toString() }
+      .map(mapper)
+}

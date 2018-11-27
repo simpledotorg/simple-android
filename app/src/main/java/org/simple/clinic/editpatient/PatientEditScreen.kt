@@ -26,6 +26,8 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.newentry.DateOfBirthEditText
+import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.FEMALE
@@ -69,7 +71,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
   private val ageAndDateOfBirthContainer by bindView<View>(R.id.patientedit_age_and_dob_container)
   private val ageEditext by bindView<EditText>(R.id.patientedit_age)
-  private val dateOfBirthEditText by bindView<EditText>(R.id.patientedit_date_of_birth)
+  private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
 
@@ -91,7 +93,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
             districtTextChanges(),
             stateTextChanges(),
             colonyTextChanges(),
-            genderChanges()
+            genderChanges(),
+            dateOfBirthTextChanges(),
+            dateOfBirthFocusChanges()
         )
         .observeOn(io())
         .compose(controller)
@@ -147,6 +151,12 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
           PatientEditGenderChanged(gender)
         }
   }
+
+  private fun dateOfBirthTextChanges(): Observable<UiEvent>
+    = dateOfBirthEditText.textChanges(::PatientEditDateOfBirthTextChanged)
+
+  private fun dateOfBirthFocusChanges(): Observable<UiEvent>
+    = dateOfBirthEditText.focusChanges.map(::PatientEditDateOfBirthFocusChanged)
 
   fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)

@@ -6,9 +6,10 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
+import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
-import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 typealias Ui = FacilityChangeScreen
@@ -28,17 +29,25 @@ class FacilityChangeScreenController @Inject constructor(
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    // Would have preferred RxJava for calculating this, but I couldn't make it work - Saket.
-    val firstUpdateDone = AtomicBoolean(false)
-
-    return events
+    val filteredFacilities = events
         .ofType<FacilityChangeSearchQueryChanged>()
         .map { it.query }
         .switchMap { query -> facilityRepository.facilities(query) }
-        .map { facilities ->
-          val isFirstUpdate = firstUpdateDone.get().not()
-          firstUpdateDone.set(true)
-          return@map { ui: Ui -> ui.updateFacilities(facilities, isFirstUpdate) }
+        .replay()
+        .refCount()
+
+    val firstUpdate = filteredFacilities
+        .map { facilities -> facilities to FIRST_UPDATE }
+        .take(1)
+
+    val subsequentUpdates = filteredFacilities
+        .map { facilities -> facilities to SUBSEQUENT_UPDATE }
+        .skip(1)
+
+    return firstUpdate
+        .mergeWith(subsequentUpdates)
+        .map { (facilities, updateType) ->
+          { ui: Ui -> ui.updateFacilities(facilities, updateType) }
         }
   }
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.editpatient
 
+import com.google.common.truth.Truth
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
@@ -23,6 +24,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
@@ -60,6 +62,8 @@ class PatientEditScreenControllerTest {
   private lateinit var controller: PatientEditScreenController
   var config = PatientEditConfig(isEditAgeAndDobEnabled = false)
 
+  private lateinit var errorConsumer: (Throwable) -> Unit
+
   @Before
   fun setUp() {
     screen = mock()
@@ -68,11 +72,11 @@ class PatientEditScreenControllerTest {
 
     controller = PatientEditScreenController(patientRepository, numberValidator, Single.fromCallable { config }, clock)
 
+    errorConsumer = { throw it }
+
     uiEvents
         .compose(controller)
-        .subscribe { uiChange ->
-          uiChange(screen)
-        }
+        .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
   }
 
   @Test
@@ -796,5 +800,27 @@ class PatientEditScreenControllerTest {
 
     verify(screen, times(2)).showDatePatternInDateOfBirthLabel()
     verify(screen).hideDatePatternInDateOfBirthLabel()
+  }
+
+  @Test
+  fun `date-of-birth and age fields should only be visible while one of them is empty`() {
+    uiEvents.onNext(PatientEditAgeTextChanged(""))
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged("1"))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
+    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+  }
+
+  @Test()
+  fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
+    errorConsumer = { Truth.assertThat(it).isInstanceOf(AssertionError::class.java) }
+
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged("1"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
   }
 }

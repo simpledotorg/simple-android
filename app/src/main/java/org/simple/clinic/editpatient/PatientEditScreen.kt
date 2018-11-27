@@ -72,6 +72,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val ageAndDateOfBirthContainer by bindView<View>(R.id.patientedit_age_and_dob_container)
   private val ageEditext by bindView<EditText>(R.id.patientedit_age)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
+  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
 
@@ -321,5 +322,13 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   fun disableEditAgeAndDateOfBirthFeature() {
     ageAndDateOfBirthContainer.visibility = GONE
+  }
+
+  fun showDatePatternInDateOfBirthLabel() {
+    dateOfBirthInputLayout.hint = resources.getString(R.string.patientedit_date_of_birth_focused)
+  }
+
+  fun hideDatePatternInDateOfBirthLabel() {
+    dateOfBirthInputLayout.hint = resources.getString(R.string.patientedit_date_of_birth_unfocused)
   }
 }

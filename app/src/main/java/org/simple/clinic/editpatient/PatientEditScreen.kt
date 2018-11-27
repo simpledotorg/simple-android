@@ -2,8 +2,14 @@ package org.simple.clinic.editpatient
 
 import android.content.Context
 import android.support.design.widget.TextInputLayout
+import android.support.transition.ChangeBounds
+import android.support.transition.Fade
+import android.support.transition.TransitionManager
+import android.support.transition.TransitionSet
+import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RadioButton
@@ -16,6 +22,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
+import kotlinx.android.synthetic.main.screen_patient_edit.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -26,6 +33,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
 import org.simple.clinic.newentry.DateOfBirthEditText
 import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
@@ -73,9 +81,13 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val ageEditext by bindView<EditText>(R.id.patientedit_age)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
+  private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patientedit_date_of_birth_container)
+  private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patientedit_dateofbirth_and_age_separator)
+  private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientedit_age_container)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
 
+  @Suppress("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -96,7 +108,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
             colonyTextChanges(),
             genderChanges(),
             dateOfBirthTextChanges(),
-            dateOfBirthFocusChanges()
+            dateOfBirthFocusChanges(),
+            ageTextChanges()
         )
         .observeOn(io())
         .compose(controller)
@@ -158,6 +171,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun dateOfBirthFocusChanges(): Observable<UiEvent>
     = dateOfBirthEditText.focusChanges.map(::PatientEditDateOfBirthFocusChanged)
+
+  private fun ageTextChanges(): Observable<UiEvent>
+    = ageEditext.textChanges(::PatientEditAgeTextChanged)
 
   fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)
@@ -330,5 +346,30 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   fun hideDatePatternInDateOfBirthLabel() {
     dateOfBirthInputLayout.hint = resources.getString(R.string.patientedit_date_of_birth_unfocused)
+  }
+
+  fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {
+    val transition = TransitionSet()
+        .addTransition(ChangeBounds())
+        .addTransition(Fade())
+        .setOrdering(TransitionSet.ORDERING_TOGETHER)
+        .setDuration(250)
+        .setInterpolator(FastOutSlowInInterpolator())
+    TransitionManager.beginDelayedTransition(this, transition)
+
+    dateOfBirthEditTextContainer.visibility = when (visibility) {
+      DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE, DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
+      else -> View.GONE
+    }
+
+    dateOfBirthAndAgeSeparator.visibility = when (visibility) {
+      DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
+      else -> View.GONE
+    }
+
+    ageEditTextContainer.visibility = when (visibility) {
+      DateOfBirthAndAgeVisibility.AGE_VISIBLE, DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
+      else -> View.GONE
+    }
   }
 }

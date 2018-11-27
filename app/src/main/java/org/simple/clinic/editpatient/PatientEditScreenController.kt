@@ -15,6 +15,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
 import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
@@ -49,7 +50,8 @@ class PatientEditScreenController @Inject constructor(
         hideValidationErrorsOnInput(transformedEvents),
         savePatientDetails(transformedEvents),
         toggleEditAgeAndDateofBirthFeature(transformedEvents),
-        toggleDatePatternInDateOfBirthLabel(transformedEvents))
+        toggleDatePatternInDateOfBirthLabel(transformedEvents),
+        switchBetweenDateOfBirthAndAge(transformedEvents))
   }
 
   private fun toggleEditAgeAndDateofBirthFeature(events: Observable<UiEvent>): Observable<UiChange> {
@@ -324,6 +326,27 @@ class PatientEditScreenController @Inject constructor(
             } else {
               ui.hideDatePatternInDateOfBirthLabel()
             }
+          }
+        }
+  }
+
+  private fun switchBetweenDateOfBirthAndAge(events: Observable<UiEvent>): Observable<UiChange> {
+    val isDateOfBirthBlanks = events
+        .ofType<PatientEditDateOfBirthTextChanged>()
+        .map { it.dateOfBirth.isBlank() }
+
+    val isAgeBlanks = events
+        .ofType<PatientEditAgeTextChanged>()
+        .map { it.age.isBlank() }
+
+    return Observables.combineLatest(isDateOfBirthBlanks, isAgeBlanks)
+        .distinctUntilChanged()
+        .map<UiChange> { (dateBlank, ageBlank) ->
+          when {
+            !dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE) }
+            dateBlank && !ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE) }
+            dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE) }
+            else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
           }
         }
   }

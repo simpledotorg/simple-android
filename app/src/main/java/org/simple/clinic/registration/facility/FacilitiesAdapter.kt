@@ -1,7 +1,10 @@
 package org.simple.clinic.registration.facility
 
+import android.support.v4.content.ContextCompat
 import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.util.DiffUtil
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,12 +15,16 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.change.FacilityListItem
+import org.simple.clinic.facility.change.FacilityListItem.Address
+import org.simple.clinic.facility.change.FacilityListItem.Name
+import org.simple.clinic.util.exhaustive
 
 /**
  * FYI: We tried using Groupie for facility screen, but it was resulting in a weird
  * error where a CheckBox click was leading to callbacks from two CheckBoxes in two rows.
  */
-class FacilitiesAdapter : ListAdapter<Facility, FacilityViewHolder>(FacilityDiffer()) {
+class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(FacilityListItem.Differ()) {
 
   val facilityClicks = PublishSubject.create<Facility>()!!
 
@@ -27,7 +34,7 @@ class FacilitiesAdapter : ListAdapter<Facility, FacilityViewHolder>(FacilityDiff
   }
 
   override fun onBindViewHolder(holder: FacilityViewHolder, position: Int) {
-    holder.facility = getItem(position)
+    holder.facilityListItem = getItem(position)
     holder.render()
   }
 
@@ -41,33 +48,44 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<Facility>) : ViewHold
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
 
-  lateinit var facility: Facility
+  lateinit var facilityListItem: FacilityListItem
 
   init {
     itemView.setOnClickListener {
-      uiEvents.onNext(facility)
+      uiEvents.onNext(facilityListItem.facility)
     }
   }
 
   fun render() {
-    nameTextView.text = facility.name
+    val name = facilityListItem.name
+    when (name) {
+      is Name.Highlighted -> {
+        val highlightedName = SpannableStringBuilder(name.name)
+        val highlightColor = ContextCompat.getColor(itemView.context, R.color.facility_search_query_highlight)
+        highlightedName.setSpan(ForegroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        nameTextView.text = highlightedName
+      }
+      is Name.Plain -> {
+        nameTextView.text = name.name
+      }
+    }.exhaustive()
 
-    if (facility.streetAddress.isNullOrBlank()) {
-      addressTextView.text = itemView.resources.getString(
-          R.string.registrationfacilities_facility_address_without_street,
-          facility.district,
-          facility.state)
-    } else {
-      addressTextView.text = itemView.resources.getString(
-          R.string.registrationfacilities_facility_address_with_street,
-          facility.streetAddress,
-          facility.district,
-          facility.state)
+    val address = facilityListItem.address
+    addressTextView.text = when (address) {
+      is Address.WithStreet -> {
+        itemView.resources.getString(
+            R.string.registrationfacilities_facility_address_with_street,
+            address.street,
+            address.district,
+            address.state)
+      }
+      is Address.WithoutStreet -> {
+        itemView.resources.getString(
+            R.string.registrationfacilities_facility_address_without_street,
+            address.district,
+            address.state)
+      }
     }
   }
 }
 
-class FacilityDiffer : DiffUtil.ItemCallback<Facility>() {
-  override fun areItemsTheSame(oldItem: Facility, newItem: Facility) = oldItem.uuid == newItem.uuid
-  override fun areContentsTheSame(oldItem: Facility, newItem: Facility) = oldItem == newItem
-}

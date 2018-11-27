@@ -98,6 +98,7 @@ object PatientMocker {
   fun facility(
       uuid: UUID = mock(),
       name: String = "some facility",
+      streetAddress: String? = "some street",
       district: String = "district",
       state: String = "state"
   ): Facility {
@@ -107,7 +108,7 @@ object PatientMocker {
         district = district,
         state = state,
         facilityType = null,
-        streetAddress = null,
+        streetAddress = streetAddress,
         villageOrColony = null,
         country = "India",
         pinCode = null,

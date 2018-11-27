@@ -60,7 +60,7 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
         .andThen(pull())
         .blockingAwait()
 
-    val recordCountAfterPull = repository().recordCount().blockingGet()
+    val recordCountAfterPull = repository().recordCount().blockingFirst()
     assertThat(recordCountAfterPull).isAtLeast(recordsToInsert)
   }
 

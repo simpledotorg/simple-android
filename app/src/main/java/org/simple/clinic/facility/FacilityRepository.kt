@@ -96,7 +96,7 @@ class FacilityRepository @Inject constructor(
     return Completable.fromAction { facilityDao.updateSyncStatus(uuids = ids, newStatus = to) }
   }
 
-  override fun recordCount(): Single<Int> {
-    return facilityDao.count().firstOrError()
+  override fun recordCount(): Observable<Int> {
+    return facilityDao.count().toObservable()
   }
 }

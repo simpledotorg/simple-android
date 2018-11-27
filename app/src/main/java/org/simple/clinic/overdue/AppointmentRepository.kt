@@ -110,8 +110,8 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  override fun recordCount(): Single<Int> {
-    return appointmentDao.count().firstOrError()
+  override fun recordCount(): Observable<Int> {
+    return appointmentDao.count().toObservable()
   }
 
   fun overdueAppointments(): Observable<List<OverdueAppointment>> {

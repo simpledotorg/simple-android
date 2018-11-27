@@ -145,8 +145,10 @@ class PatientRepository @Inject constructor(
     return Completable.fromAction { database.patientDao().updateSyncStatus(ids, to) }
   }
 
-  override fun recordCount(): Single<Int> {
-    return database.patientDao().patientCount().firstOrError()
+  override fun recordCount(): Observable<Int> {
+    return database.patientDao()
+        .patientCount()
+        .toObservable()
   }
 
   override fun mergeWithLocalData(payloads: List<PatientPayload>): Completable {

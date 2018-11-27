@@ -43,6 +43,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -329,10 +330,4 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
       formScrollView.smoothScrollTo(0, formScrollView.height)
     }
   }
-}
-
-private fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {
-  return RxTextView.textChanges(this)
-      .map { it.toString() }
-      .map(mapper)
 }

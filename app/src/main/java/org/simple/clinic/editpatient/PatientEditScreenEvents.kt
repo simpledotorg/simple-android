@@ -36,3 +36,11 @@ data class OngoingEditPatientEntryChanged(val ongoingEditPatientEntry: OngoingEd
 class PatientEditSaveClicked: UiEvent {
   override val analyticsName = "Edit Patient Entry:Save Clicked"
 }
+
+data class PatientEditDateOfBirthFocusChanged(val hasFocus: Boolean): UiEvent {
+  override val analyticsName = "Edit Patient Entry:Focused on DOB Text Field"
+}
+
+data class PatientEditDateOfBirthTextChanged(val dateOfBirth: String): UiEvent {
+  override val analyticsName = "Edit Patient Entry:DOB Text Changed"
+}

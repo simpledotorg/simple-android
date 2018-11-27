@@ -23,6 +23,9 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.change.FacilitiesUpdateType
+import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
+import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -121,12 +124,11 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     errorContainer.visibility = View.GONE
   }
 
-  fun updateFacilities(facilityItems: List<Facility>, isFirstUpdate: Boolean) {
+  fun updateFacilities(facilityItems: List<Facility>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
-    if (isFirstUpdate) {
-      facilityRecyclerView.itemAnimator = null
-    } else {
-      facilityRecyclerView.itemAnimator = SlideUpAlphaAnimator()
+    facilityRecyclerView.itemAnimator = when (updateType) {
+      FIRST_UPDATE -> null
+      SUBSEQUENT_UPDATE -> SlideUpAlphaAnimator()
           .withInterpolator(FastOutSlowInInterpolator())
           .apply { moveDuration = 200 }
     }

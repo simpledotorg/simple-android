@@ -1,5 +1,6 @@
 package org.simple.clinic.facility.change
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -10,6 +11,8 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
+import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
@@ -41,8 +44,8 @@ class FacilityChangeScreenControllerTest {
 
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = ""))
 
-    verify(screen).updateFacilities(listOf(facility1, facility2), isFirstUpdate = true)
-    verify(screen).updateFacilities(listOf(facility1, facility2), isFirstUpdate = false)
+    verify(screen).updateFacilities(listOf(facility1, facility2), FIRST_UPDATE)
+    verify(screen).updateFacilities(listOf(facility1, facility2), SUBSEQUENT_UPDATE)
   }
 
   @Test
@@ -50,9 +53,7 @@ class FacilityChangeScreenControllerTest {
     val facilities = listOf(
         PatientMocker.facility(name = "Facility 1"),
         PatientMocker.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities("F")).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.facilities("Fa")).thenReturn(Observable.just(facilities))
-    whenever(facilityRepository.facilities("Fac")).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
 
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "F"))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fa"))

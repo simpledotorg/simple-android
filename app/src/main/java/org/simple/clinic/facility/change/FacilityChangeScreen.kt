@@ -18,7 +18,6 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.registration.facility.FacilitiesAdapter
@@ -84,7 +83,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
           .facilityClicks
           .map(::FacilityChangeClicked)
 
-  fun updateFacilities(facilityItems: List<Facility>, updateType: FacilitiesUpdateType) {
+  fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
     facilityRecyclerView.itemAnimator = when (updateType) {
       FIRST_UPDATE -> null

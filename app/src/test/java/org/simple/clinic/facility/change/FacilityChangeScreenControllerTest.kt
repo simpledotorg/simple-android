@@ -42,10 +42,14 @@ class FacilityChangeScreenControllerTest {
     val facilities = listOf(facility1, facility2)
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
 
-    uiEvents.onNext(FacilityChangeSearchQueryChanged(query = ""))
+    val searchQuery = ""
+    uiEvents.onNext(FacilityChangeSearchQueryChanged(searchQuery))
 
-    verify(screen).updateFacilities(listOf(facility1, facility2), FIRST_UPDATE)
-    verify(screen).updateFacilities(listOf(facility1, facility2), SUBSEQUENT_UPDATE)
+    val facility1ListItem = FacilityListItem.Builder.build(facility1, searchQuery)
+    val facility2ListItem = FacilityListItem.Builder.build(facility2, searchQuery)
+
+    verify(screen).updateFacilities(listOf(facility1ListItem, facility2ListItem), FIRST_UPDATE)
+    verify(screen).updateFacilities(listOf(facility1ListItem, facility2ListItem), SUBSEQUENT_UPDATE)
   }
 
   @Test

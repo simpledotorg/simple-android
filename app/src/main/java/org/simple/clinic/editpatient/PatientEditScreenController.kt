@@ -48,7 +48,8 @@ class PatientEditScreenController @Inject constructor(
         showValidationErrorsOnSaveClick(transformedEvents),
         hideValidationErrorsOnInput(transformedEvents),
         savePatientDetails(transformedEvents),
-        toggleEditAgeAndDateofBirthFeature(transformedEvents))
+        toggleEditAgeAndDateofBirthFeature(transformedEvents),
+        toggleDatePatternInDateOfBirthLabel(transformedEvents))
   }
 
   private fun toggleEditAgeAndDateofBirthFeature(events: Observable<UiEvent>): Observable<UiChange> {
@@ -290,5 +291,29 @@ class PatientEditScreenController @Inject constructor(
     return Observables.zip(savePatientDetails, saveOrUpdatePhoneNumber)
         .filter { (patientSaved, numberSaved) -> patientSaved && numberSaved }
         .map { (_, _) -> { ui: Ui -> ui.goBack() } }
+  }
+
+  private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {
+    val dateFocusChanges = events
+        .ofType<PatientEditDateOfBirthFocusChanged>()
+        .map { it.hasFocus }
+
+    val dateTextAvailabilities = events
+        .ofType<PatientEditDateOfBirthTextChanged>()
+        .map { it.dateOfBirth.isNotBlank() }
+
+    return Observables.combineLatest(dateFocusChanges, dateTextAvailabilities)
+        .map { (hasFocus, hasDateOfBirth) -> hasFocus || hasDateOfBirth }
+        .distinctUntilChanged()
+        .map { showPattern ->
+          { ui: Ui ->
+            if (showPattern) {
+              ui.showDatePatternInDateOfBirthLabel()
+
+            } else {
+              ui.hideDatePatternInDateOfBirthLabel()
+            }
+          }
+        }
   }
 }

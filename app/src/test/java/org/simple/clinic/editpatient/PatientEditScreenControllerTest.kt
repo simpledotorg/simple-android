@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -757,5 +758,28 @@ class PatientEditScreenControllerTest {
     } else {
       verify(screen).disableEditAgeAndDateOfBirthFeature()
     }
+  }
+
+  @Test
+  fun `when data of birth has focus, the date format should be shown in the label`() {
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = true))
+    uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = false))
+    uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = true))
+    uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = false))
+
+    verify(screen, times(2)).showDatePatternInDateOfBirthLabel()
+    verify(screen, times(2)).hideDatePatternInDateOfBirthLabel()
+  }
+
+  @Test
+  fun `when date of birth text changes, the date format should be shown in the label`() {
+    uiEvents.onNext(PatientEditDateOfBirthFocusChanged(hasFocus = false))
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged("01/01/1990"))
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged("01/01/1990"))
+
+    verify(screen, times(2)).showDatePatternInDateOfBirthLabel()
+    verify(screen).hideDatePatternInDateOfBirthLabel()
   }
 }

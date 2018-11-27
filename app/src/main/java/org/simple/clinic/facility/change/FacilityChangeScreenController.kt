@@ -29,25 +29,29 @@ class FacilityChangeScreenController @Inject constructor(
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val filteredFacilities = events
+    val filteredFacilityListItems = events
         .ofType<FacilityChangeSearchQueryChanged>()
         .map { it.query }
-        .switchMap { query -> facilityRepository.facilities(query) }
+        .switchMap { query ->
+          facilityRepository
+              .facilities(query)
+              .map { facilities -> facilities.map { FacilityListItem.Builder.build(it, query) } }
+        }
         .replay()
         .refCount()
 
-    val firstUpdate = filteredFacilities
-        .map { facilities -> facilities to FIRST_UPDATE }
+    val firstUpdate = filteredFacilityListItems
+        .map { listItems -> listItems to FIRST_UPDATE }
         .take(1)
 
-    val subsequentUpdates = filteredFacilities
-        .map { facilities -> facilities to SUBSEQUENT_UPDATE }
+    val subsequentUpdates = filteredFacilityListItems
+        .map { listItems -> listItems to SUBSEQUENT_UPDATE }
         .skip(1)
 
     return firstUpdate
         .mergeWith(subsequentUpdates)
-        .map { (facilities, updateType) ->
-          { ui: Ui -> ui.updateFacilities(facilities, updateType) }
+        .map { (listItems, updateType) ->
+          { ui: Ui -> ui.updateFacilities(listItems, updateType) }
         }
   }
 

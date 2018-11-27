@@ -23,10 +23,10 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
+import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -139,7 +139,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     errorContainer.visibility = View.GONE
   }
 
-  fun updateFacilities(facilityItems: List<Facility>, updateType: FacilitiesUpdateType) {
+  fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.
     facilityRecyclerView.itemAnimator = when (updateType) {
       FIRST_UPDATE -> null

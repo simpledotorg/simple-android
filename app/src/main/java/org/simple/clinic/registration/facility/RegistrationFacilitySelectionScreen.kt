@@ -13,6 +13,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
+import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
@@ -30,6 +31,7 @@ import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -45,7 +47,9 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   @Inject
   lateinit var screenRouter: ScreenRouter
 
-  private val toolbar by bindView<Toolbar>(R.id.registrationfacilities_toolbar)
+  private val toolbarViewFlipper by bindView<ViewFlipper>(R.id.registrationfacilities_toolbar_container)
+  private val toolbarViewWithSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_with_search)
+  private val toolbarViewWithoutSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_without_search)
   private val searchEditText by bindView<EditText>(R.id.registrationfacilities_search)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
   private val progressView by bindView<View>(R.id.registrationfacilities_progress)
@@ -71,7 +75,10 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
 
-    toolbar.setNavigationOnClickListener {
+    toolbarViewWithSearch.setNavigationOnClickListener {
+      screenRouter.pop()
+    }
+    toolbarViewWithoutSearch.setNavigationOnClickListener {
       screenRouter.pop()
     }
 
@@ -105,6 +112,14 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   fun hideProgressIndicator() {
     progressView.visibility = GONE
+  }
+
+  fun showToolbarWithSearchField() {
+    toolbarViewFlipper.displayedChildResId = R.id.registrationfacilities_toolbar_with_search
+  }
+
+  fun showToolbarWithoutSearchField() {
+    toolbarViewFlipper.displayedChildResId = R.id.registrationfacilities_toolbar_without_search
   }
 
   fun showNetworkError() {

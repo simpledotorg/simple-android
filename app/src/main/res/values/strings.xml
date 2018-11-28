@@ -89,6 +89,8 @@
   <string name="patientedit_dateofbirth_and_age_separator">@string/patiententry_dateofbirth_and_age_separator</string>
   <string name="patientedit_age">@string/patiententry_age</string>
   <string name="patientedit_error_both_dateofbirth_and_age_empty">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
+  <string name="patientedit_error_invalid_dateofbirth">@string/patiententry_error_invalid_dateofbirth</string>
+  <string name="patientedit_error_dateofbirth_is_in_future">@string/patiententry_error_dateofbirth_is_in_future</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

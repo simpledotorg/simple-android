@@ -378,6 +378,10 @@ class PatientSummaryScreenController @Inject constructor(
     val screenCreates = events
         .ofType<PatientSummaryScreenCreated>()
 
+    val isPatientNew = screenCreates
+        .filter { it.caller == NEW_PATIENT }
+        .map { Saved(it.patientUuid) as PatientSummaryResult }
+
     val appointmentScheduled = events.ofType<AppointmentScheduled>()
         .withLatestFrom(screenCreates)
         .map { (_, createdEvent) -> Scheduled(createdEvent.patientUuid) as PatientSummaryResult }
@@ -388,7 +392,7 @@ class PatientSummaryScreenController @Inject constructor(
         .filter { (item, createdEvent) -> item.hasItemChangedSince(createdEvent.screenCreatedTimestamp) }
         .map { (_, createdEvent) -> Saved(createdEvent.patientUuid) as PatientSummaryResult }
 
-    return wasPatientSummaryItemsChanged.mergeWith(appointmentScheduled)
+    return Observable.merge(isPatientNew, wasPatientSummaryItemsChanged, appointmentScheduled)
         .flatMap {
           patientSummaryResult.set(it)
           Observable.never<UiChange>()

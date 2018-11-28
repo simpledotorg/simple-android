@@ -2,7 +2,6 @@ package org.simple.clinic.drugs.sync
 
 import io.reactivex.Single
 import org.simple.clinic.sync.DataPushResponse
-import org.threeten.bp.Instant
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -22,6 +21,6 @@ interface PrescriptionSyncApiV1 {
   @GET("$version/prescription_drugs/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullTimestamp: Instant? = null
+      @Query("processed_since") lastPullToken: String? = null
   ): Single<PrescriptionPullResponse>
 }

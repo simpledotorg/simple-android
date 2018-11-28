@@ -12,7 +12,6 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV1
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,7 +23,7 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
 
   @Inject
   @field:Named("last_patient_pull_token")
-  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var sync: PatientSync
@@ -50,7 +49,7 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
 
   override fun generatePayload() = testData.patientPayload()
 
-  override fun lastPullTimestamp() = lastPullTimestamp
+  override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<PatientPayload>) = syncApi.push(PatientPushRequest(payloads))
 }

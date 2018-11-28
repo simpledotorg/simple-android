@@ -13,9 +13,8 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -42,7 +41,7 @@ class FacilitySyncAndroidTest {
 
   @Inject
   @field:Named("last_facility_pull_token")
-  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var facilitySync: FacilitySync
@@ -60,7 +59,7 @@ class FacilitySyncAndroidTest {
 
   @Test
   fun when_pulling_facilities_then_paginate_till_the_server_does_not_have_anymore_facilities() {
-    lastPullTimestamp.set(Just(Instant.EPOCH))
+    lastPullToken.set(None)
 
     facilitySync.pull()
         .test()

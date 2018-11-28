@@ -10,7 +10,7 @@ import java.util.UUID
 class WeightedLevenshteinSearch(
     private val minimumSearchTermLength: Int,
     private val fuzzyStringDistanceCutoff: Float,
-    private val resultsComparator: Comparator<SearchContext>,
+    private val resultsComparator: Comparator<PatientSearchContext>,
     characterSubstitutionCost: Float,
     characterInsertionCost: Float,
     characterDeletionCost: Float
@@ -43,7 +43,7 @@ class WeightedLevenshteinSearch(
       val searchContext = names
           .filter { it.fullName.isNotBlank() }
           .map {
-            SearchContext(
+            PatientSearchContext(
                 patient = it,
                 nameParts = nameToSearchableParts(it.fullName),
                 searchParts = searchTermParts)
@@ -51,7 +51,7 @@ class WeightedLevenshteinSearch(
           .filter { it.nameParts.isNotEmpty() }
           .map {
             val distances = searchTermParts.zip(it.nameParts) { searchPart, namePart ->
-              SearchContext.EditDistance(
+              PatientSearchContext.EditDistance(
                   namePart = namePart,
                   searchPart = searchPart,
                   editDistance = levenshtein.distance(searchPart, namePart))

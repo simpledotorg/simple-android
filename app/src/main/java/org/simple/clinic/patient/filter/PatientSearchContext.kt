@@ -2,7 +2,7 @@ package org.simple.clinic.patient.filter
 
 import org.simple.clinic.patient.PatientSearchResult
 
-data class SearchContext(
+data class PatientSearchContext(
     val patient: PatientSearchResult.PatientNameAndId,
     val nameParts: List<String>,
     val searchParts: List<String>,

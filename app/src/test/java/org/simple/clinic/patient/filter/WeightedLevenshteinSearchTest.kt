@@ -263,7 +263,7 @@ class WeightedLevenshteinSearchTest {
   fun `it should sort the results based on the comparator provided`(
       input: List<PatientNameAndId>,
       searchTerm: String,
-      comparator: Comparator<SearchContext>,
+      comparator: Comparator<PatientSearchContext>,
       expectedResults: List<UUID>
   ) {
     val search = WeightedLevenshteinSearch(
@@ -282,7 +282,7 @@ class WeightedLevenshteinSearchTest {
     fun constructTestData(
         names: List<String>,
         expectedResultIndices: List<Int>,
-        comparator: Comparator<SearchContext>,
+        comparator: Comparator<PatientSearchContext>,
         searchTerm: String
     ): List<Any> {
       val input = names.map { PatientNameAndId(UUID.randomUUID(), it) }
@@ -324,7 +324,7 @@ class WeightedLevenshteinSearchTest {
             comparator = SortByTotalSumOfDistances().reversed()))
   }
 
-  private class DoNothingComparator : Comparator<SearchContext> {
-    override fun compare(o1: SearchContext, o2: SearchContext) = 0
+  private class DoNothingComparator : Comparator<PatientSearchContext> {
+    override fun compare(o1: PatientSearchContext, o2: PatientSearchContext) = 0
   }
 }

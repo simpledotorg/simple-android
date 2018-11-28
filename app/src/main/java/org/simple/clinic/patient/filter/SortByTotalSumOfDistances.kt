@@ -1,6 +1,6 @@
 package org.simple.clinic.patient.filter
 
-class SortByTotalSumOfDistances : Comparator<SearchContext> {
+class SortByTotalSumOfDistances : Comparator<PatientSearchContext> {
 
-  override fun compare(first: SearchContext, second: SearchContext) = first.totalEditDistance.compareTo(second.totalEditDistance)
+  override fun compare(first: PatientSearchContext, second: PatientSearchContext) = first.totalEditDistance.compareTo(second.totalEditDistance)
 }

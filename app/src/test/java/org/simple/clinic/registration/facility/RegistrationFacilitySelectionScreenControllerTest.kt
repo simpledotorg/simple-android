@@ -170,8 +170,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `search field should only be shown when facilities are available`() {
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.never())
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.never())
 
     uiEvents.onNext(ScreenCreated())
 

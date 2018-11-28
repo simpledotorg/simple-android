@@ -10,13 +10,17 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.OngoingEditPatientEntry
+import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
@@ -27,6 +31,7 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.Clock
 import javax.inject.Inject
 
@@ -37,7 +42,8 @@ class PatientEditScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val numberValidator: PhoneNumberValidator,
     private val configProvider: Single<PatientEditConfig>,
-    private val clock: Clock
+    private val clock: Clock,
+    private val dateOfBirthFormatValidator: DateOfBirthFormatValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -167,7 +173,13 @@ class PatientEditScreenController @Inject constructor(
 
     val ageChanges = events
         .ofType<PatientEditAgeTextChanged>()
-        .map { it.age }
+        .map { EntryWithAge(it.age) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
+
+    val dateOfBirthChanges = events
+        .ofType<PatientEditDateOfBirthTextChanged>()
+        .map { EntryWithDateOfBirth(it.dateOfBirth) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
+
+    val ageOrDateOfBirthChanges = Observable.merge(ageChanges, dateOfBirthChanges)
 
     return Observables.combineLatest(
         nameChanges,
@@ -176,8 +188,8 @@ class PatientEditScreenController @Inject constructor(
         districtChanges,
         stateChanges,
         phoneNumberChanges,
-        ageChanges
-    ) { name, gender, colonyOrVillage, district, state, phoneNumber, age ->
+        ageOrDateOfBirthChanges
+    ) { name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOFBirth ->
       OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
           name = name,
           gender = gender,
@@ -185,7 +197,7 @@ class PatientEditScreenController @Inject constructor(
           colonyOrVillage = colonyOrVillage,
           district = district,
           state = state,
-          age = age))
+          ageOrDateOfBirth = ageOrDateOFBirth))
     }
   }
 
@@ -203,7 +215,7 @@ class PatientEditScreenController @Inject constructor(
           ongoingEditPatientEntry to phoneNumber
         }
         .map { (ongoingEditPatientEntry, phoneNumber) ->
-          ongoingEditPatientEntry.validate(phoneNumber.toNullable(), numberValidator)
+          ongoingEditPatientEntry.validate(phoneNumber.toNullable(), numberValidator, dateOfBirthFormatValidator)
         }
         .filter { it.isNotEmpty() }
         .map { errors ->
@@ -221,7 +233,8 @@ class PatientEditScreenController @Inject constructor(
         PatientEditColonyOrVillageChanged::class to setOf(COLONY_OR_VILLAGE_EMPTY),
         PatientEditStateTextChanged::class to setOf(STATE_EMPTY),
         PatientEditDistrictTextChanged::class to setOf(DISTRICT_EMPTY),
-        PatientEditAgeTextChanged::class to setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
+        PatientEditAgeTextChanged::class to setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT),
+        PatientEditDateOfBirthTextChanged::class to setOf(INVALID_DATE_OF_BIRTH, DATE_OF_BIRTH_IN_FUTURE))
 
     return events
         .map { uiEvent -> errorsForEventType[uiEvent::class] ?: emptySet() }
@@ -247,7 +260,7 @@ class PatientEditScreenController @Inject constructor(
     val validEntry = saveClicks
         .withLatestFrom(entryChanges, savedNumbers)
         .filter { (_, entry, savedNumber) ->
-          val validationErrors = entry.validate(savedNumber.toNullable(), numberValidator)
+          val validationErrors = entry.validate(savedNumber.toNullable(), numberValidator, dateOfBirthFormatValidator)
           validationErrors.isEmpty()
         }
         .map { (_, entry) -> entry }

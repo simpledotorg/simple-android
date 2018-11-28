@@ -24,6 +24,8 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
 class PatientSearchResultsControllerTest {
@@ -37,6 +39,7 @@ class PatientSearchResultsControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   val currentFacility = PatientMocker.facility()
+  val dateOfBirthFormat = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
 
   @Before
   fun setUp() {
@@ -47,7 +50,7 @@ class PatientSearchResultsControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
-    controller = PatientSearchResultsController(patientRepository, userSession, facilityRepository, fixedClock)
+    controller = PatientSearchResultsController(patientRepository, userSession, facilityRepository, fixedClock, dateOfBirthFormat)
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 

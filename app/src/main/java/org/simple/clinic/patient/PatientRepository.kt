@@ -7,9 +7,9 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
@@ -25,14 +25,12 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Arrays
-import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias PatientUuid = UUID
 typealias FacilityUuid = UUID
-
-val DATE_OF_BIRTH_FORMAT_FOR_UI = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)!!
 
 @AppScope
 class PatientRepository @Inject constructor(
@@ -42,7 +40,8 @@ class PatientRepository @Inject constructor(
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
-    private val ageFuzzer: AgeFuzzer
+    private val ageFuzzer: AgeFuzzer,
+    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -326,10 +325,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {
-    return dateOfBirth?.let {
-      val formatter = DATE_OF_BIRTH_FORMAT_FOR_UI
-      formatter.parse(dateOfBirth, LocalDate::from)
-    }
+    return dateOfBirth?.let { dateOfBirthFormat.parse(dateOfBirth, LocalDate::from) }
   }
 
   private fun saveAddress(address: PatientAddress): Completable {

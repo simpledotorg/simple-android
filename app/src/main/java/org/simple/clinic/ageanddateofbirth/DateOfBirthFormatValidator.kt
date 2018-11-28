@@ -1,4 +1,4 @@
-package org.simple.clinic.newentry
+package org.simple.clinic.ageanddateofbirth
 
 import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.threeten.bp.LocalDate

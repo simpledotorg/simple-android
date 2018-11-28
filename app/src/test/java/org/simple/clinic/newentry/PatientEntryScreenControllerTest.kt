@@ -19,10 +19,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker

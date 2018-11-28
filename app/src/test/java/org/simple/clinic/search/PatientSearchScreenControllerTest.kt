@@ -9,9 +9,9 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
-import org.simple.clinic.newentry.DateOfBirthFormatValidator
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 

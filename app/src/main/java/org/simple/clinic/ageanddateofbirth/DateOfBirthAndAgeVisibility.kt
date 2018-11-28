@@ -1,4 +1,4 @@
-package org.simple.clinic.newentry
+package org.simple.clinic.ageanddateofbirth
 
 enum class DateOfBirthAndAgeVisibility {
   AGE_VISIBLE,

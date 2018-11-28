@@ -8,10 +8,10 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.AGE_VISIBLE
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.newentry.DateOfBirthFormatValidator
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.search.PatientSearchValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT

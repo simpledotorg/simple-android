@@ -1,9 +1,9 @@
 package org.simple.clinic.patient
 
-import org.simple.clinic.newentry.DateOfBirthFormatValidator
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.INVALID_PATTERN
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result.VALID
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator.Result.INVALID_PATTERN
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY

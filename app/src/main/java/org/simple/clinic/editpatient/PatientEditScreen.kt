@@ -22,7 +22,6 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
-import kotlinx.android.synthetic.main.screen_patient_edit.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -33,8 +32,8 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
-import org.simple.clinic.newentry.DateOfBirthEditText
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.textChanges
 import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.simple.clinic.patient.Gender

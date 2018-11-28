@@ -7,8 +7,8 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.newentry.DateOfBirthFormatValidator
-import org.simple.clinic.newentry.DateOfBirthFormatValidator.Result
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber

@@ -9,7 +9,7 @@ import java.util.UUID
 
 class WeightedLevenshteinSearch(
     private val minimumSearchTermLength: Int,
-    private val fuzzyStringDistanceCutoff: Float,
+    private val maximumAllowedEditDistance: Float,
     private val resultsComparator: Comparator<PatientSearchContext>,
     characterSubstitutionCost: Float,
     characterInsertionCost: Float,
@@ -59,7 +59,7 @@ class WeightedLevenshteinSearch(
 
             it.copy(editDistances = distances)
           }
-          .filter { it.totalEditDistance <= fuzzyStringDistanceCutoff }
+          .filter { it.totalEditDistance <= maximumAllowedEditDistance }
           .sortedWith(resultsComparator)
 
       Single.just(searchContext.map { it.patient.uuid })

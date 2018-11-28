@@ -14,11 +14,13 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -30,6 +32,7 @@ import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
@@ -85,11 +88,11 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     facilityRecyclerView.layoutManager = LinearLayoutManager(context)
     facilityRecyclerView.adapter = recyclerViewAdapter
 
-    // Filtering facilities is optional. Doing it
-    // without adding a post{} block doesn't work.
+    // Doing it without adding a post{} block doesn't work.
     post {
       hideKeyboard()
     }
+    hideKeyboardOnListScroll()
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
@@ -105,6 +108,20 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
           .map { RegistrationFacilitySelectionRetryClicked() }
 
   private fun facilityClicks() = recyclerViewAdapter.facilityClicks.map(::RegistrationFacilityClicked)
+
+  @SuppressLint("CheckResult")
+  private fun hideKeyboardOnListScroll() {
+    val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
+    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
+
+    Observables.combineLatest(scrollEvents, scrollStateChanges)
+        .compose(RecyclerViewUserScrollDetector.streamDetections())
+        .filter { it.byUser }
+        .takeUntil(RxView.detaches(this))
+        .subscribe {
+          hideKeyboard()
+        }
+  }
 
   fun showProgressIndicator() {
     progressView.visibility = VISIBLE

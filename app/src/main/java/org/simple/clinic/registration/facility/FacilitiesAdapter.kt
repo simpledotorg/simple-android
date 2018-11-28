@@ -39,7 +39,8 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   }
 
   override fun getItemId(position: Int): Long {
-    // The data-set never changes, so this is fine.
+    // DiffUtil handles calculating item changes
+    // even without stable IDs so this is fine.
     return position.toLong()
   }
 }

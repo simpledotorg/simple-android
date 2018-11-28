@@ -59,11 +59,15 @@ class WeightedLevenshteinSearch(
 
             it.copy(editDistances = distances)
           }
-          .filter { it.totalEditDistance <= maximumAllowedEditDistance }
+          .filter(this::discardLowQualityResults)
           .sortedWith(resultsComparator)
 
       Single.just(searchContext.map { it.patient.uuid })
     }
+  }
+
+  private fun discardLowQualityResults(patientSearchContext: PatientSearchContext): Boolean {
+    return patientSearchContext.totalEditDistance <= maximumAllowedEditDistance
   }
 
   private fun stringToSearchableParts(string: String) = string.split(whiteSpaceRegex)

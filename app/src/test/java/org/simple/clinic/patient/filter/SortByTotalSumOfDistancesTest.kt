@@ -14,8 +14,8 @@ class SortByTotalSumOfDistancesTest {
   @Test
   @Parameters(method = "params for sorting values")
   fun `it should sort the values based on the total sum of the distances`(
-      originalList: List<SearchContext>,
-      expected: List<SearchContext>
+      originalList: List<PatientSearchContext>,
+      expected: List<PatientSearchContext>
   ) {
     val sorted = originalList.sortedWith(SortByTotalSumOfDistances())
 
@@ -24,9 +24,9 @@ class SortByTotalSumOfDistancesTest {
 
   @Suppress("Unused")
   private fun `params for sorting values`(): List<List<Any>> {
-    fun generateTestData(distances: List<List<SearchContext.EditDistance>>, results: List<Int>): List<Any> {
+    fun generateTestData(distances: List<List<PatientSearchContext.EditDistance>>, results: List<Int>): List<Any> {
       val originalList = distances.map {
-        SearchContext(
+        PatientSearchContext(
             patient = PatientNameAndId(fullName = "Name", uuid = UUID.randomUUID()),
             nameParts = emptyList(),
             searchParts = emptyList(),
@@ -38,7 +38,7 @@ class SortByTotalSumOfDistancesTest {
       return listOf(originalList, expected)
     }
 
-    val template = SearchContext.EditDistance(namePart = "", searchPart = "", editDistance = 0.0)
+    val template = PatientSearchContext.EditDistance(namePart = "", searchPart = "", editDistance = 0.0)
 
     return listOf(
         generateTestData(

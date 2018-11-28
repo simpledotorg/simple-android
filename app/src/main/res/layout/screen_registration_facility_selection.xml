@@ -13,6 +13,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:animateFirstView="false"
+    android:background="@color/white100"
+    android:elevation="3dp"
     android:inAnimation="@anim/registrationfacilities_toolbar_entry"
     android:outAnimation="@anim/registrationfacilities_toolbar_exit"
     app:debug_displayedChild="0">
@@ -21,6 +23,7 @@
       android:id="@+id/registrationfacilities_toolbar_without_search"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:elevation="@dimen/elevation_toolbar"
       app:navigationIcon="@drawable/ic_arrow_back_24dp"
       app:title="@string/registrationfacilities_screen_title" />
 
@@ -42,6 +45,8 @@
         android:hint="@string/registrationfacilities_search_hint"
         android:importantForAutofill="no"
         android:inputType="textPostalAddress"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
+        android:textColorHint="@color/grey1"
         tools:ignore="UnusedAttribute" />
     </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>

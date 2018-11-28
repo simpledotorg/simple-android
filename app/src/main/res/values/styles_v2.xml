@@ -45,6 +45,17 @@
     <item name="android:letterSpacing">0.02</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body0Left">
+    <item name="android:textSize">18sp</item>
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:letterSpacing">0.01</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body0Left.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body1Left">
     <item name="android:textSize">@dimen/textsize_16</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>

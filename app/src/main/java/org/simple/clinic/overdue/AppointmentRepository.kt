@@ -139,7 +139,7 @@ class AppointmentRepository @Inject constructor(
   }
 
   fun scheduledAppointmentForPatient(patientUuid: UUID): Observable<Appointment> {
-    return appointmentDao.getAppointmentFromPatientUUID(
+    return appointmentDao.scheduledAppointmentForPatient(
         patientUuid = patientUuid,
         status = Appointment.Status.SCHEDULED
     )

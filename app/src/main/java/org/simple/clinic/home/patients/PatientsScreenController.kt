@@ -188,5 +188,4 @@ class PatientsScreenController @Inject constructor(
 
     return Observable.merge(savedStream, scheduledStream)
   }
-
 }

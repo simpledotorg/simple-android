@@ -29,11 +29,11 @@ open class NetworkModule {
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
-        .add(polymorphic())
+        .add(patientSummaryResultAdapterFactory())
         .build()
   }
 
-  private fun polymorphic(): PolymorphicJsonAdapterFactory<PatientSummaryResult> {
+  private fun patientSummaryResultAdapterFactory(): PolymorphicJsonAdapterFactory<PatientSummaryResult> {
     return PolymorphicJsonAdapterFactory.of(PatientSummaryResult::class.java, "patient_summary_result")
         .withSubtype(PatientSummaryResult.Scheduled::class.java, "result_scheduled")
         .withSubtype(PatientSummaryResult.Saved::class.java, "result_saved")

@@ -79,7 +79,7 @@ data class Appointment(
     fun save(appointments: List<Appointment>)
 
     @Query("SELECT * FROM Appointment WHERE patientUuid = :patientUuid AND status = :status")
-    fun getAppointmentFromPatientUUID(patientUuid: UUID, status: Status): Flowable<Appointment>
+    fun scheduledAppointmentForPatient(patientUuid: UUID, status: Status): Flowable<Appointment>
 
     @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Flowable<Int>

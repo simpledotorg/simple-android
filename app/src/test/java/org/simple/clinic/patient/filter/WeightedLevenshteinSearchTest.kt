@@ -23,7 +23,7 @@ class WeightedLevenshteinSearchTest {
   ) {
     val search = WeightedLevenshteinSearch(
         minimumSearchTermLength = 1,
-        fuzzyStringDistanceCutoff = 100F,
+        maximumAllowedEditDistance = 100F,
         characterSubstitutionCost = charSubstitutionCost,
         characterDeletionCost = charDeletionCost,
         characterInsertionCost = charInsertionCost,
@@ -159,7 +159,7 @@ class WeightedLevenshteinSearchTest {
   ) {
     val search = WeightedLevenshteinSearch(
         minimumSearchTermLength = 1,
-        fuzzyStringDistanceCutoff = 100F,
+        maximumAllowedEditDistance = 100F,
         characterSubstitutionCost = 30F,
         characterDeletionCost = 30F,
         characterInsertionCost = 30F,
@@ -211,7 +211,7 @@ class WeightedLevenshteinSearchTest {
   ) {
     val search = WeightedLevenshteinSearch(
         minimumSearchTermLength = minimumSearchTermLength,
-        fuzzyStringDistanceCutoff = 100F,
+        maximumAllowedEditDistance = 100F,
         characterSubstitutionCost = 30F,
         characterDeletionCost = 30F,
         characterInsertionCost = 30F,
@@ -268,7 +268,7 @@ class WeightedLevenshteinSearchTest {
   ) {
     val search = WeightedLevenshteinSearch(
         minimumSearchTermLength = 1,
-        fuzzyStringDistanceCutoff = 100F,
+        maximumAllowedEditDistance = 100F,
         characterSubstitutionCost = 1F,
         characterDeletionCost = 1F,
         characterInsertionCost = 1F,

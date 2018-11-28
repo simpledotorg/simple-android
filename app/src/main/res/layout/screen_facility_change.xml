@@ -13,8 +13,8 @@
     android:id="@+id/facilitychange_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="3dp"
     android:background="@color/white100"
+    android:elevation="3dp"
     app:contentInsetStartWithNavigation="58dp"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:navigationIconTint="@color/grey1">
@@ -27,6 +27,8 @@
       android:hint="@string/facilitychange_search_hint"
       android:importantForAutofill="no"
       android:inputType="textPostalAddress"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
+      android:textColorHint="@color/grey1"
       tools:ignore="UnusedAttribute" />
   </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
 

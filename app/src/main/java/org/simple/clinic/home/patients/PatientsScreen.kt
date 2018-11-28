@@ -55,6 +55,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @IdRes
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
+  private var disposable = Disposables.empty()
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -117,8 +118,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showStatus(statusViewId)
     currentStatusViewId = approvalStatusViewFlipper.currentView.id
   }
-
-  private var disposable = Disposables.empty()
 
   override fun onDetachedFromWindow() {
     super.onDetachedFromWindow()

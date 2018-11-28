@@ -514,6 +514,13 @@ class PatientSummaryScreenControllerTest {
     )
   }
 
+  @Test
+  fun `when a new patient is registered, always show the status as saved`() {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(patientSummaryResult, times(1)).set(PatientSummaryResult.Saved(patientUuid))
+  }
+
   @Suppress("unused")
   fun medicalHistoryQuestionsWithoutNone() = MedicalHistoryQuestion.values().filter { it != MedicalHistoryQuestion.NONE }
 

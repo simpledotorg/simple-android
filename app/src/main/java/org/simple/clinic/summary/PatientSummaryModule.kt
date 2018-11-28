@@ -24,6 +24,6 @@ open class PatientSummaryModule {
   @Named("patient_summary_result")
   fun patientSummaryResult(rxSharedPreferences: RxSharedPreferences, moshi: Moshi): Preference<PatientSummaryResult> {
     val typeConverter = PatientSummaryResult.RxPreferencesConverter(moshi)
-    return rxSharedPreferences.getObject("patient_summary_result", PatientSummaryResult.NotSaved, typeConverter)
+    return rxSharedPreferences.getObject("patient_summary_result_v1", PatientSummaryResult.NotSaved, typeConverter)
   }
 }

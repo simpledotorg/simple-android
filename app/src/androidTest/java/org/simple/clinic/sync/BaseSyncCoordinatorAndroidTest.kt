@@ -13,7 +13,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.IN_FLIGHT
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import javax.inject.Inject
@@ -50,7 +50,7 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
       return
     }
 
-    lastPullTimestamp().set(Just(Instant.EPOCH))
+    lastPullTimestamp().set(None)
 
     val recordsToInsert = 2 * configProvider.blockingGet().batchSize + 7
     val payloads = (0 until recordsToInsert).map { (::generatePayload)() }

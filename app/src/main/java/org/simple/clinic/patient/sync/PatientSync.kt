@@ -3,10 +3,10 @@ package org.simple.clinic.patient.sync
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.patient.PatientPhoneNumber
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientProfile
-import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.ModelSync
+import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Instant
 import javax.inject.Inject
@@ -16,7 +16,7 @@ class PatientSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: PatientRepository,
     private val api: PatientSyncApiV1,
-    @Named("last_patient_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_patient_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) : ModelSync {
 
   override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())

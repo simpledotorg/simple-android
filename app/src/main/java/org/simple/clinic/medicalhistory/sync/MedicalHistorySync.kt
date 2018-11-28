@@ -15,7 +15,7 @@ class MedicalHistorySync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApiV1,
-    @Named("last_medicalhistory_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_medicalhistory_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable {

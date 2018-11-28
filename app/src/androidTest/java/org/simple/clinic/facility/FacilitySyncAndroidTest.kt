@@ -41,7 +41,7 @@ class FacilitySyncAndroidTest {
   lateinit var userSession: UserSession
 
   @Inject
-  @field:Named("last_facility_pull_timestamp")
+  @field:Named("last_facility_pull_token")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject

@@ -51,13 +51,13 @@ class WeightedLevenshteinSearch(
           .filter { it.nameParts.isNotEmpty() }
           .map {
             val distances = searchTermParts.zip(it.nameParts) { searchPart, namePart ->
-              EditDistanceRecord(
+              SearchContext.EditDistance(
                   namePart = namePart,
                   searchPart = searchPart,
                   editDistance = levenshtein.distance(searchPart, namePart))
             }
 
-            it.copy(editDistanceRecords = distances)
+            it.copy(editDistances = distances)
           }
           .filter { it.totalEditDistance <= fuzzyStringDistanceCutoff }
           .sortedWith(resultsComparator)

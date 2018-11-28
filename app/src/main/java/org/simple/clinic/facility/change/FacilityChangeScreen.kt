@@ -9,11 +9,13 @@ import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.EditText
 import android.widget.RelativeLayout
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -22,6 +24,7 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.registration.facility.FacilitiesAdapter
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
@@ -69,6 +72,8 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // For some reasons, the keyboard stays
     // visible when coming from AppLockScreen.
     hideKeyboard()
+
+    hideKeyboardOnListScroll()
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())
@@ -82,6 +87,20 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       recyclerViewAdapter
           .facilityClicks
           .map(::FacilityChangeClicked)
+
+  @SuppressLint("CheckResult")
+  private fun hideKeyboardOnListScroll() {
+    val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
+    val scrollStateChanges = RxRecyclerView.scrollStateChanges(facilityRecyclerView)
+
+    Observables.combineLatest(scrollEvents, scrollStateChanges)
+        .compose(RecyclerViewUserScrollDetector.streamDetections())
+        .filter { it.byUser }
+        .takeUntil(RxView.detaches(this))
+        .subscribe {
+          hideKeyboard()
+        }
+  }
 
   fun updateFacilities(facilityItems: List<FacilityListItem>, updateType: FacilitiesUpdateType) {
     // Avoid animating the items on their first entry.

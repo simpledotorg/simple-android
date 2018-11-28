@@ -250,8 +250,13 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
           showAgeEmptyError(true)
         }
 
-        INVALID_DATE_OF_BIRTH -> TODO()
-        DATE_OF_BIRTH_IN_FUTURE -> TODO()
+        INVALID_DATE_OF_BIRTH -> {
+          showInvalidaDateOfBithError()
+        }
+
+        DATE_OF_BIRTH_IN_FUTURE -> {
+          showDateOfBirthIsInFutureError()
+        }
       }.exhaustive()
     }
   }
@@ -285,8 +290,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
           showAgeEmptyError(false)
         }
 
-        INVALID_DATE_OF_BIRTH -> TODO()
-        DATE_OF_BIRTH_IN_FUTURE -> TODO()
+        INVALID_DATE_OF_BIRTH, DATE_OF_BIRTH_IN_FUTURE -> {
+          hideDateOfBirthError()
+        }
       }.exhaustive()
     }
   }
@@ -335,6 +341,18 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_more)
   }
 
+  private fun showInvalidaDateOfBithError() {
+    dateOfBirthInputLayout.error = context.getString(R.string.patientedit_error_invalid_dateofbirth)
+  }
+
+  private fun showDateOfBirthIsInFutureError() {
+    dateOfBirthInputLayout.error = context.getString(R.string.patientedit_error_dateofbirth_is_in_future)
+  }
+
+  private fun hideDateOfBirthError() {
+    dateOfBirthInputLayout.error = null
+  }
+
   private fun hidePhoneNumberError() {
     phoneNumberInputLayout.error = null
   }
@@ -346,7 +364,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         colonyOrVillageInputLayout,
         districtInputLayout,
         stateInputLayout,
-        ageInputLayout)
+        ageInputLayout,
+        dateOfBirthInputLayout)
 
     val firstFieldWithError = views.firstOrNull { it.error.isNullOrBlank().not() }
 

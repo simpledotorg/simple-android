@@ -9,6 +9,7 @@ import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.ageanddateofbirth.DateFormatterModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.editpatient.PatientEditModule
 import org.simple.clinic.login.LoginModule
@@ -49,7 +50,8 @@ import org.threeten.bp.Clock
   AgeFuzzerModule::class,
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,
-  PatientEditModule::class])
+  PatientEditModule::class,
+  DateFormatterModule::class])
 open class AppModule(
     private val appContext: Application,
     private val databaseName: String = "red-db",

@@ -15,6 +15,8 @@ import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
 class OngoingNewPatientEntryTest {
@@ -36,7 +38,7 @@ class OngoingNewPatientEntryTest {
         address = Address(colonyOrVillage, district, state),
         phoneNumber = PhoneNumber(""))
 
-    val dobValidator = DateOfBirthFormatValidator()
+    val dobValidator = DateOfBirthFormatValidator(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
     val numValidator = mock<PhoneNumberValidator>()
     whenever(numValidator.validate("", LANDLINE_OR_MOBILE)).thenReturn(phoneValidationResult)
 

@@ -1,12 +1,15 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
-import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeParseException
 import javax.inject.Inject
+import javax.inject.Named
 
-class DateOfBirthFormatValidator @Inject constructor() {
+class DateOfBirthFormatValidator @Inject constructor(
+    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter
+) {
 
   enum class Result {
     VALID,
@@ -20,7 +23,7 @@ class DateOfBirthFormatValidator @Inject constructor() {
         Result.INVALID_PATTERN
       }
 
-      val parsedDate = DATE_OF_BIRTH_FORMAT_FOR_UI.parse(dateText, LocalDate::from)
+      val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
       when {
         parsedDate > nowDate -> Result.DATE_IS_IN_FUTURE
         else -> Result.VALID

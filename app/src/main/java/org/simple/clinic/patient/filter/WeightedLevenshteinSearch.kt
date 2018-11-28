@@ -34,7 +34,7 @@ class WeightedLevenshteinSearch(
   )
 
   override fun search(searchTerm: String, names: List<PatientSearchResult.PatientNameAndId>): Single<List<UUID>> {
-    val searchTermParts = nameToSearchableParts(searchTerm)
+    val searchTermParts = stringToSearchableParts(searchTerm)
         .filter { it.length >= minimumSearchTermLength }
 
     return if (searchTermParts.isEmpty()) {
@@ -45,7 +45,7 @@ class WeightedLevenshteinSearch(
           .map {
             PatientSearchContext(
                 patient = it,
-                nameParts = nameToSearchableParts(it.fullName),
+                nameParts = stringToSearchableParts(it.fullName),
                 searchParts = searchTermParts)
           }
           .filter { it.nameParts.isNotEmpty() }
@@ -66,7 +66,7 @@ class WeightedLevenshteinSearch(
     }
   }
 
-  private fun nameToSearchableParts(string: String) = string.split(whiteSpaceRegex)
+  private fun stringToSearchableParts(string: String) = string.split(whiteSpaceRegex)
       .filter { it.length >= minimumSearchTermLength }
       .map { it.toLowerCase() }
 }

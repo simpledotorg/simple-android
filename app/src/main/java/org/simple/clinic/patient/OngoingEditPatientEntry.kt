@@ -1,6 +1,7 @@
 package org.simple.clinic.patient
 
 import org.simple.clinic.editpatient.PatientEditValidationError
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
@@ -18,7 +19,8 @@ data class OngoingEditPatientEntry(
     val phoneNumber: String,
     val colonyOrVillage: String,
     val district: String,
-    val state: String
+    val state: String,
+    val age: String
 ) {
   fun validate(alreadySavedNumber: PatientPhoneNumber?, numberValidator: PhoneNumberValidator): Set<PatientEditValidationError> {
     val errors = mutableSetOf<PatientEditValidationError>()
@@ -51,6 +53,10 @@ data class OngoingEditPatientEntry(
 
     if (district.isBlank()) {
       errors.add(DISTRICT_EMPTY)
+    }
+
+    if(age.isBlank()) {
+      errors.add(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
     }
 
     return errors

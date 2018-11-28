@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
@@ -15,7 +16,6 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
@@ -26,6 +26,7 @@ import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.threeten.bp.Clock
 import javax.inject.Inject
 
@@ -164,15 +165,27 @@ class PatientEditScreenController @Inject constructor(
         .ofType<PatientEditPhoneNumberTextChanged>()
         .map { it.phoneNumber }
 
+    val ageChanges = events
+        .ofType<PatientEditAgeTextChanged>()
+        .map { it.age }
+
     return Observables.combineLatest(
         nameChanges,
         genderChanges,
         colonyOrVillageChanges,
         districtChanges,
         stateChanges,
-        phoneNumberChanges
-    ) { name, gender, colonyOrVillage, district, state, phoneNumber ->
-      OngoingEditPatientEntryChanged(OngoingEditPatientEntry(name, gender, phoneNumber, colonyOrVillage, district, state))
+        phoneNumberChanges,
+        ageChanges
+    ) { name, gender, colonyOrVillage, district, state, phoneNumber, age ->
+      OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
+          name = name,
+          gender = gender,
+          phoneNumber = phoneNumber,
+          colonyOrVillage = colonyOrVillage,
+          district = district,
+          state = state,
+          age = age))
     }
   }
 
@@ -207,7 +220,8 @@ class PatientEditScreenController @Inject constructor(
         PatientEditPatientNameTextChanged::class to setOf(FULL_NAME_EMPTY),
         PatientEditColonyOrVillageChanged::class to setOf(COLONY_OR_VILLAGE_EMPTY),
         PatientEditStateTextChanged::class to setOf(STATE_EMPTY),
-        PatientEditDistrictTextChanged::class to setOf(DISTRICT_EMPTY))
+        PatientEditDistrictTextChanged::class to setOf(DISTRICT_EMPTY),
+        PatientEditAgeTextChanged::class to setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
 
     return events
         .map { uiEvent -> errorsForEventType[uiEvent::class] ?: emptySet() }

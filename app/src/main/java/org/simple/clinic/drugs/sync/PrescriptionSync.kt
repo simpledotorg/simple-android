@@ -14,7 +14,7 @@ class PrescriptionSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val api: PrescriptionSyncApiV1,
     private val repository: PrescriptionRepository,
-    @Named("last_prescription_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_prescription_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())

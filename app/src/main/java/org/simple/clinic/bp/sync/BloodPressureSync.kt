@@ -14,7 +14,7 @@ class BloodPressureSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val api: BloodPressureSyncApiV1,
     private val repository: BloodPressureRepository,
-    @Named("last_bp_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_bp_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())

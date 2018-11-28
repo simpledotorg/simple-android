@@ -121,12 +121,12 @@ class UserSessionTest {
         loginOtpSmsListener = loginOtpSmsListener,
         accessTokenPreference = accessTokenPref,
         bruteForceProtection = bruteForceProtection,
-        patientSyncPullTimestamp = patientPullTimestamp,
-        bpSyncPullTimestamp = bpPullTimestamp,
-        prescriptionSyncPullTimestamp = prescriptionPullTimestamp,
-        appointmentSyncPullTimestamp = appointmentPullTimestamp,
-        communicationSyncPullTimestamp = communicationPullTimestamp,
-        medicalHistorySyncPullTimestamp = medicalHistoryPullTimestamp,
+        patientSyncPullToken = patientPullTimestamp,
+        bpSyncPullToken = bpPullTimestamp,
+        prescriptionSyncPullToken = prescriptionPullTimestamp,
+        appointmentSyncPullToken = appointmentPullTimestamp,
+        communicationSyncPullToken = communicationPullTimestamp,
+        medicalHistorySyncPullToken = medicalHistoryPullTimestamp,
         ongoingLoginEntryRepository = ongoingLoginEntryRepository)
 
     whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())

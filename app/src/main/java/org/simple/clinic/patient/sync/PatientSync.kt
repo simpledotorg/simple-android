@@ -8,7 +8,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -16,14 +15,14 @@ class PatientSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: PatientRepository,
     private val api: PatientSyncApiV1,
-    @Named("last_patient_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_patient_pull_token") private val lastPullToken: Preference<Optional<String>>
 ) : ModelSync {
 
   override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
   override fun push() = syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
 
-  override fun pull() = syncCoordinator.pull(repository, lastPullTimestamp, api::pull)
+  override fun pull() = syncCoordinator.pull(repository, lastPullToken, api::pull)
 
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(

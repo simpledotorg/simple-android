@@ -7,7 +7,6 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -15,7 +14,7 @@ class MedicalHistorySync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApiV1,
-    @Named("last_medicalhistory_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_medicalhistory_pull_token") internal val lastPullToken: Preference<Optional<String>>
 ) {
 
   fun sync(): Completable {
@@ -29,7 +28,7 @@ class MedicalHistorySync @Inject constructor(
   fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
-        lastPullTimestamp = lastPullTimestamp,
+        lastPullTimestamp = lastPullToken,
         pullNetworkCall = api::pull)
   }
 

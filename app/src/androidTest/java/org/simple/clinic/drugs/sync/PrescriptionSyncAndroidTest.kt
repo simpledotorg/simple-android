@@ -11,7 +11,6 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,7 +22,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   @Inject
   @field:Named("last_prescription_pull_token")
-  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var syncApi: PrescriptionSyncApiV1
@@ -49,7 +48,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   override fun generatePayload() = testData.prescriptionPayload()
 
-  override fun lastPullTimestamp() = lastPullTimestamp
+  override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<PrescribedDrugPayload>) = syncApi.push(PrescriptionPushRequest(payloads))
 }

@@ -6,7 +6,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -14,14 +13,14 @@ class PrescriptionSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val api: PrescriptionSyncApiV1,
     private val repository: PrescriptionRepository,
-    @Named("last_prescription_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_prescription_pull_token") internal val lastPullToken: Preference<Optional<String>>
 ) {
 
   fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
   fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)) }
 
-  fun pull() = syncCoordinator.pull(repository, lastPullTimestamp, api::pull)
+  fun pull() = syncCoordinator.pull(repository, lastPullToken, api::pull)
 
   private fun toRequest(drugs: List<PrescribedDrug>): PrescriptionPushRequest {
     val payloads = drugs.map { it.toPayload() }

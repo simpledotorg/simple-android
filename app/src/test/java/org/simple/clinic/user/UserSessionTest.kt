@@ -50,7 +50,6 @@ import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -86,12 +85,12 @@ class UserSessionTest {
   private lateinit var userSession: UserSession
   private lateinit var syncScheduler: SyncScheduler
 
-  private lateinit var medicalHistoryPullTimestamp: Preference<Optional<Instant>>
-  private lateinit var communicationPullTimestamp: Preference<Optional<Instant>>
-  private lateinit var appointmentPullTimestamp: Preference<Optional<Instant>>
-  private lateinit var prescriptionPullTimestamp: Preference<Optional<Instant>>
-  private lateinit var bpPullTimestamp: Preference<Optional<Instant>>
-  private lateinit var patientPullTimestamp: Preference<Optional<Instant>>
+  private lateinit var medicalHistoryPullToken: Preference<Optional<String>>
+  private lateinit var communicationPullToken: Preference<Optional<String>>
+  private lateinit var appointmentPullToken: Preference<Optional<String>>
+  private lateinit var prescriptionPullToken: Preference<Optional<String>>
+  private lateinit var bpPullToken: Preference<Optional<String>>
+  private lateinit var patientPullToken: Preference<Optional<String>>
   private lateinit var loginOtpSmsListener: LoginOtpSmsListener
 
   @Before
@@ -101,12 +100,12 @@ class UserSessionTest {
 
     loginOtpSmsListener = mock()
     syncScheduler = mock()
-    medicalHistoryPullTimestamp = mock()
-    communicationPullTimestamp = mock()
-    appointmentPullTimestamp = mock()
-    prescriptionPullTimestamp = mock()
-    bpPullTimestamp = mock()
-    patientPullTimestamp = mock()
+    medicalHistoryPullToken = mock()
+    communicationPullToken = mock()
+    appointmentPullToken = mock()
+    prescriptionPullToken = mock()
+    bpPullToken = mock()
+    patientPullToken = mock()
 
     userSession = UserSession(
         loginApi = loginApi,
@@ -121,12 +120,12 @@ class UserSessionTest {
         loginOtpSmsListener = loginOtpSmsListener,
         accessTokenPreference = accessTokenPref,
         bruteForceProtection = bruteForceProtection,
-        patientSyncPullToken = patientPullTimestamp,
-        bpSyncPullToken = bpPullTimestamp,
-        prescriptionSyncPullToken = prescriptionPullTimestamp,
-        appointmentSyncPullToken = appointmentPullTimestamp,
-        communicationSyncPullToken = communicationPullTimestamp,
-        medicalHistorySyncPullToken = medicalHistoryPullTimestamp,
+        patientSyncPullToken = patientPullToken,
+        bpSyncPullToken = bpPullToken,
+        prescriptionSyncPullToken = prescriptionPullToken,
+        appointmentSyncPullToken = appointmentPullToken,
+        communicationSyncPullToken = communicationPullToken,
+        medicalHistorySyncPullToken = medicalHistoryPullToken,
         ongoingLoginEntryRepository = ongoingLoginEntryRepository)
 
     whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())
@@ -480,12 +479,12 @@ class UserSessionTest {
 
     userSession.syncAndClearData(patientRepository).blockingAwait()
 
-    verify(patientPullTimestamp).delete()
-    verify(bpPullTimestamp).delete()
-    verify(appointmentPullTimestamp).delete()
-    verify(communicationPullTimestamp).delete()
-    verify(medicalHistoryPullTimestamp).delete()
-    verify(prescriptionPullTimestamp).delete()
+    verify(patientPullToken).delete()
+    verify(bpPullToken).delete()
+    verify(appointmentPullToken).delete()
+    verify(communicationPullToken).delete()
+    verify(medicalHistoryPullToken).delete()
+    verify(prescriptionPullToken).delete()
     assertThat(bruteForceReset).isTrue()
   }
 

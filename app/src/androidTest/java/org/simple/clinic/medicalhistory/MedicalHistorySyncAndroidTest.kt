@@ -15,7 +15,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -24,7 +23,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
 
   @Inject
   @field:Named("last_medicalhistory_pull_token")
-  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var sync: MedicalHistorySync
@@ -53,7 +52,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
 
   override fun generatePayload() = testData.medicalHistoryPayload()
 
-  override fun lastPullTimestamp() = lastPullTimestamp
+  override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<MedicalHistoryPayload>): Single<DataPushResponse> {
     val request = MedicalHistoryPushRequest(payloads)

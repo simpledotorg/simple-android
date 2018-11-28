@@ -85,10 +85,10 @@
   <string name="patientedit_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
   <string name="patientedit_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
   <string name="patientedit_date_of_birth_unfocused">@string/patiententry_date_of_birth_unfocused</string>
-  <!--suppress UnusedResources -->
   <string name="patientedit_date_of_birth_focused">@string/patiententry_date_of_birth_focused</string>
   <string name="patientedit_dateofbirth_and_age_separator">@string/patiententry_dateofbirth_and_age_separator</string>
   <string name="patientedit_age">@string/patiententry_age</string>
+  <string name="patientedit_error_both_dateofbirth_and_age_empty">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

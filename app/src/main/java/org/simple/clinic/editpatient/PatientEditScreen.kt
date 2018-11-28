@@ -27,9 +27,12 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.ageanddateofbirth.DateOfBirthEditText
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
@@ -39,6 +42,7 @@ import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.scrollToChild
@@ -89,6 +93,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientedit_age_container)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
+  private val ageInputLayout by bindView<TextInputLayout>(R.id.patientedit_age_inputlayout)
 
   @Suppress("CheckResult")
   override fun onFinishInflate() {
@@ -240,7 +245,14 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         STATE_EMPTY -> {
           showEmptyStateError(true)
         }
-      }
+
+        BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> {
+          showAgeEmptyError(true)
+        }
+
+        INVALID_DATE_OF_BIRTH -> TODO()
+        DATE_OF_BIRTH_IN_FUTURE -> TODO()
+      }.exhaustive()
     }
   }
 
@@ -268,7 +280,14 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         STATE_EMPTY -> {
           showEmptyStateError(false)
         }
-      }
+
+        BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> {
+          showAgeEmptyError(false)
+        }
+
+        INVALID_DATE_OF_BIRTH -> TODO()
+        DATE_OF_BIRTH_IN_FUTURE -> TODO()
+      }.exhaustive()
     }
   }
 
@@ -301,6 +320,13 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
   }
 
+  private fun showAgeEmptyError(show: Boolean) {
+    ageInputLayout.error = if (show) {
+      resources.getString(R.string.patientedit_error_both_dateofbirth_and_age_empty)
+
+    } else null
+  }
+
   private fun showLengthTooShortPhoneNumberError() {
     phoneNumberInputLayout.error = context.getString(R.string.patientedit_error_phonenumber_length_less)
   }
@@ -319,7 +345,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         phoneNumberInputLayout,
         colonyOrVillageInputLayout,
         districtInputLayout,
-        stateInputLayout)
+        stateInputLayout,
+        ageInputLayout)
 
     val firstFieldWithError = views.firstOrNull { it.error.isNullOrBlank().not() }
 

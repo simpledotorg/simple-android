@@ -16,6 +16,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
@@ -164,15 +165,27 @@ class PatientEditScreenController @Inject constructor(
         .ofType<PatientEditPhoneNumberTextChanged>()
         .map { it.phoneNumber }
 
+    val ageChanges = events
+        .ofType<PatientEditAgeTextChanged>()
+        .map { it.age }
+
     return Observables.combineLatest(
         nameChanges,
         genderChanges,
         colonyOrVillageChanges,
         districtChanges,
         stateChanges,
-        phoneNumberChanges
-    ) { name, gender, colonyOrVillage, district, state, phoneNumber ->
-      OngoingEditPatientEntryChanged(OngoingEditPatientEntry(name, gender, phoneNumber, colonyOrVillage, district, state))
+        phoneNumberChanges,
+        ageChanges
+    ) { name, gender, colonyOrVillage, district, state, phoneNumber, age ->
+      OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
+          name = name,
+          gender = gender,
+          phoneNumber = phoneNumber,
+          colonyOrVillage = colonyOrVillage,
+          district = district,
+          state = state,
+          age = age))
     }
   }
 
@@ -207,7 +220,8 @@ class PatientEditScreenController @Inject constructor(
         PatientEditPatientNameTextChanged::class to setOf(FULL_NAME_EMPTY),
         PatientEditColonyOrVillageChanged::class to setOf(COLONY_OR_VILLAGE_EMPTY),
         PatientEditStateTextChanged::class to setOf(STATE_EMPTY),
-        PatientEditDistrictTextChanged::class to setOf(DISTRICT_EMPTY))
+        PatientEditDistrictTextChanged::class to setOf(DISTRICT_EMPTY),
+        PatientEditAgeTextChanged::class to setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
 
     return events
         .map { uiEvent -> errorsForEventType[uiEvent::class] ?: emptySet() }

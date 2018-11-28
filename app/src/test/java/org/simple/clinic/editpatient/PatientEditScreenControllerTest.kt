@@ -25,6 +25,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
@@ -197,6 +198,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
 
     uiEvents.onNext(PatientEditPatientNameTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
@@ -229,6 +231,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
@@ -270,6 +273,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
 
     uiEvents.onNext(PatientEditColonyOrVillageChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
@@ -295,6 +299,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
 
     uiEvents.onNext(PatientEditDistrictTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
@@ -321,11 +326,38 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditAgeTextChanged("1"))
 
     uiEvents.onNext(PatientEditStateTextChanged(""))
     uiEvents.onNext(PatientEditSaveClicked())
 
     verify(screen).showValidationErrors(setOf(STATE_EMPTY))
+  }
+
+  @Test
+  fun `when save is clicked, the age should be validated`() {
+    whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
+    whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
+    whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
+    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+
+    whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
+    whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
+
+    uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
+    uiEvents.onNext(PatientEditDistrictTextChanged("District"))
+    uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
+    uiEvents.onNext(PatientEditStateTextChanged("State"))
+    uiEvents.onNext(PatientEditAgeTextChanged(""))
+    uiEvents.onNext(PatientEditSaveClicked())
+
+    verify(screen).showValidationErrors(setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT))
   }
 
   @Test
@@ -337,6 +369,7 @@ class PatientEditScreenControllerTest {
       colonyOrVillage: String,
       district: String,
       state: String,
+      age: String,
       expectedErrors: Set<PatientEditValidationError>
   ) {
     whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
@@ -358,6 +391,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditDistrictTextChanged(district))
     uiEvents.onNext(PatientEditStateTextChanged(state))
     uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditAgeTextChanged(age))
 
     uiEvents.onNext(PatientEditSaveClicked())
 
@@ -385,6 +419,7 @@ class PatientEditScreenControllerTest {
             "",
             "",
             "",
+            "1",
             setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY)
         ),
         listOf(
@@ -394,7 +429,8 @@ class PatientEditScreenControllerTest {
             "",
             "",
             "",
-            setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY)
+            "",
+            setOf(FULL_NAME_EMPTY, COLONY_OR_VILLAGE_EMPTY, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
 
         listOf(
@@ -404,6 +440,7 @@ class PatientEditScreenControllerTest {
             "Colony",
             "",
             "",
+            "1",
             setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY)
         ),
         listOf(
@@ -413,7 +450,8 @@ class PatientEditScreenControllerTest {
             "Colony",
             "",
             "",
-            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY)
+            "",
+            setOf(FULL_NAME_EMPTY, PHONE_NUMBER_LENGTH_TOO_SHORT, DISTRICT_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
 
         listOf(
@@ -423,6 +461,7 @@ class PatientEditScreenControllerTest {
             "",
             "District",
             "",
+            "1",
             setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY)
         ),
         listOf(
@@ -432,6 +471,7 @@ class PatientEditScreenControllerTest {
             "",
             "District",
             "",
+            "1",
             setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY)
         ),
 
@@ -442,6 +482,7 @@ class PatientEditScreenControllerTest {
             "Colony",
             "District",
             "",
+            "1",
             setOf(FULL_NAME_EMPTY, STATE_EMPTY)
         ),
         listOf(
@@ -451,7 +492,8 @@ class PatientEditScreenControllerTest {
             "Colony",
             "District",
             "",
-            setOf(FULL_NAME_EMPTY, STATE_EMPTY)
+            "",
+            setOf(FULL_NAME_EMPTY, STATE_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
 
         listOf(
@@ -461,6 +503,7 @@ class PatientEditScreenControllerTest {
             "Colony",
             "District",
             "State",
+            "1",
             setOf(FULL_NAME_EMPTY, PHONE_NUMBER_EMPTY)
         ),
         listOf(
@@ -470,7 +513,8 @@ class PatientEditScreenControllerTest {
             "Colony",
             "District",
             "State",
-            setOf(FULL_NAME_EMPTY)
+            "",
+            setOf(FULL_NAME_EMPTY, BOTH_DATEOFBIRTH_AND_AGE_ABSENT)
         ),
 
         listOf(
@@ -480,6 +524,7 @@ class PatientEditScreenControllerTest {
             "Colony",
             "District",
             "State",
+            "1",
             emptySet<PatientEditValidationError>()
         ),
         listOf(
@@ -489,6 +534,7 @@ class PatientEditScreenControllerTest {
             "Colony",
             "District",
             "State",
+            "1",
             emptySet<PatientEditValidationError>()
         )
     )
@@ -529,6 +575,7 @@ class PatientEditScreenControllerTest {
         listOf(PatientEditStateTextChanged("State"), setOf(STATE_EMPTY)),
         listOf(PatientEditDistrictTextChanged(""), setOf(DISTRICT_EMPTY)),
         listOf(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
+        listOf(PatientEditAgeTextChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
         listOf(PatientEditGenderChanged(TRANSGENDER), emptySet<PatientEditValidationError>())
     )
   }
@@ -628,7 +675,10 @@ class PatientEditScreenControllerTest {
           PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
           PatientEditStateTextChanged(patientProfile.address.state),
           PatientEditGenderChanged(patientProfile.patient.gender),
-          PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
+          PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: ""),
+
+          // TODO: actually test this when implementing save patient
+          PatientEditAgeTextChanged("1")
       )
 
       return listOf(

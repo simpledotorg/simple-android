@@ -42,9 +42,9 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
     val fetchOnScreenStart = events
         .ofType<ScreenCreated>()
-        .flatMap { facilityRepository.facilities() }
+        .flatMap { facilityRepository.recordCount() }
         .take(1)
-        .filter { it.isEmpty() }
+        .filter { count -> count == 0 }
 
     return Observable.merge(fetchOnScreenStart, retryClicks)
         .flatMap {

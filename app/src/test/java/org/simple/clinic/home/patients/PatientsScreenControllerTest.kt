@@ -56,7 +56,6 @@ class PatientsScreenControllerTest {
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
 
-
   @Before
   fun setUp() {
     // This is needed because we manually subscribe to the refresh user status

@@ -54,7 +54,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val dateInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_date)
 
   @IdRes
-  private var currentStatusView: Int = R.id.patients_user_status_hidden
+  private var currentStatusViewId: Int = R.id.patients_user_status_hidden
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -115,7 +115,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun showUserAccountStatus(@IdRes statusViewId: Int) {
     showStatus(statusViewId)
-    currentStatusView = approvalStatusViewFlipper.currentView.id
+    currentStatusViewId = approvalStatusViewFlipper.currentView.id
   }
 
   private var disposable = Disposables.empty()
@@ -129,7 +129,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     showStatus(statusViewId)
     disposable = Observable.timer(2500L, TimeUnit.MILLISECONDS, mainThread())
         .subscribe {
-          showUserAccountStatus(currentStatusView)
+          showUserAccountStatus(currentStatusViewId)
         }
   }
 

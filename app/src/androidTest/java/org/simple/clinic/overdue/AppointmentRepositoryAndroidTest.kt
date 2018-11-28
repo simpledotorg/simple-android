@@ -495,16 +495,16 @@ class AppointmentRepositoryAndroidTest {
   @Test
   fun when_fetching_appointment_for_patient_it_should_return_scheduled_appointment_only() {
       val patientId = UUID.randomUUID()
-      val appointmentDate1 = LocalDate.now()
-      val appointmentDate2 = LocalDate.now().plusDays(1)
-      appointmentRepository.schedule(patientId, appointmentDate1).blockingAwait()
-      appointmentRepository.schedule(patientId, appointmentDate2).blockingAwait()
+      val appointmentDateNow = LocalDate.now()
+      val appointmentDateLater = LocalDate.now().plusDays(1)
+      appointmentRepository.schedule(patientId, appointmentDateNow).blockingAwait()
+      appointmentRepository.schedule(patientId, appointmentDateLater).blockingAwait()
 
       val appointment = appointmentRepository.scheduledAppointmentForPatient(patientId).blockingFirst()
       assertThat(appointment).isNotNull()
       assertThat(appointment.patientUuid).isEqualTo(patientId)
       assertThat(appointment.status).isEqualTo(SCHEDULED)
-      assertThat(appointment.scheduledDate).isEqualTo(appointmentDate2)
+      assertThat(appointment.scheduledDate).isEqualTo(appointmentDateLater)
     }
 
     @After

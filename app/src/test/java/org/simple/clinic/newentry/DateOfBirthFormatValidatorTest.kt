@@ -8,6 +8,8 @@ import org.junit.runner.RunWith
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
 class DateOfBirthFormatValidatorTest {
@@ -22,13 +24,17 @@ class DateOfBirthFormatValidatorTest {
     " , INVALID_PATTERN"
   ])
   fun validate(date: String, expectedResult: Result) {
-    assertThat(DateOfBirthFormatValidator().validate(date)).isEqualTo(expectedResult)
+    val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+
+    assertThat(DateOfBirthFormatValidator(format).validate(date)).isEqualTo(expectedResult)
   }
 
   @Test
   fun `validate future date`() {
-    val dobValidator = DateOfBirthFormatValidator()
+    val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
+    val dobValidator = DateOfBirthFormatValidator(format)
     val futureDateResult = dobValidator.validate("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
+
     assertThat(futureDateResult).isEqualTo(Result.DATE_IS_IN_FUTURE)
   }
 }

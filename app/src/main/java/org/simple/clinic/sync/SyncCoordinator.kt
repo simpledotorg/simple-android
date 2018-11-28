@@ -8,7 +8,6 @@ import io.reactivex.functions.Consumer
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -59,8 +58,8 @@ class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>
 
   fun <T : Any, P> pull(
       repository: SynceableRepository<T, P>,
-      lastPullTimestamp: Preference<Optional<Instant>>,
-      pullNetworkCall: (recordsToPull: Int, lastPull: Instant?) -> Single<out DataPullResponse<P>>
+      lastPullTimestamp: Preference<Optional<String>>,
+      pullNetworkCall: (recordsToPull: Int, lastPull: String?) -> Single<out DataPullResponse<P>>
   ): Completable {
     return configProvider
         .flatMapCompletable { config ->

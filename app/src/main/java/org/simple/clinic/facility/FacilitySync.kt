@@ -6,7 +6,6 @@ import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,7 +14,7 @@ class FacilitySync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: FacilityRepository,
     private val api: FacilitySyncApiV1,
-    @Named("last_facility_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_facility_pull_token") private val lastPullToken: Preference<Optional<String>>
 ) : ModelSync {
 
   override fun sync() = pull()
@@ -25,7 +24,7 @@ class FacilitySync @Inject constructor(
   override fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
-        lastPullTimestamp = lastPullTimestamp,
+        lastPullTimestamp = lastPullToken,
         pullNetworkCall = api::pull
     )
   }

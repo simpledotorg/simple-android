@@ -39,7 +39,6 @@ import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -64,12 +63,12 @@ class UserSession @Inject constructor(
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<Instant>>,
-    @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<Instant>>,
-    @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<Instant>>,
-    @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<Instant>>,
-    @Named("last_communication_pull_token") private val communicationSyncPullToken: Preference<Optional<Instant>>,
-    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<Instant>>
+    @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
+    @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
+    @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
+    @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
+    @Named("last_communication_pull_token") private val communicationSyncPullToken: Preference<Optional<String>>,
+    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>
 ) {
 
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null

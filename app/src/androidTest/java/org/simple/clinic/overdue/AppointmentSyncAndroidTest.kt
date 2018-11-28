@@ -11,7 +11,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,7 +22,7 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   @Inject
   @field:Named("last_appointment_pull_token")
-  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var sync: AppointmentSync
@@ -49,7 +48,7 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun generatePayload() = testData.appointmentPayload()
 
-  override fun lastPullTimestamp() = lastPullTimestamp
+  override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<AppointmentPayload>): Single<DataPushResponse> {
     val request = AppointmentPushRequest(payloads)

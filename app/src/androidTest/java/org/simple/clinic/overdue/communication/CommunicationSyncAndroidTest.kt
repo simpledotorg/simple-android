@@ -11,7 +11,6 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,7 +22,7 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
 
   @Inject
   @field:Named("last_communication_pull_token")
-  lateinit var lastPullTimestamp: Preference<Optional<Instant>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var sync: CommunicationSync
@@ -49,7 +48,7 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
 
   override fun generatePayload() = testData.communicationPayload()
 
-  override fun lastPullTimestamp() = lastPullTimestamp
+  override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<CommunicationPayload>): Single<DataPushResponse> {
     val request = CommunicationPushRequest(payloads)

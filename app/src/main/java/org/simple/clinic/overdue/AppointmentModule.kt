@@ -7,11 +7,10 @@ import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
-import org.threeten.bp.Instant
+import org.simple.clinic.util.StringPreferenceConverter
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -40,7 +39,7 @@ class AppointmentModule {
 
   @Provides
   @Named("last_appointment_pull_token")
-  fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
-    return rxSharedPrefs.getObject("last_appointment_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
+  fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
+    return rxSharedPrefs.getObject("last_appointment_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

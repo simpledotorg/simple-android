@@ -14,6 +14,7 @@ import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
+import org.simple.clinic.util.StringPreferenceConverter
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -29,15 +30,7 @@ open class LoginModule {
   @Provides
   @Named("preference_access_token")
   fun accessTokenForLoggedInUser(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("access_token", None, OptionalRxPreferencesConverter(object : Preference.Converter<String> {
-      override fun deserialize(serialized: String): String {
-        return serialized
-      }
-
-      override fun serialize(value: String): String {
-        return value
-      }
-    }))
+    return rxSharedPrefs.getObject("access_token", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 
   @Provides

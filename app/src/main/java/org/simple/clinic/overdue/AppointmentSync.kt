@@ -4,7 +4,6 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Instant
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -12,7 +11,7 @@ class AppointmentSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: AppointmentRepository,
     private val api: AppointmentSyncApiV1,
-    @Named("last_appointment_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>
 ) {
 
   fun sync(): Completable {
@@ -26,7 +25,7 @@ class AppointmentSync @Inject constructor(
   fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
-        lastPullTimestamp = lastPullTimestamp,
+        lastPullTimestamp = lastPullToken,
         pullNetworkCall = api::pull)
   }
 

@@ -22,7 +22,7 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
   lateinit var repository: CommunicationRepository
 
   @Inject
-  @field:Named("last_communication_pull_timestamp")
+  @field:Named("last_communication_pull_token")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject

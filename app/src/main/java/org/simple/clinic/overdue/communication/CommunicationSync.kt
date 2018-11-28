@@ -12,7 +12,7 @@ class CommunicationSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: CommunicationRepository,
     private val api: CommunicationSyncApiV1,
-    @Named("last_communication_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_communication_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable {

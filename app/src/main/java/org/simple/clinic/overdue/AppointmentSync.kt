@@ -12,7 +12,7 @@ class AppointmentSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: AppointmentRepository,
     private val api: AppointmentSyncApiV1,
-    @Named("last_appointment_pull_timestamp") private val lastPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_appointment_pull_token") private val lastPullTimestamp: Preference<Optional<Instant>>
 ) {
 
   fun sync(): Completable {

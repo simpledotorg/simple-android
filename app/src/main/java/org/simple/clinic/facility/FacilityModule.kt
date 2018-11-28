@@ -33,7 +33,7 @@ class FacilityModule {
   }
 
   @Provides
-  @Named("last_facility_pull_timestamp")
+  @Named("last_facility_pull_token")
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
     return rxSharedPrefs.getObject("last_facility_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }

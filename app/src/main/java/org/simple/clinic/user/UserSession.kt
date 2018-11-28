@@ -64,12 +64,12 @@ class UserSession @Inject constructor(
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
-    @Named("last_patient_pull_timestamp") private val patientSyncPullTimestamp: Preference<Optional<Instant>>,
-    @Named("last_bp_pull_timestamp") private val bpSyncPullTimestamp: Preference<Optional<Instant>>,
-    @Named("last_prescription_pull_timestamp") private val prescriptionSyncPullTimestamp: Preference<Optional<Instant>>,
-    @Named("last_appointment_pull_timestamp") private val appointmentSyncPullTimestamp: Preference<Optional<Instant>>,
-    @Named("last_communication_pull_timestamp") private val communicationSyncPullTimestamp: Preference<Optional<Instant>>,
-    @Named("last_medicalhistory_pull_timestamp") private val medicalHistorySyncPullTimestamp: Preference<Optional<Instant>>
+    @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<Instant>>,
+    @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<Instant>>,
+    @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<Instant>>,
+    @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<Instant>>,
+    @Named("last_communication_pull_token") private val communicationSyncPullToken: Preference<Optional<Instant>>,
+    @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<Instant>>
 ) {
 
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
@@ -415,12 +415,12 @@ class UserSession @Inject constructor(
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
         .andThen(Completable.fromAction {
-          patientSyncPullTimestamp.delete()
-          bpSyncPullTimestamp.delete()
-          prescriptionSyncPullTimestamp.delete()
-          appointmentSyncPullTimestamp.delete()
-          communicationSyncPullTimestamp.delete()
-          medicalHistorySyncPullTimestamp.delete()
+          patientSyncPullToken.delete()
+          bpSyncPullToken.delete()
+          prescriptionSyncPullToken.delete()
+          appointmentSyncPullToken.delete()
+          communicationSyncPullToken.delete()
+          medicalHistorySyncPullToken.delete()
         })
         .andThen(bruteForceProtection.resetFailedAttempts())
         .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->

@@ -22,7 +22,7 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   lateinit var repository: AppointmentRepository
 
   @Inject
-  @field:Named("last_appointment_pull_timestamp")
+  @field:Named("last_appointment_pull_token")
   lateinit var lastPullTimestamp: Preference<Optional<Instant>>
 
   @Inject

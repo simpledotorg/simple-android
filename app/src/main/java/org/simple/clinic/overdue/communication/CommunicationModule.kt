@@ -28,7 +28,7 @@ class CommunicationModule {
   }
 
   @Provides
-  @Named("last_communication_pull_timestamp")
+  @Named("last_communication_pull_token")
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
     return rxSharedPrefs.getObject("last_communication_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }

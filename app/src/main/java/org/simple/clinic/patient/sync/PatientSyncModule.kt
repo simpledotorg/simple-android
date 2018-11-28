@@ -21,7 +21,7 @@ open class PatientSyncModule {
   }
 
   @Provides
-  @Named("last_patient_pull_timestamp")
+  @Named("last_patient_pull_token")
   fun lastPullTimestamp(rxSharedPrefs: RxSharedPreferences): Preference<Optional<Instant>> {
     return rxSharedPrefs.getObject("last_patient_pull_timestamp", None, OptionalRxPreferencesConverter(InstantRxPreferencesConverter()))
   }

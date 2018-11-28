@@ -9,7 +9,7 @@ import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.newentry.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.fuzzy.AgeFuzzer

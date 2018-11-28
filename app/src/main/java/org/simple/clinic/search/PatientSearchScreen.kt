@@ -24,7 +24,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreen

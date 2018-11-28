@@ -27,9 +27,11 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
-import org.simple.clinic.newentry.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER

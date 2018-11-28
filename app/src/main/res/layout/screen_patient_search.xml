@@ -136,7 +136,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <org.simple.clinic.newentry.DateOfBirthEditText
+            <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
               android:id="@+id/patientsearch_dateofbirth"
               style="@style/Clinic.V2.TextInputEditText"
               android:layout_width="match_parent"

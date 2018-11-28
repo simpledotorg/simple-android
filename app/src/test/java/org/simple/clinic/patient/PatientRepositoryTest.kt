@@ -17,7 +17,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.newentry.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.BoundedAge
 import org.simple.clinic.patient.sync.PatientPayload

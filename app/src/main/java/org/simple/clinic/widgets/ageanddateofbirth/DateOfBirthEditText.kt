@@ -1,4 +1,4 @@
-package org.simple.clinic.newentry
+package org.simple.clinic.widgets.ageanddateofbirth
 
 import android.content.Context
 import android.text.Spannable
@@ -6,6 +6,7 @@ import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
 import br.com.sapereaude.maskedEditText.MaskedEditText
 import io.reactivex.Observable
+import org.simple.clinic.newentry.MultipleFocusChangeListeners
 import timber.log.Timber
 import java.lang.reflect.Field
 

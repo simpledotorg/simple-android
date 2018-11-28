@@ -150,7 +150,7 @@
             android:layout_height="wrap_content"
             app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-            <org.simple.clinic.newentry.DateOfBirthEditText
+            <org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
               android:id="@+id/patiententry_date_of_birth"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"

@@ -45,8 +45,9 @@ class RegistrationFullNameScreenController @Inject constructor(
     return events
         .ofType<RegistrationFullNameScreenCreated>()
         .flatMap {
-          facilityRepository.facilities()
-              .filter { it.isEmpty() }
+          facilityRepository.recordCount()
+              .take(1)
+              .filter { count -> count == 0 }
               .flatMapCompletable { facilitySync.sync().onErrorComplete() }
               .andThen(Observable.empty<UiChange>())
         }

@@ -101,7 +101,7 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when screen is started and facilities haven't already been synced then facilities should be synced`() {
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0, 10))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
 

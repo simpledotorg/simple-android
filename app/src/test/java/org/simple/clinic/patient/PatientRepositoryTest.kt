@@ -26,6 +26,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -45,12 +46,13 @@ class PatientRepositoryTest {
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val numberValidator = mock<PhoneNumberValidator>()
+  private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
 
   @Before
   fun setUp() {
     ageFuzzer = mock()
     whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
-    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock, ageFuzzer)
+    repository = PatientRepository(database, dobValidator, facilityRepository, userSession, numberValidator, clock, ageFuzzer, dateOfBirthFormat)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

@@ -9,7 +9,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
@@ -18,7 +17,9 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientSearchResultsScreen
 typealias UiChange = (Ui) -> Unit
@@ -27,7 +28,8 @@ class PatientSearchResultsController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val clock: Clock
+    private val clock: Clock,
+    @Named("short_date") private val dateOfBirthFormat: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -77,7 +79,7 @@ class PatientSearchResultsController @Inject constructor(
     return when {
       age.isNotBlank() -> age.trim().toInt()
       else -> {
-        val dateOfBirth = DATE_OF_BIRTH_FORMAT_FOR_UI.parse(dob.trim(), LocalDate::from)
+        val dateOfBirth = dateOfBirthFormat.parse(dob.trim(), LocalDate::from)
         Period.between(dateOfBirth, LocalDate.now(clock)).years
       }
     }

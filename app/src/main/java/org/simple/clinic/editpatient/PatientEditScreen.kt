@@ -32,10 +32,6 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
-import org.simple.clinic.widgets.textChanges
-import org.simple.clinic.patient.DATE_OF_BIRTH_FORMAT_FOR_UI
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
@@ -43,10 +39,15 @@ import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.textChanges
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
 
@@ -60,6 +61,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @field:[Inject Named("long_date")]
+  lateinit var dateOfBirthFormat: DateTimeFormatter
 
   private val formScrollView by bindView<ScrollView>(R.id.patientedit_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patientedit_full_name)
@@ -165,14 +169,11 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
         }
   }
 
-  private fun dateOfBirthTextChanges(): Observable<UiEvent>
-    = dateOfBirthEditText.textChanges(::PatientEditDateOfBirthTextChanged)
+  private fun dateOfBirthTextChanges(): Observable<UiEvent> = dateOfBirthEditText.textChanges(::PatientEditDateOfBirthTextChanged)
 
-  private fun dateOfBirthFocusChanges(): Observable<UiEvent>
-    = dateOfBirthEditText.focusChanges.map(::PatientEditDateOfBirthFocusChanged)
+  private fun dateOfBirthFocusChanges(): Observable<UiEvent> = dateOfBirthEditText.focusChanges.map(::PatientEditDateOfBirthFocusChanged)
 
-  private fun ageTextChanges(): Observable<UiEvent>
-    = ageEditext.textChanges(::PatientEditAgeTextChanged)
+  private fun ageTextChanges(): Observable<UiEvent> = ageEditext.textChanges(::PatientEditAgeTextChanged)
 
   fun setPatientName(name: String) {
     fullNameEditText.setTextAndCursor(name)
@@ -209,7 +210,7 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   fun setPatientDateofBirth(dateOfBirth: LocalDate) {
-    dateOfBirthEditText.setTextAndCursor(DATE_OF_BIRTH_FORMAT_FOR_UI.format(dateOfBirth))
+    dateOfBirthEditText.setTextAndCursor(dateOfBirthFormat.format(dateOfBirth))
   }
 
   fun showValidationErrors(errors: Set<PatientEditValidationError>) {

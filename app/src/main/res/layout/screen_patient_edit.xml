@@ -94,9 +94,7 @@
         android:id="@+id/patientedit_age_and_dob_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_marginTop="@dimen/spacing_16">
 
         <!-- A background is intentionally set on these Views
              to avoid overlapping when they animate -->

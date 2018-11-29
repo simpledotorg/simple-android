@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.StringRes
 import android.util.AttributeSet
-import android.view.View
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
@@ -46,7 +45,7 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
     TheActivity.component.inject(this)
 
-    pinEntryCardView.forgotPinButton.visibility = View.GONE
+    pinEntryCardView.setForgotButtonVisible(false)
 
     Observable.mergeArray(screenCreates(), pinAuthentications(), backClicks(), otpReceived())
         .observeOn(Schedulers.io())

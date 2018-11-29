@@ -25,6 +25,7 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -34,13 +35,13 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   lateinit var controller: PinEntryCardController
 
   val pinEditText by bindView<StaggeredEditText>(R.id.pinentry_pin)
-  val forgotPinButton by bindView<Button>(R.id.pinentry_forgotpin)
 
   private val progressView by bindView<View>(R.id.pinentry_progress)
   private val contentContainer by bindView<ViewGroup>(R.id.pinentry_content_container)
   private val pinAndLockViewFlipper by bindView<ViewFlipper>(R.id.pinentry_pin_and_bruteforcelock_viewflipper)
   private val timeRemainingTillUnlockTextView by bindView<TextView>(R.id.pinentry_bruteforcelock_time_remaining)
   private val errorTextView by bindView<TextView>(R.id.pinentry_error)
+  val forgotPinButton by bindView<Button>(R.id.pinentry_forgotpin)
 
   private val successfulAuthSubject = PublishSubject.create<PinAuthenticated>()
   val successfulAuthentications: Observable<PinAuthenticated> = successfulAuthSubject.hide()
@@ -54,6 +55,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   init {
     LayoutInflater.from(context).inflate(R.layout.pin_entry_card, this, true)
     moveToState(State.PinEntry)
+    setForgotButtonVisible(true)
   }
 
   @SuppressLint("CheckResult")
@@ -147,6 +149,18 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
 
   fun dispatchAuthenticatedCallback(enteredPin: String) {
     successfulAuthSubject.onNext(PinAuthenticated(enteredPin))
+  }
+
+  /** Defaults to visible. */
+  fun setForgotButtonVisible(visible: Boolean) {
+    if (visible) {
+      forgotPinButton.visibility = View.VISIBLE
+      contentContainer.setPaddingBottom(R.dimen.pinentry_content_bottom_spacing_with_forgot_pin)
+
+    } else {
+      forgotPinButton.visibility = View.GONE
+      contentContainer.setPaddingBottom(R.dimen.pinentry_content_bottom_spacing_without_forgot_pin)
+    }
   }
 }
 

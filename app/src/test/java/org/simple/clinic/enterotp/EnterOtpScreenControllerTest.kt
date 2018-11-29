@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -165,11 +164,30 @@ class EnterOtpScreenControllerTest {
   }
 
   @Test
-  fun `when the OTP text changes, the errors should be hidden`() {
-    uiEvents.onNext(EnterOtpTextChanges("1"))
-    uiEvents.onNext(EnterOtpTextChanges("11"))
+  fun `when the login call fails unexpectedly, the PIN should be cleared`() {
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(UnexpectedError))
 
-    verify(screen, times(2)).hideError()
+    uiEvents.onNext(EnterOtpSubmitted("111111"))
+
+    verify(screen).clearPin()
+  }
+
+  @Test
+  fun `when the login call fails with a network error, the PIN should be cleared`() {
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(NetworkError))
+
+    uiEvents.onNext(EnterOtpSubmitted("111111"))
+
+    verify(screen).clearPin()
+  }
+
+  @Test
+  fun `when the login call fails with a server error, the PIN should be cleared`() {
+    whenever(userSession.loginWithOtp(any())).thenReturn(Single.just(ServerError("Error")))
+
+    uiEvents.onNext(EnterOtpSubmitted("111111"))
+
+    verify(screen).clearPin()
   }
 
   @Test
@@ -333,23 +351,44 @@ class EnterOtpScreenControllerTest {
   @Suppress("Unused")
   private fun `params for show error on request otp`(): List<List<Any>> {
     return listOf(
-        listOf<Any>(Single.just(LoginResult.Success), { screen: Ui ->
-          verify(screen, never()).showNetworkError()
-          verify(screen, never()).showServerError(any())
-          verify(screen, never()).showUnexpectedError()
-        }),
-        listOf<Any>(Single.just(LoginResult.UnexpectedError), { screen: Ui ->
-          verify(screen).showUnexpectedError()
-        }),
-        listOf<Any>(Single.just(LoginResult.ServerError("Error 1")), { screen: Ui ->
-          verify(screen).showServerError("Error 1")
-        }),
-        listOf<Any>(Single.just(LoginResult.ServerError("Error 2")), { screen: Ui ->
-          verify(screen).showServerError("Error 2")
-        }),
-        listOf<Any>(Single.just(LoginResult.NetworkError), { screen: Ui ->
-          verify(screen).showNetworkError()
-        })
+        listOf<Any>(
+            Single.just(LoginResult.Success),
+            { screen: Ui ->
+              verify(screen, never()).showNetworkError()
+              verify(screen, never()).showServerError(any())
+              verify(screen, never()).showUnexpectedError()
+            }),
+        listOf<Any>(
+            Single.just(LoginResult.UnexpectedError),
+            { screen: Ui -> verify(screen).showUnexpectedError() }),
+        listOf<Any>(
+            Single.just(LoginResult.NetworkError),
+            { screen: Ui -> verify(screen).showNetworkError() }),
+        listOf<Any>(
+            Single.just(LoginResult.ServerError("Error 1")),
+            { screen: Ui -> verify(screen).showServerError("Error 1") }),
+        listOf<Any>(
+            Single.just(LoginResult.NetworkError),
+            { screen: Ui -> verify(screen).showNetworkError() })
     )
+  }
+
+  @Test
+  @Parameters(method = "params for clear PIN on request otp")
+  fun `when the resend sms call fails, the PIN must be cleared`(result: LoginResult) {
+    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(result))
+
+    uiEvents.onNext(EnterOtpResendSmsClicked())
+
+    verify(screen).clearPin()
+  }
+
+  @Suppress("Unused")
+  private fun `params for clear PIN on request otp`(): List<Any> {
+    return listOf(
+        LoginResult.UnexpectedError,
+        LoginResult.ServerError("Error 1"),
+        LoginResult.ServerError("Error 2"),
+        LoginResult.NetworkError)
   }
 }

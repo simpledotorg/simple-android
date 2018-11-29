@@ -20,7 +20,6 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
 class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -49,6 +48,10 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
     backButton.setOnClickListener {
       screenRouter.pop()
     }
+
+    // Because PIN is auto-submitted when 4 digits are entered, restoring the
+    // existing PIN will immediately take the user to the next screen.
+    pinEditText.isSaveEnabled = false
 
     Observable.merge(screenCreates(), pinTextChanges(), doneClicks())
         .observeOn(io())
@@ -88,7 +91,6 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
     fullNameTextView.text = ongoingEntry.fullName
     phoneNumberTextView.text = ongoingEntry.phoneNumber
-    pinEditText.setTextAndCursor(ongoingEntry.pin)
   }
 
   companion object {

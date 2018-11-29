@@ -61,7 +61,7 @@ class RegistrationPinScreenController @Inject constructor(
 
   private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<RegistrationPinTextChanged>()
+        .ofType<RegistrationPinDoneClicked>()
         .map { { ui: Ui -> ui.hideIncompletePinError() } }
   }
 

@@ -46,7 +46,7 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `when next button is clicked then ongoing entry should be updated with the input pin and the next screen should be opened`() {
+  fun `when next button is clicked then ongoing entry should be updated with the input PIN and the next screen should be opened`() {
     val input = "1234"
 
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
@@ -72,7 +72,7 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `proceed button clicks should only be accepted if the input pin is of 4 digits`() {
+  fun `proceed button clicks should only be accepted if the input PIN is of 4 digits`() {
     val validPin = "1234"
     val invalidPin = "1"
 
@@ -87,7 +87,7 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `when proceed is clicked with a pin of length less than 4 digits then an error should be shown`() {
+  fun `when proceed is clicked with a PIN of length less than 4 digits then an error should be shown`() {
     uiEvents.onNext(RegistrationPinTextChanged("123"))
     uiEvents.onNext(RegistrationPinDoneClicked())
 
@@ -97,8 +97,8 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `when input pin is changed then any visible errors should be removed`() {
-    uiEvents.onNext(RegistrationPinTextChanged(""))
+  fun `when the PIN is submitted then any visible errors should be removed`() {
+    uiEvents.onNext(RegistrationPinDoneClicked())
     verify(screen).hideIncompletePinError()
   }
 }

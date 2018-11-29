@@ -33,6 +33,19 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
+  fun `when 4 digits are entered then the PIN should be submitted automatically`() {
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationPinTextChanged("1"))
+    uiEvents.onNext(RegistrationPinTextChanged("12"))
+    uiEvents.onNext(RegistrationPinTextChanged("123"))
+    uiEvents.onNext(RegistrationPinTextChanged("1234"))
+
+    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = "1234"))
+  }
+
+  @Test
   fun `when next button is clicked then ongoing entry should be updated with the input pin and the next screen should be opened`() {
     val input = "1234"
 
@@ -40,7 +53,6 @@ class RegistrationPinScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = input))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPinTextChanged(input))
-    uiEvents.onNext(RegistrationPinDoneClicked())
 
     verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = input))
     verify(screen).openRegistrationConfirmPinScreen()
@@ -68,10 +80,7 @@ class RegistrationPinScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(pin = validPin))).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPinTextChanged(invalidPin))
-    uiEvents.onNext(RegistrationPinDoneClicked())
-
     uiEvents.onNext(RegistrationPinTextChanged(validPin))
-    uiEvents.onNext(RegistrationPinDoneClicked())
 
     verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
     verify(screen, times(1)).openRegistrationConfirmPinScreen()

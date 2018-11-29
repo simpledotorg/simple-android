@@ -3,6 +3,7 @@ package org.simple.clinic.registration.pin
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
@@ -20,11 +21,21 @@ class RegistrationPinScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
+    val transformedEvents = events
+        .mergeWith(autoSubmitPin(replayedEvents))
+
     return Observable.merge(
-        preFillExistingDetails(replayedEvents),
-        showValidationError(replayedEvents),
-        hideValidationError(replayedEvents),
-        updateOngoingEntryAndProceed(replayedEvents))
+        preFillExistingDetails(transformedEvents),
+        showValidationError(transformedEvents),
+        hideValidationError(transformedEvents),
+        updateOngoingEntryAndProceed(transformedEvents))
+  }
+
+  private fun autoSubmitPin(events: Observable<UiEvent>): Observable<UiEvent> {
+    return events
+        .ofType<RegistrationPinTextChanged>()
+        .filter { isPinValid(it.pin) }
+        .map { RegistrationPinDoneClicked() }
   }
 
   private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
@@ -32,7 +43,7 @@ class RegistrationPinScreenController @Inject constructor(
         .ofType<RegistrationPinScreenCreated>()
         .flatMapSingle {
           userSession.ongoingRegistrationEntry()
-              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
+              .map { entry -> { ui: Ui -> ui.preFillUserDetails(entry) } }
         }
   }
 
@@ -55,11 +66,12 @@ class RegistrationPinScreenController @Inject constructor(
   }
 
   private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val pinTextChanges = events.ofType<RegistrationPinTextChanged>()
     val doneClicks = events.ofType<RegistrationPinDoneClicked>()
+    val pinTextChanges = events
+        .ofType<RegistrationPinTextChanged>()
+        .map { it.pin }
 
-    return doneClicks
-        .withLatestFrom(pinTextChanges.map { it.pin })
+    return Observables.combineLatest(doneClicks, pinTextChanges)
         .filter { (_, pin) -> isPinValid(pin) }
         .flatMap { (_, pin) ->
           if (pin.length > 4) {

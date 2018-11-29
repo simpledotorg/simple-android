@@ -24,7 +24,7 @@ class FacilitySync @Inject constructor(
   override fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
-        lastPullTimestamp = lastPullToken,
+        lastPullToken = lastPullToken,
         pullNetworkCall = api::pull
     )
   }

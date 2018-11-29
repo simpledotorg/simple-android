@@ -3,7 +3,6 @@ package org.simple.clinic.medicalhistory.sync
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
@@ -28,7 +27,7 @@ class MedicalHistorySync @Inject constructor(
   fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
-        lastPullTimestamp = lastPullToken,
+        lastPullToken = lastPullToken,
         pullNetworkCall = api::pull)
   }
 
@@ -39,12 +38,12 @@ class MedicalHistorySync @Inject constructor(
             MedicalHistoryPayload(
                 uuid = uuid,
                 patientUuid = patientUuid,
-                diagnosedWithHypertension = Answer.toBoolean(diagnosedWithHypertension),
-                hasHadHeartAttack = Answer.toBoolean(hasHadHeartAttack),
-                hasHadStroke = Answer.toBoolean(hasHadStroke),
-                hasHadKidneyDisease = Answer.toBoolean(hasHadKidneyDisease),
-                isOnTreatmentForHypertension = Answer.toBoolean(isOnTreatmentForHypertension),
-                hasDiabetes = Answer.toBoolean(hasDiabetes),
+                diagnosedWithHypertension = diagnosedWithHypertension,
+                hasHadHeartAttack = hasHadHeartAttack,
+                hasHadStroke = hasHadStroke,
+                hasHadKidneyDisease = hasHadKidneyDisease,
+                isOnTreatmentForHypertension = isOnTreatmentForHypertension,
+                hasDiabetes = hasDiabetes,
                 createdAt = createdAt,
                 updatedAt = updatedAt)
           }

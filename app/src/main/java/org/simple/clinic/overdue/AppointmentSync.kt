@@ -25,7 +25,7 @@ class AppointmentSync @Inject constructor(
   fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
-        lastPullTimestamp = lastPullToken,
+        lastPullToken = lastPullToken,
         pullNetworkCall = api::pull)
   }
 

@@ -58,6 +58,7 @@ class PatientEditScreenController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     val transformedEvents = replayedEvents.mergeWith(ongoingEntryPatientEntryChanges(replayedEvents))
+        .replay().refCount()
 
     return Observable.mergeArray(
         prefillOnStart(transformedEvents),
@@ -501,10 +502,10 @@ class PatientEditScreenController @Inject constructor(
     }
 
     val hasAgeOrDateOfBirthChanged = entry.run {
-      when(ageOrDateOfBirth) {
+      when (ageOrDateOfBirth) {
         is EntryWithAge -> {
           val savedAgeAsString = savedPatient.age?.value?.toString()
-          if(savedAgeAsString == null && ageOrDateOfBirth.age.isBlank()) {
+          if (savedAgeAsString == null && ageOrDateOfBirth.age.isBlank()) {
             false
 
           } else {
@@ -515,7 +516,7 @@ class PatientEditScreenController @Inject constructor(
         is EntryWithDateOfBirth -> {
           val savedDateOfBirthAsString = savedPatient.dateOfBirth?.format(dateOfBirthFormatter)
 
-          if(savedDateOfBirthAsString == null && ageOrDateOfBirth.dateOfBirth.isBlank()) {
+          if (savedDateOfBirthAsString == null && ageOrDateOfBirth.dateOfBirth.isBlank()) {
             false
 
           } else {

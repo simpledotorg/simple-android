@@ -8,20 +8,22 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.editpatient.PatientEditValidationError.DISTRICT_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
-import org.simple.clinic.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
-import org.simple.clinic.editpatient.PatientEditValidationError.INVALID_DATE_OF_BIRTH
+import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.OngoingEditPatientEntry
-import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.*
+import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
+import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
@@ -32,7 +34,11 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientEditScreen
 typealias UiChange = (Ui) -> Unit
@@ -42,7 +48,8 @@ class PatientEditScreenController @Inject constructor(
     private val numberValidator: PhoneNumberValidator,
     private val configProvider: Single<PatientEditConfig>,
     private val clock: Clock,
-    private val dateOfBirthFormatValidator: DateOfBirthFormatValidator
+    private val dateOfBirthFormatValidator: DateOfBirthFormatValidator,
+    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -297,10 +304,7 @@ class PatientEditScreenController @Inject constructor(
     val savePatientDetails = validEntry
         .withLatestFrom(savedPatient, savedPatientAddress)
         .map { (ongoingEditPatientEntry, patient, patientAddress) ->
-          val updatedPatient = patient.copy(
-              fullName = ongoingEditPatientEntry.name,
-              gender = ongoingEditPatientEntry.gender
-          )
+          val updatedPatient = patientWithEdits(patient, ongoingEditPatientEntry)
 
           val updatedAddress = patientAddress.copy(
               colonyOrVillage = ongoingEditPatientEntry.colonyOrVillage,
@@ -319,6 +323,49 @@ class PatientEditScreenController @Inject constructor(
     return Observables.zip(savePatientDetails, saveOrUpdatePhoneNumber)
         .filter { (patientSaved, numberSaved) -> patientSaved && numberSaved }
         .map { (_, _) -> { ui: Ui -> ui.goBack() } }
+  }
+
+  private fun patientWithEdits(
+      patient: Patient,
+      ongoingEditPatientEntry: OngoingEditPatientEntry
+  ): Patient {
+    return when (ongoingEditPatientEntry.ageOrDateOfBirth) {
+      is EntryWithAge -> {
+        patient.copy(
+            fullName = ongoingEditPatientEntry.name,
+            gender = ongoingEditPatientEntry.gender,
+            dateOfBirth = null,
+            age = coerceAgeFrom(patient.age, ongoingEditPatientEntry.ageOrDateOfBirth.age)
+        )
+      }
+      is EntryWithDateOfBirth -> {
+        patient.copy(
+            fullName = ongoingEditPatientEntry.name,
+            gender = ongoingEditPatientEntry.gender,
+            age = null,
+            dateOfBirth = LocalDate.parse(ongoingEditPatientEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormat)
+        )
+      }
+    }
+  }
+
+  private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String): Age {
+    val enteredAgeValue = enteredAge.toInt()
+
+    return when {
+      // When prefilling the details, the age text changed event will get triggered, which will
+      // trigger an update of the age and the age updated at timestamp which will change the age
+      // calculations again. This handles that case.
+      alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> {
+        alreadySavedAge
+      }
+      else -> {
+        Age(
+            value = enteredAgeValue,
+            updatedAt = Instant.now(clock),
+            computedDateOfBirth = LocalDate.now(clock).minusYears(enteredAgeValue.toLong()))
+      }
+    }
   }
 
   private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {

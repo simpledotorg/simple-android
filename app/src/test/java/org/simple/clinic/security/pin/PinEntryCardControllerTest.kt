@@ -29,7 +29,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
 @RunWith(JUnitParamsRunner::class)
-class PinEntryCardControllerTest {
+class  PinEntryCardControllerTest {
 
   private val screen = mock<PinEntryCardView>()
   private val userSession = mock<UserSession>()

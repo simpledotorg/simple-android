@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.pin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -37,6 +38,7 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   private val pinHintTextView by bindView<TextView>(R.id.registrationpin_pin_hint)
   private val errorTextView by bindView<TextView>(R.id.registrationpin_error)
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {

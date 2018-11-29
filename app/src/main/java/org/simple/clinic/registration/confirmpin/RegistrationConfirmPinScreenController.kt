@@ -6,7 +6,6 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -16,8 +15,7 @@ typealias Ui = RegistrationConfirmPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationConfirmPinScreenController @Inject constructor(
-    private val userSession: UserSession,
-    private val registrationScheduler: RegistrationScheduler
+    private val userSession: UserSession
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

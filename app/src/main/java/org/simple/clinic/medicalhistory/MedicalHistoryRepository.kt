@@ -118,12 +118,12 @@ class MedicalHistoryRepository @Inject constructor(
       MedicalHistory(
           uuid = uuid,
           patientUuid = patientUuid,
-          hasHadHeartAttack = MedicalHistory.Answer.fromBoolean(hasHadHeartAttack),
-          hasHadStroke = MedicalHistory.Answer.fromBoolean(hasHadStroke),
-          hasHadKidneyDisease = MedicalHistory.Answer.fromBoolean(hasHadKidneyDisease),
-          diagnosedWithHypertension = MedicalHistory.Answer.fromBoolean(diagnosedWithHypertension),
-          isOnTreatmentForHypertension = MedicalHistory.Answer.fromBoolean(isOnTreatmentForHypertension),
-          hasDiabetes = MedicalHistory.Answer.fromBoolean(hasDiabetes),
+          hasHadHeartAttack = hasHadHeartAttack,
+          hasHadStroke = hasHadStroke,
+          hasHadKidneyDisease = hasHadKidneyDisease,
+          diagnosedWithHypertension = diagnosedWithHypertension,
+          isOnTreatmentForHypertension = isOnTreatmentForHypertension,
+          hasDiabetes = hasDiabetes,
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt)

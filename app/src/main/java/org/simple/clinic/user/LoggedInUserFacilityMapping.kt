@@ -86,7 +86,7 @@ data class LoggedInUserFacilityMapping(
       WHERE userUuid = :userUuid
       AND isCurrentFacility = 1
     """)
-    protected abstract fun currentFacilityUuid(userUuid: UUID): UUID?
+    abstract fun currentFacilityUuid(userUuid: UUID): UUID?
 
     @Query("SELECT facilityUuid FROM LoggedInUserFacilityMapping WHERE userUuid = :userUuid")
     abstract fun facilityUuids(userUuid: UUID): Flowable<List<UUID>>

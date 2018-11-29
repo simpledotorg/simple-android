@@ -2,6 +2,7 @@ package org.simple.clinic.medicalhistory.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -15,22 +16,22 @@ data class MedicalHistoryPayload(
     val patientUuid: UUID,
 
     @Json(name = "diagnosed_with_hypertension")
-    val diagnosedWithHypertension: Boolean?,
+    val diagnosedWithHypertension: MedicalHistory.Answer,
 
     @Json(name = "receiving_treatment_for_hypertension")
-    val isOnTreatmentForHypertension: Boolean?,
+    val isOnTreatmentForHypertension: MedicalHistory.Answer,
 
     @Json(name = "prior_heart_attack")
-    val hasHadHeartAttack: Boolean?,
+    val hasHadHeartAttack: MedicalHistory.Answer,
 
     @Json(name = "prior_stroke")
-    val hasHadStroke: Boolean?,
+    val hasHadStroke: MedicalHistory.Answer,
 
     @Json(name = "chronic_kidney_disease")
-    val hasHadKidneyDisease: Boolean?,
+    val hasHadKidneyDisease: MedicalHistory.Answer,
 
     @Json(name = "diabetes")
-    val hasDiabetes: Boolean?,
+    val hasDiabetes: MedicalHistory.Answer,
 
     @Json(name = "created_at")
     val createdAt: Instant,

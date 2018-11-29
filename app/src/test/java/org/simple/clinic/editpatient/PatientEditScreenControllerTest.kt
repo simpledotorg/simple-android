@@ -607,6 +607,21 @@ class PatientEditScreenControllerTest {
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
             }),
         generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = false),
+            numberValidationResult = VALID,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditColonyOrVillageChanged("Colony"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(MALE),
+                PatientEditPhoneNumberTextChanged("")),
+            shouldSavePatient = true,
+            createExpectedPatient =
+            { it.copy(fullName = "Name", gender = MALE) },
+            createExpectedAddress =
+            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
+        generateTestData(
             patientProfile = generatePatientProfile(true),
             numberValidationResult = VALID,
             inputEvents = listOf(

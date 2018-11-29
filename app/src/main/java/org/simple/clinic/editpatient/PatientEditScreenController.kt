@@ -210,9 +210,20 @@ class PatientEditScreenController @Inject constructor(
     val createNewPhoneNumber = validEntry
         .withLatestFrom(savedNumbers.ofType<None>(), patientUuidStream)
         .flatMapSingle { (entry, _, patientUuid) ->
-          patientRepository
-              .createPhoneNumberForPatient(patientUuid, entry.phoneNumber, phoneNumberType = PatientPhoneNumberType.MOBILE, active = true)
-              .toSingleDefault(true)
+          // When prefilling fields, setting a blank phone number causes the text changed event on
+          // the phone number field to get triggered with a blank string. Even though the previously
+          // saved phone number is null, this gets saved then as a blank phone number. The next time
+          // we edit this patient, the user is forced to enter a phone number since a blank phone
+          // number already exists and it gets checked in the validations. This is a workaround to
+          // prevent this situation by not creating a blank phone number in the first place.
+          if (entry.phoneNumber.isBlank()) {
+            Single.just(true)
+
+          } else {
+            patientRepository
+                .createPhoneNumberForPatient(patientUuid, entry.phoneNumber, phoneNumberType = PatientPhoneNumberType.MOBILE, active = true)
+                .toSingleDefault(true)
+          }
         }
 
     val saveOrUpdatePhoneNumber = Observable.merge(createNewPhoneNumber, updateExistingPhoneNumber)

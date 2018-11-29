@@ -33,14 +33,14 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
   }
 
   private fun showOtpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val showIncorrectOtpErrors = events.ofType<EnterOtpSubmitted>()
+    return events.ofType<EnterOtpSubmitted>()
         .filter { it.otp.length != OTP_LENGTH }
-        .map { { ui: Ui -> ui.showIncorrectOtpError() } }
-
-    val hideOtpErrorOnPinTextChanges = events.ofType<EnterOtpTextChanges>()
-        .map { { ui: Ui -> ui.hideError() } }
-
-    return showIncorrectOtpErrors.mergeWith(hideOtpErrorOnPinTextChanges)
+        .map {
+          { ui: Ui ->
+            ui.showIncorrectOtpError()
+            ui.clearPin()
+          }
+        }
   }
 
   private fun showPhoneNumberOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -67,7 +67,9 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
         .flatMap { otp ->
           userSession.loginWithOtp(otp)
               .flatMapObservable { loginResult ->
-                Observable.merge(handleLoginResult(loginResult), hideProgressOnLoginResult(loginResult))
+                Observable.merge(
+                    handleLoginResult(loginResult),
+                    Observable.just({ ui: Ui -> ui.hideProgress() }))
               }
               .startWith { ui: Ui -> ui.showProgress() }
         }
@@ -78,17 +80,20 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
         .map {
           when (it) {
             is LoginResult.Success -> { ui: Ui -> ui.goBack() }
-            is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-            is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
-            is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
+            is LoginResult.NetworkError -> { ui: Ui ->
+              ui.showNetworkError()
+              ui.clearPin()
+            }
+            is LoginResult.ServerError -> { ui: Ui ->
+              ui.showServerError(it.error)
+              ui.clearPin()
+            }
+            is LoginResult.UnexpectedError -> { ui: Ui ->
+              ui.showUnexpectedError()
+              ui.clearPin()
+            }
           }
         }
-        .toObservable()
-  }
-
-  private fun hideProgressOnLoginResult(loginResult: LoginResult): Observable<UiChange> {
-    return Single.just(loginResult)
-        .map { { ui: Ui -> ui.hideProgress() } }
         .toObservable()
   }
 
@@ -101,11 +106,16 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
 
   private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<EnterOtpResendSmsClicked>()
-        .flatMap { _ ->
+        .flatMap {
           userSession
               .requestLoginOtp()
               .flatMapObservable { loginResult ->
-                Observable.merge(showMessageOnLoginResult(loginResult), hideProgressOnLoginResult(loginResult))
+                Observable.merge(
+                    showMessageOnLoginResult(loginResult),
+                    Observable.just({ ui: Ui ->
+                      ui.hideProgress()
+                      ui.clearPin()
+                    }))
               }
               .startWith { ui: Ui ->
                 ui.hideError()

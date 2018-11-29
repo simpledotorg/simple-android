@@ -18,6 +18,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_EMP
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_LONG
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
+import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
@@ -35,6 +36,8 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.Clock
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -315,10 +318,7 @@ class PatientEditScreenController @Inject constructor(
     val savePatientDetails = validEntry
         .withLatestFrom(savedPatient, savedPatientAddress)
         .map { (ongoingEditPatientEntry, patient, patientAddress) ->
-          val updatedPatient = patient.copy(
-              fullName = ongoingEditPatientEntry.name,
-              gender = ongoingEditPatientEntry.gender
-          )
+          val updatedPatient = patientWithEdits(patient, ongoingEditPatientEntry)
 
           val updatedAddress = patientAddress.copy(
               colonyOrVillage = ongoingEditPatientEntry.colonyOrVillage,
@@ -337,6 +337,49 @@ class PatientEditScreenController @Inject constructor(
     return Observables.zip(savePatientDetails, saveOrUpdatePhoneNumber)
         .filter { (patientSaved, numberSaved) -> patientSaved && numberSaved }
         .map { (_, _) -> { ui: Ui -> ui.goBack() } }
+  }
+
+  private fun patientWithEdits(
+      patient: Patient,
+      ongoingEditPatientEntry: OngoingEditPatientEntry
+  ): Patient {
+    return when (ongoingEditPatientEntry.ageOrDateOfBirth) {
+      is EntryWithAge -> {
+        patient.copy(
+            fullName = ongoingEditPatientEntry.name,
+            gender = ongoingEditPatientEntry.gender,
+            dateOfBirth = null,
+            age = coerceAgeFrom(patient.age, ongoingEditPatientEntry.ageOrDateOfBirth.age)
+        )
+      }
+      is EntryWithDateOfBirth -> {
+        patient.copy(
+            fullName = ongoingEditPatientEntry.name,
+            gender = ongoingEditPatientEntry.gender,
+            age = null,
+            dateOfBirth = LocalDate.parse(ongoingEditPatientEntry.ageOrDateOfBirth.dateOfBirth, dateOfBirthFormatter)
+        )
+      }
+    }
+  }
+
+  private fun coerceAgeFrom(alreadySavedAge: Age?, enteredAge: String): Age {
+    val enteredAgeValue = enteredAge.toInt()
+
+    return when {
+      // When prefilling the details, the age text changed event will get triggered, which will
+      // trigger an update of the age and the age updated at timestamp which will change the age
+      // calculations again. This handles that case.
+      alreadySavedAge != null && alreadySavedAge.value == enteredAgeValue -> {
+        alreadySavedAge
+      }
+      else -> {
+        Age(
+            value = enteredAgeValue,
+            updatedAt = Instant.now(clock),
+            computedDateOfBirth = LocalDate.now(clock).minusYears(enteredAgeValue.toLong()))
+      }
+    }
   }
 
   private fun toggleDatePatternInDateOfBirthLabel(events: Observable<UiEvent>): Observable<UiChange> {

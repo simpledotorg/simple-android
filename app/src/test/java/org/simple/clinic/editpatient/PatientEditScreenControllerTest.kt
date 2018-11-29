@@ -49,10 +49,14 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.UUID
@@ -376,8 +380,8 @@ class PatientEditScreenControllerTest {
 
   @Test
   @Parameters(value = [
-    "01-01-2000|INVALID_PATTERN|INVALID_DATE_OF_BIRTH",
-    "01-01-2000|DATE_IS_IN_FUTURE|DATE_OF_BIRTH_IN_FUTURE"
+    "01/01/2000|INVALID_PATTERN|INVALID_DATE_OF_BIRTH",
+    "01/01/2000|DATE_IS_IN_FUTURE|DATE_OF_BIRTH_IN_FUTURE"
   ])
   fun `when save is clicked, the date of birth should be validated`(
       dateOfBirth: String,
@@ -429,7 +433,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
-    if(dateOfBirthValidationResult != null) {
+    if (dateOfBirthValidationResult != null) {
       whenever(dateOfBirthFormatValidator.validate(any(), any())).thenReturn(dateOfBirthValidationResult)
     }
 
@@ -441,16 +445,16 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditDistrictTextChanged(district))
     uiEvents.onNext(PatientEditStateTextChanged(state))
     uiEvents.onNext(PatientEditGenderChanged(MALE))
-    if(age != null) {
+    if (age != null) {
       uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
       uiEvents.onNext(PatientEditAgeTextChanged(age))
     }
-    if(dateOfBirth != null) {
+    if (dateOfBirth != null) {
       uiEvents.onNext(PatientEditAgeTextChanged(""))
       uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirth))
     }
 
-    if(age == null && dateOfBirth == null) {
+    if (age == null && dateOfBirth == null) {
       uiEvents.onNext(PatientEditAgeTextChanged(""))
     }
 
@@ -566,7 +570,7 @@ class PatientEditScreenControllerTest {
             "",
             null,
             DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
-            "01-01-2000",
+            "01/01/2000",
             setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE)
         ),
         listOf(
@@ -602,7 +606,7 @@ class PatientEditScreenControllerTest {
             "State",
             null,
             DateOfBirthFormatValidator.Result.VALID,
-            "01-01-2000",
+            "01/01/2000",
             emptySet<PatientEditValidationError>()
         )
     )
@@ -656,6 +660,8 @@ class PatientEditScreenControllerTest {
       existingSavedAddress: PatientAddress,
       existingSavedPhoneNumber: PatientPhoneNumber?,
       numberValidationResult: PhoneNumberValidator.Result,
+      dateOfBirthValidationResult: DateOfBirthFormatValidator.Result,
+      advanceClockBy: Duration,
       inputEvents: List<UiEvent>,
       shouldSavePatient: Boolean,
       expectedSavedPatient: Patient?,
@@ -665,14 +671,14 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.patient(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPatient.toOptional()))
     whenever(patientRepository.phoneNumbers(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
     whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
-
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
-
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
+    whenever(dateOfBirthFormatValidator.validate(any(), any())).thenReturn(dateOfBirthValidationResult)
 
+    clock.advanceBy(advanceClockBy)
     uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditSaveClicked())
@@ -711,12 +717,28 @@ class PatientEditScreenControllerTest {
   @Suppress("Unused")
   private fun `params for saving patient on save clicked`(): List<List<Any?>> {
 
-    fun generatePatientProfile(shouldAddNumber: Boolean): PatientProfile {
+    fun generatePatientProfile(shouldAddNumber: Boolean, shouldHaveAge: Boolean): PatientProfile {
       val patientUuid = UUID.randomUUID()
       val addressUuid = UUID.randomUUID()
 
+      val patient = if (shouldHaveAge) {
+        PatientMocker.patient(
+            uuid = patientUuid,
+            age = Age(value = 20, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+            dateOfBirth = null,
+            addressUuid = addressUuid)
+
+      } else {
+        PatientMocker.patient(
+            uuid = patientUuid,
+            age = null,
+            dateOfBirth = LocalDate.now(clock),
+            addressUuid = addressUuid
+        )
+      }
+
       return PatientProfile(
-          patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
+          patient = patient,
           address = PatientMocker.address(uuid = addressUuid),
           phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList()
       )
@@ -725,6 +747,8 @@ class PatientEditScreenControllerTest {
     fun generateTestData(
         patientProfile: PatientProfile,
         numberValidationResult: PhoneNumberValidator.Result,
+        dateOfBirthValidationResult: DateOfBirthFormatValidator.Result,
+        advanceClockBy: Duration,
         inputEvents: List<UiEvent>,
         shouldSavePatient: Boolean,
         createExpectedPatient: (Patient) -> Patient = { it },
@@ -746,15 +770,20 @@ class PatientEditScreenControllerTest {
           PatientEditGenderChanged(patientProfile.patient.gender),
           PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: ""),
 
-          // TODO: actually test this when implementing save patient
-          PatientEditAgeTextChanged("1")
+          if (patientProfile.patient.age != null) {
+            PatientEditAgeTextChanged(patientProfile.patient.age!!.value.toString())
+          } else {
+            PatientEditDateOfBirthTextChanged(dateOfBirthFormat.format(patientProfile.patient.dateOfBirth!!))
+          }
       )
 
       return listOf(
           patientProfile.patient,
           patientProfile.address,
-          if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first(),
+          patientProfile.phoneNumbers.firstOrNull(),
           numberValidationResult,
+          dateOfBirthValidationResult,
+          advanceClockBy,
           preCreateInputEvents + inputEvents,
           shouldSavePatient,
           if (shouldSavePatient) createExpectedPatient(patientProfile.patient) else null,
@@ -763,26 +792,66 @@ class PatientEditScreenControllerTest {
       )
     }
 
+    val oneYear = Duration.ofDays(365L)
+    val twoYears = oneYear.plus(oneYear)
+
     return listOf(
         generateTestData(
-            patientProfile = generatePatientProfile(false),
+            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditColonyOrVillageChanged("Colony"),
                 PatientEditStateTextChanged("State"),
                 PatientEditGenderChanged(MALE),
-                PatientEditPhoneNumberTextChanged("12345678")),
+                PatientEditPhoneNumberTextChanged("12345678"),
+                PatientEditDateOfBirthTextChanged("20/05/1985")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name", gender = MALE) },
-            createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
-            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
+            createExpectedPatient =
+            { it.copy(fullName = "Name", gender = MALE, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
+            createExpectedAddress =
+            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
+            createExpectedPhoneNumber =
+            { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
             }),
         generateTestData(
-            patientProfile = generatePatientProfile(shouldAddNumber = false),
+            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = oneYear,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditColonyOrVillageChanged("Colony"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(MALE),
+                PatientEditPhoneNumberTextChanged("12345678"),
+                PatientEditDateOfBirthTextChanged(""),
+                PatientEditAgeTextChanged("22")),
+            shouldSavePatient = true,
+            createExpectedPatient =
+            {
+              val expectedAge = Age(
+                  value = 22,
+                  updatedAt = Instant.now(clock).plus(oneYear),
+                  computedDateOfBirth = LocalDate.parse("1949-01-01"))
+              it.copy(fullName = "Name", gender = MALE, dateOfBirth = null, age = expectedAge)
+            },
+            createExpectedAddress =
+            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
+            createExpectedPhoneNumber =
+            { patientId, alreadyPresentPhoneNumber ->
+              alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
+            }),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -796,23 +865,95 @@ class PatientEditScreenControllerTest {
             createExpectedAddress =
             { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         generateTestData(
-            patientProfile = generatePatientProfile(true),
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
                 PatientEditGenderChanged(TRANSGENDER),
-                PatientEditPhoneNumberTextChanged("123456")),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name", gender = TRANSGENDER) },
-            createExpectedAddress = { it.copy(district = "District", state = "State") },
-            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
+            createExpectedPatient =
+            {
+              val expectedAge = Age(
+                  value = 25,
+                  updatedAt = Instant.now(clock),
+                  computedDateOfBirth = LocalDate.parse("1945-01-01")
+              )
+              it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
+            },
+            createExpectedAddress =
+            { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber =
+            { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
         generateTestData(
-            patientProfile = generatePatientProfile(true),
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("25/06/1965")),
+            shouldSavePatient = true,
+            createExpectedPatient =
+            {
+              it.copy(
+                  fullName = "Name",
+                  gender = TRANSGENDER,
+                  age = null,
+                  dateOfBirth = LocalDate.parse("1965-06-25")
+              )
+            },
+            createExpectedAddress =
+            { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber =
+            { patientId, alreadyPresentPhoneNumber ->
+              alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
+            }),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = twoYears,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditAgeTextChanged("25")),
+            shouldSavePatient = true,
+            createExpectedPatient =
+            {
+              val expectedAge = Age(
+                  value = 25,
+                  updatedAt = Instant.now(clock).plus(twoYears),
+                  computedDateOfBirth = LocalDate.parse("1947-01-01")
+              )
+              it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
+            },
+            createExpectedAddress =
+            { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber =
+            { patientId, alreadyPresentPhoneNumber ->
+              alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
+            }),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -823,14 +964,117 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 2"),
                 PatientEditPhoneNumberTextChanged("1234567")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name 2", gender = TRANSGENDER) },
-            createExpectedAddress = { it.copy(district = "District", state = "State 2") },
-            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
+            createExpectedPatient =
+            { it.copy(fullName = "Name 2", gender = TRANSGENDER) },
+            createExpectedAddress =
+            { it.copy(district = "District", state = "State 2") },
+            createExpectedPhoneNumber =
+            { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "1234567") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "1234567")
             }),
         generateTestData(
-            patientProfile = generatePatientProfile(true),
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditAgeTextChanged("")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.INVALID_PATTERN,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditDateOfBirthTextChanged("12/34")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditDateOfBirthTextChanged("30/11/2000")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditAgeTextChanged("")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("30/11/2000")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.INVALID_PATTERN,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name 1"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditStateTextChanged("State 1"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditStateTextChanged("State 2"),
+                PatientEditPatientNameTextChanged("Name 2"),
+                PatientEditPhoneNumberTextChanged("1234567"),
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("30/11")),
+            shouldSavePatient = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             numberValidationResult = LENGTH_TOO_SHORT,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -838,8 +1082,10 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(TRANSGENDER)),
             shouldSavePatient = false),
         generateTestData(
-            patientProfile = generatePatientProfile(false),
+            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -852,8 +1098,10 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("")),
             shouldSavePatient = false),
         generateTestData(
-            patientProfile = generatePatientProfile(true),
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             numberValidationResult = LENGTH_TOO_LONG,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged(""),
                 PatientEditDistrictTextChanged("District"),
@@ -861,8 +1109,10 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(TRANSGENDER)),
             shouldSavePatient = false),
         generateTestData(
-            patientProfile = generatePatientProfile(true),
+            patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged(""),
@@ -870,13 +1120,15 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(TRANSGENDER)),
             shouldSavePatient = false),
         generateTestData(
-            patientProfile = generatePatientProfile(false),
+            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             numberValidationResult = BLANK,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged(""),
-                PatientEditGenderChanged(FEMALE)),
+                PatientEditGenderChanged(Gender.FEMALE)),
             shouldSavePatient = false)
     )
   }
@@ -1020,11 +1272,11 @@ class PatientEditScreenControllerTest {
         profile
 
       }.let { profile ->
-        if(ageValue != null) {
+        if (ageValue != null) {
           val age = Age(value = ageValue, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock))
           return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
 
-        } else if(dateOfBirthString != null) {
+        } else if (dateOfBirthString != null) {
           val dateOfBirth = LocalDate.parse(dateOfBirthString)
           return@let profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = dateOfBirth))
         }
@@ -1046,7 +1298,7 @@ class PatientEditScreenControllerTest {
           PatientEditGenderChanged(patientProfile.patient.gender),
           PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
       ) + patientProfile.let { (patient, _, _) ->
-        if(patient.age != null) {
+        if (patient.age != null) {
           listOf(PatientEditAgeTextChanged(patient.age!!.value.toString()))
         } else {
           listOf(PatientEditDateOfBirthTextChanged(patient.dateOfBirth!!.format(dateOfBirthFormat)))

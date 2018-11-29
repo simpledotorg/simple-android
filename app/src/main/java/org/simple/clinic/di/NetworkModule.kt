@@ -10,6 +10,7 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientSummaryResult
+import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
@@ -25,13 +26,20 @@ open class NetworkModule {
   @Provides
   @AppScope
   fun moshi(): Moshi {
-    return Moshi.Builder()
+    val moshi = Moshi.Builder()
         .add(InstantMoshiAdapter())
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
         .add(patientSummaryResultAdapterFactory())
         .add(AppointmentCancelReason.MoshiTypeConverter())
+        .build()
+
+    val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()
+
+    return moshi
+        .newBuilder()
+        .add(PatientPayload::class.java, patientPayloadNullSerializingAdapter)
         .build()
   }
 

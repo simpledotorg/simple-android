@@ -823,6 +823,23 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             numberValidationResult = VALID,
             dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
+            advanceClockBy = Duration.ZERO,
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Name"),
+                PatientEditDistrictTextChanged("District"),
+                PatientEditColonyOrVillageChanged("Colony"),
+                PatientEditStateTextChanged("State"),
+                PatientEditGenderChanged(MALE),
+                PatientEditPhoneNumberTextChanged("")),
+            shouldSavePatient = true,
+            createExpectedPatient =
+            { it.copy(fullName = "Name", gender = MALE) },
+            createExpectedAddress =
+            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
+        generateTestData(
+            patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
+            numberValidationResult = VALID,
+            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
             advanceClockBy = oneYear,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),

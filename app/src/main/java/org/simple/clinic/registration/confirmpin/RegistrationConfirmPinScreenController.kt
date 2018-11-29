@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
@@ -15,18 +16,33 @@ typealias Ui = RegistrationConfirmPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class RegistrationConfirmPinScreenController @Inject constructor(
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val clock: Clock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
+    val transformedEvents = replayedEvents
+        .compose(autoSubmitPin())
+        .compose(validatePin())
+
     return Observable.mergeArray(
-        preFillExistingDetails(replayedEvents),
-        showValidationError(replayedEvents),
-        hideValidationError(replayedEvents),
-        resetPins(replayedEvents),
-        updateOngoingEntryAndProceed(replayedEvents))
+        preFillExistingDetails(transformedEvents),
+        showValidationError(transformedEvents),
+        resetPins(transformedEvents),
+        saveConfirmPinAndProceed(transformedEvents))
+  }
+
+  private fun autoSubmitPin(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { upstream ->
+      val autoSubmits = upstream
+          .ofType<RegistrationConfirmPinTextChanged>()
+          .distinctUntilChanged()
+          .filter { it.confirmPin.length == 4 }
+          .map { RegistrationConfirmPinDoneClicked() }
+      upstream.mergeWith(autoSubmits)
+    }
   }
 
   private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
@@ -34,55 +50,59 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .ofType<RegistrationConfirmPinScreenCreated>()
         .flatMapSingle {
           userSession.ongoingRegistrationEntry()
-              .map { { ui: Ui -> ui.preFillUserDetails(it) } }
+              .map { entry -> { ui: Ui -> ui.preFillUserDetails(entry) } }
         }
+  }
+
+  private fun validatePin(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { upstream ->
+      val doneClicks = upstream.ofType<RegistrationConfirmPinDoneClicked>()
+
+      val pinTextChanges = upstream
+          .ofType<RegistrationConfirmPinTextChanged>()
+          .map { it.confirmPin }
+
+      val validations = doneClicks
+          .withLatestFrom(pinTextChanges)
+          .flatMapSingle { (_, confirmPin) ->
+            userSession
+                .ongoingRegistrationEntry()
+                .map { ongoingEntry ->
+                  val valid = ongoingEntry.pin == confirmPin
+                  RegistrationConfirmPinValidated(confirmPin, valid)
+                }
+          }
+
+      upstream.mergeWith(validations)
+    }
   }
 
   private fun showValidationError(events: Observable<UiEvent>): Observable<UiChange> {
-    val pinTextChanges = events.ofType<RegistrationConfirmPinTextChanged>().map { it.confirmPin }
-
     return events
-        .ofType<RegistrationConfirmPinDoneClicked>()
-        .withLatestFrom(pinTextChanges)
-        .flatMapSingle { (_, confirmPin) -> matchesWithPin(confirmPin) }
-        .filter { pinMatches -> pinMatches.not() }
+        .ofType<RegistrationConfirmPinValidated>()
+        .filter { it.valid.not() }
         .map { { ui: Ui -> ui.showPinMismatchError() } }
   }
 
-  private fun hideValidationError(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun saveConfirmPinAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<RegistrationConfirmPinTextChanged>()
-        .map { { ui: Ui -> ui.hidePinMismatchError() } }
-  }
-
-  private fun updateOngoingEntryAndProceed(events: Observable<UiEvent>): Observable<UiChange> {
-    val pinTextChanges = events.ofType<RegistrationConfirmPinTextChanged>()
-    val doneClicks = events.ofType<RegistrationConfirmPinDoneClicked>()
-
-    return doneClicks
-        .withLatestFrom(pinTextChanges.map { it.confirmPin })
-        .flatMapSingle { (_, confirmPin) -> matchesWithPin(confirmPin).map { it to confirmPin } }
-        .filter { (pinMatches, _) -> pinMatches }
-        .flatMap { (_, confirmPin) ->
+        .ofType<RegistrationConfirmPinValidated>()
+        .filter { it.valid }
+        .flatMap {
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(pinConfirmation = confirmPin, createdAt = Instant.now()) }
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
+              .map { entry -> entry.copy(pinConfirmation = it.confirmPin, createdAt = Instant.now(clock)) }
+              .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
               .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
         }
   }
-
-  private fun matchesWithPin(confirmPin: String) =
-      userSession
-          .ongoingRegistrationEntry()
-          .map { ongoingEntry -> ongoingEntry.pin == confirmPin }
 
   private fun resetPins(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<RegistrationResetPinClicked>()
         .flatMap {
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(pin = null, pinConfirmation = null) }
-              .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
+              .map { entry -> entry.copy(pin = null, pinConfirmation = null) }
+              .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
               .andThen(Observable.just({ ui: Ui -> ui.goBackToPinScreen() }))
         }
   }

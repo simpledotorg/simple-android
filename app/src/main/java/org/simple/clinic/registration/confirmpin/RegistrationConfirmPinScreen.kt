@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.confirmpin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -22,8 +23,8 @@ import org.simple.clinic.registration.location.RegistrationLocationPermissionScr
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
-import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -42,6 +43,7 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   private val errorStateViewGroup by bindView<LinearLayout>(R.id.registrationconfirmpin_error)
   private val resetPinButton by bindView<Button>(R.id.registrationconfirmpin_reset_pin)
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -52,6 +54,10 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
     backButton.setOnClickListener {
       screenRouter.pop()
     }
+
+    // Because PIN is auto-submitted when 4 digits are entered, restoring the
+    // existing PIN will immediately take the user to the next screen.
+    confirmPinEditText.isSaveEnabled = false
 
     Observable.merge(screenCreates(), confirmPinTextChanges(), resetPinClicks(), doneClicks())
         .observeOn(io())
@@ -85,11 +91,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
     pinHintTextView.visibility = View.GONE
   }
 
-  fun hidePinMismatchError() {
-    errorStateViewGroup.visibility = View.GONE
-    pinHintTextView.visibility = View.VISIBLE
-  }
-
   fun openFacilitySelectionScreen() {
     screenRouter.push(RegistrationLocationPermissionScreen.KEY)
   }
@@ -97,7 +98,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
     fullNameTextView.text = ongoingEntry.fullName
     phoneNumberTextView.text = ongoingEntry.phoneNumber
-    confirmPinEditText.setTextAndCursor(ongoingEntry.pinConfirmation)
   }
 
   fun goBackToPinScreen() {

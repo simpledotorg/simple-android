@@ -14,9 +14,9 @@ import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.TestClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -26,17 +26,33 @@ class RegistrationConfirmPinScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<RegistrationConfirmPinScreen>()
   private val userSession = mock<UserSession>()
-  private val registrationScheduler = mock<RegistrationScheduler>()
+  private val clock = TestClock()
 
   private lateinit var controller: RegistrationConfirmPinScreenController
 
   @Before
   fun setUp() {
-    controller = RegistrationConfirmPinScreenController(userSession, registrationScheduler)
+    controller = RegistrationConfirmPinScreenController(userSession, clock)
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+  }
+
+  @Test
+  fun `when 4 digits are entered then the PIN should be submitted automatically`() {
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry(pin = "1234")))
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationConfirmPinTextChanged("1"))
+    uiEvents.onNext(RegistrationConfirmPinTextChanged("12"))
+    uiEvents.onNext(RegistrationConfirmPinTextChanged("123"))
+    uiEvents.onNext(RegistrationConfirmPinTextChanged("1234"))
+
+    verify(userSession).saveOngoingRegistrationEntry(OngoingRegistrationEntry(
+        pin = "1234",
+        pinConfirmation = "1234",
+        createdAt = Instant.now(clock)))
   }
 
   @Test
@@ -48,7 +64,6 @@ class RegistrationConfirmPinScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(input))
-    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     val inOrder = inOrder(userSession, screen)
     inOrder.verify(userSession).saveOngoingRegistrationEntry(check {
@@ -86,7 +101,6 @@ class RegistrationConfirmPinScreenControllerTest {
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     uiEvents.onNext(RegistrationConfirmPinTextChanged(validConfirmationPin))
-    uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
     verify(userSession, times(1)).saveOngoingRegistrationEntry(any())
     verify(screen, times(1)).openFacilitySelectionScreen()
@@ -97,18 +111,12 @@ class RegistrationConfirmPinScreenControllerTest {
     val ongoingEntry = OngoingRegistrationEntry(pin = "1234")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
 
-    uiEvents.onNext(RegistrationConfirmPinTextChanged("123"))
+    uiEvents.onNext(RegistrationConfirmPinTextChanged("4567"))
     uiEvents.onNext(RegistrationConfirmPinDoneClicked())
 
-    verify(screen).showPinMismatchError()
+    verify(screen, times(2)).showPinMismatchError()
     verify(userSession, never()).saveOngoingRegistrationEntry(any())
     verify(screen, never()).openFacilitySelectionScreen()
-  }
-
-  @Test
-  fun `when input pin is changed then any visible errors should be removed`() {
-    uiEvents.onNext(RegistrationConfirmPinTextChanged(""))
-    verify(screen).hidePinMismatchError()
   }
 
   @Test

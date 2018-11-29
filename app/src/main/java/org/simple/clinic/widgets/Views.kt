@@ -51,6 +51,11 @@ fun View.setPadding(@DimenRes paddingRes: Int) {
   setPaddingRelative(padding, padding, padding, padding)
 }
 
+fun View.setPaddingBottom(@DimenRes paddingRes: Int) {
+  val newPaddingBottom = resources.getDimensionPixelSize(paddingRes)
+  setPaddingRelative(paddingStart, paddingTop, paddingEnd, newPaddingBottom)
+}
+
 fun View.setTopMargin(@DimenRes topMarginRes: Int) {
   val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
   marginLayoutParams.topMargin = resources.getDimensionPixelSize(topMarginRes)

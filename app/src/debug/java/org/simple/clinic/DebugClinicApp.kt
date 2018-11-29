@@ -13,8 +13,6 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
-import org.simple.clinic.editpatient.PatientEditConfig
-import org.simple.clinic.editpatient.PatientEditModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientConfig
@@ -101,12 +99,6 @@ class DebugClinicApp : ClinicApp() {
             return super.config().map {
               it.copy(blockDuration = Duration.ofSeconds(5))
             }
-          }
-        })
-        .patientEditModule(object : PatientEditModule() {
-          override fun providePatientEditConfig(): Single<PatientEditConfig> {
-            return super.providePatientEditConfig()
-                .map { it.copy(isEditAgeAndDobEnabled = true) }
           }
         })
         .patientModule(object : PatientModule() {

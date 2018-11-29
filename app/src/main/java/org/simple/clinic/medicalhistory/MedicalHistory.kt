@@ -6,6 +6,7 @@ import android.arch.persistence.room.Insert
 import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
+import com.squareup.moshi.Json
 import io.reactivex.Flowable
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
@@ -30,21 +31,18 @@ data class MedicalHistory(
 ) {
 
   enum class Answer {
+    @Json(name = "yes")
     YES,
+
+    @Json(name = "no")
     NO,
+
+    @Json(name = "unknown")
     UNSELECTED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Answer>(Answer::class.java)
 
     companion object {
-      fun fromBoolean(answer: Boolean?): Answer {
-        return when (answer) {
-          true -> YES
-          false -> NO
-          null -> UNSELECTED
-        }
-      }
-
       fun toBoolean(answer: Answer): Boolean? {
         return when (answer) {
           YES -> true

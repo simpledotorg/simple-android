@@ -459,12 +459,12 @@ class TestData @Inject constructor(
   fun medicalHistoryPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      diagnosedWithHypertension:Boolean = faker.bool.bool(),
-      hasHadHeartAttack: Boolean = faker.bool.bool(),
-      hasHadStroke: Boolean = faker.bool.bool(),
-      hasHadKidneyDisease: Boolean = faker.bool.bool(),
-      isOnTreatmentForHypertension: Boolean = faker.bool.bool(),
-      hasDiabetes: Boolean = faker.bool.bool(),
+      diagnosedWithHypertension:Answer = randomOfEnum(Answer::class),
+      hasHadHeartAttack: Answer = randomOfEnum(Answer::class),
+      hasHadStroke: Answer = randomOfEnum(Answer::class),
+      hasHadKidneyDisease: Answer = randomOfEnum(Answer::class),
+      isOnTreatmentForHypertension: Answer = randomOfEnum(Answer::class),
+      hasDiabetes: Answer = randomOfEnum(Answer::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now()
   ): MedicalHistoryPayload {

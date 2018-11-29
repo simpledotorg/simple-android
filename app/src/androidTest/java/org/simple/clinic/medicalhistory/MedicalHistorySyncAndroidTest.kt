@@ -10,7 +10,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
-import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV1
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV2
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
@@ -29,7 +29,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   lateinit var sync: MedicalHistorySync
 
   @Inject
-  lateinit var syncApi: MedicalHistorySyncApiV1
+  lateinit var syncApi: MedicalHistorySyncApiV2
 
   @Inject
   lateinit var repository: MedicalHistoryRepository

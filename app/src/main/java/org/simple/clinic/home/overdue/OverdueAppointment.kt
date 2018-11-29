@@ -5,6 +5,8 @@ import android.arch.persistence.room.Embedded
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
@@ -91,12 +93,12 @@ data class OverdueAppointment(
 
           (
             CASE
-              WHEN MH.hasHadStroke = 1 THEN 1
+              WHEN MH.hasHadStroke = :yesAnswer THEN :trueBoolean
               WHEN BP.systolic >= 160 AND BP.diastolic >= 100
-                  AND (MH.hasDiabetes = 1 OR MH.hasHadKidneyDisease = 1)
+                  AND (MH.hasDiabetes = :yesAnswer OR MH.hasHadKidneyDisease = :yesAnswer)
                   AND (P.dateOfBirth <= :patientBornBefore OR P.age_computedDateOfBirth <= :patientBornBefore)
-                  THEN 1
-              ELSE 0
+                  THEN :trueBoolean
+              ELSE :falseBoolean
             END
           ) AS isAtHighRisk
 
@@ -117,7 +119,10 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
-        patientBornBefore: LocalDate
+        patientBornBefore: LocalDate,
+        yesAnswer: MedicalHistory.Answer = Answer.YES,
+        trueBoolean: Boolean = true,
+        falseBoolean: Boolean = false
     ): Flowable<List<OverdueAppointment>>
   }
 }

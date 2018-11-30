@@ -1,7 +1,6 @@
 package org.simple.clinic.drugs.selection
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.DialogFragment
 import android.support.v4.app.FragmentManager
@@ -27,8 +26,8 @@ class ConfirmDeletePrescriptionDialog : DialogFragment() {
         .create()
   }
 
-  override fun onAttach(context: Context?) {
-    super.onAttach(context)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
   }
 

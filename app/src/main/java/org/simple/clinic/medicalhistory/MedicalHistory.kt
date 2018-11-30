@@ -41,16 +41,6 @@ data class MedicalHistory(
     UNSELECTED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Answer>(Answer::class.java)
-
-    companion object {
-      fun toBoolean(answer: Answer): Boolean? {
-        return when (answer) {
-          YES -> true
-          NO -> false
-          UNSELECTED -> null
-        }
-      }
-    }
   }
 
   @Dao

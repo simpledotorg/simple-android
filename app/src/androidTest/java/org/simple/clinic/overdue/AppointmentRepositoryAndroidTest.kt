@@ -103,7 +103,12 @@ class AppointmentRepositoryAndroidTest {
     val patientId = UUID.randomUUID()
 
     val date1 = LocalDate.now(clock)
+    val timeOfSchedule = Instant.now(clock)
     appointmentRepository.schedule(patientId, date1).blockingAwait()
+
+    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+
+    testClock.advanceBy(Duration.ofHours(24))
 
     val date2 = LocalDate.now(clock).plusDays(10)
     appointmentRepository.schedule(patientId, date2).blockingAwait()
@@ -111,15 +116,19 @@ class AppointmentRepositoryAndroidTest {
     val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(savedAppointment).hasSize(2)
 
-    savedAppointment[0].apply {
+    val oldAppointment = savedAppointment[0]
+    oldAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(date1)
       assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
       assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
+      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
+      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
     }
 
-    savedAppointment[1].apply {
+    val newAppointment = savedAppointment[1]
+    newAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(date2)
       assertThat(this.status).isEqualTo(SCHEDULED)
@@ -304,24 +313,30 @@ class AppointmentRepositoryAndroidTest {
   fun when_setting_appointment_reminder_then_reminder_with_correct_date_should_be_set() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
+    val timeOfSchedule = Instant.now(clock)
     appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
     assertThat(appointments.first().remindOn).isNull()
 
-    val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
 
+    testClock.advanceBy(Duration.ofHours(24))
+
+    val uuid = appointments[0].uuid
     val reminderDate = LocalDate.now(clock).plusDays(10)
     appointmentRepository.createReminder(uuid, reminderDate).blockingGet()
 
-    val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
-    assertThat(updatedList).hasSize(1)
-    updatedList[0].apply {
+    val updatedAppointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
+    assertThat(updatedAppointments).hasSize(1)
+    updatedAppointments[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.remindOn).isEqualTo(reminderDate)
       assertThat(this.agreedToVisit).isNull()
+      assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
+      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
+      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
@@ -329,6 +344,7 @@ class AppointmentRepositoryAndroidTest {
   fun when_marking_appointment_as_agreed_to_visit_reminder_for_30_days_should_be_set() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
+    val timeOfSchedule = Instant.now(clock)
     appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -337,8 +353,10 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointments.first().agreedToVisit).isNull()
 
     val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
-    appointmentRepository.markAsAgreedToVisit(uuid).blockingGet()
+    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+
+    testClock.advanceBy(Duration.ofDays(1))
+    appointmentRepository.markAsAgreedToVisit(uuid).blockingAwait()
 
     val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
@@ -346,6 +364,8 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.remindOn).isEqualTo(LocalDate.now(clock).plusDays(30))
       assertThat(this.agreedToVisit).isTrue()
+      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
+      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
@@ -353,6 +373,7 @@ class AppointmentRepositoryAndroidTest {
   fun when_removing_appointment_from_list_then_appointment_status_and_cancel_reason_should_be_updated() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
+    val timeOfSchedule = Instant.now(clock)
     appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -360,7 +381,10 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointments.first().cancelReason).isNull()
 
     val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
+    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+
+    testClock.advanceBy(Duration.ofDays(1))
+
     appointmentRepository.cancelWithReason(uuid, Appointment.CancelReason.PATIENT_NOT_RESPONDING).blockingGet()
 
     val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -369,6 +393,8 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.cancelReason).isEqualTo(Appointment.CancelReason.PATIENT_NOT_RESPONDING)
       assertThat(this.status).isEqualTo(CANCELLED)
+      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
+      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
     }
   }
 
@@ -376,6 +402,7 @@ class AppointmentRepositoryAndroidTest {
   fun when_removing_appointment_with_reason_as_patient_already_visited_then_appointment_should_be_marked_as_visited() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
+    val timeOfSchedule = Instant.now(clock)
     appointmentRepository.schedule(patientId, appointmentDate).blockingAwait()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
@@ -383,8 +410,11 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointments.first().status).isEqualTo(SCHEDULED)
 
     val uuid = appointments[0].uuid
-    appointmentRepository.setSyncStatus(listOf(uuid), SyncStatus.DONE).blockingGet()
-    appointmentRepository.markAsVisited(uuid).blockingGet()
+    appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
+
+    testClock.advanceBy(Duration.ofDays(1))
+
+    appointmentRepository.markAsAlreadyVisited(uuid).blockingAwait()
 
     val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
@@ -392,6 +422,8 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.cancelReason).isNull()
       assertThat(this.status).isEqualTo(VISITED)
+      assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
+      assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
     }
   }
 
@@ -494,24 +526,22 @@ class AppointmentRepositoryAndroidTest {
 
   @Test
   fun when_fetching_appointment_for_patient_it_should_return_scheduled_appointment_only() {
-      val patientId = UUID.randomUUID()
-      val appointmentDateNow = LocalDate.now()
-      val appointmentDateLater = LocalDate.now().plusDays(1)
-      appointmentRepository.schedule(patientId, appointmentDateNow).blockingAwait()
-      appointmentRepository.schedule(patientId, appointmentDateLater).blockingAwait()
+    val patientId = UUID.randomUUID()
+    val appointmentDateNow = LocalDate.now()
+    val appointmentDateLater = LocalDate.now().plusDays(1)
+    appointmentRepository.schedule(patientId, appointmentDateNow).blockingAwait()
+    appointmentRepository.schedule(patientId, appointmentDateLater).blockingAwait()
 
-      val appointment = appointmentRepository.scheduledAppointmentForPatient(patientId).blockingFirst()
-      assertThat(appointment).isNotNull()
-      assertThat(appointment.patientUuid).isEqualTo(patientId)
-      assertThat(appointment.status).isEqualTo(SCHEDULED)
-      assertThat(appointment.scheduledDate).isEqualTo(appointmentDateLater)
-    }
-
-    @After
-    fun tearDown() {
-      database.clearAllTables()
-      testClock.resetToEpoch()
-    }
-
-
+    val appointment = appointmentRepository.scheduledAppointmentForPatient(patientId).blockingFirst()
+    assertThat(appointment).isNotNull()
+    assertThat(appointment.patientUuid).isEqualTo(patientId)
+    assertThat(appointment.status).isEqualTo(SCHEDULED)
+    assertThat(appointment.scheduledDate).isEqualTo(appointmentDateLater)
   }
+
+  @After
+  fun tearDown() {
+    database.clearAllTables()
+    testClock.resetToEpoch()
+  }
+}

@@ -56,7 +56,7 @@ class RemoveAppointmentSheetController @Inject constructor(
     val markAsVisitedStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is AlreadyVisitedReasonClicked }
         .flatMap { (_, uuid, _) ->
-          appointmentRepository.markAsVisited(uuid)
+          appointmentRepository.markAsAlreadyVisited(uuid)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 

@@ -51,7 +51,7 @@ class RemoveAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, and reason is "already visited", then repository should update and sheet should close`() {
-    whenever(repository.markAsVisited(appointmentUuid)).thenReturn(Completable.complete())
+    whenever(repository.markAsAlreadyVisited(appointmentUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
@@ -66,7 +66,7 @@ class RemoveAppointmentSheetControllerTest {
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(5)).enableDoneButton()
-    inOrder.verify(repository).markAsVisited(appointmentUuid)
+    inOrder.verify(repository).markAsAlreadyVisited(appointmentUuid)
     inOrder.verify(sheet).closeSheet()
   }
 
@@ -83,7 +83,7 @@ class RemoveAppointmentSheetControllerTest {
     uiEvents.onNext(PatientDeadClicked(patientUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
-    verify(repository, never()).markAsVisited(any())
+    verify(repository, never()).markAsAlreadyVisited(any())
 
     val inOrder = inOrder(sheet, repository, patientRepository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
@@ -104,7 +104,7 @@ class RemoveAppointmentSheetControllerTest {
     uiEvents.onNext(CancelReasonClicked(MOVED))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
-    verify(repository, never()).markAsVisited(any())
+    verify(repository, never()).markAsAlreadyVisited(any())
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(4)).enableDoneButton()

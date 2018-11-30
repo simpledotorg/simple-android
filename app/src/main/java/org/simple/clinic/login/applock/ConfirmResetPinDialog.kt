@@ -1,7 +1,6 @@
 package org.simple.clinic.login.applock
 
 import android.app.Dialog
-import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
@@ -34,8 +33,8 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
     }
   }
 
-  override fun onAttach(context: Context) {
-    super.onAttach(context)
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
   }
 

@@ -72,6 +72,7 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.isOngoingRegistrationEntryPresent()).thenReturn(Single.just(true))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.never())
+    whenever(userSession.clearLoggedInUser()).thenReturn(Completable.complete())
 
     uiEvents.onNext(RegistrationPhoneScreenCreated())
 

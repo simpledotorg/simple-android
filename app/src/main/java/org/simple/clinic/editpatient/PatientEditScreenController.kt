@@ -22,6 +22,8 @@ import org.simple.clinic.patient.OngoingEditPatientEntry
 import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithAge
 import org.simple.clinic.patient.OngoingEditPatientEntry.EitherAgeOrDateOfBirth.EntryWithDateOfBirth
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -30,11 +32,12 @@ import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.Clock
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = PatientEditScreen
 typealias UiChange = (Ui) -> Unit
@@ -44,7 +47,8 @@ class PatientEditScreenController @Inject constructor(
     private val numberValidator: PhoneNumberValidator,
     private val configProvider: Single<PatientEditConfig>,
     private val clock: Clock,
-    private val dateOfBirthFormatValidator: DateOfBirthFormatValidator
+    private val dateOfBirthFormatValidator: DateOfBirthFormatValidator,
+    @Named("long_date") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -59,7 +63,8 @@ class PatientEditScreenController @Inject constructor(
         savePatientDetails(transformedEvents),
         toggleEditAgeAndDateofBirthFeature(transformedEvents),
         toggleDatePatternInDateOfBirthLabel(transformedEvents),
-        switchBetweenDateOfBirthAndAge(transformedEvents))
+        switchBetweenDateOfBirthAndAge(transformedEvents),
+        closeScreenWithoutSaving(transformedEvents))
   }
 
   private fun toggleEditAgeAndDateofBirthFeature(events: Observable<UiEvent>): Observable<UiChange> {
@@ -377,5 +382,111 @@ class PatientEditScreenController @Inject constructor(
             else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
           }
         }
+  }
+
+  private fun closeScreenWithoutSaving(events: Observable<UiEvent>): Observable<UiChange> {
+    val ongoingEntryChanges = events
+        .ofType<OngoingEditPatientEntryChanged>()
+        .map { it.ongoingEditPatientEntry }
+
+    val patientUuidStream = events.ofType<PatientEditScreenCreated>()
+        .map { it.patientUuid }
+
+    val savedPatient = patientUuidStream
+        .flatMap { patientRepository.patient(it).take(1).unwrapJust() }
+        .replay()
+        .refCount()
+
+    val savedPatientAddress = savedPatient
+        .flatMap { patientRepository.address(it.addressUuid).take(1).unwrapJust() }
+        .replay()
+        .refCount()
+
+    val savedNumbers = patientUuidStream
+        .flatMap { patientRepository.phoneNumbers(it).take(1) }
+        .replay()
+        .refCount()
+
+    val hasEntryChangedStream = events
+        .ofType<PatientEditBackClicked>()
+        .withLatestFrom(ongoingEntryChanges) { _, entry -> entry }
+        .withLatestFrom(savedPatient, savedPatientAddress, savedNumbers) { entry, patient, patientAddress, phoneNumbers ->
+          hasPatientBeenEdited(
+              entry = entry,
+              savedPatient = patient,
+              savedPatientAddress = patientAddress,
+              savedPatientPhoneNumber = phoneNumbers.toNullable()
+          )
+        }
+
+    val confirmDiscardChanges = events
+        .ofType<PatientEditBackClicked>()
+        .withLatestFrom(hasEntryChangedStream)
+        .filter { (_, hasEntryChanged) -> hasEntryChanged }
+        .map { { ui: Ui -> ui.showDiscardChangesAlert() } }
+
+    val closeScreenWithoutConfirmation = events
+        .ofType<PatientEditBackClicked>()
+        .withLatestFrom(hasEntryChangedStream)
+        .filter { (_, hasEntryChanged) -> hasEntryChanged.not() }
+        .map { { ui: Ui -> ui.goBack() } }
+
+    return confirmDiscardChanges.mergeWith(closeScreenWithoutConfirmation)
+  }
+
+  private fun hasPatientBeenEdited(
+      entry: OngoingEditPatientEntry,
+      savedPatient: Patient,
+      savedPatientAddress: PatientAddress,
+      savedPatientPhoneNumber: PatientPhoneNumber?
+  ): Boolean {
+    val hasPatientChanged = entry.run {
+      name != savedPatient.fullName || gender != savedPatient.gender
+    }
+
+    val hasPhoneNumberChanged = entry.run {
+      when (savedPatientPhoneNumber) {
+        null -> phoneNumber.isNotBlank()
+        else -> savedPatientPhoneNumber.number != phoneNumber
+      }
+    }
+
+    val hasDistrictOrStateChanged = entry.run {
+      district != savedPatientAddress.district || state != savedPatientAddress.state
+    }
+
+    val hasColonyOrVillageChanged = entry.run {
+      when (savedPatientAddress.colonyOrVillage) {
+        null -> colonyOrVillage.isNotBlank()
+        else -> savedPatientAddress.colonyOrVillage != colonyOrVillage
+      }
+    }
+
+    val hasAgeOrDateOfBirthChanged = entry.run {
+      when(ageOrDateOfBirth) {
+        is EntryWithAge -> {
+          val savedAgeAsString = savedPatient.age?.value?.toString()
+          if(savedAgeAsString == null && ageOrDateOfBirth.age.isBlank()) {
+            false
+
+          } else {
+            ageOrDateOfBirth.age != savedAgeAsString
+          }
+        }
+
+        is EntryWithDateOfBirth -> {
+          val savedDateOfBirthAsString = savedPatient.dateOfBirth?.format(dateOfBirthFormatter)
+
+          if(savedDateOfBirthAsString == null && ageOrDateOfBirth.dateOfBirth.isBlank()) {
+            false
+
+          } else {
+            ageOrDateOfBirth.dateOfBirth != savedDateOfBirthAsString
+          }
+        }
+      }
+    }
+
+    return hasPatientChanged || hasPhoneNumberChanged || hasColonyOrVillageChanged || hasDistrictOrStateChanged || hasAgeOrDateOfBirthChanged
   }
 }

@@ -70,10 +70,12 @@ class TestData @Inject constructor(
       patientAddressUuid: UUID = UUID.randomUUID(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): PatientProfile {
+    val numberOfPhoneNumbersToAdd = (0..1).shuffled().first()
+
     return PatientProfile(
         patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
         address = patientAddress(uuid = patientAddressUuid),
-        phoneNumbers = (0 until Math.random().times(10).toInt()).map { patientPhoneNumber(patientUuid = patientUuid) }
+        phoneNumbers = (0 until numberOfPhoneNumbersToAdd).map { patientPhoneNumber(patientUuid = patientUuid) }
     )
   }
 

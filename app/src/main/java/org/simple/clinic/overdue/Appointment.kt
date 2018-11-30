@@ -82,31 +82,60 @@ data class Appointment(
     fun count(): Flowable<Int>
 
     @Query("""UPDATE Appointment
-      SET status = :updatedStatus, syncStatus = :newSyncStatus
+      SET status = :updatedStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE patientUuid = :patientUuid AND status = :scheduledStatus""")
     fun markOlderAppointmentsAsVisited(
         patientUuid: UUID,
         updatedStatus: Status,
         scheduledStatus: Status,
-        newSyncStatus: SyncStatus
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant
     )
 
-    @Query("UPDATE Appointment SET remindOn = :reminderDate WHERE uuid = :appointmentUUID")
-    fun createReminder(appointmentUUID: UUID, reminderDate: LocalDate)
+    @Query("""UPDATE Appointment
+       SET remindOn = :reminderDate, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
+       WHERE uuid = :appointmentUUID""")
+    fun saveRemindDate(
+        appointmentUUID: UUID,
+        reminderDate: LocalDate,
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant
+    )
 
     @Query("""UPDATE Appointment
-      SET remindOn = :reminderDate, agreedToVisit = :agreed
+      SET remindOn = :reminderDate, agreedToVisit = :agreed, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE uuid = :appointmentUUID""")
-    fun markAsAgreedToVisit(appointmentUUID: UUID, reminderDate: LocalDate, agreed: Boolean)
+    fun markAsAgreedToVisit(
+        appointmentUUID: UUID,
+        reminderDate: LocalDate,
+        agreed: Boolean = true,
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant
+    )
 
-    @Query("UPDATE Appointment SET status = :newStatus WHERE uuid = :appointmentUuid")
-    fun markAsVisited(appointmentUuid: UUID, newStatus: Status)
-
-    @Query("""UPDATE Appointment
-      SET cancelReason = :cancelReason, status = :newStatus
+    @Query("""
+      UPDATE Appointment
+      SET status = :newStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE uuid = :appointmentUuid
     """)
-    fun cancelWithReason(appointmentUuid: UUID, cancelReason: CancelReason, newStatus: Status)
+    fun markAsVisited(
+        appointmentUuid: UUID,
+        newStatus: Status,
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant
+    )
+
+    @Query("""UPDATE Appointment
+      SET cancelReason = :cancelReason, status = :newStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
+      WHERE uuid = :appointmentUuid
+    """)
+    fun cancelWithReason(
+        appointmentUuid: UUID,
+        cancelReason: CancelReason,
+        newStatus: Status,
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant
+    )
 
     @Query("DELETE FROM Appointment")
     fun clear()

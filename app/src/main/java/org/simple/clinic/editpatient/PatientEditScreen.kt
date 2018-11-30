@@ -39,6 +39,8 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.router.screen.BackPressInterceptCallback
+import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
@@ -69,6 +71,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   @field:[Inject Named("long_date")]
   lateinit var dateOfBirthFormat: DateTimeFormatter
+
+  @Inject
+  lateinit var activity: TheActivity
 
   private val formScrollView by bindView<ScrollView>(R.id.patientedit_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patientedit_full_name)
@@ -128,7 +133,15 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   private fun setupBackClicks() {
-    backButton.setOnClickListener { goBack() }
+    backButton.setOnClickListener {
+      ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
+    }
+    screenRouter.registerBackPressInterceptor(object : BackPressInterceptor {
+      override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
+        ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
+        callback.markBackPressIntercepted()
+      }
+    })
   }
 
   private fun screenCreates(): Observable<UiEvent> {

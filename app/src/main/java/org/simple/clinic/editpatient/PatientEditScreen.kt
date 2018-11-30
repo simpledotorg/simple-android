@@ -431,4 +431,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
       else -> GONE
     }
   }
+
+  fun showDiscardChangesAlert() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
 }

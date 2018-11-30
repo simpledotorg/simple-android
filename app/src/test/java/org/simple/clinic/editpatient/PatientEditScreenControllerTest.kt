@@ -28,6 +28,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
@@ -48,11 +49,12 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
+import java.util.Locale
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -69,6 +71,7 @@ class PatientEditScreenControllerTest {
 
   private lateinit var errorConsumer: (Throwable) -> Unit
   lateinit var dateOfBirthFormatValidator: DateOfBirthFormatValidator
+  val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   @Before
   fun setUp() {
@@ -82,7 +85,8 @@ class PatientEditScreenControllerTest {
         numberValidator,
         Single.fromCallable { config },
         clock,
-        dateOfBirthFormatValidator)
+        dateOfBirthFormatValidator,
+        dateOfBirthFormat)
 
     errorConsumer = { throw it }
 
@@ -937,5 +941,404 @@ class PatientEditScreenControllerTest {
 
     uiEvents.onNext(PatientEditDateOfBirthTextChanged("1"))
     uiEvents.onNext(PatientEditAgeTextChanged("1"))
+  }
+
+  @Test
+  @Parameters(method = "params for confirming discard changes")
+  fun `when back is clicked, the confirm discard changes popup must be shown if there have been changes`(
+      existingSavedPatient: Patient,
+      existingSavedAddress: PatientAddress,
+      existingSavedPhoneNumber: PatientPhoneNumber?,
+      inputEvents: List<UiEvent>,
+      shouldShowConfirmDiscardChangesPopup: Boolean
+  ) {
+    whenever(patientRepository.patient(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPatient.toOptional()))
+    whenever(patientRepository.phoneNumbers(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
+    whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
+
+    uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))
+    inputEvents.forEach { uiEvents.onNext(it) }
+    uiEvents.onNext(PatientEditBackClicked())
+
+    if (shouldShowConfirmDiscardChangesPopup) {
+      verify(screen).showDiscardChangesAlert()
+      verify(screen, never()).goBack()
+    } else {
+      verify(screen).goBack()
+      verify(screen, never()).showDiscardChangesAlert()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for confirming discard changes`(): List<List<Any?>> {
+
+    fun generatePatientProfile(
+        name: String? = null,
+        phoneNumber: String? = null,
+        gender: Gender? = null,
+        ageValue: Int? = null,
+        dateOfBirthString: String? = null,
+        colonyOrVillage: String? = null,
+        district: String? = null,
+        state: String? = null
+    ): PatientProfile {
+      val patientUuid = UUID.randomUUID()
+      val addressUuid = UUID.randomUUID()
+
+      return PatientProfile(
+          patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
+          address = PatientMocker.address(uuid = addressUuid),
+          phoneNumbers = phoneNumber?.let { listOf(PatientMocker.phoneNumber(patientUuid = patientUuid, number = it)) } ?: emptyList()
+      ).let { profile ->
+        if (gender != null) {
+          return@let profile.copy(patient = profile.patient.copy(gender = gender))
+        }
+        profile
+
+      }.let { profile ->
+        if (name != null) {
+          return@let profile.copy(patient = profile.patient.copy(fullName = name))
+        }
+        profile
+
+      }.let { profile ->
+        if (colonyOrVillage != null) {
+          return@let profile.copy(address = profile.address.copy(colonyOrVillage = colonyOrVillage))
+        }
+        profile
+
+      }.let { profile ->
+        if (district != null) {
+          return@let profile.copy(address = profile.address.copy(district = district))
+        }
+        profile
+
+      }.let { profile ->
+        if (state != null) {
+          return@let profile.copy(address = profile.address.copy(state = state))
+        }
+        profile
+
+      }.let { profile ->
+        if(ageValue != null) {
+          val age = Age(value = ageValue, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock))
+          return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
+
+        } else if(dateOfBirthString != null) {
+          val dateOfBirth = LocalDate.parse(dateOfBirthString)
+          return@let profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = dateOfBirth))
+        }
+        profile
+
+      }
+    }
+
+    fun generateTestData(
+        patientProfile: PatientProfile,
+        inputEvents: List<UiEvent>,
+        shouldShowConfirmDiscardChangesPopup: Boolean
+    ): List<Any?> {
+      val preCreateInputEvents = listOf(
+          PatientEditPatientNameTextChanged(patientProfile.patient.fullName),
+          PatientEditDistrictTextChanged(patientProfile.address.district),
+          PatientEditColonyOrVillageChanged(patientProfile.address.colonyOrVillage ?: ""),
+          PatientEditStateTextChanged(patientProfile.address.state),
+          PatientEditGenderChanged(patientProfile.patient.gender),
+          PatientEditPhoneNumberTextChanged(patientProfile.phoneNumbers.firstOrNull()?.number ?: "")
+      ) + patientProfile.let { (patient, _, _) ->
+        if(patient.age != null) {
+          listOf(PatientEditAgeTextChanged(patient.age!!.value.toString()))
+        } else {
+          listOf(PatientEditDateOfBirthTextChanged(patient.dateOfBirth!!.format(dateOfBirthFormat)))
+        }
+      }
+
+      return listOf(
+          patientProfile.patient,
+          patientProfile.address,
+          if (patientProfile.phoneNumbers.isEmpty()) null else patientProfile.phoneNumbers.first(),
+          preCreateInputEvents + inputEvents,
+          shouldShowConfirmDiscardChangesPopup)
+    }
+
+    return listOf(
+        generateTestData(
+            patientProfile = generatePatientProfile(),
+            inputEvents = emptyList(),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(
+                name = "Anish",
+                phoneNumber = "123456",
+                gender = FEMALE,
+                colonyOrVillage = "Bathinda",
+                district = "Hoshiarpur",
+                state = "Bengaluru",
+                ageValue = 30),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditColonyOrVillageChanged("Batinda"),
+                PatientEditDistrictTextChanged("Hosiarpur"),
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditAgeTextChanged("32")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(
+                name = "Anish",
+                phoneNumber = "123456",
+                gender = FEMALE,
+                colonyOrVillage = "Bathinda",
+                district = "Hoshiarpur",
+                state = "Bengaluru",
+                ageValue = 30),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditColonyOrVillageChanged("Batinda"),
+                PatientEditDistrictTextChanged("Hosiarpur"),
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("13/06/1995")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(
+                name = "Anish",
+                phoneNumber = "123456",
+                gender = FEMALE,
+                colonyOrVillage = "Bathinda",
+                district = "Hoshiarpur",
+                state = "Bengaluru",
+                dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditColonyOrVillageChanged("Batinda"),
+                PatientEditDistrictTextChanged("Hosiarpur"),
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditDateOfBirthTextChanged("13/06/1994")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(
+                name = "Anish",
+                phoneNumber = "123456",
+                gender = FEMALE,
+                colonyOrVillage = "Bathinda",
+                district = "Hoshiarpur",
+                state = "Bengaluru",
+                dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditColonyOrVillageChanged("Batinda"),
+                PatientEditDistrictTextChanged("Hosiarpur"),
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditDateOfBirthTextChanged(""),
+                PatientEditAgeTextChanged("30")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(
+                name = "Anish",
+                phoneNumber = "123456",
+                gender = FEMALE,
+                colonyOrVillage = "Bathinda",
+                district = "Hoshiarpur",
+                state = "Bengaluru",
+                ageValue = 30),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditColonyOrVillageChanged("Batinda"),
+                PatientEditDistrictTextChanged("Hosiarpur"),
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditAgeTextChanged("31"),
+                PatientEditPatientNameTextChanged("Anish"),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditGenderChanged(FEMALE),
+                PatientEditColonyOrVillageChanged("Bathinda"),
+                PatientEditDistrictTextChanged("Hoshiarpur"),
+                PatientEditStateTextChanged("Bengaluru"),
+                PatientEditAgeTextChanged("30")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(
+                name = "Anish",
+                phoneNumber = "123456",
+                gender = FEMALE,
+                colonyOrVillage = "Bathinda",
+                district = "Hoshiarpur",
+                state = "Bengaluru",
+                dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditColonyOrVillageChanged("Batinda"),
+                PatientEditDistrictTextChanged("Hosiarpur"),
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditDateOfBirthTextChanged("13/06/1996"),
+                PatientEditPatientNameTextChanged("Anish"),
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditGenderChanged(FEMALE),
+                PatientEditColonyOrVillageChanged("Bathinda"),
+                PatientEditDistrictTextChanged("Hoshiarpur"),
+                PatientEditStateTextChanged("Bengaluru"),
+                PatientEditDateOfBirthTextChanged("13/06/1995")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(name = "Anish"),
+            inputEvents = listOf(PatientEditPatientNameTextChanged("Anisha")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(name = "Anish"),
+            inputEvents = listOf(
+                PatientEditPatientNameTextChanged("Anisha"),
+                PatientEditPatientNameTextChanged("Anish")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(name = "Anish"),
+            inputEvents = listOf(PatientEditPatientNameTextChanged("Anish")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(phoneNumber = null),
+            inputEvents = listOf(PatientEditPhoneNumberTextChanged("12345")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(phoneNumber = null),
+            inputEvents = listOf(
+                PatientEditPhoneNumberTextChanged("12345"),
+                PatientEditPhoneNumberTextChanged("")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(phoneNumber = null),
+            inputEvents = listOf(PatientEditPhoneNumberTextChanged("")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(phoneNumber = "1234567"),
+            inputEvents = listOf(PatientEditPhoneNumberTextChanged("12345")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(phoneNumber = "1234567"),
+            inputEvents = listOf(
+                PatientEditPhoneNumberTextChanged("123456"),
+                PatientEditPhoneNumberTextChanged("1234567")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(colonyOrVillage = "Batinda"),
+            inputEvents = listOf(PatientEditColonyOrVillageChanged("Bathinda")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(colonyOrVillage = "Batinda"),
+            inputEvents = listOf(
+                PatientEditColonyOrVillageChanged("Bathinda"),
+                PatientEditColonyOrVillageChanged("Batinda")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(colonyOrVillage = "Bathinda"),
+            inputEvents = listOf(PatientEditColonyOrVillageChanged("Bathinda")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(district = "Hosiarpur"),
+            inputEvents = listOf(PatientEditDistrictTextChanged("Hoshiarpur")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(district = "Hosiarpur"),
+            inputEvents = listOf(
+                PatientEditDistrictTextChanged("Hoshiarpur"),
+                PatientEditDistrictTextChanged("Hosiarpur")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(district = "Hoshiarpur"),
+            inputEvents = listOf(PatientEditDistrictTextChanged("Hoshiarpur")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(state = "Bengaluru"),
+            inputEvents = listOf(PatientEditStateTextChanged("Bangalore")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(state = "Bengaluru"),
+            inputEvents = listOf(
+                PatientEditStateTextChanged("Bangalore"),
+                PatientEditStateTextChanged("Bengaluru")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(state = "Bengaluru"),
+            inputEvents = listOf(PatientEditStateTextChanged("Bengaluru")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(gender = MALE),
+            inputEvents = listOf(PatientEditGenderChanged(FEMALE)),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(gender = MALE),
+            inputEvents = listOf(
+                PatientEditGenderChanged(FEMALE),
+                PatientEditGenderChanged(MALE)),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(gender = MALE),
+            inputEvents = listOf(PatientEditGenderChanged(MALE)),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(ageValue = 30),
+            inputEvents = listOf(PatientEditAgeTextChanged("30")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(ageValue = 30),
+            inputEvents = listOf(
+                PatientEditAgeTextChanged("31"),
+                PatientEditAgeTextChanged("30")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(ageValue = 30),
+            inputEvents = listOf(PatientEditAgeTextChanged("31")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(ageValue = 30),
+            inputEvents = listOf(
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("13/06/1995")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(ageValue = 30),
+            inputEvents = listOf(
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("13/06/1995"),
+                PatientEditDateOfBirthTextChanged(""),
+                PatientEditAgeTextChanged("30")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(PatientEditDateOfBirthTextChanged("13/06/1995")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(
+                PatientEditDateOfBirthTextChanged("13/06/1996"),
+                PatientEditDateOfBirthTextChanged("13/06/1995")),
+            shouldShowConfirmDiscardChangesPopup = false),
+        generateTestData(
+            patientProfile = generatePatientProfile(dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(PatientEditDateOfBirthTextChanged("13/06/1996")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(
+                PatientEditDateOfBirthTextChanged(""),
+                PatientEditAgeTextChanged("30")),
+            shouldShowConfirmDiscardChangesPopup = true),
+        generateTestData(
+            patientProfile = generatePatientProfile(dateOfBirthString = "1995-06-13"),
+            inputEvents = listOf(
+                PatientEditDateOfBirthTextChanged(""),
+                PatientEditAgeTextChanged("30"),
+                PatientEditAgeTextChanged(""),
+                PatientEditDateOfBirthTextChanged("13/06/1995")),
+            shouldShowConfirmDiscardChangesPopup = false))
   }
 }

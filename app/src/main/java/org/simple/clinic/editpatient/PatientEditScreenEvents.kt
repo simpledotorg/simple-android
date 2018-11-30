@@ -48,3 +48,7 @@ data class PatientEditDateOfBirthTextChanged(val dateOfBirth: String): UiEvent {
 data class PatientEditAgeTextChanged(val age: String): UiEvent {
   override val analyticsName = "Edit Patient Entry:Age Text Changed"
 }
+
+class PatientEditBackClicked: UiEvent {
+  override val analyticsName = "Edit Patient Entry:Back Clicked"
+}

@@ -25,6 +25,7 @@ import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -80,6 +81,10 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { it(this) }
+
+    post {
+      hideKeyboard()
+    }
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

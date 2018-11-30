@@ -91,6 +91,9 @@
   <string name="patientedit_error_both_dateofbirth_and_age_empty">@string/patiententry_error_both_dateofbirth_and_age_empty</string>
   <string name="patientedit_error_invalid_dateofbirth">@string/patiententry_error_invalid_dateofbirth</string>
   <string name="patientedit_error_dateofbirth_is_in_future">@string/patiententry_error_dateofbirth_is_in_future</string>
+  <string name="patientedit_confirm_discard_title">Discard changes?</string>
+  <string name="patientedit_confirm_discard_ok">Discard</string>
+  <string name="patientedit_confirm_discard_cancel">Cancel</string>
 
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->

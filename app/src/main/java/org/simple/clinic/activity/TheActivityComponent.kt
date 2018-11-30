@@ -12,6 +12,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
+import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.PatientEditScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen
@@ -83,6 +84,7 @@ interface TheActivityComponent {
   fun inject(target: NewMedicalHistoryScreen)
   fun inject(target: PinEntryCardView)
   fun inject(target: PatientEditScreen)
+  fun inject(target: ConfirmDiscardChangesDialog)
 
   @Subcomponent.Builder
   interface Builder {

@@ -215,9 +215,13 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
 
     if (openAs is OpenAs.Update) {
-      verify(sheet).updateBpMeasurements(bloodPressureMeasurement!!.systolic, bloodPressureMeasurement.diastolic)
+      val verify = verify(sheet)
+      verify.setSystolic(bloodPressureMeasurement!!.systolic.toString())
+      verify.setDiastolic(bloodPressureMeasurement.diastolic.toString())
     } else {
-      verify(sheet, never()).updateBpMeasurements(any(), any())
+      val verify = verify(sheet, never())
+      verify.setSystolic(any())
+      verify.setDiastolic(any())
     }
   }
 

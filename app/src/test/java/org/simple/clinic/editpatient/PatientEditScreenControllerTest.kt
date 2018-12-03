@@ -49,6 +49,7 @@ import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -920,14 +921,14 @@ class PatientEditScreenControllerTest {
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
     uiEvents.onNext(PatientEditAgeTextChanged(""))
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
-    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
+    verify(screen).setDateOfBirthAndAgeVisibility(BOTH_VISIBLE)
 
     uiEvents.onNext(PatientEditDateOfBirthTextChanged("1"))
-    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE)
+    verify(screen).setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE)
 
     uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientEditAgeTextChanged("1"))
-    verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
+    verify(screen).setDateOfBirthAndAgeVisibility(AGE_VISIBLE)
   }
 
   @Test()

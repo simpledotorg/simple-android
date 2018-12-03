@@ -109,7 +109,6 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     }
 
     TheActivity.component.inject(this)
-    setupBackClicks()
 
     Observable
         .mergeArray(
@@ -123,25 +122,14 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
             genderChanges(),
             dateOfBirthTextChanges(),
             dateOfBirthFocusChanges(),
-            ageTextChanges()
+            ageTextChanges(),
+            backClicks()
         )
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
         .takeUntil(RxView.detaches(this))
         .subscribe { uiChange -> uiChange(this) }
-  }
-
-  private fun setupBackClicks() {
-    backButton.setOnClickListener {
-      ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
-    }
-    screenRouter.registerBackPressInterceptor(object : BackPressInterceptor {
-      override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-        ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
-        callback.markBackPressIntercepted()
-      }
-    })
   }
 
   private fun screenCreates(): Observable<UiEvent> {
@@ -172,6 +160,23 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun colonyTextChanges(): Observable<UiEvent> {
     return RxTextView.textChanges(colonyEditText).map { PatientEditColonyOrVillageChanged(it.toString()) }
+  }
+
+  private fun backClicks(): Observable<UiEvent> {
+    val hardwareBackKeyClicks = Observable.create<Any> { emitter ->
+      val interceptor = object : BackPressInterceptor {
+        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
+          emitter.onNext(Any())
+          callback.markBackPressIntercepted()
+        }
+      }
+      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
+      screenRouter.registerBackPressInterceptor(interceptor)
+    }
+
+    return RxView.clicks(backButton)
+        .mergeWith(hardwareBackKeyClicks)
+        .map { PatientEditBackClicked() }
   }
 
   private fun genderChanges(): Observable<UiEvent> {
@@ -433,6 +438,6 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   fun showDiscardChangesAlert() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    ConfirmDiscardChangesDialog.show(activity.supportFragmentManager)
   }
 }

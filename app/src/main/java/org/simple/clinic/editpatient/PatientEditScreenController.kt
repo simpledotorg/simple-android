@@ -415,20 +415,15 @@ class PatientEditScreenController @Inject constructor(
               entry = entry,
               savedPatient = patient,
               savedPatientAddress = patientAddress,
-              savedPatientPhoneNumber = phoneNumbers.toNullable()
-          )
+              savedPatientPhoneNumber = phoneNumbers.toNullable())
         }
 
-    val confirmDiscardChanges = events
-        .ofType<PatientEditBackClicked>()
-        .withLatestFrom(hasEntryChangedStream)
-        .filter { (_, hasEntryChanged) -> hasEntryChanged }
+    val confirmDiscardChanges = hasEntryChangedStream
+        .filter { hasEntryChanged -> hasEntryChanged }
         .map { { ui: Ui -> ui.showDiscardChangesAlert() } }
 
-    val closeScreenWithoutConfirmation = events
-        .ofType<PatientEditBackClicked>()
-        .withLatestFrom(hasEntryChangedStream)
-        .filter { (_, hasEntryChanged) -> hasEntryChanged.not() }
+    val closeScreenWithoutConfirmation = hasEntryChangedStream
+        .filter { hasEntryChanged -> hasEntryChanged.not() }
         .map { { ui: Ui -> ui.goBack() } }
 
     return confirmDiscardChanges.mergeWith(closeScreenWithoutConfirmation)

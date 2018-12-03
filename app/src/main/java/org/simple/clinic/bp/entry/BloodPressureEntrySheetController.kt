@@ -68,7 +68,12 @@ class BloodPressureEntrySheetController @Inject constructor(
         .filter { it.openAs is OpenAs.Update }
         .map { it.openAs as OpenAs.Update }
         .flatMapSingle { bloodPressureRepository.measurement(it.bpUuid) }
-        .map { bloodPressure -> { ui: Ui -> ui.updateBpMeasurements(bloodPressure.systolic, bloodPressure.diastolic) } }
+        .map { bloodPressure ->
+          { ui: Ui ->
+            ui.setSystolic(bloodPressure.systolic.toString())
+            ui.setDiastolic(bloodPressure.diastolic.toString())
+          }
+        }
   }
 
   private fun bpValidations(events: Observable<UiEvent>): Observable<UiChange> {

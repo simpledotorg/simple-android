@@ -161,8 +161,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     errorTextView.visibility = View.VISIBLE
   }
 
-  fun updateBpMeasurements(systolic: Int, diastolic: Int) {
-    systolicEditText.setText(systolic.toString())
-    diastolicEditText.setTextAndCursor(diastolic.toString())
+  fun setSystolic(systolic: String) {
+    systolicEditText.setTextAndCursor(systolic)
+  }
+
+  fun setDiastolic(diastolic: String) {
+    diastolicEditText.setTextAndCursor(diastolic)
   }
 }

@@ -44,6 +44,7 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
@@ -403,18 +404,18 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
     TransitionManager.beginDelayedTransition(this, transition)
 
     dateOfBirthEditTextContainer.visibility = when (visibility) {
-      DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE, DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
-      else -> View.GONE
+      DATE_OF_BIRTH_VISIBLE, BOTH_VISIBLE -> VISIBLE
+      else -> GONE
     }
 
     dateOfBirthAndAgeSeparator.visibility = when (visibility) {
-      DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
-      else -> View.GONE
+      BOTH_VISIBLE -> VISIBLE
+      else -> GONE
     }
 
     ageEditTextContainer.visibility = when (visibility) {
-      DateOfBirthAndAgeVisibility.AGE_VISIBLE, DateOfBirthAndAgeVisibility.BOTH_VISIBLE -> View.VISIBLE
-      else -> View.GONE
+      AGE_VISIBLE, BOTH_VISIBLE -> VISIBLE
+      else -> GONE
     }
   }
 }

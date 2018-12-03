@@ -3,6 +3,7 @@ package org.simple.clinic.editpatient
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
@@ -19,7 +20,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust

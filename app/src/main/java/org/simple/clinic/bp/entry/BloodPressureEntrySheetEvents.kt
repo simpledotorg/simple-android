@@ -1,7 +1,6 @@
 package org.simple.clinic.bp.entry
 
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 data class BloodPressureEntrySheetCreated(val openAs: OpenAs) : UiEvent
 
@@ -16,3 +15,5 @@ class BloodPressureDiastolicTextChanged(val diastolic: String) : UiEvent {
 class BloodPressureSaveClicked : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Save Clicked"
 }
+
+object BloodPressureDiastolicBackspaceClicked : UiEvent

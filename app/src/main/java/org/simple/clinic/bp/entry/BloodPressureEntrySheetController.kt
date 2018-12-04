@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
@@ -30,7 +31,7 @@ class BloodPressureEntrySheetController @Inject constructor(
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
-        automaticDiastolicFocusChanges(replayedEvents),
+        automaticFocusChanges(replayedEvents),
         validationErrorResets(replayedEvents),
         prefillWhenUpdatingABloodPressure(replayedEvents),
         bpValidations(replayedEvents),
@@ -38,16 +39,41 @@ class BloodPressureEntrySheetController @Inject constructor(
         updateBp(replayedEvents))
   }
 
-  private fun automaticDiastolicFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<BloodPressureSystolicTextChanged>()
-        .filter { shouldFocusDiastolic(it.systolic) }
+  private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
+    val isSystolicValueComplete = { systolicText: String ->
+      (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))
+          || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
+    }
+
+    val moveFocusToDiastolic = events.ofType<BloodPressureSystolicTextChanged>()
+        .filter { isSystolicValueComplete(it.systolic) }
         .distinctUntilChanged()
         .map { { ui: Ui -> ui.changeFocusToDiastolic() } }
-  }
 
-  private fun shouldFocusDiastolic(systolicText: String): Boolean {
-    return (systolicText.length == 3 && systolicText.matches("^[123].*$".toRegex()))
-        || (systolicText.length == 2 && systolicText.matches("^[789].*$".toRegex()))
+    data class BloodPressure(val systolic: String, val diastolic: String)
+
+    val systolicChanges = events.ofType<BloodPressureSystolicTextChanged>().map { it.systolic }
+    val diastolicChanges = events.ofType<BloodPressureDiastolicTextChanged>().map { it.diastolic }
+
+    val bpChanges = Observables
+        .combineLatest(systolicChanges, diastolicChanges)
+        .map { (systolic, diastolic) -> BloodPressure(systolic, diastolic) }
+
+    val diastolicBackspaceClicksWithEmptyText = events.ofType<BloodPressureDiastolicBackspaceClicked>()
+        .withLatestFrom(bpChanges) { _, bp -> bp }
+        .filter { bp -> bp.diastolic.isEmpty() }
+
+    val moveFocusBackToSystolic = diastolicBackspaceClicksWithEmptyText
+        .map { { ui: Ui -> ui.changeFocusToSystolic() } }
+
+    val deleteLastDigitOfSystolic = diastolicBackspaceClicksWithEmptyText
+        .filter { bp -> bp.systolic.isNotBlank() }
+        .map { bp -> bp.systolic.substring(0, bp.systolic.length - 1) }
+        .map { truncatedSystolic -> { ui: Ui -> ui.setSystolic(truncatedSystolic) } }
+
+    return moveFocusToDiastolic
+        .mergeWith(moveFocusBackToSystolic)
+        .mergeWith(deleteLastDigitOfSystolic)
   }
 
   private fun validationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {

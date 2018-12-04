@@ -47,13 +47,43 @@ class BloodPressureEntrySheetControllerTest {
     "66|false",
     "44|false"
   ])
-  fun `when valid systolic value is entered, move cursor to diastolic field automatically`(sampleSystolicBp: String, shouldMove: Boolean) {
+  fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String, shouldMove: Boolean) {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged(sampleSystolicBp))
 
     when (shouldMove) {
       true -> verify(sheet).changeFocusToDiastolic()
       false -> verify(sheet, never()).changeFocusToDiastolic()
+    }
+  }
+
+  @Test
+  @Parameters(value = [
+    "170, 17",
+    "17, 1",
+    "1,",
+    ","])
+  fun `when backspace is pressed in diastolic field and it's text is empty, move cursor to systolic and delete last digit`(
+      existingSystolic: String,
+      systolicAfterBackspace: String
+  ) {
+    uiEvents.onNext(BloodPressureSystolicTextChanged(existingSystolic))
+    uiEvents.onNext(BloodPressureDiastolicTextChanged("142"))
+
+    uiEvents.onNext(BloodPressureDiastolicBackspaceClicked)
+    uiEvents.onNext(BloodPressureDiastolicTextChanged("14"))
+
+    uiEvents.onNext(BloodPressureDiastolicBackspaceClicked)
+    uiEvents.onNext(BloodPressureDiastolicTextChanged("1"))
+
+    uiEvents.onNext(BloodPressureDiastolicBackspaceClicked)
+    uiEvents.onNext(BloodPressureDiastolicTextChanged(""))
+
+    uiEvents.onNext(BloodPressureDiastolicBackspaceClicked)
+
+    verify(sheet).changeFocusToSystolic()
+    if (systolicAfterBackspace.isNotEmpty()) {
+      verify(sheet).setSystolic(systolicAfterBackspace)
     }
   }
 

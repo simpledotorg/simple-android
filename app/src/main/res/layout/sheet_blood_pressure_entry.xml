@@ -65,7 +65,7 @@
       android:layout_height="wrap_content"
       android:orientation="vertical">
 
-      <EditText
+      <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
         android:id="@+id/bloodpressureentry_diastolic"
         style="@style/Clinic.BloodPressureInput"
         android:importantForAutofill="no"

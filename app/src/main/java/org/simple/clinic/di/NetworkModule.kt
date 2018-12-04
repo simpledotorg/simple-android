@@ -8,7 +8,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
-import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
@@ -25,18 +24,12 @@ open class NetworkModule {
   @Provides
   @AppScope
   fun moshi(): Moshi {
-    val moshi = Moshi.Builder()
+    return Moshi.Builder()
         .add(InstantMoshiAdapter())
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
         .add(patientSummaryResultAdapterFactory())
-        .build()
-
-    val medicalHistoryMoshiAdapter = moshi.adapter(MedicalHistoryPayload::class.java).serializeNulls()
-    return moshi
-        .newBuilder()
-        .add(MedicalHistoryPayload::class.java, medicalHistoryMoshiAdapter)
         .build()
   }
 

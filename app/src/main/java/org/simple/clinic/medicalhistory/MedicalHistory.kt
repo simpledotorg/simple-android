@@ -38,7 +38,7 @@ data class MedicalHistory(
     NO,
 
     @Json(name = "unknown")
-    UNSELECTED;
+    UNKNOWN;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Answer>(Answer::class.java)
   }

@@ -27,7 +27,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -373,12 +373,12 @@ class PatientSummaryScreenControllerTest {
       newAnswer: MedicalHistory.Answer
   ) {
     val medicalHistory = medicalHistory(
-        diagnosedWithHypertension = UNSELECTED,
-        isOnTreatmentForHypertension = UNSELECTED,
-        hasHadHeartAttack = UNSELECTED,
-        hasHadStroke = UNSELECTED,
-        hasHadKidneyDisease = UNSELECTED,
-        hasDiabetes = UNSELECTED,
+        diagnosedWithHypertension = UNKNOWN,
+        isOnTreatmentForHypertension = UNKNOWN,
+        hasHadHeartAttack = UNKNOWN,
+        hasHadStroke = UNKNOWN,
+        hasHadKidneyDisease = UNKNOWN,
+        hasDiabetes = UNKNOWN,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
@@ -387,12 +387,12 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
-        diagnosedWithHypertension = if (question == DIAGNOSED_WITH_HYPERTENSION) newAnswer else UNSELECTED,
-        isOnTreatmentForHypertension = if (question == IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else UNSELECTED,
-        hasHadHeartAttack = if (question == HAS_HAD_A_HEART_ATTACK) newAnswer else UNSELECTED,
-        hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else UNSELECTED,
-        hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else UNSELECTED,
-        hasDiabetes = if (question == HAS_DIABETES) newAnswer else UNSELECTED)
+        diagnosedWithHypertension = if (question == DIAGNOSED_WITH_HYPERTENSION) newAnswer else UNKNOWN,
+        isOnTreatmentForHypertension = if (question == IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else UNKNOWN,
+        hasHadHeartAttack = if (question == HAS_HAD_A_HEART_ATTACK) newAnswer else UNKNOWN,
+        hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else UNKNOWN,
+        hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else UNKNOWN,
+        hasDiabetes = if (question == HAS_DIABETES) newAnswer else UNKNOWN)
     verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
   }
 

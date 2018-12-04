@@ -11,7 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -111,12 +111,12 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = UNSELECTED,
-            isOnTreatmentForHypertension = UNSELECTED,
-            hasHadHeartAttack = UNSELECTED,
-            hasHadStroke = UNSELECTED,
-            hasHadKidneyDisease = UNSELECTED,
-            hasDiabetes = UNSELECTED))
+            diagnosedWithHypertension = UNKNOWN,
+            isOnTreatmentForHypertension = UNKNOWN,
+            hasHadHeartAttack = UNKNOWN,
+            hasHadStroke = UNKNOWN,
+            hasHadKidneyDisease = UNKNOWN,
+            hasDiabetes = UNKNOWN))
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
   }
 }

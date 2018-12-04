@@ -14,7 +14,7 @@ import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.widgets.CheckboxWithSuppressibleListener
 import org.simple.clinic.widgets.setCompoundDrawableStart
@@ -32,7 +32,7 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}
 
-  var answer: MedicalHistory.Answer = UNSELECTED
+  var answer: MedicalHistory.Answer = UNKNOWN
     set(value) {
       field = value
       answerChangeListener(value)
@@ -41,8 +41,8 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   private val checkboxChangeListener: (CompoundButton, Boolean) -> Unit = { checkBox, checked ->
     answer = when (checkBox) {
-      yesCheckBox -> if (checked) YES else UNSELECTED
-      noCheckBox -> if (checked) NO else UNSELECTED
+      yesCheckBox -> if (checked) YES else UNKNOWN
+      noCheckBox -> if (checked) NO else UNKNOWN
       else -> throw AssertionError()
     }
   }

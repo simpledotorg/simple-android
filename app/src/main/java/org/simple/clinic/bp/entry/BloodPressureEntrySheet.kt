@@ -32,7 +32,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
-  private val diastolicEditText by bindView<EditText>(R.id.bloodpressureentry_diastolic)
+  private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
   private val errorTextView by bindView<TextView>(R.id.bloodpressureentry_error)
 
   private val onDestroys = PublishSubject.create<Any>()
@@ -63,7 +63,13 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    Observable.merge(sheetCreates(), systolicTextChanges(), diastolicTextChanges(), diastolicImeOptionClicks())
+    Observable
+        .mergeArray(
+            sheetCreates(),
+            systolicTextChanges(),
+            diastolicTextChanges(),
+            diastolicImeOptionClicks(),
+            diastolicBackspaceClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -111,8 +117,18 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .map { BloodPressureSaveClicked() }
   }
 
+  private fun diastolicBackspaceClicks(): Observable<UiEvent> {
+    return diastolicEditText
+        .backspaceClicks
+        .map { BloodPressureDiastolicBackspaceClicked }
+  }
+
   fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()
+  }
+
+  fun changeFocusToSystolic() {
+    systolicEditText.requestFocus()
   }
 
   fun setBPSavedResultAndFinish() {

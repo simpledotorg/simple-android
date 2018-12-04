@@ -23,8 +23,9 @@ class LoggedInUserHttpInterceptor @Inject constructor(
     val (accessToken) = userSession.accessToken()
 
     var facilityUuid: UUID? = null
-    if (user != null)
+    if (user != null) {
       facilityUuid = facilityRepository.currentFacilityUuid(user)
+    }
 
     return if (user != null && accessToken.isNullOrBlank().not() && facilityUuid != null) {
       chain.proceed(addHeaders(originalRequest, accessToken!!, user, facilityUuid))

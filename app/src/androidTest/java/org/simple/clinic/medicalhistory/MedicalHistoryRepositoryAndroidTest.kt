@@ -7,7 +7,7 @@ import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNSELECTED
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Clock
@@ -100,11 +100,11 @@ class MedicalHistoryRepositoryAndroidTest {
   fun when_medical_history_isnt_present_for_a_patient_then_an_empty_value_should_be_returned() {
     val emptyHistory = repository.historyForPatientOrDefault(UUID.randomUUID()).blockingFirst()
 
-    assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(UNSELECTED)
-    assertThat(emptyHistory.hasHadStroke).isEqualTo(UNSELECTED)
-    assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(UNSELECTED)
-    assertThat(emptyHistory.isOnTreatmentForHypertension).isEqualTo(UNSELECTED)
-    assertThat(emptyHistory.hasDiabetes).isEqualTo(UNSELECTED)
+    assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(UNKNOWN)
+    assertThat(emptyHistory.hasHadStroke).isEqualTo(UNKNOWN)
+    assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(UNKNOWN)
+    assertThat(emptyHistory.isOnTreatmentForHypertension).isEqualTo(UNKNOWN)
+    assertThat(emptyHistory.hasDiabetes).isEqualTo(UNKNOWN)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 

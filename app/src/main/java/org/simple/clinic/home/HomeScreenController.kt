@@ -22,7 +22,9 @@ class HomeScreenController @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
 
-    return currentFacility(replayedEvents)
+    return Observable.merge(
+        currentFacility(replayedEvents),
+        changeFacility(replayedEvents))
   }
 
   private fun currentFacility(events: Observable<UiEvent>): Observable<UiChange> {
@@ -31,4 +33,9 @@ class HomeScreenController @Inject constructor(
         .map { { ui: Ui -> ui.setFacility(it.name) } }
   }
 
+  private fun changeFacility(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<HomeFacilitySelectionClicked>()
+        .map { { ui: Ui -> ui.openFacilitySelection() } }
+  }
 }

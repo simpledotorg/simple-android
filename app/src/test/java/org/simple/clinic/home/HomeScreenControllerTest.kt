@@ -44,5 +44,9 @@ class HomeScreenControllerTest {
     verify(screen).setFacility("CHC Nathana")
   }
 
-
+  @Test
+  fun when_facility_change_button_is_clicked_facility_selection_screen_should_open() {
+    uiEvents.onNext(HomeFacilitySelectionClicked())
+    verify(screen).openFacilitySelection()
+  }
 }

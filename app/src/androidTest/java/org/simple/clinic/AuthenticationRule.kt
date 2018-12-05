@@ -67,7 +67,7 @@ class AuthenticationRule : TestRule {
       val registrationEntry = testData.ongoingRegistrationEntry(
           phoneNumber = faker.number.number(10),
           pin = testData.qaUserPin(),
-          facilities = facilities)
+          facilities = facilities.take(1))
 
       val registrationResult = userSession.saveOngoingRegistrationEntry(registrationEntry)
           .andThen(userSession.loginFromOngoingRegistrationEntry())

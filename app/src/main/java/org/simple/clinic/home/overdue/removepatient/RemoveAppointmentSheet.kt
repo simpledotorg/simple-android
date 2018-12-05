@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue.removepatient
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,9 +13,9 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.overdue.Appointment.CancelReason.MOVED
-import org.simple.clinic.overdue.Appointment.CancelReason.OTHER
-import org.simple.clinic.overdue.Appointment.CancelReason.PATIENT_NOT_RESPONDING
+import org.simple.clinic.overdue.AppointmentCancelReason.Moved
+import org.simple.clinic.overdue.AppointmentCancelReason.Other
+import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.PrimarySolidButton
 import org.simple.clinic.widgets.UiEvent
@@ -45,6 +46,7 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<Any>()
 
+  @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
@@ -60,22 +62,29 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val appointmentUuid = intent.extras.getSerializable(KEY_APPOINTMENT_UUID) as UUID
+    val appointmentUuid = intent.extras!!.getSerializable(KEY_APPOINTMENT_UUID) as UUID
     return Observable.just(RemoveAppointmentSheetCreated(appointmentUuid))
   }
 
-  private fun doneClicks(): Observable<UiEvent> = RxView.clicks(reasonSelectedDoneButton).map { RemoveReasonDoneClicked }
+  private fun doneClicks() =
+      RxView
+          .clicks(reasonSelectedDoneButton)
+          .map { RemoveReasonDoneClicked }
 
-  private fun alreadyVisitedClicks() = RxView.clicks(alreadyVisitedRadioButton).map { AlreadyVisitedReasonClicked }
+  private fun alreadyVisitedClicks() =
+      RxView
+          .clicks(alreadyVisitedRadioButton)
+          .map { AlreadyVisitedReasonClicked }
 
-  private fun patientDiedClicks() = RxView.clicks(diedRadioButton).map {
-    PatientDeadClicked(patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID)
-  }
+  private fun patientDiedClicks() =
+      RxView
+          .clicks(diedRadioButton)
+          .map { PatientDeadClicked(patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID) }
 
   private fun cancelReasonClicks(): Observable<UiEvent> {
-    val movedOutStream = RxView.clicks(movedOutRadioButton).map { CancelReasonClicked(MOVED) }
-    val notRespondingStream = RxView.clicks(notRespondingRadioButton).map { CancelReasonClicked(PATIENT_NOT_RESPONDING) }
-    val otherStream = RxView.clicks(otherReasonRadioButton).map { CancelReasonClicked(OTHER) }
+    val movedOutStream = RxView.clicks(movedOutRadioButton).map { CancelReasonClicked(Moved) }
+    val notRespondingStream = RxView.clicks(notRespondingRadioButton).map { CancelReasonClicked(PatientNotResponding) }
+    val otherStream = RxView.clicks(otherReasonRadioButton).map { CancelReasonClicked(Other) }
 
     return Observable.merge(movedOutStream, notRespondingStream, otherStream)
   }

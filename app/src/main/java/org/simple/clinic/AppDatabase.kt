@@ -9,6 +9,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
@@ -51,7 +52,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     UserStatus.RoomTypeConverter::class,
     User.LoggedInStatus.RoomTypeConverter::class,
     Appointment.Status.RoomTypeConverter::class,
-    Appointment.CancelReason.RoomTypeConverter::class,
+    AppointmentCancelReason.RoomTypeConverter::class,
     Communication.Type.RoomTypeConverter::class,
     Communication.Result.RoomTypeConverter::class,
     MedicalHistory.Answer.RoomTypeConverter::class,

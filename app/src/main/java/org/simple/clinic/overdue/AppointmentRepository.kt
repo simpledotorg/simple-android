@@ -4,7 +4,6 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.withLatestFrom
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.SyncStatus
@@ -18,7 +17,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class AppointmentRepository @Inject constructor(
-    private val database: AppDatabase,
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,

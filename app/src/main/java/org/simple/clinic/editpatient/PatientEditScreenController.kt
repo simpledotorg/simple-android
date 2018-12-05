@@ -1,11 +1,14 @@
 package org.simple.clinic.editpatient
 
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -54,11 +57,30 @@ class PatientEditScreenController @Inject constructor(
     @Named("long_date") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
+  private val disposables = CompositeDisposable()
+
+  /**
+   * We do not want the UI stream to end if the count of subscribers change
+   * midway while the merge() inside apply is going through all Ui changes.
+   * As a solution, we're going to use autoConnect(), but that also means
+   * that this Transformer's stream have to be disposed manually by the screen.
+   */
+  fun disposeOnDetach(ui: Ui) {
+    RxView.detaches(ui)
+        .take(1)
+        .subscribe {
+          disposables.clear()
+        }
+  }
+
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
+    val replayedEvents = events.compose(ReportAnalyticsEvents())
+        .replay()
+        .autoConnect(1) { d -> disposables += d }
 
     val transformedEvents = replayedEvents.mergeWith(ongoingEntryPatientEntryChanges(replayedEvents))
-        .replay().refCount()
+        .replay()
+        .autoConnect(1) { d -> disposables += d }
 
     return Observable.mergeArray(
         prefillOnStart(transformedEvents),

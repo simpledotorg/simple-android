@@ -110,6 +110,8 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     TheActivity.component.inject(this)
 
+    controller.disposeOnDetach(this)
+
     Observable
         .mergeArray(
             screenCreates(),

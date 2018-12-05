@@ -24,6 +24,9 @@ class AppointmentCancelReasonTypeAdapterTest {
     return listOf(
         listOf(AppointmentCancelReason.PatientNotResponding, "not_responding"),
         listOf(AppointmentCancelReason.Moved, "moved"),
+        listOf(AppointmentCancelReason.InvalidPhoneNumber, "invalid_phone_number"),
+        listOf(AppointmentCancelReason.TransferredToAnotherPublicHospital, "public_hospital_transfer"),
+        listOf(AppointmentCancelReason.MovedToPrivatePractitioner, "moved_to_private"),
         listOf(AppointmentCancelReason.Dead, "dead"),
         listOf(AppointmentCancelReason.Other, "other")
     )
@@ -44,6 +47,9 @@ class AppointmentCancelReasonTypeAdapterTest {
     return listOf(
         listOf("not_responding", AppointmentCancelReason.PatientNotResponding),
         listOf("moved", AppointmentCancelReason.Moved),
+        listOf("invalid_phone_number", AppointmentCancelReason.InvalidPhoneNumber),
+        listOf("public_hospital_transfer", AppointmentCancelReason.TransferredToAnotherPublicHospital),
+        listOf("moved_to_private", AppointmentCancelReason.MovedToPrivatePractitioner),
         listOf("dead", AppointmentCancelReason.Dead),
         listOf("other", AppointmentCancelReason.Other)
     )

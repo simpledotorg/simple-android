@@ -33,6 +33,12 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   @Inject
   lateinit var testData: TestData
 
+  @Inject
+  lateinit var appointmentConfigProvider: Single<AppointmentConfig>
+
+  val config: AppointmentConfig
+    get() = appointmentConfigProvider.blockingGet()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -44,9 +50,9 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.appointment(syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.appointment(syncStatus, config.v2ApiEnabled)
 
-  override fun generatePayload() = testData.appointmentPayload()
+  override fun generatePayload() = testData.appointmentPayload(apiV2Enabled = config.v2ApiEnabled)
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

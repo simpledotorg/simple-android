@@ -388,13 +388,13 @@ class AppointmentRepositoryAndroidTest {
 
     testClock.advanceBy(Duration.ofDays(1))
 
-    appointmentRepository.cancelWithReason(uuid, Appointment.CancelReason.PATIENT_NOT_RESPONDING).blockingGet()
+    appointmentRepository.cancelWithReason(uuid, AppointmentCancelReason.PatientNotResponding).blockingGet()
 
     val updatedList = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(updatedList).hasSize(1)
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
-      assertThat(this.cancelReason).isEqualTo(Appointment.CancelReason.PATIENT_NOT_RESPONDING)
+      assertThat(this.cancelReason).isEqualTo(AppointmentCancelReason.PatientNotResponding)
       assertThat(this.status).isEqualTo(CANCELLED)
       assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
       assertThat(this.updatedAt).isEqualTo(Instant.now(clock))

@@ -11,10 +11,10 @@ import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.overdue.Appointment.CancelReason.DEAD
-import org.simple.clinic.overdue.Appointment.CancelReason.MOVED
-import org.simple.clinic.overdue.Appointment.CancelReason.OTHER
-import org.simple.clinic.overdue.Appointment.CancelReason.PATIENT_NOT_RESPONDING
+import org.simple.clinic.overdue.AppointmentCancelReason.Dead
+import org.simple.clinic.overdue.AppointmentCancelReason.Moved
+import org.simple.clinic.overdue.AppointmentCancelReason.Other
+import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
@@ -55,10 +55,10 @@ class RemoveAppointmentSheetControllerTest {
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
-    uiEvents.onNext(CancelReasonClicked(DEAD))
+    uiEvents.onNext(CancelReasonClicked(Dead))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(PATIENT_NOT_RESPONDING))
-    uiEvents.onNext(CancelReasonClicked(OTHER))
+    uiEvents.onNext(CancelReasonClicked(PatientNotResponding))
+    uiEvents.onNext(CancelReasonClicked(Other))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
     uiEvents.onNext(RemoveReasonDoneClicked)
 
@@ -72,14 +72,14 @@ class RemoveAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`(){
-    whenever(repository.cancelWithReason(appointmentUuid, DEAD)).thenReturn(Completable.complete())
+    whenever(repository.cancelWithReason(appointmentUuid, Dead)).thenReturn(Completable.complete())
     val patientUuid = UUID.randomUUID()
     whenever(patientRepository.updatePatientStatusToDead(patientUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(PATIENT_NOT_RESPONDING))
-    uiEvents.onNext(CancelReasonClicked(DEAD))
+    uiEvents.onNext(CancelReasonClicked(PatientNotResponding))
+    uiEvents.onNext(CancelReasonClicked(Dead))
     uiEvents.onNext(PatientDeadClicked(patientUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
@@ -88,27 +88,27 @@ class RemoveAppointmentSheetControllerTest {
     val inOrder = inOrder(sheet, repository, patientRepository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
     inOrder.verify(patientRepository).updatePatientStatusToDead(patientUuid)
-    inOrder.verify(repository).cancelWithReason(appointmentUuid, DEAD)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, Dead)
     inOrder.verify(sheet).closeSheet()
   }
 
   @Test
   fun `when done is clicked, and a cancel reason is selected, then repository should update and sheet should close`() {
-    whenever(repository.cancelWithReason(appointmentUuid, MOVED)).thenReturn(Completable.complete())
+    whenever(repository.cancelWithReason(appointmentUuid, Moved)).thenReturn(Completable.complete())
 
     uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
     uiEvents.onNext(RemoveReasonDoneClicked)
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(PATIENT_NOT_RESPONDING))
+    uiEvents.onNext(CancelReasonClicked(PatientNotResponding))
     uiEvents.onNext(AlreadyVisitedReasonClicked)
-    uiEvents.onNext(CancelReasonClicked(MOVED))
+    uiEvents.onNext(CancelReasonClicked(Moved))
     uiEvents.onNext(RemoveReasonDoneClicked)
 
     verify(repository, never()).markAsAlreadyVisited(any())
 
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, times(4)).enableDoneButton()
-    inOrder.verify(repository).cancelWithReason(appointmentUuid, MOVED)
+    inOrder.verify(repository).cancelWithReason(appointmentUuid, Moved)
     inOrder.verify(sheet).closeSheet()
   }
 }

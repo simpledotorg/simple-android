@@ -25,7 +25,7 @@ data class AppointmentPayload(
     val status: Appointment.Status,
 
     @Json(name = "cancel_reason")
-    val cancelReason: Appointment.CancelReason?,
+    val cancelReason: AppointmentCancelReason?,
 
     @Json(name = "remind_on")
     val remindOn: LocalDate?,

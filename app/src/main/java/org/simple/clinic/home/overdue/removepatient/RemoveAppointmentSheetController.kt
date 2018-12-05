@@ -6,7 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.overdue.Appointment.CancelReason.DEAD
+import org.simple.clinic.overdue.AppointmentCancelReason.Dead
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
@@ -64,7 +64,7 @@ class RemoveAppointmentSheetController @Inject constructor(
         .filter { (_, _, reason) -> reason is PatientDeadClicked }
         .flatMap { (_, uuid, reason) ->
           patientRepository.updatePatientStatusToDead((reason as PatientDeadClicked).patientUuid)
-              .andThen(appointmentRepository.cancelWithReason(uuid, DEAD))
+              .andThen(appointmentRepository.cancelWithReason(uuid, Dead))
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 

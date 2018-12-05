@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
@@ -30,6 +31,7 @@ open class NetworkModule {
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
         .add(patientSummaryResultAdapterFactory())
+        .add(AppointmentCancelReason.MoshiTypeConverter())
         .build()
   }
 

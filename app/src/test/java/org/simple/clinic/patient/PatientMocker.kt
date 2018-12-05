@@ -10,6 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
@@ -161,7 +162,7 @@ object PatientMocker {
       scheduledDate: LocalDate = LocalDate.now(UTC),
       facilityUuid: UUID = UUID.randomUUID(),
       status: Appointment.Status = Appointment.Status.SCHEDULED,
-      cancelReason: Appointment.CancelReason = Appointment.CancelReason.PATIENT_NOT_RESPONDING,
+      cancelReason: AppointmentCancelReason = AppointmentCancelReason.PatientNotResponding,
       syncStatus: SyncStatus = SyncStatus.PENDING,
       agreedToVisit: Boolean? = null,
       remindOn: LocalDate? = LocalDate.now(UTC).minusDays(2),

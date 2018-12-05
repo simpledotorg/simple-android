@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
@@ -365,7 +366,7 @@ class TestData @Inject constructor(
         scheduledDate = LocalDate.now(UTC).plusDays(30),
         facilityUuid = qaUserFacilityUuid(),
         status = randomOfEnum(Appointment.Status::class),
-        cancelReason = randomOfEnum(Appointment.CancelReason::class),
+        cancelReason = AppointmentCancelReason.random(),
         remindOn = null,
         agreedToVisit = null,
         syncStatus = syncStatus,
@@ -379,7 +380,7 @@ class TestData @Inject constructor(
       date: LocalDate = LocalDate.now(UTC).plusDays(30),
       facilityUuid: UUID = qaUserFacilityUuid(),
       status: Appointment.Status = randomOfEnum(Appointment.Status::class),
-      cancelReason: Appointment.CancelReason = randomOfEnum(Appointment.CancelReason::class),
+      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now()
   ): AppointmentPayload {

@@ -13,8 +13,23 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="0dp"
-    app:logo="@drawable/logo_regular"
-    tools:targetApi="lollipop" />
+    app:logo="@drawable/ic_icons_logo"
+    tools:targetApi="lollipop">
+
+    <Button
+      android:id="@+id/home_facility_change_button"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:drawableEnd="@drawable/ic_keyboard_arrow_down_24dp"
+      android:ellipsize="end"
+      android:maxLines="1"
+      android:drawablePadding="@dimen/spacing_4"
+      android:padding="@dimen/spacing_8"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
+      tools:text="CHC Facility Name" />
+
+  </android.support.v7.widget.Toolbar>
 
   <android.support.v4.view.ViewPager
     android:id="@+id/home_viewpager"

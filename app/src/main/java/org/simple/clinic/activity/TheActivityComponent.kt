@@ -18,6 +18,7 @@ import org.simple.clinic.enterotp.EnterOtpScreen
 import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
+import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentSheet
@@ -54,6 +55,7 @@ import javax.inject.Named
 interface TheActivityComponent {
 
   fun inject(target: TheActivity)
+  fun inject(target: HomeScreen)
   fun inject(target: PatientsScreen)
   fun inject(target: LoginPinScreen)
   fun inject(target: AppLockScreen)

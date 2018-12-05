@@ -358,7 +358,8 @@ class TestData @Inject constructor(
   }
 
   fun appointment(
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      apiV2Enabled: Boolean
   ): Appointment {
     return Appointment(
         uuid = UUID.randomUUID(),
@@ -366,7 +367,7 @@ class TestData @Inject constructor(
         scheduledDate = LocalDate.now(UTC).plusDays(30),
         facilityUuid = qaUserFacilityUuid(),
         status = randomOfEnum(Appointment.Status::class),
-        cancelReason = AppointmentCancelReason.random(),
+        cancelReason = AppointmentCancelReason.random(apiV2Enabled),
         remindOn = null,
         agreedToVisit = null,
         syncStatus = syncStatus,
@@ -380,7 +381,8 @@ class TestData @Inject constructor(
       date: LocalDate = LocalDate.now(UTC).plusDays(30),
       facilityUuid: UUID = qaUserFacilityUuid(),
       status: Appointment.Status = randomOfEnum(Appointment.Status::class),
-      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
+      apiV2Enabled: Boolean = false,
+      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(apiV2Enabled),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now()
   ): AppointmentPayload {

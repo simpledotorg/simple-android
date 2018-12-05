@@ -399,6 +399,21 @@
     <item name="android:textColor">@color/red1</item>
   </style>
 
+  <style name="Clinic.V2.AppointmentRemovalReason">
+    <item name ="android:layout_width">match_parent</item>
+    <item name ="android:layout_height">wrap_content</item>
+    <item name ="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left</item>
+    <item name ="android:textColor">@color/removeappointment_radio_button</item>
+    <item name ="android:padding">@dimen/spacing_16</item>
+  </style>
+
+  <style name="Clinic.V2.AppointmentRemovalReasonSeparator">
+    <item name ="android:layout_width">match_parent</item>
+    <item name ="android:layout_height">1dp</item>
+    <item name ="android:layout_marginStart">@dimen/spacing_48</item>
+    <item name ="android:background">@color/grey3</item>
+  </style>
+
   <style name="Clinic.V2.FacilityNameTextView">
     <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body2Left.White100</item>
     <item name="android:layout_width">wrap_content</item>

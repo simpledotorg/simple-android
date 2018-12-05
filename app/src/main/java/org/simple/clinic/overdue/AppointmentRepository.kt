@@ -93,7 +93,7 @@ class AppointmentRepository @Inject constructor(
     }
   }
 
-  fun cancelWithReason(appointmentUuid: UUID, reason: Appointment.CancelReason): Completable {
+  fun cancelWithReason(appointmentUuid: UUID, reason: AppointmentCancelReason): Completable {
     return Completable.fromAction {
       appointmentDao.cancelWithReason(
           appointmentUuid = appointmentUuid,

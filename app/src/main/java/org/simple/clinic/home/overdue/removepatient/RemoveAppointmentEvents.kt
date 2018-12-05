@@ -1,6 +1,6 @@
 package org.simple.clinic.home.overdue.removepatient
 
-import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -18,6 +18,6 @@ data class PatientDeadClicked(val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Remove Appointment with Reason:Reason changed to Patient Dead"
 }
 
-data class CancelReasonClicked(val selectedReason: Appointment.CancelReason) : UiEvent {
+data class CancelReasonClicked(val selectedReason: AppointmentCancelReason) : UiEvent {
   override val analyticsName = "Remove Appointment with Reason:Reason changed to $selectedReason"
 }

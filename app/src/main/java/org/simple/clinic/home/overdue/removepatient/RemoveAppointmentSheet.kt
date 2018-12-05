@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.RadioButton
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -13,9 +15,13 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.Moved
+import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitioner
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
+import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.PrimarySolidButton
 import org.simple.clinic.widgets.UiEvent
@@ -28,10 +34,10 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
     private const val KEY_APPOINTMENT_UUID = "KEY_APPOINTMENT_UUID"
     private const val KEY_PATIENT_UUID = "KEY_PATIENT_UUID"
 
-    fun intent(context: Context, appointmentUuid: UUID, patientUuid: UUID) =
+    fun intent(context: Context, appointmentUuid: UUID, patientUuid: UUID): Intent =
         Intent(context, RemoveAppointmentSheet::class.java)
             .putExtra(RemoveAppointmentSheet.KEY_APPOINTMENT_UUID, appointmentUuid)
-            .putExtra(KEY_PATIENT_UUID, patientUuid)!!
+            .putExtra(KEY_PATIENT_UUID, patientUuid)
   }
 
   @Inject
@@ -40,6 +46,9 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   private val alreadyVisitedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_already_visited)
   private val movedOutRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_moved)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
+  private val invalidPhoneNumberRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_invalid_phone_number)
+  private val publicHospitalTransferRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_public_hospital_transfer)
+  private val movedToPrivateRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_moved_to_private)
   private val diedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_died)
   private val otherReasonRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_other)
   private val reasonSelectedDoneButton by bindView<PrimarySolidButton>(R.id.removeappointment_done_button)
@@ -59,6 +68,11 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
         .observeOn(mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
+  }
+
+  override fun onDestroy() {
+    onDestroys.onNext(Any())
+    super.onDestroy()
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
@@ -82,11 +96,18 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
           .map { PatientDeadClicked(patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID) }
 
   private fun cancelReasonClicks(): Observable<UiEvent> {
-    val movedOutStream = RxView.clicks(movedOutRadioButton).map { CancelReasonClicked(Moved) }
-    val notRespondingStream = RxView.clicks(notRespondingRadioButton).map { CancelReasonClicked(PatientNotResponding) }
-    val otherStream = RxView.clicks(otherReasonRadioButton).map { CancelReasonClicked(Other) }
+    val reasonClicks = { button: RadioButton, reason: AppointmentCancelReason ->
+      RxView.clicks(button).map { CancelReasonClicked(reason) }
+    }
 
-    return Observable.merge(movedOutStream, notRespondingStream, otherStream)
+    return Observable.mergeArray(
+        reasonClicks(movedOutRadioButton, Moved),
+        reasonClicks(notRespondingRadioButton, PatientNotResponding),
+        reasonClicks(invalidPhoneNumberRadioButton, InvalidPhoneNumber),
+        reasonClicks(publicHospitalTransferRadioButton, TransferredToAnotherPublicHospital),
+        reasonClicks(movedToPrivateRadioButton, MovedToPrivatePractitioner),
+        reasonClicks(otherReasonRadioButton, Other)
+    )
   }
 
   fun closeSheet() = finish()
@@ -95,8 +116,13 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
     reasonSelectedDoneButton.isEnabled = true
   }
 
-  override fun onDestroy() {
-    onDestroys.onNext(Any())
-    super.onDestroy()
+  fun setV2ApiReasonsEnabled(v2Enabled: Boolean) {
+    invalidPhoneNumberRadioButton.visibility = if (v2Enabled) VISIBLE else GONE
+    publicHospitalTransferRadioButton.visibility = if (v2Enabled) VISIBLE else GONE
+    movedToPrivateRadioButton.visibility = if (v2Enabled) VISIBLE else GONE
+
+    alreadyVisitedRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
+    movedOutRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
+    notRespondingRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
   }
 }

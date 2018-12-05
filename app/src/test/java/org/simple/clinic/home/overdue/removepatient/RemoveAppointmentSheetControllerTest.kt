@@ -8,33 +8,40 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.overdue.AppointmentCancelReason.Dead
 import org.simple.clinic.overdue.AppointmentCancelReason.Moved
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
+import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class RemoveAppointmentSheetControllerTest {
 
   private val sheet = mock<RemoveAppointmentSheet>()
   private val repository = mock<AppointmentRepository>()
-
-  private val uiEvents = PublishSubject.create<UiEvent>()
-  private val appointmentUuid = UUID.randomUUID()
-
   private val patientRepository = mock<PatientRepository>()
 
+  private val appointmentUuid = UUID.randomUUID()
+  private val uiEvents = PublishSubject.create<UiEvent>()
+
   lateinit var controller: RemoveAppointmentSheetController
+  lateinit var config: AppointmentConfig
 
   @Before
   fun setUp() {
-    controller = RemoveAppointmentSheetController(repository, patientRepository)
+    config = AppointmentConfig(highlightHighRiskPatients = true, v2ApiEnabled = false)
+    controller = RemoveAppointmentSheetController(repository, patientRepository, Single.fromCallable { config })
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
   }
 
@@ -71,7 +78,7 @@ class RemoveAppointmentSheetControllerTest {
   }
 
   @Test
-  fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`(){
+  fun `when done is clicked, and reason is "Patient dead", then patient repository should be updated`() {
     whenever(repository.cancelWithReason(appointmentUuid, Dead)).thenReturn(Completable.complete())
     val patientUuid = UUID.randomUUID()
     whenever(patientRepository.updatePatientStatusToDead(patientUuid)).thenReturn(Completable.complete())
@@ -110,5 +117,14 @@ class RemoveAppointmentSheetControllerTest {
     inOrder.verify(sheet, times(4)).enableDoneButton()
     inOrder.verify(repository).cancelWithReason(appointmentUuid, Moved)
     inOrder.verify(sheet).closeSheet()
+  }
+
+  @Test
+  @Parameters("true", "false")
+  fun `v2 API reasons should only be enabled when v2 flag is enabled`(v2ApiEnabled: Boolean) {
+    config = config.copy(v2ApiEnabled = v2ApiEnabled)
+
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    verify(sheet).setV2ApiReasonsEnabled(v2ApiEnabled)
   }
 }

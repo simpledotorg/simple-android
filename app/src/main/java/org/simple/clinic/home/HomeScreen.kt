@@ -71,5 +71,4 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   fun openFacilitySelection() {
     screenRouter.push(FacilityChangeScreen.KEY)
   }
-
 }

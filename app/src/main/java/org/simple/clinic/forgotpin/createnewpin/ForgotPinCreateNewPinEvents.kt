@@ -9,7 +9,3 @@ data class ForgotPinCreateNewPinTextChanged(val pin: String) : UiEvent {
 object ForgotPinCreateNewPinSubmitClicked : UiEvent {
   override val analyticsName = "Forgot PIN:Create new PIN:Submit Clicked"
 }
-
-object ForgotPinCreateNewPinFacilityClicked : UiEvent {
-  override val analyticsName = "Forgot PIN:Create new PIN:Facility Clicked"
-}

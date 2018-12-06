@@ -13,7 +13,6 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
@@ -36,7 +35,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var activity: TheActivity
 
-  private val facilityButton by bindView<Button>(R.id.applock_facility_name)
+  private val facilityTextView by bindView<TextView>(R.id.applock_facility_name)
   private val fullNameTextView by bindView<TextView>(R.id.applock_user_fullname)
   private val logoutButton by bindView<Button>(R.id.applock_logout)
   private val pinEntryCardView by bindView<PinEntryCardView>(R.id.applock_pin_entry_card)
@@ -48,7 +47,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), backClicks(), facilityClicks(), forgotPinClicks(), pinAuthentications())
+    Observable.mergeArray(screenCreates(), backClicks(), forgotPinClicks(), pinAuthentications())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -65,11 +64,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   private fun screenCreates() = Observable.just(AppLockScreenCreated())
-
-  private fun facilityClicks() =
-      RxView
-          .clicks(facilityButton)
-          .map { AppLockFacilityClicked() }
 
   private fun backClicks(): Observable<AppLockBackClicked> {
     return Observable.create { emitter ->
@@ -99,7 +93,7 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun setFacilityName(facilityName: String) {
-    this.facilityButton.text = facilityName
+    this.facilityTextView.text = facilityName
   }
 
   fun restorePreviousScreen() {
@@ -108,10 +102,6 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   fun exitApp() {
     activity.finish()
-  }
-
-  fun openFacilityChangeScreen() {
-    screenRouter.push(FacilityChangeScreen.KEY)
   }
 
   fun showConfirmResetPinDialog() {

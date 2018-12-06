@@ -67,12 +67,6 @@ class AppLockScreenControllerTest {
   }
 
   @Test
-  fun `when facility name is clicked then facility change screen should be shown`() {
-    uiEvents.onNext(AppLockFacilityClicked())
-    verify(screen).openFacilityChangeScreen()
-  }
-
-  @Test
   fun `when forgot pin is clicked then the confirm forgot pin alert must be shown`() {
     uiEvents.onNext(AppLockForgotPinClicked())
     verify(screen).showConfirmResetPinDialog()

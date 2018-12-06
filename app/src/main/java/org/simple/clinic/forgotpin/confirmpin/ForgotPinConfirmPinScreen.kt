@@ -1,9 +1,9 @@
 package org.simple.clinic.forgotpin.confirmpin
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.StringRes
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -19,7 +19,6 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -50,12 +49,13 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
   private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
 
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), facilityClicks(), pinSubmits(), pinTextChanges())
+    Observable.mergeArray(screenCreates(), pinSubmits(), pinTextChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -72,10 +72,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
     return Observable.just(ForgotPinConfirmPinScreenCreated(screenKey.enteredPin))
   }
 
-  private fun facilityClicks() =
-      RxView.clicks(facilityNameTextView)
-          .map { ForgotPinConfirmPinScreenFacilityClicked }
-
   private fun pinSubmits() =
       RxTextView.editorActions(pinEntryEditText)
           .filter { it == EditorInfo.IME_ACTION_DONE }
@@ -91,10 +87,6 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
 
   fun showFacility(name: String) {
     facilityNameTextView.text = name
-  }
-
-  fun openFacilityChangeScreen() {
-    screenRouter.push(FacilityChangeScreenKey())
   }
 
   private fun goBack() {

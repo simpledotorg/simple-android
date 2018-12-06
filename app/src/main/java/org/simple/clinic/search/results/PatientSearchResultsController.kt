@@ -29,7 +29,7 @@ class PatientSearchResultsController @Inject constructor(
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val clock: Clock,
-    @Named("short_date") private val dateOfBirthFormat: DateTimeFormatter
+    @Named("date_for_search_results") private val dateOfBirthFormat: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {

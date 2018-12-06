@@ -26,6 +26,7 @@ import org.simple.clinic.storage.Migration_9_10
 
 private fun Cursor.string(column: String): String = getString(getColumnIndex(column))
 private fun Cursor.boolean(column: String): Boolean = getInt(getColumnIndex(column)) == 1
+private fun Cursor.integer(columnName: String): Int = getInt(getColumnIndex(columnName))
 
 @RunWith(AndroidJUnit4::class)
 class MigrationAndroidTest {
@@ -297,12 +298,12 @@ class MigrationAndroidTest {
       it.moveToFirst()
 
       val falseAsInt = 0
-      assertThat(it.getString(it.getColumnIndex("uuid"))).isNotEqualTo("old-uuid")
-      assertThat(it.getInt(it.getColumnIndex("hasHadHeartAttack"))).isEqualTo(falseAsInt)
-      assertThat(it.getInt(it.getColumnIndex("hasHadStroke"))).isEqualTo(falseAsInt)
-      assertThat(it.getInt(it.getColumnIndex("hasHadKidneyDisease"))).isEqualTo(falseAsInt)
-      assertThat(it.getInt(it.getColumnIndex("isOnTreatmentForHypertension"))).isEqualTo(falseAsInt)
-      assertThat(it.getInt(it.getColumnIndex("hasDiabetes"))).isEqualTo(falseAsInt)
+      assertThat(it.string("uuid")).isNotEqualTo("old-uuid")
+      assertThat(it.integer("hasHadHeartAttack")).isEqualTo(falseAsInt)
+      assertThat(it.integer("hasHadStroke")).isEqualTo(falseAsInt)
+      assertThat(it.integer("hasHadKidneyDisease")).isEqualTo(falseAsInt)
+      assertThat(it.integer("isOnTreatmentForHypertension")).isEqualTo(falseAsInt)
+      assertThat(it.integer("hasDiabetes")).isEqualTo(falseAsInt)
     }
   }
 
@@ -333,8 +334,8 @@ class MigrationAndroidTest {
       assertThat(it.columnCount).isEqualTo(11)
 
       it.moveToFirst()
-      assertThat(it.getString(it.getColumnIndex("uuid"))).isEqualTo("464bcda8-b26a-484d-bb70-49b3675f4a38")
-      assertThat(it.getString(it.getColumnIndex("diagnosedWithHypertension"))).isEqualTo("0")
+      assertThat(it.string("uuid")).isEqualTo("464bcda8-b26a-484d-bb70-49b3675f4a38")
+      assertThat(it.string("diagnosedWithHypertension")).isEqualTo("0")
     }
   }
 
@@ -550,12 +551,12 @@ class MigrationAndroidTest {
       assertThat(it.count).isEqualTo(1)
 
       it.moveToFirst()
-      assertThat(it.getString(it.getColumnIndex("diagnosedWithHypertension"))).isEqualTo("NO")
-      assertThat(it.getString(it.getColumnIndex("isOnTreatmentForHypertension"))).isEqualTo("YES")
-      assertThat(it.getString(it.getColumnIndex("hasHadHeartAttack"))).isEqualTo("NO")
-      assertThat(it.getString(it.getColumnIndex("hasHadStroke"))).isEqualTo("YES")
-      assertThat(it.getString(it.getColumnIndex("hasHadKidneyDisease"))).isEqualTo("NO")
-      assertThat(it.getString(it.getColumnIndex("hasDiabetes"))).isEqualTo("YES")
+      assertThat(it.string("diagnosedWithHypertension")).isEqualTo("NO")
+      assertThat(it.string("isOnTreatmentForHypertension")).isEqualTo("YES")
+      assertThat(it.string("hasHadHeartAttack")).isEqualTo("NO")
+      assertThat(it.string("hasHadStroke")).isEqualTo("YES")
+      assertThat(it.string("hasHadKidneyDisease")).isEqualTo("NO")
+      assertThat(it.string("hasDiabetes")).isEqualTo("YES")
     }
   }
 }

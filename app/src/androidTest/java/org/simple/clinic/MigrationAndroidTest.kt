@@ -19,15 +19,19 @@ import org.simple.clinic.storage.Migration_16_17
 import org.simple.clinic.storage.Migration_17_18
 import org.simple.clinic.storage.Migration_18_19
 import org.simple.clinic.storage.Migration_19_20
+import org.simple.clinic.storage.Migration_20_21
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
 import org.simple.clinic.storage.Migration_9_10
+import org.simple.clinic.storage.inTransaction
+import java.util.UUID
 
 private fun Cursor.string(column: String): String = getString(getColumnIndex(column))
 private fun Cursor.boolean(column: String): Boolean = getInt(getColumnIndex(column)) == 1
 private fun Cursor.integer(columnName: String): Int = getInt(getColumnIndex(columnName))
 
+@Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
 class MigrationAndroidTest {
 
@@ -557,6 +561,56 @@ class MigrationAndroidTest {
       assertThat(it.string("hasHadStroke")).isEqualTo("YES")
       assertThat(it.string("hasHadKidneyDisease")).isEqualTo("NO")
       assertThat(it.string("hasDiabetes")).isEqualTo("YES")
+    }
+  }
+
+  @Test
+  fun migration_20_to_21() {
+    val db_20 = helper.createDatabase(version = 20)
+
+    val patientUuid = UUID.randomUUID()
+
+    val insertAppointmentWithCancelReason = { reason: String ->
+      db_20.execSQL("""
+      INSERT OR REPLACE INTO "Appointment" VALUES (
+        '${UUID.randomUUID()}',
+        '$patientUuid',
+        'facility-uuid',
+        'scheduled-date',
+        'status',
+        '$reason',
+        'remind-on',
+        1,
+        'sync-status',
+        'created-at',
+        'updated-at'
+      )
+    """)
+    }
+
+    db_20.inTransaction {
+      insertAppointmentWithCancelReason("PATIENT_NOT_RESPONDING")
+      insertAppointmentWithCancelReason("MOVED")
+      insertAppointmentWithCancelReason("DEAD")
+      insertAppointmentWithCancelReason("OTHER")
+    }
+
+    val db_21 = helper.migrateTo(21, Migration_20_21())
+
+    db_21.query("""SELECT * FROM "Appointment" WHERE "patientUuid" = '$patientUuid'""").use {
+      assertThat(it.count).isEqualTo(4)
+    }
+    db_21.query("""SELECT * FROM "Appointment" WHERE "cancelReason" = 'not_responding'""").use {
+      assertThat(it.count).isEqualTo(1)
+    }
+    db_21.query("""SELECT * FROM "Appointment" WHERE "cancelReason" = 'moved'""").use {
+      assertThat(it.count).isEqualTo(1)
+    }
+    db_21.query("""SELECT * FROM "Appointment" WHERE "cancelReason" = 'dead'""").use {
+      assertThat(it.count).isEqualTo(1)
+    }
+    db_21.query("""SELECT * FROM "Appointment" WHERE "cancelReason" = 'other'""").use {
+      assertThat(it.count).isEqualTo(1)
     }
   }
 }

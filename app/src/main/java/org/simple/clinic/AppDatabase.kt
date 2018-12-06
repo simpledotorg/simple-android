@@ -42,7 +42,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Communication::class,
       MedicalHistory::class,
       OngoingLoginEntry::class],
-    version = 20,
+    version = 21,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,

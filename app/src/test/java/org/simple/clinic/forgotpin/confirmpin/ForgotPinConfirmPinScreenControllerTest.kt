@@ -70,13 +70,6 @@ class ForgotPinConfirmPinScreenControllerTest {
   }
 
   @Test
-  fun `when the facility name is clicked then facility change screen should be shown`() {
-    uiEvents.onNext(ForgotPinConfirmPinScreenFacilityClicked)
-
-    verify(screen).openFacilityChangeScreen()
-  }
-
-  @Test
   @Parameters(value = [
     "0000|000|0000|false",
     "0000|000|001|true",

@@ -32,7 +32,6 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
     return Observable.mergeArray(
         showUserNameOnScreenStarted(replayedEvents),
         showFacilityOnScreenCreated(replayedEvents),
-        openFacilityChangeScreen(replayedEvents),
         hideErrorsOnPinTextChanged(replayedEvents),
         showMismatchedPinErrors(replayedEvents),
         showProgress(replayedEvents),
@@ -51,11 +50,6 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .flatMap { userSession.requireLoggedInUser() }
         .switchMap { facilityRepository.currentFacility(it) }
         .map { facility -> { ui: Ui -> ui.showFacility(facility.name) } }
-  }
-
-  private fun openFacilityChangeScreen(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<ForgotPinConfirmPinScreenFacilityClicked>()
-        .map { { ui: Ui -> ui.openFacilityChangeScreen() } }
   }
 
   private fun hideErrorsOnPinTextChanged(events: Observable<UiEvent>): Observable<UiChange> {

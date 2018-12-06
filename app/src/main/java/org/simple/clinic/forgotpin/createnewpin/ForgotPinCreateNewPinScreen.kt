@@ -14,7 +14,6 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
@@ -50,7 +49,7 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), pinTextChanges(), pinSubmitClicked(), facilityClicks())
+    Observable.merge(screenCreates(), pinTextChanges(), pinSubmitClicked())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -71,10 +70,6 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
           .filter { it == EditorInfo.IME_ACTION_DONE }
           .map { ForgotPinCreateNewPinSubmitClicked }
 
-  private fun facilityClicks() =
-      RxView.clicks(facilityNameTextView)
-          .map { ForgotPinCreateNewPinFacilityClicked }
-
   fun showUserName(name: String) {
     userNameTextView.text = name
   }
@@ -94,9 +89,5 @@ class ForgotPinCreateNewPinScreen(context: Context, attributeSet: AttributeSet?)
 
   fun hideInvalidPinError() {
     pinErrorTextView.visibility = View.GONE
-  }
-
-  fun openFacilityChangeScreen() {
-    screenRouter.push(FacilityChangeScreenKey())
   }
 }

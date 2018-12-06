@@ -18,24 +18,12 @@
     android:paddingStart="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_4">
 
-    <Button
+    <TextView
       android:id="@+id/forgotpin_createpin_facility_name"
-      style="@style/Widget.AppCompat.Button.Borderless"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
+      style="@style/Clinic.V2.FacilityNameTextView"
       android:layout_gravity="center_horizontal"
       android:layout_marginEnd="@dimen/spacing_24"
       android:layout_marginStart="@dimen/spacing_24"
-      android:drawableEnd="@drawable/ic_keyboard_arrow_down_20dp"
-      android:drawablePadding="6dp"
-      android:drawableStart="@drawable/ic_location_20dp"
-      android:ellipsize="end"
-      android:fontFamily="sans-serif"
-      android:maxLines="1"
-      android:padding="@dimen/spacing_8"
-      android:textAllCaps="false"
-      android:textColor="@color/white"
-      android:textSize="@dimen/textsize_16"
       tools:text="A really long facility name that does not fit" />
 
     <TextView

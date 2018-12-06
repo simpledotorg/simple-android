@@ -15,7 +15,6 @@ import org.simple.clinic.widgets.UiEvent
 
 class HomeScreenControllerTest {
 
-
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: HomeScreenController
 

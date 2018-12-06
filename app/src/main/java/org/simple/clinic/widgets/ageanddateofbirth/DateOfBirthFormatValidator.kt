@@ -8,7 +8,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class DateOfBirthFormatValidator @Inject constructor(
-    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter
+    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
 
   enum class Result {

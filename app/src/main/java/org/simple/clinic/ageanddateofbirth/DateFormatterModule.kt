@@ -12,11 +12,11 @@ class DateFormatterModule {
 
   @Provides
   @AppScope
-  @Named("short_date")
+  @Named("date_for_search_results")
   fun provideShortDigitDateFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern("d/MM/yyyy", Locale.ENGLISH)
 
   @Provides
   @AppScope
-  @Named("long_date")
+  @Named("date_for_user_input")
   fun provideLongDateFormatter(): DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 }

@@ -54,7 +54,7 @@ class PatientEditScreenController @Inject constructor(
     private val configProvider: Single<PatientEditConfig>,
     private val clock: Clock,
     private val dateOfBirthFormatValidator: DateOfBirthFormatValidator,
-    @Named("long_date") private val dateOfBirthFormatter: DateTimeFormatter
+    @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   private val disposables = CompositeDisposable()

@@ -42,7 +42,7 @@ class PatientRepository @Inject constructor(
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
     private val ageFuzzer: AgeFuzzer,
-    @Named("long_date") private val dateOfBirthFormat: DateTimeFormatter,
+    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
     private val searchPatientByName: SearchPatientByName,
     private val configProvider: Single<PatientConfig>
 ) : SynceableRepository<PatientProfile, PatientPayload> {

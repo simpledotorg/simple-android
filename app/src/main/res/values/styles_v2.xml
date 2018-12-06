@@ -8,9 +8,80 @@
     <item name="colorPrimaryDark">@color/color_primary_dark</item>
     <item name="colorAccent">@color/color_accent</item>
     <item name="colorError">@color/color_error</item>
-
     <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
+    <item name="android:alertDialogStyle">@style/Clinic.V2.DialogStyle</item>
     <item name="android:windowBackground">@color/window_background</item>
+  </style>
+
+  <style name="Clinic.V2.DialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <item name="buttonBarNeutralButtonStyle">@style/Clinic.V2.DialogNeutralButton</item>
+    <item name="buttonBarNegativeButtonStyle">@style/Clinic.V2.DialogNegativeButton</item>
+    <item name="buttonBarPositiveButtonStyle">@style/Clinic.V2.DialogPositiveButton</item>
+    <item name="android:windowTitleStyle">@style/Clinic.V2.Dialog.Title</item>
+  </style>
+
+  <style name="Clinic.V2.Dialog.Title" parent="RtlOverlay.DialogWindowTitle.AppCompat">
+    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.H6.Grey0</item>
+  </style>
+
+  <style name="Clinic.V2.DialogNeutralButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+     <item name="android:textAppearance">@style/Clinic.V2.DialogNeutralButton.TextAppearance</item>
+  </style>
+
+  <style name="Clinic.V2.DialogStyle.Destructive">
+    <item name="buttonBarPositiveButtonStyle">@style/Clinic.V2.DialogPositiveButton.Destructive</item>
+  </style>
+
+  <style name="Clinic.V2.DialogNeutralButton.TextAppearance" parent="TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:letterSpacing">0.07</item>
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textColor">@color/grey2</item>
+  </style>
+
+  <style name="Clinic.V2.DialogNegativeButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <item name="android:textAppearance">@style/Clinic.V2.DialogNegativeButton.TextAppearance</item>
+  </style>
+
+  <style name="Clinic.V2.DialogNegativeButton.TextAppearance" parent="TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:letterSpacing">0.07</item>
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textColor">@color/grey2</item>
+  </style>
+
+  <style name="Clinic.V2.DialogPositiveButton" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <item name="android:textAppearance">@style/Clinic.V2.DialogPositiveButton.TextAppearance</item>
+  </style>
+
+  <style name="Clinic.V2.DialogPositiveButton.TextAppearance" parent="TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:letterSpacing">0.07</item>
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textColor">@color/blue1</item>
+  </style>
+
+  <style name="Clinic.V2.DialogPositiveButton.Destructive" parent="Widget.AppCompat.Button.Borderless.Colored">
+    <item name="android:textAppearance">@style/Clinic.V2.DialogPositiveButton.Destructive.TextAppearance</item>
+  </style>
+
+  <style name="Clinic.V2.DialogPositiveButton.Destructive.TextAppearance" parent="TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
+    <item name="android:gravity">center_horizontal</item>
+    <item name="android:textSize">@dimen/textsize_14</item>
+    <item name="android:fontFamily">sans-serif-medium</item>
+    <item name="android:textStyle">normal</item>
+    <item name="android:letterSpacing">0.07</item>
+    <item name="android:lineSpacingExtra">2sp</item>
+    <item name="android:textColor">@color/red1</item>
   </style>
 
   <style name="Clinic.V2.Theme.BottomSheetActivity">

@@ -398,4 +398,16 @@
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:textColor">@color/red1</item>
   </style>
+
+  <style name="Clinic.V2.FacilityNameTextView">
+    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body2Left.White100</item>
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:ellipsize">end</item>
+    <item name="android:maxLines">1</item>
+    <item name="android:padding">@dimen/spacing_8</item>
+    <item name="android:textAllCaps">false</item>
+    <item name="android:drawableStart">@drawable/ic_location_20dp</item>
+    <item name="android:drawablePadding">6dp</item>
+  </style>
 </resources>

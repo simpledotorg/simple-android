@@ -23,7 +23,7 @@ class LoggedOutOnOtherDeviceDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(context!!)
+    return AlertDialog.Builder(requireContext())
         .setTitle(R.string.patients_loggedoutalert_title)
         .setMessage(R.string.patients_loggedoutalert_message)
         .setPositiveButton(R.string.patients_loggedoutalert_dismiss) { _, _ ->

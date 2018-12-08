@@ -45,6 +45,7 @@ import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -87,6 +88,7 @@ interface TheActivityComponent {
   fun inject(target: PinEntryCardView)
   fun inject(target: PatientEditScreen)
   fun inject(target: ConfirmDiscardChangesDialog)
+  fun inject(target: UpdatePhoneNumberDialog)
 
   @Subcomponent.Builder
   interface Builder {

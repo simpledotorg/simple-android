@@ -28,7 +28,7 @@ class ConfirmDiscardChangesDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(context!!, R.style.Clinic_V2_DialogStyle_Destructive)
+    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setMessage(R.string.patientedit_confirm_discard_title)
         .setPositiveButton(R.string.patientedit_confirm_discard_ok) { _, _ ->
           screenRouter.pop()

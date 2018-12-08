@@ -39,7 +39,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(context!!, R.style.Clinic_V2_DialogStyle_Destructive)
+    return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setTitle(R.string.applock_reset_pin_alert_title)
         .setMessage(R.string.applock_reset_pin_alert_message)
         .setPositiveButton(R.string.applock_reset_pin_alert_confirm) { _, _ ->

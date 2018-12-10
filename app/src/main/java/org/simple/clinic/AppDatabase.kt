@@ -20,6 +20,8 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.protocolv2.Protocol
+import org.simple.clinic.protocolv2.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -41,8 +43,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       Appointment::class,
       Communication::class,
       MedicalHistory::class,
-      OngoingLoginEntry::class],
-    version = 21,
+      OngoingLoginEntry::class,
+      Protocol::class,
+      ProtocolDrug::class],
+    version = 22,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,

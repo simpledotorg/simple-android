@@ -20,6 +20,7 @@ import org.simple.clinic.storage.Migration_17_18
 import org.simple.clinic.storage.Migration_18_19
 import org.simple.clinic.storage.Migration_19_20
 import org.simple.clinic.storage.Migration_20_21
+import org.simple.clinic.storage.Migration_21_22
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -611,6 +612,20 @@ class MigrationAndroidTest {
     }
     db_21.query("""SELECT * FROM "Appointment" WHERE "cancelReason" = 'other'""").use {
       assertThat(it.count).isEqualTo(1)
+    }
+  }
+
+  @Test
+  fun migration_21_to_22() {
+    helper.createDatabase(version = 21)
+    val db_22 = helper.migrateTo(22, Migration_21_22())
+
+    db_22.query("""SELECT * FROM "Protocol" """).use {
+      assertThat(it.columnCount).isEqualTo(6)
+    }
+
+    db_22.query("""SELECT * FROM "ProtocolDrug" """).use {
+      assertThat(it.columnCount).isEqualTo(8)
     }
   }
 }

@@ -746,9 +746,9 @@ class PatientEditScreenControllerTest {
 
     fun generateTestData(
         patientProfile: PatientProfile,
-        numberValidationResult: PhoneNumberValidator.Result,
-        dateOfBirthValidationResult: DateOfBirthFormatValidator.Result,
-        advanceClockBy: Duration,
+        numberValidationResult: PhoneNumberValidator.Result = VALID,
+        dateOfBirthValidationResult: DateOfBirthFormatValidator.Result = DateOfBirthFormatValidator.Result.VALID,
+        advanceClockBy: Duration = Duration.ZERO,
         inputEvents: List<UiEvent>,
         shouldSavePatient: Boolean,
         createExpectedPatient: (Patient) -> Patient = { it },
@@ -798,9 +798,6 @@ class PatientEditScreenControllerTest {
     return listOf(
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -820,8 +817,6 @@ class PatientEditScreenControllerTest {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
             advanceClockBy = oneYear,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -849,9 +844,6 @@ class PatientEditScreenControllerTest {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -866,9 +858,6 @@ class PatientEditScreenControllerTest {
             { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -894,9 +883,6 @@ class PatientEditScreenControllerTest {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -923,8 +909,6 @@ class PatientEditScreenControllerTest {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
             advanceClockBy = twoYears,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
@@ -951,9 +935,6 @@ class PatientEditScreenControllerTest {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -974,9 +955,6 @@ class PatientEditScreenControllerTest {
             }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -990,9 +968,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = VALID,
             dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.INVALID_PATTERN,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1006,9 +982,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = VALID,
             dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1022,9 +996,6 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1038,9 +1009,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            numberValidationResult = VALID,
             dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1055,9 +1024,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            numberValidationResult = VALID,
             dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.INVALID_PATTERN,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1073,8 +1040,6 @@ class PatientEditScreenControllerTest {
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             numberValidationResult = LENGTH_TOO_SHORT,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
@@ -1083,9 +1048,6 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1100,8 +1062,6 @@ class PatientEditScreenControllerTest {
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
             numberValidationResult = LENGTH_TOO_LONG,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged(""),
                 PatientEditDistrictTextChanged("District"),
@@ -1110,9 +1070,6 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            numberValidationResult = VALID,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged(""),
@@ -1122,8 +1079,6 @@ class PatientEditScreenControllerTest {
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
             numberValidationResult = BLANK,
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.VALID,
-            advanceClockBy = Duration.ZERO,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),

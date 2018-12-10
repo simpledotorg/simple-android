@@ -807,12 +807,9 @@ class PatientEditScreenControllerTest {
                 PatientEditPhoneNumberTextChanged("12345678"),
                 PatientEditDateOfBirthTextChanged("20/05/1985")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            { it.copy(fullName = "Name", gender = MALE, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
-            createExpectedAddress =
-            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
-            createExpectedPhoneNumber =
-            { patientId, alreadyPresentPhoneNumber ->
+            createExpectedPatient = { it.copy(fullName = "Name", gender = MALE, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
+            createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
             }),
         generateTestData(
@@ -828,18 +825,16 @@ class PatientEditScreenControllerTest {
                 PatientEditDateOfBirthTextChanged(""),
                 PatientEditAgeTextChanged("22")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            {
+            createExpectedPatient = {
               val expectedAge = Age(
                   value = 22,
                   updatedAt = Instant.now(clock).plus(oneYear),
                   computedDateOfBirth = LocalDate.parse("1949-01-01"))
+
               it.copy(fullName = "Name", gender = MALE, dateOfBirth = null, age = expectedAge)
             },
-            createExpectedAddress =
-            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
-            createExpectedPhoneNumber =
-            { patientId, alreadyPresentPhoneNumber ->
+            createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
             }),
         generateTestData(
@@ -852,10 +847,8 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(MALE),
                 PatientEditPhoneNumberTextChanged("")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            { it.copy(fullName = "Name", gender = MALE) },
-            createExpectedAddress =
-            { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
+            createExpectedPatient = { it.copy(fullName = "Name", gender = MALE) },
+            createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
             inputEvents = listOf(
@@ -866,19 +859,16 @@ class PatientEditScreenControllerTest {
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            {
+            createExpectedPatient = {
               val expectedAge = Age(
                   value = 25,
                   updatedAt = Instant.now(clock),
-                  computedDateOfBirth = LocalDate.parse("1945-01-01")
-              )
+                  computedDateOfBirth = LocalDate.parse("1945-01-01"))
+
               it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
             },
-            createExpectedAddress =
-            { it.copy(district = "District", state = "State") },
-            createExpectedPhoneNumber =
-            { patientId, alreadyPresentPhoneNumber ->
+            createExpectedAddress = { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
         generateTestData(
@@ -892,19 +882,15 @@ class PatientEditScreenControllerTest {
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("25/06/1965")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            {
+            createExpectedPatient = {
               it.copy(
                   fullName = "Name",
                   gender = TRANSGENDER,
                   age = null,
-                  dateOfBirth = LocalDate.parse("1965-06-25")
-              )
+                  dateOfBirth = LocalDate.parse("1965-06-25"))
             },
-            createExpectedAddress =
-            { it.copy(district = "District", state = "State") },
-            createExpectedPhoneNumber =
-            { patientId, alreadyPresentPhoneNumber ->
+            createExpectedAddress = { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
         generateTestData(
@@ -918,19 +904,16 @@ class PatientEditScreenControllerTest {
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            {
+            createExpectedPatient = {
               val expectedAge = Age(
                   value = 25,
                   updatedAt = Instant.now(clock).plus(twoYears),
-                  computedDateOfBirth = LocalDate.parse("1947-01-01")
-              )
+                  computedDateOfBirth = LocalDate.parse("1947-01-01"))
+
               it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
             },
-            createExpectedAddress =
-            { it.copy(district = "District", state = "State") },
-            createExpectedPhoneNumber =
-            { patientId, alreadyPresentPhoneNumber ->
+            createExpectedAddress = { it.copy(district = "District", state = "State") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "123456") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "123456")
             }),
         generateTestData(
@@ -945,12 +928,9 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 2"),
                 PatientEditPhoneNumberTextChanged("1234567")),
             shouldSavePatient = true,
-            createExpectedPatient =
-            { it.copy(fullName = "Name 2", gender = TRANSGENDER) },
-            createExpectedAddress =
-            { it.copy(district = "District", state = "State 2") },
-            createExpectedPhoneNumber =
-            { patientId, alreadyPresentPhoneNumber ->
+            createExpectedPatient = { it.copy(fullName = "Name 2", gender = TRANSGENDER) },
+            createExpectedAddress = { it.copy(district = "District", state = "State 2") },
+            createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "1234567") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "1234567")
             }),
         generateTestData(

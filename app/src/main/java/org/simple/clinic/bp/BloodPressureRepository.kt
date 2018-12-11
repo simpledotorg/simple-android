@@ -44,11 +44,12 @@ class BloodPressureRepository @Inject constructor(
               systolic = systolic,
               diastolic = diastolic,
               syncStatus = SyncStatus.PENDING,
-              patientUuid = patientUuid,
-              facilityUuid = facility.uuid,
               userUuid = user!!.uuid,
+              facilityUuid = facility.uuid,
+              patientUuid = patientUuid,
               createdAt = Instant.now(clock),
-              updatedAt = Instant.now(clock))
+              updatedAt = Instant.now(clock),
+              deletedAt = null)
         }
         .flatMap {
           save(listOf(it)).toSingleDefault(it)

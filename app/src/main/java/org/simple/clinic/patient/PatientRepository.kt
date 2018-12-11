@@ -247,7 +247,8 @@ class PatientRepository @Inject constructor(
                 district = address.district,
                 state = address.state,
                 createdAt = Instant.now(clock),
-                updatedAt = Instant.now(clock))
+                updatedAt = Instant.now(clock),
+                deletedAt = null)
           }
         }
         .flatMapCompletable { address -> saveAddress(address) }
@@ -258,10 +259,10 @@ class PatientRepository @Inject constructor(
           with(it) {
             Patient(
                 uuid = patientUuid,
+                addressUuid = addressUuid,
                 fullName = personalDetails!!.fullName,
                 searchableName = nameToSearchableForm(personalDetails.fullName),
                 gender = personalDetails.gender!!,
-                status = PatientStatus.ACTIVE,
 
                 dateOfBirth = convertToDate(personalDetails.dateOfBirth),
                 age = personalDetails.age?.let {
@@ -270,10 +271,11 @@ class PatientRepository @Inject constructor(
                       computedDateOfBirth = LocalDate.now(clock).minusYears(personalDetails.age.toLong()))
                 },
 
-                addressUuid = addressUuid,
+                status = PatientStatus.ACTIVE,
 
                 createdAt = Instant.now(clock),
                 updatedAt = Instant.now(clock),
+                deletedAt = null,
                 syncStatus = PENDING)
           }
         }
@@ -291,11 +293,12 @@ class PatientRepository @Inject constructor(
               PatientPhoneNumber(
                   uuid = UUID.randomUUID(),
                   patientUuid = patientUuid,
-                  phoneType = type,
                   number = number,
+                  phoneType = type,
                   active = active,
                   createdAt = Instant.now(clock),
-                  updatedAt = Instant.now(clock))
+                  updatedAt = Instant.now(clock),
+                  deletedAt = null)
             }
             savePhoneNumber(number)
           }
@@ -353,7 +356,8 @@ class PatientRepository @Inject constructor(
               phoneType = phoneNumberType,
               active = active,
               createdAt = now,
-              updatedAt = now
+              updatedAt = now,
+              deletedAt = null
           )
         }
         .flatMapCompletable(this::savePhoneNumber)

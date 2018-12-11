@@ -34,7 +34,8 @@ class CommunicationRepository @Inject constructor(
               result = result,
               syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(),
-              updatedAt = Instant.now())
+              updatedAt = Instant.now(),
+              deletedAt = null)
         }
         .flatMapCompletable { save(listOf(it)) }
   }
@@ -86,7 +87,8 @@ class CommunicationRepository @Inject constructor(
           result = result,
           syncStatus = syncStatus,
           createdAt = createdAt,
-          updatedAt = updatedAt)
+          updatedAt = updatedAt,
+          deletedAt = null)
     }
   }
 }

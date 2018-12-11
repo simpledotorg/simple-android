@@ -56,6 +56,7 @@ data class FacilityPayload(
         pinCode = pinCode,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        syncStatus = syncStatus)
+        syncStatus = syncStatus,
+        deletedAt = null)
   }
 }

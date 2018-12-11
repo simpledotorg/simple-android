@@ -26,7 +26,8 @@ data class Appointment(
     val agreedToVisit: Boolean?,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
-    val updatedAt: Instant
+    val updatedAt: Instant,
+    val deletedAt: Instant?
 ) {
 
   enum class Status {

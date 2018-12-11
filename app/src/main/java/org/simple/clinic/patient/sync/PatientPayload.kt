@@ -58,8 +58,8 @@ data class PatientPayload(
     return Patient(
         uuid = uuid,
         addressUuid = address.uuid,
-        searchableName = nameToSearchableForm(fullName),
         fullName = fullName,
+        searchableName = nameToSearchableForm(fullName),
         gender = gender,
         dateOfBirth = dateOfBirth,
         age = age?.let {
@@ -68,6 +68,7 @@ data class PatientPayload(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        deletedAt = null,
         syncStatus = newStatus)
   }
 
@@ -111,7 +112,8 @@ data class PatientAddressPayload(
         state = state,
         country = country,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = null)
   }
 }
 
@@ -144,7 +146,8 @@ data class PatientPhoneNumberPayload(
         phoneType = type,
         active = active,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deletedAt = null
     )
   }
 }

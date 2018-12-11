@@ -37,11 +37,12 @@ class AppointmentRepository @Inject constructor(
               scheduledDate = appointmentDate,
               status = Appointment.Status.SCHEDULED,
               cancelReason = null,
-              agreedToVisit = null,
               remindOn = null,
+              agreedToVisit = null,
               syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(clock),
-              updatedAt = Instant.now(clock))
+              updatedAt = Instant.now(clock),
+              deletedAt = null)
         }
         .flatMapCompletable { save(listOf(it)) }
 
@@ -176,8 +177,8 @@ class AppointmentRepository @Inject constructor(
     return payload.run {
       Appointment(
           uuid = uuid,
-          facilityUuid = facilityUuid,
           patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
           scheduledDate = date,
           status = status,
           cancelReason = cancelReason,
@@ -185,7 +186,8 @@ class AppointmentRepository @Inject constructor(
           agreedToVisit = agreedToVisit,
           syncStatus = syncStatus,
           createdAt = createdAt,
-          updatedAt = updatedAt)
+          updatedAt = updatedAt,
+          deletedAt = null)
     }
   }
 }

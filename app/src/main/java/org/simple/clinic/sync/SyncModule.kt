@@ -10,6 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.communication.CommunicationModule
 import org.simple.clinic.patient.sync.PatientSyncModule
+import org.simple.clinic.protocolv2.ProtocolModule
 import org.threeten.bp.Duration
 
 @Module(includes = [
@@ -19,7 +20,8 @@ import org.threeten.bp.Duration
   FacilityModule::class,
   AppointmentModule::class,
   CommunicationModule::class,
-  MedicalHistoryModule::class])
+  MedicalHistoryModule::class,
+  ProtocolModule::class])
 open class SyncModule {
 
   @Provides

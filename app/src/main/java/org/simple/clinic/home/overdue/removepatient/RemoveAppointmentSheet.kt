@@ -45,11 +45,17 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   lateinit var controller: RemoveAppointmentSheetController
 
   private val alreadyVisitedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_already_visited)
+  private val alreadyVisitedSeparator by bindView<View>(R.id.removeappointment_reason_patient_already_visited_separator)
   private val movedOutRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_moved)
+  private val movedOutRadioButtonSeparator by bindView<View>(R.id.removeappointment_reason_patient_moved_separator)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
+  private val notRespondingSeparator by bindView<View>(R.id.removeappointment_reason_patient_not_responding_separator)
   private val invalidPhoneNumberRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_invalid_phone_number)
+  private val invalidPhoneNumberSeparator by bindView<View>(R.id.removeappointment_reason_invalid_phone_number_separator)
   private val publicHospitalTransferRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_public_hospital_transfer)
+  private val publicHospitalTransferSeparator by bindView<View>(R.id.removeappointment_reason_public_hospital_transfer_separator)
   private val movedToPrivateRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_moved_to_private)
+  private val movedToPrivateSeparator by bindView<View>(R.id.removeappointment_reason_moved_to_private_separator)
   private val diedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_died)
   private val otherReasonRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_other)
   private val reasonSelectedDoneButton by bindView<PrimarySolidButton>(R.id.removeappointment_done_button)
@@ -122,11 +128,17 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
 
   fun setV2ApiReasonsEnabled(v2Enabled: Boolean) {
     invalidPhoneNumberRadioButton.visibility = if (v2Enabled) VISIBLE else GONE
+    invalidPhoneNumberSeparator.visibility = if (v2Enabled) VISIBLE else GONE
     publicHospitalTransferRadioButton.visibility = if (v2Enabled) VISIBLE else GONE
+    publicHospitalTransferSeparator.visibility = if (v2Enabled) VISIBLE else GONE
     movedToPrivateRadioButton.visibility = if (v2Enabled) VISIBLE else GONE
+    movedToPrivateSeparator.visibility = if (v2Enabled) VISIBLE else GONE
 
     alreadyVisitedRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
+    alreadyVisitedSeparator.visibility = if (v2Enabled) GONE else VISIBLE
     movedOutRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
+    movedOutRadioButtonSeparator.visibility = if (v2Enabled) GONE else VISIBLE
     notRespondingRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
+    notRespondingSeparator.visibility = if (v2Enabled) GONE else VISIBLE
   }
 }

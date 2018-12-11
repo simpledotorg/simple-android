@@ -14,6 +14,7 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
+import org.simple.clinic.protocolv2.sync.ProtocolSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
@@ -52,6 +53,9 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
   lateinit var facilitySync: FacilitySync
 
   @Inject
+  lateinit var protocolSync: ProtocolSync
+
+  @Inject
   lateinit var crashReporter: CrashReporter
 
   override fun doWork(): Result {
@@ -77,7 +81,8 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
             appointmentSync.sync(),
             communicationSync.sync(),
             medicalHistorySync.sync(),
-            facilitySync.sync()
+            facilitySync.sync(),
+            protocolSync.sync()
         ))
         .doOnError(logError())
         .onErrorComplete()

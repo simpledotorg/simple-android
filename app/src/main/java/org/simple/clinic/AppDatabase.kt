@@ -98,4 +98,8 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun medicalHistoryDao(): MedicalHistory.RoomDao
 
   abstract fun ongoingLoginEntryDao(): OngoingLoginEntry.RoomDao
+
+  abstract fun protocolDao(): Protocol.RoomDao
+
+  abstract fun protocolDrugDao(): ProtocolDrug.RoomDao
 }

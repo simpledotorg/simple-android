@@ -21,6 +21,7 @@ import org.simple.clinic.storage.Migration_18_19
 import org.simple.clinic.storage.Migration_19_20
 import org.simple.clinic.storage.Migration_20_21
 import org.simple.clinic.storage.Migration_21_22
+import org.simple.clinic.storage.Migration_22_23
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -626,6 +627,49 @@ class MigrationAndroidTest {
 
     db_22.query("""SELECT * FROM "ProtocolDrug" """).use {
       assertThat(it.columnCount).isEqualTo(8)
+    }
+  }
+
+  @Test
+  fun migration_22_to_23(){
+    val db_22 = helper.createDatabase(version = 22)
+    val protocolUuid = UUID.randomUUID()
+
+    db_22.execSQL("""
+      INSERT INTO "Protocol" VALUES(
+      '$protocolUuid',
+      'protocol-1',
+      '0',
+      'created-at',
+      'updated-at',
+      'PENDING')
+    """)
+
+    db_22.execSQL("""
+      INSERT INTO "ProtocolDrug" VALUES(
+      '${UUID.randomUUID()}',
+      '$protocolUuid',
+      'amlodipine',
+      'rxnorm-code-1',
+      '20mg',
+      'created-at',
+      'updated-at',
+      'PENDING')
+    """)
+
+    db_22.query("""
+      SELECT * FROM "ProtocolDrug"
+    """).use {
+      assertThat(it.columnCount).isEqualTo(8)
+    }
+
+    val db_23 = helper.migrateTo(23, Migration_22_23())
+    db_23.query("""
+      SELECT * FROM "ProtocolDrug"
+    """).use {
+      it.moveToFirst()
+      assertThat(it.string("protocolUuid")).isEqualTo(protocolUuid.toString())
+      assertThat(it.columnCount).isEqualTo(7)
     }
   }
 }

@@ -4,7 +4,7 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.ForeignKey
 import android.arch.persistence.room.Index
 import android.arch.persistence.room.PrimaryKey
-import org.simple.clinic.patient.SyncStatus
+
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -36,7 +36,5 @@ data class ProtocolDrug(
 
     val createdAt: Instant,
 
-    val updatedAt: Instant,
-
-    val syncStatus: SyncStatus
+    val updatedAt: Instant
 )

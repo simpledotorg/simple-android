@@ -1,10 +1,12 @@
 package org.simple.clinic
 
+import android.arch.persistence.db.SupportSQLiteDatabase
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
+import com.google.common.truth.Truth.assertWithMessage
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
@@ -22,6 +24,7 @@ import org.simple.clinic.storage.Migration_19_20
 import org.simple.clinic.storage.Migration_20_21
 import org.simple.clinic.storage.Migration_21_22
 import org.simple.clinic.storage.Migration_22_23
+import org.simple.clinic.storage.Migration_23_24
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -670,6 +673,49 @@ class MigrationAndroidTest {
       it.moveToFirst()
       assertThat(it.string("protocolUuid")).isEqualTo(protocolUuid.toString())
       assertThat(it.columnCount).isEqualTo(7)
+    }
+  }
+
+  @Test
+  fun migration_23_to_24() {
+    val db_v23 = helper.createDatabase(version = 23)
+
+    db_v23.apply {
+      assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 9)
+      assertColumnCount(tableName = "PrescribedDrug", expectedCount = 11)
+      assertColumnCount(tableName = "Facility", expectedCount = 12)
+      assertColumnCount(tableName = "MedicalHistory", expectedCount = 11)
+      assertColumnCount(tableName = "Appointment", expectedCount = 11)
+      assertColumnCount(tableName = "Communication", expectedCount = 8)
+      assertColumnCount(tableName = "Patient", expectedCount = 13)
+      assertColumnCount(tableName = "PatientAddress", expectedCount = 7)
+      assertColumnCount(tableName = "PatientPhoneNumber", expectedCount = 7)
+      assertColumnCount(tableName = "Protocol", expectedCount = 6)
+      assertColumnCount(tableName = "ProtocolDrug", expectedCount = 7)
+    }
+
+    val db_v24 = helper.migrateTo(24, Migration_23_24())
+
+    db_v24.apply {
+      assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 10)
+      assertColumnCount(tableName = "PrescribedDrug", expectedCount = 12)
+      assertColumnCount(tableName = "Facility", expectedCount = 13)
+      assertColumnCount(tableName = "MedicalHistory", expectedCount = 12)
+      assertColumnCount(tableName = "Appointment", expectedCount = 12)
+      assertColumnCount(tableName = "Communication", expectedCount = 9)
+      assertColumnCount(tableName = "Patient", expectedCount = 14)
+      assertColumnCount(tableName = "PatientAddress", expectedCount = 8)
+      assertColumnCount(tableName = "PatientPhoneNumber", expectedCount = 8)
+      assertColumnCount(tableName = "Protocol", expectedCount = 7)
+      assertColumnCount(tableName = "ProtocolDrug", expectedCount = 8)
+    }
+  }
+
+  private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
+    this.query("""
+      SELECT * FROM "$tableName"
+    """).use {
+      assertWithMessage("With table [$tableName]").that(it.columnCount).isEqualTo(expectedCount)
     }
   }
 }

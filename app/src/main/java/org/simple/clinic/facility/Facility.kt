@@ -37,7 +37,9 @@ data class Facility(
 
     val updatedAt: Instant,
 
-    val syncStatus: SyncStatus
+    val syncStatus: SyncStatus,
+
+    val deletedAt: Instant?
 ) {
 
   @Dao

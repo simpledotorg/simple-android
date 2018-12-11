@@ -49,13 +49,14 @@ class PrescriptionRepository @Inject constructor(
               name = name,
               dosage = dosage,
               rxNormCode = rxNormCode,
-              isProtocolDrug = isProtocolDrug,
               isDeleted = false,
-              syncStatus = SyncStatus.PENDING,
+              isProtocolDrug = isProtocolDrug,
               patientUuid = patientUuid,
               facilityUuid = facility.uuid,
+              syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(),
-              updatedAt = Instant.now())
+              updatedAt = Instant.now(),
+              deletedAt = null)
         }
         .flatMapCompletable { save(listOf(it)) }
   }

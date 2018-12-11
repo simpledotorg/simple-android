@@ -41,7 +41,8 @@ object PatientMocker {
       dateOfBirth: LocalDate? = LocalDate.now(ZoneOffset.UTC),
       age: Age? = null,
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): Patient {
     return Patient(
         uuid = uuid,
@@ -54,6 +55,7 @@ object PatientMocker {
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        deletedAt = deletedAt,
         syncStatus = syncStatus)
   }
 
@@ -64,7 +66,8 @@ object PatientMocker {
       state: String = "state",
       country: String = "India",
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): PatientAddress {
     return PatientAddress(
         uuid = uuid,
@@ -73,7 +76,8 @@ object PatientMocker {
         state = state,
         country = country,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun bp(
@@ -85,18 +89,20 @@ object PatientMocker {
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       userUuid: UUID = UUID.randomUUID(),
-      facilityUuid: UUID = UUID.randomUUID()
+      facilityUuid: UUID = UUID.randomUUID(),
+      deletedAt: Instant? = null
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
         systolic = systolic,
         diastolic = diastolic,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
         syncStatus = syncStatus,
         userUuid = userUuid,
         facilityUuid = facilityUuid,
-        patientUuid = patientUuid)
+        patientUuid = patientUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun facility(
@@ -104,21 +110,30 @@ object PatientMocker {
       name: String = "some facility",
       streetAddress: String? = "some street",
       district: String = "district",
-      state: String = "state"
+      state: String = "state",
+      facilityType: String? = null,
+      villageOrColony: String? = null,
+      country: String = "India",
+      pinCode: String? = null,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): Facility {
     return Facility(
         uuid = uuid,
         name = name,
+        facilityType = facilityType,
+        streetAddress = streetAddress,
+        villageOrColony = villageOrColony,
         district = district,
         state = state,
-        facilityType = null,
-        streetAddress = streetAddress,
-        villageOrColony = null,
-        country = "India",
-        pinCode = null,
-        createdAt = mock(),
-        updatedAt = mock(),
-        syncStatus = mock())
+        country = country,
+        pinCode = pinCode,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        syncStatus = syncStatus,
+        deletedAt = deletedAt)
   }
 
   fun prescription(
@@ -130,7 +145,8 @@ object PatientMocker {
       patientUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -143,7 +159,8 @@ object PatientMocker {
         facilityUuid = facilityUuid,
         syncStatus = syncStatus,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun protocolDrug(
@@ -167,25 +184,28 @@ object PatientMocker {
       agreedToVisit: Boolean? = null,
       remindOn: LocalDate? = LocalDate.now(UTC).minusDays(2),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): Appointment {
     return Appointment(
         uuid = uuid,
         patientUuid = patientUuid,
-        scheduledDate = scheduledDate,
         facilityUuid = facilityUuid,
+        scheduledDate = scheduledDate,
         status = status,
         cancelReason = cancelReason,
-        syncStatus = syncStatus,
-        agreedToVisit = agreedToVisit,
         remindOn = remindOn,
+        agreedToVisit = agreedToVisit,
+        syncStatus = syncStatus,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
     )
   }
 
   fun overdueAppointment(
-      name: String = "somebody"
+      name: String = "somebody",
+      bloodPressureMeasurement: BloodPressureMeasurement = bp()
   ): OverdueAppointment {
     return OverdueAppointment(
         fullName = name,
@@ -194,16 +214,7 @@ object PatientMocker {
         age = null,
         phoneNumber = mock(),
         appointment = appointment(),
-        bloodPressure = BloodPressureMeasurement(
-            uuid = mock(),
-            systolic = 175,
-            diastolic = 77,
-            createdAt = mock(),
-            updatedAt = Instant.now(),
-            syncStatus = SyncStatus.PENDING,
-            userUuid = mock(),
-            facilityUuid = mock(),
-            patientUuid = mock()),
+        bloodPressure = bloodPressureMeasurement,
         isAtHighRisk = false
     )
   }
@@ -284,21 +295,24 @@ object PatientMocker {
       diagnosedWithHypertension: Answer = NO,
       isOnTreatmentForHypertension: Answer = YES,
       hasDiabetes: Answer = YES,
+      createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      syncStatus: SyncStatus = SyncStatus.PENDING
+      syncStatus: SyncStatus = SyncStatus.PENDING,
+      deletedAt: Instant? = null
   ): MedicalHistory {
     return MedicalHistory(
         uuid = UUID.randomUUID(),
         patientUuid = UUID.randomUUID(),
+        diagnosedWithHypertension = diagnosedWithHypertension,
+        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
-        diagnosedWithHypertension = diagnosedWithHypertension,
-        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasDiabetes = hasDiabetes,
         syncStatus = syncStatus,
-        createdAt = Instant.now(),
-        updatedAt = updatedAt)
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun phoneNumber(
@@ -308,7 +322,8 @@ object PatientMocker {
       phoneType: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ) = PatientPhoneNumber(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -316,6 +331,7 @@ object PatientMocker {
       phoneType = phoneType,
       active = active,
       createdAt = createdAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      deletedAt = deletedAt
   )
 }

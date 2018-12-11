@@ -37,7 +37,7 @@ fun nameToSearchableForm(string: String) = string.replace(spacePunctuationRegex,
     indices = [
       Index("addressUuid")
     ])
-data class Patient constructor(
+data class Patient (
     @PrimaryKey
     val uuid: UUID,
 
@@ -59,6 +59,8 @@ data class Patient constructor(
     val createdAt: Instant,
 
     val updatedAt: Instant,
+
+    val deletedAt: Instant?,
 
     val syncStatus: SyncStatus
 ) {

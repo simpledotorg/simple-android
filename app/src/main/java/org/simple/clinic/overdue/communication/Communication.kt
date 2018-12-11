@@ -22,7 +22,8 @@ data class Communication(
     val result: Result,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
-    val updatedAt: Instant
+    val updatedAt: Instant,
+    val deletedAt: Instant?
 ) {
 
   enum class Type {

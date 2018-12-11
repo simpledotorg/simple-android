@@ -44,6 +44,7 @@ data class BloodPressureMeasurementPayload(
         facilityUuid = facilityUuid,
         patientUuid = patientUuid,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = null)
   }
 }

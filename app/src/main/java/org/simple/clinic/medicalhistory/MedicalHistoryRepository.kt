@@ -23,15 +23,16 @@ class MedicalHistoryRepository @Inject constructor(
     val defaultValue = MedicalHistory(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,
+        diagnosedWithHypertension = UNKNOWN,
+        isOnTreatmentForHypertension = UNKNOWN,
         hasHadHeartAttack = UNKNOWN,
         hasHadStroke = UNKNOWN,
         hasHadKidneyDisease = UNKNOWN,
-        diagnosedWithHypertension = UNKNOWN,
-        isOnTreatmentForHypertension = UNKNOWN,
         hasDiabetes = UNKNOWN,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(clock),
-        updatedAt = Instant.now(clock))
+        updatedAt = Instant.now(clock),
+        deletedAt = null)
 
     return dao.historyForPatient(patientUuid)
         .toObservable()
@@ -55,15 +56,16 @@ class MedicalHistoryRepository @Inject constructor(
     val medicalHistory = MedicalHistory(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,
+        diagnosedWithHypertension = historyEntry.diagnosedWithHypertension,
+        isOnTreatmentForHypertension = historyEntry.isOnTreatmentForHypertension,
         hasHadHeartAttack = historyEntry.hasHadHeartAttack,
         hasHadStroke = historyEntry.hasHadStroke,
         hasHadKidneyDisease = historyEntry.hasHadKidneyDisease,
-        diagnosedWithHypertension = historyEntry.diagnosedWithHypertension,
-        isOnTreatmentForHypertension = historyEntry.isOnTreatmentForHypertension,
         hasDiabetes = historyEntry.hasDiabetes,
         syncStatus = SyncStatus.PENDING,
         createdAt = Instant.now(clock),
-        updatedAt = Instant.now(clock))
+        updatedAt = Instant.now(clock),
+        deletedAt = null)
     return save(listOf(medicalHistory))
   }
 
@@ -118,15 +120,16 @@ class MedicalHistoryRepository @Inject constructor(
       MedicalHistory(
           uuid = uuid,
           patientUuid = patientUuid,
+          diagnosedWithHypertension = diagnosedWithHypertension,
+          isOnTreatmentForHypertension = isOnTreatmentForHypertension,
           hasHadHeartAttack = hasHadHeartAttack,
           hasHadStroke = hasHadStroke,
           hasHadKidneyDisease = hasHadKidneyDisease,
-          diagnosedWithHypertension = diagnosedWithHypertension,
-          isOnTreatmentForHypertension = isOnTreatmentForHypertension,
           hasDiabetes = hasDiabetes,
           syncStatus = syncStatus,
           createdAt = createdAt,
-          updatedAt = updatedAt)
+          updatedAt = updatedAt,
+          deletedAt = null)
     }
   }
 }

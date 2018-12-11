@@ -66,7 +66,9 @@ class PrescriptionRepositoryAndroidTest {
             null,
             Instant.now(),
             Instant.now(),
-            SyncStatus.DONE
+            SyncStatus.DONE,
+            null
+
         )
     ))
 
@@ -79,7 +81,9 @@ class PrescriptionRepositoryAndroidTest {
             faker.address.state(),
             "India",
             Instant.now(),
-            Instant.now()
+            Instant.now(),
+            null
+
         )
     )
 
@@ -96,8 +100,8 @@ class PrescriptionRepositoryAndroidTest {
             PatientStatus.ACTIVE,
             Instant.now(),
             Instant.now(),
-            SyncStatus.DONE
-        ))
+            null,
+            SyncStatus.DONE))
 
     val protocolUuid = UUID.randomUUID()
     val amlodipine = ProtocolDrug("Amlodipine", rxNormCode = null, dosages = listOf("5mg", "10mg"))

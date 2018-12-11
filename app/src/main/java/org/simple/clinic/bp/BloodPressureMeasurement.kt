@@ -14,7 +14,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity(indices = [Index("patientUuid", unique = false)])
-data class BloodPressureMeasurement constructor(
+data class BloodPressureMeasurement (
     @PrimaryKey
     val uuid: UUID,
 
@@ -32,7 +32,9 @@ data class BloodPressureMeasurement constructor(
 
     val createdAt: Instant,
 
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    val deletedAt: Instant?
 ) {
 
   @Transient

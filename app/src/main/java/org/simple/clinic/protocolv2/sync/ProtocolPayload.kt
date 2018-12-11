@@ -27,7 +27,7 @@ data class ProtocolPayload(
     val followUpDays: Int,
 
     @Json(name = "protocol_drugs")
-    val protocolDrugs: List<ProtocolDrugPayload>
+    val protocolDrugs: List<ProtocolDrugPayload>?
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Protocol {
@@ -45,7 +45,7 @@ data class ProtocolPayload(
 @JsonClass(generateAdapter = true)
 data class ProtocolDrugPayload(
 
-    @Json(name = "uuid")
+    @Json(name = "id")
     val uuid: UUID,
 
     @Json(name = "created_at")
@@ -58,7 +58,7 @@ data class ProtocolDrugPayload(
     val protocolId: UUID,
 
     @Json(name = "rxnorm_code")
-    val rxNormCode: String,
+    val rxNormCode: String?,
 
     @Json(name = "dosage")
     val dosage: String,

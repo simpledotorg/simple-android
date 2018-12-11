@@ -27,7 +27,8 @@ data class MedicalHistory(
     val hasDiabetes: Answer,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
-    val updatedAt: Instant
+    val updatedAt: Instant,
+    val deletedAt: Instant?
 ) {
 
   enum class Answer {

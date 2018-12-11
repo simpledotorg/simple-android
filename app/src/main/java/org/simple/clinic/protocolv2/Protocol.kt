@@ -20,5 +20,7 @@ data class Protocol(
 
     val updatedAt: Instant,
 
-    val syncStatus: SyncStatus
+    val syncStatus: SyncStatus,
+
+    val deletedAt: Instant?
 )

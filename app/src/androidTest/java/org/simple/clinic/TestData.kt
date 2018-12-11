@@ -90,6 +90,7 @@ class TestData @Inject constructor(
       status: PatientStatus = randomOfEnum(PatientStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): Patient {
     return Patient(
@@ -103,6 +104,7 @@ class TestData @Inject constructor(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        deletedAt = deletedAt,
         syncStatus = syncStatus
     )
   }
@@ -114,7 +116,8 @@ class TestData @Inject constructor(
       phoneType: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
       active: Boolean = faker.bool.bool(),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ) = PatientPhoneNumber(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -122,7 +125,8 @@ class TestData @Inject constructor(
       phoneType = phoneType,
       active = active,
       createdAt = createdAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      deletedAt = deletedAt
   )
 
   fun patientAddress(
@@ -132,7 +136,8 @@ class TestData @Inject constructor(
       state: String = faker.address.state(),
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ) = PatientAddress(
       uuid = uuid,
       colonyOrVillage = colonyOrVilage,
@@ -140,7 +145,8 @@ class TestData @Inject constructor(
       state = state,
       country = country,
       createdAt = createdAt,
-      updatedAt = updatedAt
+      updatedAt = updatedAt,
+      deletedAt = deletedAt
   )
 
   fun patientPayload(
@@ -216,21 +222,31 @@ class TestData @Inject constructor(
       uuid: UUID,
       name: String = faker.company.name(),
       district: String = faker.address.city(),
-      state: String = faker.address.state()
+      state: String = faker.address.state(),
+      facilityType: String? = null,
+      streetAddress: String? = null,
+      villageOrColony: String? = null,
+      country: String = faker.address.country(),
+      pinCode: String? = null,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      deletedAt: Instant? = null
   ): Facility {
     return Facility(
         uuid = uuid,
         name = name,
+        facilityType = facilityType,
+        streetAddress = streetAddress,
+        villageOrColony = villageOrColony,
         district = district,
         state = state,
-        facilityType = null,
-        streetAddress = null,
-        villageOrColony = null,
-        country = faker.address.country(),
-        pinCode = null,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now(),
-        syncStatus = randomOfEnum(SyncStatus::class))
+        country = country,
+        pinCode = pinCode,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        syncStatus = syncStatus,
+        deletedAt = deletedAt)
   }
 
   fun facilityPayload(
@@ -315,7 +331,8 @@ class TestData @Inject constructor(
       facilityUuid: UUID = UUID.randomUUID(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -328,7 +345,8 @@ class TestData @Inject constructor(
         facilityUuid = facilityUuid,
         syncStatus = syncStatus,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun prescriptionPayload(
@@ -359,20 +377,32 @@ class TestData @Inject constructor(
 
   fun appointment(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
-      apiV2Enabled: Boolean
+      apiV2Enabled: Boolean,
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = qaUserFacilityUuid(),
+      scheduledDate: LocalDate = LocalDate.now(UTC).plusDays(30),
+      status: Appointment.Status = randomOfEnum(Appointment.Status::class),
+      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(apiV2Enabled),
+      remindOn: LocalDate? = null,
+      agreedToVisit: Boolean? = null,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): Appointment {
     return Appointment(
-        uuid = UUID.randomUUID(),
-        patientUuid = UUID.randomUUID(),
-        scheduledDate = LocalDate.now(UTC).plusDays(30),
-        facilityUuid = qaUserFacilityUuid(),
-        status = randomOfEnum(Appointment.Status::class),
-        cancelReason = AppointmentCancelReason.random(apiV2Enabled),
-        remindOn = null,
-        agreedToVisit = null,
+        uuid = uuid,
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        scheduledDate = scheduledDate,
+        status = status,
+        cancelReason = cancelReason,
+        remindOn = remindOn,
+        agreedToVisit = agreedToVisit,
         syncStatus = syncStatus,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun appointmentPayload(
@@ -400,17 +430,26 @@ class TestData @Inject constructor(
   }
 
   fun communication(
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      uuid: UUID = UUID.randomUUID(),
+      appointmentUuid: UUID = UUID.randomUUID(),
+      userUuid: UUID = qaUserUuid(),
+      type: Communication.Type = randomOfEnum(Communication.Type::class),
+      result: Communication.Result = randomOfEnum(Communication.Result::class),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): Communication {
     return Communication(
-        uuid = UUID.randomUUID(),
-        appointmentUuid = UUID.randomUUID(),
-        userUuid = qaUserUuid(),
-        type = randomOfEnum(Communication.Type::class),
-        result = randomOfEnum(Communication.Result::class),
+        uuid = uuid,
+        appointmentUuid = appointmentUuid,
+        userUuid = userUuid,
+        type = type,
+        result = result,
         syncStatus = syncStatus,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now())
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun communicationPayload(
@@ -443,20 +482,22 @@ class TestData @Inject constructor(
       hasDiabetes: Answer = randomOfEnum(Answer::class),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): MedicalHistory {
     return MedicalHistory(
         uuid = uuid,
         patientUuid = patientUuid,
+        diagnosedWithHypertension = diagnosedWithHypertension,
+        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
-        diagnosedWithHypertension = diagnosedWithHypertension,
-        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasDiabetes = hasDiabetes,
         syncStatus = syncStatus,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun medicalHistoryPayload(
@@ -512,18 +553,20 @@ class TestData @Inject constructor(
       diastolic: Int = faker.number.between(50, 60),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
-        patientUuid = patientUuid,
-        facilityUuid = facilityUuid,
         systolic = systolic,
         diastolic = diastolic,
         syncStatus = syncStatus,
         userUuid = userUuid,
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
     )
   }
 }

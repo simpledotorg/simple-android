@@ -53,7 +53,8 @@ data class PrescribedDrugPayload(
         facilityUuid = facilityId,
         syncStatus = syncStatus,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deletedAt = null
     )
   }
 }

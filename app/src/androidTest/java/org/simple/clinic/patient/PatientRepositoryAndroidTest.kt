@@ -291,7 +291,7 @@ class PatientRepositoryAndroidTest {
     val patientUuid = patientPayloads.first().uuid
 
     val rangeOfRecords = 1..4
-    val bloodPressurePayloads = rangeOfRecords.map { testData.bpPayload(patientUuid = patientUuid, facilytyUuid = facilityUuid) }
+    val bloodPressurePayloads = rangeOfRecords.map { testData.bpPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val prescriptionPayloads = rangeOfRecords.map { testData.prescriptionPayload(patientUuid = patientUuid, facilityUuid = facilityUuid) }
     val appointmentPayloads = rangeOfRecords.map { testData.appointmentPayload(patientUuid = patientUuid) }
 

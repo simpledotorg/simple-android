@@ -322,19 +322,23 @@ class TestData @Inject constructor(
   fun bpPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      facilytyUuid: UUID = qaUserFacilityUuid(),
+      facilityUuid: UUID = qaUserFacilityUuid(),
       systolic: Int = faker.number.between(0, 299),
-      diastolic: Int = faker.number.between(50, 60)
+      diastolic: Int = faker.number.between(50, 60),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): BloodPressureMeasurementPayload {
     return BloodPressureMeasurementPayload(
         uuid = uuid,
+        patientUuid = patientUuid,
         systolic = systolic,
         diastolic = diastolic,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now(),
+        facilityUuid = facilityUuid,
         userUuid = qaUserUuid(),
-        facilityUuid = facilytyUuid,
-        patientUuid = patientUuid)
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun prescription(

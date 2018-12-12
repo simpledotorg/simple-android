@@ -37,7 +37,8 @@ data class ProtocolPayload(
         updatedAt = updatedAt,
         name = name,
         followUpDays = followUpDays,
-        syncStatus = newStatus
+        syncStatus = newStatus,
+        deletedAt = null
     )
   }
 }
@@ -75,7 +76,8 @@ data class ProtocolDrugPayload(
         protocolUuid = protocolId,
         rxNormCode = rxNormCode,
         dosage = dosage,
-        name = name
+        name = name,
+        deletedAt = null
     )
   }
 }

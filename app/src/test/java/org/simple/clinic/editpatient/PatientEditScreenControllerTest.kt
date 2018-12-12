@@ -112,7 +112,7 @@ class PatientEditScreenControllerTest {
   ) {
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(patient.addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(patientRepository.phoneNumbers(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
+    whenever(patientRepository.phoneNumber(patient.uuid)).thenReturn(Observable.just(phoneNumber.toOptional()))
 
     uiEvents.onNext(PatientEditScreenCreated(patient.uuid))
 
@@ -203,7 +203,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
 
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
@@ -232,7 +232,7 @@ class PatientEditScreenControllerTest {
       numberValidationResult: PhoneNumberValidator.Result,
       expectedError: PatientEditValidationError?
   ) {
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
 
@@ -279,7 +279,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -305,7 +305,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -332,7 +332,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(PhoneNumberValidator.Result.VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
 
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
@@ -359,7 +359,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -392,7 +392,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -425,7 +425,7 @@ class PatientEditScreenControllerTest {
       dateOfBirth: String?,
       expectedErrors: Set<PatientEditValidationError>
   ) {
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(alreadyPresentPhoneNumber.toOptional()))
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
@@ -618,7 +618,7 @@ class PatientEditScreenControllerTest {
       inputChange: UiEvent,
       expectedErrorsToHide: Set<PatientEditValidationError>
   ) {
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.just(None))
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
     whenever(numberValidator.validate(any(), any())).thenReturn(BLANK)
@@ -669,7 +669,7 @@ class PatientEditScreenControllerTest {
       expectedSavedPatientPhoneNumber: PatientPhoneNumber?
   ) {
     whenever(patientRepository.patient(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPatient.toOptional()))
-    whenever(patientRepository.phoneNumbers(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
+    whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
     whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
@@ -1074,7 +1074,7 @@ class PatientEditScreenControllerTest {
     config = config.copy(isEditAgeAndDobEnabled = editAgeAndDateOfBirthEnabled)
 
     whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(any())).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
@@ -1140,7 +1140,7 @@ class PatientEditScreenControllerTest {
       shouldShowConfirmDiscardChangesPopup: Boolean
   ) {
     whenever(patientRepository.patient(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPatient.toOptional()))
-    whenever(patientRepository.phoneNumbers(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
+    whenever(patientRepository.phoneNumber(existingSavedPatient.uuid)).thenReturn(Observable.just(existingSavedPhoneNumber.toOptional()))
     whenever(patientRepository.address(existingSavedAddress.uuid)).thenReturn(Observable.just(existingSavedAddress.toOptional()))
 
     uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))

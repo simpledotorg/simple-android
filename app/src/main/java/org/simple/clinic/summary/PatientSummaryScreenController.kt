@@ -136,7 +136,7 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (it as Just).value }
 
     val phoneNumbers = patientUuid
-        .flatMap { patientRepository.phoneNumbers(it) }
+        .flatMap { patientRepository.phoneNumber(it) }
 
     return Observables.combineLatest(sharedPatients, addresses, phoneNumbers)
         .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populatePatientProfile(patient, address, phoneNumber) } }

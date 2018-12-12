@@ -390,7 +390,7 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun phoneNumbers(patientUuid: UUID): Observable<Optional<PatientPhoneNumber>> {
+  fun phoneNumber(patientUuid: UUID): Observable<Optional<PatientPhoneNumber>> {
     return database.phoneNumberDao()
         .phoneNumber(patientUuid)
         .toObservable()

@@ -10,7 +10,13 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.bp.sync.BloodPressureSync
+import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
+import org.simple.clinic.overdue.AppointmentConfig
+import org.simple.clinic.overdue.AppointmentSync
+import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.protocol.ProtocolConfig
 import org.simple.clinic.protocol.sync.ProtocolSync
@@ -25,19 +31,52 @@ class ModelSyncTest {
     return listOf(
         listOf<Any>(
             { syncCoordinator: SyncCoordinator -> PatientSync(syncCoordinator, mock(), mock(), mock()) },
-            setOf(PUSH, PULL)
-        ),
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator -> BloodPressureSync(syncCoordinator, mock(), mock(), mock()) },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator -> PrescriptionSync(syncCoordinator, mock(), mock(), mock()) },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator ->
+              AppointmentSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  apiV1 = mock(),
+                  apiV2 = mock(),
+                  configProvider = Single.just(AppointmentConfig(highlightHighRiskPatients = true, v2ApiEnabled = true)),
+                  lastPullToken = mock()
+              )
+            },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator ->
+              AppointmentSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  apiV1 = mock(),
+                  apiV2 = mock(),
+                  configProvider = Single.just(AppointmentConfig(highlightHighRiskPatients = true, v2ApiEnabled = false)),
+                  lastPullToken = mock()
+              )
+            },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator -> CommunicationSync(syncCoordinator, mock(), mock(), mock()) },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator -> MedicalHistorySync(syncCoordinator, mock(), mock(), mock()) },
+            setOf(PUSH, PULL)),
         listOf<Any>(
             { syncCoordinator: SyncCoordinator -> FacilitySync(syncCoordinator, mock(), mock(), mock()) },
-            setOf(PULL)
-        ),
+            setOf(PULL)),
         listOf<Any>(
             { syncCoordinator: SyncCoordinator ->
               val configProvider = Single.just(ProtocolConfig(isProtocolDrugSyncEnabled = true))
               ProtocolSync(syncCoordinator, mock(), mock(), configProvider, mock())
             },
-            setOf(PULL)
-        )
+            setOf(PULL))
     )
   }
 

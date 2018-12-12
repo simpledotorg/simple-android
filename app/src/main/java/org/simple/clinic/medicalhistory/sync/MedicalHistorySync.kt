@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
@@ -14,17 +15,17 @@ class MedicalHistorySync @Inject constructor(
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApiV2,
     @Named("last_medicalhistory_pull_token") private val lastPullToken: Preference<Optional<String>>
-) {
+): ModelSync {
 
-  fun sync(): Completable {
+  override fun sync(): Completable {
     return Completable.mergeArrayDelayError(push(), pull())
   }
 
-  fun push(): Completable {
+  override fun push(): Completable {
     return syncCoordinator.push(repository, pushNetworkCall = { api.push(toRequest(it)) })
   }
 
-  fun pull(): Completable {
+  override fun pull(): Completable {
     return syncCoordinator.pull(
         repository = repository,
         lastPullToken = lastPullToken,

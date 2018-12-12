@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
@@ -15,13 +16,13 @@ class AppointmentSync @Inject constructor(
     private val apiV2: AppointmentSyncApiV2,
     private val configProvider: Single<AppointmentConfig>,
     @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>
-) {
+): ModelSync {
 
-  fun sync(): Completable {
+  override fun sync(): Completable {
     return Completable.mergeArrayDelayError(push(), pull())
   }
 
-  fun push(): Completable {
+  override fun push(): Completable {
     return configProvider
         .flatMapCompletable { config ->
           if (config.v2ApiEnabled) {
@@ -32,7 +33,7 @@ class AppointmentSync @Inject constructor(
         }
   }
 
-  fun pull(): Completable {
+  override fun pull(): Completable {
     return configProvider
         .flatMapCompletable { config ->
           if (config.v2ApiEnabled) {

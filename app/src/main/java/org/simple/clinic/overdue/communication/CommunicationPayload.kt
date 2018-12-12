@@ -27,5 +27,8 @@ data class CommunicationPayload(
     val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
 )

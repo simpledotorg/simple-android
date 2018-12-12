@@ -481,7 +481,8 @@ class TestData @Inject constructor(
       type: Communication.Type = randomOfEnum(Communication.Type::class),
       result: Communication.Result = randomOfEnum(Communication.Result::class),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): CommunicationPayload {
     return CommunicationPayload(
         uuid = uuid,
@@ -490,7 +491,8 @@ class TestData @Inject constructor(
         type = type,
         result = result,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun medicalHistory(

@@ -43,7 +43,10 @@ data class FacilityPayload(
     val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): Facility {
@@ -61,6 +64,6 @@ data class FacilityPayload(
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
-        deletedAt = null)
+        deletedAt = deletedAt)
   }
 }

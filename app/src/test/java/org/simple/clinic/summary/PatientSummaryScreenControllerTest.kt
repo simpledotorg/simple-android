@@ -89,7 +89,7 @@ class PatientSummaryScreenControllerTest {
         .subscribe { uiChange -> uiChange(screen) }
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.never())
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.never())
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
@@ -106,7 +106,7 @@ class PatientSummaryScreenControllerTest {
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
-    whenever(patientRepository.phoneNumbers(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))

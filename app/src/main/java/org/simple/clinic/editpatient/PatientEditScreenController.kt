@@ -136,7 +136,7 @@ class PatientEditScreenController @Inject constructor(
         }
 
     val preFillPhoneNumber = savedPatient
-        .flatMap { patientRepository.phoneNumbers(it.uuid) }
+        .flatMap { patientRepository.phoneNumber(it.uuid) }
         .take(1)
         .filterAndUnwrapJust()
         .map { phoneNumber ->
@@ -237,7 +237,7 @@ class PatientEditScreenController @Inject constructor(
     val ongoingEditPatientEntryChanges = events.ofType<OngoingEditPatientEntryChanged>()
 
     val savedPhoneNumber = events.ofType<PatientEditScreenCreated>()
-        .flatMap { patientRepository.phoneNumbers(it.patientUuid) }
+        .flatMap { patientRepository.phoneNumber(it.patientUuid) }
         .take(1)
         .replay()
         .refCount()
@@ -284,7 +284,7 @@ class PatientEditScreenController @Inject constructor(
         .map { it.ongoingEditPatientEntry }
 
     val savedNumbers = patientUuidStream
-        .flatMap { patientRepository.phoneNumbers(it) }
+        .flatMap { patientRepository.phoneNumber(it) }
         .take(1)
         .replay()
         .refCount()
@@ -469,7 +469,7 @@ class PatientEditScreenController @Inject constructor(
         .refCount()
 
     val savedNumbers = patientUuidStream
-        .flatMap { patientRepository.phoneNumbers(it).take(1) }
+        .flatMap { patientRepository.phoneNumber(it).take(1) }
         .replay()
         .refCount()
 

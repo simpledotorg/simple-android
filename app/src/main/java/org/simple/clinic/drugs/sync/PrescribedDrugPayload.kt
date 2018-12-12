@@ -38,7 +38,10 @@ data class PrescribedDrugPayload(
     val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): PrescribedDrug {
@@ -54,7 +57,7 @@ data class PrescribedDrugPayload(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = null
+        deletedAt = deletedAt
     )
   }
 }

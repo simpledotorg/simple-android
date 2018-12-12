@@ -39,8 +39,8 @@ data class PatientAddress(
         state = state,
         country = country,
         createdAt = createdAt,
-        updatedAt = updatedAt
-    )
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   @Dao

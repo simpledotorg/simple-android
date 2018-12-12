@@ -164,6 +164,7 @@ class TestData @Inject constructor(
       status: PatientStatus = randomOfEnum(PatientStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
       address: PatientAddressPayload = addressPayload(),
       phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload())
   ): PatientPayload {
@@ -178,7 +179,8 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         address = address,
-        phoneNumbers = phoneNumbers
+        phoneNumbers = phoneNumbers,
+        deletedAt = deletedAt
     )
   }
 
@@ -189,7 +191,8 @@ class TestData @Inject constructor(
       state: String = faker.address.state(),
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): PatientAddressPayload {
     return PatientAddressPayload(
         uuid = uuid,
@@ -198,7 +201,8 @@ class TestData @Inject constructor(
         state = state,
         country = country,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
     )
   }
 
@@ -208,7 +212,8 @@ class TestData @Inject constructor(
       type: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): PatientPhoneNumberPayload {
     return PatientPhoneNumberPayload(
         uuid = uuid,
@@ -216,8 +221,8 @@ class TestData @Inject constructor(
         type = type,
         active = active,
         createdAt = createdAt,
-        updatedAt = updatedAt
-    )
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   /**

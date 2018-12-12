@@ -40,7 +40,8 @@ class CommunicationSync @Inject constructor(
                 type = type,
                 result = result,
                 createdAt = createdAt,
-                updatedAt = updatedAt)
+                updatedAt = updatedAt,
+                deletedAt = deletedAt)
           }
         }
         .toList()

@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
@@ -14,13 +15,13 @@ class PrescriptionSync @Inject constructor(
     private val api: PrescriptionSyncApiV1,
     private val repository: PrescriptionRepository,
     @Named("last_prescription_pull_token") private val lastPullToken: Preference<Optional<String>>
-) {
+): ModelSync {
 
-  fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
+  override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
 
-  fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)) }
+  override fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)) }
 
-  fun pull() = syncCoordinator.pull(repository, lastPullToken, api::pull)
+  override fun pull() = syncCoordinator.pull(repository, lastPullToken, api::pull)
 
   private fun toRequest(drugs: List<PrescribedDrug>): PrescriptionPushRequest {
     val payloads = drugs.map { it.toPayload() }

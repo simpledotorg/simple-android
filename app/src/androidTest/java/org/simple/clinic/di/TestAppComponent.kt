@@ -19,6 +19,7 @@ import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTes
 import org.simple.clinic.overdue.communication.CommunicationSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
+import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.summary.RelativeTimestampGeneratorAndroidTest
@@ -35,6 +36,7 @@ interface TestAppComponent : AppComponent {
   fun inject(target: FacilitySyncAndroidTest)
   fun inject(target: PrescriptionSyncAndroidTest)
   fun inject(target: BloodPressureSyncAndroidTest)
+  fun inject(target: ProtocolSyncAndroidTest)
   fun inject(target: PatientRepositoryAndroidTest)
   fun inject(target: PrescriptionRepositoryAndroidTest)
   fun inject(target: FacilityRepositoryAndroidTest)

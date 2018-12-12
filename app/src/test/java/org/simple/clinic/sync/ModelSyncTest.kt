@@ -11,6 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.patient.sync.PatientSync
+import org.simple.clinic.protocolv2.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
 
@@ -27,7 +28,12 @@ class ModelSyncTest {
         listOf<Any>(
             { syncCoordinator: SyncCoordinator -> FacilitySync(syncCoordinator, mock(), mock(), mock()) },
             setOf(PULL)
+        ),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator -> ProtocolSync(syncCoordinator, mock(), mock(), mock()) },
+            setOf(PULL)
         )
+
     )
   }
 

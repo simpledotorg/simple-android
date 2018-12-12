@@ -47,6 +47,9 @@ data class PatientPayload(
     @Json(name = "updated_at")
     val updatedAt: Instant,
 
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?,
+
     @Json(name = "address")
     val address: PatientAddressPayload,
 
@@ -68,7 +71,7 @@ data class PatientPayload(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = null,
+        deletedAt = deletedAt,
         syncStatus = newStatus)
   }
 
@@ -101,7 +104,10 @@ data class PatientAddressPayload(
     val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(): PatientAddress {
@@ -113,7 +119,7 @@ data class PatientAddressPayload(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = null)
+        deletedAt = deletedAt)
   }
 }
 
@@ -135,7 +141,10 @@ data class PatientPhoneNumberPayload(
     val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(uuidOfPatient: UUID): PatientPhoneNumber {
@@ -147,7 +156,7 @@ data class PatientPhoneNumberPayload(
         active = active,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = null
+        deletedAt = deletedAt
     )
   }
 }

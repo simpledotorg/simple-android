@@ -267,22 +267,30 @@ class TestData @Inject constructor(
       name: String = faker.company.name(),
       district: String = faker.address.city(),
       state: String = faker.address.state(),
-      protocolUuid: UUID = UUID.randomUUID()
+      protocolUuid: UUID = UUID.randomUUID(),
+      facilityType: String? = null,
+      streetAddress: String? = null,
+      villageOrColony: String? = null,
+      country: String = faker.address.country(),
+      pinCode: String? = null,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): FacilityPayload {
     return FacilityPayload(
         uuid = uuid,
         name = name,
+        facilityType = facilityType,
+        streetAddress = streetAddress,
+        villageOrColony = villageOrColony,
         district = district,
         state = state,
-        facilityType = null,
-        streetAddress = null,
-        villageOrColony = null,
         protocolUuid = protocolUuid,
-        country = faker.address.country(),
-        pinCode = null,
-        createdAt = Instant.now(),
-        updatedAt = Instant.now()
-    )
+        country = country,
+        pinCode = pinCode,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun loggedInUser(
@@ -604,7 +612,7 @@ class TestData @Inject constructor(
       followUpDays: Int = 0,
       deletedAt: Instant? = null,
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
-      ): Protocol {
+  ): Protocol {
     return Protocol(
         uuid = uuid,
         name = name,

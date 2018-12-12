@@ -433,19 +433,21 @@ class TestData @Inject constructor(
       apiV2Enabled: Boolean = false,
       cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(apiV2Enabled),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): AppointmentPayload {
     return AppointmentPayload(
         uuid = uuid,
         patientUuid = patientUuid,
-        date = date,
         facilityUuid = facilityUuid,
+        date = date,
         status = status,
         cancelReason = cancelReason,
         remindOn = null,
         agreedToVisit = null,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun communication(

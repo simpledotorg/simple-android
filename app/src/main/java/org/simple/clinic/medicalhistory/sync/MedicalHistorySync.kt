@@ -39,13 +39,14 @@ class MedicalHistorySync @Inject constructor(
                 uuid = uuid,
                 patientUuid = patientUuid,
                 diagnosedWithHypertension = diagnosedWithHypertension,
+                isOnTreatmentForHypertension = isOnTreatmentForHypertension,
                 hasHadHeartAttack = hasHadHeartAttack,
                 hasHadStroke = hasHadStroke,
                 hasHadKidneyDisease = hasHadKidneyDisease,
-                isOnTreatmentForHypertension = isOnTreatmentForHypertension,
                 hasDiabetes = hasDiabetes,
                 createdAt = createdAt,
-                updatedAt = updatedAt)
+                updatedAt = updatedAt,
+                deletedAt = deletedAt)
           }
         }
     return MedicalHistoryPushRequest(payloads)

@@ -529,19 +529,21 @@ class TestData @Inject constructor(
       isOnTreatmentForHypertension: Answer = randomOfEnum(Answer::class),
       hasDiabetes: Answer = randomOfEnum(Answer::class),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): MedicalHistoryPayload {
     return MedicalHistoryPayload(
         uuid = uuid,
         patientUuid = patientUuid,
         diagnosedWithHypertension = diagnosedWithHypertension,
+        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasHadHeartAttack = hasHadHeartAttack,
         hasHadStroke = hasHadStroke,
         hasHadKidneyDisease = hasHadKidneyDisease,
-        isOnTreatmentForHypertension = isOnTreatmentForHypertension,
         hasDiabetes = hasDiabetes,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun ongoingPatientEntry(

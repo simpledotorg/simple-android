@@ -56,7 +56,8 @@ data class PrescribedDrug(
         patientId = patientUuid,
         facilityId = facilityUuid,
         createdAt = createdAt,
-        updatedAt = updatedAt)
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   @Dao

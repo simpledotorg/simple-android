@@ -187,7 +187,7 @@ class AppointmentRepository @Inject constructor(
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          deletedAt = null)
+          deletedAt = deletedAt)
     }
   }
 }

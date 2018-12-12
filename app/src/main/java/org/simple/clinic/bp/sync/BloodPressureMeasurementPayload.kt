@@ -31,7 +31,10 @@ data class BloodPressureMeasurementPayload(
     val createdAt: Instant,
 
     @Json(name = "updated_at")
-    val updatedAt: Instant
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): BloodPressureMeasurement {
@@ -45,6 +48,6 @@ data class BloodPressureMeasurementPayload(
         patientUuid = patientUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = null)
+        deletedAt = deletedAt)
   }
 }

@@ -6,8 +6,6 @@ import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.intellij.lang.annotations.Language
-import org.simple.clinic.patient.sync.PatientPayload
-import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -115,35 +113,6 @@ data class PatientSearchResult(
       SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status
     """)
     fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
-  }
-
-  fun toPayload(): PatientPayload {
-    val payload = PatientPayload(
-        uuid = uuid,
-        fullName = fullName,
-        gender = gender,
-        dateOfBirth = dateOfBirth,
-        age = age?.value,
-        ageUpdatedAt = age?.updatedAt,
-        status = status,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        phoneNumbers = null,
-        address = address.toPayload())
-
-    if (phoneUuid != null && phoneNumber != null) {
-      return payload.copy(
-          phoneNumbers = listOf(PatientPhoneNumberPayload(
-              uuid = phoneUuid,
-              number = phoneNumber,
-              type = phoneType!!,
-              active = phoneActive!!,
-              createdAt = phoneCreatedAt!!,
-              updatedAt = phoneUpdatedAt!!
-          )))
-    }
-
-    return payload
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

@@ -57,7 +57,8 @@ class AppointmentSync @Inject constructor(
                 remindOn = remindOn,
                 agreedToVisit = agreedToVisit,
                 createdAt = createdAt,
-                updatedAt = updatedAt)
+                updatedAt = updatedAt,
+                deletedAt = deletedAt)
           }
         }
         .toList()

@@ -8,17 +8,9 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.search.PatientSearchValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-import org.simple.clinic.search.PatientSearchValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-import org.simple.clinic.search.PatientSearchValidationError.DATE_OF_BIRTH_IN_FUTURE
 import org.simple.clinic.search.PatientSearchValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.search.PatientSearchValidationError.INVALID_DATE_OF_BIRTH
 import org.simple.clinic.search.results.CreateNewPatientClicked
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -27,8 +19,7 @@ private typealias Ui = PatientSearchScreen
 private typealias UiChange = (Ui) -> Unit
 
 class PatientSearchScreenController @Inject constructor(
-    private val repository: PatientRepository,
-    private val dobValidator: DateOfBirthFormatValidator
+    private val repository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -40,7 +31,6 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observable.mergeArray(
         enableSearchButton(replayedEvents),
-        switchBetweenDateOfBirthAndAge(replayedEvents),
         showValidationErrors(replayedEvents),
         resetValidationErrors(replayedEvents),
         openSearchResults(replayedEvents),
@@ -48,20 +38,9 @@ class PatientSearchScreenController @Inject constructor(
   }
 
   private fun enableSearchButton(events: Observable<UiEvent>): Observable<UiChange> {
-    val nameChanges = events
+    return events
         .ofType<SearchQueryNameChanged>()
-        .map { it.name }
-
-    val ageChanges = events
-        .ofType<SearchQueryAgeChanged>()
-        .map { it.ageString }
-
-    val dateOfBirthChanges = events
-        .ofType<SearchQueryDateOfBirthChanged>()
-        .map { it.dateOfBirth }
-
-    return Observables.combineLatest(nameChanges, ageChanges, dateOfBirthChanges)
-        .map { (name, age, dob) -> name.isNotBlank() && (age.isNotBlank() || dob.isNotBlank()) }
+        .map { it.name.isNotBlank() }
         .map { isQueryComplete ->
           { ui: Ui ->
             if (isQueryComplete) {
@@ -73,60 +52,17 @@ class PatientSearchScreenController @Inject constructor(
         }
   }
 
-  private fun switchBetweenDateOfBirthAndAge(events: Observable<UiEvent>): Observable<UiChange> {
-    val isDateOfBirthBlanks = events
-        .ofType<SearchQueryDateOfBirthChanged>()
-        .map { it.dateOfBirth.isBlank() }
-
-    val isAgeBlanks = events
-        .ofType<SearchQueryAgeChanged>()
-        .map { it.ageString.isBlank() }
-
-    return Observables.combineLatest(isDateOfBirthBlanks, isAgeBlanks)
-        .distinctUntilChanged()
-        .map<UiChange> { (dateBlank, ageBlank) ->
-          when {
-            !dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(DATE_OF_BIRTH_VISIBLE) }
-            dateBlank && !ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(AGE_VISIBLE) }
-            dateBlank && ageBlank -> { ui: Ui -> ui.setDateOfBirthAndAgeVisibility(BOTH_VISIBLE) }
-            else -> throw AssertionError("Both date-of-birth and age cannot have user input at the same time")
-          }
-        }
-  }
-
   private fun validateQuery(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
       val nameChanges = events
           .ofType<SearchQueryNameChanged>()
           .map { it.name.trim() }
 
-      val ageChanges = events
-          .ofType<SearchQueryAgeChanged>()
-          .map { it.ageString.trim() }
-
-      val dateOfBirthChanges = events
-          .ofType<SearchQueryDateOfBirthChanged>()
-          .map { it.dateOfBirth.trim() }
-
       val validationErrors = events.ofType<SearchClicked>()
-          .withLatestFrom(nameChanges, ageChanges, dateOfBirthChanges) { _, name, age, dob -> Triple(name, age, dob) }
-          .map { (name, age, dateOfBirth) ->
+          .withLatestFrom(nameChanges)
+          .map { (_, name) ->
             val errors = mutableListOf<PatientSearchValidationError>()
 
-            if (dateOfBirth.isNullOrBlank() && age.isNullOrBlank()) {
-              errors += BOTH_DATEOFBIRTH_AND_AGE_ABSENT
-
-            } else if (dateOfBirth.isNullOrBlank().not() && age.isNullOrBlank().not()) {
-              errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
-
-            } else if (dateOfBirth.isNotBlank()) {
-              val dobValidationResult = dobValidator.validate(dateOfBirth)
-              errors += when (dobValidationResult) {
-                DateOfBirthFormatValidator.Result.INVALID_PATTERN -> listOf(INVALID_DATE_OF_BIRTH)
-                DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE -> listOf(DATE_OF_BIRTH_IN_FUTURE)
-                DateOfBirthFormatValidator.Result.VALID -> listOf()
-              }
-            }
             if (name.isBlank()) {
               errors += FULL_NAME_EMPTY
             }
@@ -145,49 +81,21 @@ class PatientSearchScreenController @Inject constructor(
           { ui: Ui ->
             when (it) {
               FULL_NAME_EMPTY -> ui.setEmptyFullNameErrorVisible(true)
-              BOTH_DATEOFBIRTH_AND_AGE_ABSENT -> ui.setEmptyDateOfBirthAndAgeErrorVisible(true)
-              INVALID_DATE_OF_BIRTH -> ui.setInvalidDateOfBirthErrorVisible(true)
-              DATE_OF_BIRTH_IN_FUTURE -> ui.setDateOfBirthIsInFutureErrorVisible(true)
-              BOTH_DATEOFBIRTH_AND_AGE_PRESENT -> throw AssertionError("Should never receive $it")
             }
           }
         }
   }
 
   private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    val nameErrorResets = events
+    return events
         .ofType<SearchQueryNameChanged>()
         .map { { ui: Ui -> ui.setEmptyFullNameErrorVisible(false) } }
-
-    val ageErrorResets = events
-        .ofType<SearchQueryAgeChanged>()
-        .map { { ui: Ui -> ui.setEmptyDateOfBirthAndAgeErrorVisible(false) } }
-
-    val dateOfBirthErrorResets = events
-        .ofType<SearchQueryDateOfBirthChanged>()
-        .map {
-          { ui: Ui ->
-            ui.setEmptyDateOfBirthAndAgeErrorVisible(false)
-            ui.setInvalidDateOfBirthErrorVisible(false)
-            ui.setDateOfBirthIsInFutureErrorVisible(false)
-          }
-        }
-
-    return Observable.merge(nameErrorResets, dateOfBirthErrorResets, ageErrorResets)
   }
 
   private fun openSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val nameChanges = events
         .ofType<SearchQueryNameChanged>()
         .map { it.name.trim() }
-
-    val ageChanges = events
-        .ofType<SearchQueryAgeChanged>()
-        .map { it.ageString.trim() }
-
-    val dateOfBirthChanges = events
-        .ofType<SearchQueryDateOfBirthChanged>()
-        .map { it.dateOfBirth.trim() }
 
     val validationErrors = events
         .ofType<SearchQueryValidated>()
@@ -199,8 +107,9 @@ class PatientSearchScreenController @Inject constructor(
 
     return Observables.combineLatest(searchClicks, validationErrors)
         .filter { (_, errors) -> errors.isEmpty() }
-        .withLatestFrom(nameChanges, ageChanges, dateOfBirthChanges) { _, name, age, dob -> Triple(name, age, dob) }
-        .map { (name, age, dateOfBirth) -> { ui: Ui -> ui.openPatientSearchResultsScreen(name, age, dateOfBirth) } }
+        .withLatestFrom(nameChanges) { _, name ->
+          { ui: Ui -> ui.openPatientSearchResultsScreen(name) }
+        }
   }
 
   private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {

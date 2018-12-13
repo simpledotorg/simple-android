@@ -25,7 +25,7 @@
   </style>
 
   <style name="Clinic.V2.DialogNeutralButton" parent="Widget.AppCompat.Button.Borderless.Colored">
-     <item name="android:textAppearance">@style/Clinic.V2.DialogNeutralButton.TextAppearance</item>
+    <item name="android:textAppearance">@style/Clinic.V2.DialogNeutralButton.TextAppearance</item>
   </style>
 
   <style name="Clinic.V2.DialogStyle.Destructive">
@@ -139,14 +139,6 @@
 
   <style name="Clinic.V2.TextAppearance.Body1Left.Grey1">
     <item name="android:textColor">@color/grey1</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric">
-    <item name="android:letterSpacing" tools:ignore="NewApi">0.06</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0">
-    <item name="android:textColor">@color/grey0</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body1Center">
@@ -471,18 +463,18 @@
   </style>
 
   <style name="Clinic.V2.AppointmentRemovalReason">
-    <item name ="android:layout_width">match_parent</item>
-    <item name ="android:layout_height">wrap_content</item>
-    <item name ="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left</item>
-    <item name ="android:textColor">@color/removeappointment_radio_button</item>
-    <item name ="android:padding">@dimen/spacing_16</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left</item>
+    <item name="android:textColor">@color/removeappointment_radio_button</item>
+    <item name="android:padding">@dimen/spacing_16</item>
   </style>
 
   <style name="Clinic.V2.AppointmentRemovalReasonSeparator">
-    <item name ="android:layout_width">match_parent</item>
-    <item name ="android:layout_height">1dp</item>
-    <item name ="android:layout_marginStart">@dimen/spacing_48</item>
-    <item name ="android:background">@color/grey3</item>
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">1dp</item>
+    <item name="android:layout_marginStart">@dimen/spacing_48</item>
+    <item name="android:background">@color/grey3</item>
   </style>
 
   <style name="Clinic.V2.FacilityNameTextView">

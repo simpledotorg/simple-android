@@ -63,7 +63,6 @@ class PatientSummaryScreenControllerTest {
   private val clock = Clock.fixed(Instant.EPOCH, UTC)
   private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
 
-
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = BehaviorSubject.create<PatientSummaryConfig>()
   private val reporter = MockAnalyticsReporter()

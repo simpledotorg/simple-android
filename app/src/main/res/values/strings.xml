@@ -51,14 +51,14 @@
   <string name="patiententry_gender_female">@string/gender_female</string>
   <string name="patiententry_gender_male">@string/gender_male</string>
   <string name="patiententry_gender_transgender">@string/gender_transgender</string>
-  <string name="patiententry_colony_or_village">Colony or village</string>
+  <string name="patiententry_colony_or_village">Colony / Village / Ward</string>
   <string name="patiententry_district">District</string>
   <string name="patiententry_state">State</string>
   <string name="patiententry_save_patient">Next</string>
 
   <string name="patiententry_error_empty_fullname">Enter patient’s full name</string>
   <string name="patiententry_error_empty_gender">Choose patient’s gender</string>
-  <string name="patiententry_error_empty_colony_or_village">Enter village or colony</string>
+  <string name="patiententry_error_empty_colony_or_village">Enter colony / village / ward</string>
   <string name="patiententry_error_empty_district">Enter patient’s home district</string>
   <string name="patiententry_error_state_empty">Enter patient’s home state</string>
   <string name="patiententry_error_both_dateofbirth_and_age_empty">Enter patient’s age</string>

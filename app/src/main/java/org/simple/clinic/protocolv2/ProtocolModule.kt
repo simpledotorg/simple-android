@@ -4,8 +4,8 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.protocolv2.sync.ProtocolSync
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -30,6 +30,9 @@ class ProtocolModule {
   fun protocolSyncApi(retrofit: Retrofit): ProtocolSyncApiV2 {
     return retrofit.create(ProtocolSyncApiV2::class.java)
   }
+
+  @Provides
+  fun provideProtocolDrugSyncEnabledConfig(): Single<ProtocolConfig> = Single.just(ProtocolConfig(false))
 
   @Provides
   @Named("last_protocol_pull_token")

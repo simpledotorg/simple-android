@@ -14,6 +14,8 @@ class PatientFuzzySearch {
   interface PatientFuzzySearchDao {
 
     fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
+
+    fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
   }
 
   class PatientFuzzySearchDaoImpl(
@@ -21,13 +23,27 @@ class PatientFuzzySearch {
       private val patientSearchDao: PatientSearchResult.RoomDao
   ) : PatientFuzzySearchDao {
 
-    override fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String) =
-        patientUuidsMatching(query).flatMap { uuidsSortedByScore ->
-          val uuids = uuidsSortedByScore.map { it.uuid }
-          patientSearchDao
-              .searchByIds(uuids, dobUpperBound, dobLowerBound, PatientStatus.ACTIVE)
-              .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
-        }!!
+    override fun searchForPatientsWithNameLikeAndAgeWithin(
+        query: String,
+        dobUpperBound: String,
+        dobLowerBound: String
+    ): Single<List<PatientSearchResult>> {
+      return patientUuidsMatching(query).flatMap { uuidsSortedByScore ->
+        val uuids = uuidsSortedByScore.map { it.uuid }
+        patientSearchDao
+            .searchByIds(uuids, dobUpperBound, dobLowerBound, PatientStatus.ACTIVE)
+            .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
+      }
+    }
+
+    override fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>> {
+      return patientUuidsMatching(query).flatMap { uuidsSortedByScore ->
+        val uuids = uuidsSortedByScore.map { it.uuid }
+        patientSearchDao
+            .searchByIds(uuids, PatientStatus.ACTIVE)
+            .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
+      }
+    }
 
     private fun patientUuidsMatching(query: String): Single<List<UuidToScore>> {
       return Single.fromCallable {

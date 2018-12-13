@@ -95,6 +95,11 @@ data class PatientSearchResult(
       """)
     fun search(name: String, dobUpperBound: String, dobLowerBound: String, status: PatientStatus): Flowable<List<PatientSearchResult>>
 
+    @Query("""$mainQuery
+      WHERE P.searchableName LIKE '%' || :name || '%' AND P.status = :status
+    """)
+    fun search(name: String, status: PatientStatus): Flowable<List<PatientSearchResult>>
+
     @Query("$mainQuery WHERE P.syncStatus == :status")
     fun withSyncStatus(status: SyncStatus): Flowable<List<PatientSearchResult>>
 
@@ -104,7 +109,12 @@ data class PatientSearchResult(
         WHERE Patient.status = :status
         AND ((Patient.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound) OR (Patient.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
     """)
-    fun nameWithDobBounds(dobUpperBound: String, dobLowerBound: String, status: PatientStatus): Flowable<List<PatientNameAndId>>
+    fun nameAndIdWithDobBounds(dobUpperBound: String, dobLowerBound: String, status: PatientStatus): Flowable<List<PatientNameAndId>>
+
+    @Query("""
+      SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status
+    """)
+    fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
   }
 
   fun toPayload(): PatientPayload {

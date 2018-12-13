@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <android.support.design.widget.TextInputLayout
+    android:id="@+id/updatephone_phone_inputlayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <android.support.design.widget.TextInputEditText
+      android:id="@+id/updatephone_phone"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:imeOptions="flagNoFullscreen"
+      android:inputType="phone"
+      android:maxLength="10" />
+  </android.support.design.widget.TextInputLayout>
+
+  <LinearLayout
+    style="?buttonBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <Button
+      android:id="@+id/updatephone_cancel"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsummary_updatephone_cancel"
+      tools:ignore="ButtonStyle" />
+
+    <Button
+      android:id="@+id/updatephone_save"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsummary_updatephone_save"
+      tools:ignore="ButtonStyle" />
+  </LinearLayout>
+</LinearLayout>

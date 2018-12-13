@@ -22,6 +22,7 @@ open class RegistrationModule {
 
   @Provides
   open fun phoneNumberValidator(): PhoneNumberValidator {
+    // In the future, we will want to return a validator depending upon the location.
     return IndianPhoneNumberValidator()
   }
 }

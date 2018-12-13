@@ -330,11 +330,7 @@ class PatientRepository @Inject constructor(
   }
 
   fun updatePhoneNumberForPatient(patientUuid: UUID, phoneNumber: PatientPhoneNumber): Completable {
-    return Single
-        .fromCallable {
-          phoneNumber.copy(updatedAt = Instant.now(clock))
-        }
-        .flatMapCompletable(this::savePhoneNumber)
+    return savePhoneNumber(phoneNumber.copy(updatedAt = Instant.now(clock)))
         .andThen(Completable.fromAction {
           database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
         })

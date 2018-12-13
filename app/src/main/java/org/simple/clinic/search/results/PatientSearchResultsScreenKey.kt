@@ -6,17 +6,7 @@ import org.simple.clinic.R
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
-data class PatientSearchResultsScreenKey(
-    val fullName: String,
-    val age: String,
-    val dateOfBirth: String
-) : FullScreenKey {
-
-  init {
-    if (age.isNotEmpty() && dateOfBirth.isNotEmpty()) {
-      throw AssertionError()
-    }
-  }
+data class PatientSearchResultsScreenKey(val fullName: String) : FullScreenKey {
 
   @IgnoredOnParcel
   override val analyticsName = "Patient Search Results"

@@ -27,9 +27,7 @@ typealias UiChange = (Ui) -> Unit
 class PatientSearchResultsController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
-    private val clock: Clock,
-    @Named("date_for_search_results") private val dateOfBirthFormat: DateTimeFormatter
+    private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -38,29 +36,20 @@ class PatientSearchResultsController @Inject constructor(
         .replay().refCount()
 
     return Observable.mergeArray(
-        showComputedAge(replayedEvents),
         populateSearchResults(replayedEvents),
         openPatientSummary(replayedEvents),
         createNewPatient(replayedEvents))
   }
 
-  private fun showComputedAge(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PatientSearchResultsScreenCreated>()
-        .map { it.key }
-        .map { (_, age, dob) -> coerceAgeFrom(age, dob) }
-        .map { { ui: Ui -> ui.showComputedAge(it.toString()) } }
-  }
-
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSearchResultsScreenCreated>()
         .map { it.key }
-        .map { (name, age, dob) -> name to coerceAgeFrom(age, dob) }
-        .flatMap { (name, computedAge) ->
+        .flatMap { (name) ->
           val facilities = userSession
               .requireLoggedInUser()
               .switchMap { facilityRepository.currentFacility(it) }
 
-          val searchResults = patientRepository.search(name, computedAge)
+          val searchResults = patientRepository.search(name)
 
           Observables.combineLatest(searchResults, facilities)
               // We can't understand why, but search is occasionally
@@ -73,16 +62,6 @@ class PatientSearchResultsController @Inject constructor(
             ui.setEmptyStateVisible(results.isEmpty())
           }
         }
-  }
-
-  private fun coerceAgeFrom(age: String, dob: String): Int {
-    return when {
-      age.isNotBlank() -> age.trim().toInt()
-      else -> {
-        val dateOfBirth = dateOfBirthFormat.parse(dob.trim(), LocalDate::from)
-        Period.between(dateOfBirth, LocalDate.now(clock)).years
-      }
-    }
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {
@@ -101,8 +80,8 @@ class PatientSearchResultsController @Inject constructor(
         .map { (_, key) ->
           OngoingNewPatientEntry(PersonalDetails(
               fullName = key.fullName,
-              dateOfBirth = key.dateOfBirth,
-              age = key.age,
+              dateOfBirth = null,
+              age = null,
               gender = null))
         }
         .flatMap {

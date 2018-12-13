@@ -16,6 +16,7 @@ class ProtocolSync @Inject constructor(
     private val syncApi: ProtocolSyncApiV2,
     @Named("last_protocol_pull_token") private val lastPullToken: Preference<Optional<String>>
 ) : ModelSync {
+
   override fun sync(): Completable = pull()
 
   override fun push(): Completable = Completable.complete()

@@ -18,14 +18,8 @@
 
   <!-- Patient search -->
   <string name="patientsearch_name">Patient’s name</string>
-  <string name="patientsearch_dateofbirth">Date of birth dd/mm/yyyy</string>
-  <string name="patientsearch_age">Age</string>
   <string name="patientsearch_search">Next</string>
-  <string name="patientsearch_dateofbirth_and_age_separator">or</string>
   <string name="patientsearch_error_empty_fullname">Enter patient’s full name</string>
-  <string name="patientsearch_error_both_dateofbirth_and_age_empty">Enter age or date of birth (guess if unsure)</string>
-  <string name="patientsearch_error_invalid_dateofbirth">Enter patient’s date of birth in DD/MM/YYYY</string>
-  <string name="patientsearch_error_dateofbirth_is_in_future">Fix patient’s date of birth</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_query_age">Age</string>

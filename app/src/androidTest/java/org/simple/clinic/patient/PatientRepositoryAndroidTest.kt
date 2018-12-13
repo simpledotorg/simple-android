@@ -190,7 +190,7 @@ class PatientRepositoryAndroidTest {
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
 
-      val search = patientRepository.search(query, assumedAge = 20).blockingFirst()
+      val search = patientRepository.search(query).blockingFirst()
 
       assertThat(search.any { it.fullName == fullName }).isTrue()
     }
@@ -204,7 +204,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .subscribe()
 
-    val combinedPatient = patientRepository.search(name = "kumar", assumedAge = 71)
+    val combinedPatient = patientRepository.search(name = "kumar")
         .blockingFirst()
         .first()
 
@@ -221,7 +221,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_patients_with_date_of_birth_are_present_and_age_filter_is_applied_then_search_should_correctly_find_them() {
+  fun when_patients_are_present_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.TRANSGENDER)
     val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
@@ -238,7 +238,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .blockingGet()
 
-    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", "01/01/1949", null, Gender.TRANSGENDER)
+    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.TRANSGENDER)
     val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
@@ -246,7 +246,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .blockingGet()
 
-    val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", "12/10/1951", null, Gender.TRANSGENDER)
+    val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.TRANSGENDER)
     val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
@@ -254,17 +254,17 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .blockingGet()
 
-    val search0 = patientRepository.search("kumar", 12).blockingFirst()
+    val search0 = patientRepository.search("Vinod").blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = patientRepository.search("kumar", 77).blockingFirst()
+    val search1 = patientRepository.search("Alok").blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search("ab", 68).blockingFirst()
+    val search2 = patientRepository.search("ab").blockingFirst()
     val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
 
     assertThat(search2).hasSize(expectedResultsInSearch2.size)
@@ -274,58 +274,6 @@ class PatientRepositoryAndroidTest {
       assertThat(searchResult.fullName).isEqualTo(expectedPatient.fullName)
       assertThat(searchResult.dateOfBirth).isEqualTo(expectedPatient.dateOfBirth)
     }
-  }
-
-  @Test
-  fun when_patients_with_age_are_present_and_age_filter_is_applied_then_search_should_correctly_find_them() {
-    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", null, "20", Gender.TRANSGENDER)
-    val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("34314159", PatientPhoneNumberType.MOBILE, active = true)
-    val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
-    patientRepository.saveOngoingEntry(ongoingPatientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
-
-    val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", null, "17", Gender.FEMALE)
-    val opa2 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn2 = OngoingNewPatientEntry.PhoneNumber("3413459", PatientPhoneNumberType.MOBILE, active = true)
-    val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
-    patientRepository.saveOngoingEntry(ope2)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
-
-    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "26", Gender.FEMALE)
-    val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn3 = OngoingNewPatientEntry.PhoneNumber("9913459", PatientPhoneNumberType.MOBILE, active = true)
-    val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
-    patientRepository.saveOngoingEntry(ope3)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
-
-    val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "19", Gender.FEMALE)
-    val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
-    val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
-    patientRepository.saveOngoingEntry(ope4)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
-        .subscribe()
-
-    val search0 = patientRepository.search("kumar", 50).blockingFirst()
-    assertThat(search0).hasSize(0)
-
-    val search1 = patientRepository.search("kumar", 28).blockingFirst()
-    val person1 = search1.first()
-    assertThat(search1).hasSize(1)
-    assertThat(person1.fullName).isEqualTo("Abhishek Kumar")
-    assertThat(person1.age!!.value).isEqualTo(26)
-    assertThat(person1.phoneNumber).isEqualTo("9913459")
-
-    val search2 = patientRepository.search("ab", 18).blockingFirst()
-    assertThat(search2).hasSize(2)
-    assertThat(search2[0].fullName).isEqualTo("Abhay Kumar")
-    assertThat(search2[0].age!!.value).isEqualTo(20)
-    assertThat(search2[1].fullName).isEqualTo("Abshot Kumar")
-    assertThat(search2[1].age!!.value).isEqualTo(19)
   }
 
   @Test
@@ -392,7 +340,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_searching_with_age_then_patients_whose_last_visited_facility_matches_with_the_current_facility_should_be_present_at_the_top() {
+  fun patients_whose_last_visited_facility_matches_with_the_current_facility_should_be_present_at_the_top_when_searching() {
     val user = userSession.requireLoggedInUser().blockingFirst()
 
     val facilities = facilityRepository.facilities().blockingFirst()
@@ -451,7 +399,7 @@ class PatientRepositoryAndroidTest {
       assertThat(actualResultIndicesOfOtherFacility).isEqualTo(expectedResultIndicesInOtherFacility)
     }
 
-    val resultsWithAgeFilter = patientRepository.search("ash", assumedAge = 20).blockingFirst()
+    val resultsWithAgeFilter = patientRepository.search("ash").blockingFirst()
     runAssertions(resultsWithAgeFilter)
   }
 
@@ -464,7 +412,7 @@ class PatientRepositoryAndroidTest {
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResult = patientRepository.search(name = "Ashok", assumedAge = 20).blockingFirst()
+    val searchResult = patientRepository.search(name = "Ashok").blockingFirst()
     val patientFirst = patientRepository.patient(patient.uuid).blockingFirst()
 
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
@@ -503,7 +451,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(patientsToSave).blockingAwait()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1000)
 
-    assertThat(patientRepository.search(name = "ame", assumedAge = 3).blockingFirst().size).isEqualTo(config.limitOfSearchResults)
+    assertThat(patientRepository.search(name = "ame").blockingFirst().size).isEqualTo(config.limitOfSearchResults)
   }
 
   @Test

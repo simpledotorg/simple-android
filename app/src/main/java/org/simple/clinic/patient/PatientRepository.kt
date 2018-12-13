@@ -49,6 +49,62 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
+  fun search(name: String): Observable<List<PatientSearchResult>> {
+    return configProvider.flatMapObservable { (isFuzzySearchV2Enabled) ->
+      if (isFuzzySearchV2Enabled) {
+        searchWithoutAgeV2(name = name)
+      } else {
+        searchWithoutAgeV1(name = name)
+      }
+    }
+  }
+
+  @Deprecated(message = "replaced by search v2")
+  private fun searchWithoutAgeV1(name: String): Observable<List<PatientSearchResult>> {
+    val searchableName = nameToSearchableForm(name)
+
+    val substringSearch = database.patientSearchDao()
+        .search(searchableName, PatientStatus.ACTIVE)
+        .toObservable()
+
+    val fuzzySearch = database.fuzzyPatientSearchDao()
+        .searchForPatientsWithNameLike(searchableName)
+        .toObservable()
+
+    return Observables.zip(substringSearch, fuzzySearch, configProvider.toObservable())
+        .map { (results, fuzzyResults, config) ->
+          // Fuzzy search has an internal limit, but the substring search also can return more than
+          // a thousand results which can fail when we sort on the current facility since it
+          // queries the blood pressure table with an IN clause which can cause an exception.
+          (fuzzyResults + results).distinctBy { it.uuid }.take(config.limitOfSearchResults)
+        }
+        .compose(sortByCurrentFacility())
+  }
+
+  private fun searchWithoutAgeV2(name: String): Observable<List<PatientSearchResult>> {
+    return database.patientSearchDao()
+        .nameAndId(PatientStatus.ACTIVE)
+        .toObservable()
+        .switchMapSingle { searchPatientByName.search(name, it) }
+        .zipWith(configProvider.toObservable())
+        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
+        .switchMapSingle { matchingUuidsSortedByScore ->
+          when {
+            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
+            else -> {
+              database.patientSearchDao()
+                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
+                  .map { results ->
+                    val resultsByUuid = results.associateBy { it.uuid }
+                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
+                  }
+            }
+          }
+        }
+        .compose(sortByCurrentFacility())
+  }
+
+  @Deprecated("search with age/DOB has been removed")
   fun search(name: String, assumedAge: Int): Observable<List<PatientSearchResult>> {
     val ageBounds = ageFuzzer.bounded(assumedAge)
     val dateOfBirthLowerBound = ageBounds.upper.toString()
@@ -87,7 +143,7 @@ class PatientRepository @Inject constructor(
 
   private fun searchV2(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
     return database.patientSearchDao()
-        .nameWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
+        .nameAndIdWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
         .toObservable()
         .switchMapSingle { searchPatientByName.search(name, it) }
         .zipWith(configProvider.toObservable())

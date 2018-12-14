@@ -53,24 +53,7 @@ class PrescriptionRepositoryAndroidTest {
   @Test
   fun prescriptions_for_a_patient_should_exclude_soft_deleted_prescriptions() {
     val facilityUUID = testData.qaUserFacilityUuid()
-    database.facilityDao().save(listOf(
-        Facility(
-            facilityUUID,
-            faker.company.name(),
-            null,
-            null,
-            null,
-            faker.address.city(),
-            faker.address.state(),
-            "India",
-            null,
-            Instant.now(),
-            Instant.now(),
-            SyncStatus.DONE,
-            null
-
-        )
-    ))
+    database.facilityDao().save(listOf(testData.facility(uuid = facilityUUID, syncStatus = SyncStatus.DONE)))
 
     val addressUuid = UUID.randomUUID()
     database.addressDao().save(
@@ -83,7 +66,6 @@ class PrescriptionRepositoryAndroidTest {
             Instant.now(),
             Instant.now(),
             null
-
         )
     )
 

@@ -31,6 +31,8 @@ import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
+import org.simple.clinic.protocolv2.Protocol
+import org.simple.clinic.protocolv2.ProtocolDrug
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -230,6 +232,7 @@ class TestData @Inject constructor(
       villageOrColony: String? = null,
       country: String = faker.address.country(),
       pinCode: String? = null,
+      protocolUuid: UUID? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
@@ -245,6 +248,7 @@ class TestData @Inject constructor(
         state = state,
         country = country,
         pinCode = pinCode,
+        protocolUuid = protocolUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
@@ -255,7 +259,8 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       name: String = faker.company.name(),
       district: String = faker.address.city(),
-      state: String = faker.address.state()
+      state: String = faker.address.state(),
+      protocolUuid: UUID = UUID.randomUUID()
   ): FacilityPayload {
     return FacilityPayload(
         uuid = uuid,
@@ -265,6 +270,7 @@ class TestData @Inject constructor(
         facilityType = null,
         streetAddress = null,
         villageOrColony = null,
+        protocolUuid = protocolUuid,
         country = faker.address.country(),
         pinCode = null,
         createdAt = Instant.now(),
@@ -505,7 +511,7 @@ class TestData @Inject constructor(
   fun medicalHistoryPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      diagnosedWithHypertension:Answer = randomOfEnum(Answer::class),
+      diagnosedWithHypertension: Answer = randomOfEnum(Answer::class),
       hasHadHeartAttack: Answer = randomOfEnum(Answer::class),
       hasHadStroke: Answer = randomOfEnum(Answer::class),
       hasHadKidneyDisease: Answer = randomOfEnum(Answer::class),
@@ -566,6 +572,48 @@ class TestData @Inject constructor(
         userUuid = userUuid,
         facilityUuid = facilityUuid,
         patientUuid = patientUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
+
+  fun protocol(
+      uuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      name: String = "Protocol-Punjab",
+      followUpDays: Int = 0,
+      deletedAt: Instant? = null,
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      ): Protocol {
+    return Protocol(
+        uuid = uuid,
+        name = name,
+        followUpDays = followUpDays,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt,
+        syncStatus = syncStatus
+    )
+  }
+
+  fun protocolDrug(
+      uuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      protocolUuid: UUID,
+      rxNormCode: String = "rx-NormCode-1",
+      dosage: String = "20mg",
+      name: String = "Amlodipine",
+      deletedAt: Instant? = null
+  ): ProtocolDrug {
+    return ProtocolDrug(
+        uuid = uuid,
+        rxNormCode = rxNormCode,
+        dosage = dosage,
+        name = name,
+        protocolUuid = protocolUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt

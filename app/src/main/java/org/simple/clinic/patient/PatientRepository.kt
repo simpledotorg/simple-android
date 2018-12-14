@@ -12,7 +12,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.sync.SynceableRepository
@@ -41,7 +40,6 @@ class PatientRepository @Inject constructor(
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
-    private val ageFuzzer: AgeFuzzer,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
     private val searchPatientByName: SearchPatientByName,
     private val configProvider: Single<PatientConfig>
@@ -89,66 +87,6 @@ class PatientRepository @Inject constructor(
         .switchMapSingle { searchPatientByName.search(name, it) }
 
     return Observables.combineLatest(patientUuidsMatchingName, configProvider.toObservable())
-        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
-        .switchMapSingle { matchingUuidsSortedByScore ->
-          when {
-            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
-            else -> {
-              database.patientSearchDao()
-                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
-                  .map { results ->
-                    val resultsByUuid = results.associateBy { it.uuid }
-                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
-                  }
-            }
-          }
-        }
-        .compose(sortByCurrentFacility())
-  }
-
-  @Deprecated("search with age/DOB has been removed")
-  fun search(name: String, assumedAge: Int): Observable<List<PatientSearchResult>> {
-    val ageBounds = ageFuzzer.bounded(assumedAge)
-    val dateOfBirthLowerBound = ageBounds.upper.toString()
-    val dateOfBirthUpperBound = ageBounds.lower.toString()
-
-    return configProvider.flatMapObservable { (isFuzzySearchV2Enabled) ->
-      if (isFuzzySearchV2Enabled) {
-        searchV2(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
-      } else {
-        searchV1(name = name, dateOfBirthUpperBound = dateOfBirthUpperBound, dateOfBirthLowerBound = dateOfBirthLowerBound)
-      }
-    }
-  }
-
-  @Deprecated(message = "replaced by search v2")
-  private fun searchV1(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
-    val searchableName = nameToSearchableForm(name)
-
-    val substringSearch = database.patientSearchDao()
-        .search(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
-        .toObservable()
-
-    val fuzzySearch = database.fuzzyPatientSearchDao()
-        .searchForPatientsWithNameLikeAndAgeWithin(searchableName, dateOfBirthUpperBound, dateOfBirthLowerBound)
-        .toObservable()
-
-    return Observables.zip(substringSearch, fuzzySearch, configProvider.toObservable())
-        .map { (results, fuzzyResults, config) ->
-          // Fuzzy search has an internal limit, but the substring search also can return more than
-          // a thousand results which can fail when we sort on the current facility since it
-          // queries the blood pressure table with an IN clause which can cause an exception.
-          (fuzzyResults + results).distinctBy { it.uuid }.take(config.limitOfSearchResults)
-        }
-        .compose(sortByCurrentFacility())
-  }
-
-  private fun searchV2(name: String, dateOfBirthUpperBound: String, dateOfBirthLowerBound: String): Observable<List<PatientSearchResult>> {
-    return database.patientSearchDao()
-        .nameAndIdWithDobBounds(dateOfBirthUpperBound, dateOfBirthLowerBound, PatientStatus.ACTIVE)
-        .toObservable()
-        .switchMapSingle { searchPatientByName.search(name, it) }
-        .zipWith(configProvider.toObservable())
         .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
         .switchMapSingle { matchingUuidsSortedByScore ->
           when {

@@ -19,7 +19,7 @@ open class PatientModule {
   @Provides
   open fun provideFilterPatientByName(): SearchPatientByName = WeightedLevenshteinSearch(
       minimumSearchTermLength = 3,
-      maximumAllowedEditDistance = 350F,
+      maximumAllowedEditDistance = 1000F,
 
       // Values are taken from what sqlite spellfix uses internally.
       characterSubstitutionCost = 150F,

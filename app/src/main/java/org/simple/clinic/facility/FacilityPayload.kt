@@ -36,6 +36,9 @@ data class FacilityPayload(
     @Json(name = "pin")
     val pinCode: String?,
 
+    @Json(name = "protocol_id")
+    val protocolUuid: UUID?,
+
     @Json(name = "created_at")
     val createdAt: Instant,
 
@@ -54,6 +57,7 @@ data class FacilityPayload(
         state = state,
         country = country,
         pinCode = pinCode,
+        protocolUuid = protocolUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,

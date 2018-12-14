@@ -42,6 +42,7 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
 import org.threeten.bp.Clock
+import java.util.Locale
 
 @Module(includes = [
   QrModule::class,
@@ -113,4 +114,8 @@ open class AppModule(
   @Provides
   @AppScope
   open fun clock(): Clock = Clock.systemUTC()
+
+  @Provides
+  @AppScope
+  fun currentLocale(): Locale = Locale.ENGLISH
 }

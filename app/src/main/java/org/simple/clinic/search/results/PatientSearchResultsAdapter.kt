@@ -1,5 +1,6 @@
 package org.simple.clinic.search.results
 
+import android.content.res.Resources
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -11,19 +12,18 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.Period
+import org.threeten.bp.Clock
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
-import java.util.Locale
 import javax.inject.Inject
-
-private val DATE_OF_BIRTH_FORMATTER = DateTimeFormatter.ofPattern("d-MMM-yyyy", Locale.ENGLISH)
+import javax.inject.Named
 
 class PatientSearchResultsAdapter @Inject constructor(
-    private val phoneObfuscator: PhoneNumberObfuscator
+    private val phoneObfuscator: PhoneNumberObfuscator,
+    @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter,
+    private val clock: Clock
 ) : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   val itemClicks: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
@@ -46,7 +46,7 @@ class PatientSearchResultsAdapter @Inject constructor(
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     holder.searchResult = patients[position]
-    holder.render(phoneObfuscator, currentFacility)
+    holder.render(phoneObfuscator, currentFacility, dateOfBirthFormatter, clock)
   }
 
   override fun getItemCount(): Int {
@@ -62,7 +62,6 @@ class PatientSearchResultsAdapter @Inject constructor(
     private val phoneNumberTextView by bindView<TextView>(R.id.patientsearchresult_item_phone)
     private val lastBpDateAndFacilityTextView by bindView<TextView>(R.id.patientsearchresults_item_last_bp)
     private val lastBpDateFrame by bindView<ViewGroup>(R.id.patientsearchresults_item_last_bp_container)
-    private val ageTextView by bindView<TextView>(R.id.patientsearch_item_age)
 
     lateinit var searchResult: PatientSearchResult
 
@@ -72,41 +71,25 @@ class PatientSearchResultsAdapter @Inject constructor(
       }
     }
 
-    fun render(phoneObfuscator: PhoneNumberObfuscator, currentFacility: Facility) {
-      genderImageView.setImageResource(searchResult.gender.displayIconRes)
-
+    fun render(
+        phoneObfuscator: PhoneNumberObfuscator,
+        currentFacility: Facility,
+        dateOfBirthFormat: DateTimeFormatter,
+        clock: Clock
+    ) {
       val resources = itemView.resources
-      titleTextView.text = resources.getString(
-          R.string.patientsearchresults_item_name_with_gender,
-          searchResult.fullName,
-          resources.getString(searchResult.gender.displayLetterRes))
+      renderPatientNameAgeAndGender(resources, clock)
+      renderPatientAddress(resources)
+      renderPatientDateOfBirth(dateOfBirthFormat)
+      renderPatientPhoneNumber(phoneObfuscator)
+      renderLastRecordedBloodPressure(dateOfBirthFormat, currentFacility, resources)
+    }
 
-      val address = searchResult.address
-      if (address.colonyOrVillage.isNullOrEmpty()) {
-        addressTextView.text = searchResult.address.district
-      } else {
-        addressTextView.text = resources.getString(
-            R.string.patientsearchresults_item_address_with_colony_and_district,
-            searchResult.address.colonyOrVillage,
-            searchResult.address.district)
-      }
-
-      val dateOfBirth = searchResult.dateOfBirth
-      if (dateOfBirth == null) {
-        dateOfBirthTextView.visibility = View.GONE
-      } else {
-        dateOfBirthTextView.visibility = View.VISIBLE
-        dateOfBirthTextView.text = DATE_OF_BIRTH_FORMATTER.format(dateOfBirth)
-      }
-
-      val phoneNumber = searchResult.phoneNumber
-      if (phoneNumber.isNullOrBlank()) {
-        phoneNumberTextView.visibility = View.GONE
-      } else {
-        phoneNumberTextView.visibility = View.VISIBLE
-        phoneNumberTextView.text = phoneObfuscator.obfuscate(phoneNumber!!)
-      }
-
+    private fun renderLastRecordedBloodPressure(
+        dateOfBirthFormat: DateTimeFormatter,
+        currentFacility: Facility,
+        resources: Resources
+    ) {
       val lastBp = searchResult.lastBp
       if (lastBp == null) {
         lastBpDateFrame.visibility = View.GONE
@@ -114,7 +97,7 @@ class PatientSearchResultsAdapter @Inject constructor(
         lastBpDateFrame.visibility = View.VISIBLE
 
         val lastBpDate = lastBp.takenOn.atZone(UTC).toLocalDate()
-        val formattedLastBpDate = DATE_OF_BIRTH_FORMATTER.format(lastBpDate)
+        val formattedLastBpDate = dateOfBirthFormat.format(lastBpDate)
 
         val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacility.uuid
         if (isCurrentFacility) {
@@ -126,21 +109,58 @@ class PatientSearchResultsAdapter @Inject constructor(
               lastBp.takenAtFacilityName)
         }
       }
+    }
 
-      val age = searchResult.age
-      if (age == null) {
-        val years = Period.between(searchResult.dateOfBirth, LocalDate.now()).years
-        ageTextView.text = years.toString()
-
+    private fun renderPatientPhoneNumber(phoneObfuscator: PhoneNumberObfuscator) {
+      val phoneNumber = searchResult.phoneNumber
+      if (phoneNumber.isNullOrBlank()) {
+        phoneNumberTextView.visibility = View.GONE
       } else {
-        val ageUpdatedAt = LocalDateTime.ofInstant(age.updatedAt, UTC)
-        val updatedAtLocalDate = LocalDate.of(ageUpdatedAt.year, ageUpdatedAt.month, ageUpdatedAt.dayOfMonth)
-        val yearsSinceThen = Period.between(updatedAtLocalDate, LocalDate.now()).years
-
-        val oldAge = age.value
-        val currentAge = oldAge + yearsSinceThen
-        ageTextView.text = currentAge.toString()
+        phoneNumberTextView.visibility = View.VISIBLE
+        phoneNumberTextView.text = phoneObfuscator.obfuscate(phoneNumber!!)
       }
+    }
+
+    private fun renderPatientDateOfBirth(dateOfBirthFormat: DateTimeFormatter) {
+      val dateOfBirth = searchResult.dateOfBirth
+      if (dateOfBirth == null) {
+        dateOfBirthTextView.visibility = View.GONE
+      } else {
+        dateOfBirthTextView.visibility = View.VISIBLE
+        dateOfBirthTextView.text = dateOfBirthFormat.format(dateOfBirth)
+      }
+    }
+
+    private fun renderPatientAddress(resources: Resources) {
+      val address = searchResult.address
+      if (address.colonyOrVillage.isNullOrEmpty()) {
+        addressTextView.text = searchResult.address.district
+      } else {
+        addressTextView.text = resources.getString(
+            R.string.patientsearchresults_item_address_with_colony_and_district,
+            searchResult.address.colonyOrVillage,
+            searchResult.address.district)
+      }
+    }
+
+    private fun renderPatientNameAgeAndGender(resources: Resources, clock: Clock) {
+      genderImageView.setImageResource(searchResult.gender.displayIconRes)
+
+      val age = when (searchResult.age) {
+        null -> {
+          estimateCurrentAge(searchResult.dateOfBirth!!, clock)
+        }
+        else -> {
+          val (recordedAge, ageRecordedAtTimestamp, _) = searchResult.age!!
+          estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, clock)
+        }
+      }
+
+      titleTextView.text = resources.getString(
+          R.string.patientsearchresults_item_name_with_gender_and_age,
+          searchResult.fullName,
+          resources.getString(searchResult.gender.displayLetterRes),
+          age)
     }
   }
 }

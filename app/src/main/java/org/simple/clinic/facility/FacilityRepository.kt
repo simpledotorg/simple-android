@@ -49,6 +49,9 @@ class FacilityRepository @Inject constructor(
     return Completable.fromAction { userFacilityMappingDao.changeCurrentFacility(user.uuid, facilityUuid) }
   }
 
+  @Deprecated(
+      message = "Use currentFacility(User) instead",
+      replaceWith = ReplaceWith("userSession.requireLoggedInUser().switchMap { currentFacility(it) }"))
   fun currentFacility(userSession: UserSession): Observable<Facility> {
     return userSession.requireLoggedInUser()
         .switchMap { currentFacility(it) }

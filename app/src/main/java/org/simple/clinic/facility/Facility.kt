@@ -33,6 +33,10 @@ data class Facility(
 
     val pinCode: String?,
 
+    //This field is nullable because we will not have protocol UUID until the facility sync happens
+    //To make the app work for existing users, we should keep this field nullable.
+    val protocolUuid: UUID? = null,
+
     val createdAt: Instant,
 
     val updatedAt: Instant,

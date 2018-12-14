@@ -25,16 +25,13 @@ import org.simple.clinic.storage.Migration_20_21
 import org.simple.clinic.storage.Migration_21_22
 import org.simple.clinic.storage.Migration_22_23
 import org.simple.clinic.storage.Migration_23_24
+import org.simple.clinic.storage.Migration_24_25
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
 import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.inTransaction
 import java.util.UUID
-
-private fun Cursor.string(column: String): String = getString(getColumnIndex(column))
-private fun Cursor.boolean(column: String): Boolean = getInt(getColumnIndex(column)) == 1
-private fun Cursor.integer(columnName: String): Int = getInt(getColumnIndex(columnName))
 
 @Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
@@ -634,7 +631,7 @@ class MigrationAndroidTest {
   }
 
   @Test
-  fun migration_22_to_23(){
+  fun migration_22_to_23() {
     val db_22 = helper.createDatabase(version = 22)
     val protocolUuid = UUID.randomUUID()
 
@@ -710,6 +707,40 @@ class MigrationAndroidTest {
       assertColumnCount(tableName = "ProtocolDrug", expectedCount = 8)
     }
   }
+
+  @Test
+  fun migration_24_to_25() {
+    val db_v24 = helper.createDatabase(version = 24)
+    db_v24.assertColumnCount(tableName = "Facility", expectedCount = 13)
+
+    db_v24.execSQL("""
+      INSERT INTO "Facility" VALUES (
+        'facility-uuid',
+        'facility-name',
+        'Facility type',
+        'Street address',
+        'Village or colony',
+        'District',
+        'State',
+        'Country',
+        'Pin code',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'PENDING',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_v25 = helper.migrateTo(25, Migration_24_25())
+    db_v25.query("""SELECT * FROM "Facility"""").use {
+      it.moveToNext()
+      assertThat(it.string("protocolUuid")).isNull()
+      assertThat(it.columnCount).isEqualTo(14)
+    }
+  }
+
+  private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
+  private fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
+  private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
 
   private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
     this.query("""

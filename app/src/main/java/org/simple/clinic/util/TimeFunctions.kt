@@ -13,3 +13,7 @@ fun estimateCurrentAge(recordedAge: Int, ageRecordedAtTimestamp: Instant, clock:
   val yearsPassedSinceAgeRecorded = Period.between(ageRecordedAtDate, today).years
   return yearsPassedSinceAgeRecorded + recordedAge
 }
+
+fun estimateCurrentAge(recordedDateOfBirth: LocalDate, clock: Clock): Int {
+  return Period.between(recordedDateOfBirth, LocalDate.now(clock)).years
+}

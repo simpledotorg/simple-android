@@ -29,8 +29,7 @@
   <string name="patientsearchresults_register_patient">Register as a new patient</string>
   <string name="patientsearchresults_register_patient_for_empty_state">Register patient</string>
   <string name="patientsearchresults_item_last_bp">Last BP:</string>
-
-  <string name="patientsearchresults_item_name_with_gender">%1$s, %2$s</string>
+  <string name="patientsearchresults_item_name_with_gender_and_age">%1$s, %2$s, %3$d</string>
   <string name="patientsearchresults_item_address_with_colony_and_district">%1$s, %2$s</string>
   <string name="patientsearchresults_item_last_bp_date_with_facility">%1$s, %2$s</string>
 

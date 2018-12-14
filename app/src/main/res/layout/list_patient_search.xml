@@ -22,8 +22,8 @@
       android:id="@+id/patientsearchresult_item_gender"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:src="@drawable/ic_patient_female"
-      tools:ignore="ContentDescription" />
+      tools:ignore="ContentDescription"
+      tools:src="@drawable/ic_patient_female" />
 
     <LinearLayout
       android:layout_width="0dp"
@@ -32,7 +32,6 @@
       android:layout_weight="1"
       android:orientation="vertical">
 
-      <!-- TODO: use textappearance instead -->
       <TextView
         android:id="@+id/patientsearchresult_item_title"
         android:layout_width="match_parent"
@@ -40,13 +39,14 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
-        tools:text="Anshu Acharya, M" />
+        tools:text="Anshu Acharya, M, 43" />
 
       <TextView
         android:id="@+id/patientsearchresult_item_address"
         style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="51dp"
         android:layout_marginTop="6dp"
         android:textColor="@color/gray_950"
         tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda" />
@@ -100,18 +100,5 @@
           tools:text="12-Jul-2018, PHC Bagta" />
       </LinearLayout>
     </LinearLayout>
-
-    <TextView
-      android:id="@+id/patientsearch_item_age"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:fontFamily="sans-serif-medium"
-      android:letterSpacing="0.05"
-      android:lineSpacingExtra="4sp"
-      android:textColor="@color/grey0"
-      android:textSize="@dimen/textsize_16"
-      tools:ignore="UnusedAttribute"
-      tools:text="42" />
   </LinearLayout>
 </android.support.v7.widget.CardView>

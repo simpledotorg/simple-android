@@ -15,22 +15,18 @@ import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.fuzzy.AgeFuzzer
-import org.simple.clinic.patient.fuzzy.BoundedAge
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
@@ -38,7 +34,6 @@ import java.util.UUID
 class PatientRepositoryTest {
 
   private lateinit var repository: PatientRepository
-  private lateinit var ageFuzzer: AgeFuzzer
   private lateinit var searchPatientByName: SearchPatientByName
   private lateinit var database: AppDatabase
   private lateinit var patientSearchResultDao: PatientSearchResult.RoomDao
@@ -68,9 +63,6 @@ class PatientRepositoryTest {
     userSession = mock()
     facilityRepository = mock()
     numberValidator = mock()
-
-    ageFuzzer = mock()
-    whenever(ageFuzzer.bounded(any())).thenReturn(BoundedAge(LocalDate.now(clock), LocalDate.now(clock)))
     searchPatientByName = mock()
 
     repository = PatientRepository(
@@ -80,7 +72,6 @@ class PatientRepositoryTest {
         userSession,
         numberValidator,
         clock,
-        ageFuzzer,
         dateOfBirthFormat,
         searchPatientByName,
         Single.fromCallable { config })
@@ -148,20 +139,6 @@ class PatientRepositoryTest {
     repository.search("Name   Surname").blockingFirst()
 
     verify(patientSearchResultDao).search(eq("NameSurname"), any())
-  }
-
-  @Test
-  @Parameters(value = ["5", "10", "13", "45"])
-  fun `when searching for patients with age bound, use fuzzy age always`(age: Int) {
-    whenever(patientSearchResultDao.search(any(), any(), any(), any())).thenReturn(Flowable.just(emptyList()))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLikeAndAgeWithin(any(), any(), any())).thenReturn(Single.just(emptyList()))
-    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-
-    repository.search("Name   Surname", age).blockingFirst()
-
-    verify(ageFuzzer).bounded(age)
   }
 
   @Test

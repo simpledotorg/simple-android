@@ -26,6 +26,7 @@ data class ProtocolPayload(
     @Json(name = "follow_up_days")
     val followUpDays: Int,
 
+    // TODO: Backend is supposed to make this non-null.
     @Json(name = "protocol_drugs")
     val protocolDrugs: List<ProtocolDrugPayload>?
 ) {
@@ -56,7 +57,7 @@ data class ProtocolDrugPayload(
     val updatedAt: Instant,
 
     @Json(name = "protocol_id")
-    val protocolId: UUID,
+    val protocolUuid: UUID,
 
     @Json(name = "rxnorm_code")
     val rxNormCode: String?,
@@ -73,7 +74,7 @@ data class ProtocolDrugPayload(
         uuid = uuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        protocolUuid = protocolId,
+        protocolUuid = protocolUuid,
         rxNormCode = rxNormCode,
         dosage = dosage,
         name = name,

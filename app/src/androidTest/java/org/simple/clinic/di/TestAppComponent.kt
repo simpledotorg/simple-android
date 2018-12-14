@@ -19,6 +19,7 @@ import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTes
 import org.simple.clinic.overdue.communication.CommunicationSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
+import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
@@ -55,4 +56,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: BruteForceProtectionAndroidTest)
   fun inject(target: DaoWithUpsertAndroidTest)
   fun inject(target: PatientEditScreenUiTest)
+  fun inject(target: ProtocolRepositoryAndroidTest)
 }

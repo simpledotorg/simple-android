@@ -54,5 +54,8 @@ data class ProtocolDrug(
 
     @Query("SELECT COUNT(uuid) FROM ProtocolDrug")
     fun count(): Flowable<Int>
+
+    @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid")
+    fun drugsForProtocolId(protocolUuid: UUID): Flowable<List<ProtocolDrug>>
   }
 }

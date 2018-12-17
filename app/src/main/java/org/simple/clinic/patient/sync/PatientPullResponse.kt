@@ -10,6 +10,6 @@ data class PatientPullResponse(
     @Json(name = "patients")
     override val payloads: List<PatientPayload>,
 
-    @Json(name = "processed_since")
+    @Json(name = "process_token")
     override val processedSinceTimestamp: String
 ) : DataPullResponse<PatientPayload>

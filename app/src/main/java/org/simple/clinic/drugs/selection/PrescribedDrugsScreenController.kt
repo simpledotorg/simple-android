@@ -10,7 +10,10 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.ProtocolDrugSelectionListItem.DosageOption
-import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.protocolv2.ProtocolDrugAndDosages
+import org.simple.clinic.protocolv2.ProtocolRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -20,6 +23,8 @@ typealias DrugName = String
 typealias DrugDosage = String
 
 class PrescribedDrugsScreenController @Inject constructor(
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository,
     private val protocolRepository: ProtocolRepository,
     private val prescriptionRepository: PrescriptionRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -45,15 +50,16 @@ class PrescribedDrugsScreenController @Inject constructor(
     // Flat-mapping with patientUuid is not required, but is helpful in
     // tests to block execution until an event is emitted. In this case,
     // PrescribedDrugsScreenCreated is that event.
-    val protocolDrugs = patientUuid
-        .flatMap { protocolRepository.currentProtocol() }
-        .map { it.drugs }
+    val protocolDrugsStream = patientUuid
+        .flatMap { userSession.requireLoggedInUser() }
+        .switchMap { facilityRepository.currentFacility(it) }
+        .switchMap { protocolRepository.drugsForProtocolOrDefault(it.protocolUuid) }
 
-    val prescribedDrugs = patientUuid
+    val prescribedDrugsStream = patientUuid
         .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
 
     return Observables
-        .combineLatest(protocolDrugs, prescribedDrugs)
+        .combineLatest(protocolDrugsStream, prescribedDrugsStream)
         .map { (protocolDrugs, prescribedDrugs) ->
           val protocolPrescribedDrugsMap = HashMap<Pair<DrugName, DrugDosage>, PrescribedDrug>(prescribedDrugs.size)
           prescribedDrugs
@@ -62,22 +68,23 @@ class PrescribedDrugsScreenController @Inject constructor(
 
           // Select protocol drugs if prescriptions exist for them.
           val protocolDrugSelectionItems = protocolDrugs
-              .mapIndexed { index, drug ->
-                val dosage1 = drug.dosages[0]
-                val dosage2 = drug.dosages[1]
-                val isDosage1Selected = protocolPrescribedDrugsMap.contains(drug.name to dosage1)
-                val isDosage2Selected = protocolPrescribedDrugsMap.contains(drug.name to dosage2)
+              .mapIndexed { index: Int, drugAndDosages: ProtocolDrugAndDosages ->
+                val drug1 = drugAndDosages.drugs[0]
+                val drug2 = drugAndDosages.drugs[1]
+
+                val isDosage1Prescribed = protocolPrescribedDrugsMap.contains(drug1.name to drug1.dosage)
+                val isDosage2Prescribed = protocolPrescribedDrugsMap.contains(drug2.name to drug2.dosage)
 
                 ProtocolDrugSelectionListItem(
                     id = index,
-                    drug = drug,
+                    drugName = drugAndDosages.drugName,
                     option1 = when {
-                      isDosage1Selected -> DosageOption.Selected(dosage = dosage1, prescription = protocolPrescribedDrugsMap[drug.name to dosage1]!!)
-                      else -> DosageOption.Unselected(dosage = dosage1)
+                      isDosage1Prescribed -> DosageOption.Selected(drug1, prescription = protocolPrescribedDrugsMap[drug1.name to drug1.dosage]!!)
+                      else -> DosageOption.Unselected(drug1)
                     },
                     option2 = when {
-                      isDosage2Selected -> DosageOption.Selected(dosage = dosage2, prescription = protocolPrescribedDrugsMap[drug.name to dosage2]!!)
-                      else -> DosageOption.Unselected(dosage = dosage2)
+                      isDosage2Prescribed -> DosageOption.Selected(drug2, prescription = protocolPrescribedDrugsMap[drug2.name to drug2.dosage]!!)
+                      else -> DosageOption.Unselected(drug2)
                     })
               }
 
@@ -101,7 +108,7 @@ class PrescribedDrugsScreenController @Inject constructor(
         .withLatestFrom(patientUuids)
         .flatMap { (selectedEvent, patientUuid) ->
           prescriptionRepository
-              .savePrescription(patientUuid, selectedEvent.drug, selectedEvent.dosage)
+              .savePrescription(patientUuid, selectedEvent.drug)
               .andThen(Observable.never<UiChange>())
         }
   }

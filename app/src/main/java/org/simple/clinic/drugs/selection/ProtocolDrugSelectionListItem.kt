@@ -9,7 +9,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.protocolv2.ProtocolDrug
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setCompoundDrawableStart
@@ -17,7 +17,7 @@ import org.simple.clinic.widgets.setPadding
 
 data class ProtocolDrugSelectionListItem(
     val id: Int,
-    val drug: ProtocolDrug,
+    val drugName: String,
     val option1: DosageOption,
     val option2: DosageOption
 ) : GroupieItemWithUiEvents<ProtocolDrugSelectionListItem.DrugViewHolder>(adapterId = id.toLong()) {
@@ -30,13 +30,14 @@ data class ProtocolDrugSelectionListItem(
   private val dosage1CheckedChangeListener: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
     when {
       isChecked -> {
-        uiEvents.onNext(ProtocolDrugDosageSelected(drug, option1.dosage))
+        uiEvents.onNext(ProtocolDrugDosageSelected(option1.drug))
         if (option2 is DosageOption.Selected) {
-          uiEvents.onNext(ProtocolDrugDosageUnselected(drug, option2.prescription))
+          uiEvents.onNext(ProtocolDrugDosageUnselected(option2.drug, option2.prescription))
         }
       }
       else -> {
-        uiEvents.onNext(ProtocolDrugDosageUnselected(drug, (option1 as DosageOption.Selected).prescription))
+        val selectedOption1 = (option1 as DosageOption.Selected)
+        uiEvents.onNext(ProtocolDrugDosageUnselected(selectedOption1.drug, selectedOption1.prescription))
       }
     }
   }
@@ -44,13 +45,14 @@ data class ProtocolDrugSelectionListItem(
   private val dosage2CheckedChangeListener: (CompoundButton, Boolean) -> Unit = { _, isChecked ->
     when {
       isChecked -> {
-        uiEvents.onNext(ProtocolDrugDosageSelected(drug, option2.dosage))
+        uiEvents.onNext(ProtocolDrugDosageSelected(option2.drug))
         if (option1 is DosageOption.Selected) {
-          uiEvents.onNext(ProtocolDrugDosageUnselected(drug, option1.prescription))
+          uiEvents.onNext(ProtocolDrugDosageUnselected(option1.drug, option1.prescription))
         }
       }
       else -> {
-        uiEvents.onNext(ProtocolDrugDosageUnselected(drug, (option2 as DosageOption.Selected).prescription))
+        val selectedOption2 = (option2 as DosageOption.Selected)
+        uiEvents.onNext(ProtocolDrugDosageUnselected(selectedOption2.drug, selectedOption2.prescription))
       }
     }
   }
@@ -62,9 +64,9 @@ data class ProtocolDrugSelectionListItem(
   }
 
   override fun bind(holder: DrugViewHolder, position: Int) {
-    holder.nameTextView.text = drug.name
-    holder.dosage1Button.text = option1.dosage
-    holder.dosage2Button.text = option2.dosage
+    holder.nameTextView.text = drugName
+    holder.dosage1Button.text = option1.drug.dosage
+    holder.dosage2Button.text = option2.drug.dosage
 
     holder.dosage1Button.setOnCheckedChangeListener(null)
     holder.dosage2Button.setOnCheckedChangeListener(null)
@@ -97,14 +99,15 @@ data class ProtocolDrugSelectionListItem(
   }
 
   sealed class DosageOption {
-    abstract val dosage: String
+
+    abstract val drug: ProtocolDrug
 
     /**
      * [prescription] is required for soft-deleting it later.
      */
-    data class Selected(override val dosage: String, val prescription: PrescribedDrug) : DosageOption()
+    data class Selected(override val drug: ProtocolDrug, val prescription: PrescribedDrug) : DosageOption()
 
-    data class Unselected(override val dosage: String) : DosageOption()
+    data class Unselected(override val drug: ProtocolDrug) : DosageOption()
   }
 
   class DrugViewHolder(rootView: View) : ViewHolder(rootView) {

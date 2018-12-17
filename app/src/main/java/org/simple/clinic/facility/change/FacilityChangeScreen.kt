@@ -71,7 +71,10 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     // For some reasons, the keyboard stays
     // visible when coming from AppLockScreen.
-    hideKeyboard()
+    searchEditText.requestFocus()
+    post {
+      hideKeyboard()
+    }
 
     hideKeyboardOnListScroll()
   }

@@ -6,6 +6,7 @@ import java.util.UUID
 import javax.inject.Inject
 
 @AppScope
+@Deprecated(message = "Use v2")
 class ProtocolRepository @Inject constructor() {
 
   fun currentProtocol(): Observable<Protocol> {

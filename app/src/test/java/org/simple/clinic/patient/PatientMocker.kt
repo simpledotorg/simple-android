@@ -11,7 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
-import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.protocolv2.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
@@ -115,6 +115,7 @@ object PatientMocker {
       villageOrColony: String? = null,
       country: String = "India",
       pinCode: String? = null,
+      protocolUuid: UUID? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -130,6 +131,7 @@ object PatientMocker {
         state = state,
         country = country,
         pinCode = pinCode,
+        protocolUuid = protocolUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
@@ -164,13 +166,23 @@ object PatientMocker {
   }
 
   fun protocolDrug(
+      uuid: UUID = UUID.randomUUID(),
       name: String = "drug name",
-      dosages: List<String> = listOf("5mg", "10mg")
+      dosage: String = "5mg",
+      protocolUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant = Instant.now()
   ): ProtocolDrug {
     return ProtocolDrug(
+        uuid = uuid,
         name = name,
         rxNormCode = "rxnormcode-1",
-        dosages = dosages)
+        dosage = dosage,
+        protocolUuid = protocolUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt)
   }
 
   fun appointment(

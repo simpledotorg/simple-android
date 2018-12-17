@@ -10,7 +10,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.protocolv2.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
@@ -25,12 +25,8 @@ class PrescriptionRepository @Inject constructor(
     private val userSession: UserSession
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
-  fun savePrescription(patientUuid: UUID, drug: ProtocolDrug, dosage: String): Completable {
-    if (drug.dosages.contains(dosage).not()) {
-      throw AssertionError("$drug does not contain this selected dosage")
-    }
-
-    return savePrescription(patientUuid, drug.name, dosage, drug.rxNormCode, isProtocolDrug = true)
+  fun savePrescription(patientUuid: UUID, drug: ProtocolDrug): Completable {
+    return savePrescription(patientUuid, drug.name, drug.dosage, drug.rxNormCode, isProtocolDrug = true)
   }
 
   fun savePrescription(patientUuid: UUID, name: String, dosage: String?, rxNormCode: String?, isProtocolDrug: Boolean): Completable {

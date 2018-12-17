@@ -602,7 +602,7 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      protocolUuid: UUID,
+      protocolUuid: UUID = UUID.randomUUID(),
       rxNormCode: String = "rx-NormCode-1",
       dosage: String = "20mg",
       name: String = "Amlodipine",

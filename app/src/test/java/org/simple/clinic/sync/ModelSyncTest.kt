@@ -5,12 +5,14 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.patient.sync.PatientSync
+import org.simple.clinic.protocolv2.ProtocolConfig
 import org.simple.clinic.protocolv2.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
@@ -30,10 +32,12 @@ class ModelSyncTest {
             setOf(PULL)
         ),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> ProtocolSync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              val configProvider = Single.just(ProtocolConfig(isProtocolDrugSyncEnabled = true))
+              ProtocolSync(syncCoordinator, mock(), mock(), configProvider, mock())
+            },
             setOf(PULL)
         )
-
     )
   }
 

@@ -15,8 +15,8 @@ import javax.inject.Named
 open class PatientSyncModule {
 
   @Provides
-  fun api(retrofit: Retrofit): PatientSyncApiV1 {
-    return retrofit.create(PatientSyncApiV1::class.java)
+  fun api(retrofit: Retrofit): PatientSyncApiV2 {
+    return retrofit.create(PatientSyncApiV2::class.java)
   }
 
   @Provides

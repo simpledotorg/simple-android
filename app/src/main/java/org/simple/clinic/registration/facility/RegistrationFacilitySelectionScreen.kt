@@ -88,11 +88,10 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     facilityRecyclerView.layoutManager = LinearLayoutManager(context)
     facilityRecyclerView.adapter = recyclerViewAdapter
 
-    // Doing it without adding a post{} block doesn't work.
     searchEditText.requestFocus()
-    post {
-      hideKeyboard()
-    }
+
+    // Hiding the keyboard without adding a post{} block doesn't seem to work.
+    post { hideKeyboard() }
     hideKeyboardOnListScroll()
   }
 

@@ -18,23 +18,9 @@
       tools:ignore="ContentDescription" />
 
     <ImageView
-      android:id="@+id/registrationconfirmpin_applogo"
       style="@style/Clinic.V2.LogoWithType.Large"
-      android:layout_alignTop="@+id/registrationconfirmpin_back"
       android:layout_centerHorizontal="true"
       tools:ignore="ContentDescription" />
-
-    <TextView
-      android:id="@+id/registrationconfirmpin_user_fullname"
-      style="@style/Clinic.RegistrationUserFullName"
-      android:layout_below="@+id/registrationconfirmpin_applogo"
-      tools:text="(User name)" />
-
-    <TextView
-      android:id="@+id/registrationconfirmpin_user_phone"
-      style="@style/Clinic.RegistrationUserPhone"
-      android:layout_below="@+id/registrationconfirmpin_user_fullname"
-      tools:text="(User phone)" />
   </RelativeLayout>
 
   <View

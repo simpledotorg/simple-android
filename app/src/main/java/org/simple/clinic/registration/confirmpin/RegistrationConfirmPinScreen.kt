@@ -22,7 +22,6 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.widgets.showKeyboard
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,8 +35,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   lateinit var controller: RegistrationConfirmPinScreenController
 
   private val backButton by bindView<ImageButton>(R.id.registrationconfirmpin_back)
-  private val fullNameTextView by bindView<TextView>(R.id.registrationconfirmpin_user_fullname)
-  private val phoneNumberTextView by bindView<TextView>(R.id.registrationconfirmpin_user_phone)
   private val confirmPinEditText by bindView<EditText>(R.id.registrationconfirmpin_pin)
   private val pinHintTextView by bindView<TextView>(R.id.registrationconfirmpin_pin_hint)
   private val errorStateViewGroup by bindView<LinearLayout>(R.id.registrationconfirmpin_error)
@@ -93,11 +90,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
 
   fun openFacilitySelectionScreen() {
     screenRouter.push(RegistrationLocationPermissionScreen.KEY)
-  }
-
-  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
-    fullNameTextView.text = ongoingEntry.fullName
-    phoneNumberTextView.text = ongoingEntry.phoneNumber
   }
 
   fun goBackToPinScreen() {

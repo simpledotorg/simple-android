@@ -27,8 +27,7 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .compose(autoSubmitPin())
         .compose(validatePin())
 
-    return Observable.mergeArray(
-        preFillExistingDetails(transformedEvents),
+    return Observable.merge(
         showValidationError(transformedEvents),
         resetPins(transformedEvents),
         saveConfirmPinAndProceed(transformedEvents))
@@ -43,15 +42,6 @@ class RegistrationConfirmPinScreenController @Inject constructor(
           .map { RegistrationConfirmPinDoneClicked() }
       upstream.mergeWith(autoSubmits)
     }
-  }
-
-  private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationConfirmPinScreenCreated>()
-        .flatMapSingle {
-          userSession.ongoingRegistrationEntry()
-              .map { entry -> { ui: Ui -> ui.preFillUserDetails(entry) } }
-        }
   }
 
   private fun validatePin(): ObservableTransformer<UiEvent, UiEvent> {

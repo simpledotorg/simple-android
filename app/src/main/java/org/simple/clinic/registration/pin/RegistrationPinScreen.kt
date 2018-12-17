@@ -19,7 +19,6 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.user.OngoingRegistrationEntry
 import javax.inject.Inject
 
 class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -31,8 +30,6 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   lateinit var controller: RegistrationPinScreenController
 
   private val backButton by bindView<ImageButton>(R.id.registrationpin_back)
-  private val fullNameTextView by bindView<TextView>(R.id.registrationpin_user_fullname)
-  private val phoneNumberTextView by bindView<TextView>(R.id.registrationpin_user_phone)
   private val pinEditText by bindView<EditText>(R.id.registrationpin_pin)
   private val pinHintTextView by bindView<TextView>(R.id.registrationpin_pin_hint)
   private val errorTextView by bindView<TextView>(R.id.registrationpin_error)
@@ -86,11 +83,6 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
 
   fun openRegistrationConfirmPinScreen() {
     screenRouter.push(RegistrationConfirmPinScreen.KEY)
-  }
-
-  fun preFillUserDetails(ongoingEntry: OngoingRegistrationEntry) {
-    fullNameTextView.text = ongoingEntry.fullName
-    phoneNumberTextView.text = ongoingEntry.phoneNumber
   }
 
   companion object {

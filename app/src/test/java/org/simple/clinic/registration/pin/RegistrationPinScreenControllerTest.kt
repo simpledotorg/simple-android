@@ -59,19 +59,6 @@ class RegistrationPinScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created then user's existing details should be pre-filled`() {
-    val ongoingEntry = OngoingRegistrationEntry(
-        fullName = "Ashok Kumar",
-        phoneNumber = "1234567890",
-        pin = "1234")
-    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
-
-    uiEvents.onNext(RegistrationPinScreenCreated())
-
-    verify(screen).preFillUserDetails(ongoingEntry)
-  }
-
-  @Test
   fun `proceed button clicks should only be accepted if the input PIN is of 4 digits`() {
     val validPin = "1234"
     val invalidPin = "1"

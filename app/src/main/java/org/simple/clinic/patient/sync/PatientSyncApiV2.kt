@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface PatientSyncApiV1 {
+interface PatientSyncApiV2 {
 
   companion object {
-    const val version = "v1"
+    const val version = "v2"
   }
 
   @POST("$version/patients/sync")
@@ -21,6 +21,6 @@ interface PatientSyncApiV1 {
   @GET("$version/patients/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullTimestamp: String? = null
+      @Query("process_token") lastPullTimestamp: String? = null
   ): Single<PatientPullResponse>
 }

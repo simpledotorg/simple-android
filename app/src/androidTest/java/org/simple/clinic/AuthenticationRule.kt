@@ -6,7 +6,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.bp.sync.BloodPressurePushRequest
-import org.simple.clinic.bp.sync.BloodPressureSyncApiV1
+import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilitySyncApiV1
 import org.simple.clinic.overdue.AppointmentPushRequest
@@ -49,7 +49,7 @@ class AuthenticationRule(
   lateinit var appointmentSyncApiV2: AppointmentSyncApiV2
 
   @Inject
-  lateinit var bloodPressureSyncApi: BloodPressureSyncApiV1
+  lateinit var bloodPressureSyncApi: BloodPressureSyncApiV2
 
   @Inject
   lateinit var facilityDao: Facility.RoomDao

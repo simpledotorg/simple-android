@@ -7,10 +7,10 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface BloodPressureSyncApiV1 {
+interface BloodPressureSyncApiV2 {
 
   companion object {
-    const val version = "v1"
+    const val version = "v2"
   }
 
   @POST("$version/blood_pressures/sync")
@@ -21,6 +21,6 @@ interface BloodPressureSyncApiV1 {
   @GET("$version/blood_pressures/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullToken: String? = null
+      @Query("process_token") lastPullToken: String? = null
   ): Single<BloodPressurePullResponse>
 }

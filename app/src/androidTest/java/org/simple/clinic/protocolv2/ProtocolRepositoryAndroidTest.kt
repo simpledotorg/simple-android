@@ -65,8 +65,8 @@ class ProtocolRepositoryAndroidTest {
   fun when_feature_is_disabled_then_default_drugs_should_be_returned() {
     val config = configProvider.blockingGet()
     if (config.isProtocolDrugSyncEnabled.not()) {
-      val randomProtocolId = UUID.randomUUID()
-      val drugs = protocolRepository.drugsForProtocol(randomProtocolId).blockingFirst()
+      val randomProtocolUuid = UUID.randomUUID()
+      val drugs = protocolRepository.drugsForProtocolOrDefault(randomProtocolUuid).blockingFirst()
       assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
     }
   }
@@ -75,8 +75,14 @@ class ProtocolRepositoryAndroidTest {
   fun when_protocols_are_not_present_in_database_then_default_drugs_should_be_returned() {
     database.clearAllTables()
 
-    val randomProtocolId = UUID.randomUUID()
-    val drugs = protocolRepository.drugsForProtocol(randomProtocolId).blockingFirst()
+    val randomProtocolUuid = UUID.randomUUID()
+    val drugs = protocolRepository.drugsForProtocolOrDefault(randomProtocolUuid).blockingFirst()
+    assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
+  }
+
+  @Test
+  fun when_protocol_ID_is_null_then_default_drugs_should_be_returned() {
+    val drugs = protocolRepository.drugsForProtocolOrDefault(null).blockingFirst()
     assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
   }
 
@@ -90,7 +96,7 @@ class ProtocolRepositoryAndroidTest {
       val drug1 = testData.protocolDrug(protocolUuid = protocol1.uuid)
       database.protocolDrugDao().save(listOf(drug1))
 
-      val drugs = protocolRepository.drugsForProtocol(protocol1.uuid).blockingFirst()
+      val drugs = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
       assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
     }
   }
@@ -107,7 +113,7 @@ class ProtocolRepositoryAndroidTest {
     val drug2 = testData.protocolDrug(protocolUuid = protocol1.uuid)
     database.protocolDrugDao().save(listOf(drug1, drug2))
 
-    val drugsForProtocol2 = protocolRepository.drugsForProtocol(protocol2.uuid).blockingFirst()
+    val drugsForProtocol2 = protocolRepository.drugsForProtocolOrDefault(protocol2.uuid).blockingFirst()
     assertThat(drugsForProtocol2).isEqualTo(protocolRepository.defaultProtocolDrugs())
   }
 
@@ -118,9 +124,9 @@ class ProtocolRepositoryAndroidTest {
     if (config.isProtocolDrugSyncEnabled) {
       database.clearAllTables()
 
-      val currentProtocolId = UUID.randomUUID()
+      val currentProtocolUuid = UUID.randomUUID()
 
-      val protocol1 = testData.protocol(uuid = currentProtocolId)
+      val protocol1 = testData.protocol(uuid = currentProtocolUuid)
       val protocol2 = testData.protocol()
       database.protocolDao().save(listOf(protocol1, protocol2))
 
@@ -129,7 +135,7 @@ class ProtocolRepositoryAndroidTest {
       val drug3 = testData.protocolDrug(name = "Amlodipine", protocolUuid = protocol2.uuid)
       database.protocolDrugDao().save(listOf(drug1, drug2, drug3))
 
-      val drugsForCurrentProtocol = protocolRepository.drugsForProtocol(currentProtocolId).blockingFirst()
+      val drugsForCurrentProtocol = protocolRepository.drugsForProtocolOrDefault(currentProtocolUuid).blockingFirst()
       assertThat(drugsForCurrentProtocol).containsAllOf(
           ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
           ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2)))
@@ -156,7 +162,7 @@ class ProtocolRepositoryAndroidTest {
       val telmisartan80mg = testData.protocolDrug(name = "Telmisartan", dosage = "80mg", protocolUuid = protocol2.uuid)
       database.protocolDrugDao().save(listOf(amlodipine5mg, amlodipine10mg, telmisartan40mg, telmisartan80mg))
 
-      val drugsForProtocol1 = protocolRepository.drugsForProtocol(protocol1.uuid).blockingFirst()
+      val drugsForProtocol1 = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
       assertThat(drugsForProtocol1).containsAllOf(
           ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(amlodipine5mg, amlodipine10mg)),
           ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(telmisartan40mg)))

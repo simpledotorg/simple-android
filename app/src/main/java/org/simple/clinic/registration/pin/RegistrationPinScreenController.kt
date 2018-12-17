@@ -25,7 +25,6 @@ class RegistrationPinScreenController @Inject constructor(
         .mergeWith(autoSubmitPin(replayedEvents))
 
     return Observable.merge(
-        preFillExistingDetails(transformedEvents),
         showValidationError(transformedEvents),
         hideValidationError(transformedEvents),
         updateOngoingEntryAndProceed(transformedEvents))
@@ -36,15 +35,6 @@ class RegistrationPinScreenController @Inject constructor(
         .ofType<RegistrationPinTextChanged>()
         .filter { isPinValid(it.pin) }
         .map { RegistrationPinDoneClicked() }
-  }
-
-  private fun preFillExistingDetails(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<RegistrationPinScreenCreated>()
-        .flatMapSingle {
-          userSession.ongoingRegistrationEntry()
-              .map { entry -> { ui: Ui -> ui.preFillUserDetails(entry) } }
-        }
   }
 
   private fun isPinValid(pin: String) = pin.length == 4

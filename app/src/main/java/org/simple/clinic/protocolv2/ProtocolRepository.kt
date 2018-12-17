@@ -72,9 +72,13 @@ class ProtocolRepository @Inject constructor(
     )
   }
 
-  fun drugsForProtocol(protocolId: UUID): Observable<List<ProtocolDrugAndDosages>> {
+  fun drugsForProtocolOrDefault(protocolUuid: UUID?): Observable<List<ProtocolDrugAndDosages>> {
+    if (protocolUuid == null) {
+      return Observable.just(defaultProtocolDrugs())
+    }
+
     val protocolDrugsWithConfig = protocolDrugsDao
-        .drugsForProtocolId(protocolId)
+        .drugsForProtocolUuid(protocolUuid)
         .toObservable()
         .withLatestFrom(config.toObservable())
         .replay()

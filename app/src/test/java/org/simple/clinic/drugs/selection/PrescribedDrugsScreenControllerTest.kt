@@ -16,7 +16,7 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-class PrescribedDrugsEntryControllerTest {
+class PrescribedDrugsScreenControllerTest {
 
   private val screen = mock<PrescribedDrugsScreen>()
   private val protocolRepository = mock<ProtocolRepository>()
@@ -24,11 +24,11 @@ class PrescribedDrugsEntryControllerTest {
   private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var controller: PrescribedDrugsEntryController
+  private lateinit var controller: PrescribedDrugsScreenController
 
   @Before
   fun setUp() {
-    controller = PrescribedDrugsEntryController(protocolRepository, prescriptionRepository)
+    controller = PrescribedDrugsScreenController(protocolRepository, prescriptionRepository)
 
     uiEvents
         .compose(controller)

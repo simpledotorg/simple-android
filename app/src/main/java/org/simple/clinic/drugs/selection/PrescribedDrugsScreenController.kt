@@ -19,7 +19,7 @@ typealias UiChange = (Ui) -> Unit
 typealias DrugName = String
 typealias DrugDosage = String
 
-class PrescribedDrugsEntryController @Inject constructor(
+class PrescribedDrugsScreenController @Inject constructor(
     private val protocolRepository: ProtocolRepository,
     private val prescriptionRepository: PrescriptionRepository
 ) : ObservableTransformer<UiEvent, UiChange> {

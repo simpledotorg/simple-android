@@ -4,9 +4,11 @@ import io.reactivex.exceptions.CompositeException
 import okhttp3.internal.http2.ConnectionShutdownException
 import okhttp3.internal.http2.StreamResetException
 import java.io.IOException
+import java.net.ConnectException
 import java.net.SocketException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
+import javax.net.ssl.SSLHandshakeException
 import kotlin.reflect.KClass
 
 private val KNOWN_NETWORK_ERRORS: Set<KClass<out IOException>> = setOf(
@@ -14,7 +16,9 @@ private val KNOWN_NETWORK_ERRORS: Set<KClass<out IOException>> = setOf(
     SocketTimeoutException::class,
     UnknownHostException::class,
     StreamResetException::class,
-    ConnectionShutdownException::class)
+    ConnectionShutdownException::class,
+    SSLHandshakeException::class,
+    ConnectException::class)
 
 object ErrorResolver {
 

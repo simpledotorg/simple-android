@@ -10,7 +10,7 @@ data class BloodPressurePullResponse(
     @Json(name = "blood_pressures")
     override val payloads: List<BloodPressureMeasurementPayload>,
 
-    @Json(name = "processed_since")
+    @Json(name = "process_token")
     override val processedSinceTimestamp: String
 
 ) : DataPullResponse<BloodPressureMeasurementPayload>

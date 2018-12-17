@@ -12,7 +12,7 @@ import javax.inject.Named
 
 class BloodPressureSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
-    private val api: BloodPressureSyncApiV1,
+    private val api: BloodPressureSyncApiV2,
     private val repository: BloodPressureRepository,
     @Named("last_bp_pull_token") private val lastPullToken: Preference<Optional<String>>
 ): ModelSync {

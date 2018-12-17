@@ -15,13 +15,13 @@ import javax.inject.Named
 open class PatientSyncModule {
 
   @Provides
-  fun api(retrofit: Retrofit): PatientSyncApiV1 {
-    return retrofit.create(PatientSyncApiV1::class.java)
+  fun api(retrofit: Retrofit): PatientSyncApiV2 {
+    return retrofit.create(PatientSyncApiV2::class.java)
   }
 
   @Provides
   @Named("last_patient_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_patient_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_patient_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

@@ -13,7 +13,7 @@ import org.simple.clinic.overdue.AppointmentPushRequest
 import org.simple.clinic.overdue.AppointmentSyncApiV2
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.PatientPushRequest
-import org.simple.clinic.patient.sync.PatientSyncApiV1
+import org.simple.clinic.patient.sync.PatientSyncApiV2
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -43,7 +43,7 @@ class AuthenticationRule(
   lateinit var facilityApi: FacilitySyncApiV1
 
   @Inject
-  lateinit var patientSyncApi: PatientSyncApiV1
+  lateinit var patientSyncApi: PatientSyncApiV2
 
   @Inject
   lateinit var appointmentSyncApiV2: AppointmentSyncApiV2

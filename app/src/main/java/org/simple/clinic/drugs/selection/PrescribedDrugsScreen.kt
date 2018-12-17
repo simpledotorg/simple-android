@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.AttributeSet
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
@@ -39,7 +38,7 @@ class PrescribedDrugsScreen(context: Context, attrs: AttributeSet) : LinearLayou
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PrescribedDrugsEntryController
+  lateinit var controller: PrescribedDrugsScreenController
 
   @Inject
   lateinit var activity: TheActivity

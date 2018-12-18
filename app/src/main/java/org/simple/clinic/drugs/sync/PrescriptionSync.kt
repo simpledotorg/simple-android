@@ -12,7 +12,7 @@ import javax.inject.Named
 
 class PrescriptionSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
-    private val api: PrescriptionSyncApiV1,
+    private val api: PrescriptionSyncApiV2,
     private val repository: PrescriptionRepository,
     @Named("last_prescription_pull_token") private val lastPullToken: Preference<Optional<String>>
 ): ModelSync {

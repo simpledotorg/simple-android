@@ -5,7 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.drugs.sync.PrescriptionSyncApiV1
+import org.simple.clinic.drugs.sync.PrescriptionSyncApiV2
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -22,8 +22,8 @@ class PrescriptionModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): PrescriptionSyncApiV1 {
-    return retrofit.create(PrescriptionSyncApiV1::class.java)
+  fun syncApi(retrofit: Retrofit): PrescriptionSyncApiV2 {
+    return retrofit.create(PrescriptionSyncApiV2::class.java)
   }
 
   @Provides

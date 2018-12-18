@@ -1,3 +1,3 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 data class ProtocolAndProtocolDrugs(val protocol: Protocol, val drugs: List<ProtocolDrug>)

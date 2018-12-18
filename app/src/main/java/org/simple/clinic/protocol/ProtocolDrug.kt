@@ -1,4 +1,4 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Entity

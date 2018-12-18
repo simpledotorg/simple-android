@@ -31,8 +31,8 @@ import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
-import org.simple.clinic.protocolv2.Protocol
-import org.simple.clinic.protocolv2.ProtocolDrug
+import org.simple.clinic.protocol.Protocol
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession

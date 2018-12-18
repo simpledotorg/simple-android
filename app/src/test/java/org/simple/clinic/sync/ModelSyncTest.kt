@@ -12,8 +12,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.patient.sync.PatientSync
-import org.simple.clinic.protocolv2.ProtocolConfig
-import org.simple.clinic.protocolv2.sync.ProtocolSync
+import org.simple.clinic.protocol.ProtocolConfig
+import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
 

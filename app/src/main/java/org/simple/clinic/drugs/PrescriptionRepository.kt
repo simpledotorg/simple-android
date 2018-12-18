@@ -10,7 +10,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.protocolv2.ProtocolDrug
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant

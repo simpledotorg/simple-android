@@ -11,7 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
-import org.simple.clinic.protocolv2.ProtocolDrug
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus

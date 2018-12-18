@@ -606,7 +606,8 @@ class TestData @Inject constructor(
       rxNormCode: String = "rx-NormCode-1",
       dosage: String = "20mg",
       name: String = "Amlodipine",
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      order: Int = 0
   ): ProtocolDrug {
     return ProtocolDrug(
         uuid = uuid,
@@ -616,7 +617,8 @@ class TestData @Inject constructor(
         protocolUuid = protocolUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        order = order
     )
   }
 }

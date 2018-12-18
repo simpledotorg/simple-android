@@ -124,4 +124,18 @@ class RegistrationConfirmPinScreenControllerTest {
     inOrder.verify(userSession).saveOngoingRegistrationEntry(ongoingEntryWithoutPins)
     inOrder.verify(screen).goBackToPinScreen()
   }
+
+  @Test
+  fun `when PIN validation fails then the PIN should be cleared`() {
+    val originalPin = "1234"
+    val invalidConfirmationPin = "5678"
+
+    val ongoingEntry = OngoingRegistrationEntry(pin = originalPin)
+    whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RegistrationConfirmPinTextChanged(invalidConfirmationPin))
+
+    verify(screen).clearPin()
+  }
 }

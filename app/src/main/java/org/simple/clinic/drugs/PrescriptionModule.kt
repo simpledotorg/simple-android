@@ -5,7 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.drugs.sync.PrescriptionSyncApiV1
+import org.simple.clinic.drugs.sync.PrescriptionSyncApiV2
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -22,13 +22,13 @@ class PrescriptionModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): PrescriptionSyncApiV1 {
-    return retrofit.create(PrescriptionSyncApiV1::class.java)
+  fun syncApi(retrofit: Retrofit): PrescriptionSyncApiV2 {
+    return retrofit.create(PrescriptionSyncApiV2::class.java)
   }
 
   @Provides
   @Named("last_prescription_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_prescription_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_prescription_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

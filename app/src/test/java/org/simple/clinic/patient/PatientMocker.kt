@@ -172,7 +172,8 @@ object PatientMocker {
       protocolUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant = Instant.now()
+      deletedAt: Instant = Instant.now(),
+      order: Int = 0
   ): ProtocolDrug {
     return ProtocolDrug(
         uuid = uuid,
@@ -182,7 +183,8 @@ object PatientMocker {
         protocolUuid = protocolUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        order = order)
   }
 
   fun appointment(

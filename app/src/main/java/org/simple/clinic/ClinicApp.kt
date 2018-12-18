@@ -8,6 +8,7 @@ import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.di.AppComponent
+import org.simple.clinic.protocol.SyncProtocolsOnLogin
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -19,6 +20,9 @@ abstract class ClinicApp : Application() {
 
   @Inject
   lateinit var updateAnalyticsUserId: UpdateAnalyticsUserId
+
+  @Inject
+  lateinit var syncProtocolsOnLogin: SyncProtocolsOnLogin
 
   @Inject
   lateinit var crashReporter: CrashReporter
@@ -39,11 +43,11 @@ abstract class ClinicApp : Application() {
 
     crashReporter.init(this)
     Timber.plant(CrashBreadcrumbsTimberTree(crashReporter))
+
+    updateAnalyticsUserId.listen(Schedulers.io())
+    syncProtocolsOnLogin.listen()
   }
 
   abstract fun buildDaggerGraph(): AppComponent
 
-  protected fun keepUserIdUpdatedInAnalytics() {
-    updateAnalyticsUserId.listen(Schedulers.io())
-  }
 }

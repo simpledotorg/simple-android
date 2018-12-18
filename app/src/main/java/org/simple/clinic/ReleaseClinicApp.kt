@@ -19,7 +19,6 @@ class ReleaseClinicApp : ClinicApp() {
     super.onCreate()
     appComponent.inject(this)
     Analytics.addReporter(HeapAnalyticsReporter(this))
-    keepUserIdUpdatedInAnalytics()
     syncScheduler.schedule().subscribe()
   }
 

@@ -45,7 +45,6 @@ class DebugClinicApp : ClinicApp() {
   override fun onCreate() {
     super.onCreate()
     appComponent().inject(this)
-    keepUserIdUpdatedInAnalytics()
 
     Timber.plant(Timber.DebugTree())
     Stetho.initializeWithDefaults(this)

@@ -1,5 +1,6 @@
 package org.simple.clinic.analytics
 
+import android.annotation.SuppressLint
 import io.reactivex.Scheduler
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -16,6 +17,7 @@ class UpdateAnalyticsUserId @Inject constructor(private val userSession: UserSes
       LOGGED_IN, RESETTING_PIN, RESET_PIN_REQUESTED
   )
 
+  @SuppressLint("CheckResult")
   fun listen(scheduler: Scheduler) {
     userSession.loggedInUser()
         .subscribeOn(scheduler)

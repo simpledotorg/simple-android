@@ -1,8 +1,8 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
-import org.simple.clinic.protocolv2.sync.ProtocolPayload
+import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.sync.DataPullResponse
 
 @JsonClass(generateAdapter = true)

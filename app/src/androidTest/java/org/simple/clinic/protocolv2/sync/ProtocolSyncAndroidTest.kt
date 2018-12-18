@@ -11,8 +11,9 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.protocolv2.ProtocolConfig
-import org.simple.clinic.protocolv2.ProtocolRepository
+import org.simple.clinic.protocol.ProtocolConfig
+import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import javax.inject.Inject

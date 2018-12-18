@@ -1,4 +1,4 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences

@@ -1,10 +1,10 @@
-package org.simple.clinic.protocolv2.sync
+package org.simple.clinic.protocol.sync
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.protocolv2.Protocol
-import org.simple.clinic.protocolv2.ProtocolDrug
+import org.simple.clinic.protocol.Protocol
+import org.simple.clinic.protocol.ProtocolDrug
 import org.threeten.bp.Instant
 import java.util.UUID
 

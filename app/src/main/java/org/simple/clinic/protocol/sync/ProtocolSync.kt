@@ -1,11 +1,11 @@
-package org.simple.clinic.protocolv2.sync
+package org.simple.clinic.protocol.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.simple.clinic.protocolv2.ProtocolConfig
-import org.simple.clinic.protocolv2.ProtocolRepository
-import org.simple.clinic.protocolv2.ProtocolSyncApiV2
+import org.simple.clinic.protocol.ProtocolConfig
+import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.protocol.ProtocolSyncApiV2
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional

@@ -13,6 +13,9 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApiV1
+import org.simple.clinic.protocol.ProtocolConfig
+import org.simple.clinic.protocol.ProtocolDrugAndDosages
+import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import java.util.UUID
 import javax.inject.Inject
@@ -154,7 +157,7 @@ class ProtocolRepositoryAndroidTest {
   @Test
   fun protocols_drugs_should_be_grouped_by_names() {
     val config = configProvider.blockingGet()
-     if (config.isProtocolDrugSyncEnabled.not()) {
+    if (config.isProtocolDrugSyncEnabled.not()) {
       return
     }
 

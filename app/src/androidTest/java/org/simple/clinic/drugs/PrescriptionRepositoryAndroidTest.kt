@@ -16,7 +16,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.protocolv2.ProtocolDrug
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.UserSession
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate

@@ -87,22 +87,28 @@ class ProtocolRepositoryAndroidTest {
   }
 
   @Test
-  fun drugs_are_present_but_feature_is_disabled_then_default_drugs_should_be_returned() {
+  fun when_drugs_are_present_but_feature_is_disabled_then_default_drugs_should_be_returned() {
     val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled.not()) {
-      val protocol1 = testData.protocol()
-      database.protocolDao().save(listOf(protocol1))
-
-      val drug1 = testData.protocolDrug(protocolUuid = protocol1.uuid)
-      database.protocolDrugDao().save(listOf(drug1))
-
-      val drugs = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
-      assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
+    if (config.isProtocolDrugSyncEnabled) {
+      return
     }
+    val protocol = testData.protocol()
+    database.protocolDao().save(listOf(protocol))
+
+    val drug = testData.protocolDrug(protocolUuid = protocol.uuid)
+    database.protocolDrugDao().save(listOf(drug))
+
+    val fetchedDrugs = protocolRepository.drugsForProtocolOrDefault(protocol.uuid).blockingFirst()
+    assertThat(fetchedDrugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
   }
 
   @Test
-  fun when_drugs_are_not_present_for_a_specific_protocol_then_default_values_should_be_returned() {
+  fun when_drugs_are_not_present_for_a_protocol_then_default_values_should_be_returned() {
+    val config = configProvider.blockingGet()
+    if (config.isProtocolDrugSyncEnabled.not()) {
+      return
+    }
+
     database.clearAllTables()
 
     val protocol1 = testData.protocol()
@@ -120,52 +126,54 @@ class ProtocolRepositoryAndroidTest {
   @Test
   fun when_protocols_are_present_in_database_then_they_should_be_returned() {
     val config = configProvider.blockingGet()
-
-    if (config.isProtocolDrugSyncEnabled) {
-      database.clearAllTables()
-
-      val currentProtocolUuid = UUID.randomUUID()
-
-      val protocol1 = testData.protocol(uuid = currentProtocolUuid)
-      val protocol2 = testData.protocol()
-      database.protocolDao().save(listOf(protocol1, protocol2))
-
-      val drug1 = testData.protocolDrug(name = "Amlodipine", protocolUuid = protocol1.uuid)
-      val drug2 = testData.protocolDrug(name = "Telmisartan", protocolUuid = protocol1.uuid)
-      val drug3 = testData.protocolDrug(name = "Amlodipine", protocolUuid = protocol2.uuid)
-      database.protocolDrugDao().save(listOf(drug1, drug2, drug3))
-
-      val drugsForCurrentProtocol = protocolRepository.drugsForProtocolOrDefault(currentProtocolUuid).blockingFirst()
-      assertThat(drugsForCurrentProtocol).containsAllOf(
-          ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
-          ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2)))
-      assertThat(drugsForCurrentProtocol).doesNotContain(drug3)
-      assertThat(drugsForCurrentProtocol).hasSize(2)
+    if (config.isProtocolDrugSyncEnabled.not()) {
+      return
     }
+
+    database.clearAllTables()
+
+    val currentProtocolUuid = UUID.randomUUID()
+
+    val protocol1 = testData.protocol(uuid = currentProtocolUuid)
+    val protocol2 = testData.protocol()
+    database.protocolDao().save(listOf(protocol1, protocol2))
+
+    val drug1 = testData.protocolDrug(name = "Amlodipine", protocolUuid = protocol1.uuid)
+    val drug2 = testData.protocolDrug(name = "Telmisartan", protocolUuid = protocol1.uuid)
+    val drug3 = testData.protocolDrug(name = "Amlodipine", protocolUuid = protocol2.uuid)
+    database.protocolDrugDao().save(listOf(drug1, drug2, drug3))
+
+    val drugsForCurrentProtocol = protocolRepository.drugsForProtocolOrDefault(currentProtocolUuid).blockingFirst()
+    assertThat(drugsForCurrentProtocol).containsAllOf(
+        ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
+        ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2)))
+    assertThat(drugsForCurrentProtocol).doesNotContain(drug3)
+    assertThat(drugsForCurrentProtocol).hasSize(2)
   }
 
   @Test
   fun protocols_drugs_should_be_grouped_by_names() {
     val config = configProvider.blockingGet()
-
-    if (config.isProtocolDrugSyncEnabled) {
-      database.clearAllTables()
-
-      val protocol1 = testData.protocol()
-      val protocol2 = testData.protocol()
-      val protocols = listOf(protocol1, protocol2)
-      database.protocolDao().save(protocols)
-
-      val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg", protocolUuid = protocol1.uuid)
-      val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocol1.uuid)
-      val telmisartan40mg = testData.protocolDrug(name = "Telmisartan", dosage = "40mg", protocolUuid = protocol1.uuid)
-      val telmisartan80mg = testData.protocolDrug(name = "Telmisartan", dosage = "80mg", protocolUuid = protocol2.uuid)
-      database.protocolDrugDao().save(listOf(amlodipine5mg, amlodipine10mg, telmisartan40mg, telmisartan80mg))
-
-      val drugsForProtocol1 = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
-      assertThat(drugsForProtocol1).containsAllOf(
-          ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(amlodipine5mg, amlodipine10mg)),
-          ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(telmisartan40mg)))
+     if (config.isProtocolDrugSyncEnabled.not()) {
+      return
     }
+
+    database.clearAllTables()
+
+    val protocol1 = testData.protocol()
+    val protocol2 = testData.protocol()
+    val protocols = listOf(protocol1, protocol2)
+    database.protocolDao().save(protocols)
+
+    val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg", protocolUuid = protocol1.uuid)
+    val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocol1.uuid)
+    val telmisartan40mg = testData.protocolDrug(name = "Telmisartan", dosage = "40mg", protocolUuid = protocol1.uuid)
+    val telmisartan80mg = testData.protocolDrug(name = "Telmisartan", dosage = "80mg", protocolUuid = protocol2.uuid)
+    database.protocolDrugDao().save(listOf(amlodipine5mg, amlodipine10mg, telmisartan40mg, telmisartan80mg))
+
+    val drugsForProtocol1 = protocolRepository.drugsForProtocolOrDefault(protocol1.uuid).blockingFirst()
+    assertThat(drugsForProtocol1).containsAllOf(
+        ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(amlodipine5mg, amlodipine10mg)),
+        ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(telmisartan40mg)))
   }
 }

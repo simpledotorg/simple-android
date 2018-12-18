@@ -71,7 +71,12 @@ class RegistrationConfirmPinScreenController @Inject constructor(
     return events
         .ofType<RegistrationConfirmPinValidated>()
         .filter { it.valid.not() }
-        .map { { ui: Ui -> ui.showPinMismatchError() } }
+        .map {
+          { ui: Ui ->
+            ui.showPinMismatchError()
+            ui.clearPin()
+          }
+        }
   }
 
   private fun saveConfirmPinAndProceed(events: Observable<UiEvent>): Observable<UiChange> {

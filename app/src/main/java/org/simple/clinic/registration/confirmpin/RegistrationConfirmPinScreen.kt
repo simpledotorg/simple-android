@@ -23,7 +23,6 @@ import org.simple.clinic.registration.location.RegistrationLocationPermissionScr
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.showKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -86,6 +85,10 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   fun showPinMismatchError() {
     errorStateViewGroup.visibility = View.VISIBLE
     pinHintTextView.visibility = View.GONE
+  }
+
+  fun clearPin() {
+    confirmPinEditText.text = null
   }
 
   fun openFacilitySelectionScreen() {

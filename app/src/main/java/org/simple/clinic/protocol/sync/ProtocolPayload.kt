@@ -78,7 +78,8 @@ data class ProtocolDrugPayload(
         rxNormCode = rxNormCode,
         dosage = dosage,
         name = name,
-        deletedAt = null
+        deletedAt = null,
+        order = 0
     )
   }
 }

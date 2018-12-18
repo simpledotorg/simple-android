@@ -43,7 +43,9 @@ data class ProtocolDrug(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val order: Int
 ) {
 
   @Dao
@@ -55,7 +57,7 @@ data class ProtocolDrug(
     @Query("SELECT COUNT(uuid) FROM ProtocolDrug")
     fun count(): Flowable<Int>
 
-    @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid")
+    @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid ORDER BY `order`")
     fun drugsForProtocolUuid(protocolUuid: UUID): Flowable<List<ProtocolDrug>>
   }
 }

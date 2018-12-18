@@ -109,7 +109,8 @@ class ProtocolRepository @Inject constructor(
           dosage = dosage,
           createdAt = Instant.now(clock),
           updatedAt = Instant.now(clock),
-          deletedAt = null
+          deletedAt = null,
+          order = 0
       )
     }
     return listOf(

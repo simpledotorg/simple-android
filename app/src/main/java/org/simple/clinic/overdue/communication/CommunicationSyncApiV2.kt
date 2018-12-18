@@ -7,16 +7,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface CommunicationSyncApiV1 {
+interface CommunicationSyncApiV2 {
 
-  @POST("v1/communications/sync")
+  @POST("v2/communications/sync")
   fun push(
       @Body body: CommunicationPushRequest
   ): Single<DataPushResponse>
 
-  @GET("v1/communications/sync")
+  @GET("v2/communications/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullToken: String? = null
+      @Query("process_token") lastPullToken: String? = null
   ): Single<CommunicationPullResponse>
 }

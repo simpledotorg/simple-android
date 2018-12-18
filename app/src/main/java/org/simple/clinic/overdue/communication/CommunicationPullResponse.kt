@@ -10,7 +10,7 @@ data class CommunicationPullResponse(
     @Json(name = "communications")
     override val payloads: List<CommunicationPayload>,
 
-    @Json(name = "processed_since")
+    @Json(name = "process_token")
     override val processedSinceTimestamp: String
 
 ) : DataPullResponse<CommunicationPayload>

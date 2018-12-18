@@ -11,7 +11,7 @@ import javax.inject.Named
 class CommunicationSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: CommunicationRepository,
-    private val api: CommunicationSyncApiV1,
+    private val api: CommunicationSyncApiV2,
     @Named("last_communication_pull_token") private val lastPullToken: Preference<Optional<String>>
 ): ModelSync {
 

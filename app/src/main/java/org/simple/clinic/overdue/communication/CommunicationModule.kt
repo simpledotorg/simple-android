@@ -21,13 +21,13 @@ class CommunicationModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): CommunicationSyncApiV1 {
-    return retrofit.create(CommunicationSyncApiV1::class.java)
+  fun syncApi(retrofit: Retrofit): CommunicationSyncApiV2 {
+    return retrofit.create(CommunicationSyncApiV2::class.java)
   }
 
   @Provides
   @Named("last_communication_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_communication_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_communication_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

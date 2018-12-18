@@ -1,4 +1,4 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 import android.support.annotation.VisibleForTesting
 import io.reactivex.Completable
@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
-import org.simple.clinic.protocolv2.sync.ProtocolPayload
+import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
 import org.threeten.bp.Clock

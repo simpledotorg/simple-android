@@ -1,3 +1,3 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 data class ProtocolConfig(val isProtocolDrugSyncEnabled: Boolean)

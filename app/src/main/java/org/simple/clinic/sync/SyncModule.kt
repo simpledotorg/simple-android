@@ -10,7 +10,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.communication.CommunicationModule
 import org.simple.clinic.patient.sync.PatientSyncModule
-import org.simple.clinic.protocolv2.ProtocolModule
+import org.simple.clinic.protocol.ProtocolModule
 import org.threeten.bp.Duration
 
 @Module(includes = [

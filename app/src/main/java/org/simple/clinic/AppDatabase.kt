@@ -20,8 +20,8 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.protocolv2.Protocol
-import org.simple.clinic.protocolv2.ProtocolDrug
+import org.simple.clinic.protocol.Protocol
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User

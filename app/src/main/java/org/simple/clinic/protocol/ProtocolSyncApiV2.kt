@@ -1,4 +1,4 @@
-package org.simple.clinic.protocolv2
+package org.simple.clinic.protocol
 
 import io.reactivex.Single
 import retrofit2.http.GET

@@ -11,8 +11,8 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.ProtocolDrugSelectionListItem.DosageOption
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.protocolv2.ProtocolDrugAndDosages
-import org.simple.clinic.protocolv2.ProtocolRepository
+import org.simple.clinic.protocol.ProtocolDrugAndDosages
+import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject

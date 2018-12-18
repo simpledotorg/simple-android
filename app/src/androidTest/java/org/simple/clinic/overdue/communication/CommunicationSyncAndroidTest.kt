@@ -31,7 +31,7 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
   lateinit var sync: CommunicationSync
 
   @Inject
-  lateinit var syncApi: CommunicationSyncApiV1
+  lateinit var syncApi: CommunicationSyncApiV2
 
   @Inject
   lateinit var testData: TestData

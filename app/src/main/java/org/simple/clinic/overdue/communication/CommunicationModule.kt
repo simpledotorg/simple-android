@@ -21,8 +21,8 @@ class CommunicationModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): CommunicationSyncApiV1 {
-    return retrofit.create(CommunicationSyncApiV1::class.java)
+  fun syncApi(retrofit: Retrofit): CommunicationSyncApiV2 {
+    return retrofit.create(CommunicationSyncApiV2::class.java)
   }
 
   @Provides

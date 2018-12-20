@@ -33,6 +33,8 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.protocol.sync.ProtocolDrugPayload
+import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
@@ -621,4 +623,38 @@ class TestData @Inject constructor(
         order = order
     )
   }
+
+  fun protocolPayload(
+      uuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      name: String = "Punjab Protocol",
+      followUpDays: Int = 0,
+      protocolDrugs: List<ProtocolDrugPayload> = listOf(protocolDrugPayload(protocolUuid = uuid))
+  ) = ProtocolPayload(
+      uuid = uuid,
+      createdAt = createdAt,
+      updatedAt = updatedAt,
+      name = name,
+      followUpDays = followUpDays,
+      protocolDrugs = protocolDrugs
+  )
+
+  fun protocolDrugPayload(
+      uuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      protocolUuid: UUID = UUID.randomUUID(),
+      rxNormCode: String = "rx-normcode",
+      dosage: String = "5mg",
+      name: String = "Amlodipine"
+  ) = ProtocolDrugPayload(
+      uuid = uuid,
+      createdAt = createdAt,
+      updatedAt = updatedAt,
+      protocolUuid = protocolUuid,
+      rxNormCode = rxNormCode,
+      dosage = dosage,
+      name = name
+  )
 }

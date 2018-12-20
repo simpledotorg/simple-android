@@ -53,7 +53,7 @@ class ProtocolRepository @Inject constructor(
   override fun mergeWithLocalData(payloads: List<ProtocolPayload>): Completable {
     val protocolDrugsWithDosage = payloads
         .filter { payload ->
-          val protocolFromDb = protocolDao.getOne(payload.uuid)
+          val protocolFromDb = appDatabase.protocolDao().getOne(payload.uuid)
           protocolFromDb?.syncStatus.canBeOverriddenByServerCopy()
         }
         .map(::payloadToProtocolAndDrugs)
@@ -68,7 +68,8 @@ class ProtocolRepository @Inject constructor(
   private fun payloadToProtocolAndDrugs(payload: ProtocolPayload): ProtocolAndProtocolDrugs {
     return ProtocolAndProtocolDrugs(
         protocol = payload.toDatabaseModel(newStatus = SyncStatus.DONE),
-        drugs = payload.protocolDrugs.orEmpty().map { it.toDatabaseModel() }
+        drugs = payload.protocolDrugs.orEmpty()
+            .mapIndexed { index, drug -> drug.toDatabaseModel(index) }
     )
   }
 

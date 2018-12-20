@@ -652,6 +652,7 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
       name: String = "Punjab Protocol",
       followUpDays: Int = 0,
       protocolDrugs: List<ProtocolDrugPayload> = listOf(protocolDrugPayload(protocolUuid = uuid))
@@ -661,13 +662,14 @@ class TestData @Inject constructor(
       updatedAt = updatedAt,
       name = name,
       followUpDays = followUpDays,
-      protocolDrugs = protocolDrugs
-  )
+      protocolDrugs = protocolDrugs,
+      deletedAt = deletedAt)
 
   fun protocolDrugPayload(
       uuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null,
       protocolUuid: UUID = UUID.randomUUID(),
       rxNormCode: String = "rx-normcode",
       dosage: String = "5mg",
@@ -679,6 +681,6 @@ class TestData @Inject constructor(
       protocolUuid = protocolUuid,
       rxNormCode = rxNormCode,
       dosage = dosage,
-      name = name
-  )
+      name = name,
+      deletedAt = deletedAt)
 }

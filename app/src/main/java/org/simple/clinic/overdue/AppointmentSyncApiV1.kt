@@ -18,5 +18,5 @@ interface AppointmentSyncApiV1 {
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("processed_since") lastPullToken: String? = null
-  ): Single<AppointmentPullResponse>
+  ): Single<AppointmentPullResponseV1>
 }

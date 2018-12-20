@@ -17,6 +17,6 @@ interface AppointmentSyncApiV2 {
   @GET("v2/appointments/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
-      @Query("processed_since") lastPullToken: String? = null
-  ): Single<AppointmentPullResponse>
+      @Query("process_token") lastPullToken: String? = null
+  ): Single<AppointmentPullResponseV2>
 }

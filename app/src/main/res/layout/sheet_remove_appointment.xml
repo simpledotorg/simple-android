@@ -45,9 +45,7 @@
       style="@style/Clinic.V2.AppointmentRemovalReason"
       android:text="@string/removeappointment_patient_is_not_responding" />
 
-    <View
-      android:id="@+id/removeappointment_reason_patient_not_responding_separator"
-      style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+    <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
 
     <RadioButton
       android:id="@+id/removeappointment_reason_invalid_phone_number"

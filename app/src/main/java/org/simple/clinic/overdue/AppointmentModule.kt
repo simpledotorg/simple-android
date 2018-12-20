@@ -19,7 +19,7 @@ class AppointmentModule {
 
   @Provides
   fun config(): Single<AppointmentConfig> {
-    return Single.just(AppointmentConfig(highlightHighRiskPatients = true, v2ApiEnabled = false))
+    return Single.just(AppointmentConfig(highlightHighRiskPatients = true, v2ApiEnabled = true))
   }
 
   @Provides

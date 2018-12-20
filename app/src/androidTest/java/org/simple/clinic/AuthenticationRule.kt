@@ -8,7 +8,7 @@ import org.junit.runners.model.Statement
 import org.simple.clinic.bp.sync.BloodPressurePushRequest
 import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilitySyncApiV1
+import org.simple.clinic.facility.FacilitySyncApiV2
 import org.simple.clinic.overdue.AppointmentPushRequest
 import org.simple.clinic.overdue.AppointmentSyncApiV2
 import org.simple.clinic.patient.SyncStatus
@@ -40,7 +40,7 @@ class AuthenticationRule(
   lateinit var testData: TestData
 
   @Inject
-  lateinit var facilityApi: FacilitySyncApiV1
+  lateinit var facilityApi: FacilitySyncApiV2
 
   @Inject
   lateinit var patientSyncApi: PatientSyncApiV2
@@ -74,10 +74,10 @@ class AuthenticationRule(
           // Login also needs to happen inside this try block so that in case
           // of a failure, logout() still gets called to reset all app data.
           registeredFacilityUuid = register()
-          if(registerPatientWithUuid != null) {
+          if (registerPatientWithUuid != null) {
             registerPatient(patientUuid = registerPatientWithUuid)
           }
-          if(registerAppointmentWithUuid != null) {
+          if (registerAppointmentWithUuid != null) {
             registerAppointment(appointmentUuid = registerAppointmentWithUuid)
           }
           base.evaluate()

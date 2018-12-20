@@ -5,9 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
-import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
@@ -19,9 +17,6 @@ import javax.inject.Inject
 
 // TODO: Use this class for all data sync tests.
 abstract class BaseSyncCoordinatorAndroidTest<T, P> {
-
-  @get:Rule
-  val authenticationRule = AuthenticationRule()
 
   @Inject
   lateinit var configProvider: Single<SyncConfig>

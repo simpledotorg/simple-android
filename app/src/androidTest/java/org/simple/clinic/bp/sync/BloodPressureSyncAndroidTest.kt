@@ -3,7 +3,9 @@ package org.simple.clinic.bp.sync
 import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import org.junit.Before
+import org.junit.Rule
 import org.junit.runner.RunWith
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -32,6 +34,9 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
 
   @Inject
   lateinit var testData: TestData
+
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
 
   @Before
   fun setUp() {

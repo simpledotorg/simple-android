@@ -13,6 +13,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.util.Optional
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,7 +37,7 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
   lateinit var testData: TestData
 
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val authenticationRule = AuthenticationRule(registerAppointmentWithUuid = UUID.randomUUID())
 
   @Before
   fun setUp() {
@@ -49,9 +50,15 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.communication(syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus): Communication {
+    return testData.communication(
+        syncStatus = syncStatus,
+        appointmentUuid = authenticationRule.registerAppointmentWithUuid!!)
+  }
 
-  override fun generatePayload() = testData.communicationPayload()
+  override fun generatePayload(): CommunicationPayload {
+    return testData.communicationPayload(appointmentUuid = authenticationRule.registerAppointmentWithUuid!!)
+  }
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

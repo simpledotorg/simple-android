@@ -12,7 +12,7 @@ import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySyncApiV1
+import org.simple.clinic.facility.FacilitySyncApiV2
 import org.simple.clinic.protocol.ProtocolConfig
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
@@ -42,7 +42,7 @@ class ProtocolRepositoryAndroidTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var facilitySyncApi: FacilitySyncApiV1
+  lateinit var facilitySyncApi: FacilitySyncApiV2
 
   @get:Rule
   val authenticationRule = AuthenticationRule()

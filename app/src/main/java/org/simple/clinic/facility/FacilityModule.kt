@@ -27,13 +27,13 @@ class FacilityModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): FacilitySyncApiV1 {
-    return retrofit.create(FacilitySyncApiV1::class.java)
+  fun syncApi(retrofit: Retrofit): FacilitySyncApiV2 {
+    return retrofit.create(FacilitySyncApiV2::class.java)
   }
 
   @Provides
   @Named("last_facility_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_facility_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+    return rxSharedPrefs.getObject("last_facility_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

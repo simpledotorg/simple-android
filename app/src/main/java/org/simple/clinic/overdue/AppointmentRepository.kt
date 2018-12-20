@@ -3,7 +3,6 @@ package org.simple.clinic.overdue
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.SyncStatus
@@ -21,8 +20,7 @@ class AppointmentRepository @Inject constructor(
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val clock: Clock,
-    private val configProvider: Single<AppointmentConfig>
+    private val clock: Clock
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
@@ -116,24 +114,14 @@ class AppointmentRepository @Inject constructor(
   fun overdueAppointments(): Observable<List<OverdueAppointment>> {
     return facilityRepository.currentFacility(userSession)
         .map { it.uuid }
-        .withLatestFrom(configProvider.toObservable())
-        .flatMap { (facilityUuid, config) ->
+        .flatMap { facilityUuid ->
           val today = LocalDate.now(clock)
-          if (config.highlightHighRiskPatients) {
-            overdueDao.appointmentsForFacility(
-                facilityUuid = facilityUuid,
-                scheduledStatus = Appointment.Status.SCHEDULED,
-                scheduledBefore = today,
-                patientBornBefore = today.minusYears(60)
-            ).toObservable()
-
-          } else {
-            overdueDao.appointmentsForFacilityOld(
-                facilityUuid = facilityUuid,
-                scheduledStatus = Appointment.Status.SCHEDULED,
-                scheduledBefore = today
-            ).toObservable()
-          }
+          overdueDao.appointmentsForFacility(
+              facilityUuid = facilityUuid,
+              scheduledStatus = Appointment.Status.SCHEDULED,
+              scheduledBefore = today,
+              patientBornBefore = today.minusYears(60)
+          ).toObservable()
         }
   }
 

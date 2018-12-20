@@ -40,7 +40,7 @@ class RemoveAppointmentSheetControllerTest {
 
   @Before
   fun setUp() {
-    config = AppointmentConfig(highlightHighRiskPatients = true, v2ApiEnabled = false)
+    config = AppointmentConfig(v2ApiEnabled = false)
     controller = RemoveAppointmentSheetController(repository, patientRepository, Single.fromCallable { config })
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
   }

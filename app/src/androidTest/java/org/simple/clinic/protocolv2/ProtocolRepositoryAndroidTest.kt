@@ -179,4 +179,30 @@ class ProtocolRepositoryAndroidTest {
         ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(amlodipine5mg, amlodipine10mg)),
         ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(telmisartan40mg)))
   }
+
+  @Test
+  fun protocol_drugs_received_in_an_order_should_be_returned_in_the_same_order() {
+    val config = configProvider.blockingGet()
+    if (config.isProtocolDrugSyncEnabled.not()) {
+      return
+    }
+    database.clearAllTables()
+
+    val protocolUuid = UUID.randomUUID()
+    val drugPayload1 = testData.protocolDrugPayload(name = "Amlodipine", protocolUuid = protocolUuid, dosage = "5mg")
+    val drugPayload2 = testData.protocolDrugPayload(name = "Telmisartan", protocolUuid = protocolUuid, dosage = "10mg")
+    val drugPayload3 = testData.protocolDrugPayload(name = "Telmisartan", protocolUuid = protocolUuid, dosage = "20mg")
+    val protocolPayload = testData.protocolPayload(uuid = protocolUuid, protocolDrugs = listOf(drugPayload1, drugPayload2, drugPayload3))
+
+    val drug1 = drugPayload1.toDatabaseModel(order = 0)
+    val drug2 = drugPayload2.toDatabaseModel(order = 1)
+    val drug3 = drugPayload3.toDatabaseModel(order = 2)
+
+    protocolRepository.mergeWithLocalData(listOf(protocolPayload)).blockingAwait()
+
+    val drugsForProtocol = protocolRepository.drugsForProtocolOrDefault(protocolUuid).blockingFirst()
+    assertThat(drugsForProtocol).containsAllOf(
+        ProtocolDrugAndDosages(drugName = "Amlodipine", drugs = listOf(drug1)),
+        ProtocolDrugAndDosages(drugName = "Telmisartan", drugs = listOf(drug2, drug3)))
+  }
 }

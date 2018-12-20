@@ -65,14 +65,14 @@ class PrescribedDrugsScreenControllerTest {
 
     val amlodipine10mgPrescription = PatientMocker.prescription(name = "Amlodipine", dosage = "10mg", isProtocolDrug = true)
     val telmisartan9000mgPrescription = PatientMocker.prescription(uuid = prescriptionUuid1, name = "Telmisartan", dosage = "9000mg", isProtocolDrug = false)
-    val ReesesPrescription = PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false)
+    val reesesPrescription = PatientMocker.prescription(uuid = prescriptionUuid2, name = "Reese's", dosage = "5 packets", isProtocolDrug = false)
     val fooPrescription = PatientMocker.prescription(uuid = prescriptionUuid3, name = "Foo", dosage = "2 pills", isProtocolDrug = false)
     val barPrescription = PatientMocker.prescription(uuid = prescriptionUuid4, name = "Bar", dosage = null, isProtocolDrug = false)
 
     val prescriptions = listOf(
         amlodipine10mgPrescription,
         telmisartan9000mgPrescription,
-        ReesesPrescription,
+        reesesPrescription,
         fooPrescription,
         barPrescription)
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
@@ -91,7 +91,7 @@ class PrescribedDrugsScreenControllerTest {
             option1 = DosageOption.Unselected(telmisartan40mg),
             option2 = DosageOption.Unselected(telmisartan80mg)),
         CustomPrescribedDrugListItem(telmisartan9000mgPrescription),
-        CustomPrescribedDrugListItem(ReesesPrescription),
+        CustomPrescribedDrugListItem(reesesPrescription),
         CustomPrescribedDrugListItem(fooPrescription),
         CustomPrescribedDrugListItem(barPrescription))
     verify(screen).populateDrugsList(expectedUiModels)

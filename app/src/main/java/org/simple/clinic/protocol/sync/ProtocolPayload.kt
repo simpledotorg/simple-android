@@ -69,7 +69,7 @@ data class ProtocolDrugPayload(
     val name: String
 ) {
 
-  fun toDatabaseModel(): ProtocolDrug {
+  fun toDatabaseModel(order: Int): ProtocolDrug {
     return ProtocolDrug(
         uuid = uuid,
         createdAt = createdAt,
@@ -79,7 +79,7 @@ data class ProtocolDrugPayload(
         dosage = dosage,
         name = name,
         deletedAt = null,
-        order = 0
+        order = order
     )
   }
 }

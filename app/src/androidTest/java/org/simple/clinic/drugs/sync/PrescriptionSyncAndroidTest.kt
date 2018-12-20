@@ -4,14 +4,19 @@ import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.RegisterPatientRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import java.util.UUID
 import javax.inject.Inject
@@ -36,8 +41,26 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   @Inject
   lateinit var testData: TestData
 
+  @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
+
+  val user: User
+    get() = userSession.loggedInUserImmediate()!!
+
+  val currentFacilityUuid: UUID
+    get() = facilityRepository.currentFacilityUuid(user)!!
+
+  val authenticationRule = AuthenticationRule()
+
+  val registerPatientRule = RegisterPatientRule(UUID.randomUUID())
+
   @get:Rule
-  val authenticationRule = AuthenticationRule(registerPatientWithUuid = UUID.randomUUID())
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(registerPatientRule)!!
 
   @Before
   fun setUp() {
@@ -53,14 +76,14 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   override fun generateRecord(syncStatus: SyncStatus): PrescribedDrug {
     return testData.prescription(
         syncStatus = syncStatus,
-        patientUuid = authenticationRule.registerPatientWithUuid!!,
-        facilityUuid = authenticationRule.registeredFacilityUuid!!)
+        patientUuid = registerPatientRule.patientUuid,
+        facilityUuid = currentFacilityUuid)
   }
 
   override fun generatePayload(): PrescribedDrugPayload {
     return testData.prescriptionPayload(
-        patientUuid = authenticationRule.registerPatientWithUuid!!,
-        facilityUuid = authenticationRule.registeredFacilityUuid!!)
+        patientUuid = registerPatientRule.patientUuid,
+        facilityUuid = currentFacilityUuid)
   }
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken

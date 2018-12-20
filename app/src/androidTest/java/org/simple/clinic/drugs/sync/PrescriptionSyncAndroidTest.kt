@@ -13,6 +13,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.util.Optional
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -36,7 +37,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   lateinit var testData: TestData
 
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val authenticationRule = AuthenticationRule(registerPatientWithUuid = UUID.randomUUID())
 
   @Before
   fun setUp() {
@@ -49,9 +50,18 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.prescription(syncStatus = syncStatus)
+  override fun generateRecord(syncStatus: SyncStatus): PrescribedDrug {
+    return testData.prescription(
+        syncStatus = syncStatus,
+        patientUuid = authenticationRule.registerPatientWithUuid!!,
+        facilityUuid = authenticationRule.registeredFacilityUuid!!)
+  }
 
-  override fun generatePayload() = testData.prescriptionPayload()
+  override fun generatePayload(): PrescribedDrugPayload {
+    return testData.prescriptionPayload(
+        patientUuid = authenticationRule.registerPatientWithUuid!!,
+        facilityUuid = authenticationRule.registeredFacilityUuid!!)
+  }
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 

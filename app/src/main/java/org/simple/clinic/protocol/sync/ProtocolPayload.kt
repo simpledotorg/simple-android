@@ -20,6 +20,9 @@ data class ProtocolPayload(
     @Json(name = "updated_at")
     val updatedAt: Instant,
 
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?,
+
     @Json(name = "name")
     val name: String,
 
@@ -36,11 +39,10 @@ data class ProtocolPayload(
         uuid = uuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        deletedAt = deletedAt,
         name = name,
         followUpDays = followUpDays,
-        syncStatus = newStatus,
-        deletedAt = null
-    )
+        syncStatus = newStatus)
   }
 }
 
@@ -55,6 +57,9 @@ data class ProtocolDrugPayload(
 
     @Json(name = "updated_at")
     val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?,
 
     @Json(name = "protocol_id")
     val protocolUuid: UUID,
@@ -74,12 +79,11 @@ data class ProtocolDrugPayload(
         uuid = uuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        deletedAt = deletedAt,
         protocolUuid = protocolUuid,
         rxNormCode = rxNormCode,
         dosage = dosage,
         name = name,
-        deletedAt = null,
-        order = order
-    )
+        order = order)
   }
 }

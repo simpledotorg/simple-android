@@ -49,7 +49,6 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   private val movedOutRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_moved)
   private val movedOutRadioButtonSeparator by bindView<View>(R.id.removeappointment_reason_patient_moved_separator)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
-  private val notRespondingSeparator by bindView<View>(R.id.removeappointment_reason_patient_not_responding_separator)
   private val invalidPhoneNumberRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_invalid_phone_number)
   private val invalidPhoneNumberSeparator by bindView<View>(R.id.removeappointment_reason_invalid_phone_number_separator)
   private val publicHospitalTransferRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_public_hospital_transfer)
@@ -138,7 +137,5 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
     alreadyVisitedSeparator.visibility = if (v2Enabled) GONE else VISIBLE
     movedOutRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
     movedOutRadioButtonSeparator.visibility = if (v2Enabled) GONE else VISIBLE
-    notRespondingRadioButton.visibility = if (v2Enabled) GONE else VISIBLE
-    notRespondingSeparator.visibility = if (v2Enabled) GONE else VISIBLE
   }
 }

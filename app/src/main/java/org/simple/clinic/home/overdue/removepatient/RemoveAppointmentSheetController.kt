@@ -82,7 +82,6 @@ class RemoveAppointmentSheetController @Inject constructor(
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
-
     return Observable.merge(markAsVisitedStream, cancelWithReasonStream, markPatientStatusDeadStream)
   }
 

@@ -46,7 +46,7 @@ class AppointmentSyncTest {
       Completable.complete()
     }
 
-    config = AppointmentConfig(v2ApiEnabled = v2ApiEnabled, highlightHighRiskPatients = true)
+    config = AppointmentConfig(v2ApiEnabled = v2ApiEnabled)
 
     sync.pull().blockingAwait()
 
@@ -66,7 +66,7 @@ class AppointmentSyncTest {
       Completable.complete()
     }
 
-    config = AppointmentConfig(v2ApiEnabled = v2ApiEnabled, highlightHighRiskPatients = true)
+    config = AppointmentConfig(v2ApiEnabled = v2ApiEnabled)
 
     sync.push().blockingAwait()
 

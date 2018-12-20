@@ -4,7 +4,9 @@ import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.junit.Before
+import org.junit.Rule
 import org.junit.runner.RunWith
+import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
@@ -36,6 +38,9 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
 
   @Inject
   lateinit var testData: TestData
+
+  @get:Rule
+  val authenticationRule = AuthenticationRule()
 
   @Before
   fun setup() {

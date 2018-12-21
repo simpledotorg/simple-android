@@ -11,6 +11,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
 import org.simple.clinic.util.StringPreferenceConverter
+import org.threeten.bp.Period
 import retrofit2.Retrofit
 import javax.inject.Named
 
@@ -19,7 +20,10 @@ class AppointmentModule {
 
   @Provides
   fun config(): Single<AppointmentConfig> {
-    return Single.just(AppointmentConfig(v2ApiEnabled = true))
+    return Single.just(AppointmentConfig(
+        v2ApiEnabled = true,
+        minimumOverduePeriodForHighRisk = Period.ofDays(30),
+        overduePeriodForLowestRiskLevel = Period.ofDays(365)))
   }
 
   @Provides

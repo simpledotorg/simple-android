@@ -17,6 +17,8 @@ import org.simple.clinic.sync.DataPullResponse
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
+import org.threeten.bp.Duration
+import org.threeten.bp.Period
 
 @Suppress("UNCHECKED_CAST")
 @RunWith(JUnitParamsRunner::class)
@@ -46,7 +48,10 @@ class AppointmentSyncTest {
       Completable.complete()
     }
 
-    config = AppointmentConfig(v2ApiEnabled = v2ApiEnabled)
+    config = AppointmentConfig(
+        v2ApiEnabled = v2ApiEnabled,
+        minimumOverduePeriodForHighRisk = Period.ofDays(1),
+        overduePeriodForLowestRiskLevel = Period.ofDays(1))
 
     sync.pull().blockingAwait()
 
@@ -66,7 +71,10 @@ class AppointmentSyncTest {
       Completable.complete()
     }
 
-    config = AppointmentConfig(v2ApiEnabled = v2ApiEnabled)
+    config = AppointmentConfig(
+        v2ApiEnabled = v2ApiEnabled,
+        minimumOverduePeriodForHighRisk = Period.ofDays(1),
+        overduePeriodForLowestRiskLevel = Period.ofDays(1))
 
     sync.push().blockingAwait()
 

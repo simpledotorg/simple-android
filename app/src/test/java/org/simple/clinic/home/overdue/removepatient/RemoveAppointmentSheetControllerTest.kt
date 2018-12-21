@@ -23,6 +23,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Period
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -40,7 +41,10 @@ class RemoveAppointmentSheetControllerTest {
 
   @Before
   fun setUp() {
-    config = AppointmentConfig(v2ApiEnabled = false)
+    config = AppointmentConfig(
+        v2ApiEnabled = false,
+        minimumOverduePeriodForHighRisk = Period.ofDays(1),
+        overduePeriodForLowestRiskLevel = Period.ofDays(1))
     controller = RemoveAppointmentSheetController(repository, patientRepository, Single.fromCallable { config })
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
   }

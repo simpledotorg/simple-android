@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.patient.SyncStatus
@@ -20,7 +21,8 @@ class AppointmentRepository @Inject constructor(
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val clock: Clock
+    private val clock: Clock,
+    private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
@@ -112,24 +114,32 @@ class AppointmentRepository @Inject constructor(
   }
 
   fun overdueAppointments(): Observable<List<OverdueAppointment>> {
-    return facilityRepository.currentFacility(userSession)
+    val facilityUuidStream = facilityRepository.currentFacility(userSession)
         .map { it.uuid }
-        .flatMap { facilityUuid ->
+
+    val appointmentConfigStream = appointmentConfigProvider.toObservable()
+
+    return Observables.combineLatest(facilityUuidStream, appointmentConfigStream)
+        .flatMap { (facilityUuid, appointmentConfig) ->
           val today = LocalDate.now(clock)
-          overdueDao.appointmentsForFacility(
-              facilityUuid = facilityUuid,
-              scheduledStatus = Appointment.Status.SCHEDULED,
-              scheduledBefore = today,
-              patientBornBefore = today.minusYears(60)
-          ).toObservable()
+          overdueDao
+              .appointmentsForFacility(
+                  facilityUuid = facilityUuid,
+                  scheduledStatus = Appointment.Status.SCHEDULED,
+                  scheduledBefore = today,
+                  minimumOverdueDateForHighRisk = today.minus(appointmentConfig.minimumOverduePeriodForHighRisk),
+                  overdueDateForLowestRiskLevel = today.minus(appointmentConfig.overduePeriodForLowestRiskLevel)
+              ).toObservable()
         }
   }
 
+  // TODO: Convert this to Observable<Optional<Appointment>>. An appointment may or may not exist.
   fun scheduledAppointmentForPatient(patientUuid: UUID): Observable<Appointment> {
-    return appointmentDao.scheduledAppointmentForPatient(
-        patientUuid = patientUuid,
-        status = Appointment.Status.SCHEDULED
-    )
+    return appointmentDao
+        .scheduledAppointmentForPatient(
+            patientUuid = patientUuid,
+            status = Appointment.Status.SCHEDULED
+        )
         .toObservable()
   }
 

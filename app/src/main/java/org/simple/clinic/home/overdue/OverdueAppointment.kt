@@ -2,6 +2,7 @@ package org.simple.clinic.home.overdue
 
 import android.arch.persistence.room.Dao
 import android.arch.persistence.room.Embedded
+import android.arch.persistence.room.Ignore
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -34,14 +35,40 @@ data class OverdueAppointment(
     @Embedded(prefix = "phone_")
     val phoneNumber: PatientPhoneNumber?,
 
-    val isAtHighRisk: Boolean
+    /**
+     * Referencing a column alias in the same SQL query isn't allowed so
+     * mapping this index to [RiskLevel] is manually done using [riskLevel].
+     * Also see [isAtHighRisk].
+     */
+    @Deprecated(
+        message = "This property is meant for internal use only. Use riskLevel instead.",
+        replaceWith = ReplaceWith("riskLevel")
+    )
+    val riskLevelIndex: Int
 ) {
+
+  @Ignore
+  val isAtHighRisk = riskLevelIndex <= RiskLevel.HIGH.levelIndex
+
+  @delegate:Ignore
+  val riskLevel by lazy {
+    RiskLevel.values().first { it.levelIndex == this.riskLevelIndex }
+  }
+
+  enum class RiskLevel(val levelIndex: Int) {
+    HIGHEST(0),
+    VERY_HIGH(1),
+    HIGH(2),
+    REGULAR(3),
+    LOW(4),
+    NONE(5);
+  }
 
   @Dao
   interface RoomDao {
 
     /**
-     * FYI: IntelliJ's SQL parser highlights `isAtHighRisk` as an error, but it's not. This is probably
+     * FYI: IntelliJ's SQL parser highlights `riskLevelIndex` as an error, but it's not. This is probably
      * because referencing column aliases in a WHERE clause is not SQL standard, but sqlite still allows it.
      */
     @Query("""
@@ -59,14 +86,19 @@ data class OverdueAppointment(
 
           (
             CASE
-              WHEN MH.hasHadStroke = :yesAnswer THEN :trueBoolean
-              WHEN BP.systolic >= 160 AND BP.diastolic >= 100
-                  AND (MH.hasDiabetes = :yesAnswer OR MH.hasHadKidneyDisease = :yesAnswer)
-                  AND (P.dateOfBirth <= :patientBornBefore OR P.age_computedDateOfBirth <= :patientBornBefore)
-                  THEN :trueBoolean
-              ELSE :falseBoolean
+              WHEN A.scheduledDate > :minimumOverdueDateForHighRisk THEN 5
+              WHEN BP.systolic >= 180 OR BP.diastolic >= 110 THEN 0
+              WHEN MH.hasHadHeartAttack = :yesAnswer
+                OR MH.hasHadStroke = :yesAnswer
+                OR MH.hasDiabetes = :yesAnswer
+                OR MH.hasHadKidneyDisease = :yesAnswer
+                THEN 1
+              WHEN (BP.systolic BETWEEN 160 AND 179) OR (BP.diastolic BETWEEN 100 AND 109) THEN 2
+              WHEN (BP.systolic BETWEEN 140 AND 159) OR (BP.diastolic BETWEEN 90 AND 99) THEN 3
+              WHEN A.scheduledDate < :overdueDateForLowestRiskLevel AND (BP.systolic <= 140 AND BP.diastolic <= 90) THEN 4
+              ELSE 5
             END
-          ) AS isAtHighRisk
+          ) AS riskLevelIndex
 
           FROM Patient P
 
@@ -75,20 +107,22 @@ data class OverdueAppointment(
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
 
-          WHERE A.facilityUuid = :facilityUuid AND A.status = :scheduledStatus AND A.scheduledDate < :scheduledBefore AND PPN.number IS NOT NULL
-          AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
+          WHERE A.facilityUuid = :facilityUuid
+            AND A.status = :scheduledStatus
+            AND A.scheduledDate < :scheduledBefore
+            AND PPN.number IS NOT NULL
+            AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
 
           GROUP BY P.uuid HAVING max(BP.updatedAt)
-          ORDER BY isAtHighRisk DESC, A.scheduledDate, A.updatedAt ASC
+          ORDER BY riskLevelIndex ASC, A.scheduledDate, A.updatedAt ASC
           """)
     fun appointmentsForFacility(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
-        patientBornBefore: LocalDate,
         yesAnswer: MedicalHistory.Answer = Answer.YES,
-        trueBoolean: Boolean = true,
-        falseBoolean: Boolean = false
+        minimumOverdueDateForHighRisk: LocalDate,
+        overdueDateForLowestRiskLevel: LocalDate
     ): Flowable<List<OverdueAppointment>>
   }
 }

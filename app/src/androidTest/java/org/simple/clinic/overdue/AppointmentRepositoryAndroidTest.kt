@@ -14,6 +14,12 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGH
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.LOW
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.REGULAR
+import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.VERY_HIGH
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
@@ -36,6 +42,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalDateTime
 import java.util.UUID
 import javax.inject.Inject
 
@@ -441,17 +448,20 @@ class AppointmentRepositoryAndroidTest {
 
     fun savePatientAndAppointment(
         fullName: String,
+        bpMeasurements: List<BP>,
+        hasHadHeartAttack: MedicalHistory.Answer = NO,
         hasHadStroke: MedicalHistory.Answer = NO,
         hasDiabetes: MedicalHistory.Answer = NO,
         hasHadKidneyDisease: MedicalHistory.Answer = NO,
-        age: String = "30",
-        vararg bpMeasurements: BP
+        appointmentHasBeenOverdueFor: Duration
     ) {
-      val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = age))
+      val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = "30"))
           .andThen(patientRepository.saveOngoingEntryAsPatient())
           .blockingGet()
           .uuid
-      appointmentRepository.schedule(patientUuid, LocalDate.now(clock).minusDays(2)).blockingAwait()
+
+      val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
+      appointmentRepository.schedule(patientUuid, scheduledDate).blockingAwait()
       bpMeasurements.forEach {
         bpRepository.saveMeasurement(patientUuid, it.systolic, it.diastolic).blockingGet()
         testClock.advanceBy(Duration.ofSeconds(1))
@@ -459,75 +469,185 @@ class AppointmentRepositoryAndroidTest {
       medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(
           hasHadStroke = hasHadStroke,
           hasDiabetes = hasDiabetes,
-          hasHadKidneyDisease = hasHadKidneyDisease
+          hasHadKidneyDisease = hasHadKidneyDisease,
+          hasHadHeartAttack = hasHadHeartAttack
       )).blockingAwait()
       testClock.advanceBy(Duration.ofSeconds(1))
     }
 
-    savePatientAndAppointment(
-        fullName = "Normal + older",
-        bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = NO)
-    testClock.advanceBy(Duration.ofSeconds(1))
+    val thirtyDays = Duration.ofDays(30)
+    val threeSixtyFiveDays = Duration.ofDays(366)
 
     savePatientAndAppointment(
-        fullName = "Normal + recent",
-        bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = NO)
-    testClock.advanceBy(Duration.ofSeconds(1))
+        fullName = "Has had a heart attack, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        hasHadHeartAttack = YES,
+        appointmentHasBeenOverdueFor = thirtyDays)
 
     savePatientAndAppointment(
-        fullName = "With stroke",
-        bpMeasurements = *arrayOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = YES)
-    testClock.advanceBy(Duration.ofSeconds(1))
+        fullName = "Has had a stroke, overdue == 20 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        hasHadStroke = YES,
+        appointmentHasBeenOverdueFor = Duration.ofDays(10))
 
     savePatientAndAppointment(
-        fullName = "Age > 60, last BP > 160/100 and diabetes",
-        age = "61",
-        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
-        hasDiabetes = YES)
-    testClock.advanceBy(Duration.ofSeconds(1))
-
-    savePatientAndAppointment(
-        fullName = "Age == 60, last BP == 160/100 and kidney disease",
-        age = "60",
-        bpMeasurements = *arrayOf(BP(systolic = 160, diastolic = 100)),
+        fullName = "Has had a kidney disease, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
         hasHadKidneyDisease = YES,
-        hasHadStroke = NO)
-    testClock.advanceBy(Duration.ofSeconds(1))
+        appointmentHasBeenOverdueFor = thirtyDays)
 
     savePatientAndAppointment(
-        fullName = "Age > 60, second last BP > 160/100 and kidney disease",
-        age = "61",
-        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120), BP(100, 100)),
-        hasHadKidneyDisease = YES,
-        hasHadStroke = NO)
-    testClock.advanceBy(Duration.ofSeconds(1))
+        fullName = "Has diabetes, overdue == 27 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        hasDiabetes = YES,
+        appointmentHasBeenOverdueFor = Duration.ofDays(27))
 
     savePatientAndAppointment(
-        fullName = "Age < 60, last BP > 160/100 and kidney disease",
-        age = "31",
-        bpMeasurements = *arrayOf(BP(systolic = 170, diastolic = 120)),
+        fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        hasHadStroke = YES,
+        hasHadHeartAttack = YES,
         hasHadKidneyDisease = YES,
-        hasHadStroke = NO)
-    testClock.advanceBy(Duration.ofSeconds(1))
+        hasDiabetes = YES,
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        hasHadStroke = YES,
+        hasHadHeartAttack = YES,
+        hasHadKidneyDisease = YES,
+        hasDiabetes = YES,
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+
+    savePatientAndAppointment(
+        fullName = "Systolic > 180, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 100)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Systolic > 180, overdue > 30 days",
+        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 100)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+
+    savePatientAndAppointment(
+        fullName = "Diastolic > 110, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Diastolic > 110, overdue > 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+
+    savePatientAndAppointment(
+        fullName = "Systolic > 180, overdue == 4 days",
+        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 100)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(4))
+
+    savePatientAndAppointment(
+        fullName = "Diastolic > 110, overdue == 3 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(3))
+
+    savePatientAndAppointment(
+        fullName = "Systolic == 179, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 179, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Systolic == 160, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 160, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Diastolic == 109, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 101, diastolic = 109)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Diastolic == 100, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 101, diastolic = 100)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Systolic == 159, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 159, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Systolic == 140, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 140, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Diastolic == 99, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 99)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "Diastolic == 90, overdue == 30 days",
+        bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
+        appointmentHasBeenOverdueFor = thirtyDays)
+
+    savePatientAndAppointment(
+        fullName = "BP == 139/89, overdue == 366 days",
+        bpMeasurements = listOf(BP(systolic = 139, diastolic = 89)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+
+    savePatientAndAppointment(
+        fullName = "BP == 141/91, overdue == 366 days",
+        bpMeasurements = listOf(BP(systolic = 141, diastolic = 91)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+
+    savePatientAndAppointment(
+        fullName = "BP == 110/80, overdue == 366 days",
+        bpMeasurements = listOf(BP(systolic = 110, diastolic = 80)),
+        appointmentHasBeenOverdueFor = threeSixtyFiveDays)
+
+    savePatientAndAppointment(
+        fullName = "BP == 110/80, overdue between 30 days and 1 year",
+        bpMeasurements = listOf(BP(systolic = 110, diastolic = 80)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(80))
+
+    savePatientAndAppointment(
+        fullName = "Overdue == 3 days",
+        bpMeasurements = listOf(BP(systolic = 9000, diastolic = 9000)),
+        appointmentHasBeenOverdueFor = Duration.ofDays(3))
 
     val appointments = appointmentRepository.overdueAppointments().blockingFirst()
 
-    assertThat(appointments.map { it.fullName to it.isAtHighRisk }).isEqualTo(listOf(
-        "With stroke" to true,
-        "Age > 60, last BP > 160/100 and diabetes" to true,
-        "Age == 60, last BP == 160/100 and kidney disease" to true,
-        "Normal + older" to false,
-        "Normal + recent" to false,
-        "Age > 60, second last BP > 160/100 and kidney disease" to false,
-        "Age < 60, last BP > 160/100 and kidney disease" to false
+    assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
+        "Systolic > 180, overdue > 30 days" to HIGHEST,
+        "Diastolic > 110, overdue > 30 days" to HIGHEST,
+        "Systolic > 180, overdue == 30 days" to HIGHEST,
+        "Diastolic > 110, overdue == 30 days" to HIGHEST,
+        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days" to VERY_HIGH,
+        "Has had a heart attack, overdue == 30 days" to VERY_HIGH,
+        "Has had a kidney disease, overdue == 30 days" to VERY_HIGH,
+        "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days" to VERY_HIGH,
+        "Systolic == 179, overdue == 30 days" to HIGH,
+        "Systolic == 160, overdue == 30 days" to HIGH,
+        "Diastolic == 109, overdue == 30 days" to HIGH,
+        "Diastolic == 100, overdue == 30 days" to HIGH,
+        "BP == 141/91, overdue == 366 days" to REGULAR,
+        "Systolic == 159, overdue == 30 days" to REGULAR,
+        "Systolic == 140, overdue == 30 days" to REGULAR,
+        "Diastolic == 99, overdue == 30 days" to REGULAR,
+        "Diastolic == 90, overdue == 30 days" to REGULAR,
+        "BP == 139/89, overdue == 366 days" to LOW,
+        "BP == 110/80, overdue == 366 days" to LOW,
+        "BP == 110/80, overdue between 30 days and 1 year" to NONE,
+        "Has diabetes, overdue == 27 days" to NONE,
+        "Has had a stroke, overdue == 20 days" to NONE,
+        "Systolic > 180, overdue == 4 days" to NONE,
+        "Diastolic > 110, overdue == 3 days" to NONE,
+        "Overdue == 3 days" to NONE
     ))
   }
 
   @Test
-  fun when_fetching_appointment_for_patient_it_should_return_scheduled_appointment_only() {
+  fun when_fetching_appointment_for_patient_it_should_only_return_a_scheduled_appointment() {
     val patientId = UUID.randomUUID()
     val appointmentDateNow = LocalDate.now()
     val appointmentDateLater = LocalDate.now().plusDays(1)

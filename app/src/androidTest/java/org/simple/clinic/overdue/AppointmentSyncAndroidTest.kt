@@ -30,7 +30,10 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   lateinit var sync: AppointmentSync
 
   @Inject
-  lateinit var syncApi: AppointmentSyncApiV1
+  lateinit var syncApiV1: AppointmentSyncApiV1
+
+  @Inject
+  lateinit var syncApiV2: AppointmentSyncApiV2
 
   @Inject
   lateinit var testData: TestData
@@ -63,6 +66,11 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun pushNetworkCall(payloads: List<AppointmentPayload>): Single<DataPushResponse> {
     val request = AppointmentPushRequest(payloads)
-    return syncApi.push(request)
+    return if (config.v2ApiEnabled) {
+      syncApiV2.push(request)
+
+    } else {
+      syncApiV1.push(request)
+    }
   }
 }

@@ -219,8 +219,20 @@ object PatientMocker {
 
   fun overdueAppointment(
       name: String = "somebody",
-      bloodPressureMeasurement: BloodPressureMeasurement = bp()
+      bloodPressureMeasurement: BloodPressureMeasurement = bp(),
+      riskLevelIndex: Int? = null,
+      riskLevel: OverdueAppointment.RiskLevel? = null
   ): OverdueAppointment {
+    if ((riskLevel == null) == (riskLevelIndex == null)) {
+      throw AssertionError("Both riskLevel and riskLevelIndex cannot be null or non-null")
+    }
+
+    val calculatedRiskLevel = when {
+      riskLevel != null -> riskLevel.levelIndex
+      riskLevelIndex != null -> riskLevelIndex
+      else -> throw AssertionError("Both riskLevel and riskLevelIndex cannot be null")
+    }
+
     return OverdueAppointment(
         fullName = name,
         gender = mock(),
@@ -229,7 +241,7 @@ object PatientMocker {
         phoneNumber = mock(),
         appointment = appointment(),
         bloodPressure = bloodPressureMeasurement,
-        isAtHighRisk = false
+        riskLevelIndex = calculatedRiskLevel
     )
   }
 

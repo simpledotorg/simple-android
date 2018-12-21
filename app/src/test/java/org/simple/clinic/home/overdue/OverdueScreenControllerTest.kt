@@ -48,7 +48,8 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is retrieved, show it`() {
-    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf(PatientMocker.overdueAppointment())))
+    whenever(repository.overdueAppointments())
+        .thenReturn(Observable.just(listOf(PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST))))
 
     uiEvents.onNext(OverdueScreenCreated())
 

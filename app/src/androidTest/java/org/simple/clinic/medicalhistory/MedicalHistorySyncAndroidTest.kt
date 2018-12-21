@@ -8,7 +8,7 @@ import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
-import org.simple.clinic.RegisterPatientRule
+import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload

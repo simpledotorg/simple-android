@@ -5,8 +5,10 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.RegisterPatientRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
@@ -40,8 +42,14 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   @Inject
   lateinit var testData: TestData
 
+  val authenticationRule = AuthenticationRule()
+
+  val registerPatientRule = RegisterPatientRule(patientUuid = UUID.randomUUID())
+
   @get:Rule
-  val authenticationRule = AuthenticationRule(registerPatientWithUuid = UUID.randomUUID())
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(registerPatientRule)
 
   @Before
   fun setup() {
@@ -57,11 +65,11 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   override fun generateRecord(syncStatus: SyncStatus): MedicalHistory {
     return testData.medicalHistory(
         syncStatus = syncStatus,
-        patientUuid = authenticationRule.registerPatientWithUuid!!)
+        patientUuid = registerPatientRule.patientUuid)
   }
 
   override fun generatePayload(): MedicalHistoryPayload {
-    return testData.medicalHistoryPayload(patientUuid = authenticationRule.registerPatientWithUuid!!)
+    return testData.medicalHistoryPayload(patientUuid = registerPatientRule.patientUuid)
   }
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken

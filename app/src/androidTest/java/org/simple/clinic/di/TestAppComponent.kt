@@ -3,7 +3,7 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.FakerModule
-import org.simple.clinic.RegisterPatientRule
+import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest

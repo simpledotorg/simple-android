@@ -1,8 +1,10 @@
-package org.simple.clinic
+package org.simple.clinic.sync
 
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.bp.sync.BloodPressurePushRequest
 import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
 import org.simple.clinic.facility.FacilityRepository

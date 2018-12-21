@@ -42,9 +42,18 @@ class AppointmentModule {
     return retrofit.create(AppointmentSyncApiV2::class.java)
   }
 
+  /**
+   * This is currently unused. Left here for documentation purposes to indicate that this key
+   * exists in the shared preferences.
+   **/
+  @Suppress("Unused")
+  private fun lastPullTokenV1(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
+    return rxSharedPrefs.getObject("last_appointment_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+  }
+
   @Provides
   @Named("last_appointment_pull_token")
-  fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_appointment_pull_timestamp", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+  fun lastPullTokenV2(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
+    return rxSharedPrefs.getObject("last_appointment_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }
 }

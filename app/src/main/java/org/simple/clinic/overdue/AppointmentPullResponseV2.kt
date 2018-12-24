@@ -11,6 +11,6 @@ data class AppointmentPullResponseV2(
     override val payloads: List<AppointmentPayload>,
 
     @Json(name = "process_token")
-    override val processedSinceTimestamp: String
+    override val processToken: String
 
 ) : DataPullResponse<AppointmentPayload>

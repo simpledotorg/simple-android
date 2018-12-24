@@ -11,6 +11,6 @@ data class CommunicationPullResponse(
     override val payloads: List<CommunicationPayload>,
 
     @Json(name = "process_token")
-    override val processedSinceTimestamp: String
+    override val processToken: String
 
 ) : DataPullResponse<CommunicationPayload>

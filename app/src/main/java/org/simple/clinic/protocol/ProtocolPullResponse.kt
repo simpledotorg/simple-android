@@ -12,6 +12,6 @@ data class ProtocolPullResponse(
     override val payloads: List<ProtocolPayload>,
 
     @Json(name = "process_token")
-    override val processedSinceTimestamp: String
+    override val processToken: String
 
 ) : DataPullResponse<ProtocolPayload>

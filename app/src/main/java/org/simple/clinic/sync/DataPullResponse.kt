@@ -4,5 +4,5 @@ interface DataPullResponse<T> {
 
   val payloads: List<T>
 
-  val processedSinceTimestamp: String
+  val processToken: String
 }

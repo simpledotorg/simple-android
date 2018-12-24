@@ -11,6 +11,6 @@ data class MedicalHistoryPullResponse(
     override val payloads: List<MedicalHistoryPayload>,
 
     @Json(name = "process_token")
-    override val processedSinceTimestamp: String
+    override val processToken: String
 
 ) : DataPullResponse<MedicalHistoryPayload>

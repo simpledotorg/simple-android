@@ -68,7 +68,7 @@ class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>
               .flatMapSingle { (lastPull) -> pullNetworkCall(config.batchSize, lastPull) }
               .flatMap { response ->
                 repository.mergeWithLocalData(response.payloads)
-                    .andThen(Completable.fromAction { lastPullToken.set(Just(response.processedSinceTimestamp)) })
+                    .andThen(Completable.fromAction { lastPullToken.set(Just(response.processToken)) })
                     .andThen(Observable.just(response))
               }
               .repeat()

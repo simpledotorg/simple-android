@@ -2,8 +2,6 @@ package org.simple.clinic.protocol.sync
 
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
-import io.reactivex.Single
-import org.simple.clinic.protocol.ProtocolConfig
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.ProtocolSyncApiV2
 import org.simple.clinic.sync.ModelSync
@@ -16,7 +14,6 @@ class ProtocolSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: ProtocolRepository,
     private val syncApi: ProtocolSyncApiV2,
-    private val configProvider: Single<ProtocolConfig>,
     @Named("last_protocol_pull_token") private val lastPullToken: Preference<Optional<String>>
 ) : ModelSync {
 
@@ -25,13 +22,7 @@ class ProtocolSync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
-    return configProvider
-        .flatMapCompletable { config ->
-          if (config.isProtocolDrugSyncEnabled) {
-            syncCoordinator.pull(repository, lastPullToken, syncApi::pull)
-          } else {
-            Completable.complete()
-          }
-        }
+    return syncCoordinator.pull(repository, lastPullToken, syncApi::pull)
+
   }
 }

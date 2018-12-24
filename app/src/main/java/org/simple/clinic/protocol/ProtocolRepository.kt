@@ -4,7 +4,6 @@ import android.support.annotation.VisibleForTesting
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
@@ -18,8 +17,7 @@ import javax.inject.Inject
 
 class ProtocolRepository @Inject constructor(
     private val appDatabase: AppDatabase,
-    private val clock: Clock,
-    private val config: Single<ProtocolConfig>
+    private val clock: Clock
 ) : SynceableRepository<ProtocolAndProtocolDrugs, ProtocolPayload> {
 
   private val protocolDao = appDatabase.protocolDao()
@@ -78,22 +76,21 @@ class ProtocolRepository @Inject constructor(
       return Observable.just(defaultProtocolDrugs())
     }
 
-    val protocolDrugsWithConfig = protocolDrugsDao
+    val protocolDrugs = protocolDrugsDao
         .drugsForProtocolUuid(protocolUuid)
         .toObservable()
-        .withLatestFrom(config.toObservable())
         .replay()
         .refCount()
 
-    val syncedDrugs = protocolDrugsWithConfig
-        .filter { (drugs, config) -> drugs.isNotEmpty() && config.isProtocolDrugSyncEnabled }
-        .map { (drugs) ->
+    val syncedDrugs = protocolDrugs
+        .filter { drugs -> drugs.isNotEmpty() }
+        .map { drugs ->
           val drugsGroupedByName = drugs.groupBy { it.name }
           drugsGroupedByName.map { (drugName, protocolDrugs) -> ProtocolDrugAndDosages(drugName, protocolDrugs) }
         }
 
-    val defaultDrugs = protocolDrugsWithConfig
-        .filter { (drugs, config) -> drugs.isEmpty() || config.isProtocolDrugSyncEnabled.not() }
+    val defaultDrugs = protocolDrugs
+        .filter { drugs -> drugs.isEmpty() }
         .map { defaultProtocolDrugs() }
 
     return syncedDrugs.mergeWith(defaultDrugs)

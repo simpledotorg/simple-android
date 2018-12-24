@@ -18,7 +18,6 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
-import org.simple.clinic.protocol.ProtocolConfig
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
@@ -79,11 +78,9 @@ class ModelSyncTest {
             { syncCoordinator: SyncCoordinator -> FacilitySync(syncCoordinator, mock(), mock(), mock()) },
             setOf(PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator ->
-              val configProvider = Single.just(ProtocolConfig(isProtocolDrugSyncEnabled = true))
-              ProtocolSync(syncCoordinator, mock(), mock(), configProvider, mock())
-            },
-            setOf(PULL))
+            { syncCoordinator: SyncCoordinator -> ProtocolSync(syncCoordinator, mock(), mock(), mock()) },
+            setOf(PULL)
+        )
     )
   }
 

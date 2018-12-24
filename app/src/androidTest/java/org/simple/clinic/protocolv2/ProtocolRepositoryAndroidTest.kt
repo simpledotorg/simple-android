@@ -2,7 +2,6 @@ package org.simple.clinic.protocolv2
 
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
-import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -12,8 +11,6 @@ import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySyncApiV2
-import org.simple.clinic.protocol.ProtocolConfig
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
@@ -36,13 +33,7 @@ class ProtocolRepositoryAndroidTest {
   lateinit var userSession: UserSession
 
   @Inject
-  lateinit var configProvider: Single<ProtocolConfig>
-
-  @Inject
   lateinit var testData: TestData
-
-  @Inject
-  lateinit var facilitySyncApi: FacilitySyncApiV2
 
   @get:Rule
   val authenticationRule = AuthenticationRule()
@@ -50,28 +41,6 @@ class ProtocolRepositoryAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-  }
-
-  // TODO: Make protocolUuid non-null in FacilityPayload when the feature is enabled and this test can be removed.
-  @Test
-  fun protocol_ID_in_payload_should_not_be_empty_when_feature_is_enabled() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled) {
-      val facilities = facilitySyncApi.pull(recordsToPull = 100, lastPullToken = null).blockingGet()
-      val facilityWithoutProtocolId = facilities.payloads.find { it.protocolUuid == null }
-      assertThat(facilityWithoutProtocolId).isNull()
-    }
-  }
-
-  // TODO: Remove user auth when this test is removed.
-  @Test
-  fun when_feature_is_disabled_then_default_drugs_should_be_returned() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled.not()) {
-      val randomProtocolUuid = UUID.randomUUID()
-      val drugs = protocolRepository.drugsForProtocolOrDefault(randomProtocolUuid).blockingFirst()
-      assertThat(drugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
-    }
   }
 
   @Test
@@ -90,28 +59,7 @@ class ProtocolRepositoryAndroidTest {
   }
 
   @Test
-  fun when_drugs_are_present_but_feature_is_disabled_then_default_drugs_should_be_returned() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled) {
-      return
-    }
-    val protocol = testData.protocol()
-    database.protocolDao().save(listOf(protocol))
-
-    val drug = testData.protocolDrug(protocolUuid = protocol.uuid)
-    database.protocolDrugDao().save(listOf(drug))
-
-    val fetchedDrugs = protocolRepository.drugsForProtocolOrDefault(protocol.uuid).blockingFirst()
-    assertThat(fetchedDrugs).isEqualTo(protocolRepository.defaultProtocolDrugs())
-  }
-
-  @Test
   fun when_drugs_are_not_present_for_a_protocol_then_default_values_should_be_returned() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled.not()) {
-      return
-    }
-
     database.clearAllTables()
 
     val protocol1 = testData.protocol()
@@ -128,11 +76,6 @@ class ProtocolRepositoryAndroidTest {
 
   @Test
   fun when_protocols_are_present_in_database_then_they_should_be_returned() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled.not()) {
-      return
-    }
-
     database.clearAllTables()
 
     val currentProtocolUuid = UUID.randomUUID()
@@ -156,11 +99,6 @@ class ProtocolRepositoryAndroidTest {
 
   @Test
   fun protocols_drugs_should_be_grouped_by_names() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled.not()) {
-      return
-    }
-
     database.clearAllTables()
 
     val protocol1 = testData.protocol()
@@ -182,10 +120,6 @@ class ProtocolRepositoryAndroidTest {
 
   @Test
   fun protocol_drugs_received_in_an_order_should_be_returned_in_the_same_order() {
-    val config = configProvider.blockingGet()
-    if (config.isProtocolDrugSyncEnabled.not()) {
-      return
-    }
     database.clearAllTables()
 
     val protocolUuid = UUID.randomUUID()

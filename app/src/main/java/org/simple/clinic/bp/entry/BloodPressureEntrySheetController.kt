@@ -3,10 +3,12 @@ package org.simple.clinic.bp.entry
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_EMPTY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_TOO_HIGH
@@ -24,7 +26,8 @@ typealias Ui = BloodPressureEntrySheet
 typealias UiChange = (Ui) -> Unit
 
 class BloodPressureEntrySheetController @Inject constructor(
-    private val bloodPressureRepository: BloodPressureRepository
+    private val bloodPressureRepository: BloodPressureRepository,
+    private val configProvider: Single<BloodPressureConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -36,7 +39,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         prefillWhenUpdatingABloodPressure(replayedEvents),
         bpValidations(replayedEvents),
         saveNewBp(replayedEvents),
-        updateBp(replayedEvents))
+        updateBp(replayedEvents),
+        toggleRemoveBloodPressureButton(replayedEvents))
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -233,5 +237,27 @@ class BloodPressureEntrySheetController @Inject constructor(
     ERROR_DIASTOLIC_TOO_HIGH,
     ERROR_DIASTOLIC_TOO_LOW,
     ERROR_SYSTOLIC_LESS_THAN_DIASTOLIC
+  }
+
+  private fun toggleRemoveBloodPressureButton(events: Observable<UiEvent>): Observable<UiChange> {
+    val featureEnabledStream = configProvider
+        .map { it.deleteBloodPressureFeatureEnabled }
+        .toObservable()
+
+    val openAsStream = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+
+    val hideRemoveBpButton = Observables
+        .combineLatest(featureEnabledStream, openAsStream)
+        .filter { (featureEnabled, openAs) -> featureEnabled.not() || openAs is OpenAs.New }
+        .map { { ui: Ui -> ui.hideRemoveBpButton() } }
+
+    val showRemoveBpButton = Observables
+        .combineLatest(featureEnabledStream, openAsStream)
+        .filter { (featureEnabled, openAs) -> featureEnabled && openAs is OpenAs.Update }
+        .map { { ui: Ui -> ui.showRemoveBpButton() } }
+
+    return hideRemoveBpButton.mergeWith(showRemoveBpButton)
   }
 }

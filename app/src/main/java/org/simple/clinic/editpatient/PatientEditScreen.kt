@@ -44,9 +44,12 @@ import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setTextAndCursor
@@ -110,11 +113,12 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     TheActivity.component.inject(this)
 
-    controller.disposeOnDetach(this)
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
     Observable
         .mergeArray(
             screenCreates(),
+            screenDestroys,
             saveClicks(),
             nameTextChanges(),
             phoneNumberTextChanges(),
@@ -125,12 +129,11 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
             dateOfBirthTextChanges(),
             dateOfBirthFocusChanges(),
             ageTextChanges(),
-            backClicks()
-        )
+            backClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
 

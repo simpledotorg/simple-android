@@ -375,7 +375,7 @@ class PatientsScreenControllerTest {
 
     val appointment = PatientMocker.appointment(patientUuid = patientUuid, scheduledDate = LocalDate.now(UTC))
     whenever(appointmentRepository.scheduledAppointmentForPatient(patientUuid))
-        .thenReturn(Observable.just(appointment))
+        .thenReturn(Observable.just(Just(appointment)))
     whenever(patientSummaryResult.get()).thenReturn(result)
     uiEvents.onNext(ScreenCreated())
 

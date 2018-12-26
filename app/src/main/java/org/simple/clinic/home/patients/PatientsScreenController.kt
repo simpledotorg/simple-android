@@ -177,6 +177,7 @@ class PatientsScreenController @Inject constructor(
 
     val appointmentDate = scheduledResult
         .flatMap { appointmentRepository.scheduledAppointmentForPatient(it.patientUuid) }
+        .unwrapJust()
         .map { it.scheduledDate }
 
     val scheduledStream = Observables

@@ -35,6 +35,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import org.threeten.bp.ZoneOffset.UTC
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -157,7 +158,11 @@ class PatientSummaryScreenController @Inject constructor(
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems.bloodPressureListItems.size }
+        .map { it ->
+          val bpList = it.patientSummaryItems.bloodPressureListItems
+          bpList.groupBy { item -> item.measurement.updatedAt.atZone(UTC).toLocalDate() }
+        }
+        .map { it.size }
         .withLatestFrom(configProvider.toObservable())
         .map { (numberOfBloodPressures, config) ->
           val numberOfPlaceholders = 0.coerceAtLeast(config.numberOfBpPlaceholders - numberOfBloodPressures)

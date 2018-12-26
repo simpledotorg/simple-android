@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
-class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication, CommunicationPayload>() {
+class CommunicationSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Communication, CommunicationPayload>() {
 
   @Inject
   lateinit var repository: CommunicationRepository
@@ -51,9 +51,7 @@ class CommunicationSyncAndroidTest: BaseSyncCoordinatorAndroidTest<Communication
   override fun repository() = repository
 
   override fun generateRecord(syncStatus: SyncStatus): Communication {
-    return testData.communication(
-        syncStatus = syncStatus,
-        appointmentUuid = authenticationRule.registerAppointmentWithUuid!!)
+    return testData.communication(syncStatus = syncStatus)
   }
 
   override fun generatePayload(): CommunicationPayload {

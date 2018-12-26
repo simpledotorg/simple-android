@@ -10,7 +10,7 @@ import org.simple.clinic.bp.sync.BloodPressureSyncApiV1
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilitySyncApiV1
 import org.simple.clinic.overdue.AppointmentPushRequest
-import org.simple.clinic.overdue.AppointmentSyncApiV2
+import org.simple.clinic.overdue.AppointmentSyncApiV1
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSyncApiV1
@@ -45,8 +45,12 @@ class AuthenticationRule(
   @Inject
   lateinit var patientSyncApi: PatientSyncApiV1
 
+  // Probably not needed for the purpose of making this hotfix.
+  //  @Inject
+  //  lateinit var appointmentSyncApiV2: AppointmentSyncApiV2
+
   @Inject
-  lateinit var appointmentSyncApiV2: AppointmentSyncApiV2
+  lateinit var appointmentSyncApiV1: AppointmentSyncApiV1
 
   @Inject
   lateinit var bloodPressureSyncApi: BloodPressureSyncApiV1
@@ -74,10 +78,10 @@ class AuthenticationRule(
           // Login also needs to happen inside this try block so that in case
           // of a failure, logout() still gets called to reset all app data.
           registeredFacilityUuid = register()
-          if(registerPatientWithUuid != null) {
+          if (registerPatientWithUuid != null) {
             registerPatient(patientUuid = registerPatientWithUuid)
           }
-          if(registerAppointmentWithUuid != null) {
+          if (registerAppointmentWithUuid != null) {
             registerAppointment(appointmentUuid = registerAppointmentWithUuid)
           }
           base.evaluate()
@@ -106,10 +110,10 @@ class AuthenticationRule(
   }
 
   private fun registerAppointment(appointmentUuid: UUID) {
-    val appointmentPayload = testData.appointmentPayload(uuid = appointmentUuid, apiV2Enabled = true, facilityUuid = registeredFacilityUuid!!)
+    val appointmentPayload = testData.appointmentPayload(uuid = appointmentUuid, facilityUuid = registeredFacilityUuid!!)
     val pushRequest = AppointmentPushRequest(listOf(appointmentPayload))
 
-    appointmentSyncApiV2
+    appointmentSyncApiV1
         .push(pushRequest)
         .blockingGet()
   }

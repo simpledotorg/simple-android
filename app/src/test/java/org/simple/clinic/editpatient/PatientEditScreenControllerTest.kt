@@ -10,7 +10,6 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -71,7 +70,6 @@ class PatientEditScreenControllerTest {
   private lateinit var patientRepository: PatientRepository
   private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var controller: PatientEditScreenController
-  var config = PatientEditConfig(isEditAgeAndDobEnabled = false)
 
   private lateinit var errorConsumer: (Throwable) -> Unit
   lateinit var dateOfBirthFormatValidator: DateOfBirthFormatValidator
@@ -87,7 +85,6 @@ class PatientEditScreenControllerTest {
     controller = PatientEditScreenController(
         patientRepository,
         numberValidator,
-        Single.fromCallable { config },
         clock,
         dateOfBirthFormatValidator,
         dateOfBirthFormat)
@@ -1066,23 +1063,6 @@ class PatientEditScreenControllerTest {
                 PatientEditGenderChanged(Gender.FEMALE)),
             shouldSavePatient = false)
     )
-  }
-
-  @Test
-  @Parameters(value = ["true", "false"])
-  fun `when the edit age & dob feature flag is set, the feature on the screen must be enabled`(editAgeAndDateOfBirthEnabled: Boolean) {
-    config = config.copy(isEditAgeAndDobEnabled = editAgeAndDateOfBirthEnabled)
-
-    whenever(patientRepository.patient(any())).thenReturn(Observable.never())
-    whenever(patientRepository.phoneNumber(any())).thenReturn(Observable.never())
-
-    uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
-
-    if (editAgeAndDateOfBirthEnabled) {
-      verify(screen).enableEditAgeAndDateOfBirthFeature()
-    } else {
-      verify(screen).disableEditAgeAndDateOfBirthFeature()
-    }
   }
 
   @Test

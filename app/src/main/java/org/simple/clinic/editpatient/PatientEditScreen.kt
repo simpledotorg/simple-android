@@ -93,7 +93,6 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val maleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_male)
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
-  private val ageAndDateOfBirthContainer by bindView<View>(R.id.patientedit_age_and_dob_container)
   private val ageEditext by bindView<EditText>(R.id.patientedit_age)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
   private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
@@ -399,14 +398,6 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   fun goBack() {
     screenRouter.pop()
-  }
-
-  fun enableEditAgeAndDateOfBirthFeature() {
-    ageAndDateOfBirthContainer.visibility = VISIBLE
-  }
-
-  fun disableEditAgeAndDateOfBirthFeature() {
-    ageAndDateOfBirthContainer.visibility = GONE
   }
 
   fun showDatePatternInDateOfBirthLabel() {

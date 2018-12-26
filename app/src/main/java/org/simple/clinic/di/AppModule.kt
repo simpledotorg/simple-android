@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.ageanddateofbirth.DateFormatterModule
 import org.simple.clinic.crash.CrashReporterModule
-import org.simple.clinic.editpatient.PatientEditModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.qrscan.QrModule
@@ -30,7 +29,6 @@ import java.util.Locale
   CrashReporterModule::class,
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,
-  PatientEditModule::class,
   DateFormatterModule::class,
   PatientModule::class
 ])

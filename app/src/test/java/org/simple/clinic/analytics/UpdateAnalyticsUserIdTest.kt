@@ -31,6 +31,12 @@ class UpdateAnalyticsUserIdTest {
     Analytics.addReporter(reporter)
   }
 
+  @After
+  fun tearDown() {
+    Analytics.clearReporters()
+    reporter.clear()
+  }
+
   @Test
   fun `when there is no logged in user present, the user id must not be set`() {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(None))
@@ -87,11 +93,5 @@ class UpdateAnalyticsUserIdTest {
         arrayOf(None, Just(user1), user1.uuid.toString()),
         arrayOf(Just(user2), Just(user2.copy(loggedInStatus = User.LoggedInStatus.LOGGED_IN)), user2.uuid.toString())
     )
-  }
-
-  @After
-  fun tearDown() {
-    Analytics.clearReporters()
-    reporter.clear()
   }
 }

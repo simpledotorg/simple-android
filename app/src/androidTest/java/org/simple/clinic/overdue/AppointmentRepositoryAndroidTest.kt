@@ -88,6 +88,12 @@ class AppointmentRepositoryAndroidTest {
     testClock.setYear(2018)
   }
 
+  @After
+  fun tearDown() {
+    database.clearAllTables()
+    testClock.resetToEpoch()
+  }
+
   @Test
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
     val patientId = UUID.randomUUID()
@@ -658,11 +664,5 @@ class AppointmentRepositoryAndroidTest {
     assertThat(appointment!!.patientUuid).isEqualTo(patientId)
     assertThat(appointment.status).isEqualTo(SCHEDULED)
     assertThat(appointment.scheduledDate).isEqualTo(appointmentDateLater)
-  }
-
-  @After
-  fun tearDown() {
-    database.clearAllTables()
-    testClock.resetToEpoch()
   }
 }

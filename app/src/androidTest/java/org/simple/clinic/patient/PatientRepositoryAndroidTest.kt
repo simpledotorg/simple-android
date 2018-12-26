@@ -86,6 +86,11 @@ class PatientRepositoryAndroidTest {
     (clock as TestClock).setYear(2018)
   }
 
+  @After
+  fun tearDown() {
+    (clock as TestClock).resetToEpoch()
+  }
+
   @Test
   fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingNewPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
@@ -757,10 +762,5 @@ class PatientRepositoryAndroidTest {
         .blockingFirst()
 
     assertThat(patient.syncStatus).isEqualTo(SyncStatus.PENDING)
-  }
-
-  @After
-  fun tearDown() {
-    (clock as TestClock).resetToEpoch()
   }
 }

@@ -19,12 +19,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
@@ -40,6 +37,9 @@ import org.simple.clinic.util.None
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenControllerTest {
@@ -68,6 +68,12 @@ class PatientEntryScreenControllerTest {
         .subscribe({ uiChange -> uiChange(screen) }, { e -> errorConsumer(e) })
 
     Analytics.addReporter(reporter)
+  }
+
+  @After
+  fun tearDown() {
+    Analytics.removeReporter(reporter)
+    reporter.clearReceivedEvents()
   }
 
   @Test
@@ -386,11 +392,5 @@ class PatientEntryScreenControllerTest {
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showEmptyDistrictError(true)
     inOrder.verify(screen).scrollToFirstFieldWithError()
-  }
-
-  @After
-  fun tearDown() {
-    Analytics.removeReporter(reporter)
-    reporter.clearReceivedEvents()
   }
 }

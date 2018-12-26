@@ -103,6 +103,12 @@ class PatientSummaryScreenControllerTest {
     Analytics.addReporter(reporter)
   }
 
+  @After
+  fun tearDown() {
+    Analytics.clearReporters()
+    reporter.clear()
+  }
+
   @Test
   fun `patient's profile should be populated`() {
     val addressUuid = UUID.randomUUID()
@@ -480,7 +486,6 @@ class PatientSummaryScreenControllerTest {
     return generateBps(Duration.ofMinutes(1L)) + generateBps(Duration.ofDays(2L))
   }
 
-
   @Parameters(method = "params for patient item changed")
   @Test
   fun `when anything is changed on the screen, assert that patient result preference is updated`(
@@ -535,8 +540,7 @@ class PatientSummaryScreenControllerTest {
         prescriptions = listOf(
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt),
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt))),
-        bloodPressureListItems = listOf(SummaryBloodPressureListItem(PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt), Today, false, true, updatedAt.toString().toOptional())
-        ),
+        bloodPressureListItems = listOf(SummaryBloodPressureListItem(PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt), Today, false, true, updatedAt.toString().toOptional())),
         medicalHistoryItems = SummaryMedicalHistoryItem(PatientMocker.medicalHistory(syncStatus = syncStatus, updatedAt = updatedAt), Today)
     )
   }
@@ -623,11 +627,5 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest2[4], timestamp = Today, showDivider = true, displayTime = displayTime(bpsForTest2[4].createdAt))
             ))
     )
-  }
-
-  @After
-  fun tearDown() {
-    Analytics.clearReporters()
-    reporter.clear()
   }
 }

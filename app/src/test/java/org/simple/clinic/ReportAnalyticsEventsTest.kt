@@ -37,6 +37,13 @@ class ReportAnalyticsEventsTest {
     uiEvents.compose(controller).subscribe { forwardedEvents.add(it) }
   }
 
+  @After
+  fun tearDown() {
+    forwardedEvents.clear()
+    reporter.clearReceivedEvents()
+    Analytics.clearReporters()
+  }
+
   @Test
   fun `whenever ui events are emitted, their analytics name must be emitted to the reporters`() {
     uiEvents.onNext(UiEvent1("1"))
@@ -82,12 +89,5 @@ class ReportAnalyticsEventsTest {
     uiEvents.onNext(UiEvent1("3"))
 
     assertThat(forwardedEvents).isEqualTo(listOf(UiEvent1("1"), UiEvent3("2"), UiEvent1("3")))
-  }
-
-  @After
-  fun tearDown() {
-    forwardedEvents.clear()
-    reporter.clearReceivedEvents()
-    Analytics.clearReporters()
   }
 }

@@ -43,6 +43,11 @@ class BloodPressureRepositoryAndroidTest {
     (clock as TestClock).setYear(2000)
   }
 
+  @After
+  fun tearDown() {
+    (clock as TestClock).resetToEpoch()
+  }
+
   @Test
   fun updating_a_blood_pressure_should_update_it_correctly() {
     val bloodPressure = testData.bloodPressureMeasurement(
@@ -98,10 +103,5 @@ class BloodPressureRepositoryAndroidTest {
     val bpMeasurements = repository.newestMeasurementsForPatient(patientUuid, 4).blockingFirst()
 
     assertThat(bpMeasurements).isEqualTo(listOf(bloodPressure2, bloodPressure4, bloodPressure1, bloodPressure3))
-  }
-
-  @After
-  fun tearDown() {
-    (clock as TestClock).resetToEpoch()
   }
 }

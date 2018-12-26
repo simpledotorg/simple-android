@@ -23,6 +23,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.Appointment.Status.CANCELLED
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
@@ -49,6 +52,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val bpRepository: BloodPressureRepository,
     private val prescriptionRepository: PrescriptionRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val appointmentRepository: AppointmentRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
     private val clock: Clock,
     private val zoneId: ZoneId,
@@ -73,7 +77,8 @@ class PatientSummaryScreenController @Inject constructor(
         handleBackAndDoneClicks(replayedEvents),
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openBloodPressureUpdateSheet(replayedEvents),
-        patientSummaryResultChanged(replayedEvents))
+        patientSummaryResultChanged(replayedEvents),
+        showUpdatePhoneDialog(replayedEvents))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
@@ -128,7 +133,6 @@ class PatientSummaryScreenController @Inject constructor(
       val displayTime = { instant: Instant ->
         instant.atZone(zoneId).format(timeFormatterForBp).toString().toOptional()
       }
-
 
       val bloodPressureItems = Observables.combineLatest(
           bloodPressures,
@@ -394,5 +398,21 @@ class PatientSummaryScreenController @Inject constructor(
     val editExpiresAt = bloodPressureMeasurement.createdAt.plus(bpEditableFor)
 
     return now <= editExpiresAt
+  }
+
+  private fun showUpdatePhoneDialog(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuidStream = events
+        .ofType<PatientSummaryScreenCreated>()
+        .map { it.patientUuid }
+
+    return Observables.combineLatest(patientUuidStream, configProvider.toObservable())
+        .filter { (_, config) -> config.isUpdatePhoneDialogEnabled }
+        .flatMap { (patientUuid) ->
+          appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)
+              .take(1)
+              .filter { (appointment) -> appointment?.cancelReason == InvalidPhoneNumber }
+              .map { patientUuid }
+        }
+        .map { patientUuid -> { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
   }
 }

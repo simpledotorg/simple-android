@@ -36,6 +36,10 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.Appointment.Status.CANCELLED
+import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientRepository
@@ -62,6 +66,7 @@ class PatientSummaryScreenControllerTest {
   private val bpRepository = mock<BloodPressureRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.randomUUID()
   private val clock = Clock.fixed(Instant.EPOCH, UTC)
   private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
@@ -83,6 +88,7 @@ class PatientSummaryScreenControllerTest {
         bpRepository,
         prescriptionRepository,
         medicalHistoryRepository,
+        appointmentRepository,
         timestampGenerator,
         clock,
         zoneId,
@@ -99,6 +105,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
+    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -652,4 +659,73 @@ class PatientSummaryScreenControllerTest {
             ))
     )
   }
+
+  @Test
+  @Parameters(method = "appointment cancelation reasons")
+  fun `when screen is opened and the patient's phone was marked as invalid then update phone dialog should be shown`(
+      cancelReason: AppointmentCancelReason
+  ) {
+    val appointment = PatientMocker.appointment(cancelReason = cancelReason)
+    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.just(Just(appointment)))
+
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        bpEditableFor = Duration.ofSeconds(30L),
+        numberOfBpsToDisplay = 100,
+        isUpdatePhoneDialogEnabled = true)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    if (cancelReason == InvalidPhoneNumber) {
+      verify(screen).showUpdatePhoneDialog(patientUuid)
+    } else {
+      verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+    }
+  }
+
+  @Test
+  fun `when screen is opened and a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
+    val appointmentStream = Observable.just(
+        None,
+        Just(PatientMocker.appointment(cancelReason = null)))
+    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(appointmentStream)
+
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        bpEditableFor = Duration.ofSeconds(30L),
+        numberOfBpsToDisplay = 100,
+        isUpdatePhoneDialogEnabled = true)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Test
+  @Parameters(method = "appointment cancelation reasons")
+  fun `when update phone dialog feature is disabled then it should never be shown`(
+      cancelReason: AppointmentCancelReason
+  ) {
+    val appointmentStream = Observable.just(
+        None,
+        Just(PatientMocker.appointment(cancelReason = null)),
+        Just(PatientMocker.appointment(cancelReason = cancelReason)))
+    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(appointmentStream)
+
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        bpEditableFor = Duration.ofSeconds(30L),
+        numberOfBpsToDisplay = 100,
+        isUpdatePhoneDialogEnabled = true)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Suppress("unused")
+  fun `appointment cancelation reasons`() = AppointmentCancelReason.values()
 }

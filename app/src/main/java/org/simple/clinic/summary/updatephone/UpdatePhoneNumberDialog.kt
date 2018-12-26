@@ -11,7 +11,6 @@ import android.widget.Button
 import android.widget.EditText
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -27,7 +26,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
     private const val FRAGMENT_TAG = "UpdatePhoneNumberDialog"
     private const val KEY_PATIENT_UUID = "patientUuid"
 
-    fun show(patient: Patient, fragmentManager: FragmentManager) {
+    fun show(patientUuid: PatientUuid, fragmentManager: FragmentManager) {
       val existingFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
 
       if (existingFragment != null) {
@@ -39,7 +38,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
 
       val fragment = UpdatePhoneNumberDialog().apply {
         arguments = Bundle(1).apply {
-          putSerializable(KEY_PATIENT_UUID, patient.uuid)
+          putSerializable(KEY_PATIENT_UUID, patientUuid)
         }
       }
 
@@ -75,13 +74,13 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
   override fun onActivityCreated(savedInstanceState: Bundle?) {
     super.onActivityCreated(savedInstanceState)
 
-    cancelButton.setOnClickListener {
-      dismiss()
-    }
-
-    Observable.merge(dialogCreates(), saveClicks())
-        .observeOn(io())
-        .compose(controller)
+//    cancelButton.setOnClickListener {
+//      dismiss()
+//    }
+//
+//    Observable.merge(dialogCreates(), saveClicks())
+//        .observeOn(io())
+//        .compose(controller)
   }
 
   private fun dialogCreates(): Observable<UiEvent> {

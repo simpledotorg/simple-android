@@ -12,7 +12,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -51,13 +51,14 @@ class UpdatePhoneNumberDialogController @Inject constructor(
 
     val newNumberAndValidationResult = events
         .ofType<UpdatePhoneNumberSaveClicked>()
-        .map { it.number to validator.validate(it.number, type = MOBILE) }
+        .map { it.number to validator.validate(it.number, type = LANDLINE_OR_MOBILE) }
 
     val showValidationError = newNumberAndValidationResult
         .map<UiChange> { (_, result) ->
           when (result) {
             VALID -> { _: Ui -> }
-            BLANK, LENGTH_TOO_SHORT, LENGTH_TOO_LONG -> { ui: Ui -> ui.showIncompletePhoneNumberError() }
+            BLANK, LENGTH_TOO_SHORT -> { ui: Ui -> ui.showPhoneNumberTooShortError() }
+            LENGTH_TOO_LONG -> { ui: Ui -> ui.showPhoneNumberTooLongError() }
           }
         }
 
@@ -68,14 +69,14 @@ class UpdatePhoneNumberDialogController @Inject constructor(
         .flatMap { (newNumber, patientUuid) ->
           repository.phoneNumber(patientUuid)
               .unwrapJust()
-              .singleOrError()
+              .take(1)
               .flatMapCompletable { existingPhone ->
                 repository.updatePhoneNumberForPatient(
                     patientUuid = patientUuid,
                     phoneNumber = existingPhone.copy(number = newNumber)
                 )
               }
-              .andThen(Observable.empty<UiChange>())
+              .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
         }
 
     return saveNumber.mergeWith(showValidationError)

@@ -2,19 +2,23 @@ package org.simple.clinic.summary.updatephone
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.support.design.widget.TextInputLayout
 import android.support.v4.app.FragmentManager
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialogFragment
+import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
@@ -54,33 +58,52 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
 
   private val phoneInputLayout by bindView<TextInputLayout>(R.id.updatephone_phone_inputlayout)
   private val numberEditText by bindView<EditText>(R.id.updatephone_phone)
-  private val cancelButton by bindView<Button>(R.id.updatephone_cancel)
-  private val saveButton by bindView<Button>(R.id.updatephone_save)
+
+  private val onStarts = PublishSubject.create<Any>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     TheActivity.component.inject(this)
   }
 
+  @SuppressLint("CheckResult", "InflateParams")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-    return AlertDialog.Builder(requireContext())
+    val layout = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_patientsummary_updatephone, null)
+
+    val dialog = AlertDialog.Builder(requireContext())
         .setTitle(R.string.patientsummary_updatephone_dialog_title)
         .setMessage(R.string.patientsummary_updatephone_dialog_message)
-        .setView(R.layout.dialog_patientsummary_updatephone)
+        .setView(layout)
+        .setPositiveButton(R.string.patientsummary_updatephone_save, null)
+        .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
         .create()
+
+    onStarts
+        .take(1)
+        .flatMap { setupDialog() }
+        .takeUntil(RxView.detaches(layout))
+        .subscribe { uiChange -> uiChange(this) }
+
+    return dialog
   }
 
-  @SuppressLint("CheckResult")
-  override fun onActivityCreated(savedInstanceState: Bundle?) {
-    super.onActivityCreated(savedInstanceState)
+  override fun onStart() {
+    super.onStart()
+    onStarts.onNext(Any())
+  }
 
-//    cancelButton.setOnClickListener {
-//      dismiss()
-//    }
-//
-//    Observable.merge(dialogCreates(), saveClicks())
-//        .observeOn(io())
-//        .compose(controller)
+  private fun setupDialog(): Observable<UiChange> {
+    val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
+    val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
+
+    cancelButton.setOnClickListener {
+      dismiss()
+    }
+
+    return Observable.merge(dialogCreates(), saveClicks(saveButton))
+        .observeOn(Schedulers.io())
+        .compose(controller)
+        .observeOn(mainThread())
   }
 
   private fun dialogCreates(): Observable<UiEvent> {
@@ -88,13 +111,17 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
     return Observable.just(UpdatePhoneNumberDialogCreated(patientUuid))
   }
 
-  private fun saveClicks() =
+  private fun saveClicks(saveButton: Button) =
       RxView
           .clicks(saveButton)
           .map { UpdatePhoneNumberSaveClicked(number = numberEditText.text.toString()) }
 
-  fun showIncompletePhoneNumberError() {
-    TODO()
+  fun showPhoneNumberTooShortError() {
+    phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_less)
+  }
+
+  fun showPhoneNumberTooLongError() {
+    phoneInputLayout.error = getString(R.string.patientsummary_updatephone_error_phonenumber_length_more)
   }
 
   fun preFillPhoneNumber(number: String) {

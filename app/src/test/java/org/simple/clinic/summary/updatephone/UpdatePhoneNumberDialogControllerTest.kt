@@ -18,8 +18,14 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
-import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.values
+import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -59,7 +65,7 @@ class UpdatePhoneNumberDialogControllerTest {
     val newNumber = "1234567890"
     val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid, number = "0987654321")
 
-    whenever(validator.validate(newNumber, type = MOBILE)).thenReturn(Result.VALID)
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(VALID)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
 
@@ -77,7 +83,7 @@ class UpdatePhoneNumberDialogControllerTest {
     val newNumber = "123"
     val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid, number = "old-number")
 
-    whenever(validator.validate(newNumber, type = MOBILE)).thenReturn(validationError)
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(eq(patientUuid), any())).thenReturn(Completable.complete())
 
@@ -95,16 +101,20 @@ class UpdatePhoneNumberDialogControllerTest {
     val newNumber = "123"
     val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid, number = "old-number")
 
-    whenever(validator.validate(newNumber, type = MOBILE)).thenReturn(validationError)
+    whenever(validator.validate(newNumber, type = LANDLINE_OR_MOBILE)).thenReturn(validationError)
     whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
     whenever(repository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.never())
 
     uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(UpdatePhoneNumberSaveClicked(newNumber))
 
-    verify(dialog).showIncompletePhoneNumberError()
+    when (validationError) {
+      BLANK, LENGTH_TOO_SHORT -> verify(dialog).showPhoneNumberTooShortError()
+      LENGTH_TOO_LONG -> verify(dialog).showPhoneNumberTooLongError()
+      VALID -> throw AssertionError()
+    }.exhaustive()
   }
 
   @Suppress("unused")
-  private fun `validation errors`() = Result.values().filter { it != Result.VALID }
+  private fun `validation errors`() = values().filter { it != VALID }
 }

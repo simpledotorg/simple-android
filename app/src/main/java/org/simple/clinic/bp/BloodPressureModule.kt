@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
 import org.simple.clinic.util.None
@@ -30,5 +31,10 @@ open class BloodPressureModule {
   @Named("last_bp_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
     return rxSharedPrefs.getObject("last_bp_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
+  }
+
+  @Provides
+  open fun provideBloodPressureEntryConfig(): Single<BloodPressureConfig> {
+    return Single.just(BloodPressureConfig(deleteBloodPressureFeatureEnabled = false))
   }
 }

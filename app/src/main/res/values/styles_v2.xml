@@ -9,7 +9,7 @@
     <item name="colorAccent">@color/color_accent</item>
     <item name="colorError">@color/color_error</item>
     <item name="toolbarStyle">@style/Clinic.V2.ToolbarStyle</item>
-    <item name="android:alertDialogStyle">@style/Clinic.V2.DialogStyle</item>
+    <item name="alertDialogTheme">@style/Clinic.V2.DialogStyle</item>
     <item name="android:windowBackground">@color/window_background</item>
   </style>
 

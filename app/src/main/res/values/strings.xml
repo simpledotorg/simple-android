@@ -142,8 +142,11 @@
 
   <string name="patientsummary_updatephone_dialog_title">Update phone number</string>
   <string name="patientsummary_updatephone_dialog_message">Patient’s phone number was previously marked as incorrect</string>
+  <string name="patientsummary_updatephone_phone_hint">Phone number</string>
   <string name="patientsummary_updatephone_save">Save</string>
   <string name="patientsummary_updatephone_cancel">Cancel</string>
+  <string name="patientsummary_updatephone_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientsummary_updatephone_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
 
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->

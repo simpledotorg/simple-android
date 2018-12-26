@@ -51,7 +51,6 @@ typealias UiChange = (Ui) -> Unit
 class PatientEditScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val numberValidator: PhoneNumberValidator,
-    private val configProvider: Single<PatientEditConfig>,
     private val clock: Clock,
     private val dateOfBirthFormatValidator: DateOfBirthFormatValidator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
@@ -68,25 +67,9 @@ class PatientEditScreenController @Inject constructor(
         showValidationErrorsOnSaveClick(replayedEvents),
         hideValidationErrorsOnInput(replayedEvents),
         savePatientDetails(replayedEvents),
-        toggleEditAgeAndDateofBirthFeature(replayedEvents),
         toggleDatePatternInDateOfBirthLabel(replayedEvents),
         switchBetweenDateOfBirthAndAge(replayedEvents),
         closeScreenWithoutSaving(replayedEvents))
-  }
-
-  private fun toggleEditAgeAndDateofBirthFeature(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PatientEditScreenCreated>()
-        .flatMapSingle { configProvider }
-        .map { (isEditAgeAndDobEnabled) ->
-          { ui: Ui ->
-            if (isEditAgeAndDobEnabled) {
-              ui.enableEditAgeAndDateOfBirthFeature()
-            } else {
-              ui.disableEditAgeAndDateOfBirthFeature()
-            }
-          }
-        }
   }
 
   private fun prefillOnStart(events: Observable<UiEvent>): Observable<UiChange> {

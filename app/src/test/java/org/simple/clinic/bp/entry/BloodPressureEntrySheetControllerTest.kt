@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.bloco.faker.components.Bool
 import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
@@ -14,6 +15,7 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
@@ -28,11 +30,12 @@ class BloodPressureEntrySheetControllerTest {
   private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private val configEmitter = PublishSubject.create<BloodPressureConfig>()
   private lateinit var controller: BloodPressureEntrySheetController
 
   @Before
   fun setUp() {
-    controller = BloodPressureEntrySheetController(bloodPressureRepository)
+    controller = BloodPressureEntrySheetController(bloodPressureRepository, configEmitter.firstOrError())
 
     uiEvents
         .compose(controller)
@@ -262,5 +265,36 @@ class BloodPressureEntrySheetControllerTest {
         listOf(OpenAs.New(patientUuid), null),
         listOf(OpenAs.Update(bpUuid), PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid))
     )
+  }
+
+  /**
+  * **Note:** When removing the feature flag, this test should **NOT** be removed, but modified
+   * to test that the button is shown only when the OpenAs is [OpenAs.Update].
+  **/
+  @Test
+  @Parameters(method = "params for enabling delete bp feature")
+  fun `when the delete blood pressure feature flag is enabled and the sheet is opened for update, the remove BP button must be shown`(
+      featureEnabled: Boolean,
+      openAs: OpenAs,
+      shouldShowRemoveBpButton: Boolean) {
+    configEmitter.onNext(BloodPressureConfig(deleteBloodPressureFeatureEnabled = featureEnabled))
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
+
+    if(shouldShowRemoveBpButton) {
+      verify(sheet).showRemoveBpButton()
+    } else {
+      verify(sheet).hideRemoveBpButton()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for enabling delete bp feature`(): List<List<Any>> {
+   return listOf(
+       listOf(true, OpenAs.New(UUID.randomUUID()), false),
+       listOf(true, OpenAs.Update(UUID.randomUUID()), true),
+       listOf(false, OpenAs.New(UUID.randomUUID()), false),
+       listOf(false, OpenAs.Update(UUID.randomUUID()), false))
   }
 }

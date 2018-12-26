@@ -184,4 +184,12 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   fun setDiastolic(diastolic: String) {
     diastolicEditText.setTextAndCursor(diastolic)
   }
+
+  fun showRemoveBpButton() {
+
+  }
+
+  fun hideRemoveBpButton() {
+
+  }
 }

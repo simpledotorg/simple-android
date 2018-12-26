@@ -14,6 +14,8 @@ import flow.KeyChanger
 import flow.State
 import flow.TraversalCallback
 
+const val SCREEN_CHANGE_ANIMATION_DURATION = 200L
+
 /**
  * Coordinates changes between [FullScreenKey]s.
  *
@@ -92,7 +94,7 @@ class FullScreenKeyChanger(
     }
 
     val scaleChange = 0.05f
-    val duration = 200L
+    val duration = SCREEN_CHANGE_ANIMATION_DURATION
     val interpolator = FastOutSlowInInterpolator()
 
     if (direction == Direction.FORWARD || direction == Direction.REPLACE) {

@@ -105,10 +105,14 @@ sealed class AppointmentCancelReason {
 
   companion object {
 
+    fun values(): Set<AppointmentCancelReason> {
+      return TypeAdapter.KNOWN_MAPPINGS.keys
+    }
+
     @VisibleForTesting
     fun random(apiV2Enabled: Boolean): AppointmentCancelReason {
       return if (apiV2Enabled) {
-        TypeAdapter.KNOWN_MAPPINGS.entries.shuffled().first().key
+        TypeAdapter.KNOWN_MAPPINGS.keys.shuffled().first()
       } else {
         listOf(PatientNotResponding, Moved, Dead, Other).shuffled().first()
       }

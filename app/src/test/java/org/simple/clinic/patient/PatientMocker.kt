@@ -195,7 +195,7 @@ object PatientMocker {
       scheduledDate: LocalDate = LocalDate.now(UTC),
       facilityUuid: UUID = UUID.randomUUID(),
       status: Appointment.Status = Appointment.Status.SCHEDULED,
-      cancelReason: AppointmentCancelReason = AppointmentCancelReason.PatientNotResponding,
+      cancelReason: AppointmentCancelReason? = AppointmentCancelReason.PatientNotResponding,
       syncStatus: SyncStatus = SyncStatus.PENDING,
       agreedToVisit: Boolean? = null,
       remindOn: LocalDate? = LocalDate.now(UTC).minusDays(2),

@@ -7,7 +7,6 @@ import android.support.v4.view.animation.FastOutSlowInInterpolator
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.AttributeSet
-import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -39,8 +38,10 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
+import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -51,6 +52,7 @@ import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
 import java.util.UUID
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -300,6 +302,15 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun goBackToHome() {
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
+  }
+
+  @SuppressLint("CheckResult")
+  fun showUpdatePhoneDialog(patientUuid: UUID) {
+    Observable.timer(SCREEN_CHANGE_ANIMATION_DURATION, MILLISECONDS, mainThread())
+        .takeUntil(RxView.detaches(this))
+        .subscribe {
+          UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
+        }
   }
 }
 

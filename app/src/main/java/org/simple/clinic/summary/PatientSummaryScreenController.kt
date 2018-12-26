@@ -1,16 +1,14 @@
 package org.simple.clinic.summary
 
 import com.f2prateek.rx.preferences2.Preference
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -54,45 +52,24 @@ class PatientSummaryScreenController @Inject constructor(
     @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  private val disposables = CompositeDisposable()
-
-  /**
-   * We do not want the UI stream to end if the count of subscribers change
-   * midway while the merge() inside apply is going through all Ui changes.
-   * As a solution, we're going to use autoConnect(), but that also means
-   * that this Transformer's stream have to be disposed manually by the screen.
-   */
-  fun disposeOnDetach(ui: Ui) {
-    RxView.detaches(ui)
-        .take(1)
-        .subscribe {
-          disposables.clear()
-        }
-  }
-
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents())
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .compose(mergeWithPatientSummaryChanges())
         .replay()
-        .autoConnect(1) { d -> disposables += d }
-
-    val dataset = constructListDataSet(replayedEvents)
-        .replay()
-        .autoConnect(1) { d -> disposables += d }
-
-    val transformedEvents = Observable.merge(replayedEvents, dataset)
 
     return Observable.mergeArray(
-        populateList(transformedEvents),
-        togglePatientEditFeature(transformedEvents),
-        reportViewedPatientEvent(transformedEvents),
-        populatePatientProfile(transformedEvents),
-        updateMedicalHistory(transformedEvents),
-        openBloodPressureBottomSheet(transformedEvents),
-        openPrescribedDrugsScreen(transformedEvents),
-        handleBackAndDoneClicks(transformedEvents),
-        exitScreenAfterSchedulingAppointment(transformedEvents),
-        openBloodPressureUpdateSheet(transformedEvents),
-        patientSummaryResultChanged(transformedEvents))
+        populateList(replayedEvents),
+        togglePatientEditFeature(replayedEvents),
+        reportViewedPatientEvent(replayedEvents),
+        populatePatientProfile(replayedEvents),
+        updateMedicalHistory(replayedEvents),
+        openBloodPressureBottomSheet(replayedEvents),
+        openPrescribedDrugsScreen(replayedEvents),
+        handleBackAndDoneClicks(replayedEvents),
+        exitScreenAfterSchedulingAppointment(replayedEvents),
+        openBloodPressureUpdateSheet(replayedEvents),
+        patientSummaryResultChanged(replayedEvents))
   }
 
   private fun togglePatientEditFeature(events: Observable<UiEvent>): Observable<UiChange> {
@@ -142,52 +119,56 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populatePatientProfile(patient, address, phoneNumber) } }
   }
 
-  private fun constructListDataSet(events: Observable<UiEvent>): Observable<PatientSummaryItemChanged> {
-    val patientUuids = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
-        .distinctUntilChanged()
+  private fun mergeWithPatientSummaryChanges(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { events ->
+      val patientUuids = events
+          .ofType<PatientSummaryScreenCreated>()
+          .map { it.patientUuid }
+          .distinctUntilChanged()
 
-    val prescriptionItems = patientUuids
-        .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
-        .map(::SummaryPrescribedDrugsItem)
+      val prescriptionItems = patientUuids
+          .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
+          .map(::SummaryPrescribedDrugsItem)
 
-    val bloodPressures = patientUuids
-        .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
-        .replay(1)
-        .refCount()
+      val bloodPressures = patientUuids
+          .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
+          .replay(1)
+          .refCount()
 
-    val bloodPressureItems = bloodPressures
-        .withLatestFrom(configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
-        .map { (measurements, bpEditableFor) ->
-          measurements.map { measurement ->
-            val timestamp = timestampGenerator.generate(measurement.updatedAt)
-            SummaryBloodPressureListItem(measurement, timestamp, isEditable = isBpEditable(measurement, bpEditableFor))
+      val bloodPressureItems = bloodPressures
+          .withLatestFrom(configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
+          .map { (measurements, bpEditableFor) ->
+            measurements.map { measurement ->
+              val timestamp = timestampGenerator.generate(measurement.updatedAt)
+              SummaryBloodPressureListItem(measurement, timestamp, isEditable = isBpEditable(measurement, bpEditableFor))
+            }
           }
-        }
 
-    val medicalHistoryItems = patientUuids
-        .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
-        .map { history ->
-          val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt)
-          SummaryMedicalHistoryItem(history, lastSyncTimestamp)
-        }
+      val medicalHistoryItems = patientUuids
+          .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
+          .map { history ->
+            val lastSyncTimestamp = timestampGenerator.generate(history.updatedAt)
+            SummaryMedicalHistoryItem(history, lastSyncTimestamp)
+          }
 
-    // combineLatest() is important here so that the first data-set for the list
-    // is dispatched in one go instead of them appearing one after another on the UI.
-    return Observables
-        .combineLatest(
-            prescriptionItems,
-            bloodPressures,
-            bloodPressureItems,
-            medicalHistoryItems) { prescriptions, _, bpSummary, history ->
-          PatientSummaryItemChanged(PatientSummaryItems(
-              prescriptionItems = prescriptions,
-              bloodPressureListItems = bpSummary,
-              medicalHistoryItems = history
-          ))
-        }
-        .distinctUntilChanged()
+      // combineLatest() is important here so that the first data-set for the list
+      // is dispatched in one go instead of them appearing one after another on the UI.
+      val summaryItemChanges = Observables
+          .combineLatest(
+              prescriptionItems,
+              bloodPressures,
+              bloodPressureItems,
+              medicalHistoryItems) { prescriptions, _, bpSummary, history ->
+            PatientSummaryItemChanged(PatientSummaryItems(
+                prescriptionItems = prescriptions,
+                bloodPressureListItems = bpSummary,
+                medicalHistoryItems = history
+            ))
+          }
+          .distinctUntilChanged()
+
+      events.mergeWith(summaryItemChanges)
+    }
   }
 
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {

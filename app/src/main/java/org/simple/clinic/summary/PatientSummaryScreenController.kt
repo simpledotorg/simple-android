@@ -60,7 +60,6 @@ class PatientSummaryScreenController @Inject constructor(
 
     return Observable.mergeArray(
         populateList(replayedEvents),
-        togglePatientEditFeature(replayedEvents),
         reportViewedPatientEvent(replayedEvents),
         populatePatientProfile(replayedEvents),
         updateMedicalHistory(replayedEvents),
@@ -70,21 +69,6 @@ class PatientSummaryScreenController @Inject constructor(
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openBloodPressureUpdateSheet(replayedEvents),
         patientSummaryResultChanged(replayedEvents))
-  }
-
-  private fun togglePatientEditFeature(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PatientSummaryScreenCreated>()
-        .withLatestFrom(configProvider.toObservable()) { _, config -> config }
-        .map { it.isPatientEditFeatureEnabled }
-        .map { isPatientEditFeatureEnabled ->
-          { ui: Ui ->
-            if (isPatientEditFeatureEnabled) {
-              ui.enableEditPatientFeature()
-            } else {
-              ui.disableEditPatientFeature()
-            }
-          }
-        }
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {

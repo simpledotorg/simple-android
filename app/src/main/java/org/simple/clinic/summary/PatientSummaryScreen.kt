@@ -301,16 +301,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   fun goBackToHome() {
     screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
   }
-
-  fun disableEditPatientFeature() {
-    editButton.isEnabled = false
-    editButton.visibility = View.GONE
-  }
-
-  fun enableEditPatientFeature() {
-    editButton.isEnabled = true
-    editButton.visibility = View.VISIBLE
-  }
 }
 
 @Parcelize

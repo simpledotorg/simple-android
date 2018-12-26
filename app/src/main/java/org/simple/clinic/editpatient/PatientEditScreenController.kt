@@ -1,15 +1,13 @@
 package org.simple.clinic.editpatient
 
-import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
-import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.plusAssign
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -36,7 +34,9 @@ import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.*
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
@@ -57,40 +57,21 @@ class PatientEditScreenController @Inject constructor(
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  private val disposables = CompositeDisposable()
-
-  /**
-   * We do not want the UI stream to end if the count of subscribers change
-   * midway while the merge() inside apply is going through all Ui changes.
-   * As a solution, we're going to use autoConnect(), but that also means
-   * that this Transformer's stream have to be disposed manually by the screen.
-   */
-  fun disposeOnDetach(ui: Ui) {
-    RxView.detaches(ui)
-        .take(1)
-        .subscribe {
-          disposables.clear()
-        }
-  }
-
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents())
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .compose(mergeWithOngoingEntryPatientEntryChanges())
         .replay()
-        .autoConnect(1) { d -> disposables += d }
-
-    val transformedEvents = replayedEvents.mergeWith(ongoingEntryPatientEntryChanges(replayedEvents))
-        .replay()
-        .autoConnect(1) { d -> disposables += d }
 
     return Observable.mergeArray(
-        prefillOnStart(transformedEvents),
-        showValidationErrorsOnSaveClick(transformedEvents),
-        hideValidationErrorsOnInput(transformedEvents),
-        savePatientDetails(transformedEvents),
-        toggleEditAgeAndDateofBirthFeature(transformedEvents),
-        toggleDatePatternInDateOfBirthLabel(transformedEvents),
-        switchBetweenDateOfBirthAndAge(transformedEvents),
-        closeScreenWithoutSaving(transformedEvents))
+        prefillOnStart(replayedEvents),
+        showValidationErrorsOnSaveClick(replayedEvents),
+        hideValidationErrorsOnInput(replayedEvents),
+        savePatientDetails(replayedEvents),
+        toggleEditAgeAndDateofBirthFeature(replayedEvents),
+        toggleDatePatternInDateOfBirthLabel(replayedEvents),
+        switchBetweenDateOfBirthAndAge(replayedEvents),
+        closeScreenWithoutSaving(replayedEvents))
   }
 
   private fun toggleEditAgeAndDateofBirthFeature(events: Observable<UiEvent>): Observable<UiChange> {
@@ -178,58 +159,62 @@ class PatientEditScreenController @Inject constructor(
         prefillPatientDateOfBirth)
   }
 
-  private fun ongoingEntryPatientEntryChanges(events: Observable<UiEvent>): Observable<UiEvent> {
-    val nameChanges = events
-        .ofType<PatientEditPatientNameTextChanged>()
-        .map { it.name }
+  private fun mergeWithOngoingEntryPatientEntryChanges(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { events ->
+      val nameChanges = events
+          .ofType<PatientEditPatientNameTextChanged>()
+          .map { it.name }
 
-    val genderChanges = events
-        .ofType<PatientEditGenderChanged>()
-        .map { it.gender }
+      val genderChanges = events
+          .ofType<PatientEditGenderChanged>()
+          .map { it.gender }
 
-    val colonyOrVillageChanges = events
-        .ofType<PatientEditColonyOrVillageChanged>()
-        .map { it.colonyOrVillage }
+      val colonyOrVillageChanges = events
+          .ofType<PatientEditColonyOrVillageChanged>()
+          .map { it.colonyOrVillage }
 
-    val districtChanges = events
-        .ofType<PatientEditDistrictTextChanged>()
-        .map { it.district }
+      val districtChanges = events
+          .ofType<PatientEditDistrictTextChanged>()
+          .map { it.district }
 
-    val stateChanges = events
-        .ofType<PatientEditStateTextChanged>()
-        .map { it.state }
+      val stateChanges = events
+          .ofType<PatientEditStateTextChanged>()
+          .map { it.state }
 
-    val phoneNumberChanges = events
-        .ofType<PatientEditPhoneNumberTextChanged>()
-        .map { it.phoneNumber }
+      val phoneNumberChanges = events
+          .ofType<PatientEditPhoneNumberTextChanged>()
+          .map { it.phoneNumber }
 
-    val ageChanges = events
-        .ofType<PatientEditAgeTextChanged>()
-        .map { EntryWithAge(it.age) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
+      val ageChanges = events
+          .ofType<PatientEditAgeTextChanged>()
+          .map { EntryWithAge(it.age) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
 
-    val dateOfBirthChanges = events
-        .ofType<PatientEditDateOfBirthTextChanged>()
-        .map { EntryWithDateOfBirth(it.dateOfBirth) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
+      val dateOfBirthChanges = events
+          .ofType<PatientEditDateOfBirthTextChanged>()
+          .map { EntryWithDateOfBirth(it.dateOfBirth) as OngoingEditPatientEntry.EitherAgeOrDateOfBirth }
 
-    val ageOrDateOfBirthChanges = Observable.merge(ageChanges, dateOfBirthChanges)
+      val ageOrDateOfBirthChanges = Observable.merge(ageChanges, dateOfBirthChanges)
 
-    return Observables.combineLatest(
-        nameChanges,
-        genderChanges,
-        colonyOrVillageChanges,
-        districtChanges,
-        stateChanges,
-        phoneNumberChanges,
-        ageOrDateOfBirthChanges
-    ) { name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOFBirth ->
-      OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
-          name = name,
-          gender = gender,
-          phoneNumber = phoneNumber,
-          colonyOrVillage = colonyOrVillage,
-          district = district,
-          state = state,
-          ageOrDateOfBirth = ageOrDateOFBirth))
+      val ongoingEntryChanges = Observables.combineLatest(
+          nameChanges,
+          genderChanges,
+          colonyOrVillageChanges,
+          districtChanges,
+          stateChanges,
+          phoneNumberChanges,
+          ageOrDateOfBirthChanges
+      ) { name, gender, colonyOrVillage, district, state, phoneNumber, ageOrDateOFBirth ->
+        OngoingEditPatientEntryChanged(OngoingEditPatientEntry(
+            name = name,
+            gender = gender,
+            phoneNumber = phoneNumber,
+            colonyOrVillage = colonyOrVillage,
+            district = district,
+            state = state,
+            ageOrDateOfBirth = ageOrDateOFBirth))
+      }
+
+      events.mergeWith(ongoingEntryChanges)
     }
   }
 

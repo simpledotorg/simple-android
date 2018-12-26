@@ -5,5 +5,6 @@ import org.threeten.bp.Duration
 data class PatientSummaryConfig(
     val numberOfBpPlaceholders: Int,
     val bpEditableFor: Duration,
-    val numberOfBpsToDisplay: Int
+    val numberOfBpsToDisplay: Int,
+    val isUpdatePhoneDialogEnabled: Boolean
 )

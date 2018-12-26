@@ -47,6 +47,12 @@ class NetworkAnalyticsInterceptorTest {
     Analytics.addReporter(mockReporter)
   }
 
+  @After
+  fun tearDown() {
+    Analytics.clearReporters()
+    mockReporter.clear()
+  }
+
   @Test
   @Parameters(value = ["0", "100", "200", "300"])
   fun `the request duration must be reported`(requestDuration: Int) {
@@ -184,12 +190,6 @@ class NetworkAnalyticsInterceptorTest {
     val reportedContentLength = mockReporter.receivedEvents.first().props["contentLength"] as Int
 
     assertThat(reportedContentLength).isEqualTo(-1)
-  }
-
-  @After
-  fun tearDown() {
-    Analytics.clearReporters()
-    mockReporter.clear()
   }
 
   private class SuccessfulChain(val request: Request, val response: Response, val requestTimeMillis: Int = 0) : FakeChain() {

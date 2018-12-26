@@ -21,6 +21,11 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
   @Inject
   lateinit var configProvider: Single<SyncConfig>
 
+  @After
+  fun tearDown() {
+    FailAllNetworkCallsInterceptor.shouldFailAll = false
+  }
+
   @Test
   fun when_pending_sync_records_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {
     if (isPushEnabled().not()) {
@@ -86,11 +91,6 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
   }
 
   private fun recordsWithSyncStatus(status: SyncStatus) = repository().recordsWithSyncStatus(status).blockingGet()
-
-  @After
-  fun tearDown() {
-    FailAllNetworkCallsInterceptor.shouldFailAll = false
-  }
 
   open fun isPullEnabled() = true
 

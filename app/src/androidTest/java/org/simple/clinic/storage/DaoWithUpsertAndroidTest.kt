@@ -27,6 +27,11 @@ class DaoWithUpsertAndroidTest {
     TestClinicApp.appComponent().inject(this)
   }
 
+  @After
+  fun tearDown() {
+    database.clearAllTables()
+  }
+
   @Test
   fun when_upserting_a_record_it_should_be_inserted_if_it_doesnt_exist_already() {
     val patientUuid = UUID.randomUUID()
@@ -103,10 +108,5 @@ class DaoWithUpsertAndroidTest {
 
     val storedPatientsCount = database.patientDao().patientCount().blockingFirst()
     assertThat(storedPatientsCount).isEqualTo(20)
-  }
-
-  @After
-  fun tearDown() {
-    database.clearAllTables()
   }
 }

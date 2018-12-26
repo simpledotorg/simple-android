@@ -141,6 +141,12 @@ class UserSessionTest {
     Analytics.addReporter(reporter)
   }
 
+  @After
+  fun tearDown() {
+    reporter.clear()
+    Analytics.clearReporters()
+  }
+
   private fun <T> unauthorizedHttpError(): HttpException {
     val error = Response.error<T>(401, ResponseBody.create(MediaType.parse("text"), unauthorizedErrorResponseJson))
     return HttpException(error)
@@ -710,11 +716,5 @@ class UserSessionTest {
         listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), false),
         listOf(Single.error<LoginResponse>(IOException()), false)
     )
-  }
-
-  @After
-  fun tearDown() {
-    reporter.clear()
-    Analytics.clearReporters()
   }
 }

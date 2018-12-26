@@ -8,6 +8,11 @@ import java.util.UUID
 
 class AnalyticsTest {
 
+  @After
+  fun tearDown() {
+    Analytics.clearReporters()
+  }
+
   @Test
   fun `when reporting interaction events without any reporters, no error should be thrown`() {
     Analytics.reportUserInteraction("Test")
@@ -139,11 +144,6 @@ class AnalyticsTest {
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)
     assertThat(reporter3.receivedEvents).isEqualTo(expected)
-  }
-
-  @After
-  fun tearDown() {
-    Analytics.clearReporters()
   }
 
   private class FailingAnalyticsReporter : AnalyticsReporter {

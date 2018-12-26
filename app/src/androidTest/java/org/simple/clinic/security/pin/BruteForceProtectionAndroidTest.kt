@@ -53,6 +53,13 @@ class BruteForceProtectionAndroidTest {
     state.delete()
   }
 
+  @After
+  fun tearDown() {
+    RxJavaPlugins.reset()
+    testClock.resetToEpoch()
+    state.delete()
+  }
+
   @Test
   fun when_listening_to_protected_state_changes_then_correct_state_changes_should_be_emitted() {
     val initialState = bruteForceProtection.protectedStateChanges().blockingFirst()
@@ -103,12 +110,5 @@ class BruteForceProtectionAndroidTest {
     advanceTimeByMillis(1)
     stateChangeObserver.assertValueAt(2, Allowed(attemptsMade = 0, attemptsRemaining = config.limitOfFailedAttempts))
     stateChangeObserver.assertValueCount(3)
-  }
-
-  @After
-  fun tearDown() {
-    RxJavaPlugins.reset()
-    testClock.resetToEpoch()
-    state.delete()
   }
 }

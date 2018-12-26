@@ -6,10 +6,16 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.overdue.Appointment.Status.CANCELLED
+import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
+import org.simple.clinic.overdue.Appointment.Status.VISITED
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -35,7 +41,7 @@ class AppointmentRepository @Inject constructor(
               patientUuid = patientUuid,
               facilityUuid = facility.uuid,
               scheduledDate = appointmentDate,
-              status = Appointment.Status.SCHEDULED,
+              status = SCHEDULED,
               cancelReason = null,
               remindOn = null,
               agreedToVisit = null,
@@ -53,8 +59,8 @@ class AppointmentRepository @Inject constructor(
     return Completable.fromAction {
       appointmentDao.markOlderAppointmentsAsVisited(
           patientUuid = patientUuid,
-          updatedStatus = Appointment.Status.VISITED,
-          scheduledStatus = Appointment.Status.SCHEDULED,
+          updatedStatus = VISITED,
+          scheduledStatus = SCHEDULED,
           newSyncStatus = SyncStatus.PENDING,
           newUpdatedAt = Instant.now(clock)
       )
@@ -86,7 +92,7 @@ class AppointmentRepository @Inject constructor(
     return Completable.fromAction {
       appointmentDao.markAsVisited(
           appointmentUuid = appointmentUuid,
-          newStatus = Appointment.Status.VISITED,
+          newStatus = VISITED,
           newSyncStatus = SyncStatus.PENDING,
           newUpdatedAt = Instant.now(clock))
     }
@@ -97,7 +103,7 @@ class AppointmentRepository @Inject constructor(
       appointmentDao.cancelWithReason(
           appointmentUuid = appointmentUuid,
           cancelReason = reason,
-          newStatus = Appointment.Status.CANCELLED,
+          newStatus = CANCELLED,
           newSyncStatus = SyncStatus.PENDING,
           newUpdatedAt = Instant.now(clock))
     }
@@ -125,7 +131,7 @@ class AppointmentRepository @Inject constructor(
           overdueDao
               .appointmentsForFacility(
                   facilityUuid = facilityUuid,
-                  scheduledStatus = Appointment.Status.SCHEDULED,
+                  scheduledStatus = SCHEDULED,
                   scheduledBefore = today,
                   minimumOverdueDateForHighRisk = today.minus(appointmentConfig.minimumOverduePeriodForHighRisk),
                   overdueDateForLowestRiskLevel = today.minus(appointmentConfig.overduePeriodForLowestRiskLevel)
@@ -133,14 +139,16 @@ class AppointmentRepository @Inject constructor(
         }
   }
 
-  // TODO: Convert this to Observable<Optional<Appointment>>. An appointment may or may not exist.
-  fun scheduledAppointmentForPatient(patientUuid: UUID): Observable<Appointment> {
+  fun scheduledAppointmentForPatient(patientUuid: UUID): Observable<Optional<Appointment>> {
     return appointmentDao
-        .scheduledAppointmentForPatient(
-            patientUuid = patientUuid,
-            status = Appointment.Status.SCHEDULED
-        )
+        .scheduledAppointmentForPatient(patientUuid = patientUuid, status = SCHEDULED)
         .toObservable()
+        .map { appointments ->
+          when {
+            appointments.isNotEmpty() -> Just(appointments.first())
+            else -> None
+          }
+        }
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Appointment>> {

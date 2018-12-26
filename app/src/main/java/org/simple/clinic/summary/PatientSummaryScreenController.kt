@@ -31,11 +31,12 @@ import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -120,14 +121,30 @@ class PatientSummaryScreenController @Inject constructor(
           .replay(1)
           .refCount()
 
+      val displayTime = { instant: Instant ->
+        instant.atZone(clock.zone).format(DateTimeFormatter.ofPattern("h:mm a")).toString().toOptional()
+      }
+
+
       val bloodPressureItems = bloodPressures
           .withLatestFrom(configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
-          .map { (measurements, bpEditableFor) ->
-            measurements.map { measurement ->
-              val timestamp = timestampGenerator.generate(measurement.updatedAt)
-              SummaryBloodPressureListItem(measurement, timestamp, isEditable = isBpEditable(measurement, bpEditableFor))
+          .map { (bps, bpEditableFor) ->
+            val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(clock.zone).toLocalDate() }
+            measurementsByDate.mapValues { (_, measurementList) ->
+              val lastElement = measurementList.last()
+              measurementList.map { measurement ->
+                val timestamp = timestampGenerator.generate(measurement.createdAt)
+                SummaryBloodPressureListItem(
+                    measurement = measurement,
+                    timestamp = timestamp,
+                    isEditable = isBpEditable(measurement, bpEditableFor),
+                    showDivider = measurement.uuid == lastElement.uuid,
+                    displayTime = displayTime(measurement.createdAt)
+                )
+              }
             }
           }
+          .map { it.values.flatten() }
 
       val medicalHistoryItems = patientUuids
           .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
@@ -160,7 +177,7 @@ class PatientSummaryScreenController @Inject constructor(
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
         .map { it ->
           val bpList = it.patientSummaryItems.bloodPressureListItems
-          bpList.groupBy { item -> item.measurement.updatedAt.atZone(UTC).toLocalDate() }
+          bpList.groupBy { item -> item.measurement.createdAt.atZone(clock.zone).toLocalDate() }
         }
         .map { it.size }
         .withLatestFrom(configProvider.toObservable())

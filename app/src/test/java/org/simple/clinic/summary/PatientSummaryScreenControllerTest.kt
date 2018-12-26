@@ -43,6 +43,7 @@ import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -198,6 +199,16 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid),
         PatientMocker.bp(patientUuid)
     )
+    val bpsForTest5 = listOf(
+        PatientMocker.bp(patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS)),
+        PatientMocker.bp(patientUuid),
+        PatientMocker.bp(patientUuid)
+    )
+    val bpsForTest6 = listOf(
+        PatientMocker.bp(patientUuid, createdAt = Instant.now(clock).minus(2, ChronoUnit.DAYS)),
+        PatientMocker.bp(patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS)),
+        PatientMocker.bp(patientUuid)
+    )
 
     // We won't be verifying the relative timestamps in the test this is used in,
     // so we can just set it to a static value.
@@ -218,24 +229,48 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(2)
             ),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest2[0], timestamp = Today)
+                SummaryBloodPressureListItem(measurement = bpsForTest2[0], timestamp = Today, showDivider = true, displayTime = bpsForTest2[0].createdAt.toString().toOptional())
             )
         ),
         listOf<Any>(
             bpsForTest3,
-            listOf(SummaryBloodPressurePlaceholderListItem(1)),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest3[0], timestamp = Today),
-                SummaryBloodPressureListItem(measurement = bpsForTest3[1], timestamp = Today)
+                SummaryBloodPressurePlaceholderListItem(1),
+                SummaryBloodPressurePlaceholderListItem(2)
+            ),
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest3[0], timestamp = Today, showDivider = false, displayTime = bpsForTest3[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest3[1], timestamp = Today, showDivider = true, displayTime = bpsForTest3[1].createdAt.toString().toOptional())
             )
         ),
         listOf<Any>(
             bpsForTest4,
+            listOf(
+                SummaryBloodPressurePlaceholderListItem(1),
+                SummaryBloodPressurePlaceholderListItem(2)
+            ),
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest4[0], timestamp = Today, showDivider = false, displayTime = bpsForTest4[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[1], timestamp = Today, showDivider = false, displayTime = bpsForTest4[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[2], timestamp = Today, showDivider = true, displayTime = bpsForTest4[2].createdAt.toString().toOptional())
+            )
+        ),
+        listOf<Any>(
+            bpsForTest5,
+            listOf(SummaryBloodPressurePlaceholderListItem(1)),
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest5[0], timestamp = Today, showDivider = false, displayTime = bpsForTest5[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest5[1], timestamp = Today, showDivider = false, displayTime = bpsForTest5[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest5[2], timestamp = Today, showDivider = true, displayTime = bpsForTest5[2].createdAt.toString().toOptional())
+            )
+        ),
+        listOf<Any>(
+            bpsForTest6,
             emptyList<SummaryBloodPressurePlaceholderListItem>(),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest4[0], timestamp = Today),
-                SummaryBloodPressureListItem(measurement = bpsForTest4[1], timestamp = Today),
-                SummaryBloodPressureListItem(measurement = bpsForTest4[2], timestamp = Today)
+                SummaryBloodPressureListItem(measurement = bpsForTest6[0], timestamp = Today, showDivider = false, displayTime = bpsForTest6[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest6[1], timestamp = Today, showDivider = false, displayTime = bpsForTest6[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest6[2], timestamp = Today, showDivider = true, displayTime = bpsForTest6[2].createdAt.toString().toOptional())
             )
         )
     )
@@ -490,7 +525,7 @@ class PatientSummaryScreenControllerTest {
         prescriptions = listOf(
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt),
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt))),
-        bloodPressureListItems = listOf(SummaryBloodPressureListItem(PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt), Today, false)
+        bloodPressureListItems = listOf(SummaryBloodPressureListItem(PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt), Today, false, true, updatedAt.toString().toOptional())
         ),
         medicalHistoryItems = SummaryMedicalHistoryItem(PatientMocker.medicalHistory(syncStatus = syncStatus, updatedAt = updatedAt), Today)
     )
@@ -510,6 +545,68 @@ class PatientSummaryScreenControllerTest {
         .asSequence()
         .map { question -> listOf(question, randomAnswer()) }
         .toList()
+  }
+
+  @Parameters(method = "params for BP grouped by date")
+  @Test
+  fun `when BPs are grouped by dates, then only the last BP item in every group should show divider`(
+      bloodPressureMeasurements: List<BloodPressureMeasurement>,
+      expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
+  ) {
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L), isPatientEditFeatureEnabled = false)
+    configSubject.onNext(config)
+
+    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
+
+    verify(screen).populateList(
+        prescribedDrugsItem = any(),
+        measurementPlaceholderItems = any(),
+        measurementItems = check {
+          it.forEachIndexed { index, item ->
+            assertThat(item.measurement).isEqualTo(expectedBloodPressureMeasurementItems[index].measurement)
+            assertThat(item.showDivider).isEqualTo(expectedBloodPressureMeasurementItems[index].showDivider)
+          }
+        },
+        medicalHistoryItem = any()
+    )
+  }
+
+  @Suppress("unused")
+  private fun `params for BP grouped by date`(): List<List<Any>> {
+    val bpsForTest1 = listOf(
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).plusMillis(1000)),
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).plusMillis(500)),
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS))
+    )
+    val bpsForTest2 = listOf(
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock)),
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock)),
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS)),
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS).plusMillis(1000)),
+        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(2, ChronoUnit.DAYS))
+    )
+    return listOf(
+        listOf<Any>(
+            bpsForTest1,
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest1[0], timestamp = Today, showDivider = false, displayTime = bpsForTest1[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest1[1], timestamp = Today, showDivider = true, displayTime = bpsForTest1[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest1[2], timestamp = Today, showDivider = true, displayTime = bpsForTest1[2].createdAt.toString().toOptional())
+            )),
+        listOf<Any>(
+            bpsForTest2,
+            listOf(
+                SummaryBloodPressureListItem(measurement = bpsForTest2[0], timestamp = Today, showDivider = false, displayTime = bpsForTest2[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[1], timestamp = Today, showDivider = true, displayTime = bpsForTest2[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[2], timestamp = Today, showDivider = false, displayTime = bpsForTest2[2].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[3], timestamp = Today, showDivider = true, displayTime = bpsForTest2[3].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[4], timestamp = Today, showDivider = true, displayTime = bpsForTest2[4].createdAt.toString().toOptional())
+            ))
+    )
   }
 
   @After

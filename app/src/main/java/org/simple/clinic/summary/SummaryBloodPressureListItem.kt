@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.support.v4.content.res.ResourcesCompat
 import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.ImageView
 import android.widget.TextView
 import com.xwray.groupie.Item
@@ -14,6 +16,7 @@ import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.widgets.UiEvent
@@ -22,7 +25,9 @@ import org.simple.clinic.widgets.setTextAppearanceCompat
 data class SummaryBloodPressureListItem(
     val measurement: BloodPressureMeasurement,
     private val timestamp: RelativeTimestamp,
-    val isEditable: Boolean = false
+    val isEditable: Boolean = false,
+    val showDivider: Boolean,
+    val displayTime: Optional<String>
 ) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -76,6 +81,8 @@ data class SummaryBloodPressureListItem(
 
     holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
     holder.itemView.isClickable = isEditable
+
+    holder.divider.visibility = if(showDivider) VISIBLE else GONE
   }
 
   override fun isSameAs(other: Item<*>?): Boolean {
@@ -87,5 +94,6 @@ data class SummaryBloodPressureListItem(
     val heartImageView by bindView<ImageView>(R.id.patientsummary_bp_reading_heart)
     val levelTextView by bindView<TextView>(R.id.patientsummary_item_bp_level)
     val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
+    val divider by bindView<View>(R.id.patientsummary_item_bp_divider)
   }
 }

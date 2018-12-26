@@ -54,6 +54,7 @@
   </LinearLayout>
 
   <View
+    android:id="@+id/patientsummary_item_bp_divider"
     style="@style/Clinic.Separator.VerticalContent"
     android:layout_gravity="bottom"
     android:layout_marginEnd="@dimen/spacing_24"

@@ -45,6 +45,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.LocalDate
@@ -106,6 +107,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     super.onRestoreInstanceState(superSavedState)
   }
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -119,11 +121,12 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     setupSummaryList()
     setupEditButtonClicks()
 
-    controller.disposeOnDetach(this)
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
     Observable
         .mergeArray(
             screenCreates(),
+            screenDestroys,
             backClicks(),
             doneClicks(),
             adapterUiEvents,
@@ -134,7 +137,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
 
@@ -184,7 +187,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private fun appointmentScheduledSuccess() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null}
+      .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null }
       .map { ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
       .map { AppointmentScheduled }
 
@@ -312,7 +315,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
 @Parcelize
 data class PatientSummaryScreenSavedState(
-    val superSavedState: Parcelable,
+    val superSavedState: Parcelable?,
     val bpEntryShownOnStart: Boolean,
     val bloodPressureWasSaved: Boolean
 ) : Parcelable

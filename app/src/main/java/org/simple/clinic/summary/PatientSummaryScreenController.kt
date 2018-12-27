@@ -35,6 +35,8 @@ import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -408,11 +410,20 @@ class PatientSummaryScreenController @Inject constructor(
     return Observables.combineLatest(patientUuidStream, configProvider.toObservable())
         .filter { (_, config) -> config.isUpdatePhoneDialogEnabled }
         .flatMap { (patientUuid) ->
-          appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)
-              .take(1)
-              .filter { (appointment) -> appointment?.cancelReason == InvalidPhoneNumber }
+          val lastCancelledAppointment = appointmentRepository
+              .appointmentForPatient(patientUuid, status = CANCELLED)
+              .filterAndUnwrapJust()
+              .filter { it.cancelReason == InvalidPhoneNumber }
+
+          val patientPhoneNumber = patientRepository
+              .phoneNumber(patientUuid)
+              .unwrapJust()
+
+          Observables.combineLatest(lastCancelledAppointment, patientPhoneNumber)
+              .filter { (appointment, number) -> appointment.updatedAt > number.updatedAt }
               .map { patientUuid }
         }
+        .take(1)
         .map { patientUuid -> { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
   }
 }

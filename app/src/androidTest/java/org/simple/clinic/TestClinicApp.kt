@@ -15,6 +15,7 @@ import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
 import org.simple.clinic.di.NetworkModule
 import org.simple.clinic.di.TestAppComponent
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
@@ -31,6 +32,7 @@ import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -106,7 +108,10 @@ class TestClinicApp : ClinicApp() {
           }
         })
         .crashReporterModule(object : CrashReporterModule() {
-          override fun crashReporter() = NoOpCrashReporter()
+          override fun crashReporter(
+              userSession: UserSession,
+              facilityRepository: FacilityRepository
+          ) = NoOpCrashReporter()
         })
         .loginModule(object : LoginModule() {
           override fun loginSmsListener(app: Application): LoginOtpSmsListener {

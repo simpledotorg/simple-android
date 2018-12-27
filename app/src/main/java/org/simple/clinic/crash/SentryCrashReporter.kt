@@ -1,6 +1,7 @@
 package org.simple.clinic.crash
 
 import android.app.Application
+import io.reactivex.schedulers.Schedulers.io
 import io.sentry.Sentry
 import io.sentry.android.AndroidSentryClientFactory
 import io.sentry.event.BreadcrumbBuilder
@@ -12,6 +13,7 @@ import org.simple.clinic.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.crash.Breadcrumb.Priority.WARN
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.filterAndUnwrapJust
 import java.util.Date
 
 typealias SentryBreadcrumbLevel = io.sentry.event.Breadcrumb.Level
@@ -23,7 +25,29 @@ class SentryCrashReporter(
 
   override fun init(appContext: Application) {
     Sentry.init(AndroidSentryClientFactory(appContext))
+    identifyUserAndCurrentFacility()
+  }
 
+  @Suppress("CheckResult")
+  private fun identifyUserAndCurrentFacility() {
+    val loggedInUserStream = userSession.loggedInUser()
+        .subscribeOn(io())
+        .filterAndUnwrapJust()
+        .replay()
+        .refCount()
+
+    loggedInUserStream
+        .map { it.uuid }
+        .subscribe(
+            { Sentry.getContext().addTag("userUuid", it.toString()) },
+            { report(it) })
+
+    loggedInUserStream
+        .flatMap { facilityRepository.currentFacility(it) }
+        .map { it.uuid }
+        .subscribe(
+            { Sentry.getContext().addTag("facilityUuid", it.toString()) },
+            { report(it) })
   }
 
   override fun dropBreadcrumb(breadcrumb: Breadcrumb) {

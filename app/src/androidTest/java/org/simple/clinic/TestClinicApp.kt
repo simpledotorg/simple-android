@@ -9,6 +9,7 @@ import org.simple.clinic.TestClinicApp.Companion.appComponent
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.crash.NoOpCrashReporter
 import org.simple.clinic.di.AppComponent
+import org.simple.clinic.di.AppInfoHttpInterceptor
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.di.DaggerTestAppComponent
@@ -115,8 +116,11 @@ class TestClinicApp : ClinicApp() {
           }
         })
         .networkModule(object : NetworkModule() {
-          override fun okHttpClient(loggedInInterceptor: LoggedInUserHttpInterceptor): OkHttpClient {
-            return super.okHttpClient(loggedInInterceptor)
+          override fun okHttpClient(
+              loggedInInterceptor: LoggedInUserHttpInterceptor,
+              appInfoHttpInterceptor: AppInfoHttpInterceptor
+          ): OkHttpClient {
+            return super.okHttpClient(loggedInInterceptor, appInfoHttpInterceptor)
                 .newBuilder()
                 .addInterceptor(FailAllNetworkCallsInterceptor)
                 .build()

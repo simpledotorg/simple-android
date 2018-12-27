@@ -51,9 +51,13 @@ open class NetworkModule {
 
   @Provides
   @AppScope
-  open fun okHttpClient(loggedInInterceptor: LoggedInUserHttpInterceptor): OkHttpClient {
+  open fun okHttpClient(
+      loggedInInterceptor: LoggedInUserHttpInterceptor,
+      appInfoHttpInterceptor: AppInfoHttpInterceptor
+  ): OkHttpClient {
     return OkHttpClient.Builder()
         .apply {
+          addInterceptor(appInfoHttpInterceptor)
           addInterceptor(loggedInInterceptor)
           addInterceptor(NetworkAnalyticsInterceptor())
 

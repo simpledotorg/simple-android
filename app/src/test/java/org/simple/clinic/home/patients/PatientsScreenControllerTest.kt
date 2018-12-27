@@ -18,6 +18,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
+import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
@@ -374,7 +375,7 @@ class PatientsScreenControllerTest {
         .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid, fullName = "Anish Acharya").toOptional()))
 
     val appointment = PatientMocker.appointment(patientUuid = patientUuid, scheduledDate = LocalDate.now(UTC))
-    whenever(appointmentRepository.scheduledAppointmentForPatient(patientUuid))
+    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = SCHEDULED))
         .thenReturn(Observable.just(Just(appointment)))
     whenever(patientSummaryResult.get()).thenReturn(result)
     uiEvents.onNext(ScreenCreated())

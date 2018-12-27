@@ -660,7 +660,7 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.schedule(patientId, appointmentDateNow).blockingAwait()
     appointmentRepository.schedule(patientId, appointmentDateLater).blockingAwait()
 
-    val (appointment) = appointmentRepository.scheduledAppointmentForPatient(patientId).blockingFirst()
+    val (appointment) = appointmentRepository.appointmentForPatient(patientId, status = SCHEDULED).blockingFirst()
     assertThat(appointment!!.patientUuid).isEqualTo(patientId)
     assertThat(appointment.status).isEqualTo(SCHEDULED)
     assertThat(appointment.scheduledDate).isEqualTo(appointmentDateLater)

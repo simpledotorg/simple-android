@@ -25,7 +25,6 @@
     <string name="patiententry_error_dateofbirth_is_in_future">ਦਰਜ ਕੀਤਾ ਜਨਮ ਮਿਤੀ ਗਲਤ ਹੈ</string>
     <string name="patiententry_state">ਰਾਜ</string>
     <string name="home_search_patient_name_phone">ਮਰੀਜ਼ ਦਾ ਨਾਮ ਤੇ ਫ਼ੋਨ ਨੰਬਰ ਭਰੋ</string>
-    <string name="bloodpressureentry_sheet_title">ਬਲੈੱਡ ਪ੍ਰੈਸ਼ਰ ਭਰੋ</string>
     <string name="bloodpressureentry_systolic">ਸਿਸਟੌਲਿਕ</string>
     <string name="bloodpressureentry_diastolic">ਡਾਇਸਟੋਲਿਕ</string>
     <string name="patientsummary_contentdescription_up_button">ਵਾਪਸ ਜਾਓ</string>

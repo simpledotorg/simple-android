@@ -25,7 +25,6 @@
     <string name="patiententry_error_invalid_dateofbirth">जन्मतिथि गलत है</string>
     <string name="patiententry_error_dateofbirth_is_in_future">जन्मतिथि भविष्य में नहीं हो सकती है</string>
     <string name="home_search_patient_name_phone">रोगी का नाम या फोन नंबर भरें</string>
-    <string name="bloodpressureentry_sheet_title">बी. पी. दर्ज करें</string>
     <string name="bloodpressureentry_systolic">सिस्टोलिक</string>
     <string name="bloodpressureentry_diastolic">डायस्टोलिक</string>
     <string name="patientsummary_contentdescription_up_button">वापस जाओ</string>

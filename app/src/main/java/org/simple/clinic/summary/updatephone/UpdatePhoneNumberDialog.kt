@@ -22,6 +22,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
+import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
@@ -91,6 +92,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
   override fun onStart() {
     super.onStart()
     onStarts.onNext(Any())
+    numberEditText.showKeyboard()
   }
 
   private fun setupDialog(): Observable<UiChange> {

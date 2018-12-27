@@ -662,11 +662,16 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   @Parameters(method = "appointment cancelation reasons")
-  fun `when screen is opened and the patient's phone was marked as invalid then update phone dialog should be shown`(
+  fun `when patient's phone was marked as invalid after the phone number was last updated then update phone dialog should be shown`(
       cancelReason: AppointmentCancelReason
   ) {
     val appointment = PatientMocker.appointment(cancelReason = cancelReason)
     whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.just(Just(appointment)))
+
+    val phoneNumber = PatientMocker.phoneNumber(
+        patientUuid = patientUuid,
+        updatedAt = appointment.updatedAt - Duration.ofHours(2))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -682,6 +687,30 @@ class PatientSummaryScreenControllerTest {
     } else {
       verify(screen, never()).showUpdatePhoneDialog(patientUuid)
     }
+  }
+
+  @Test
+  @Parameters(method = "appointment cancelation reasons")
+  fun `when patient's phone was marked as invalid before the phone number was last updated then update phone dialog should not be shown`(
+      cancelReason: AppointmentCancelReason
+  ) {
+    val appointment = PatientMocker.appointment(cancelReason = cancelReason)
+    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.just(Just(appointment)))
+
+    val phoneNumber = PatientMocker.phoneNumber(
+        patientUuid = patientUuid,
+        updatedAt = appointment.updatedAt + Duration.ofHours(2))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
+
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        bpEditableFor = Duration.ofSeconds(30L),
+        isUpdatePhoneDialogEnabled = true)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test

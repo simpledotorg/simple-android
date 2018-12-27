@@ -319,4 +319,28 @@ class BloodPressureEntrySheetControllerTest {
         listOf(OpenAs.New(UUID.randomUUID()), false),
         listOf(OpenAs.Update(UUID.randomUUID()), true))
   }
+
+  @Test
+  @Parameters(method = "params for setting the title of the sheet")
+  fun `the correct title should be shown when the sheet is opened`(
+      openAs: OpenAs,
+      showEntryTitle: Boolean
+  ) {
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
+
+    if (showEntryTitle) {
+      verify(sheet).showEnterNewBloodPressureTitle()
+    } else {
+      verify(sheet).showEditBloodPressureTitle()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for setting the title of the sheet`(): List<List<Any>> {
+    return listOf(
+        listOf(OpenAs.New(UUID.randomUUID()), true),
+        listOf(OpenAs.Update(UUID.randomUUID()), false))
+  }
 }

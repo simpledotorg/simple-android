@@ -373,6 +373,10 @@
     <item name="android:textColor">@color/white100</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Button2.Red1">
+    <item name="android:textColor">@color/red1</item>
+  </style>
+
   <!-- Screen/feature specific styles start here. -->
   <style name="Clinic.V2.BottomAlignedButtonFrame">
     <item name="android:layout_width">match_parent</item>

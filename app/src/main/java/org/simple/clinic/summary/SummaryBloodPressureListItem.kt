@@ -16,7 +16,6 @@ import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.widgets.UiEvent
@@ -24,9 +23,9 @@ import org.simple.clinic.widgets.setTextAppearanceCompat
 
 data class SummaryBloodPressureListItem(
     val measurement: BloodPressureMeasurement,
-    private val timestamp: RelativeTimestamp,
+    private val displayDaysTimestamp: RelativeTimestamp,
     val showDivider: Boolean,
-    val displayTime: Optional<String>
+    val displayTime: String?
 ) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -59,12 +58,12 @@ data class SummaryBloodPressureListItem(
     holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
 
     val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.patientsummary_edit_label_color, context.theme))
-    holder.timestampTextView.text = Truss()
+    holder.daysAgoTextView.text = Truss()
         .pushSpan(colorSpanForEditLabel)
         .append(resources.getString(R.string.patientsummary_bp_edit))
         .popSpan()
         .append(" ${Unicode.bullet} ")
-        .append(timestamp.displayText(context))
+        .append(displayDaysTimestamp.displayText(context))
         .build()
 
     val measurementImageTint = when {
@@ -76,6 +75,14 @@ data class SummaryBloodPressureListItem(
     holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
 
     holder.divider.visibility = if (showDivider) VISIBLE else GONE
+
+    if (displayTime != null) {
+      holder.timeTextView.visibility = VISIBLE
+      holder.timeTextView.text = displayTime
+    } else {
+      holder.timeTextView.visibility = GONE
+    }
+
   }
 
   override fun isSameAs(other: Item<*>?): Boolean {
@@ -86,7 +93,8 @@ data class SummaryBloodPressureListItem(
     val readingsTextView by bindView<TextView>(R.id.patientsummary_item_bp_readings)
     val heartImageView by bindView<ImageView>(R.id.patientsummary_bp_reading_heart)
     val levelTextView by bindView<TextView>(R.id.patientsummary_item_bp_level)
-    val timestampTextView by bindView<TextView>(R.id.patientsummary_item_bp_timestamp)
+    val daysAgoTextView by bindView<TextView>(R.id.patientsummary_item_bp_date)
     val divider by bindView<View>(R.id.patientsummary_item_bp_divider)
+    val timeTextView by bindView<TextView>(R.id.patientsummary_item_bp_time)
   }
 }

@@ -9,6 +9,7 @@
   android:foreground="?selectableItemBackground">
 
   <LinearLayout
+    android:id="@+id/patientsummary_item_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -46,13 +47,29 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
       tools:text="High" />
 
-    <TextView
-      android:id="@+id/patientsummary_item_bp_timestamp"
+    <LinearLayout
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-      tools:text="Edit \u2022 Today" />
+      android:orientation="vertical"
+      android:gravity="end"
+      android:layout_gravity="center_vertical">
+
+      <TextView
+        android:id="@+id/patientsummary_item_bp_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+        tools:text="Edit \u2022 Today" />
+
+
+      <TextView
+        android:id="@+id/patientsummary_item_bp_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1"
+        tools:text="23:30 PM" />
+    </LinearLayout>
+
   </LinearLayout>
 
   <View

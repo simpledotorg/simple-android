@@ -9,7 +9,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
-import org.simple.clinic.util.toOptional
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
@@ -31,9 +30,9 @@ class PatientSummaryItemsTest {
     fun generateSummaryBloodPressureListItem(syncStatus: SyncStatus, updatedAt: Instant): SummaryBloodPressureListItem {
       return SummaryBloodPressureListItem(
           measurement = PatientMocker.bp(updatedAt = updatedAt, syncStatus = syncStatus),
-          timestamp = Today,
+          displayDaysTimestamp = Today,
           showDivider = false,
-          displayTime = updatedAt.toString().toOptional()
+          displayTime = updatedAt.toString()
       )
     }
 

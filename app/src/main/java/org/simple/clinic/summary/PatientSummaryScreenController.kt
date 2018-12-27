@@ -36,7 +36,6 @@ import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
@@ -126,29 +125,26 @@ class PatientSummaryScreenController @Inject constructor(
           .flatMap { prescriptionRepository.newestPrescriptionsForPatient(it) }
           .map(::SummaryPrescribedDrugsItem)
 
-      val bloodPressures = patientUuids
-          .withLatestFrom(configProvider.toObservable())
+      val bloodPressures = Observables.combineLatest(patientUuids, configProvider.toObservable())
           .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }
           .replay(1)
           .refCount()
 
       val displayTime = { instant: Instant ->
-        instant.atZone(zoneId).format(timeFormatterForBp).toString().toOptional()
+        instant.atZone(zoneId).format(timeFormatterForBp)
       }
-
 
       val bloodPressureItems = bloodPressures
           .map { bps ->
             val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(clock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->
-              val lastElement = measurementList.last()
               measurementList.map { measurement ->
                 val timestamp = timestampGenerator.generate(measurement.createdAt)
                 SummaryBloodPressureListItem(
                     measurement = measurement,
-                    timestamp = timestamp,
-                    showDivider = measurement.uuid == lastElement.uuid,
-                    displayTime = displayTime(measurement.createdAt)
+                    displayDaysTimestamp = timestamp,
+                    displayTime = if (measurementList.size > 1) displayTime(measurement.createdAt) else null,
+                    showDivider = measurement == measurementList.last()
                 )
               }
             }

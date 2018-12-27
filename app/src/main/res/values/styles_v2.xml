@@ -347,6 +347,10 @@
     <item name="android:textColor">@color/red1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Caption.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.SearchResultsTitle">
     <item name="android:textSize">@dimen/textsize_18</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>

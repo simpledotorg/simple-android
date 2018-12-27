@@ -108,9 +108,9 @@ class BloodPressureRepository @Inject constructor(
     return dao.count().toObservable()
   }
 
-  fun newest100MeasurementsForPatient(patientUuid: UUID): Observable<List<BloodPressureMeasurement>> {
+  fun newestMeasurementsForPatient(patientUuid: UUID, limit: Int): Observable<List<BloodPressureMeasurement>> {
     return dao
-        .newest100ForPatient(patientUuid)
+        .newestMeasurementsForPatient(patientUuid, limit)
         .toObservable()
   }
 

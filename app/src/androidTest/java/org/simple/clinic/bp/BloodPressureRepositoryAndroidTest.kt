@@ -15,6 +15,8 @@ import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import org.threeten.bp.temporal.ChronoUnit
+import java.util.UUID
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -66,6 +68,36 @@ class BloodPressureRepositoryAndroidTest {
     )
 
     assertThat(appDatabase.bloodPressureDao().getOne(bloodPressure.uuid)!!).isEqualTo(expected)
+  }
+
+  @Test
+  fun when_fetching_newest_blood_pressure_the_list_should_be_ordered_by_created_at() {
+    val patientUuid = UUID.randomUUID()
+    val bloodPressure1 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock))
+
+    val bloodPressure2 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).plus(1, ChronoUnit.DAYS))
+
+    val bloodPressure3 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS))
+
+    val bloodPressure4 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).plusMillis(1000))
+
+    val bloodPressure5 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minus(10, ChronoUnit.DAYS))
+
+    appDatabase.bloodPressureDao().save(listOf(bloodPressure1, bloodPressure2, bloodPressure3, bloodPressure4, bloodPressure5))
+
+    val bpMeasurements = repository.newestMeasurementsForPatient(patientUuid, 4).blockingFirst()
+
+    assertThat(bpMeasurements).isEqualTo(listOf(bloodPressure2, bloodPressure4, bloodPressure1, bloodPressure3))
   }
 
   @After

@@ -117,7 +117,8 @@ class PatientSummaryScreenController @Inject constructor(
           .map(::SummaryPrescribedDrugsItem)
 
       val bloodPressures = patientUuids
-          .flatMap { bpRepository.newest100MeasurementsForPatient(it) }
+          .withLatestFrom(configProvider.toObservable())
+          .flatMap { (patientUuid, configProvider) -> bpRepository.newestMeasurementsForPatient(patientUuid, configProvider.numberOfBpsToDisplay) }
           .replay(1)
           .refCount()
 
@@ -126,8 +127,9 @@ class PatientSummaryScreenController @Inject constructor(
       }
 
 
-      val bloodPressureItems = bloodPressures
-          .withLatestFrom(configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
+      val bloodPressureItems = Observables.combineLatest(
+          bloodPressures,
+          configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
           .map { (bps, bpEditableFor) ->
             val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(clock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->

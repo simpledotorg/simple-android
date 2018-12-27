@@ -10,14 +10,20 @@ import org.simple.clinic.crash.Breadcrumb.Priority.ERROR
 import org.simple.clinic.crash.Breadcrumb.Priority.INFO
 import org.simple.clinic.crash.Breadcrumb.Priority.VERBOSE
 import org.simple.clinic.crash.Breadcrumb.Priority.WARN
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.user.UserSession
 import java.util.Date
 
 typealias SentryBreadcrumbLevel = io.sentry.event.Breadcrumb.Level
 
-class SentryCrashReporter : CrashReporter {
+class SentryCrashReporter(
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
+) : CrashReporter {
 
   override fun init(appContext: Application) {
     Sentry.init(AndroidSentryClientFactory(appContext))
+
   }
 
   override fun dropBreadcrumb(breadcrumb: Breadcrumb) {

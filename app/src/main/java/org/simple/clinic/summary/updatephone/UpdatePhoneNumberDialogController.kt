@@ -32,7 +32,8 @@ class UpdatePhoneNumberDialogController @Inject constructor(
 
     return Observable.merge(
         preFillExistingNumber(replayedEvents),
-        savePhoneNumber(replayedEvents))
+        saveUpdatedPhoneNumber(replayedEvents),
+        saveExistingPhoneNumber(replayedEvents))
   }
 
   private fun preFillExistingNumber(events: Observable<UiEvent>): Observable<UiChange> {
@@ -44,7 +45,7 @@ class UpdatePhoneNumberDialogController @Inject constructor(
   }
 
   @Suppress("RedundantLambdaArrow")
-  private fun savePhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun saveUpdatedPhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuidStream = events
         .ofType<UpdatePhoneNumberDialogCreated>()
         .map { it.patientUuid }
@@ -80,5 +81,33 @@ class UpdatePhoneNumberDialogController @Inject constructor(
         }
 
     return saveNumber.mergeWith(showValidationError)
+  }
+
+  /**
+   * The dialog is never shown again once it's dismissed, until the phone number
+   * is updated again and an appointment is canceled again. In order to identify
+   * if the dialog can be shown, the timestamps of the cancelled appointment and
+   * the phone number are compared.
+   *
+   * As a result, it's necessary to always bump the phone number's update
+   * timestamp even if it wasn't unchanged.
+   */
+  private fun saveExistingPhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
+    val cancelClicks = events.ofType<UpdatePhoneNumberCancelClicked>()
+
+    val patientUuidStream = events
+        .ofType<UpdatePhoneNumberDialogCreated>()
+        .map { it.patientUuid }
+
+    return cancelClicks
+        .withLatestFrom(patientUuidStream)
+        .flatMap { (_, patientUuid) -> repository.phoneNumber(patientUuid) }
+        .unwrapJust()
+        .take(1)
+        .flatMap { phoneNumber ->
+          repository
+              .updatePhoneNumberForPatient(phoneNumber.patientUuid, phoneNumber)
+              .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
+        }
   }
 }

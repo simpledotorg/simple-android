@@ -96,11 +96,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
     val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
     val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
 
-    cancelButton.setOnClickListener {
-      dismiss()
-    }
-
-    return Observable.merge(dialogCreates(), saveClicks(saveButton))
+    return Observable.merge(dialogCreates(), cancelClicks(cancelButton), saveClicks(saveButton))
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(mainThread())
@@ -110,6 +106,11 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
     val patientUuid = arguments!!.getSerializable(KEY_PATIENT_UUID) as PatientUuid
     return Observable.just(UpdatePhoneNumberDialogCreated(patientUuid))
   }
+
+  private fun cancelClicks(cancelButton: Button) =
+      RxView
+          .clicks(cancelButton)
+          .map { UpdatePhoneNumberCancelClicked }
 
   private fun saveClicks(saveButton: Button) =
       RxView

@@ -115,6 +115,18 @@ class UpdatePhoneNumberDialogControllerTest {
     }.exhaustive()
   }
 
+  @Test
+  fun `when cancel is clicked then the existing number should be saved again`() {
+    val existingPhoneNumber = PatientMocker.phoneNumber(patientUuid = patientUuid)
+    whenever(repository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(existingPhoneNumber)))
+    whenever(repository.updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(UpdatePhoneNumberDialogCreated(patientUuid))
+    uiEvents.onNext(UpdatePhoneNumberCancelClicked)
+
+    verify(repository).updatePhoneNumberForPatient(patientUuid, existingPhoneNumber)
+  }
+
   @Suppress("unused")
   private fun `validation errors`() = values().filter { it != VALID }
 }

@@ -13,6 +13,7 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.registration.RegistrationConfig
@@ -20,6 +21,7 @@ import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
 import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
@@ -89,7 +91,10 @@ class DebugClinicApp : ClinicApp() {
           }
         })
         .crashReporterModule(object : CrashReporterModule() {
-          override fun crashReporter() = NoOpCrashReporter()
+          override fun crashReporter(
+              userSession: UserSession,
+              facilityRepository: FacilityRepository
+          ) = NoOpCrashReporter()
         })
         .bruteForceProtectionModule(object : BruteForceProtectionModule() {
           override fun config(): Single<BruteForceProtectionConfig> {

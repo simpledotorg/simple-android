@@ -92,7 +92,10 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
   private fun logError() = { e: Throwable ->
     val resolvedError = ErrorResolver.resolve(e)
     when (resolvedError) {
-      is ResolvedError.Unexpected -> crashReporter.report(resolvedError.actualCause)
+      is ResolvedError.Unexpected -> {
+        Timber.i("(breadcrumb) Reporting to sentry. Error: $e. Resolved error: $resolvedError")
+        crashReporter.report(resolvedError.actualCause)
+      }
       is ResolvedError.NetworkRelated -> {
         // Connectivity issues are expected.
       }

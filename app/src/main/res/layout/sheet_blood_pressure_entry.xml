@@ -9,24 +9,58 @@
   android:paddingBottom="@dimen/spacing_24"
   android:paddingTop="@dimen/spacing_16">
 
-  <TextView
+  <FrameLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_16"
-    android:gravity="center_horizontal"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
-    android:text="@string/bloodpressureentry_sheet_title"
-    tools:ignore="UnusedAttribute" />
+    android:orientation="horizontal">
+
+    <TextView
+      android:id="@+id/bloodpressureentry_edit_blood_pressure"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="start|center_vertical"
+      android:layout_marginStart="@dimen/spacing_24"
+      android:text="@string/bloodpressureentry_sheet_title_edit_blood_pressure"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+      android:visibility="gone"
+      tools:ignore="UnusedAttribute"
+      tools:visibility="visible" />
+
+    <TextView
+      android:id="@+id/bloodpressureentry_enter_blood_pressure"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_horizontal"
+      android:text="@string/bloodpressureentry_sheet_title_enter_blood_pressure"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+      android:visibility="gone"
+      tools:ignore="UnusedAttribute"
+      tools:visibility="visible" />
+
+    <Button
+      android:id="@+id/bloodpressureentry_remove"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:text="@string/bloodpressureentry_remove"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
+      android:visibility="gone"
+      tools:visibility="visible" />
+
+  </FrameLayout>
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_16"
     android:gravity="center_horizontal">
 
     <LinearLayout
       android:layout_width="0dp"
-      android:layout_weight="1"
       android:layout_height="wrap_content"
+      android:layout_weight="1"
       android:orientation="vertical">
 
       <!-- Contains an awkward bottom-padding to keep
@@ -36,7 +70,7 @@
         style="@style/Clinic.BloodPressureInput"
         android:importantForAutofill="no"
         tools:ignore="UnusedAttribute"
-        tools:text="120"/>
+        tools:text="120" />
 
       <requestFocus />
 
@@ -47,9 +81,9 @@
       <TextView
         android:id="@+id/bloodpressureentry_systolic_label"
         style="@style/Clinic.BloodPressureInputLabel"
-        android:text="@string/bloodpressureentry_systolic"
         android:labelFor="@id/bloodpressureentry_systolic"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"/>
+        android:text="@string/bloodpressureentry_systolic"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
     </LinearLayout>
 
     <TextView
@@ -63,8 +97,8 @@
 
     <LinearLayout
       android:layout_width="0dp"
-      android:layout_weight="1"
       android:layout_height="wrap_content"
+      android:layout_weight="1"
       android:orientation="vertical">
 
       <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
@@ -80,9 +114,9 @@
       <TextView
         android:id="@+id/bloodpressureentry_diastolic_label"
         style="@style/Clinic.BloodPressureInputLabel"
-        android:text="@string/bloodpressureentry_diastolic"
         android:labelFor="@id/bloodpressureentry_diastolic"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"/>
+        android:text="@string/bloodpressureentry_diastolic"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
     </LinearLayout>
   </LinearLayout>
 

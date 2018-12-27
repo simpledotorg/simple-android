@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -34,6 +35,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
   private val errorTextView by bindView<TextView>(R.id.bloodpressureentry_error)
+  private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
+  private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
+  private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
 
   private val onDestroys = PublishSubject.create<Any>()
 
@@ -186,10 +190,18 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun showRemoveBpButton() {
-
+    removeBloodPressureButton.visibility = View.VISIBLE
   }
 
   fun hideRemoveBpButton() {
+    removeBloodPressureButton.visibility = View.GONE
+  }
 
+  fun showEnterNewBloodPressureTitle() {
+    enterBloodPressureTitleTextView.visibility = View.VISIBLE
+  }
+
+  fun showEditBloodPressureTitle() {
+    editBloodPressureTitleTextView.visibility = View.VISIBLE
   }
 }

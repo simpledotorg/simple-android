@@ -115,7 +115,9 @@
   <string name="patients_record_every_patient">Record <font color="#2f363d"><i>every patient</i></font> who has hypertension or who is taking medicines for high BP</string>
 
   <!-- New blood pressure entry -->
-  <string name="bloodpressureentry_sheet_title">Enter blood pressure</string>
+  <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Enter blood pressure</string>
+  <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Edit blood pressure</string>
+  <string name="bloodpressureentry_remove">Remove</string>
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
   <string name="bloodpressureentry_error_systolic_more">Systolic should be more than diastolic</string>

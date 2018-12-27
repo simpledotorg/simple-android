@@ -90,7 +90,7 @@ class PatientSummaryScreenControllerTest {
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.never())
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.never())
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
 
@@ -107,7 +107,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
 
@@ -116,7 +116,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's prescription summary should be populated`() {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L), numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     val prescriptions = listOf(
@@ -124,7 +124,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.prescription(name = "Telmisartan", dosage = "9000mg"),
         PatientMocker.prescription(name = "Randomzole", dosage = "2 packets"))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(prescriptions))
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
@@ -134,7 +134,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's blood pressure history should be populated`() {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L), numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
@@ -142,7 +142,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, createdAt = Instant.now(clock).minusSeconds(30L)),
         PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, createdAt = Instant.now(clock).minusSeconds(45L)))
 
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
@@ -167,10 +167,10 @@ class PatientSummaryScreenControllerTest {
       expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L), numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
@@ -210,7 +210,7 @@ class PatientSummaryScreenControllerTest {
         PatientMocker.bp(patientUuid)
     )
 
-    // We won't be verifying the relative timestamps in the test this is used in,
+    // We won't be verifying the relative timestamps and showDivider in the test this is used in,
     // so we can just set it to a static value.
     return listOf(
         listOf<Any>(
@@ -239,7 +239,7 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(2)
             ),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest3[0], timestamp = Today, showDivider = false, displayTime = bpsForTest3[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest3[0], timestamp = Today, showDivider = true, displayTime = bpsForTest3[0].createdAt.toString().toOptional()),
                 SummaryBloodPressureListItem(measurement = bpsForTest3[1], timestamp = Today, showDivider = true, displayTime = bpsForTest3[1].createdAt.toString().toOptional())
             )
         ),
@@ -250,8 +250,8 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(2)
             ),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest4[0], timestamp = Today, showDivider = false, displayTime = bpsForTest4[0].createdAt.toString().toOptional()),
-                SummaryBloodPressureListItem(measurement = bpsForTest4[1], timestamp = Today, showDivider = false, displayTime = bpsForTest4[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[0], timestamp = Today, showDivider = true, displayTime = bpsForTest4[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[1], timestamp = Today, showDivider = true, displayTime = bpsForTest4[1].createdAt.toString().toOptional()),
                 SummaryBloodPressureListItem(measurement = bpsForTest4[2], timestamp = Today, showDivider = true, displayTime = bpsForTest4[2].createdAt.toString().toOptional())
             )
         ),
@@ -259,8 +259,8 @@ class PatientSummaryScreenControllerTest {
             bpsForTest5,
             listOf(SummaryBloodPressurePlaceholderListItem(1)),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest5[0], timestamp = Today, showDivider = false, displayTime = bpsForTest5[0].createdAt.toString().toOptional()),
-                SummaryBloodPressureListItem(measurement = bpsForTest5[1], timestamp = Today, showDivider = false, displayTime = bpsForTest5[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest5[0], timestamp = Today, showDivider = true, displayTime = bpsForTest5[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest5[1], timestamp = Today, showDivider = true, displayTime = bpsForTest5[1].createdAt.toString().toOptional()),
                 SummaryBloodPressureListItem(measurement = bpsForTest5[2], timestamp = Today, showDivider = true, displayTime = bpsForTest5[2].createdAt.toString().toOptional())
             )
         ),
@@ -268,8 +268,8 @@ class PatientSummaryScreenControllerTest {
             bpsForTest6,
             emptyList<SummaryBloodPressurePlaceholderListItem>(),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest6[0], timestamp = Today, showDivider = false, displayTime = bpsForTest6[0].createdAt.toString().toOptional()),
-                SummaryBloodPressureListItem(measurement = bpsForTest6[1], timestamp = Today, showDivider = false, displayTime = bpsForTest6[1].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest6[0], timestamp = Today, showDivider = true, displayTime = bpsForTest6[0].createdAt.toString().toOptional()),
+                SummaryBloodPressureListItem(measurement = bpsForTest6[1], timestamp = Today, showDivider = true, displayTime = bpsForTest6[1].createdAt.toString().toOptional()),
                 SummaryBloodPressureListItem(measurement = bpsForTest6[2], timestamp = Today, showDivider = true, displayTime = bpsForTest6[2].createdAt.toString().toOptional())
             )
         )
@@ -278,11 +278,11 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `patient's medical history should be populated`() {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L))
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = Duration.ofSeconds(30L), numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
 
     val medicalHistory = medicalHistory(updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
@@ -441,7 +441,7 @@ class PatientSummaryScreenControllerTest {
       bloodPressureMeasurement: BloodPressureMeasurement,
       shouldBeEditable: Boolean
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = bpEditableFor)
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 0, bpEditableFor = bpEditableFor, numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
@@ -470,6 +470,7 @@ class PatientSummaryScreenControllerTest {
 
     return generateBps(Duration.ofMinutes(1L)) + generateBps(Duration.ofDays(2L))
   }
+
 
   @Parameters(method = "params for patient item changed")
   @Test
@@ -553,10 +554,10 @@ class PatientSummaryScreenControllerTest {
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
-    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L), isPatientEditFeatureEnabled = false)
+    val config = PatientSummaryConfig(numberOfBpPlaceholders = 3, bpEditableFor = Duration.ofSeconds(30L), numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    whenever(bpRepository.newest100MeasurementsForPatient(patientUuid)).thenReturn(Observable.just(bloodPressureMeasurements))
+    whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 

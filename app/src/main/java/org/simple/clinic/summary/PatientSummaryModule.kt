@@ -16,7 +16,8 @@ open class PatientSummaryModule {
   @Provides
   open fun providesSummaryConfig(): Single<PatientSummaryConfig> = Single.just(PatientSummaryConfig(
       numberOfBpPlaceholders = 3,
-      bpEditableFor = Duration.ofDays(1L)
+      bpEditableFor = Duration.ofDays(1L),
+      numberOfBpsToDisplay = 100
   ))
 
   @Provides

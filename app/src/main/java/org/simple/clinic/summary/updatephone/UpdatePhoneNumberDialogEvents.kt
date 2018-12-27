@@ -7,6 +7,10 @@ data class UpdatePhoneNumberDialogCreated(val patientUuid: PatientUuid) : UiEven
   override val analyticsName = "Patient Summary:Update Phone Number:Dialog Created"
 }
 
+object UpdatePhoneNumberCancelClicked : UiEvent {
+  override val analyticsName = "Patient Summary:Update Phone Number:Cancel Clicked"
+}
+
 data class UpdatePhoneNumberSaveClicked(val number: String) : UiEvent {
   override val analyticsName = "Patient Summary:Update Phone Number:Save Clicked"
 }

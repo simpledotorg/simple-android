@@ -10,6 +10,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
@@ -176,7 +177,7 @@ class PatientsScreenController @Inject constructor(
         .map { it.fullName }
 
     val appointmentDate = scheduledResult
-        .flatMap { appointmentRepository.scheduledAppointmentForPatient(it.patientUuid) }
+        .flatMap { appointmentRepository.appointmentForPatient(it.patientUuid, status = SCHEDULED) }
         .unwrapJust()
         .map { it.scheduledDate }
 

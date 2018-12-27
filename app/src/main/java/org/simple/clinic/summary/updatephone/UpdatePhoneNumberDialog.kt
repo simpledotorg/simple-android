@@ -41,6 +41,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
       }
 
       val fragment = UpdatePhoneNumberDialog().apply {
+        isCancelable = false
         arguments = Bundle(1).apply {
           putSerializable(KEY_PATIENT_UUID, patientUuid)
         }

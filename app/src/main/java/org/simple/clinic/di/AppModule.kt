@@ -1,14 +1,11 @@
 package org.simple.clinic.di
 
 import android.app.Application
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.room.Room
 import android.content.Context
 import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.AppDatabase
 import org.simple.clinic.ageanddateofbirth.DateFormatterModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.editpatient.PatientEditModule
@@ -17,29 +14,6 @@ import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
-import org.simple.clinic.storage.Migration_10_11
-import org.simple.clinic.storage.Migration_11_12
-import org.simple.clinic.storage.Migration_12_13
-import org.simple.clinic.storage.Migration_13_14
-import org.simple.clinic.storage.Migration_14_15
-import org.simple.clinic.storage.Migration_15_16
-import org.simple.clinic.storage.Migration_16_17
-import org.simple.clinic.storage.Migration_17_18
-import org.simple.clinic.storage.Migration_18_19
-import org.simple.clinic.storage.Migration_19_20
-import org.simple.clinic.storage.Migration_20_21
-import org.simple.clinic.storage.Migration_21_22
-import org.simple.clinic.storage.Migration_22_23
-import org.simple.clinic.storage.Migration_23_24
-import org.simple.clinic.storage.Migration_24_25
-import org.simple.clinic.storage.Migration_25_26
-import org.simple.clinic.storage.Migration_3_4
-import org.simple.clinic.storage.Migration_4_5
-import org.simple.clinic.storage.Migration_5_6
-import org.simple.clinic.storage.Migration_6_7
-import org.simple.clinic.storage.Migration_7_8
-import org.simple.clinic.storage.Migration_8_9
-import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
@@ -60,53 +34,11 @@ import java.util.Locale
   DateFormatterModule::class,
   PatientModule::class
 ])
-open class AppModule(
-    private val appContext: Application,
-    private val databaseName: String = "red-db",
-    private val runDatabaseQueriesOnMainThread: Boolean = false
-) {
+open class AppModule(private val appContext: Application) {
 
   @Provides
   fun appContext(): Application {
     return appContext
-  }
-
-  // TODO: move to StorageModule.
-  @Provides
-  @AppScope
-  fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory): AppDatabase {
-    return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
-        .openHelperFactory(factory)
-        .apply {
-          if (runDatabaseQueriesOnMainThread) {
-            allowMainThreadQueries()
-          }
-        }
-        .addMigrations(
-            Migration_3_4(),
-            Migration_4_5(),
-            Migration_5_6(),
-            Migration_6_7(),
-            Migration_7_8(),
-            Migration_8_9(),
-            Migration_9_10(),
-            Migration_10_11(),
-            Migration_11_12(),
-            Migration_12_13(),
-            Migration_13_14(),
-            Migration_14_15(),
-            Migration_15_16(),
-            Migration_16_17(),
-            Migration_17_18(),
-            Migration_18_19(),
-            Migration_19_20(),
-            Migration_20_21(),
-            Migration_21_22(),
-            Migration_22_23(),
-            Migration_23_24(),
-            Migration_24_25(),
-            Migration_25_26())
-        .build()
   }
 
   @Provides

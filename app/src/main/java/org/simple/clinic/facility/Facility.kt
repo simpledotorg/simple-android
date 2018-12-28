@@ -33,9 +33,13 @@ data class Facility(
 
     val pinCode: String?,
 
-    // Nullable because we will not have protocol
-    // UUID until a facility sync happens.
+    // Nullable because existing facilities will not
+    // have protocol UUID until they're synced again.
     val protocolUuid: UUID?,
+
+    // Nullable because existing facilities will not
+    // have group UUID until they're synced again.
+    val groupUuid: UUID?,
 
     val createdAt: Instant,
 

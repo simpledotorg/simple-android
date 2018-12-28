@@ -114,7 +114,7 @@
   <!--suppress UnusedResources -->
   <string name="patients_record_every_patient">Record <font color="#2f363d"><i>every patient</i></font> who has hypertension or who is taking medicines for high BP</string>
 
-  <!-- New blood pressure entry -->
+  <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Enter blood pressure</string>
   <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Edit blood pressure</string>
   <string name="bloodpressureentry_remove">Remove</string>
@@ -127,6 +127,11 @@
   <string name="bloodpressureentry_error_diastolic_180">Diastolic cannot be more than 180</string>
   <string name="bloodpressureentry_error_systolic_empty">Enter systolic and diastolic pressures</string>
   <string name="bloodpressureentry_error_diastolic_empty">Enter systolic and diastolic pressures</string>
+  <string name="bloodpressureentry_remove_bp_title">Remove BP</string>
+  <string name="bloodpressureentry_remove_bp_message">Are you sure you want to remove this blood pressure recording?</string>
+  <string name="bloodpressureentry_remove_bp_confirm">Remove</string>
+  <string name="bloodpressureentry_remove_bp_cancel">Cancel</string>
+
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string> <!-- TODO: The UP button will probably behave differently for different entry points. Update this CD accordingly. -->

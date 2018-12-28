@@ -9,6 +9,7 @@ import dagger.Provides
 import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
+import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
@@ -89,6 +90,7 @@ interface TheActivityComponent {
   fun inject(target: PatientEditScreen)
   fun inject(target: ConfirmDiscardChangesDialog)
   fun inject(target: UpdatePhoneNumberDialog)
+  fun inject(target: ConfirmRemoveBloodPressureDialog)
 
   @Subcomponent.Builder
   interface Builder {

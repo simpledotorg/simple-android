@@ -46,7 +46,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       OngoingLoginEntry::class,
       Protocol::class,
       ProtocolDrug::class],
-    version = 26,
+    version = 27,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,

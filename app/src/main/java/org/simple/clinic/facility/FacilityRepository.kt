@@ -24,8 +24,34 @@ class FacilityRepository @Inject constructor(
     return if (searchQuery.isBlank()) {
       facilityDao.all().toObservable()
     } else {
-      facilityDao.filtered(searchQuery).toObservable()
+      facilityDao.filteredByName(searchQuery).toObservable()
     }
+  }
+
+  fun facilitiesInCurrentGroup(searchQuery: String = "", user: User): Observable<List<Facility>> {
+    val filteredByName = {
+      if (searchQuery.isBlank()) {
+        facilityDao.all().toObservable()
+      } else {
+        facilityDao.filteredByName(searchQuery).toObservable()
+      }
+    }
+
+    val filteredByNameAndGroup = { group: UUID ->
+      if (searchQuery.isBlank()) {
+        facilityDao.filteredByGroup(group).toObservable()
+      } else {
+        facilityDao.filteredByNameAndGroup(searchQuery, group).toObservable()
+      }
+    }
+
+    return currentFacility(user)
+        .switchMap { current ->
+          when {
+            current.groupUuid == null -> filteredByName()
+            else -> filteredByNameAndGroup(current.groupUuid)
+          }
+        }
   }
 
   fun associateUserWithFacilities(user: User, facilityIds: List<UUID>, currentFacility: UUID): Completable {
@@ -96,7 +122,7 @@ class FacilityRepository @Inject constructor(
   }
 
   override fun setSyncStatus(ids: List<UUID>, to: SyncStatus): Completable {
-    if(ids.isEmpty()) {
+    if (ids.isEmpty()) {
       throw AssertionError("IDs must not be empty!")
     }
 

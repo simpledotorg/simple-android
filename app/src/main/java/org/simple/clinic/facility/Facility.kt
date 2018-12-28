@@ -73,10 +73,24 @@ data class Facility(
 
     @Query("""
       SELECT * FROM facility
-      WHERE name LIKE '%' || :filterQuery || '%'
+      WHERE name LIKE '%' || :nameFilter || '%'
       ORDER BY name ASC
     """)
-    fun filtered(filterQuery: String): Flowable<List<Facility>>
+    fun filteredByName(nameFilter: String): Flowable<List<Facility>>
+
+    @Query("""
+      SELECT * FROM facility
+      WHERE name LIKE '%' || :nameFilter || '%' AND groupUuid = :groupUuid
+      ORDER BY name ASC
+    """)
+    fun filteredByNameAndGroup(nameFilter: String, groupUuid: UUID): Flowable<List<Facility>>
+
+    @Query("""
+      SELECT * FROM facility
+      WHERE groupUuid = :groupUuid
+      ORDER BY name ASC
+    """)
+    fun filteredByGroup(groupUuid: UUID): Flowable<List<Facility>>
 
     @Query("SELECT COUNT(uuid) FROM facility")
     fun count(): Flowable<Int>

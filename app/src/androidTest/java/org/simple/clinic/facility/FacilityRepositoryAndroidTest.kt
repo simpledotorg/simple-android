@@ -149,7 +149,7 @@ class FacilityRepositoryAndroidTest {
   }
 
   @Test
-  fun when_filter_query_is_blank_then_all_facilities_should_be_fetched() {
+  fun when_search_query_is_blank_then_all_facilities_should_be_fetched() {
     val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
     val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 2")
     val facilities = listOf(facility1, facility2)
@@ -160,7 +160,33 @@ class FacilityRepositoryAndroidTest {
   }
 
   @Test
-  fun when_filter_query_is_not_blank_then_filtered_facilities_should_be_fetched() {
+  fun when_filtering_by_current_group_and_search_query_is_blank_then_all_facilities_should_be_fetched() {
+    val facilityGroup1 = UUID.randomUUID()
+    val facilityGroup2 = UUID.randomUUID()
+
+    val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1", groupUuid = facilityGroup1)
+    val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 2", groupUuid = facilityGroup1)
+    val facility3 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 3", groupUuid = facilityGroup2)
+
+    val facilitiesInGroup1 = listOf(facility1, facility2)
+    val facilitiesInGroup2 = listOf(facility3)
+    facilityDao.save(facilitiesInGroup1 + facilitiesInGroup2)
+
+    associateCurrentFacilityToUser(user, facilitiesInGroup1.first())
+
+    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "", user = user).blockingFirst()
+    assertThat(filteredFacilities).isEqualTo(facilitiesInGroup1)
+  }
+
+  private fun associateCurrentFacilityToUser(user: User, facility: Facility) {
+    repository
+        .associateUserWithFacility(user, facility)
+        .andThen(repository.setCurrentFacility(user, facility))
+        .blockingAwait()
+  }
+
+  @Test
+  fun when_search_query_is_not_blank_then_filtered_facilities_should_be_fetched() {
     val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
     val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 2")
     val facility3 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 3")
@@ -172,6 +198,26 @@ class FacilityRepositoryAndroidTest {
   }
 
   @Test
+  fun when_filtering_by_current_group_and_search_query_is_not_blank_then_filtered_facilities_should_be_fetched() {
+    val facilityGroup1 = UUID.randomUUID()
+    val facilityGroup2 = UUID.randomUUID()
+
+    val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1", groupUuid = facilityGroup1)
+    val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 2", groupUuid = facilityGroup2)
+    val facility3 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 3", groupUuid = facilityGroup1)
+    val facility4 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 4", groupUuid = facilityGroup1)
+
+    val facilitiesInGroup1 = listOf(facility1, facility3, facility4)
+    val facilitiesInGroup2 = listOf(facility2)
+    facilityDao.save(facilitiesInGroup1 + facilitiesInGroup2)
+
+    associateCurrentFacilityToUser(user, facilitiesInGroup2.first())
+
+    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "hac", user = user).blockingFirst()
+    assertThat(filteredFacilities).isEqualTo(listOf(facility2))
+  }
+
+  @Test
   fun filtering_of_facilities_should_be_case_insensitive() {
     val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
     val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 2")
@@ -180,5 +226,21 @@ class FacilityRepositoryAndroidTest {
 
     val filteredFacilities = repository.facilities(searchQuery = "fac").blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(facility1))
+  }
+
+  @Test
+  fun filtering_of_facilities_in_current_group_should_be_case_insensitive() {
+    val facilityGroup1 = UUID.randomUUID()
+    val facilityGroup2 = UUID.randomUUID()
+
+    val group1Facility = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1", groupUuid = facilityGroup1)
+    val group2Facility = testData.facility(uuid = UUID.randomUUID(), name = "Phacility 2", groupUuid = facilityGroup2)
+    val facilities = listOf(group1Facility, group2Facility)
+    facilityDao.save(facilities)
+
+    associateCurrentFacilityToUser(user, group1Facility)
+
+    val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac", user = user).blockingFirst()
+    assertThat(filteredFacilities).isEqualTo(listOf(group1Facility))
   }
 }

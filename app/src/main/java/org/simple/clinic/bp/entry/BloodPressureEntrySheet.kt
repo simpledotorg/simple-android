@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -73,7 +74,8 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             systolicTextChanges(),
             diastolicTextChanges(),
             diastolicImeOptionClicks(),
-            diastolicBackspaceClicks())
+            diastolicBackspaceClicks(),
+            removeClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -126,6 +128,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .backspaceClicks
         .map { BloodPressureDiastolicBackspaceClicked }
   }
+
+  private fun removeClicks(): Observable<UiEvent> =
+      RxView.clicks(removeBloodPressureButton).map { BloodPressureRemoveClicked }
 
   fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()
@@ -191,10 +196,12 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   fun showRemoveBpButton() {
     removeBloodPressureButton.visibility = View.VISIBLE
+    removeBloodPressureButton.isEnabled = true
   }
 
   fun hideRemoveBpButton() {
     removeBloodPressureButton.visibility = View.GONE
+    removeBloodPressureButton.isEnabled = false
   }
 
   fun showEnterNewBloodPressureTitle() {
@@ -203,5 +210,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   fun showEditBloodPressureTitle() {
     editBloodPressureTitleTextView.visibility = View.VISIBLE
+  }
+
+  fun showConfirmRemoveBloodPressureDialog(uuid: UUID) {
+    ConfirmRemoveBloodPressureDialog.show(uuid, supportFragmentManager)
   }
 }

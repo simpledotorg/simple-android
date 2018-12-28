@@ -343,4 +343,15 @@ class BloodPressureEntrySheetControllerTest {
         listOf(OpenAs.New(UUID.randomUUID()), true),
         listOf(OpenAs.Update(UUID.randomUUID()), false))
   }
+
+  @Test
+  fun `when the remove button is clicked, the confirmation alert must be shown`() {
+    val bloodPressure = PatientMocker.bp()
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(bloodPressure))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bloodPressure.uuid)))
+    uiEvents.onNext(BloodPressureRemoveClicked)
+
+    verify(sheet).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
+  }
 }

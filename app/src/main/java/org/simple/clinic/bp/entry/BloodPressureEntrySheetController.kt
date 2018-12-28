@@ -41,7 +41,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         saveNewBp(replayedEvents),
         updateBp(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
-        updateSheetTitle(replayedEvents))
+        updateSheetTitle(replayedEvents),
+        showConfirmRemoveBloodPressureDialog(replayedEvents))
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -231,7 +232,6 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   enum class Validation {
     SUCCESS,
-
     ERROR_SYSTOLIC_EMPTY,
     ERROR_DIASTOLIC_EMPTY,
     ERROR_SYSTOLIC_TOO_HIGH,
@@ -277,5 +277,19 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { { ui: Ui -> ui.showEditBloodPressureTitle() } }
 
     return showEnterBloodPressureTitle.mergeWith(showEditBloodPressureTitle)
+  }
+
+  private fun showConfirmRemoveBloodPressureDialog(events: Observable<UiEvent>): Observable<out UiChange>? {
+    val bloodPressureMeasurementUuidStream = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+        .ofType<OpenAs.Update>()
+        .map { it.bpUuid }
+
+    val removeClicks = events.ofType<BloodPressureRemoveClicked>()
+
+    return removeClicks
+        .withLatestFrom(bloodPressureMeasurementUuidStream)
+        .map { (_, uuid) -> { ui: Ui -> ui.showConfirmRemoveBloodPressureDialog(uuid) } }
   }
 }

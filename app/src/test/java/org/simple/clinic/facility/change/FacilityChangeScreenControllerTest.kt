@@ -1,6 +1,7 @@
 package org.simple.clinic.facility.change
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -24,11 +25,15 @@ class FacilityChangeScreenControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
 
+  private val user = PatientMocker.loggedInUser()
+
   private lateinit var controller: FacilityChangeScreenController
 
   @Before
   fun setUp() {
     controller = FacilityChangeScreenController(facilityRepository, userSession)
+
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
     uiEvents
         .compose(controller)
@@ -40,7 +45,7 @@ class FacilityChangeScreenControllerTest {
     val facility1 = PatientMocker.facility()
     val facility2 = PatientMocker.facility()
     val facilities = listOf(facility1, facility2)
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities, facilities))
+    whenever(facilityRepository.facilitiesInCurrentGroup(user = user)).thenReturn(Observable.just(facilities, facilities))
 
     val searchQuery = ""
     uiEvents.onNext(FacilityChangeSearchQueryChanged(searchQuery))
@@ -57,15 +62,15 @@ class FacilityChangeScreenControllerTest {
     val facilities = listOf(
         PatientMocker.facility(name = "Facility 1"),
         PatientMocker.facility(name = "Facility 2"))
-    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.facilitiesInCurrentGroup(any(), eq(user))).thenReturn(Observable.just(facilities))
 
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "F"))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fa"))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fac"))
 
-    verify(facilityRepository).facilities("F")
-    verify(facilityRepository).facilities("Fa")
-    verify(facilityRepository).facilities("Fac")
+    verify(facilityRepository).facilitiesInCurrentGroup(searchQuery = "F", user = user)
+    verify(facilityRepository).facilitiesInCurrentGroup(searchQuery = "Fa", user = user)
+    verify(facilityRepository).facilitiesInCurrentGroup(searchQuery = "Fac", user = user)
   }
 
   @Test

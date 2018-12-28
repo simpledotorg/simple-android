@@ -27,6 +27,7 @@ import org.simple.clinic.storage.Migration_22_23
 import org.simple.clinic.storage.Migration_23_24
 import org.simple.clinic.storage.Migration_24_25
 import org.simple.clinic.storage.Migration_25_26
+import org.simple.clinic.storage.Migration_26_27
 import org.simple.clinic.storage.Migration_6_7
 import org.simple.clinic.storage.Migration_7_8
 import org.simple.clinic.storage.Migration_8_9
@@ -739,18 +740,6 @@ class MigrationAndroidTest {
     }
   }
 
-  private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
-  private fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
-  private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
-
-  private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
-    this.query("""
-      SELECT * FROM "$tableName"
-    """).use {
-      assertWithMessage("With table [$tableName]").that(it.columnCount).isEqualTo(expectedCount)
-    }
-  }
-
   @Test
   fun migration_25_to_26() {
     val db_v25 = helper.createDatabase(version = 25)
@@ -790,4 +779,47 @@ class MigrationAndroidTest {
     }
   }
 
+  @Test
+  fun migration_26_to_27() {
+    val db_v26 = helper.createDatabase(version = 26)
+    db_v26.assertColumnCount(tableName = "Facility", expectedCount = 14)
+
+    db_v26.execSQL("""
+      INSERT INTO "Facility" VALUES (
+        'facility-uuid',
+        'facility-name',
+        'Facility type',
+        'Street address',
+        'Village or colony',
+        'District',
+        'State',
+        'Country',
+        'Pin code',
+        'protocol-uuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'PENDING',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_v27 = helper.migrateTo(27, Migration_26_27())
+    db_v27.query("""SELECT * FROM "Facility"""").use {
+      it.moveToNext()
+      assertThat(it.columnNames.contains("groupUuid"))
+      assertThat(it.string("groupUuid")).isNull()
+      assertThat(it.columnCount).isEqualTo(15)
+    }
+  }
+}
+
+private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
+private fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
+private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
+
+private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
+  this.query("""
+      SELECT * FROM "$tableName"
+    """).use {
+    assertWithMessage("With table [$tableName]").that(it.columnCount).isEqualTo(expectedCount)
+  }
 }

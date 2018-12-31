@@ -5,7 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Completable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -13,6 +13,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -121,7 +122,7 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.schedule(any(), any())).thenReturn(Completable.complete())
+    whenever(repository.schedule(any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val current = ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS)
     val date = LocalDate.now(UTC).plus(1, ChronoUnit.MONTHS)

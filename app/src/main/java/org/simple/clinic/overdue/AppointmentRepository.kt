@@ -31,10 +31,10 @@ class AppointmentRepository @Inject constructor(
     private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Completable {
+  fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Single<Appointment> {
     val newAppointmentStream = facilityRepository
         .currentFacility(userSession)
-        .take(1)
+        .firstOrError()
         .map { facility ->
           Appointment(
               uuid = UUID.randomUUID(),
@@ -50,7 +50,9 @@ class AppointmentRepository @Inject constructor(
               updatedAt = Instant.now(clock),
               deletedAt = null)
         }
-        .flatMapCompletable { save(listOf(it)) }
+        .flatMap { appointment ->
+          save(listOf(appointment)).andThen(Single.just(appointment))
+        }
 
     return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
   }
@@ -139,8 +141,8 @@ class AppointmentRepository @Inject constructor(
         }
   }
 
-  fun appointmentForPatient(patientUuid: UUID, status: Appointment.Status): Observable<Optional<Appointment>> {
-    return appointmentDao.appointmentForPatient(patientUuid, status)
+  fun lastCreatedAppointmentForPatient(patientUuid: UUID): Observable<Optional<Appointment>> {
+    return appointmentDao.lastCreatedAppointmentForPatient(patientUuid)
         .toObservable()
         .map { appointments ->
           when {

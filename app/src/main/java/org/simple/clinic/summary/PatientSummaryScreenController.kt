@@ -411,9 +411,9 @@ class PatientSummaryScreenController @Inject constructor(
         .filter { (_, config) -> config.isUpdatePhoneDialogEnabled }
         .flatMap { (patientUuid) ->
           val lastCancelledAppointment = appointmentRepository
-              .appointmentForPatient(patientUuid, status = CANCELLED)
+              .lastCreatedAppointmentForPatient(patientUuid)
               .filterAndUnwrapJust()
-              .filter { it.cancelReason == InvalidPhoneNumber }
+              .filter { it.status == CANCELLED && it.cancelReason == InvalidPhoneNumber }
 
           val patientPhoneNumber = patientRepository
               .phoneNumber(patientUuid)

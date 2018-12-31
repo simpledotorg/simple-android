@@ -18,7 +18,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
-import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
@@ -31,6 +30,7 @@ import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -375,8 +375,7 @@ class PatientsScreenControllerTest {
         .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid, fullName = "Anish Acharya").toOptional()))
 
     val appointment = PatientMocker.appointment(patientUuid = patientUuid, scheduledDate = LocalDate.now(UTC))
-    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = SCHEDULED))
-        .thenReturn(Observable.just(Just(appointment)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(appointment)))
     whenever(patientSummaryResult.get()).thenReturn(result)
     uiEvents.onNext(ScreenCreated())
 
@@ -394,7 +393,7 @@ class PatientsScreenControllerTest {
         verify(screen, never()).showStatusPatientSummarySaved(any())
         verify(patientSummaryResult, never()).delete()
       }
-    }
+    }.exhaustive()
   }
 
   @Suppress("unused")

@@ -62,15 +62,22 @@ data class Appointment(
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(appointments: List<Appointment>)
 
-    @Query("SELECT * FROM Appointment WHERE patientUuid = :patientUuid AND status = :status")
-    fun appointmentForPatient(patientUuid: UUID, status: Status): Flowable<List<Appointment>>
+    @Query("""
+      SELECT * FROM Appointment
+      WHERE patientUuid = :patientUuid
+      ORDER BY createdAt DESC
+      LIMIT 1
+    """)
+    fun lastCreatedAppointmentForPatient(patientUuid: UUID): Flowable<List<Appointment>>
 
     @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Flowable<Int>
 
-    @Query("""UPDATE Appointment
+    @Query("""
+      UPDATE Appointment
       SET status = :updatedStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
-      WHERE patientUuid = :patientUuid AND status = :scheduledStatus""")
+      WHERE patientUuid = :patientUuid AND status = :scheduledStatus
+    """)
     fun markOlderAppointmentsAsVisited(
         patientUuid: UUID,
         updatedStatus: Status,
@@ -79,9 +86,11 @@ data class Appointment(
         newUpdatedAt: Instant
     )
 
-    @Query("""UPDATE Appointment
+    @Query("""
+      UPDATE Appointment
        SET remindOn = :reminderDate, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
-       WHERE uuid = :appointmentUUID""")
+       WHERE uuid = :appointmentUUID
+    """)
     fun saveRemindDate(
         appointmentUUID: UUID,
         reminderDate: LocalDate,
@@ -89,9 +98,11 @@ data class Appointment(
         newUpdatedAt: Instant
     )
 
-    @Query("""UPDATE Appointment
+    @Query("""
+      UPDATE Appointment
       SET remindOn = :reminderDate, agreedToVisit = :agreed, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
-      WHERE uuid = :appointmentUUID""")
+      WHERE uuid = :appointmentUUID
+    """)
     fun markAsAgreedToVisit(
         appointmentUUID: UUID,
         reminderDate: LocalDate,
@@ -112,7 +123,8 @@ data class Appointment(
         newUpdatedAt: Instant
     )
 
-    @Query("""UPDATE Appointment
+    @Query("""
+      UPDATE Appointment
       SET cancelReason = :cancelReason, status = :newStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
       WHERE uuid = :appointmentUuid
     """)

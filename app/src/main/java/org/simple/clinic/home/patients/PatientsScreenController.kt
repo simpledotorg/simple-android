@@ -177,8 +177,9 @@ class PatientsScreenController @Inject constructor(
         .map { it.fullName }
 
     val appointmentDate = scheduledResult
-        .flatMap { appointmentRepository.appointmentForPatient(it.patientUuid, status = SCHEDULED) }
+        .flatMap { appointmentRepository.lastCreatedAppointmentForPatient(it.patientUuid) }
         .unwrapJust()
+        .doOnNext { assert(it.status == SCHEDULED) { "Last appointment's status != 'scheduled'" } }
         .map { it.scheduledDate }
 
     val scheduledStream = Observables

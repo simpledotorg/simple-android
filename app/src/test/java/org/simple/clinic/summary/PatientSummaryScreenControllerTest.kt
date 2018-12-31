@@ -37,6 +37,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
+import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
@@ -105,7 +106,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
-    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.never())
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -665,12 +666,12 @@ class PatientSummaryScreenControllerTest {
   fun `when patient's phone was marked as invalid after the phone number was last updated then update phone dialog should be shown`(
       cancelReason: AppointmentCancelReason
   ) {
-    val appointment = PatientMocker.appointment(cancelReason = cancelReason)
-    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.just(Just(appointment)))
+    val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
-        updatedAt = appointment.updatedAt - Duration.ofHours(2))
+        updatedAt = canceledAppointment.updatedAt - Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
     val config = PatientSummaryConfig(
@@ -694,17 +695,18 @@ class PatientSummaryScreenControllerTest {
   fun `when patient's phone was marked as invalid before the phone number was last updated then update phone dialog should not be shown`(
       cancelReason: AppointmentCancelReason
   ) {
-    val appointment = PatientMocker.appointment(cancelReason = cancelReason)
-    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(Observable.just(Just(appointment)))
+    val canceledAppointment = PatientMocker.appointment(cancelReason = cancelReason)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(
         patientUuid = patientUuid,
-        updatedAt = appointment.updatedAt + Duration.ofHours(2))
+        updatedAt = canceledAppointment.updatedAt + Duration.ofHours(2))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Just(phoneNumber)))
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         bpEditableFor = Duration.ofSeconds(30L),
+        numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
 
@@ -717,8 +719,8 @@ class PatientSummaryScreenControllerTest {
   fun `when screen is opened and a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
     val appointmentStream = Observable.just(
         None,
-        Just(PatientMocker.appointment(cancelReason = null)))
-    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(appointmentStream)
+        Just(PatientMocker.appointment(status = SCHEDULED, cancelReason = null)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -741,7 +743,7 @@ class PatientSummaryScreenControllerTest {
         None,
         Just(PatientMocker.appointment(cancelReason = null)),
         Just(PatientMocker.appointment(cancelReason = cancelReason)))
-    whenever(appointmentRepository.appointmentForPatient(patientUuid, status = CANCELLED)).thenReturn(appointmentStream)
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,

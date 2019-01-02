@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -26,9 +27,9 @@ class UpdatePhoneNumberDialogController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents())
-        .replay(1)
-        .refCount()
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.merge(
         preFillExistingNumber(replayedEvents),

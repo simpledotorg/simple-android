@@ -21,6 +21,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import java.util.UUID
@@ -40,7 +41,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
 
-  private val onDestroys = PublishSubject.create<Any>()
+  private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
   companion object {
     private const val KEY_OPEN_AS = "openAs"
@@ -71,6 +72,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     Observable
         .mergeArray(
             sheetCreates(),
+            screenDestroys,
             systolicTextChanges(),
             diastolicTextChanges(),
             diastolicImeOptionClicks(),
@@ -79,7 +81,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(onDestroys)
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
 
     // Dismiss this sheet when the keyboard is dismissed.
@@ -87,7 +89,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   override fun onDestroy() {
-    onDestroys.onNext(Any())
+    screenDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
   }
 

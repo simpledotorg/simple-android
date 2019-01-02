@@ -20,8 +20,10 @@ open class StorageModule(
 ) {
 
   @Provides
-  fun databaseMigrations(): MutableList<Migration> {
-    return mutableListOf(
+  fun databaseMigrations(): ArrayList<Migration> {
+    // kotlin.collections.List doesn't work when injecting collections using
+    // Dagger. Using @JvmSuppressWildcards is an option, but that looks verbose.
+    return arrayListOf(
         Migration_3_4(),
         Migration_4_5(),
         Migration_5_6(),
@@ -53,7 +55,7 @@ open class StorageModule(
   fun appDatabase(
       appContext: Application,
       factory: SupportSQLiteOpenHelper.Factory,
-      migrations: MutableList<Migration>
+      migrations: ArrayList<Migration>
   ): AppDatabase {
     return Room.databaseBuilder(appContext, AppDatabase::class.java, databaseName)
         .openHelperFactory(factory)

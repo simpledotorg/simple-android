@@ -3,7 +3,7 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.FakerModule
-import org.simple.clinic.sync.RegisterPatientRule
+import org.simple.clinic.MigrationAndroidTest
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -25,6 +25,7 @@ import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.summary.RelativeTimestampGeneratorAndroidTest
+import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
@@ -59,4 +60,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: PatientEditScreenUiTest)
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)
+  fun inject(target: MigrationAndroidTest)
 }

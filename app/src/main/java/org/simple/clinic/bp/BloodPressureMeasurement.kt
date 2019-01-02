@@ -71,10 +71,10 @@ data class BloodPressureMeasurement (
     @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid LIMIT 1")
     fun getOne(uuid: UUID): BloodPressureMeasurement?
 
-    @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid AND deletedAt IS NOT NULL")
-    fun getOneWhichIsDeleted(uuid: UUID): Flowable<BloodPressureMeasurement>
+    @Query("SELECT * FROM bloodpressuremeasurement WHERE uuid = :uuid")
+    fun bloodPressure(uuid: UUID): Flowable<BloodPressureMeasurement>
 
-    @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
+    @Query("SELECT COUNT(uuid) FROM bloodpressuremeasurement")
     fun count(): Flowable<Int>
 
     @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid ORDER BY createdAt DESC LIMIT :limit")

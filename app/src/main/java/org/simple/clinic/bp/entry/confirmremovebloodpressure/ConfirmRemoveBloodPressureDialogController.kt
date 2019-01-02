@@ -27,13 +27,14 @@ class ConfirmRemoveBloodPressureDialogController @Inject constructor(
   }
 
   private fun markBloodPressureAsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
-    val savedBloodPressureMeasurementStream = events
+    val savedBloodPressureMeasurementUuidStream = events
         .ofType<ConfirmRemoveBloodPressureDialogCreated>()
-        .flatMapSingle { bloodPressureRepository.measurement(it.bloodPressureMeasurementUuid) }
+        .map { it.bloodPressureMeasurementUuid }
 
     return events
         .ofType<ConfirmRemoveBloodPressureDialogRemoveClicked>()
-        .withLatestFrom(savedBloodPressureMeasurementStream) { _, bloodPressureMeasurement -> bloodPressureMeasurement }
+        .withLatestFrom(savedBloodPressureMeasurementUuidStream) { _, bloodPressureMeasurementUuid -> bloodPressureMeasurementUuid }
+        .flatMapSingle { bloodPressureRepository.measurement(it) }
         .flatMap {
           bloodPressureRepository
               .markBloodPressureAsDeleted(it)

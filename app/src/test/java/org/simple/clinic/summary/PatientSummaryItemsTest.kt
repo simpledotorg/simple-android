@@ -32,7 +32,6 @@ class PatientSummaryItemsTest {
       return SummaryBloodPressureListItem(
           measurement = PatientMocker.bp(updatedAt = updatedAt, syncStatus = syncStatus),
           timestamp = Today,
-          isEditable = false,
           showDivider = false,
           displayTime = updatedAt.toString().toOptional()
       )

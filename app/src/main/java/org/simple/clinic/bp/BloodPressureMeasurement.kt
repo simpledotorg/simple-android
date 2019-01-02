@@ -77,7 +77,11 @@ data class BloodPressureMeasurement (
     @Query("SELECT COUNT(*) FROM bloodpressuremeasurement")
     fun count(): Flowable<Int>
 
-    @Query("SELECT * FROM bloodpressuremeasurement WHERE patientUuid = :patientUuid ORDER BY createdAt DESC LIMIT :limit")
+    @Query("""
+      SELECT * FROM bloodpressuremeasurement
+        WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+        ORDER BY createdAt DESC LIMIT :limit
+    """)
     fun newestMeasurementsForPatient(patientUuid: UUID, limit: Int): Flowable<List<BloodPressureMeasurement>>
 
     @Query("DELETE FROM bloodpressuremeasurement")

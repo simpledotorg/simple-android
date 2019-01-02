@@ -6,7 +6,6 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.ageanddateofbirth.DateFormatterModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientModule
@@ -17,6 +16,7 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
 import org.threeten.bp.Clock
+import org.threeten.bp.ZoneId
 import java.util.Locale
 
 @Module(includes = [
@@ -52,4 +52,8 @@ open class AppModule(private val appContext: Application) {
   @Provides
   @AppScope
   fun currentLocale(): Locale = Locale.ENGLISH
+
+  @Provides
+  @AppScope
+  fun systemDefaultZone() = ZoneId.systemDefault()
 }

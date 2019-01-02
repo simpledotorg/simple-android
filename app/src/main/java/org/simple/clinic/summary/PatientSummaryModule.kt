@@ -18,7 +18,7 @@ open class PatientSummaryModule {
       numberOfBpPlaceholders = 3,
       bpEditableFor = Duration.ofDays(1L),
       numberOfBpsToDisplay = 100,
-      isUpdatePhoneDialogEnabled = false
+      isUpdatePhoneDialogEnabled = true
   ))
 
   @Provides

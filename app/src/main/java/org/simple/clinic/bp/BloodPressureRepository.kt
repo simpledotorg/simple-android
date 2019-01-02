@@ -127,4 +127,8 @@ class BloodPressureRepository @Inject constructor(
       dao.save(listOf(deletedBloodPressureMeasurement))
     }
   }
+
+  fun deletedMeasurements(bloodPressureMeasurementUuid: UUID): Observable<BloodPressureMeasurement> {
+    return dao.getOneWhichIsDeleted(bloodPressureMeasurementUuid).toObservable()
+  }
 }

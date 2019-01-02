@@ -1,11 +1,13 @@
 package org.simple.clinic.bp
 
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Flowable
 import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -18,6 +20,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
+import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -81,5 +84,24 @@ class BloodPressureRepositoryTest {
     } else {
       verify(dao).save(argThat { isEmpty() })
     }
+  }
+
+  @Test
+  fun `observing a deleted blood pressure should work correctly`() {
+    val bloodPressureUuid = UUID.randomUUID()
+    val bloodPressures = listOf(
+        PatientMocker.bp(uuid = bloodPressureUuid, deletedAt = null),
+        PatientMocker.bp(uuid = bloodPressureUuid, deletedAt = Instant.now(testClock)),
+        PatientMocker.bp(uuid = bloodPressureUuid, deletedAt = null),
+        PatientMocker.bp(uuid = bloodPressureUuid, deletedAt = Instant.now(testClock)),
+        PatientMocker.bp(uuid = bloodPressureUuid, deletedAt = null)
+    )
+    whenever(dao.bloodPressure(bloodPressureUuid)).thenReturn(Flowable.fromIterable(bloodPressures))
+
+    val deletedBloodPressures = repository.deletedMeasurements(bloodPressureUuid)
+        .blockingIterable()
+        .toList()
+
+    assertThat(deletedBloodPressures).isEqualTo(listOf(bloodPressures[1], bloodPressures[3]))
   }
 }

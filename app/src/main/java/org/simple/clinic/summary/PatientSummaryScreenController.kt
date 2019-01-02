@@ -36,6 +36,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -50,8 +51,10 @@ class PatientSummaryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
     private val clock: Clock,
+    private val zoneId: ZoneId,
     private val configProvider: Single<PatientSummaryConfig>,
-    @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>
+    @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>,
+    @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -123,7 +126,7 @@ class PatientSummaryScreenController @Inject constructor(
           .refCount()
 
       val displayTime = { instant: Instant ->
-        instant.atZone(clock.zone).format(DateTimeFormatter.ofPattern("h:mm a")).toString().toOptional()
+        instant.atZone(zoneId).format(timeFormatterForBp).toString().toOptional()
       }
 
 

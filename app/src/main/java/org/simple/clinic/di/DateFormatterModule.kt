@@ -1,4 +1,4 @@
-package org.simple.clinic.ageanddateofbirth
+package org.simple.clinic.di
 
 import dagger.Module
 import dagger.Provides
@@ -19,4 +19,9 @@ class DateFormatterModule {
   @AppScope
   @Named("date_for_user_input")
   fun provideDateFormatterForUserInput(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy", locale)
+
+  @Provides
+  @AppScope
+  @Named("time_for_bps_recorded")
+  fun providesTimeFormatterForBPRecorded(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", locale)
 }

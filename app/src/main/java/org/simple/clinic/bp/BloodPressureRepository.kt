@@ -115,4 +115,16 @@ class BloodPressureRepository @Inject constructor(
   }
 
   fun measurement(uuid: UUID): Single<BloodPressureMeasurement> = Single.fromCallable { dao.getOne(uuid) }
+
+  fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
+    return Completable.fromAction {
+      val now = Instant.now(clock)
+      val deletedBloodPressureMeasurement = bloodPressureMeasurement.copy(
+          updatedAt = now,
+          deletedAt = now,
+          syncStatus = SyncStatus.PENDING)
+
+      dao.save(listOf(deletedBloodPressureMeasurement))
+    }
+  }
 }

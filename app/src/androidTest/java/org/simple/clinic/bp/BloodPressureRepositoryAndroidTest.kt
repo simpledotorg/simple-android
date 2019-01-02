@@ -37,6 +37,9 @@ class BloodPressureRepositoryAndroidTest {
   @get:Rule
   val authenticationRule = AuthenticationRule()
 
+  val testClock: TestClock
+    get() = clock as TestClock
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -55,13 +58,12 @@ class BloodPressureRepositoryAndroidTest {
         diastolic = 80,
         createdAt = Instant.now(clock),
         updatedAt = Instant.now(clock),
-        syncStatus = SyncStatus.DONE
-    )
+        syncStatus = SyncStatus.DONE)
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressure))
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
-    (clock as TestClock).advanceBy(durationToAdvanceBy)
+    testClock.advanceBy(durationToAdvanceBy)
 
     repository.updateMeasurement(bloodPressure.copy(systolic = 130, diastolic = 90)).blockingAwait()
 
@@ -103,5 +105,32 @@ class BloodPressureRepositoryAndroidTest {
     val bpMeasurements = repository.newestMeasurementsForPatient(patientUuid, 4).blockingFirst()
 
     assertThat(bpMeasurements).isEqualTo(listOf(bloodPressure2, bloodPressure4, bloodPressure1, bloodPressure3))
+  }
+
+  @Test
+  fun marking_a_blood_pressure_as_deleted_should_work_correctly() {
+    val now = Instant.now(clock)
+    val bloodPressure = testData.bloodPressureMeasurement(
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE)
+
+    appDatabase.bloodPressureDao().save(listOf(bloodPressure))
+
+    val durationToAdvanceBy = Duration.ofMinutes(15L)
+    testClock.advanceBy(durationToAdvanceBy)
+
+    repository.markBloodPressureAsDeleted(bloodPressure).blockingAwait()
+
+    val timeAtWhichBpWasDeleted = now.plus(durationToAdvanceBy)
+    val expected = bloodPressure.copy(
+        updatedAt = timeAtWhichBpWasDeleted,
+        deletedAt = timeAtWhichBpWasDeleted,
+        syncStatus = SyncStatus.PENDING)
+
+    val savedBloodPressure = appDatabase.bloodPressureDao().getOne(expected.uuid)!!
+
+    assertThat(savedBloodPressure).isEqualTo(expected)
   }
 }

@@ -138,7 +138,6 @@ class PatientSummaryScreenControllerTest {
   fun `patient's prescription summary should be populated`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
@@ -160,7 +159,6 @@ class PatientSummaryScreenControllerTest {
   fun `patient's blood pressure history should be populated`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
@@ -181,9 +179,6 @@ class PatientSummaryScreenControllerTest {
         any(),
         check {
           it.forEachIndexed { i, item -> assertThat(item.measurement).isEqualTo(bloodPressureMeasurements[i]) }
-          assertThat(it[0].isEditable).isTrue()
-          assertThat(it[1].isEditable).isTrue()
-          assertThat(it[2].isEditable).isFalse()
         },
         any())
   }
@@ -197,7 +192,6 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 3,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
@@ -315,7 +309,6 @@ class PatientSummaryScreenControllerTest {
   fun `patient's medical history should be populated`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
@@ -474,26 +467,11 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for editing blood pressures")
-  fun `when blood pressure is clicked for editing, only those recorded in a given period must be editable`(
-      bpEditableFor: Duration,
-      bloodPressureMeasurement: BloodPressureMeasurement,
-      shouldBeEditable: Boolean
-  ) {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        bpEditableFor = bpEditableFor,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
-    configSubject.onNext(config)
-
+  fun `when blood pressure is clicked for editing, blood pressure update sheet should show up`() {
+    val bloodPressureMeasurement = PatientMocker.bp()
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
 
-    if (shouldBeEditable) {
-      verify(screen).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
-    } else {
-      verify(screen, never()).showBloodPressureUpdateSheet(any())
-    }
+    verify(screen).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
   }
 
   @Suppress("Unused")
@@ -568,7 +546,12 @@ class PatientSummaryScreenControllerTest {
         prescriptions = listOf(
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt),
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt))),
-        bloodPressureListItems = listOf(SummaryBloodPressureListItem(PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt), Today, false, true, updatedAt.toString().toOptional())),
+        bloodPressureListItems = listOf(SummaryBloodPressureListItem(
+            measurement = PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt),
+            timestamp = Today,
+            showDivider = false,
+            displayTime = updatedAt.toString().toOptional()
+        )),
         medicalHistoryItems = SummaryMedicalHistoryItem(PatientMocker.medicalHistory(syncStatus = syncStatus, updatedAt = updatedAt), Today)
     )
   }
@@ -597,7 +580,6 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
@@ -676,7 +658,6 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
@@ -705,7 +686,6 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
@@ -724,7 +704,6 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
@@ -747,7 +726,6 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        bpEditableFor = Duration.ofSeconds(30L),
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)

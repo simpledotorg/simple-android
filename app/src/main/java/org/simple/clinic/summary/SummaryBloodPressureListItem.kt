@@ -25,7 +25,6 @@ import org.simple.clinic.widgets.setTextAppearanceCompat
 data class SummaryBloodPressureListItem(
     val measurement: BloodPressureMeasurement,
     private val timestamp: RelativeTimestamp,
-    val isEditable: Boolean = false,
     val showDivider: Boolean,
     val displayTime: Optional<String>
 ) : GroupieItemWithUiEvents<SummaryBloodPressureListItem.BpViewHolder>(measurement.uuid.hashCode().toLong()) {
@@ -59,19 +58,14 @@ data class SummaryBloodPressureListItem(
     }
     holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
 
-    holder.timestampTextView.text = if (isEditable) {
-      val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.patientsummary_edit_label_color, context.theme))
-      Truss()
-          .pushSpan(colorSpanForEditLabel)
-          .append(resources.getString(R.string.patientsummary_bp_edit))
-          .popSpan()
-          .append(" ${Unicode.bullet} ")
-          .append(timestamp.displayText(context))
-          .build()
-
-    } else {
-      timestamp.displayText(context)
-    }
+    val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.patientsummary_edit_label_color, context.theme))
+    holder.timestampTextView.text = Truss()
+        .pushSpan(colorSpanForEditLabel)
+        .append(resources.getString(R.string.patientsummary_bp_edit))
+        .popSpan()
+        .append(" ${Unicode.bullet} ")
+        .append(timestamp.displayText(context))
+        .build()
 
     val measurementImageTint = when {
       level.isUrgent() -> R.color.patientsummary_bp_reading_high
@@ -80,9 +74,8 @@ data class SummaryBloodPressureListItem(
     holder.heartImageView.imageTintList = ResourcesCompat.getColorStateList(resources, measurementImageTint, null)
 
     holder.itemView.setOnClickListener { uiEvents.onNext(PatientSummaryBpClicked(measurement)) }
-    holder.itemView.isClickable = isEditable
 
-    holder.divider.visibility = if(showDivider) VISIBLE else GONE
+    holder.divider.visibility = if (showDivider) VISIBLE else GONE
   }
 
   override fun isSameAs(other: Item<*>?): Boolean {

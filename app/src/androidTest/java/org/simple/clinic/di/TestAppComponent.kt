@@ -3,7 +3,7 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.FakerModule
-import org.simple.clinic.MigrationAndroidTest
+import org.simple.clinic.DatabaseMigrationAndroidTest
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -60,5 +60,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: PatientEditScreenUiTest)
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)
-  fun inject(target: MigrationAndroidTest)
+  fun inject(target: DatabaseMigrationAndroidTest)
 }

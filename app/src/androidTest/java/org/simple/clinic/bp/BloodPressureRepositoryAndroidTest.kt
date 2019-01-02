@@ -18,6 +18,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.temporal.ChronoUnit.*
 import java.util.UUID
 import javax.inject.Inject
 
@@ -94,11 +95,11 @@ class BloodPressureRepositoryAndroidTest {
 
     val bloodPressure2 = testData.bloodPressureMeasurement(
         patientUuid = patientUuid,
-        createdAt = Instant.now(clock).plus(1, ChronoUnit.DAYS))
+        createdAt = Instant.now(clock).plus(1, DAYS))
 
     val bloodPressure3 = testData.bloodPressureMeasurement(
         patientUuid = patientUuid,
-        createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS))
+        createdAt = Instant.now(clock).minus(1, DAYS))
 
     val bloodPressure4 = testData.bloodPressureMeasurement(
         patientUuid = patientUuid,
@@ -106,13 +107,45 @@ class BloodPressureRepositoryAndroidTest {
 
     val bloodPressure5 = testData.bloodPressureMeasurement(
         patientUuid = patientUuid,
-        createdAt = Instant.now(clock).minus(10, ChronoUnit.DAYS))
+        createdAt = Instant.now(clock).minus(10, DAYS))
 
     appDatabase.bloodPressureDao().save(listOf(bloodPressure1, bloodPressure2, bloodPressure3, bloodPressure4, bloodPressure5))
 
     val bpMeasurements = repository.newestMeasurementsForPatient(patientUuid, 4).blockingFirst()
 
     assertThat(bpMeasurements).isEqualTo(listOf(bloodPressure2, bloodPressure4, bloodPressure1, bloodPressure3))
+  }
+
+  @Test
+  fun deleted_blood_pressures_should_not_be_included_when_fetching_newest_blood_pressures() {
+    val patientUuid = UUID.randomUUID()
+    val bloodPressure1 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock))
+
+    val bloodPressure2 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).plus(1, DAYS),
+        deletedAt = Instant.now(clock).plus(3, DAYS))
+
+    val bloodPressure3 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minus(1, DAYS))
+
+    val bloodPressure4 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).plusMillis(1000),
+        deletedAt = Instant.now(clock))
+
+    val bloodPressure5 = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        createdAt = Instant.now(clock).minus(10, DAYS))
+
+    appDatabase.bloodPressureDao().save(listOf(bloodPressure1, bloodPressure2, bloodPressure3, bloodPressure4, bloodPressure5))
+
+    val bpMeasurements = repository.newestMeasurementsForPatient(patientUuid, 4).blockingFirst()
+
+    assertThat(bpMeasurements).isEqualTo(listOf(bloodPressure1, bloodPressure3, bloodPressure5))
   }
 
   @Test

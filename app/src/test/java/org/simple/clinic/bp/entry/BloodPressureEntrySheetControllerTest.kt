@@ -362,4 +362,16 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(sheet).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
   }
+
+  @Test
+  fun `when a blood pressure being edited is removed, the sheet should be closed`() {
+    val bloodPressure = PatientMocker.bp()
+    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(Single.just(bloodPressure))
+    whenever(bloodPressureRepository.deletedMeasurements(bloodPressure.uuid))
+        .thenReturn(Observable.just(bloodPressure.copy(deletedAt = Instant.now())))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
+
+    verify(sheet).setBPSavedResultAndFinish()
+  }
 }

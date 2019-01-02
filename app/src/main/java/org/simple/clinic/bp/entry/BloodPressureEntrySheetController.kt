@@ -42,7 +42,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         updateBp(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
-        showConfirmRemoveBloodPressureDialog(replayedEvents))
+        showConfirmRemoveBloodPressureDialog(replayedEvents),
+        closeSheetWhenEditedBpIsDeleted(replayedEvents))
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -291,5 +292,18 @@ class BloodPressureEntrySheetController @Inject constructor(
     return removeClicks
         .withLatestFrom(bloodPressureMeasurementUuidStream)
         .map { (_, uuid) -> { ui: Ui -> ui.showConfirmRemoveBloodPressureDialog(uuid) } }
+  }
+
+  private fun closeSheetWhenEditedBpIsDeleted(events: Observable<UiEvent>): Observable<UiChange>? {
+    val bloodPressureMeasurementUuidStream = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+        .ofType<OpenAs.Update>()
+        .map { it.bpUuid }
+
+    return bloodPressureMeasurementUuidStream
+        .flatMap(bloodPressureRepository::deletedMeasurements)
+        .take(1)
+        .map { { ui: Ui -> ui.setBPSavedResultAndFinish() } }
   }
 }

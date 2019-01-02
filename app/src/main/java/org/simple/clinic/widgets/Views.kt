@@ -56,6 +56,11 @@ fun View.setPaddingBottom(@DimenRes paddingRes: Int) {
   setPaddingRelative(paddingStart, paddingTop, paddingEnd, newPaddingBottom)
 }
 
+fun View.setPaddingTop(@DimenRes paddingRes: Int) {
+  val newPaddingTop = resources.getDimensionPixelSize(paddingRes)
+  setPaddingRelative(paddingStart, newPaddingTop, paddingEnd, paddingBottom)
+}
+
 fun View.setHorizontalPadding(@DimenRes paddingRes: Int) {
   val padding = resources.getDimensionPixelSize(paddingRes)
   setPaddingRelative(padding, paddingTop, padding, paddingBottom)

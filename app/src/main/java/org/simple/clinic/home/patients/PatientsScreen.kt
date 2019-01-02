@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.support.annotation.IdRes
 import android.support.v4.view.animation.FastOutSlowInInterpolator
@@ -22,6 +23,7 @@ import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.indexOfChildId
 import org.threeten.bp.LocalDate
@@ -57,6 +59,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
   private var disposable = Disposables.empty()
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -66,9 +69,12 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     setupApprovalStatusAnimations()
 
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+
     Observable
         .mergeArray(
             screenCreates(),
+            screenDestroys,
             activityStarts(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
@@ -76,7 +82,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
 

@@ -17,6 +17,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -127,6 +128,42 @@ class BloodPressureRepositoryAndroidTest {
     val savedBloodPressure = appDatabase.bloodPressureDao().getOne(expected.uuid)!!
 
     assertThat(savedBloodPressure).isEqualTo(expected)
+  }
+
+  @Test
+  fun observing_a_deleted_blood_pressure_as_a_stream_should_work_correctly() {
+    val now = Instant.now(clock)
+    val bloodPressure = testData.bloodPressureMeasurement(
+        createdAt = now,
+        updatedAt = now,
+        deletedAt = null,
+        syncStatus = SyncStatus.DONE)
+    appDatabase.bloodPressureDao().save(listOf(bloodPressure))
+
+    val deletedMeasurementObserver = repository.deletedMeasurementAsStream(bloodPressure.uuid)
+        .test()
+
+    val fifteenSeconds = Duration.ofSeconds(15L)
+    val tenHours = Duration.ofHours(10L)
+    val twentyDays = Duration.ofDays(20L)
+
+    listOf(fifteenSeconds, tenHours, twentyDays)
+        .map { now.plus(it) }
+        .map { bloodPressure.copy(deletedAt = it, updatedAt = it) }
+        .forEach { appDatabase.bloodPressureDao().save(listOf(it)) }
+
+    // We cannot verify we received the values exactly because Room does not always emit all the
+    // intermediate changes. So we'll either have to add a delay between each update to guarantee
+    // that the change notification will be published, or just verify that the last event received
+    // is what we expect.
+    deletedMeasurementObserver.await(1L, TimeUnit.SECONDS)
+    val receivedValues = deletedMeasurementObserver.values()
+
+    assertThat(receivedValues.size).isAtLeast(1)
+    assertThat(receivedValues.last())
+        .isEqualTo(bloodPressure.copy(deletedAt = now.plus(twentyDays), updatedAt = now.plus(twentyDays)))
+
+    deletedMeasurementObserver.dispose()
   }
 
   @After

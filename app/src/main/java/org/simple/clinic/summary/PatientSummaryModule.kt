@@ -7,7 +7,6 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.patient.PatientSummaryResult
-import org.threeten.bp.Duration
 import javax.inject.Named
 
 @Module
@@ -16,7 +15,6 @@ open class PatientSummaryModule {
   @Provides
   open fun providesSummaryConfig(): Single<PatientSummaryConfig> = Single.just(PatientSummaryConfig(
       numberOfBpPlaceholders = 3,
-      bpEditableFor = Duration.ofDays(1L),
       numberOfBpsToDisplay = 100,
       isUpdatePhoneDialogEnabled = true
   ))

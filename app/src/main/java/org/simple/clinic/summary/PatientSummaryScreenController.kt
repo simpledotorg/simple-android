@@ -11,7 +11,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -39,7 +38,6 @@ import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
-import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -136,10 +134,9 @@ class PatientSummaryScreenController @Inject constructor(
         instant.atZone(zoneId).format(timeFormatterForBp).toString().toOptional()
       }
 
-      val bloodPressureItems = Observables.combineLatest(
-          bloodPressures,
-          configProvider.toObservable()) { measurements, config -> measurements to config.bpEditableFor }
-          .map { (bps, bpEditableFor) ->
+
+      val bloodPressureItems = bloodPressures
+          .map { bps ->
             val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(clock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->
               val lastElement = measurementList.last()
@@ -148,7 +145,6 @@ class PatientSummaryScreenController @Inject constructor(
                 SummaryBloodPressureListItem(
                     measurement = measurement,
                     timestamp = timestamp,
-                    isEditable = isBpEditable(measurement, bpEditableFor),
                     showDivider = measurement.uuid == lastElement.uuid,
                     displayTime = displayTime(measurement.createdAt)
                 )
@@ -363,11 +359,7 @@ class PatientSummaryScreenController @Inject constructor(
   private fun openBloodPressureUpdateSheet(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSummaryBpClicked>()
         .map { it.bloodPressureMeasurement }
-        .withLatestFrom(configProvider.toObservable())
-        .filter { (bloodPressureMeasurement, config) -> isBpEditable(bloodPressureMeasurement, config.bpEditableFor) }
-        .map { (bloodPressureMeasurement, _) ->
-          { ui: Ui -> ui.showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid) }
-        }
+        .map { bp -> { ui: Ui -> ui.showBloodPressureUpdateSheet(bp.uuid) } }
   }
 
   private fun patientSummaryResultChanged(events: Observable<UiEvent>): Observable<UiChange> {
@@ -393,13 +385,6 @@ class PatientSummaryScreenController @Inject constructor(
           patientSummaryResult.set(it)
           Observable.never<UiChange>()
         }
-  }
-
-  private fun isBpEditable(bloodPressureMeasurement: BloodPressureMeasurement, bpEditableFor: Duration): Boolean {
-    val now = Instant.now(clock)
-    val editExpiresAt = bloodPressureMeasurement.createdAt.plus(bpEditableFor)
-
-    return now <= editExpiresAt
   }
 
   private fun showUpdatePhoneDialog(events: Observable<UiEvent>): Observable<UiChange> {

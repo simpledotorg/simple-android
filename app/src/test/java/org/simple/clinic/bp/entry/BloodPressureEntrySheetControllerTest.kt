@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -19,6 +20,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -207,6 +209,7 @@ class BloodPressureEntrySheetControllerTest {
       alreadyPresentBp = PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid, systolic = 120, diastolic = 80)
       whenever(bloodPressureRepository.measurement(bpUuid)).thenReturn(Single.just(alreadyPresentBp))
       whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
+      whenever(bloodPressureRepository.deletedMeasurementAsStream(any())).thenReturn(Observable.never())
 
     } else if (openAs is OpenAs.New) {
       whenever(bloodPressureRepository.saveMeasurement(openAs.patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
@@ -242,6 +245,7 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     if (openAs is OpenAs.Update) {
       whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(bloodPressureMeasurement!!))
+      whenever(bloodPressureRepository.deletedMeasurementAsStream(any())).thenReturn(Observable.never())
     }
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
@@ -279,6 +283,7 @@ class BloodPressureEntrySheetControllerTest {
   ) {
     configEmitter.onNext(BloodPressureConfig(deleteBloodPressureFeatureEnabled = featureEnabled))
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.deletedMeasurementAsStream(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
 
@@ -305,6 +310,7 @@ class BloodPressureEntrySheetControllerTest {
       showEntryTitle: Boolean
   ) {
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.deletedMeasurementAsStream(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
 
@@ -326,10 +332,23 @@ class BloodPressureEntrySheetControllerTest {
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
     val bloodPressure = PatientMocker.bp()
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(bloodPressure))
+    whenever(bloodPressureRepository.deletedMeasurementAsStream(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bloodPressure.uuid)))
     uiEvents.onNext(BloodPressureRemoveClicked)
 
     verify(sheet).showConfirmRemoveBloodPressureDialog(bloodPressure.uuid)
+  }
+
+  @Test
+  fun `when a blood pressure being edited is removed, the sheet should be closed`() {
+    val bloodPressure = PatientMocker.bp()
+    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(Single.just(bloodPressure))
+    whenever(bloodPressureRepository.deletedMeasurementAsStream(bloodPressure.uuid))
+        .thenReturn(Observable.just(bloodPressure.copy(deletedAt = Instant.now())))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
+
+    verify(sheet).setBPSavedResultAndFinish()
   }
 }

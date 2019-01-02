@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 @Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
-class MigrationAndroidTest {
+class DatabaseMigrationAndroidTest {
 
   @get:Rule
   val helper = MigrationTestHelperWithForeignConstraints()

@@ -14,14 +14,16 @@ class MigrationTestHelperWithForeignConstraints : MigrationTestHelper(
     AppSqliteOpenHelperFactory()
 ) {
 
+  lateinit var migrations: List<Migration>
+
   fun createDatabase(version: Int): SupportSQLiteDatabase {
     val db = super.createDatabase(TEST_DB_NAME, version)
     db.setForeignKeyConstraintsEnabled(true)
     return db
   }
 
-  fun migrateTo(version: Int, vararg migrations: Migration): SupportSQLiteDatabase {
-    return super.runMigrationsAndValidate(TEST_DB_NAME, version, true, *migrations)
+  fun migrateTo(version: Int): SupportSQLiteDatabase {
+    return super.runMigrationsAndValidate(TEST_DB_NAME, version, true, *migrations.toTypedArray())
   }
 
   @Deprecated(message = "Use migrateTo() instead", replaceWith = ReplaceWith("helper.migrateTo(version, *migrations)"))

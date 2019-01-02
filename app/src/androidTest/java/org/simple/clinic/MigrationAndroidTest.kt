@@ -1,39 +1,21 @@
 package org.simple.clinic
 
 import android.arch.persistence.db.SupportSQLiteDatabase
+import android.arch.persistence.room.migration.Migration
 import android.database.Cursor
 import android.database.sqlite.SQLiteConstraintException
 import android.support.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
-import org.simple.clinic.storage.Migration_10_11
-import org.simple.clinic.storage.Migration_11_12
-import org.simple.clinic.storage.Migration_12_13
-import org.simple.clinic.storage.Migration_13_14
-import org.simple.clinic.storage.Migration_14_15
-import org.simple.clinic.storage.Migration_15_16
-import org.simple.clinic.storage.Migration_16_17
-import org.simple.clinic.storage.Migration_17_18
-import org.simple.clinic.storage.Migration_18_19
-import org.simple.clinic.storage.Migration_19_20
-import org.simple.clinic.storage.Migration_20_21
-import org.simple.clinic.storage.Migration_21_22
-import org.simple.clinic.storage.Migration_22_23
-import org.simple.clinic.storage.Migration_23_24
-import org.simple.clinic.storage.Migration_24_25
-import org.simple.clinic.storage.Migration_25_26
-import org.simple.clinic.storage.Migration_26_27
-import org.simple.clinic.storage.Migration_6_7
-import org.simple.clinic.storage.Migration_7_8
-import org.simple.clinic.storage.Migration_8_9
-import org.simple.clinic.storage.Migration_9_10
 import org.simple.clinic.storage.inTransaction
 import java.util.UUID
+import javax.inject.Inject
 
 @Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
@@ -44,6 +26,15 @@ class MigrationAndroidTest {
 
   @get:Rule
   val expectedException = ExpectedException.none()
+
+  @Inject
+  lateinit var migrations: ArrayList<Migration>
+
+  @Before
+  fun setup() {
+    TestClinicApp.appComponent().inject(this)
+    helper.migrations = migrations
+  }
 
   @Test
   fun migration_6_to_7_with_an_existing_user() {
@@ -62,7 +53,7 @@ class MigrationAndroidTest {
         '2018-06-21T10:15:58.666Z')
     """)
 
-    val db_v7 = helper.migrateTo(7, Migration_6_7())
+    val db_v7 = helper.migrateTo(7)
 
     val cursor = db_v7.query("SELECT * FROM `LoggedInUserFacilityMapping`")
     cursor.use {
@@ -82,7 +73,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_6_to_7_without_an_existing_user() {
     helper.createDatabase(version = 6)
-    val db_v7 = helper.migrateTo(7, Migration_6_7())
+    val db_v7 = helper.migrateTo(7)
 
     val cursor = db_v7.query("SELECT * FROM LoggedInUserFacilityMapping")
 
@@ -107,7 +98,7 @@ class MigrationAndroidTest {
         '2018-06-21T10:15:58.666Z')
     """)
 
-    val db_v8 = helper.migrateTo(8, Migration_7_8())
+    val db_v8 = helper.migrateTo(8)
 
     val cursor = db_v8.query("""SELECT "loggedInStatus" FROM "LoggedInUser" WHERE "uuid"='c6834f82-3305-4144-9dc8-5f77c908ebf1'""")
 
@@ -120,7 +111,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_8_to_9() {
     helper.createDatabase(version = 8)
-    val db_v9 = helper.migrateTo(9, Migration_8_9())
+    val db_v9 = helper.migrateTo(9)
 
     db_v9.query("SELECT * FROM `Appointment`").use {
       assertThat(it.columnCount).isEqualTo(9)
@@ -130,7 +121,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_9_to_10() {
     helper.createDatabase(version = 9)
-    val db_v10 = helper.migrateTo(10, Migration_9_10())
+    val db_v10 = helper.migrateTo(10)
 
     db_v10.query("SELECT * FROM `Communication`").use {
       assertThat(it.columnCount).isEqualTo(8)
@@ -168,7 +159,7 @@ class MigrationAndroidTest {
         '2018-06-21T10:15:58.666Z');
     """)
 
-    val db_v11 = helper.migrateTo(11, Migration_10_11())
+    val db_v11 = helper.migrateTo(11)
 
     db_v11.query("SELECT * FROM `Appointment`").use {
       assertThat(it.count).isEqualTo(1)
@@ -200,7 +191,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_11_to_12() {
     helper.createDatabase(version = 11)
-    val db_v12 = helper.migrateTo(12, Migration_11_12())
+    val db_v12 = helper.migrateTo(12)
 
     db_v12.query("SELECT * FROM `MedicalHistory`").use {
       assertThat(it.columnCount).isEqualTo(10)
@@ -225,7 +216,7 @@ class MigrationAndroidTest {
         '2018-06-21T10:15:58.666Z');
     """)
 
-    val db_v13 = helper.migrateTo(13, Migration_12_13())
+    val db_v13 = helper.migrateTo(13)
 
     db_v13.query("SELECT * FROM `Appointment`").use {
       assertThat(it.count).isEqualTo(1)
@@ -297,7 +288,7 @@ class MigrationAndroidTest {
       assertThat(it.count).isEqualTo(1)
     }
 
-    val db_v14 = helper.migrateTo(14, Migration_13_14())
+    val db_v14 = helper.migrateTo(14)
 
     db_v14.query("SELECT * FROM `MedicalHistory` WHERE patientUuid = '$patientUuid'").use {
       assertThat(it.count).isEqualTo(1)
@@ -335,7 +326,7 @@ class MigrationAndroidTest {
         '2018-09-25T11:20:42.008Z')
     """)
 
-    val db_v15 = helper.migrateTo(15, Migration_14_15())
+    val db_v15 = helper.migrateTo(15)
     db_v15.query("SELECT * FROM `MedicalHistory`").use {
       assertThat(it.columnCount).isEqualTo(11)
 
@@ -356,7 +347,7 @@ class MigrationAndroidTest {
       assertThat(it.count).isEqualTo(1)
     }
 
-    val db_v16 = helper.migrateTo(16, Migration_15_16())
+    val db_v16 = helper.migrateTo(16)
 
     db_v16.query("""SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='PatientFuzzySearch'""").use {
       assertThat(it.count).isEqualTo(0)
@@ -399,7 +390,7 @@ class MigrationAndroidTest {
         '1995-09-25');
     """)
 
-    val db_17 = helper.migrateTo(17, Migration_16_17())
+    val db_17 = helper.migrateTo(17)
 
     db_17.execSQL("""
       INSERT INTO `Patient` VALUES(
@@ -498,7 +489,7 @@ class MigrationAndroidTest {
     assertThat(thrownException).isNotNull()
     assertThat(thrownException).isInstanceOf(SQLiteConstraintException::class.java)
 
-    val db_v18 = helper.migrateTo(18, Migration_17_18())
+    val db_v18 = helper.migrateTo(18)
 
     db_v18.execSQL("""DELETE FROM "Facility" WHERE "uuid" = '$existentFacilityUuid'""")
 
@@ -524,7 +515,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_18_to_19() {
     helper.createDatabase(version = 18)
-    val db_v19 = helper.migrateTo(19, Migration_18_19())
+    val db_v19 = helper.migrateTo(19)
 
     db_v19.query("""SELECT * FROM "OngoingLoginEntry" """).use {
       assertThat(it.columnCount).isEqualTo(3)
@@ -551,7 +542,7 @@ class MigrationAndroidTest {
         '2018-09-25T11:20:42.008Z')
     """)
 
-    val db_20 = helper.migrateTo(20, Migration_19_20())
+    val db_20 = helper.migrateTo(20)
 
     db_20.query("""SELECT * FROM "MedicalHistory" ORDER BY "createdAt" DESC""").use {
       assertThat(it.count).isEqualTo(1)
@@ -597,7 +588,7 @@ class MigrationAndroidTest {
       insertAppointmentWithCancelReason("OTHER")
     }
 
-    val db_21 = helper.migrateTo(21, Migration_20_21())
+    val db_21 = helper.migrateTo(21)
 
     db_21.query("""SELECT * FROM "Appointment" WHERE "patientUuid" = '$patientUuid'""").use {
       assertThat(it.count).isEqualTo(4)
@@ -619,7 +610,7 @@ class MigrationAndroidTest {
   @Test
   fun migration_21_to_22() {
     helper.createDatabase(version = 21)
-    val db_22 = helper.migrateTo(22, Migration_21_22())
+    val db_22 = helper.migrateTo(22)
 
     db_22.query("""SELECT * FROM "Protocol" """).use {
       assertThat(it.columnCount).isEqualTo(6)
@@ -663,7 +654,7 @@ class MigrationAndroidTest {
       assertThat(it.columnCount).isEqualTo(8)
     }
 
-    val db_23 = helper.migrateTo(23, Migration_22_23())
+    val db_23 = helper.migrateTo(23)
     db_23.query("""
       SELECT * FROM "ProtocolDrug"
     """).use {
@@ -691,7 +682,7 @@ class MigrationAndroidTest {
       assertColumnCount(tableName = "ProtocolDrug", expectedCount = 7)
     }
 
-    val db_v24 = helper.migrateTo(24, Migration_23_24())
+    val db_v24 = helper.migrateTo(24)
 
     db_v24.apply {
       assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 10)
@@ -730,7 +721,7 @@ class MigrationAndroidTest {
         '2018-09-25T11:20:42.008Z')
     """)
 
-    val db_v25 = helper.migrateTo(25, Migration_24_25())
+    val db_v25 = helper.migrateTo(25)
     db_v25.query("""SELECT * FROM "Facility"""").use {
       it.moveToNext()
       assertThat(it.string("protocolUuid")).isNull()
@@ -766,7 +757,7 @@ class MigrationAndroidTest {
 
     db_v25.assertColumnCount(tableName = "ProtocolDrug", expectedCount = 8)
 
-    val db_26 = helper.migrateTo(version = 26, migrations = Migration_25_26())
+    val db_26 = helper.migrateTo(26)
     db_26.query("""
       SELECT * FROM "ProtocolDrug"
     """).use {
@@ -800,7 +791,7 @@ class MigrationAndroidTest {
         '2018-09-25T11:20:42.008Z')
     """)
 
-    val db_v27 = helper.migrateTo(27, Migration_26_27())
+    val db_v27 = helper.migrateTo(27)
     db_v27.query("""SELECT * FROM "Facility"""").use {
       it.moveToNext()
       assertThat(it.columnNames.contains("groupUuid"))

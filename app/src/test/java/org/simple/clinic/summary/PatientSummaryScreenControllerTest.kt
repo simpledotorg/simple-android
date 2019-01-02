@@ -256,7 +256,7 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(2)
             ),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest2[0], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime)
+                SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
         listOf<Any>(
@@ -266,8 +266,8 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(2)
             ),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest3[0], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest3[1], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime)
+                SummaryBloodPressureListItem(measurement = bpsForTest3[0], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest3[1], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
         listOf<Any>(
@@ -277,27 +277,27 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressurePlaceholderListItem(2)
             ),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest4[0], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest4[1], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest4[2], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime)
+                SummaryBloodPressureListItem(measurement = bpsForTest4[0], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[1], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest4[2], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
         listOf<Any>(
             bpsForTest5,
             listOf(SummaryBloodPressurePlaceholderListItem(1)),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest5[0], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest5[1], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest5[2], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime)
+                SummaryBloodPressureListItem(measurement = bpsForTest5[0], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest5[1], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest5[2], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
         listOf<Any>(
             bpsForTest6,
             emptyList<SummaryBloodPressurePlaceholderListItem>(),
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest6[0], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest6[1], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime),
-                SummaryBloodPressureListItem(measurement = bpsForTest6[2], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime)
+                SummaryBloodPressureListItem(measurement = bpsForTest6[0], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest6[1], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest6[2], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         )
     )
@@ -546,9 +546,10 @@ class PatientSummaryScreenControllerTest {
             PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt))),
         bloodPressureListItems = listOf(SummaryBloodPressureListItem(
             measurement = PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt),
-            displayDaysTimestamp = Today,
-            showDivider = false,
-            displayTime = updatedAt.toString()
+            daysAgo = Today,
+            showDivider = true,
+            formattedTime = updatedAt.toString(),
+            addTopPadding = false
         )),
         medicalHistoryItems = SummaryMedicalHistoryItem(PatientMocker.medicalHistory(syncStatus = syncStatus, updatedAt = updatedAt), Today)
     )
@@ -595,7 +596,7 @@ class PatientSummaryScreenControllerTest {
           it.forEachIndexed { index, item ->
             assertThat(item.measurement).isEqualTo(expectedBloodPressureMeasurementItems[index].measurement)
             assertThat(item.showDivider).isEqualTo(expectedBloodPressureMeasurementItems[index].showDivider)
-            assertThat(item.displayTime).isEqualTo(expectedBloodPressureMeasurementItems[index].displayTime)
+            assertThat(item.formattedTime).isEqualTo(expectedBloodPressureMeasurementItems[index].formattedTime)
           }
         },
         medicalHistoryItem = any()
@@ -618,25 +619,25 @@ class PatientSummaryScreenControllerTest {
     )
 
     val displayTime = { instant: Instant ->
-      instant.atZone(zoneId).format(timeFormatter).toString()
+      instant.atZone(zoneId).format(timeFormatter)
     }
 
     return listOf(
         listOf<Any>(
             bpsForTest1,
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest1[0], displayDaysTimestamp = Today, showDivider = false, displayTime = displayTime(bpsForTest1[0].createdAt)),
-                SummaryBloodPressureListItem(measurement = bpsForTest1[1], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime(bpsForTest1[1].createdAt)),
-                SummaryBloodPressureListItem(measurement = bpsForTest1[2], displayDaysTimestamp = Today, showDivider = true, displayTime = null)
+                SummaryBloodPressureListItem(measurement = bpsForTest1[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest1[0].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest1[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest1[1].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest1[2], daysAgo = Today, showDivider = true, formattedTime = null, addTopPadding = false)
             )),
         listOf<Any>(
             bpsForTest2,
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest2[0], displayDaysTimestamp = Today, showDivider = false, displayTime = displayTime(bpsForTest2[0].createdAt)),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[1], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime(bpsForTest2[1].createdAt)),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[2], displayDaysTimestamp = Today, showDivider = false, displayTime = displayTime(bpsForTest2[2].createdAt)),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[3], displayDaysTimestamp = Today, showDivider = true, displayTime = displayTime(bpsForTest2[3].createdAt)),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[4], displayDaysTimestamp = Today, showDivider = true, displayTime = null)
+                SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[0].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest2[1].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[2], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[2].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[3], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest2[3].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[4], daysAgo = Today, showDivider = true, formattedTime = null, addTopPadding = false)
             ))
     )
   }

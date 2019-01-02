@@ -142,9 +142,10 @@ class PatientSummaryScreenController @Inject constructor(
                 val timestamp = timestampGenerator.generate(measurement.createdAt)
                 SummaryBloodPressureListItem(
                     measurement = measurement,
-                    displayDaysTimestamp = timestamp,
-                    displayTime = if (measurementList.size > 1) displayTime(measurement.createdAt) else null,
-                    showDivider = measurement == measurementList.last()
+                    daysAgo = timestamp,
+                    showDivider = measurement == measurementList.last(),
+                    formattedTime = if (measurementList.size > 1) displayTime(measurement.createdAt) else null,
+                    addTopPadding = measurement == measurementList.first()
                 )
               }
             }

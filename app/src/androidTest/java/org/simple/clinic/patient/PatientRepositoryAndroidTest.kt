@@ -12,6 +12,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
@@ -57,9 +58,6 @@ class PatientRepositoryAndroidTest {
 
   @get:Rule
   val instantTaskExecutorRule = InstantTaskExecutorRule()
-
-  @Inject
-  lateinit var bpRepository: BloodPressureRepository
 
   @Inject
   lateinit var facilityRepository: FacilityRepository
@@ -255,6 +253,76 @@ class PatientRepositoryAndroidTest {
       assertThat(searchResult.fullName).isEqualTo(expectedPatient.fullName)
       assertThat(searchResult.dateOfBirth).isEqualTo(expectedPatient.dateOfBirth)
     }
+  }
+
+  @Test
+  fun deleted_blood_pressures_should_be_excluded_when_searching_for_patients() {
+    val now = Instant.now(clock)
+    val user = userSession.loggedInUserImmediate()!!
+    val currentFacility = facilityRepository.currentFacility(user).blockingFirst()
+
+    fun createBp(patientUuid: UUID, createdAt: Instant, deletedAt: Instant? = null): BloodPressureMeasurement {
+      return testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = currentFacility.uuid,
+          userUuid = user.uuid,
+          createdAt = createdAt,
+          deletedAt = deletedAt)
+    }
+
+    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.TRANSGENDER)
+    val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
+    val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
+    val abhayKumar = patientRepository.saveOngoingEntry(ongoingPatientEntry)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+    val bpsForAbhayKumar = listOf(
+        createBp(abhayKumar.uuid, createdAt = now.plusSeconds(2L)),
+        createBp(abhayKumar.uuid, createdAt = now),
+        createBp(abhayKumar.uuid, createdAt = now.plusSeconds(5L), deletedAt = now))
+    bloodPressureRepository.save(bpsForAbhayKumar).blockingAwait()
+
+    val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.TRANSGENDER)
+    val opa2 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.MOBILE, active = true)
+    val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
+    val alokKumar = patientRepository.saveOngoingEntry(ope2)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+    val bpsForAlokKumar = listOf(
+        createBp(alokKumar.uuid, createdAt = now, deletedAt = now))
+    bloodPressureRepository.save(bpsForAlokKumar).blockingAwait()
+
+    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.TRANSGENDER)
+    val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
+    val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
+    val abhishekKumar = patientRepository.saveOngoingEntry(ope3)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+    val bpsForAbhishekKumar = listOf(
+        createBp(abhishekKumar.uuid, createdAt = now, deletedAt = now),
+        createBp(abhishekKumar.uuid, createdAt = now.plusSeconds(1L), deletedAt = now))
+    bloodPressureRepository.save(bpsForAbhishekKumar).blockingAwait()
+
+    val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.TRANSGENDER)
+    val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
+    val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
+    val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
+    val abshotKumar = patientRepository.saveOngoingEntry(ope4)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    val searchResults = patientRepository.search("kumar").blockingFirst()
+        .groupBy { it.uuid }
+        .mapValues { (_, results) -> results.first() }
+
+    assertThat(searchResults.size).isEqualTo(4)
+    assertThat(searchResults[abhayKumar.uuid]!!.lastBp!!.takenOn).isEqualTo(now.plusSeconds(2L))
+    assertThat(searchResults[alokKumar.uuid]!!.lastBp).isNull()
+    assertThat(searchResults[abhishekKumar.uuid]!!.lastBp).isNull()
+    assertThat(searchResults[abshotKumar.uuid]!!.lastBp).isNull()
   }
 
   @Test

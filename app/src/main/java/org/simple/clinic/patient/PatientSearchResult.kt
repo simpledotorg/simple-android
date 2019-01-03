@@ -68,10 +68,14 @@ data class PatientSearchResult(
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
         		SELECT BP.patientUuid, BP.createdAt, F.name facilityName, F.uuid facilityUuid
-        		FROM BloodPressureMeasurement BP
+        		FROM (
+                SELECT BP.patientUuid, BP.createdAt, BP.facilityUuid
+                FROM BloodPressureMeasurement BP
+                WHERE BP.deletedAt IS NULL
+                ORDER BY BP.createdAt DESC
+                LIMIT 1
+            ) BP
         		INNER JOIN Facility F ON BP.facilityUuid = F.uuid
-            GROUP BY BP.patientUuid
-        		ORDER BY BP.createdAt DESC
         	) BP ON (BP.patientUuid = P.uuid)
     """
     }

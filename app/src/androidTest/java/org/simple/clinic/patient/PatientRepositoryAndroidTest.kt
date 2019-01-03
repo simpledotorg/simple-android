@@ -14,6 +14,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
@@ -53,9 +54,6 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var database: AppDatabase
-
-  @Inject
-  lateinit var bpRepository: BloodPressureRepository
 
   @Inject
   lateinit var facilityRepository: FacilityRepository
@@ -271,6 +269,68 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun deleted_blood_pressures_should_be_excluded_when_searching_for_patients() {
+    val now = Instant.now(clock)
+    val user = userSession.loggedInUserImmediate()!!
+    val currentFacility = facilityRepository.currentFacility(user).blockingFirst()
+
+    fun createPatientProfile(fullName: String): PatientProfile {
+      return testData.patientProfile()
+          .let { profile ->
+            profile.copy(patient = profile.patient.copy(
+                fullName = fullName,
+                status = PatientStatus.ACTIVE))
+          }
+    }
+
+    fun createBp(patientUuid: UUID, createdAt: Instant, deletedAt: Instant? = null): BloodPressureMeasurement {
+      return testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = currentFacility.uuid,
+          userUuid = user.uuid,
+          createdAt = createdAt,
+          deletedAt = deletedAt)
+    }
+
+    val patient0WithLatestBpDeleted = createPatientProfile(fullName = "Patient with latest BP deleted")
+    val bpsForPatient0 = listOf(
+        createBp(patient0WithLatestBpDeleted.patient.uuid, createdAt = now.plusSeconds(2L)),
+        createBp(patient0WithLatestBpDeleted.patient.uuid, createdAt = now),
+        createBp(patient0WithLatestBpDeleted.patient.uuid, createdAt = now.plusSeconds(5L), deletedAt = now))
+    patientRepository.save(listOf(patient0WithLatestBpDeleted))
+        .andThen(bloodPressureRepository.save(bpsForPatient0))
+        .blockingAwait()
+
+    val patient1WithOneDeletedBp = createPatientProfile(fullName = "Patient with only one deleted BP")
+    val bpsForPatient1 = listOf(
+        createBp(patient1WithOneDeletedBp.patient.uuid, createdAt = now, deletedAt = now))
+    patientRepository.save(listOf(patient1WithOneDeletedBp))
+        .andThen(bloodPressureRepository.save(bpsForPatient1))
+        .blockingAwait()
+
+    val patient2WithTwoDeletedBps = createPatientProfile(fullName = "Patient with two deleted BPs")
+    val bpsForPatient2 = listOf(
+        createBp(patient2WithTwoDeletedBps.patient.uuid, createdAt = now, deletedAt = now),
+        createBp(patient2WithTwoDeletedBps.patient.uuid, createdAt = now.plusSeconds(1L), deletedAt = now))
+    patientRepository.save(listOf(patient2WithTwoDeletedBps))
+        .andThen(bloodPressureRepository.save(bpsForPatient2))
+        .blockingAwait()
+
+    val patient3WithNoBps = createPatientProfile(fullName = "Patient with no BPs")
+    patientRepository.save(listOf(patient3WithNoBps)).blockingAwait()
+
+    val searchResults = patientRepository.search("patient").blockingFirst()
+        .groupBy { it.uuid }
+        .mapValues { (_, results) -> results.first() }
+
+    assertThat(searchResults.size).isEqualTo(4)
+    assertThat(searchResults[patient0WithLatestBpDeleted.patient.uuid]!!.lastBp!!.takenOn).isEqualTo(now.plusSeconds(2L))
+    assertThat(searchResults[patient1WithOneDeletedBp.patient.uuid]!!.lastBp).isNull()
+    assertThat(searchResults[patient2WithTwoDeletedBps.patient.uuid]!!.lastBp).isNull()
+    assertThat(searchResults[patient3WithNoBps.patient.uuid]!!.lastBp).isNull()
+  }
+
+  @Test
   fun when_the_patient_data_is_cleared_all_patient_data_must_be_cleared() {
     val facilityPayloads = listOf(testData.facilityPayload())
     val facilityUuid = facilityPayloads.first().uuid
@@ -361,7 +421,7 @@ class PatientRepositoryAndroidTest {
                     .flatMapSingle { facility ->
                       facilityRepository
                           .setCurrentFacility(user, facility)
-                          .andThen(bpRepository
+                          .andThen(bloodPressureRepository
                               .saveMeasurement(savedPatient.uuid, systolic = 120, diastolic = 121)
                           )
                     }

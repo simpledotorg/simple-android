@@ -714,6 +714,22 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
+  fun `when screen is opened for a patient without a phone number, then avoid showing update phone dialog`() {
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(None))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        numberOfBpsToDisplay = 100,
+        isUpdatePhoneDialogEnabled = true)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when update phone dialog feature is disabled then it should never be shown`(
       cancelReason: AppointmentCancelReason

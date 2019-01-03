@@ -13,8 +13,6 @@ class PatientFuzzySearch {
   // TODO: See if this can merged with the PatientSearchDao.
   interface PatientFuzzySearchDao {
 
-    fun searchForPatientsWithNameLikeAndAgeWithin(query: String, dobUpperBound: String, dobLowerBound: String): Single<List<PatientSearchResult>>
-
     fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>>
   }
 
@@ -22,19 +20,6 @@ class PatientFuzzySearch {
       private val sqLiteOpenHelper: SupportSQLiteOpenHelper,
       private val patientSearchDao: PatientSearchResult.RoomDao
   ) : PatientFuzzySearchDao {
-
-    override fun searchForPatientsWithNameLikeAndAgeWithin(
-        query: String,
-        dobUpperBound: String,
-        dobLowerBound: String
-    ): Single<List<PatientSearchResult>> {
-      return patientUuidsMatching(query).flatMap { uuidsSortedByScore ->
-        val uuids = uuidsSortedByScore.map { it.uuid }
-        patientSearchDao
-            .searchByIds(uuids, dobUpperBound, dobLowerBound, PatientStatus.ACTIVE)
-            .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
-      }
-    }
 
     override fun searchForPatientsWithNameLike(query: String): Single<List<PatientSearchResult>> {
       return patientUuidsMatching(query).flatMap { uuidsSortedByScore ->

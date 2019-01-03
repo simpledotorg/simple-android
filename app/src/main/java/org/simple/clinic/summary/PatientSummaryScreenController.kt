@@ -22,9 +22,11 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
@@ -33,14 +35,14 @@ import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.exhaustive
-import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.unwrapJust
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -78,7 +80,7 @@ class PatientSummaryScreenController @Inject constructor(
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openBloodPressureUpdateSheet(replayedEvents),
         patientSummaryResultChanged(replayedEvents),
-        showUpdatePhoneDialog(replayedEvents))
+        showUpdatePhoneDialogIfRequired(replayedEvents))
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
@@ -387,28 +389,30 @@ class PatientSummaryScreenController @Inject constructor(
         }
   }
 
-  private fun showUpdatePhoneDialog(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuidStream = events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    return Observables.combineLatest(patientUuidStream, configProvider.toObservable())
+    return Observables
+        .zip(patientUuidStream, configProvider.toObservable())
         .filter { (_, config) -> config.isUpdatePhoneDialogEnabled }
-        .flatMap { (patientUuid) ->
-          val lastCancelledAppointment = appointmentRepository
-              .lastCreatedAppointmentForPatient(patientUuid)
-              .filterAndUnwrapJust()
-              .filter { it.status == CANCELLED && it.cancelReason == InvalidPhoneNumber }
-
-          val patientPhoneNumber = patientRepository
-              .phoneNumber(patientUuid)
-              .unwrapJust()
-
-          Observables.combineLatest(lastCancelledAppointment, patientPhoneNumber)
-              .filter { (appointment, number) -> appointment.updatedAt > number.updatedAt }
-              .map { patientUuid }
-        }
+        .switchMap { (patientUuid, _) -> Observables.zip(phoneNumber(patientUuid), lastCancelledAppointment(patientUuid)) }
+        .filter { (number, appointment) -> appointment.updatedAt > number.updatedAt }
         .take(1)
-        .map { patientUuid -> { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
+        .map { (number) -> { ui: Ui -> ui.showUpdatePhoneDialog(number.patientUuid) } }
+  }
+
+  private fun lastCancelledAppointment(patientUuid: UUID): Observable<Appointment> {
+    return appointmentRepository
+        .lastCreatedAppointmentForPatient(patientUuid)
+        .filterAndUnwrapJust()
+        .filter { it.status == CANCELLED && it.cancelReason == InvalidPhoneNumber }
+  }
+
+  private fun phoneNumber(patientUuid: UUID): Observable<PatientPhoneNumber> {
+    return patientRepository
+        .phoneNumber(patientUuid)
+        .filterAndUnwrapJust()
   }
 }

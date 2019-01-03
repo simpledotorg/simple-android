@@ -87,7 +87,11 @@ data class BloodPressureMeasurement (
     @Query("DELETE FROM bloodpressuremeasurement")
     fun clearData(): Int
 
-    @Query("SELECT patientUuid, facilityUuid FROM bloodpressuremeasurement WHERE patientUuid IN (:patientUuids)")
+    @Query("""
+      SELECT patientUuid, facilityUuid
+      FROM bloodpressuremeasurement
+      WHERE patientUuid IN (:patientUuids) AND deletedAt IS NULL
+      """)
     fun patientToFacilityIds(patientUuids: List<UUID>): Flowable<List<PatientToFacilityId>>
   }
 }

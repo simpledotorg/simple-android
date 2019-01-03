@@ -3,7 +3,6 @@ package org.simple.clinic.patient
 import android.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
@@ -17,6 +16,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
@@ -394,7 +394,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun patients_whose_last_visited_facility_matches_with_the_current_facility_should_be_present_at_the_top_when_searching() {
+  fun patients_who_have_ever_visited_current_facility_should_be_present_at_the_top_when_searching() {
     val user = userSession.requireLoggedInUser().blockingFirst()
 
     val facilities = facilityRepository.facilities().blockingFirst()
@@ -403,58 +403,77 @@ class PatientRepositoryAndroidTest {
 
     facilityRepository.associateUserWithFacilities(user, facilities.map { it.uuid }).blockingAwait()
 
-    val data = listOf(
-        "Ashoka" to listOf(otherFacility),
-        "Ashok Kumari" to listOf(currentFacility),
-        "Kumar Ashok" to listOf(currentFacility, currentFacility),
-        "Ashoka Kumar" to listOf(otherFacility, currentFacility),
-        "Ash Kumari" to listOf())
+    data class FacilityAndBloodPressureDeleted(val facility: Facility, val isBloodPressureDeleted: Boolean)
 
-    Observable.fromIterable(data)
-        .flatMapCompletable { (patientName, visitedFacilities) ->
-          patientRepository
-              .saveOngoingEntry(testData.ongoingPatientEntry(fullName = patientName, age = "20"))
-              .andThen(patientRepository.saveOngoingEntryAsPatient())
-              .flatMapCompletable { savedPatient ->
-                // Record BPs in different facilities.
-                Observable.fromIterable(visitedFacilities)
-                    .flatMapSingle { facility ->
-                      facilityRepository
-                          .setCurrentFacility(user, facility)
-                          .andThen(bloodPressureRepository
-                              .saveMeasurement(savedPatient.uuid, systolic = 120, diastolic = 121)
-                          )
-                    }
-                    .ignoreElements()
-              }
-        }
-        .blockingAwait()
+    val data = listOf(
+        "Patient with one BP in other facility" to listOf(
+            FacilityAndBloodPressureDeleted(otherFacility, false)),
+        "Patient with one BP in current facility" to listOf(
+            FacilityAndBloodPressureDeleted(currentFacility, false)),
+        "Patient with two BPs in current facility" to listOf(
+            FacilityAndBloodPressureDeleted(currentFacility, false),
+            FacilityAndBloodPressureDeleted(currentFacility, false)),
+        "Patient with two BPs, latest in current facility" to listOf(
+            FacilityAndBloodPressureDeleted(otherFacility, false),
+            FacilityAndBloodPressureDeleted(currentFacility, false)),
+        "Patient with two BPs, latest in other facility" to listOf(
+            FacilityAndBloodPressureDeleted(currentFacility, false),
+            FacilityAndBloodPressureDeleted(otherFacility, false)),
+        "Patient with two BPs, latest in other facility deleted, older in current facility" to listOf(
+            FacilityAndBloodPressureDeleted(currentFacility, false),
+            FacilityAndBloodPressureDeleted(otherFacility, true)),
+        "Patient with two BPs, latest in current facility deleted, older in other facility" to listOf(
+            FacilityAndBloodPressureDeleted(otherFacility, false),
+            FacilityAndBloodPressureDeleted(currentFacility, true)),
+        "Patient with no BPs" to listOf())
+
+    data.forEach { (patientName, visitedFacilities) ->
+      val patientProfile = testData.patientProfile()
+          .let { profile ->
+            profile.copy(patient = profile.patient.copy(fullName = patientName, status = PatientStatus.ACTIVE))
+          }
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      // Record BPs in different facilities.
+      visitedFacilities.forEach { (facility, isBloodPressureDeleted) ->
+        val bloodPressureMeasurement = testData.bloodPressureMeasurement(
+            patientUuid = patientProfile.patient.uuid,
+            facilityUuid = facility.uuid,
+            deletedAt = if (isBloodPressureDeleted) Instant.now() else null)
+
+        bloodPressureRepository.save(listOf(bloodPressureMeasurement)).blockingAwait()
+      }
+    }
 
     facilityRepository.setCurrentFacility(user, currentFacility).blockingAwait()
 
-    val runAssertions = { searchResults: List<PatientSearchResult> ->
-      assertThat(searchResults).hasSize(5)
+    val searchResults = patientRepository.search("patient").blockingFirst()
+    assertThat(searchResults).hasSize(data.size)
 
-      val (inCurrentFacility, inOtherFacility) = searchResults.partition { currentFacility.uuid == it.lastBp?.takenAtFacilityUuid }
+    val patientsWhoHaveVisitedCurrentFacility = setOf(
+        "Patient with one BP in current facility",
+        "Patient with two BPs in current facility",
+        "Patient with two BPs, latest in current facility",
+        "Patient with two BPs, latest in other facility deleted, older in current facility",
+        "Patient with two BPs, latest in other facility")
+    val patientsWhoHaveNeverVisitedCurrentFacility = setOf(
+        "Patient with one BP in other facility",
+        "Patient with no BPs",
+        "Patient with two BPs, latest in current facility deleted, older in other facility")
 
-      val expectedResultIndicesInCurrentFacility = setOf(0, 1, 2)
-      val expectedResultIndicesInOtherFacility = setOf(3, 4)
-
-      val actualPatientsInCurrentFacility = inCurrentFacility.map { it.fullName }.toSet()
-      val actualPatientsInOtherFacility = inOtherFacility.map { it.fullName }.toSet()
-      val actualResultIndicesInCurrentFacility = actualPatientsInCurrentFacility.map { patientName ->
-        searchResults.indexOfFirst { it.fullName == patientName }
-      }.toSet()
-      val actualResultIndicesOfOtherFacility = actualPatientsInOtherFacility.map { patientName ->
-        searchResults.indexOfFirst { it.fullName == patientName }
-      }.toSet()
-
-      assertThat(actualResultIndicesInCurrentFacility).isEqualTo(expectedResultIndicesInCurrentFacility)
-      assertThat(actualResultIndicesOfOtherFacility).isEqualTo(expectedResultIndicesInOtherFacility)
+    val findIndexOfPatientInSearchResults: (String) -> Int = { patientName ->
+      searchResults.indexOfFirst { it.fullName == patientName }
     }
+    val indicesOfVisitedCurrentFacilityPatientsInSearchResults = patientsWhoHaveVisitedCurrentFacility
+        .map(findIndexOfPatientInSearchResults)
+        .toSet()
+    val indicesOfNotVisitedCurrentFacilityPatientsInSearchResults = patientsWhoHaveNeverVisitedCurrentFacility
+        .map(findIndexOfPatientInSearchResults)
+        .toSet()
 
-    val resultsWithAgeFilter = patientRepository.search("ash").blockingFirst()
-    runAssertions(resultsWithAgeFilter)
+    assertThat(indicesOfVisitedCurrentFacilityPatientsInSearchResults).isEqualTo(setOf(0, 1, 2, 3, 4))
+    assertThat(indicesOfNotVisitedCurrentFacilityPatientsInSearchResults).isEqualTo(setOf(5, 6, 7))
   }
 
   @Test

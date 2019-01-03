@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
@@ -48,13 +47,27 @@ class PatientRepository @Inject constructor(
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
   fun search(name: String): Observable<List<PatientSearchResult>> {
-    return configProvider.flatMapObservable { config ->
-      if (config.isFuzzySearchV2Enabled) {
-        searchWithoutAgeV2(name = name)
-      } else {
-        searchWithoutAgeV1(name = name)
-      }
-    }
+    val patientUuidsMatchingName = database.patientSearchDao()
+        .nameAndId(PatientStatus.ACTIVE)
+        .toObservable()
+        .switchMapSingle { searchPatientByName.search(name, it) }
+
+    return Observables.combineLatest(patientUuidsMatchingName, configProvider.toObservable())
+        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
+        .switchMapSingle { matchingUuidsSortedByScore ->
+          when {
+            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
+            else -> {
+              database.patientSearchDao()
+                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
+                  .map { results ->
+                    val resultsByUuid = results.associateBy { it.uuid }
+                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
+                  }
+            }
+          }
+        }
+        .compose(sortByCurrentFacility())
   }
 
   @Deprecated(message = "replaced by search v2")
@@ -76,30 +89,6 @@ class PatientRepository @Inject constructor(
           // queries the blood pressure table with an IN clause which can cause an exception.
           (fuzzyResults + results).distinctBy { it.uuid }
               .take(config.limitOfSearchResults)
-        }
-        .compose(sortByCurrentFacility())
-  }
-
-  private fun searchWithoutAgeV2(name: String): Observable<List<PatientSearchResult>> {
-    val patientUuidsMatchingName = database.patientSearchDao()
-        .nameAndId(PatientStatus.ACTIVE)
-        .toObservable()
-        .switchMapSingle { searchPatientByName.search(name, it) }
-
-    return Observables.combineLatest(patientUuidsMatchingName, configProvider.toObservable())
-        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
-        .switchMapSingle { matchingUuidsSortedByScore ->
-          when {
-            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
-            else -> {
-              database.patientSearchDao()
-                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
-                  .map { results ->
-                    val resultsByUuid = results.associateBy { it.uuid }
-                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
-                  }
-            }
-          }
         }
         .compose(sortByCurrentFacility())
   }

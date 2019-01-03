@@ -104,7 +104,7 @@ class TestClinicApp : ClinicApp() {
 
           override fun providePatientConfig(): Single<PatientConfig> {
             return super.providePatientConfig()
-                .map { it.copy(isFuzzySearchV2Enabled = true, limitOfSearchResults = 50) }
+                .map { it.copy(limitOfSearchResults = 50) }
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

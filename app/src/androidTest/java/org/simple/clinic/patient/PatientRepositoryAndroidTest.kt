@@ -6,7 +6,6 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.AppDatabase
@@ -176,24 +175,6 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .test()
         .assertError(AssertionError::class.java)
-  }
-
-  @Test
-  @Ignore("deprecated because of search v2")
-  fun patient_search_should_ignore_spaces_and_whitespace_characters() {
-    val names = arrayOf("Riya Puri" to "ya p", "Manabi    Mehra" to "bime", "Amit:Sodhi" to "ito")
-
-    names.forEach { (fullName, query) ->
-      val patientEntry = testData.ongoingPatientEntry(fullName = fullName, age = "20")
-
-      patientRepository.saveOngoingEntry(patientEntry)
-          .andThen(patientRepository.saveOngoingEntryAsPatient())
-          .blockingGet()
-
-      val search = patientRepository.search(query).blockingFirst()
-
-      assertThat(search.any { it.fullName == fullName }).isTrue()
-    }
   }
 
   @Test

@@ -70,29 +70,6 @@ class PatientRepository @Inject constructor(
         .compose(sortByCurrentFacility())
   }
 
-  @Deprecated(message = "replaced by search v2")
-  private fun searchWithoutAgeV1(name: String): Observable<List<PatientSearchResult>> {
-    val searchableName = nameToSearchableForm(name)
-
-    val substringSearch = database.patientSearchDao()
-        .search(searchableName, PatientStatus.ACTIVE)
-        .toObservable()
-
-    val fuzzySearch = database.fuzzyPatientSearchDao()
-        .searchForPatientsWithNameLike(searchableName)
-        .toObservable()
-
-    return Observables.zip(substringSearch, fuzzySearch, configProvider.toObservable())
-        .map { (results, fuzzyResults, config) ->
-          // Fuzzy search has an internal limit, but the substring search also can return more than
-          // a thousand results which can fail when we sort on the current facility since it
-          // queries the blood pressure table with an IN clause which can cause an exception.
-          (fuzzyResults + results).distinctBy { it.uuid }
-              .take(config.limitOfSearchResults)
-        }
-        .compose(sortByCurrentFacility())
-  }
-
   // TODO: Get user from caller.
   private fun sortByCurrentFacility(): ObservableTransformer<List<PatientSearchResult>, List<PatientSearchResult>> {
     return ObservableTransformer { searchResults ->

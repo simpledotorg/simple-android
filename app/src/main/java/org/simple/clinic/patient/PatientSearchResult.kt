@@ -86,18 +86,6 @@ data class PatientSearchResult(
       """)
     fun searchByIds(uuids: List<UUID>, dobUpperBound: String, dobLowerBound: String, status: PatientStatus): Single<List<PatientSearchResult>>
 
-    @Query("""$mainQuery
-      WHERE P.searchableName LIKE '%' || :name || '%'
-      AND ((P.dateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound) OR (P.age_computedDateOfBirth BETWEEN :dobUpperBound AND :dobLowerBound))
-      AND P.status = :status
-      """)
-    fun search(name: String, dobUpperBound: String, dobLowerBound: String, status: PatientStatus): Flowable<List<PatientSearchResult>>
-
-    @Query("""$mainQuery
-      WHERE P.searchableName LIKE '%' || :name || '%' AND P.status = :status
-    """)
-    fun search(name: String, status: PatientStatus): Flowable<List<PatientSearchResult>>
-
     @Query("$mainQuery WHERE P.syncStatus == :status")
     fun withSyncStatus(status: SyncStatus): Flowable<List<PatientSearchResult>>
 

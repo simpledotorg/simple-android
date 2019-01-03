@@ -52,6 +52,10 @@ data class PatientSearchResult(
     val lastBp: LastBp?
 ) {
 
+  override fun toString(): String {
+    return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastBp?.takenAtFacilityUuid}"
+  }
+
   @Dao
   interface RoomDao {
 

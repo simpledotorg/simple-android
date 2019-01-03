@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.atLeastOnce
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -57,7 +56,7 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    config = PatientConfig(isFuzzySearchV2Enabled = false, limitOfSearchResults = 100)
+    config = PatientConfig(limitOfSearchResults = 100)
     database = mock()
     patientSearchResultDao = mock()
     patientDao = mock()
@@ -132,54 +131,6 @@ class PatientRepositoryTest {
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
     verify(patientDao).save(argThat<List<Patient>> { first().searchableName == expectedSearchableName })
-  }
-
-  @Test
-  fun `when searching for patients, strip the search query of any whitespace or punctuation`() {
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(emptyList()))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
-    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-
-    repository.search("Name   Surname").blockingFirst()
-
-    verify(patientSearchResultDao).search(eq("NameSurname"), any())
-  }
-
-  @Test
-  fun `when the fuzzy patient search returns results, they must be at the head of the final results list`() {
-    val patientSearchResultTemplate = PatientMocker.patientSearchResult()
-
-    val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
-    val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()))
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(actualResults))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
-    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
-
-    repository.search(name = "test")
-        .firstOrError()
-        .test()
-        .assertValue(fuzzyResults + actualResults)
-  }
-
-  @Test
-  fun `when the fuzzy patient search returns results, they must not contain any duplicates`() {
-    val patientSearchResultTemplate = PatientMocker.patientSearchResult()
-    val actualResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), patientSearchResultTemplate.copy(UUID.randomUUID()))
-    val fuzzyResults = listOf(patientSearchResultTemplate.copy(uuid = UUID.randomUUID()), actualResults[0])
-
-    val expected = listOf(fuzzyResults[0], fuzzyResults[1], actualResults[1])
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(actualResults))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(fuzzyResults))
-    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
-
-    repository.search(name = "test")
-        .firstOrError()
-        .test()
-        .assertValue(expected)
   }
 
   @Test
@@ -288,47 +239,11 @@ class PatientRepositoryTest {
   }
 
   @Test
-  @Parameters(value = [
-    "true",
-    "false"
-  ])
-  fun `when the fuzzySearchV2 is enabled, searching for patient should use the new flow`(isFuzzySearchV2Enabled: Boolean) {
-    config = config.copy(isFuzzySearchV2Enabled = isFuzzySearchV2Enabled)
-
-    whenever(database.patientDao()).thenReturn(patientDao)
-    whenever(database.addressDao()).thenReturn(patientAddressDao)
-    whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
-    whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
-    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
-    whenever(searchPatientByName.search(any(), any())).thenReturn(Single.just(emptyList()))
-    whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(emptyList()))
-    whenever(patientSearchResultDao.search(any(), any())).thenReturn(Flowable.just(emptyList()))
-    whenever(fuzzyPatientSearchDao.searchForPatientsWithNameLike(any())).thenReturn(Single.just(emptyList()))
-    whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
-
-    repository.search("name").blockingFirst()
-
-    if (isFuzzySearchV2Enabled) {
-      verify(patientSearchResultDao, atLeastOnce()).nameAndId(any())
-      verify(searchPatientByName, atLeastOnce()).search(any(), any())
-      verify(fuzzyPatientSearchDao, never()).searchForPatientsWithNameLike(any())
-      verify(patientSearchResultDao, never()).search(any(), any())
-    } else {
-      verify(patientSearchResultDao, never()).nameAndId(any())
-      verify(searchPatientByName, never()).search(any(), any())
-      verify(fuzzyPatientSearchDao).searchForPatientsWithNameLike(any())
-      verify(patientSearchResultDao).search(any(), any())
-    }
-  }
-
-  @Test
-  @Parameters(method = "params for querying results for v2 fuzzy search")
-  fun `when the fuzzySearchV2 is enabled and the filter by name returns results, the database must be queried for the complete information`(
+  @Parameters(method = "params for querying results for fuzzy search")
+  fun `when the the filter patient by name returns results, the database must be queried for the complete information`(
       filteredUuids: List<UUID>,
       shouldQueryFilteredIds: Boolean
   ) {
-    config = config.copy(isFuzzySearchV2Enabled = true)
-
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
@@ -349,7 +264,7 @@ class PatientRepositoryTest {
   }
 
   @Suppress("Unused")
-  private fun `params for querying results for v2 fuzzy search`(): List<List<Any>> {
+  private fun `params for querying results for fuzzy search`(): List<List<Any>> {
     return listOf(
         listOf(listOf(UUID.randomUUID()), true),
         listOf(listOf(UUID.randomUUID(), UUID.randomUUID()), true),
@@ -357,14 +272,12 @@ class PatientRepositoryTest {
   }
 
   @Test
-  @Parameters(method = "params for sorting results for v2 fuzzy search")
-  fun `when the fuzzySearchV2 is enabled and the filter by name returns results, the results must be sorted in the same order as the filtered ids`(
+  @Parameters(method = "params for sorting results for fuzzy search")
+  fun `when the filter patient by name returns results, the results must be sorted in the same order as the filtered ids`(
       filteredUuids: List<UUID>,
       results: List<PatientSearchResult>,
       expectedResults: List<PatientSearchResult>
   ) {
-    config = config.copy(isFuzzySearchV2Enabled = true)
-
     whenever(database.patientDao()).thenReturn(patientDao)
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
@@ -380,7 +293,7 @@ class PatientRepositoryTest {
   }
 
   @Suppress("Unused")
-  private fun `params for sorting results for v2 fuzzy search`(): List<List<Any>> {
+  private fun `params for sorting results for fuzzy search`(): List<List<Any>> {
     fun generateTestData(numberOfResults: Int): List<Any> {
       val filteredUuids = (1..numberOfResults).map { UUID.randomUUID() }
       val results = filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }.shuffled()

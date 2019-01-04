@@ -1,13 +1,18 @@
 package org.simple.clinic.facility.change
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.change.FacilityListItem.Address
 import org.simple.clinic.facility.change.FacilityListItem.Builder
 import org.simple.clinic.facility.change.FacilityListItem.Name
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.RxErrorsRule
 
 class FacilityListItemBuilderTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   @Test
   fun `search query should be correctly highlighted`() {

@@ -11,15 +11,19 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
-import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
 class RegistrationFullNameScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   val uiEvents = PublishSubject.create<UiEvent>()!!
   val screen = mock<RegistrationFullNameScreen>()
@@ -58,7 +62,7 @@ class RegistrationFullNameScreenControllerTest {
         fullName = "Ashok Kumar",
         phoneNumber = "1234567890")
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(facilityRepository.facilities()).thenReturn(Observable.never())
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
 
     uiEvents.onNext(RegistrationFullNameScreenCreated())
 
@@ -112,7 +116,7 @@ class RegistrationFullNameScreenControllerTest {
 
   @Test
   fun `when screen is started and facilities have already been synced then facilities should not be synced again`() {
-    whenever(facilityRepository.facilities()).thenReturn(Observable.just(listOf(PatientMocker.facility())))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(facilitySync.sync()).thenReturn(Completable.complete())
 

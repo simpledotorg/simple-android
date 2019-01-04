@@ -7,11 +7,16 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
 class PatientSearchScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen: PatientSearchScreen = mock()
   private val repository: PatientRepository = mock()

@@ -8,19 +8,24 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.ProtocolDrugSelectionListItem.*
+import org.simple.clinic.drugs.selection.ProtocolDrugSelectionListItem.DosageOption
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 class PrescribedDrugsScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<PrescribedDrugsScreen>()
   private val userSession = mock<UserSession>()

@@ -11,18 +11,22 @@ import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataPullResponse
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Duration
+import org.simple.clinic.util.RxErrorsRule
 import org.threeten.bp.Period
 
 @Suppress("UNCHECKED_CAST")
 @RunWith(JUnitParamsRunner::class)
 class AppointmentSyncTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val syncCoordinator = mock<SyncCoordinator>()
   private val repository = mock<AppointmentRepository>()

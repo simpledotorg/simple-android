@@ -1,7 +1,6 @@
 package org.simple.clinic.bp
 
 import com.google.common.truth.Truth.assertThat
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.argThat
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
@@ -12,19 +11,23 @@ import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class BloodPressureRepositoryTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val dao = mock<BloodPressureMeasurement.RoomDao>()
   private val userSession = mock<UserSession>()

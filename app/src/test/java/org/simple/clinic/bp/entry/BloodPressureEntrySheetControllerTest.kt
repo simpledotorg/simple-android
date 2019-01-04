@@ -13,18 +13,23 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class BloodPressureEntrySheetControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val sheet = mock<BloodPressureEntrySheet>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()

@@ -12,6 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
@@ -21,11 +22,15 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.phone.Caller
 import org.simple.clinic.phone.MaskedPhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class OverdueScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()

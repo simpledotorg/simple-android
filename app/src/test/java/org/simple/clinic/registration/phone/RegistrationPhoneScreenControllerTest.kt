@@ -12,6 +12,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.SaveUserLocallyResult
@@ -22,10 +23,14 @@ import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 class RegistrationPhoneScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<RegistrationPhoneScreen>()
   private val userSession = mock<UserSession>()

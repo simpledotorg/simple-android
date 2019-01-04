@@ -11,16 +11,21 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 class LoginPinScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()

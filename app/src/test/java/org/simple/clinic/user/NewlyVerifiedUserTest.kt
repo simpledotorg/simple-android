@@ -5,14 +5,19 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 
 @RunWith(JUnitParamsRunner::class)
 class NewlyVerifiedUserTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private lateinit var newlyVerifiedUser: NewlyVerifiedUser
   private lateinit var receivedUsers: MutableList<User>

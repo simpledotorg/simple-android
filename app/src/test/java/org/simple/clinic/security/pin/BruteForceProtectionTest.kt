@@ -7,15 +7,20 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
 class BruteForceProtectionTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val clock = TestClock()
   private val state = mock<Preference<BruteForceProtectionState>>()

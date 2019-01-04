@@ -10,9 +10,11 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -21,6 +23,9 @@ import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class AppointmentReminderSheetControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val sheet = mock<AppointmentReminderSheet>()
   private val repository = mock<AppointmentRepository>()

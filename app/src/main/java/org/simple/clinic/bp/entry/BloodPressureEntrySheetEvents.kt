@@ -17,7 +17,7 @@ class BloodPressureSaveClicked : UiEvent {
 }
 
 object BloodPressureRemoveClicked : UiEvent {
-  override val analyticsName = "BloodPressureEntry:Remove Clicked"
+  override val analyticsName = "Blood Pressure Entry:Remove Clicked"
 }
 
 object BloodPressureDiastolicBackspaceClicked : UiEvent

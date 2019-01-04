@@ -15,6 +15,7 @@ import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
@@ -25,6 +26,7 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.threeten.bp.format.DateTimeFormatter
@@ -32,6 +34,9 @@ import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientRepositoryTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private lateinit var repository: PatientRepository
   private lateinit var searchPatientByName: SearchPatientByName

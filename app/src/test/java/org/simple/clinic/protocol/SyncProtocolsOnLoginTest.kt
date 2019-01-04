@@ -9,14 +9,19 @@ import io.reactivex.Observable
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RxErrorsRule
 
 class SyncProtocolsOnLoginTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val userSession = mock<UserSession>()
   private val protocolSync = mock<ProtocolSync>()

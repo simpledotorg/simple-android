@@ -14,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
@@ -45,6 +46,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_T
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
@@ -62,6 +64,9 @@ import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEditScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   val clock: TestClock = TestClock()

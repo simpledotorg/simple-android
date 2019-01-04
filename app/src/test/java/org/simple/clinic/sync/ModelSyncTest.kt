@@ -8,6 +8,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.bp.sync.BloodPressureSync
@@ -21,10 +22,14 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
+import org.simple.clinic.util.RxErrorsRule
 import org.threeten.bp.Period
 
 @RunWith(JUnitParamsRunner::class)
 class ModelSyncTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   @Suppress("Unused")
   private fun `sync models that both push and pull`(): List<List<Any>> {

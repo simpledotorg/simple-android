@@ -7,13 +7,18 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
 class ConfirmRemoveBloodPressureDialogControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   lateinit var bloodPressureRepository: BloodPressureRepository
   lateinit var controller: ConfirmRemoveBloodPressureDialogController

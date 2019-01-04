@@ -9,11 +9,16 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.Observables
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.util.RxErrorsRule
 
 @RunWith(JUnitParamsRunner::class)
 class RecyclerViewUserScrollDetectorTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   @Test
   @Parameters(value = [

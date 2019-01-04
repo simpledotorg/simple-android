@@ -12,6 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker
@@ -25,12 +26,16 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.values
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class UpdatePhoneNumberDialogControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val dialog = mock<UpdatePhoneNumberDialog>()

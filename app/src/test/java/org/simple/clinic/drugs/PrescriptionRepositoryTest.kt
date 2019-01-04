@@ -10,6 +10,7 @@ import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
@@ -17,10 +18,14 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PrescriptionRepositoryTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val database = mock<AppDatabase>()
   private val dao = mock<PrescribedDrug.RoomDao>()

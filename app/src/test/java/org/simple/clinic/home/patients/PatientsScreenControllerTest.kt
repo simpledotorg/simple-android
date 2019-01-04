@@ -15,6 +15,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
@@ -30,6 +31,7 @@ import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
@@ -44,6 +46,9 @@ import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientsScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen: PatientsScreen = mock()
   private val userSession = mock<UserSession>()

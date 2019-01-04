@@ -24,6 +24,7 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
@@ -50,6 +51,7 @@ import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -57,6 +59,9 @@ import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class UserSessionTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val loginApi = mock<LoginApiV1>()
   private val registrationApi = mock<RegistrationApiV1>()

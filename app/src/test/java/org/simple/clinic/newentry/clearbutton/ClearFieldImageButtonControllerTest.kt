@@ -5,10 +5,15 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
 class ClearFieldImageButtonControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val button = mock<ClearFieldImageButton>()
 
@@ -21,7 +26,7 @@ class ClearFieldImageButtonControllerTest {
 
     uiEvents
         .compose(controller)
-        .subscribe({ uiChange -> uiChange(button) })
+        .subscribe { uiChange -> uiChange(button) }
   }
 
   @Test

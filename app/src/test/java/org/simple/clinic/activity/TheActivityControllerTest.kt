@@ -14,6 +14,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
@@ -33,6 +34,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -40,6 +42,9 @@ import java.util.concurrent.TimeUnit
 
 @RunWith(JUnitParamsRunner::class)
 class TheActivityControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val lockInMinutes = 15L
 

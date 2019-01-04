@@ -13,6 +13,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
@@ -25,10 +26,14 @@ import org.simple.clinic.user.ForgotPinResult.UnexpectedError
 import org.simple.clinic.user.ForgotPinResult.UserNotFound
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
 @RunWith(JUnitParamsRunner::class)
 class ForgotPinConfirmPinScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 

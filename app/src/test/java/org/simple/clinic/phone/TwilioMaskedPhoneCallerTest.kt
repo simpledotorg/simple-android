@@ -5,9 +5,14 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.mock
 import io.reactivex.Single
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.util.RxErrorsRule
 
 class TwilioMaskedPhoneCallerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private lateinit var maskedPhoneCaller: MaskedPhoneCaller
   private lateinit var config: PhoneNumberMaskerConfig

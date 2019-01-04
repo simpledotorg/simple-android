@@ -9,13 +9,18 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import org.threeten.bp.Instant
 import java.util.UUID
 
 class SyncCoordinatorTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private lateinit var syncCoordinator: SyncCoordinator
   private lateinit var syncConfig: SyncConfig

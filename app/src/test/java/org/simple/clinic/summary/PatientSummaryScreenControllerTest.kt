@@ -19,6 +19,7 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
@@ -48,6 +49,7 @@ import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -60,6 +62,9 @@ import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientSummaryScreenControllerTest {
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val screen = mock<PatientSummaryScreen>()
   private val patientRepository = mock<PatientRepository>()

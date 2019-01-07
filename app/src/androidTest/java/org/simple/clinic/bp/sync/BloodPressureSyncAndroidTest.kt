@@ -4,6 +4,7 @@ import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
@@ -13,6 +14,7 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,8 +37,14 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
   @Inject
   lateinit var testData: TestData
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

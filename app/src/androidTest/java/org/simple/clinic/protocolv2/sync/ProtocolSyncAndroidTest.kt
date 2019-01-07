@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
@@ -14,6 +15,7 @@ import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -33,8 +35,14 @@ class ProtocolSyncAndroidTest {
   @field:Named("last_protocol_pull_token")
   lateinit var lastPullToken: Preference<Optional<String>>
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

@@ -5,6 +5,7 @@ import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
@@ -17,6 +18,7 @@ import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -49,8 +51,14 @@ class CommunicationSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Communicatio
   @Inject
   lateinit var appointmentSyncApi: AppointmentSyncApiV2
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   val appointmentUuid = UUID.randomUUID()
 

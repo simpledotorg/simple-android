@@ -4,6 +4,7 @@ import android.support.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import org.junit.Before
 import org.junit.Rule
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
@@ -14,6 +15,7 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV2
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -35,8 +37,15 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
 
   @Inject
   lateinit var testData: TestData
+
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

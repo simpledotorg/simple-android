@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
@@ -21,6 +22,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.unwrapJust
 import org.threeten.bp.Clock
@@ -53,12 +55,6 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var database: AppDatabase
 
-  @get:Rule
-  val authenticationRule = AuthenticationRule()
-
-  @get:Rule
-  val instantTaskExecutorRule = InstantTaskExecutorRule()
-
   @Inject
   lateinit var bpRepository: BloodPressureRepository
 
@@ -76,6 +72,18 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var configProvider: Single<PatientConfig>
+
+  private val authenticationRule = AuthenticationRule()
+
+  private val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
+  @get:Rule
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(instantTaskExecutorRule)
+      .around(rxErrorsRule)!!
 
   val config: PatientConfig
     get() = configProvider.blockingGet()

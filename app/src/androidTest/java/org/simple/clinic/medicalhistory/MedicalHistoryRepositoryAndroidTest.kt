@@ -3,6 +3,7 @@ package org.simple.clinic.medicalhistory
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
@@ -10,6 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.RxErrorsRule
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit.DAYS
@@ -29,6 +31,9 @@ class MedicalHistoryRepositoryAndroidTest {
 
   @Inject
   lateinit var clock: Clock
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   @Before
   fun setup() {

@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
@@ -20,6 +21,7 @@ import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,8 +43,14 @@ class UserSessionAndroidTest {
   @Inject
   lateinit var facilityApi: FacilitySyncApiV2
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

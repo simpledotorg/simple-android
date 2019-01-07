@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
@@ -14,6 +15,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 
@@ -35,8 +37,14 @@ class ProtocolRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

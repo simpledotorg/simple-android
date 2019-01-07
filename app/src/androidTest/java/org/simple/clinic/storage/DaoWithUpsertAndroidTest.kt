@@ -3,6 +3,7 @@ package org.simple.clinic.storage
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
@@ -11,6 +12,7 @@ import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 
@@ -21,6 +23,9 @@ class DaoWithUpsertAndroidTest {
 
   @Inject
   lateinit var testData: TestData
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   @Before
   fun setUp() {

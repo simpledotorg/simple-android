@@ -6,11 +6,13 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -34,8 +36,14 @@ class BloodPressureRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   val testClock: TestClock
     get() = clock as TestClock

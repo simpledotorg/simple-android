@@ -9,11 +9,13 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.TestScheduler
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
@@ -35,6 +37,9 @@ class BruteForceProtectionAndroidTest {
 
   @Inject
   lateinit var state: Preference<BruteForceProtectionState>
+
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
 
   private val testClock
     get() = clock as TestClock

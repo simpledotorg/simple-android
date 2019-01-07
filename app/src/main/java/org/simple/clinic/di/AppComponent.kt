@@ -8,6 +8,7 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
 import org.simple.clinic.registration.RegistrationWorker
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncWorker
 import org.simple.clinic.user.UserSession
 import javax.inject.Scope
@@ -22,6 +23,7 @@ interface AppComponent {
   fun inject(target: ClearFieldImageButton)
   fun inject(target: RegistrationWorker)
   fun inject(target: OtpSmsReceiver)
+  fun inject(target: DataSync)
 
   fun activityComponentBuilder(): TheActivityComponent.Builder
   fun userSession(): UserSession

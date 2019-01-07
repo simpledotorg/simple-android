@@ -146,7 +146,7 @@ android {
 dependencies {
   implementation project(path: ':router')
 
-  testImplementation "junit:junit:$versions.junit"
+  implementation "junit:junit:$versions.junit"
   testImplementation "org.mockito:mockito-core:$versions.mockito"
   testImplementation "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
   testImplementation "pl.pragmatists:JUnitParams:$versions.junitParams"

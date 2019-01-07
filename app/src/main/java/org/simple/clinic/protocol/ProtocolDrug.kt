@@ -9,7 +9,6 @@ import android.arch.persistence.room.OnConflictStrategy
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.Query
 import io.reactivex.Flowable
-
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -59,5 +58,8 @@ data class ProtocolDrug(
 
     @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid ORDER BY `order`")
     fun drugsForProtocolUuid(protocolUuid: UUID): Flowable<List<ProtocolDrug>>
+
+    @Query("SELECT dosage FROM ProtocolDrug WHERE protocolUuid = :protocolUuid AND name = :drugName")
+    fun dosagesForDrug(drugName: String, protocolUuid: UUID): Flowable<List<String>>
   }
 }

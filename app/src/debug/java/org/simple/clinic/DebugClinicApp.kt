@@ -3,6 +3,7 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
+import com.squareup.leakcanary.LeakCanary
 import dagger.Provides
 import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Single
@@ -48,6 +49,11 @@ class DebugClinicApp : ClinicApp() {
 
   override fun onCreate() {
     super.onCreate()
+    if (LeakCanary.isInAnalyzerProcess(this)) {
+      return
+    }
+    LeakCanary.install(this)
+
     appComponent().inject(this)
 
     Timber.plant(Timber.DebugTree())

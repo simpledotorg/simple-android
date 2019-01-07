@@ -96,6 +96,20 @@ class ProtocolRepository @Inject constructor(
     return syncedDrugs.mergeWith(defaultDrugs)
   }
 
+  fun dosagesForDrugOrDefault(drugName: String, protocolUuid: UUID?): Observable<List<String>> {
+    val defaultDosages = defaultProtocolDrugs()
+        .filter { it.drugName == drugName }
+        .flatMap { drugAndDosages -> drugAndDosages.drugs.map { it.dosage } }
+
+    if (protocolUuid == null) {
+      return Observable.just(defaultDosages)
+    }
+
+    return protocolDrugsDao
+        .dosagesForDrug(drugName, protocolUuid)
+        .toObservable()
+  }
+
   @VisibleForTesting
   fun defaultProtocolDrugs(): List<ProtocolDrugAndDosages> {
     val protocolDrug = { uuid: UUID, name: String, dosage: String ->
@@ -162,5 +176,4 @@ class ProtocolRepository @Inject constructor(
             ))
     )
   }
-
 }

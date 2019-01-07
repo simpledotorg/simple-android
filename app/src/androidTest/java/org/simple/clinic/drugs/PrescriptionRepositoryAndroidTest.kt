@@ -6,20 +6,15 @@ import io.bloco.faker.Faker
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Patient
-import org.simple.clinic.patient.PatientAddress
-import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.UserSession
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,8 +36,14 @@ class PrescriptionRepositoryAndroidTest {
   @Inject
   lateinit var testData: TestData
 
+  private val authenticationRule = AuthenticationRule()
+
+  private val rxErrorsRule = RxErrorsRule()
+
   @get:Rule
-  val authenticationRule = AuthenticationRule()
+  val ruleChain = RuleChain
+      .outerRule(authenticationRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

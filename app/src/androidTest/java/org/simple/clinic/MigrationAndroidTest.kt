@@ -39,12 +39,10 @@ import java.util.UUID
 @RunWith(AndroidJUnit4::class)
 class MigrationAndroidTest {
 
-  @Rule
-  @JvmField
+  @get:Rule
   val helper = MigrationTestHelperWithForeignConstraints()
 
-  @Rule
-  @JvmField
+  @get:Rule
   val expectedException = ExpectedException.none()
 
   @Test

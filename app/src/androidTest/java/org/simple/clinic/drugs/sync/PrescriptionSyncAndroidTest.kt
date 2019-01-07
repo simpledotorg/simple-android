@@ -7,7 +7,6 @@ import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
-import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.drugs.PrescribedDrug
@@ -15,9 +14,11 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,20 +48,23 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   @Inject
   lateinit var facilityRepository: FacilityRepository
 
-  val user: User
+  private val user: User
     get() = userSession.loggedInUserImmediate()!!
 
-  val currentFacilityUuid: UUID
+  private val currentFacilityUuid: UUID
     get() = facilityRepository.currentFacilityUuid(user)!!
 
-  val authenticationRule = AuthenticationRule()
+  private val authenticationRule = AuthenticationRule()
 
-  val registerPatientRule = RegisterPatientRule(UUID.randomUUID())
+  private val registerPatientRule = RegisterPatientRule(UUID.randomUUID())
+
+  private val rxErrorsRule = RxErrorsRule()
 
   @get:Rule
   val ruleChain = RuleChain
       .outerRule(authenticationRule)
-      .around(registerPatientRule)!!
+      .around(registerPatientRule)
+      .around(rxErrorsRule)!!
 
   @Before
   fun setUp() {

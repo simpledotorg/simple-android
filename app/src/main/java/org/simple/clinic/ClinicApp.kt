@@ -1,6 +1,8 @@
 package org.simple.clinic
 
 import android.app.Application
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
 import com.tspoon.traceur.Traceur
 import io.reactivex.schedulers.Schedulers
@@ -36,6 +38,7 @@ abstract class ClinicApp : Application() {
     }
 
     Traceur.enableLogging()
+    WorkManager.initialize(this, Configuration.Builder().build())
     LazyThreeTen.init(this)
 
     appComponent = buildDaggerGraph()

@@ -320,4 +320,5 @@
 
   <string name="patient_summary_saved_status">Saved</string>
   <string name="patient_status_summary_saved_scheduled_appointment">Next visit for %s scheduled on</string>
+  <string name="prescribed_drug_with_dosage_drug_name">%s dosage</string>
 </resources>

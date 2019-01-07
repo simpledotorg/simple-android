@@ -28,7 +28,7 @@ class RxErrorsRule : TestRule {
 
         try {
           base.evaluate()
-          
+
         } finally {
           RxJavaPlugins.setErrorHandler(null)
           assertNoErrors()

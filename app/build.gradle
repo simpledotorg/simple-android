@@ -118,7 +118,14 @@ android {
   }
 
   sourceSets {
-    androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
+    def sharedTestDir = 'src/sharedTest/java'
+    test {
+      java.srcDirs += sharedTestDir
+    }
+    androidTest {
+      assets.srcDirs += files("$projectDir/schemas".toString())
+      java.srcDirs += sharedTestDir
+    }
   }
 
   packagingOptions {
@@ -146,7 +153,7 @@ android {
 dependencies {
   implementation project(path: ':router')
 
-  implementation "junit:junit:$versions.junit"
+  testImplementation "junit:junit:$versions.junit"
   testImplementation "org.mockito:mockito-core:$versions.mockito"
   testImplementation "com.nhaarman:mockito-kotlin:$versions.mockitoKotlin"
   testImplementation "pl.pragmatists:JUnitParams:$versions.junitParams"

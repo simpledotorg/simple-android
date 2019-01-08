@@ -9,17 +9,32 @@
   android:paddingBottom="@dimen/spacing_24"
   android:paddingTop="@dimen/spacing_16">
 
-  <FrameLayout
+  <RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
+
+    <Button
+      android:id="@+id/bloodpressureentry_remove"
+      style="@style/Widget.AppCompat.Button.Borderless"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_alignParentEnd="true"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:text="@string/bloodpressureentry_remove"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
+      android:visibility="gone"
+      tools:visibility="visible" />
 
     <TextView
       android:id="@+id/bloodpressureentry_edit_blood_pressure"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_gravity="start|center_vertical"
+      android:layout_alignParentStart="true"
+      android:layout_centerVertical="true"
       android:layout_marginStart="@dimen/spacing_24"
+      android:layout_toStartOf="@id/bloodpressureentry_remove"
+      android:ellipsize="end"
+      android:lines="1"
       android:text="@string/bloodpressureentry_sheet_title_edit_blood_pressure"
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
       android:visibility="gone"
@@ -28,28 +43,16 @@
 
     <TextView
       android:id="@+id/bloodpressureentry_enter_blood_pressure"
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:gravity="center_horizontal"
+      android:layout_centerHorizontal="true"
+      android:lines="1"
       android:text="@string/bloodpressureentry_sheet_title_enter_blood_pressure"
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
       android:visibility="gone"
-      tools:ignore="UnusedAttribute"
-      tools:visibility="visible" />
+      tools:ignore="UnusedAttribute" />
 
-    <Button
-      android:id="@+id/bloodpressureentry_remove"
-      style="@style/Widget.AppCompat.Button.Borderless"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_gravity="end"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:text="@string/bloodpressureentry_remove"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
-      android:visibility="gone"
-      tools:visibility="visible" />
-
-  </FrameLayout>
+  </RelativeLayout>
 
   <LinearLayout
     android:layout_width="match_parent"

@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selectionv2.dosage
 
 import android.content.Context
 import android.content.Intent
@@ -18,22 +18,22 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
+class DosagePickerSheet : BottomSheetActivity() {
 
   @Inject
-  lateinit var adapter: PrescribedDosageAdapter
+  lateinit var adapter: DosageAdapter
 
   @Inject
-  lateinit var controller: PrescribedDrugWithDosagesSheetController
+  lateinit var controller: DosagePickerSheetController
 
-  private val recyclerView by bindView<RecyclerView>(R.id.prescribed_drug_with_dosages_list)
-  private val drugNameTextView by bindView<TextView>(R.id.prescribed_drug_with_dosages_drug_name)
+  private val recyclerView by bindView<RecyclerView>(R.id.sheet_dosage_name_list)
+  private val drugNameTextView by bindView<TextView>(R.id.sheet_dosage_drug_name)
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_prescribed_drug_with_dosages)
+    setContentView(R.layout.sheet_dosage_picker)
     TheActivity.component.inject(this)
 
     recyclerView.adapter = adapter
@@ -55,7 +55,7 @@ class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
 
   private fun sheetCreates(): Observable<UiEvent> {
     val drugName = intent.getStringExtra(KEY_DRUG_NAME)
-    return Observable.just(PrescribedDrugsWithDosagesSheetCreated(drugName))
+    return Observable.just(DosagePickerSheetCreated(drugName))
   }
 
   private fun displayDrugName() {
@@ -63,7 +63,7 @@ class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
     drugNameTextView.text = getString(R.string.prescribed_drug_with_dosages_sheet_drug_name, drugName)
   }
 
-  fun populateDosageList(list: List<PrescribedDosageListItem>) {
+  fun populateDosageList(list: List<DosageListItem>) {
     adapter.submitList(list)
   }
 
@@ -71,7 +71,7 @@ class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
     private const val KEY_DRUG_NAME = "drugName"
 
     fun intent(context: Context, drugName: String): Intent {
-      val intent = Intent(context, PrescribedDrugWithDosagesSheet::class.java)
+      val intent = Intent(context, DosagePickerSheet::class.java)
       intent.putExtra(KEY_DRUG_NAME, drugName)
       return intent
     }

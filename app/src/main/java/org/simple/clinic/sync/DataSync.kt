@@ -66,11 +66,12 @@ class DataSync @Inject constructor(
       is ResolvedError.Unexpected -> {
         Timber.i("(breadcrumb) Reporting to sentry. Error: $e. Resolved error: $resolvedError")
         crashReporter.report(resolvedError.actualCause)
+        Timber.e(resolvedError.actualCause)
       }
       is ResolvedError.NetworkRelated -> {
         // Connectivity issues are expected.
+        Timber.e(e)
       }
     }.exhaustive()
-    Timber.e(e)
   }
 }

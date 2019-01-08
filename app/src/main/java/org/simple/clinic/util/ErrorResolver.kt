@@ -25,7 +25,7 @@ object ErrorResolver {
   fun resolve(error: Throwable): ResolvedError {
     val actualCause = findActualCause(error)
 
-    return if (error::class in KNOWN_NETWORK_ERRORS) {
+    return if (actualCause::class in KNOWN_NETWORK_ERRORS) {
       ResolvedError.NetworkRelated(actualCause)
     } else {
       ResolvedError.Unexpected(actualCause)

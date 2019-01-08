@@ -4,7 +4,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
@@ -42,7 +42,7 @@ class ConfirmRemoveBloodPressureDialogControllerTest {
   fun `when remove is clicked, the blood pressure must be marked as deleted and the dialog should be dismissed`() {
     val bloodPressure = PatientMocker.bp()
     val markBloodPressureDeletedCompletable = Completable.complete()
-    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(Single.just(bloodPressure))
+    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(Observable.just(bloodPressure))
     whenever(bloodPressureRepository.markBloodPressureAsDeleted(bloodPressure)).thenReturn(markBloodPressureDeletedCompletable)
 
     uiEvents.onNext(ConfirmRemoveBloodPressureDialogCreated(bloodPressureMeasurementUuid = bloodPressure.uuid))

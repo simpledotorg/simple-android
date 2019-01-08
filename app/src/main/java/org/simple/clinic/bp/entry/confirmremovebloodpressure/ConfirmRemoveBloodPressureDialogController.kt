@@ -34,7 +34,8 @@ class ConfirmRemoveBloodPressureDialogController @Inject constructor(
     return events
         .ofType<ConfirmRemoveBloodPressureDialogRemoveClicked>()
         .withLatestFrom(savedBloodPressureMeasurementUuidStream) { _, bloodPressureMeasurementUuid -> bloodPressureMeasurementUuid }
-        .flatMapSingle { bloodPressureRepository.measurement(it) }
+        .flatMap { bloodPressureRepository.measurement(it) }
+        .take(1)
         .flatMap {
           bloodPressureRepository
               .markBloodPressureAsDeleted(it)

@@ -7,6 +7,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers.*
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureConfig
@@ -103,7 +105,14 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs is OpenAs.Update }
         .map { it.openAs as OpenAs.Update }
-        .flatMapSingle { bloodPressureRepository.measurement(it.bpUuid) }
+        .flatMapSingle {
+          // Subscribing on the IO scheduler should not be necessary here, but we've seen
+          // occasional crashes because it sometimes runs on the main thread. This is a temp.
+          // workaround until we figure out what's actually happening.
+          bloodPressureRepository
+              .measurement(it.bpUuid)
+              .subscribeOn(io())
+        }
         .map { bloodPressure ->
           { ui: Ui ->
             ui.setSystolic(bloodPressure.systolic.toString())

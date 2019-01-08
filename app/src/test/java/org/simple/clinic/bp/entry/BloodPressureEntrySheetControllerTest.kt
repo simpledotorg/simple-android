@@ -9,6 +9,8 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -41,6 +43,7 @@ class BloodPressureEntrySheetControllerTest {
 
   @Before
   fun setUp() {
+    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
     controller = BloodPressureEntrySheetController(bloodPressureRepository, configEmitter.firstOrError())
 
     uiEvents

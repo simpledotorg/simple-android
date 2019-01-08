@@ -114,7 +114,7 @@ class BloodPressureRepository @Inject constructor(
         .toObservable()
   }
 
-  fun measurement(uuid: UUID): Single<BloodPressureMeasurement> = Single.fromCallable { dao.getOne(uuid) }
+  fun measurement(uuid: UUID): Observable<BloodPressureMeasurement> = dao.bloodPressure(uuid).toObservable()
 
   fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {
@@ -126,12 +126,5 @@ class BloodPressureRepository @Inject constructor(
 
       dao.save(listOf(deletedBloodPressureMeasurement))
     }
-  }
-
-  fun deletedMeasurements(bloodPressureMeasurementUuid: UUID): Observable<BloodPressureMeasurement> {
-    return dao
-        .bloodPressure(bloodPressureMeasurementUuid)
-        .filter { it.deletedAt != null }
-        .toObservable()
   }
 }

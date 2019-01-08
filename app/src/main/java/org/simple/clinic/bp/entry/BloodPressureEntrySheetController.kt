@@ -7,8 +7,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.schedulers.Schedulers.*
+import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureConfig
@@ -105,13 +104,14 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs is OpenAs.Update }
         .map { it.openAs as OpenAs.Update }
-        .flatMapSingle {
+        .flatMap {
           // Subscribing on the IO scheduler should not be necessary here, but we've seen
           // occasional crashes because it sometimes runs on the main thread. This is a temp.
           // workaround until we figure out what's actually happening.
           bloodPressureRepository
               .measurement(it.bpUuid)
               .subscribeOn(io())
+              .take(1L)
         }
         .map { bloodPressure ->
           { ui: Ui ->
@@ -207,9 +207,9 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val bloodPressure = events
         .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs is OpenAs.Update }
-        .map { it.openAs as OpenAs.Update }
-        .flatMapSingle { bloodPressureRepository.measurement(it.bpUuid) }
+        .map { it.openAs }
+        .ofType<OpenAs.Update>()
+        .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
         .take(1)
 
     return imeDoneClicks
@@ -314,7 +314,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { it.bpUuid }
 
     return bloodPressureMeasurementUuidStream
-        .flatMap(bloodPressureRepository::deletedMeasurements)
+        .flatMap(bloodPressureRepository::measurement)
+        .filter { it.deletedAt != null }
         .take(1)
         .map { { ui: Ui -> ui.setBPSavedResultAndFinish() } }
   }

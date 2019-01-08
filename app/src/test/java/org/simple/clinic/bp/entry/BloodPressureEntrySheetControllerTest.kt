@@ -11,6 +11,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -215,9 +216,8 @@ class BloodPressureEntrySheetControllerTest {
       val bpUuid = openAs.bpUuid
 
       alreadyPresentBp = PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid, systolic = 120, diastolic = 80)
-      whenever(bloodPressureRepository.measurement(bpUuid)).thenReturn(Single.just(alreadyPresentBp))
+      whenever(bloodPressureRepository.measurement(bpUuid)).thenReturn(Observable.just(alreadyPresentBp))
       whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
-      whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
 
     } else if (openAs is OpenAs.New) {
       whenever(bloodPressureRepository.saveMeasurement(openAs.patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
@@ -252,8 +252,7 @@ class BloodPressureEntrySheetControllerTest {
       bloodPressureMeasurement: BloodPressureMeasurement?
   ) {
     if (openAs is OpenAs.Update) {
-      whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(bloodPressureMeasurement!!))
-      whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
+      whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bloodPressureMeasurement!!))
     }
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
@@ -287,8 +286,7 @@ class BloodPressureEntrySheetControllerTest {
       shouldShowRemoveBpButton: Boolean
   ) {
     configEmitter.onNext(BloodPressureConfig(deleteBloodPressureFeatureEnabled = featureEnabled))
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
-    whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(PatientMocker.bp()))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
 
@@ -315,8 +313,7 @@ class BloodPressureEntrySheetControllerTest {
       shouldShowRemoveBpButton: Boolean
   ) {
     configEmitter.onNext(BloodPressureConfig(deleteBloodPressureFeatureEnabled = true))
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
-    whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(PatientMocker.bp()))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
 
@@ -340,8 +337,7 @@ class BloodPressureEntrySheetControllerTest {
       openAs: OpenAs,
       showEntryTitle: Boolean
   ) {
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(PatientMocker.bp()))
-    whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(PatientMocker.bp()))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
 
@@ -362,8 +358,7 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when the remove button is clicked, the confirmation alert must be shown`() {
     val bloodPressure = PatientMocker.bp()
-    whenever(bloodPressureRepository.measurement(any())).thenReturn(Single.just(bloodPressure))
-    whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bloodPressure))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bloodPressure.uuid)))
     uiEvents.onNext(BloodPressureRemoveClicked)
@@ -374,11 +369,12 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when a blood pressure being edited is removed, the sheet should be closed`() {
     val bloodPressure = PatientMocker.bp()
-    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(Single.just(bloodPressure))
-    whenever(bloodPressureRepository.deletedMeasurements(bloodPressure.uuid))
-        .thenReturn(Observable.just(bloodPressure.copy(deletedAt = Instant.now())))
-
+    val bloodPressureSubject = BehaviorSubject.createDefault<BloodPressureMeasurement>(bloodPressure)
+    whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(bloodPressureSubject)
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
+    verify(sheet, never()).setBPSavedResultAndFinish()
+
+    bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
 
     verify(sheet).setBPSavedResultAndFinish()
   }

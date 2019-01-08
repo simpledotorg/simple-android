@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selectionv2.dosage
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.drugs.DosageType
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession

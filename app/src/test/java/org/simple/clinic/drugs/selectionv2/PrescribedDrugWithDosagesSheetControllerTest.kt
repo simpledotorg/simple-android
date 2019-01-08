@@ -8,7 +8,11 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Test
-import org.simple.clinic.drugs.DosageType
+import org.simple.clinic.drugs.selectionv2.dosage.DosageType
+import org.simple.clinic.drugs.selectionv2.dosage.PrescribedDosageListItem
+import org.simple.clinic.drugs.selectionv2.dosage.PrescribedDrugWithDosagesSheet
+import org.simple.clinic.drugs.selectionv2.dosage.PrescribedDrugWithDosagesSheetController
+import org.simple.clinic.drugs.selectionv2.dosage.PrescribedDrugsWithDosagesSheetCreated
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolRepository

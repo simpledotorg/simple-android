@@ -63,7 +63,7 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".drugs.selectionv2.PrescribedDrugWithDosagesSheet"
+      android:name=".drugs.selectionv2.dosage.PrescribedDrugWithDosagesSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 

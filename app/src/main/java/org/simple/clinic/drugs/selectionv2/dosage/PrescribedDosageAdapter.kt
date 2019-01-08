@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selectionv2.dosage
 
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.util.DiffUtil
@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.drugs.DosageType
 import javax.inject.Inject
 
 class PrescribedDosageAdapter @Inject constructor() : ListAdapter<PrescribedDosageListItem, PrescribedDosageViewHolder>(PrescribedDosageDiffer()) {

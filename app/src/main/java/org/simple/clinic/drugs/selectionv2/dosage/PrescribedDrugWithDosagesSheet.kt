@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selectionv2.dosage
 
 import android.content.Context
 import android.content.Intent

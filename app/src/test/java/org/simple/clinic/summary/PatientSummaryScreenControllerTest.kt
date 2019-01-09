@@ -13,6 +13,7 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -26,7 +27,9 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionConfig
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -83,11 +86,12 @@ class PatientSummaryScreenControllerTest {
   private val zoneId = UTC
 
   private lateinit var controller: PatientSummaryScreenController
+  private lateinit var prescriptionConfig: PrescriptionConfig
 
   @Before
   fun setUp() {
     val timestampGenerator = RelativeTimestampGenerator()
-
+    prescriptionConfig = PrescriptionConfig(isNewPrescriptionScreenEnabled = false)
     controller = PatientSummaryScreenController(
         patientRepository,
         bpRepository,
@@ -98,6 +102,7 @@ class PatientSummaryScreenControllerTest {
         clock,
         zoneId,
         configSubject.firstOrError(),
+        Single.fromCallable { prescriptionConfig },
         patientSummaryResult,
         timeFormatter)
 
@@ -417,7 +422,8 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
+    val key = PrescribedDrugsScreenKey(patientUuid)
+    verify(screen).showUpdatePrescribedDrugsScreen(key)
   }
 
   @Test

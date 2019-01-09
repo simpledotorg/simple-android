@@ -37,6 +37,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
+import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
@@ -287,8 +288,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     activity.startActivityForResult(intent, REQCODE_BP_SAVED)
   }
 
-  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
+  fun showUpdatePrescribedDrugsScreen(key: FullScreenKey) {
+    screenRouter.push(key)
   }
 
   fun showScheduleAppointmentSheet(patientUuid: UUID) {

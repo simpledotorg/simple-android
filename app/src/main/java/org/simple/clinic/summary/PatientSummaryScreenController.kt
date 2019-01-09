@@ -12,7 +12,10 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionConfig
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
+import org.simple.clinic.drugs.selectionv2.PrescribedDrugsScreenKeyV2
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -58,6 +61,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val clock: Clock,
     private val zoneId: ZoneId,
     private val configProvider: Single<PatientSummaryConfig>,
+    private val prescriptionConfig: Single<PrescriptionConfig>,
     @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>,
     @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -265,8 +269,15 @@ class PatientSummaryScreenController @Inject constructor(
 
     return events
         .ofType<PatientSummaryUpdateDrugsClicked>()
-        .withLatestFrom(patientUuid)
-        .map { (_, patientUuid) -> { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
+        .withLatestFrom(patientUuid, prescriptionConfig.toObservable())
+        .map { (_, patientUuid, config) ->
+          val key =
+              when (config.isNewPrescriptionScreenEnabled) {
+                true -> PrescribedDrugsScreenKeyV2(patientUuid)
+                false -> PrescribedDrugsScreenKey(patientUuid)
+              }
+          { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(key) }
+        }
   }
 
   private fun handleBackAndDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {

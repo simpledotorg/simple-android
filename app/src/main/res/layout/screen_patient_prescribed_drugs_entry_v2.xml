@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.drugs.selectionv2.PrescribedDrugScreenV2 android:id="@+id/prescribeddrugs_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <android.support.v7.widget.Toolbar
+    android:id="@+id/prescribeddrugs_toolbarv2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/patient_prescribeddrugs_screen_title" />
+
+  <android.support.v7.widget.RecyclerView
+    android:id="@+id/prescribeddrugs_recyclerviewv2"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_above="@+id/prescribeddrugs_donev2"
+    android:layout_below="@+id/prescribeddrugs_toolbarv2"
+    android:layout_margin="@dimen/spacing_8"
+    android:layout_weight="1"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_16" />
+
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+    android:id="@+id/prescribeddrugs_donev2"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    android:layout_alignParentBottom="true"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
+
+    <org.simple.clinic.widgets.PrimarySolidButton
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/patientsummary_finish_saving_patient"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
+</org.simple.clinic.drugs.selectionv2.PrescribedDrugScreenV2>

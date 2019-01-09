@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
+import io.reactivex.Single
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.drugs.sync.PrescriptionSyncApiV2
 import org.simple.clinic.util.None
@@ -25,6 +26,10 @@ class PrescriptionModule {
   fun syncApi(retrofit: Retrofit): PrescriptionSyncApiV2 {
     return retrofit.create(PrescriptionSyncApiV2::class.java)
   }
+
+  @Provides
+  fun providesNewPrescriptionScreenEnabled(): Single<PrescriptionConfig> = Single.just(
+      PrescriptionConfig(isNewPrescriptionScreenEnabled = false))
 
   @Provides
   @Named("last_prescription_pull_token")

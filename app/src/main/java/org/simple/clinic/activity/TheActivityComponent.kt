@@ -13,6 +13,7 @@ import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.drugs.selection.ConfirmDeletePrescriptionDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
+import org.simple.clinic.drugs.selectionv2.PrescribedDrugScreenV2
 import org.simple.clinic.drugs.selectionv2.dosage.PrescribedDrugWithDosagesSheet
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.PatientEditScreen
@@ -93,6 +94,7 @@ interface TheActivityComponent {
   fun inject(target: UpdatePhoneNumberDialog)
   fun inject(target: ConfirmRemoveBloodPressureDialog)
   fun inject(target: PrescribedDrugWithDosagesSheet)
+  fun inject(target: PrescribedDrugScreenV2)
 
   @Subcomponent.Builder
   interface Builder {

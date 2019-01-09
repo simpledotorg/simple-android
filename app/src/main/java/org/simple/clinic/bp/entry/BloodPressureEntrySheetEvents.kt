@@ -21,3 +21,10 @@ object BloodPressureRemoveClicked : UiEvent {
 }
 
 object BloodPressureDiastolicBackspaceClicked : UiEvent
+
+data class BloodPressureScreenChanged(val type: ScreenType) : UiEvent
+
+enum class ScreenType {
+  BP_ENTRY,
+  DATE_ENTRY
+}

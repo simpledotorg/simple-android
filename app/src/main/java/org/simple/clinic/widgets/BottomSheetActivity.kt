@@ -19,7 +19,7 @@ import org.simple.clinic.R
  * keyboard otherwise aligns itself just below text fields, overlapping everything else
  * present below them.
  *
- * TODO: BottomSheet behavior.
+ * TODO: Add BottomSheet behavior to dismiss the sheet by dragging it downwards.
  */
 abstract class BottomSheetActivity : AppCompatActivity() {
 

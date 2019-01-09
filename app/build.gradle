@@ -182,6 +182,7 @@ dependencies {
   implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"
   implementation "com.google.android.material:material:$versions.material"
   implementation "androidx.cardview:cardview:$versions.cardview"
+  implementation "androidx.constraintlayout:constraintlayout:$versions.constraintLayout"
   implementation "androidx.room:room-runtime:$versions.room"
   kapt "androidx.room:room-compiler:$versions.room"
   implementation "androidx.room:room-rxjava2:$versions.room"

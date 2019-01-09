@@ -12,7 +12,7 @@ class BloodPressureDiastolicTextChanged(val diastolic: String) : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Diastolic Text Changed"
 }
 
-class BloodPressureSaveClicked : UiEvent {
+object BloodPressureSaveClicked : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Save Clicked"
 }
 

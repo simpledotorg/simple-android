@@ -4,11 +4,11 @@ import org.simple.clinic.widgets.UiEvent
 
 data class BloodPressureEntrySheetCreated(val openAs: OpenAs) : UiEvent
 
-class BloodPressureSystolicTextChanged(val systolic: String) : UiEvent {
+data class BloodPressureSystolicTextChanged(val systolic: String) : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Systolic Text Changed"
 }
 
-class BloodPressureDiastolicTextChanged(val diastolic: String) : UiEvent {
+data class BloodPressureDiastolicTextChanged(val diastolic: String) : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Diastolic Text Changed"
 }
 

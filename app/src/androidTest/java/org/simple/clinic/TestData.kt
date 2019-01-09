@@ -74,15 +74,15 @@ class TestData @Inject constructor(
   fun patientProfile(
       patientUuid: UUID = UUID.randomUUID(),
       patientAddressUuid: UUID = UUID.randomUUID(),
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
+      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
+      generatePhoneNumber: Boolean = faker.bool.bool()
   ): PatientProfile {
-    val numberOfPhoneNumbersToAdd = (0..1).shuffled().first()
+    val phoneNumbers = if(generatePhoneNumber) listOf(patientPhoneNumber(patientUuid = patientUuid)) else emptyList()
 
     return PatientProfile(
         patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
         address = patientAddress(uuid = patientAddressUuid),
-        phoneNumbers = (0 until numberOfPhoneNumbersToAdd).map { patientPhoneNumber(patientUuid = patientUuid) }
-    )
+        phoneNumbers = phoneNumbers)
   }
 
   fun patient(

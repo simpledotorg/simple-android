@@ -105,7 +105,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("90"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("140"))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showSystolicLessThanDiastolicError()
@@ -116,7 +116,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("55"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("55"))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showSystolicLowError()
@@ -127,7 +127,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("333"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("88"))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showSystolicHighError()
@@ -138,7 +138,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("110"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("33"))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showDiastolicLowError()
@@ -149,7 +149,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("233"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showDiastolicHighError()
@@ -160,7 +160,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged(""))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showSystolicEmptyError()
@@ -171,7 +171,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("120"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged(""))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet).showDiastolicEmptyError()
@@ -201,7 +201,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged(systolic))
     uiEvents.onNext(BloodPressureDiastolicTextChanged(diastolic))
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
     verify(sheet, never()).setBPSavedResultAndFinish()
@@ -226,9 +226,9 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
     uiEvents.onNext(BloodPressureSystolicTextChanged("142"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("80"))
-    uiEvents.onNext(BloodPressureSaveClicked())
-    uiEvents.onNext(BloodPressureSaveClicked())
-    uiEvents.onNext(BloodPressureSaveClicked())
+    uiEvents.onNext(BloodPressureSaveClicked)
+    uiEvents.onNext(BloodPressureSaveClicked)
+    uiEvents.onNext(BloodPressureSaveClicked)
 
     if (openAs is OpenAs.New) {
       verify(bloodPressureRepository).saveMeasurement(openAs.patientUuid, 142, 80)

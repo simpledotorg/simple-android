@@ -117,9 +117,13 @@
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Enter blood pressure</string>
   <string name="bloodpressureentry_sheet_title_edit_blood_pressure">Edit blood pressure</string>
+  <string name="bloodpressureentry_sheet_title_enter_date">Date of visit</string>
   <string name="bloodpressureentry_remove">Remove</string>
   <string name="bloodpressureentry_systolic">Systolic</string>
   <string name="bloodpressureentry_diastolic">Diastolic</string>
+  <string name="bloodpressureentry_day">Day</string>
+  <string name="bloodpressureentry_month">Month</string>
+  <string name="bloodpressureentry_year">Year</string>
   <string name="bloodpressureentry_error_systolic_more">Systolic should be more than diastolic</string>
   <string name="bloodpressureentry_error_systolic_70">Systolic cannot be less than 70</string>
   <string name="bloodpressureentry_error_systolic_300">Systolic cannot be more than 300</string>

@@ -16,7 +16,8 @@ open class PatientSummaryModule {
   open fun providesSummaryConfig(): Single<PatientSummaryConfig> = Single.just(PatientSummaryConfig(
       numberOfBpPlaceholders = 3,
       numberOfBpsToDisplay = 100,
-      isUpdatePhoneDialogEnabled = true
+      isUpdatePhoneDialogEnabled = true,
+      isNewPrescriptionScreenEnabled = false
   ))
 
   @Provides

@@ -28,6 +28,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
+import org.simple.clinic.drugs.selectionv2.PrescribedDrugScreenV2
 import org.simple.clinic.editpatient.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.patient.Gender
@@ -287,10 +288,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     activity.startActivityForResult(intent, REQCODE_BP_SAVED)
   }
 
-  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
-  }
-
   fun showScheduleAppointmentSheet(patientUuid: UUID) {
     val intent = ScheduleAppointmentSheet.intent(context, patientUuid)
     activity.startActivityForResult(intent, REQCODE_SCHEDULE_APPOINTMENT)
@@ -311,6 +308,14 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .subscribe {
           UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
         }
+  }
+
+  fun showUpdatePrescribedDrugsScreenv1(patientUuid: UUID) {
+    screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
+  }
+
+  fun showUpdatePrescribedDrugsScreenv2(patientUuid: UUID) {
+    screenRouter.push(PrescribedDrugScreenV2.KEY(patientUuid))
   }
 }
 

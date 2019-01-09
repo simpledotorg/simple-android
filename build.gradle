@@ -52,6 +52,7 @@ buildscript {
       javaStringSimilarity: '1.1.0',
       espresso            : '3.1.1',
       leakCanary          : '1.6.2',
+      constraintLayout    : '1.1.2',
   ]
 
   repositories {

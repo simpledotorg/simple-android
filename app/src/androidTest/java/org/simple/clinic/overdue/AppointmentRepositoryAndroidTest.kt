@@ -34,6 +34,7 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
+import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
@@ -336,6 +337,107 @@ class AppointmentRepositoryAndroidTest {
       assertThat(this.appointment.cancelReason).isEqualTo(null)
       assertThat(this.bloodPressure.uuid).isEqualTo(bp30)
     }
+  }
+
+  @Test
+  fun deleted_blood_pressure_measurements_should_not_be_considered_when_fetching_overdue_appointments() {
+    fun createBloodPressure(patientUuid: UUID, deletedAt: Instant? = null): BloodPressureMeasurement {
+      return testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = testData.qaUserFacilityUuid(),
+          userUuid = testData.qaUserUuid(),
+          syncStatus = SyncStatus.DONE,
+          createdAt = Instant.now(),
+          updatedAt = Instant.now(),
+          deletedAt = deletedAt)
+    }
+
+    fun createAppointment(patientUuid: UUID, scheduledDate: LocalDate): Appointment {
+      return testData.appointment(
+          patientUuid = patientUuid,
+          facilityUuid = testData.qaUserFacilityUuid(),
+          status = SCHEDULED,
+          scheduledDate = scheduledDate)
+    }
+
+    fun createPatient(fullName: String): PatientProfile {
+      return testData.patientProfile(generatePhoneNumber = true)
+          .let { patientProfile ->
+            patientProfile.copy(patient = patientProfile.patient.copy(fullName = fullName))
+          }
+    }
+
+    val patients = listOf(
+        createPatient(fullName = "No BPs are deleted"),
+        createPatient(fullName = "Latest BP is deleted"),
+        createPatient(fullName = "Oldest BP is not deleted"),
+        createPatient(fullName = "All BPs are deleted"))
+
+    patientRepository.save(patients).blockingAwait()
+
+    val bpsForPatient0 = patients[0].patient.let { patient ->
+      listOf(
+          createBloodPressure(patientUuid = patient.uuid),
+          createBloodPressure(patientUuid = patient.uuid))
+    }
+
+    val bpsForPatient1 = patients[1].patient.let { patient ->
+      listOf(
+          createBloodPressure(patientUuid = patient.uuid),
+          createBloodPressure(patientUuid = patient.uuid),
+          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)))
+    }
+
+    val bpsForPatient2 = patients[2].patient.let { patient ->
+      listOf(
+          createBloodPressure(patientUuid = patient.uuid),
+          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)),
+          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)))
+    }
+
+    val bpsForPatient3 = patients[3].patient.let { patient ->
+      listOf(
+          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)),
+          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)),
+          createBloodPressure(patientUuid = patient.uuid, deletedAt = Instant.now(clock)))
+    }
+
+    bpRepository
+        .save(bpsForPatient0 + bpsForPatient1 + bpsForPatient2 + bpsForPatient3)
+        .blockingAwait()
+
+    val today = LocalDate.now(clock)
+    val appointmentsScheduledFor = today.minusDays(1L)
+
+    val appointmentForPatient0 = createAppointment(
+        patientUuid = patients[0].patient.uuid,
+        scheduledDate = appointmentsScheduledFor)
+
+    val appointmentForPatient1 = createAppointment(
+        patientUuid = patients[1].patient.uuid,
+        scheduledDate = appointmentsScheduledFor)
+
+    val appointmentsForPatient2 = createAppointment(
+        patientUuid = patients[2].patient.uuid,
+        scheduledDate = appointmentsScheduledFor)
+
+    val appointmentsForPatient3 = createAppointment(
+        patientUuid = patients[3].patient.uuid,
+        scheduledDate = appointmentsScheduledFor)
+
+    appointmentRepository
+        .save(listOf(appointmentForPatient0, appointmentForPatient1, appointmentsForPatient2, appointmentsForPatient3))
+        .blockingAwait()
+
+    val overdueAppointments = appointmentRepository.overdueAppointments().blockingFirst()
+        .associateBy { it.fullName }
+
+    assertThat(overdueAppointments.keys)
+        .isEqualTo(setOf("No BPs are deleted", "Latest BP is deleted", "Oldest BP is not deleted"))
+
+    assertThat(overdueAppointments["No BPs are deleted"]!!.bloodPressure.uuid).isEqualTo(bpsForPatient0[1].uuid)
+    assertThat(overdueAppointments["Latest BP is deleted"]!!.bloodPressure.uuid).isEqualTo(bpsForPatient1[1].uuid)
+    assertThat(overdueAppointments["Oldest BP is not deleted"]!!.bloodPressure.uuid).isEqualTo(bpsForPatient2[0].uuid)
   }
 
   @Test

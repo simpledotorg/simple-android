@@ -3,14 +3,12 @@ package org.simple.clinic.bp.entry
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_EMPTY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_TOO_HIGH
@@ -29,7 +27,6 @@ import javax.inject.Inject
 @Deprecated(message = "Use BloodPressureEntrySheetControllerV2 instead")
 class BloodPressureEntrySheetController @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
-    private val configProvider: Single<BloodPressureConfig>,
     private val clock: Clock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -257,22 +254,16 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun toggleRemoveBloodPressureButton(events: Observable<UiEvent>): Observable<UiChange> {
-    val featureEnabledStream = configProvider
-        .map { it.deleteBloodPressureFeatureEnabled }
-        .toObservable()
-
-    val openAsStream = events
+    val hideRemoveBpButton = events
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.openAs }
-
-    val hideRemoveBpButton = Observables
-        .combineLatest(featureEnabledStream, openAsStream)
-        .filter { (featureEnabled, openAs) -> featureEnabled.not() || openAs is OpenAs.New }
+        .ofType<OpenAs.New>()
         .map { { ui: Ui -> ui.hideRemoveBpButton() } }
 
-    val showRemoveBpButton = Observables
-        .combineLatest(featureEnabledStream, openAsStream)
-        .filter { (featureEnabled, openAs) -> featureEnabled && openAs is OpenAs.Update }
+    val showRemoveBpButton = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+        .ofType<OpenAs.Update>()
         .map { { ui: Ui -> ui.showRemoveBpButton() } }
 
     return hideRemoveBpButton.mergeWith(showRemoveBpButton)

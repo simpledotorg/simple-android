@@ -50,9 +50,7 @@ open class BloodPressureModule {
    */
   @Provides
   open fun provideBloodPressureEntryConfig(): BloodPressureConfig {
-    return BloodPressureConfig(
-        deleteBloodPressureFeatureEnabled = false,
-        dateEntryEnabled = true)
+    return BloodPressureConfig(dateEntryEnabled = true)
   }
 
   @Provides

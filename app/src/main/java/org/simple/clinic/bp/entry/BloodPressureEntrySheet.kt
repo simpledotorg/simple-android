@@ -122,7 +122,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .merge(
             RxTextView.editorActions(systolicEditText) { actionId -> actionId == EditorInfo.IME_ACTION_DONE },
             RxTextView.editorActions(diastolicEditText) { actionId -> actionId == EditorInfo.IME_ACTION_DONE })
-        .map { BloodPressureSaveClicked() }
+        .map { BloodPressureSaveClicked }
   }
 
   private fun diastolicBackspaceClicks(): Observable<UiEvent> {

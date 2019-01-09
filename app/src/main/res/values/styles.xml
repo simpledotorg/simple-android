@@ -12,30 +12,6 @@
     <item name="android:src">@drawable/ic_clear_circular_16dp</item>
   </style>
 
-  <style name="Clinic.BloodPressureInput">
-    <item name="android:layout_width">wrap_content</item>
-    <item name="android:layout_height">wrap_content</item>
-    <item name="android:background">@null</item>
-    <item name="android:fontFamily">sans-serif</item>
-    <item name="android:gravity">center|top</item>
-    <item name="android:inputType">number</item>
-    <item name="android:maxEms">3</item>
-    <item name="android:maxLength">3</item>
-    <item name="android:minEms">3</item>
-    <item name="android:textSize">40sp</item>
-    <item name="android:textColor">@color/grey0</item>
-    <item name="android:lineSpacingExtra">16sp</item>
-  </style>
-
-  <style name="Clinic.BloodPressureInputUnderline">
-    <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">1dp</item>
-    <item name="android:layout_marginEnd">24dp</item>
-    <item name="android:layout_marginStart">24dp</item>
-    <item name="android:background">@color/grey2</item>
-    <item name="android:layout_marginBottom">@dimen/spacing_8</item>
-  </style>
-
   <style name="Clinic.BloodPressureInputLabel">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>

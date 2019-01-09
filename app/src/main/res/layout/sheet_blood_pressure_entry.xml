@@ -13,17 +13,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <Button
-      android:id="@+id/bloodpressureentry_remove"
-      style="@style/Widget.AppCompat.Button.Borderless"
+    <TextView
+      android:id="@+id/bloodpressureentry_enter_blood_pressure"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_alignParentEnd="true"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:text="@string/bloodpressureentry_remove"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
+      android:layout_centerHorizontal="true"
+      android:lines="1"
+      android:text="@string/bloodpressureentry_sheet_title_enter_blood_pressure"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
       android:visibility="gone"
-      tools:visibility="visible" />
+      tools:ignore="UnusedAttribute" />
 
     <TextView
       android:id="@+id/bloodpressureentry_edit_blood_pressure"
@@ -41,87 +40,85 @@
       tools:ignore="UnusedAttribute"
       tools:visibility="visible" />
 
-    <TextView
-      android:id="@+id/bloodpressureentry_enter_blood_pressure"
+    <Button
+      android:id="@+id/bloodpressureentry_remove"
+      style="@style/Widget.AppCompat.Button.Borderless"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_centerHorizontal="true"
-      android:lines="1"
-      android:text="@string/bloodpressureentry_sheet_title_enter_blood_pressure"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+      android:layout_alignParentEnd="true"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:text="@string/bloodpressureentry_remove"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
       android:visibility="gone"
-      tools:ignore="UnusedAttribute" />
-
+      tools:visibility="visible" />
   </RelativeLayout>
 
-  <LinearLayout
+  <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_16"
     android:gravity="center_horizontal">
 
-    <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:orientation="vertical">
-
-      <!-- Contains an awkward bottom-padding to keep
+    <!-- Contains an awkward bottom-padding to keep
            the label visible even when the keyboard is up. -->
-      <EditText
-        android:id="@+id/bloodpressureentry_systolic"
-        style="@style/Clinic.BloodPressureInput"
-        android:importantForAutofill="no"
-        tools:ignore="UnusedAttribute"
-        tools:text="120" />
+    <EditText
+      android:id="@+id/bloodpressureentry_systolic"
+      style="@style/Clinic.V2.BloodPressureInput"
+      android:layout_toStartOf="@+id/bloodpressureentry_systolic_diastolic_separator"
+      android:importantForAutofill="no"
+      android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+      tools:ignore="UnusedAttribute"
+      tools:text="120">
 
       <requestFocus />
-
-      <View
-        android:id="@+id/bloodpressureentry_systolic_underline"
-        style="@style/Clinic.BloodPressureInputUnderline" />
-
-      <TextView
-        android:id="@+id/bloodpressureentry_systolic_label"
-        style="@style/Clinic.BloodPressureInputLabel"
-        android:labelFor="@id/bloodpressureentry_systolic"
-        android:text="@string/bloodpressureentry_systolic"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
-    </LinearLayout>
+    </EditText>
 
     <TextView
+      android:id="@+id/bloodpressureentry_systolic_label"
+      style="@style/Clinic.BloodPressureInputLabel"
+      android:layout_alignEnd="@+id/bloodpressureentry_systolic"
+      android:layout_alignStart="@+id/bloodpressureentry_systolic"
+      android:layout_below="@+id/bloodpressureentry_systolic"
+      android:gravity="center_horizontal"
+      android:labelFor="@id/bloodpressureentry_systolic"
+      android:text="@string/bloodpressureentry_systolic"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
+
+    <TextView
+      android:id="@+id/bloodpressureentry_systolic_diastolic_separator"
       android:layout_width="wrap_content"
-      android:layout_height="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_alignBottom="@+id/bloodpressureentry_systolic"
+      android:layout_alignTop="@+id/bloodpressureentry_systolic"
+      android:layout_centerHorizontal="true"
+      android:layout_marginEnd="@dimen/spacing_12"
+      android:layout_marginStart="@dimen/spacing_12"
       android:fontFamily="sans-serif"
+      android:gravity="center_vertical"
       android:text="/"
       android:textColor="@color/grey2"
       android:textSize="40dp"
       tools:ignore="HardcodedText,SpUsage" />
 
-    <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_weight="1"
-      android:orientation="vertical">
+    <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
+      android:id="@+id/bloodpressureentry_diastolic"
+      style="@style/Clinic.V2.BloodPressureInput"
+      android:layout_toEndOf="@+id/bloodpressureentry_systolic_diastolic_separator"
+      android:importantForAutofill="no"
+      android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+      tools:ignore="UnusedAttribute" />
 
-      <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
-        android:id="@+id/bloodpressureentry_diastolic"
-        style="@style/Clinic.BloodPressureInput"
-        android:importantForAutofill="no"
-        tools:ignore="UnusedAttribute" />
-
-      <View
-        android:id="@+id/bloodpressureentry_diastolic_underline"
-        style="@style/Clinic.BloodPressureInputUnderline" />
-
-      <TextView
-        android:id="@+id/bloodpressureentry_diastolic_label"
-        style="@style/Clinic.BloodPressureInputLabel"
-        android:labelFor="@id/bloodpressureentry_diastolic"
-        android:text="@string/bloodpressureentry_diastolic"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
-    </LinearLayout>
-  </LinearLayout>
+    <TextView
+      android:id="@+id/bloodpressureentry_diastolic_label"
+      style="@style/Clinic.BloodPressureInputLabel"
+      android:layout_alignEnd="@+id/bloodpressureentry_diastolic"
+      android:layout_alignStart="@+id/bloodpressureentry_diastolic"
+      android:layout_below="@+id/bloodpressureentry_diastolic"
+      android:gravity="center_horizontal"
+      android:labelFor="@id/bloodpressureentry_diastolic"
+      android:text="@string/bloodpressureentry_diastolic"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
+  </RelativeLayout>
 
   <TextView
     android:id="@+id/bloodpressureentry_error"
@@ -131,5 +128,4 @@
     android:layout_marginTop="@dimen/spacing_8"
     android:gravity="center_horizontal"
     android:visibility="gone" />
-
 </org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener>

@@ -1,7 +1,7 @@
 package org.simple.clinic.search
 
 import android.content.Context
-import android.support.design.widget.TextInputLayout
+import com.google.android.material.textfield.TextInputLayout
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -39,7 +39,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
   private val fullNameEditText by bindView<EditText>(R.id.patientsearch_fullname)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientsearch_fullname_inputlayout)
+  private val fullNameInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientsearch_fullname_inputlayout)
   private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsearch_search_frame)
 
   override fun onFinishInflate() {

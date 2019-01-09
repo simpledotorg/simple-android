@@ -1,6 +1,6 @@
 package org.simple.clinic.drugs.selection
 
-import android.support.v4.content.ContextCompat
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.CompoundButton
 import android.widget.TextView

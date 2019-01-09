@@ -1,6 +1,6 @@
 package org.simple.clinic.medicalhistory
 
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import org.simple.clinic.R
 
 enum class MedicalHistoryQuestion(@StringRes val questionRes: Int) {

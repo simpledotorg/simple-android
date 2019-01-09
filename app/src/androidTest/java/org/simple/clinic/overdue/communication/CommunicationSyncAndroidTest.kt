@@ -1,6 +1,6 @@
 package org.simple.clinic.overdue.communication
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Single
 import org.junit.Before

@@ -2,9 +2,9 @@ package org.simple.clinic.drugs.selection
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -43,7 +43,7 @@ class ConfirmDeletePrescriptionDialog : AppCompatDialogFragment() {
     private const val TAG = "BloodPressureEntrySheetFragment"
     private const val KEY_PRESCRIPTION_UUID = "prescriptionUuid"
 
-    fun showForPrescription(prescriptionUuid: UUID, fragmentManager: FragmentManager) {
+    fun showForPrescription(prescriptionUuid: UUID, fragmentManager: androidx.fragment.app.FragmentManager) {
       val existingFragment = fragmentManager.findFragmentByTag(TAG)
 
       if (existingFragment != null) {

@@ -1,12 +1,12 @@
 package org.simple.clinic.editpatient
 
 import android.content.Context
-import android.support.design.widget.TextInputLayout
-import android.support.transition.ChangeBounds
-import android.support.transition.Fade
-import android.support.transition.TransitionManager
-import android.support.transition.TransitionSet
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.textfield.TextInputLayout
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -80,28 +80,28 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private val formScrollView by bindView<ScrollView>(R.id.patientedit_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patientedit_full_name)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientedit_full_name_inputlayout)
+  private val fullNameInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patientedit_phone_number)
-  private val phoneNumberInputLayout by bindView<TextInputLayout>(R.id.patientedit_phone_number_inputlayout)
+  private val phoneNumberInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_phone_number_inputlayout)
   private val colonyEditText by bindView<EditText>(R.id.patientedit_colony_or_village)
-  private val colonyOrVillageInputLayout by bindView<TextInputLayout>(R.id.patientedit_colony_or_village_inputlayout)
+  private val colonyOrVillageInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_colony_or_village_inputlayout)
   private val districtEditText by bindView<EditText>(R.id.patientedit_district)
-  private val districtInputLayout by bindView<TextInputLayout>(R.id.patientedit_district_inputlayout)
+  private val districtInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_district_inputlayout)
   private val stateEditText by bindView<EditText>(R.id.patientedit_state)
-  private val stateInputLayout by bindView<TextInputLayout>(R.id.patientedit_state_inputlayout)
+  private val stateInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_state_inputlayout)
   private val femaleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_female)
   private val maleRadioButton by bindView<RadioButton>(R.id.patientedit_gender_male)
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patientedit_gender_transgender)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patientedit_gender_radiogroup)
   private val ageEditext by bindView<EditText>(R.id.patientedit_age)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patientedit_date_of_birth)
-  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
+  private val dateOfBirthInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_date_of_birth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patientedit_date_of_birth_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patientedit_dateofbirth_and_age_separator)
   private val ageEditTextContainer by bindView<ViewGroup>(R.id.patientedit_age_container)
   private val backButton by bindView<ImageButton>(R.id.patientedit_back)
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
-  private val ageInputLayout by bindView<TextInputLayout>(R.id.patientedit_age_inputlayout)
+  private val ageInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patientedit_age_inputlayout)
 
   @Suppress("CheckResult")
   override fun onFinishInflate() {

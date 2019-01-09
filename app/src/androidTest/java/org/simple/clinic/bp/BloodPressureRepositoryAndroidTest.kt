@@ -1,6 +1,6 @@
 package org.simple.clinic.bp
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Before

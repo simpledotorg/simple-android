@@ -7,7 +7,7 @@
   android:layout_height="match_parent"
   tools:context=".activity.TheActivity">
 
-  <android.support.v7.widget.Toolbar
+  <androidx.appcompat.widget.Toolbar
     android:id="@+id/home_toolbar"
     style="Clinic.V2.ToolbarStyle"
     android:layout_width="match_parent"
@@ -29,15 +29,15 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.White100"
       tools:text="CHC Facility Name" />
 
-  </android.support.v7.widget.Toolbar>
+  </androidx.appcompat.widget.Toolbar>
 
-  <android.support.v4.view.ViewPager
+  <androidx.viewpager.widget.ViewPager
     android:id="@+id/home_viewpager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@id/home_toolbar">
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
       android:id="@+id/home_tabs"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -49,6 +49,6 @@
       app:tabTextColor="@color/white48"
       tools:ignore="UnusedAttribute" />
 
-  </android.support.v4.view.ViewPager>
+  </androidx.viewpager.widget.ViewPager>
 
 </org.simple.clinic.home.HomeScreen>

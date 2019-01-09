@@ -1,7 +1,7 @@
 package org.simple.clinic.search.results
 
 import android.content.res.Resources
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,7 +24,7 @@ class PatientSearchResultsAdapter @Inject constructor(
     private val phoneObfuscator: PhoneNumberObfuscator,
     @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter,
     private val clock: Clock
-) : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
+) : androidx.recyclerview.widget.RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   val itemClicks: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
@@ -53,7 +53,7 @@ class PatientSearchResultsAdapter @Inject constructor(
     return patients.size
   }
 
-  class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+  class ViewHolder(itemView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
     private val genderImageView by bindView<ImageView>(R.id.patientsearchresult_item_gender)
     private val titleTextView by bindView<TextView>(R.id.patientsearchresult_item_title)

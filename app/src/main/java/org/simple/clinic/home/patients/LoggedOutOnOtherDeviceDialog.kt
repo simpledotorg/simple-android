@@ -2,17 +2,17 @@ package org.simple.clinic.home.patients
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import com.google.android.material.snackbar.Snackbar
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.View
 import org.simple.clinic.R
 
 class LoggedOutOnOtherDeviceDialog : AppCompatDialogFragment() {
 
   companion object {
-    fun show(fragmentManager: FragmentManager) {
+    fun show(fragmentManager: androidx.fragment.app.FragmentManager) {
       (fragmentManager.findFragmentByTag("logged_out_on_other_device_alert") as LoggedOutOnOtherDeviceDialog?)?.dismiss()
 
       val fragment = LoggedOutOnOtherDeviceDialog()
@@ -27,8 +27,9 @@ class LoggedOutOnOtherDeviceDialog : AppCompatDialogFragment() {
         .setTitle(R.string.patients_loggedoutalert_title)
         .setMessage(R.string.patients_loggedoutalert_message)
         .setPositiveButton(R.string.patients_loggedoutalert_dismiss) { _, _ ->
-          val view = dialog.ownerActivity.findViewById<View>(android.R.id.content)
-          Snackbar.make(view, R.string.patients_you_are_now_logged_in, Snackbar.LENGTH_LONG).show()
+          dialog?.ownerActivity?.findViewById<View>(android.R.id.content)?.let { view ->
+            com.google.android.material.snackbar.Snackbar.make(view, R.string.patients_you_are_now_logged_in, com.google.android.material.snackbar.Snackbar.LENGTH_LONG).show()
+          }
         }
         .create()
   }

@@ -1,7 +1,7 @@
 package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
-import android.support.v4.content.res.ResourcesCompat
+import androidx.core.content.res.ResourcesCompat
 import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.GONE

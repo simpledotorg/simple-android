@@ -2,7 +2,7 @@ package org.simple.clinic.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.ViewPager
+import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
@@ -27,7 +27,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   private val rootLayout by bindView<ViewGroup>(R.id.home_root)
-  private val viewPager by bindView<ViewPager>(R.id.home_viewpager)
+  private val viewPager by bindView<androidx.viewpager.widget.ViewPager>(R.id.home_viewpager)
   private val facilitySelectButton by bindView<Button>(R.id.home_facility_change_button)
 
   @Inject

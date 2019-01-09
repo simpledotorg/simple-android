@@ -1,8 +1,8 @@
 package org.simple.clinic.home.overdue
 
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.util.DiffUtil
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -24,11 +24,11 @@ import javax.inject.Inject
 
 class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
 
-  private lateinit var recyclerView: RecyclerView
+  private lateinit var recyclerView: androidx.recyclerview.widget.RecyclerView
 
   val itemClicks = PublishSubject.create<UiEvent>()!!
 
-  override fun onAttachedToRecyclerView(rv: RecyclerView) {
+  override fun onAttachedToRecyclerView(rv: androidx.recyclerview.widget.RecyclerView) {
     super.onAttachedToRecyclerView(rv)
     recyclerView = rv
   }
@@ -49,7 +49,7 @@ class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, Ov
         val differenceInBottoms = itemBottomWithMargin - rvLocation.bottom
 
         if (differenceInBottoms > 0) {
-          (holder.itemView.parent as RecyclerView).smoothScrollBy(0, differenceInBottoms)
+          (holder.itemView.parent as androidx.recyclerview.widget.RecyclerView).smoothScrollBy(0, differenceInBottoms)
         }
       }
     }
@@ -80,7 +80,7 @@ data class OverdueListItem(
 class OverdueListViewHolder(
     itemView: View,
     private val eventStream: PublishSubject<UiEvent>
-) : RecyclerView.ViewHolder(itemView) {
+) : androidx.recyclerview.widget.RecyclerView.ViewHolder(itemView) {
 
   private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
   private val patientBPTextView by bindView<TextView>(R.id.overdue_patient_bp)

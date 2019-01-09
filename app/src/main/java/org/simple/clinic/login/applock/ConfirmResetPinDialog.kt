@@ -2,9 +2,9 @@ package org.simple.clinic.login.applock
 
 import android.app.Dialog
 import android.os.Bundle
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
@@ -26,7 +26,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
   lateinit var patientRepository: PatientRepository
 
   companion object {
-    fun show(fragmentManager: FragmentManager) {
+    fun show(fragmentManager: androidx.fragment.app.FragmentManager) {
       (fragmentManager.findFragmentByTag("confirm_reset_pin_alert") as ConfirmResetPinDialog?)?.dismiss()
 
       ConfirmResetPinDialog().show(fragmentManager, "confirm_reset_pin_alert")

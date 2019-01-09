@@ -2,10 +2,10 @@ package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -54,7 +54,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   private val toolbarViewWithSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_with_search)
   private val toolbarViewWithoutSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_without_search)
   private val searchEditText by bindView<EditText>(R.id.registrationfacilities_search)
-  private val facilityRecyclerView by bindView<RecyclerView>(R.id.registrationfacilities_list)
+  private val facilityRecyclerView by bindView<androidx.recyclerview.widget.RecyclerView>(R.id.registrationfacilities_list)
   private val progressView by bindView<View>(R.id.registrationfacilities_progress)
   private val errorContainer by bindView<ViewGroup>(R.id.registrationfacilities_error_container)
   private val errorTitleTextView by bindView<TextView>(R.id.registrationfacilities_error_title)
@@ -85,7 +85,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
       screenRouter.pop()
     }
 
-    facilityRecyclerView.layoutManager = LinearLayoutManager(context)
+    facilityRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
     facilityRecyclerView.adapter = recyclerViewAdapter
 
     searchEditText.requestFocus()

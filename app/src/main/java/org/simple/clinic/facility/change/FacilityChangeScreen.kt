@@ -2,10 +2,10 @@ package org.simple.clinic.facility.change
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.EditText
 import android.widget.RelativeLayout
@@ -42,7 +42,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   lateinit var screenRouter: ScreenRouter
 
   private val toolbar by bindView<Toolbar>(R.id.facilitychange_toolbar)
-  private val facilityRecyclerView by bindView<RecyclerView>(R.id.facilitychange_list)
+  private val facilityRecyclerView by bindView<androidx.recyclerview.widget.RecyclerView>(R.id.facilitychange_list)
   private val searchEditText by bindView<EditText>(R.id.facilitychange_search)
 
   private val recyclerViewAdapter = FacilitiesAdapter()
@@ -66,7 +66,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       screenRouter.pop()
     }
 
-    facilityRecyclerView.layoutManager = LinearLayoutManager(context)
+    facilityRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
     facilityRecyclerView.adapter = recyclerViewAdapter
 
     // For some reasons, the keyboard stays

@@ -3,9 +3,9 @@ package org.simple.clinic.summary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
-import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
@@ -78,7 +78,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
   private val byline1TextView by bindView<TextView>(R.id.patientsummary_byline1)
   private val byline2TextView by bindView<TextView>(R.id.patientsummary_byline2)
-  private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
+  private val recyclerView by bindView<androidx.recyclerview.widget.RecyclerView>(R.id.patientsummary_recyclerview)
   private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsummary_done)
   private val editButton by bindView<Button>(R.id.patientsummary_edit)
 
@@ -225,7 +225,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   private fun setupSummaryList() {
-    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
     recyclerView.adapter = recyclerViewAdapter
 
     val newBpItem = SummaryAddNewBpListItem()

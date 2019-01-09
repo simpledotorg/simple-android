@@ -1,6 +1,6 @@
 package org.simple.clinic.di
 
-import android.arch.persistence.db.SupportSQLiteOpenHelper
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import io.requery.android.database.sqlite.RequerySQLiteOpenHelperFactory
 import io.requery.android.database.sqlite.SQLiteCustomExtension
 import io.requery.android.database.sqlite.SQLiteDatabase

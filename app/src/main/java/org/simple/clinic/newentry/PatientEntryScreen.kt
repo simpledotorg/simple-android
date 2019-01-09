@@ -1,12 +1,12 @@
 package org.simple.clinic.newentry
 
 import android.content.Context
-import android.support.design.widget.TextInputLayout
-import android.support.transition.ChangeBounds
-import android.support.transition.Fade
-import android.support.transition.TransitionManager
-import android.support.transition.TransitionSet
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.textfield.TextInputLayout
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -66,14 +66,14 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val backButton by bindView<View>(R.id.patiententry_back)
   private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patiententry_full_name_inputlayout)
+  private val fullNameInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_full_name_inputlayout)
   private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
-  private val phoneNumberInputLayout by bindView<TextInputLayout>(R.id.patiententry_phone_number_inputlayout)
+  private val phoneNumberInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_phone_number_inputlayout)
   private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patiententry_date_of_birth)
-  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
+  private val dateOfBirthInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
   private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patiententry_date_of_birth_container)
   private val ageEditText by bindView<EditText>(R.id.patiententry_age)
-  private val ageEditTextInputLayout by bindView<TextInputLayout>(R.id.patiententry_age_inputlayout)
+  private val ageEditTextInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_age_inputlayout)
   private val ageEditTextContainer by bindView<ViewGroup>(R.id.patiententry_age_container)
   private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patiententry_dateofbirth_and_age_separator)
   private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
@@ -82,11 +82,11 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val transgenderRadioButton by bindView<RadioButton>(R.id.patiententry_gender_transgender)
   private val genderErrorTextView by bindView<TextView>(R.id.patiententry_gender_validation_error)
   private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
-  private val colonyOrVillageInputLayout by bindView<TextInputLayout>(R.id.patiententry_colony_or_village_inputlayout)
+  private val colonyOrVillageInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_colony_or_village_inputlayout)
   private val districtEditText by bindView<EditText>(R.id.patiententry_district)
-  private val districtInputLayout by bindView<TextInputLayout>(R.id.patiententry_district_inputlayout)
+  private val districtInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_district_inputlayout)
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
-  private val stateInputLayout by bindView<TextInputLayout>(R.id.patiententry_state_inputlayout)
+  private val stateInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.patiententry_state_inputlayout)
   private val saveButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patiententry_save)
 
   override fun onFinishInflate() {
@@ -312,7 +312,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         .filter {
           when {
             isGenderErrorView(it) -> it.visibility == View.VISIBLE
-            it is TextInputLayout -> it.error.isNullOrBlank().not()
+            it is com.google.android.material.textfield.TextInputLayout -> it.error.isNullOrBlank().not()
             else -> throw AssertionError()
           }
         }

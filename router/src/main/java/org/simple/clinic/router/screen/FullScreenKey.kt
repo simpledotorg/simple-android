@@ -1,7 +1,7 @@
 package org.simple.clinic.router.screen
 
 import android.os.Parcelable
-import android.support.annotation.LayoutRes
+import androidx.annotation.LayoutRes
 
 /**
  *

@@ -1,9 +1,9 @@
 package org.simple.clinic.home
 
 import android.content.Context
-import android.support.annotation.LayoutRes
-import android.support.annotation.StringRes
-import android.support.v4.view.PagerAdapter
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.viewpager.widget.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,7 +12,7 @@ import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.patients.PatientsScreen
 import org.simple.clinic.home.report.ReportsScreen
 
-class HomePagerAdapter(private val context: Context) : PagerAdapter() {
+class HomePagerAdapter(private val context: Context) : androidx.viewpager.widget.PagerAdapter() {
 
   override fun instantiateItem(container: ViewGroup, position: Int): Any {
     val inflater = LayoutInflater.from(container.context)

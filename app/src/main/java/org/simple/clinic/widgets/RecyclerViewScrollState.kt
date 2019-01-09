@@ -1,6 +1,6 @@
 package org.simple.clinic.widgets
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
 import io.reactivex.ObservableTransformer
 import kotlin.math.absoluteValue
@@ -13,9 +13,9 @@ enum class RecyclerViewScrollState {
   companion object {
     fun fromIntDef(stateInt: Int): RecyclerViewScrollState {
       return when (stateInt) {
-        RecyclerView.SCROLL_STATE_IDLE -> IDLE
-        RecyclerView.SCROLL_STATE_DRAGGING -> DRAGGING
-        RecyclerView.SCROLL_STATE_SETTLING -> SETTLING
+        androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE -> IDLE
+        androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING -> DRAGGING
+        androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING -> SETTLING
         else -> throw AssertionError("Unknown scroll state: $stateInt")
       }
     }

@@ -2,7 +2,7 @@ package org.simple.clinic.registration.location
 
 import android.Manifest
 import android.content.Context
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.RelativeLayout

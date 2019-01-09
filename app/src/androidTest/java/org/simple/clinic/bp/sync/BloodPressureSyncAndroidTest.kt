@@ -1,6 +1,6 @@
 package org.simple.clinic.bp.sync
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import org.junit.Before
 import org.junit.Rule

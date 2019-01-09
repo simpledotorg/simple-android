@@ -1,9 +1,9 @@
 package org.simple.clinic.search.results
 
 import android.content.Context
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Button
@@ -48,7 +48,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var clock: Clock
 
   private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
-  private val recyclerView by bindView<RecyclerView>(R.id.patientsearchresults_results)
+  private val recyclerView by bindView<androidx.recyclerview.widget.RecyclerView>(R.id.patientsearchresults_results)
   private val emptyStateView by bindView<View>(R.id.patientsearchresults_empty_state)
   private val newPatientRationaleTextView by bindView<TextView>(R.id.patientsearchresults_new_patient_rationale)
   private val newPatientButton by bindView<Button>(R.id.patientsearchresults_new_patient)
@@ -83,7 +83,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    recyclerView.layoutManager = LinearLayoutManager(context)
+    recyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
     recyclerView.adapter = adapter
 
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)

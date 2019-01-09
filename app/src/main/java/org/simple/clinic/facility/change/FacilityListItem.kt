@@ -1,6 +1,6 @@
 package org.simple.clinic.facility.change
 
-import android.support.v7.util.DiffUtil
+import androidx.recyclerview.widget.DiffUtil
 import org.simple.clinic.facility.Facility
 
 data class FacilityListItem(

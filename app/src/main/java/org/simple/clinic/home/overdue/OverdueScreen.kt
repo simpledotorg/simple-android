@@ -2,9 +2,9 @@ package org.simple.clinic.home.overdue
 
 import android.Manifest
 import android.content.Context
-import android.support.transition.TransitionManager
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import androidx.transition.TransitionManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
@@ -46,7 +46,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var overdueListAdapter: OverdueListAdapter
 
-  private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
+  private val overdueRecyclerView by bindView<androidx.recyclerview.widget.RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
   override fun onFinishInflate() {
@@ -58,7 +58,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     TheActivity.component.inject(this)
 
     overdueRecyclerView.adapter = overdueListAdapter
-    overdueRecyclerView.layoutManager = LinearLayoutManager(context)
+    overdueRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
     Observable
         .mergeArray(

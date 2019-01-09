@@ -1,7 +1,7 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
-import android.support.v7.widget.AppCompatCheckBox
+import androidx.appcompat.widget.AppCompatCheckBox
 import android.util.AttributeSet
 
 class CheckboxWithSuppressibleListener(context: Context, attrs: AttributeSet) : AppCompatCheckBox(context, attrs) {

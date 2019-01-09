@@ -1,6 +1,6 @@
 package org.simple.clinic.activity
 
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.BindsInstance
@@ -124,5 +124,5 @@ class TheActivityModule {
   }
 
   @Provides
-  fun fragmentManager(activity: TheActivity): FragmentManager = activity.supportFragmentManager
+  fun fragmentManager(activity: TheActivity): androidx.fragment.app.FragmentManager = activity.supportFragmentManager
 }

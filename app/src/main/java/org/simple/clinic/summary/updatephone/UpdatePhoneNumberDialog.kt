@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.support.design.widget.TextInputLayout
-import android.support.v4.app.FragmentManager
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatDialogFragment
+import com.google.android.material.textfield.TextInputLayout
+import androidx.fragment.app.FragmentManager
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
@@ -32,7 +32,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
     private const val FRAGMENT_TAG = "UpdatePhoneNumberDialog"
     private const val KEY_PATIENT_UUID = "patientUuid"
 
-    fun show(patientUuid: PatientUuid, fragmentManager: FragmentManager) {
+    fun show(patientUuid: PatientUuid, fragmentManager: androidx.fragment.app.FragmentManager) {
       val existingFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
 
       if (existingFragment != null) {
@@ -59,7 +59,7 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
   @Inject
   lateinit var controller: UpdatePhoneNumberDialogController
 
-  private val phoneInputLayout by bindView<TextInputLayout>(R.id.updatephone_phone_inputlayout)
+  private val phoneInputLayout by bindView<com.google.android.material.textfield.TextInputLayout>(R.id.updatephone_phone_inputlayout)
   private val numberEditText by bindView<EditText>(R.id.updatephone_phone)
 
   private val onStarts = PublishSubject.create<Any>()

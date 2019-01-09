@@ -28,7 +28,7 @@
     style="@style/Clinic.LoginLogoContainerOverflow"
     android:layout_below="@+id/registrationpin_logo_container" />
 
-  <android.support.v7.widget.CardView
+  <androidx.cardview.widget.CardView
     android:id="@+id/registrationpin_card"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/registrationpin_logo_container">
@@ -65,5 +65,5 @@
         android:visibility="gone"
         tools:text="A really long error message to test wrapping on this TextView." />
     </LinearLayout>
-  </android.support.v7.widget.CardView>
+  </androidx.cardview.widget.CardView>
 </org.simple.clinic.registration.pin.RegistrationPinScreen>

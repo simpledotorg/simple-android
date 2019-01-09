@@ -1,6 +1,6 @@
 package org.simple.clinic.widgets
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
 import com.nhaarman.mockito_kotlin.mock
@@ -22,17 +22,17 @@ class RecyclerViewUserScrollDetectorTest {
 
   @Test
   @Parameters(value = [
-    "10, ${RecyclerView.SCROLL_STATE_IDLE}, false",
-    "10, ${RecyclerView.SCROLL_STATE_DRAGGING}, true",
-    "10, ${RecyclerView.SCROLL_STATE_SETTLING}, false",
+    "10, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE}, false",
+    "10, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING}, true",
+    "10, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING}, false",
 
-    "0, ${RecyclerView.SCROLL_STATE_IDLE}, false",
-    "0, ${RecyclerView.SCROLL_STATE_DRAGGING}, false",
-    "0, ${RecyclerView.SCROLL_STATE_SETTLING}, false",
+    "0, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE}, false",
+    "0, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING}, false",
+    "0, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING}, false",
 
-    "-10, ${RecyclerView.SCROLL_STATE_IDLE}, false",
-    "-10, ${RecyclerView.SCROLL_STATE_DRAGGING}, true",
-    "-10, ${RecyclerView.SCROLL_STATE_SETTLING}, false"
+    "-10, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_IDLE}, false",
+    "-10, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING}, true",
+    "-10, ${androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_SETTLING}, false"
   ])
   fun `scrolls by the user should be detected correctly`(dy: Int, scrollState: Int, expectedToBeByUser: Boolean) {
     val scrollEvent = mock<RecyclerViewScrollEvent>()

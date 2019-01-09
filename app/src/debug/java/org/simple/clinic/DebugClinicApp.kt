@@ -112,9 +112,9 @@ class DebugClinicApp : ClinicApp() {
           }
         })
         .bloodPressureModule(object : BloodPressureModule() {
-          override fun provideBloodPressureEntryConfig(): Single<BloodPressureConfig> {
+          override fun provideBloodPressureEntryConfig(): BloodPressureConfig {
             return super.provideBloodPressureEntryConfig()
-                .map { it.copy(deleteBloodPressureFeatureEnabled = true) }
+                .copy(deleteBloodPressureFeatureEnabled = true, dateEntryEnabled = false)
           }
         })
         .build()

@@ -13,6 +13,7 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.cast
 import io.reactivex.schedulers.Schedulers
@@ -27,11 +28,13 @@ import org.simple.clinic.widgets.setTextAndCursor
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 class BloodPressureEntrySheet : BottomSheetActivity() {
 
   @Inject
-  lateinit var controller: BloodPressureEntrySheetController
+  @field:Named("bp_entry_controller")
+  lateinit var controller: ObservableTransformer<UiEvent, UiChange>
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
@@ -142,7 +145,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     systolicEditText.requestFocus()
   }
 
-  fun setBPSavedResultAndFinish() {
+  fun setBpSavedResultAndFinish() {
     val intent = Intent()
     intent.putExtra(EXTRA_WAS_BP_SAVED, true)
     setResult(Activity.RESULT_OK, intent)
@@ -216,5 +219,21 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   fun showConfirmRemoveBloodPressureDialog(uuid: UUID) {
     ConfirmRemoveBloodPressureDialog.show(uuid, supportFragmentManager)
+  }
+
+  fun showBpEntryScreen() {
+    TODO()
+  }
+
+  fun showDateEntryScreen() {
+    TODO()
+  }
+
+  fun showInvalidDateError() {
+    TODO()
+  }
+
+  fun showDateIsInFutureError() {
+    TODO()
   }
 }

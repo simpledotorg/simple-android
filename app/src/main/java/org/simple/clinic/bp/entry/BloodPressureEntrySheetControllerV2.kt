@@ -12,22 +12,30 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_EMPTY
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_TOO_HIGH
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_DIASTOLIC_TOO_LOW
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_EMPTY
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_LESS_THAN_DIASTOLIC
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_HIGH
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_LOW
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.SUCCESS
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_DIASTOLIC_EMPTY
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_DIASTOLIC_TOO_HIGH
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_DIASTOLIC_TOO_LOW
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_SYSTOLIC_EMPTY
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_SYSTOLIC_LESS_THAN_DIASTOLIC
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_SYSTOLIC_TOO_HIGH
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_SYSTOLIC_TOO_LOW
+import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.SUCCESS
+import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import javax.inject.Inject
 
-@Deprecated(message = "Use BloodPressureEntrySheetControllerV2 instead")
-class BloodPressureEntrySheetController @Inject constructor(
+typealias Ui = BloodPressureEntrySheet
+typealias UiChange = (Ui) -> Unit
+
+/**
+ * V2: Includes date entry.
+ */
+class BloodPressureEntrySheetControllerV2 @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
-    private val configProvider: Single<BloodPressureConfig>
+    private val configProvider: Single<BloodPressureConfig>,
+    private val dateValidator: DateOfBirthFormatValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -40,12 +48,13 @@ class BloodPressureEntrySheetController @Inject constructor(
         validationErrorResets(replayedEvents),
         prefillWhenUpdatingABloodPressure(replayedEvents),
         bpValidations(replayedEvents),
-        saveNewBp(replayedEvents),
+        proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         updateBp(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
         showConfirmRemoveBloodPressureDialog(replayedEvents),
-        closeSheetWhenEditedBpIsDeleted(replayedEvents))
+        closeSheetWhenEditedBpIsDeleted(replayedEvents),
+        showDateValidationErrors(replayedEvents))
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -134,7 +143,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
         .map { (systolic, diastolic) ->
           { ui: Ui ->
-            when (validateInput(systolic, diastolic)) {
+            when (validateBpInput(systolic, diastolic)) {
               ERROR_SYSTOLIC_LESS_THAN_DIASTOLIC -> ui.showSystolicLessThanDiastolicError()
               ERROR_SYSTOLIC_TOO_HIGH -> ui.showSystolicHighError()
               ERROR_SYSTOLIC_TOO_LOW -> ui.showSystolicLowError()
@@ -150,8 +159,12 @@ class BloodPressureEntrySheetController @Inject constructor(
         }
   }
 
-  private fun saveNewBp(events: Observable<UiEvent>): Observable<UiChange> {
-    val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
+  private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenChanges = events.ofType<BloodPressureScreenChanged>()
+
+    val saveBpClicks = events.ofType<BloodPressureSaveClicked>()
+        .withLatestFrom(screenChanges)
+        .filter { (_, screen) -> screen.type == BP_ENTRY }
 
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()
@@ -161,28 +174,9 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureDiastolicTextChanged>()
         .map { it.diastolic }
 
-    val validBpEntry = imeDoneClicks
-        .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
-        .map { (systolic, diastolic) -> Triple(systolic, diastolic, validateInput(systolic, diastolic)) }
-        .filter { (_, _, validation) -> validation == SUCCESS }
-        .map { (systolic, diastolic, _) -> systolic to diastolic }
-
-    val patientUuid = events
-        .ofType<BloodPressureEntrySheetCreated>()
-        .filter { it.openAs is OpenAs.New }
-        .map { (it.openAs as OpenAs.New).patientUuid }
-
-    return imeDoneClicks
-        .withLatestFrom(validBpEntry, patientUuid) { _, (systolic, diastolic), patientId -> Triple(patientId, systolic, diastolic) }
-        .distinctUntilChanged()
-        .flatMapSingle { (patientId, systolic, diastolic) ->
-          bloodPressureRepository
-              .saveMeasurement(
-                  patientUuid = patientId,
-                  systolic = systolic.toInt(),
-                  diastolic = diastolic.toInt()
-              )
-        }
+    return saveBpClicks
+        .withLatestFrom(systolicChanges, diastolicChanges)
+        .filter { (_, systolic, diastolic) -> validateBpInput(systolic, diastolic) == SUCCESS }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
   }
 
@@ -199,7 +193,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val validBpEntry = imeDoneClicks
         .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
-        .map { (systolic, diastolic) -> Triple(systolic, diastolic, validateInput(systolic, diastolic)) }
+        .map { (systolic, diastolic) -> Triple(systolic, diastolic, validateBpInput(systolic, diastolic)) }
         .filter { (_, _, validation) -> validation == SUCCESS }
         .map { (systolic, diastolic, _) -> systolic to diastolic }
 
@@ -220,7 +214,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         }
   }
 
-  private fun validateInput(systolic: String, diastolic: String): Validation {
+  private fun validateBpInput(systolic: String, diastolic: String): Validation {
     if (systolic.isBlank()) {
       return ERROR_SYSTOLIC_EMPTY
     }
@@ -316,5 +310,15 @@ class BloodPressureEntrySheetController @Inject constructor(
         .filter { it.deletedAt != null }
         .take(1)
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+  }
+
+  private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
+    // TODO.
+    return Observable.empty()
+  }
+
+  private fun saveBpWhenDateEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
+    // TODO
+    return Observable.empty()
   }
 }

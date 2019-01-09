@@ -265,8 +265,13 @@ class PatientSummaryScreenController @Inject constructor(
 
     return events
         .ofType<PatientSummaryUpdateDrugsClicked>()
-        .withLatestFrom(patientUuid)
-        .map { (_, patientUuid) -> { ui: Ui -> ui.showUpdatePrescribedDrugsScreen(patientUuid) } }
+        .withLatestFrom(patientUuid, configProvider.toObservable())
+        .map { (_, patientUuid, config) ->
+          when (config.isNewPrescriptionScreenEnabled) {
+            true -> { ui: Ui -> ui.showUpdatePrescribedDrugsScreenv2(patientUuid) }
+            false -> { ui: Ui -> ui.showUpdatePrescribedDrugsScreenv1(patientUuid) }
+          }
+        }
   }
 
   private fun handleBackAndDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {

@@ -6,6 +6,7 @@ import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.drugs.selection.ProtocolDrugDosageSelected
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 
@@ -26,6 +27,9 @@ data class ProtocolDrugListItem(
   override fun bind(holder: DrugViewHolder, position: Int) {
     holder.nameTextView.text = drugName
     holder.dosageTextView.text = dosage ?: ""
+    holder.rootView.setOnClickListener {
+      uiEvents.onNext(ProtocolDrugSelected(drugName))
+    }
   }
 
   class DrugViewHolder(val rootView: View, val uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {

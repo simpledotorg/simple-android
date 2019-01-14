@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
@@ -11,7 +12,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
-import org.simple.clinic.drugs.selection.PrescribedDrugsScreenCreated
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -121,5 +121,20 @@ class PrescribedDrugsScreenControllerV2Test {
     uiEvents.onNext(AddNewPrescriptionClicked())
 
     verify(screen).showNewPrescriptionEntrySheet(patientUuid)
+  }
+
+  @Test
+  fun `when a protocol drug is selected then open dosages sheet for that drug`() {
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.never())
+    whenever(prescriptionRepository.savePrescription(any(), any())).thenReturn(Completable.complete())
+    whenever(protocolRepository.drugsForProtocolOrDefault(any())).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
+    val amlodipine10mg = PatientMocker.protocolDrug(name = "Amlodipine", dosage = "10mg")
+
+    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
+    uiEvents.onNext(ProtocolDrugSelected(drugName = amlodipine10mg.name))
+
+    verify(screen).showDosageSelectionSheet(drugName = amlodipine10mg.name, patientUuid = patientUuid)
   }
 }

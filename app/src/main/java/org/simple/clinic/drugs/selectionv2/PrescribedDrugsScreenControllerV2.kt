@@ -11,7 +11,6 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
 import org.simple.clinic.drugs.selection.PrescribedDrugsDoneClicked
-import org.simple.clinic.drugs.selection.PrescribedDrugsScreenCreated
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
@@ -35,12 +34,13 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
     return Observable.mergeArray(
         handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents),
-        selectPrescription(replayedEvents))
+        selectPrescription(replayedEvents),
+        selectDosage(replayedEvents))
   }
 
   private fun populateDrugsList(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuid = events
-        .ofType<PrescribedDrugsScreenCreated>()
+        .ofType<org.simple.clinic.drugs.selectionv2.PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
         .take(1)
 
@@ -81,6 +81,21 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
           protocolDrugSelectionItems + customPrescribedDrugItems
         }
         .map { { ui: Ui -> ui.populateDrugsList(it) } }
+  }
+
+  private fun selectDosage(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuids = events
+        .ofType<PrescribedDrugsScreenCreated>()
+        .map { it.patientUuid }
+        .take(1)
+
+    val drugSelected = events
+        .ofType<ProtocolDrugSelected>()
+        .map { it.drugName }
+
+    return drugSelected
+        .withLatestFrom(patientUuids)
+        .map { (drugSelected, patientUuid) -> { ui: Ui -> ui.showDosageSelectionSheet(drugName = drugSelected, patientUuid = patientUuid) } }
   }
 
   private fun selectPrescription(events: Observable<UiEvent>): Observable<UiChange> {

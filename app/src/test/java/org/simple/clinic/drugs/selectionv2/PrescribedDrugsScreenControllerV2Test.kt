@@ -4,14 +4,17 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
-import org.simple.clinic.drugs.selection.PrescribedDrugsScreenCreated
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -22,6 +25,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class PrescribedDrugsScreenControllerV2Test {
 
   @get:Rule
@@ -121,5 +125,23 @@ class PrescribedDrugsScreenControllerV2Test {
     uiEvents.onNext(AddNewPrescriptionClicked())
 
     verify(screen).showNewPrescriptionEntrySheet(patientUuid)
+  }
+
+  @Parameters(
+      "Amlodipine",
+      "Telimisartan",
+      "Athenlol"
+  )
+  @Test
+  fun `when a protocol drug is selected then open dosages sheet for that drug`(drugName: String) {
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.never())
+    whenever(prescriptionRepository.savePrescription(any(), any())).thenReturn(Completable.complete())
+    whenever(protocolRepository.drugsForProtocolOrDefault(any())).thenReturn(Observable.never())
+    whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
+
+    uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
+    uiEvents.onNext(ProtocolDrugSelected(drugName = drugName))
+
+    verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid)
   }
 }

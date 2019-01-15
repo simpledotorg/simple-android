@@ -170,6 +170,7 @@ object PatientMocker {
   fun protocolDrug(
       uuid: UUID = UUID.randomUUID(),
       name: String = "drug name",
+      rxNormCode: String = "rxnormcode-1",
       dosage: String = "5mg",
       protocolUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
@@ -180,7 +181,7 @@ object PatientMocker {
     return ProtocolDrug(
         uuid = uuid,
         name = name,
-        rxNormCode = "rxnormcode-1",
+        rxNormCode = rxNormCode,
         dosage = dosage,
         protocolUuid = protocolUuid,
         createdAt = createdAt,

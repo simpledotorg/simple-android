@@ -187,4 +187,14 @@ class ProtocolRepository @Inject constructor(
     return notEmptyDosages.mergeWith(emptyDosages).toObservable()
   }
 
+  fun drugByNameAndDosage(drugName: String, dosage: String, protocolUuid: UUID?): ProtocolDrug? {
+    val defaultDrug = defaultProtocolDrugs()
+        .filter { it.drugName == drugName }
+        .map { drugAndDosages -> drugAndDosages.drugs.firstOrNull { dosage == it.dosage } }
+
+    if (protocolUuid == null) {
+      return defaultDrug.first()
+    }
+    return protocolDrugsDao.drugForNameAndDosage(drugName, dosage, protocolUuid)
+  }
 }

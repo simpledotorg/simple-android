@@ -179,4 +179,48 @@ class ProtocolRepositoryAndroidTest {
     val dosages = protocolRepository.dosagesForDrug(drugName = "Amlodipine", protocolUuid = null).blockingFirst()
     assertThat(dosages).containsAllOf("5mg", "10mg")
   }
+
+  @Test
+  fun when_fetching_protocol_drug_by_name_dosage_and_protocolId_then_drug_should_be_returned_if_present() {
+    database.clearAllTables()
+
+    val protocol1 = testData.protocol()
+    val protocol2 = testData.protocol()
+    val protocols = listOf(protocol1, protocol2)
+    database.protocolDao().save(protocols)
+
+    val amlodipine20mg1 = testData.protocolDrug(name = "Amlodipine", dosage = "20mg", protocolUuid = protocol1.uuid)
+    val amlodipine20mg2 = testData.protocolDrug(name = "Amlodipine", dosage = "20mg", protocolUuid = protocol2.uuid)
+    val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocol1.uuid)
+    val telmisartan40mg = testData.protocolDrug(name = "Telmisartan", dosage = "40mg", protocolUuid = protocol1.uuid)
+    database.protocolDrugDao().save(listOf(amlodipine10mg, amlodipine20mg1, amlodipine20mg2, telmisartan40mg))
+
+    val drug1 = protocolRepository.drugByNameAndDosage(drugName = "Amlodipine", dosage = "20mg", protocolUuid = protocol1.uuid)
+    assertThat(drug1).isEqualTo(amlodipine20mg1)
+
+    val drug2 = protocolRepository.drugByNameAndDosage(drugName = "Amlodipine", dosage = "5mg", protocolUuid = protocol1.uuid)
+    assertThat(drug2).isNull()
+  }
+
+  @Test
+  fun when_fetching_protocol_drug_by_name_dosage_and_null_protocolId_then_matching_default_drug_should_be_returned() {
+    val protocol = testData.protocol()
+    database.protocolDao().save(listOf(protocol))
+
+    val selectedDrugName = "Amlodipine"
+    val selectedDrugDosage = "10mg"
+
+    val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocol.uuid)
+    database.protocolDrugDao().save(listOf(amlodipine10mg))
+
+    val defaultDrug = protocolRepository.defaultProtocolDrugs()
+        .filter { it.drugName == selectedDrugName }
+        .map { drugAndDosages -> drugAndDosages.drugs.firstOrNull { selectedDrugDosage == it.dosage } }
+        .first()
+
+    val drug = protocolRepository.drugByNameAndDosage(drugName = selectedDrugName, dosage = selectedDrugDosage, protocolUuid = null)
+    assertThat(drug).isNotNull()
+    assertThat(drug).isNotEqualTo(amlodipine10mg)
+    assertThat(drug).isEqualTo(defaultDrug)
+  }
 }

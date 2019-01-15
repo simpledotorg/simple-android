@@ -61,5 +61,8 @@ data class ProtocolDrug(
 
     @Query("SELECT dosage FROM ProtocolDrug WHERE protocolUuid = :protocolUuid AND name = :drugName")
     fun dosagesForDrug(drugName: String, protocolUuid: UUID): Flowable<List<String>>
+
+    @Query("SELECT * FROM ProtocolDrug WHERE protocolUuid = :protocolUuid AND name = :drugName AND dosage = :dosage LIMIT 1")
+    fun drugForNameAndDosage(drugName: String, dosage: String, protocolUuid: UUID): ProtocolDrug?
   }
 }

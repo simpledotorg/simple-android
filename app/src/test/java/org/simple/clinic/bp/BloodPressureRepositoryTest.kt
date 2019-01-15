@@ -19,6 +19,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
+import org.threeten.bp.Instant
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -50,15 +51,18 @@ class BloodPressureRepositoryTest {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
-    repository.saveMeasurement(patientUuid, systolic = 120, diastolic = 65).subscribe()
+    repository.saveMeasurement(patientUuid, systolic = 120, diastolic = 65, createdAt = Instant.now(testClock)).subscribe()
 
     verify(dao).save(check {
-      assertThat(it.first().systolic).isEqualTo(120)
-      assertThat(it.first().diastolic).isEqualTo(65)
-      assertThat(it.first().facilityUuid).isEqualTo(facility.uuid)
-      assertThat(it.first().patientUuid).isEqualTo(patientUuid)
+      val measurement = it.first()
+      assertThat(measurement.systolic).isEqualTo(120)
+      assertThat(measurement.diastolic).isEqualTo(65)
+      assertThat(measurement.facilityUuid).isEqualTo(facility.uuid)
+      assertThat(measurement.patientUuid).isEqualTo(patientUuid)
+      assertThat(measurement.createdAt).isEqualTo(Instant.now(testClock))
+      assertThat(measurement.updatedAt).isEqualTo(Instant.now(testClock))
 
-      assertThat(it.first().userUuid).isEqualTo(aUuid)
+      assertThat(measurement.userUuid).isEqualTo(aUuid)
     })
   }
 

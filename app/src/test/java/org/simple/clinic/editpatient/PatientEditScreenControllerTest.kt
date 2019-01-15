@@ -1143,7 +1143,6 @@ class PatientEditScreenControllerTest {
 
   @Suppress("Unused")
   private fun `params for confirming discard changes`(): List<List<Any?>> {
-
     fun generatePatientProfile(
         name: String? = null,
         phoneNumber: String? = null,

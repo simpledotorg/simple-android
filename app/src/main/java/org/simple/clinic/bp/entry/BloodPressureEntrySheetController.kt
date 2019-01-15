@@ -22,12 +22,15 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.E
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.SUCCESS
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Clock
+import org.threeten.bp.Instant
 import javax.inject.Inject
 
 @Deprecated(message = "Use BloodPressureEntrySheetControllerV2 instead")
 class BloodPressureEntrySheetController @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
-    private val configProvider: Single<BloodPressureConfig>
+    private val configProvider: Single<BloodPressureConfig>,
+    private val clock: Clock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -180,7 +183,8 @@ class BloodPressureEntrySheetController @Inject constructor(
               .saveMeasurement(
                   patientUuid = patientId,
                   systolic = systolic.toInt(),
-                  diastolic = diastolic.toInt()
+                  diastolic = diastolic.toInt(),
+                  createdAt = Instant.now(clock)
               )
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }

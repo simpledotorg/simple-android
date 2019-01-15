@@ -24,6 +24,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -36,6 +37,7 @@ class BloodPressureEntrySheetControllerTest {
 
   private val sheet = mock<BloodPressureEntrySheet>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
+  private val testClock = TestClock()
   private val patientUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -45,7 +47,7 @@ class BloodPressureEntrySheetControllerTest {
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-    controller = BloodPressureEntrySheetController(bloodPressureRepository, configEmitter.firstOrError())
+    controller = BloodPressureEntrySheetController(bloodPressureRepository, configEmitter.firstOrError(), testClock)
 
     uiEvents
         .compose(controller)
@@ -107,7 +109,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("140"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicLessThanDiastolicError()
   }
 
@@ -118,7 +120,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("55"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicLowError()
   }
 
@@ -129,7 +131,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("88"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicHighError()
   }
 
@@ -140,7 +142,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("33"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showDiastolicLowError()
   }
 
@@ -151,7 +153,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showDiastolicHighError()
   }
 
@@ -162,7 +164,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicEmptyError()
   }
 
@@ -173,7 +175,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged(""))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showDiastolicEmptyError()
   }
 
@@ -203,7 +205,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged(diastolic))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet, never()).setBpSavedResultAndFinish()
   }
 
@@ -220,7 +222,8 @@ class BloodPressureEntrySheetControllerTest {
       whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
 
     } else if (openAs is OpenAs.New) {
-      whenever(bloodPressureRepository.saveMeasurement(openAs.patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
+      whenever(bloodPressureRepository.saveMeasurement(openAs.patientUuid, 142, 80, Instant.now(testClock)))
+          .thenReturn(Single.just(PatientMocker.bp()))
     }
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
@@ -231,10 +234,10 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked)
 
     if (openAs is OpenAs.New) {
-      verify(bloodPressureRepository).saveMeasurement(openAs.patientUuid, 142, 80)
+      verify(bloodPressureRepository).saveMeasurement(openAs.patientUuid, 142, 80, Instant.now(testClock))
       verify(bloodPressureRepository, never()).updateMeasurement(any())
     } else {
-      verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+      verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
       verify(bloodPressureRepository).updateMeasurement(alreadyPresentBp!!.copy(systolic = 142, diastolic = 80))
     }
     verify(sheet).setBpSavedResultAndFinish()

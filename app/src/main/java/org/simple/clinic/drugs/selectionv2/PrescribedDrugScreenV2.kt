@@ -117,6 +117,6 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   fun showDosageSelectionSheet(drugName: String, patientUuid: UUID) {
-    activity.startActivity(PrescribedDrugWithDosagesSheet.intent(context,drugName))
+    activity.startActivity(PrescribedDrugWithDosagesSheet.intent(context, drugName, patientUuid))
   }
 }

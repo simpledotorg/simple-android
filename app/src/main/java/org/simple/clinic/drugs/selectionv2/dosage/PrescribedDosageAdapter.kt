@@ -7,15 +7,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 class PrescribedDosageAdapter @Inject constructor() : ListAdapter<PrescribedDosageListItem, PrescribedDosageViewHolder>(PrescribedDosageDiffer()) {
 
+  val itemClicks = PublishSubject.create<UiEvent>()!!
+
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrescribedDosageViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(R.layout.prescribed_drug_with_dosage_list_item, parent, false)
-    return PrescribedDosageViewHolder(layout)
+    return PrescribedDosageViewHolder(layout, itemClicks)
   }
 
   override fun onBindViewHolder(holder: PrescribedDosageViewHolder, position: Int) {
@@ -24,12 +29,18 @@ class PrescribedDosageAdapter @Inject constructor() : ListAdapter<PrescribedDosa
   }
 }
 
-class PrescribedDosageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class PrescribedDosageViewHolder(itemView: View, val itemClicks: Subject<UiEvent>) : RecyclerView.ViewHolder(itemView) {
 
   private val dosageTextView by bindView<TextView>(R.id.prescribed_drug_list_item_dosage_name)
   private val divider by bindView<View>(R.id.prescribed_drug_list_item_divider)
 
   lateinit var dosageItem: PrescribedDosageListItem
+
+  init {
+    itemView.setOnClickListener {
+      itemClicks.onNext(DosageItemClicked(dosageItem.dosageType))
+    }
+  }
 
   fun render() {
     val dosageType = dosageItem.dosageType

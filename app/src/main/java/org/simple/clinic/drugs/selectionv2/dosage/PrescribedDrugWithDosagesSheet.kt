@@ -15,6 +15,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
@@ -39,7 +40,7 @@ class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
     recyclerView.layoutManager = LinearLayoutManager(this)
     displayDrugName()
 
-    Observable.mergeArray(sheetCreates())
+    Observable.mergeArray(sheetCreates(), adapter.itemClicks)
         .observeOn(io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -54,7 +55,8 @@ class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
 
   private fun sheetCreates(): Observable<UiEvent> {
     val drugName = intent.getStringExtra(KEY_DRUG_NAME)
-    return Observable.just(PrescribedDrugsWithDosagesSheetCreated(drugName))
+    val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
+    return Observable.just(PrescribedDrugsWithDosagesSheetCreated(drugName, patientUuid))
   }
 
   private fun displayDrugName() {
@@ -70,10 +72,12 @@ class PrescribedDrugWithDosagesSheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_DRUG_NAME = "drugName"
+    private const val KEY_PATIENT_UUID = "patientUuid"
 
-    fun intent(context: Context, drugName: String): Intent {
+    fun intent(context: Context, drugName: String, patientUuid: UUID): Intent {
       val intent = Intent(context, PrescribedDrugWithDosagesSheet::class.java)
       intent.putExtra(KEY_DRUG_NAME, drugName)
+      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
       return intent
     }
   }

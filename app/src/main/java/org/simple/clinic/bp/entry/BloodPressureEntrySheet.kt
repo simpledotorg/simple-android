@@ -72,16 +72,15 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    Observable
-        .mergeArray(
-            sheetCreates(),
-            screenDestroys,
-            systolicTextChanges(),
-            diastolicTextChanges(),
-            diastolicImeOptionClicks(),
-            diastolicBackspaceClicks(),
-            removeClicks())
-        .observeOn(Schedulers.io())
+    Observable.mergeArray(
+    sheetCreates(),
+    screenDestroys,
+    systolicTextChanges(),
+    diastolicTextChanges(),
+    diastolicImeOptionClicks(),
+    diastolicBackspaceClicks(),
+    removeClicks())
+    .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(screenDestroys)

@@ -24,6 +24,12 @@ import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.INVALID_PATTERN
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
@@ -41,6 +47,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(ReportAnalyticsEvents())
+        .compose(combineDateInputs())
+        .compose(validateDateInput())
         .replay()
 
     return Observable.mergeArray(
@@ -49,12 +57,13 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         prefillWhenUpdatingABloodPressure(replayedEvents),
         bpValidations(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
-        updateBp(replayedEvents),
+        //        updateBp(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
         showConfirmRemoveBloodPressureDialog(replayedEvents),
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
-        showDateValidationErrors(replayedEvents))
+        showDateValidationErrors(replayedEvents),
+        saveBpWhenDateEntryIsDone(replayedEvents))
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -177,41 +186,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return saveBpClicks
         .withLatestFrom(systolicChanges, diastolicChanges)
         .filter { (_, systolic, diastolic) -> validateBpInput(systolic, diastolic) == SUCCESS }
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
-  }
-
-  private fun updateBp(events: Observable<UiEvent>): Observable<UiChange> {
-    val imeDoneClicks = events.ofType<BloodPressureSaveClicked>()
-
-    val systolicChanges = events
-        .ofType<BloodPressureSystolicTextChanged>()
-        .map { it.systolic }
-
-    val diastolicChanges = events
-        .ofType<BloodPressureDiastolicTextChanged>()
-        .map { it.diastolic }
-
-    val validBpEntry = imeDoneClicks
-        .withLatestFrom(systolicChanges, diastolicChanges) { _, systolic, diastolic -> systolic to diastolic }
-        .map { (systolic, diastolic) -> Triple(systolic, diastolic, validateBpInput(systolic, diastolic)) }
-        .filter { (_, _, validation) -> validation == SUCCESS }
-        .map { (systolic, diastolic, _) -> systolic to diastolic }
-
-    val bloodPressure = events
-        .ofType<BloodPressureEntrySheetCreated>()
-        .map { it.openAs }
-        .ofType<OpenAs.Update>()
-        .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
-        .take(1)
-
-    return imeDoneClicks
-        .withLatestFrom(validBpEntry, bloodPressure) { _, (systolic, diastolic), savedBp -> Triple(savedBp, systolic, diastolic) }
-        .distinctUntilChanged()
-        .map { (savedBp, systolic, diastolic) -> savedBp.copy(systolic = systolic.toInt(), diastolic = diastolic.toInt()) }
-        .flatMapSingle { bloodPressureMeasurement ->
-          bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
-              .toSingleDefault({ ui: Ui -> ui.setBpSavedResultAndFinish() })
-        }
+        .map { Ui::showDateEntryScreen }
   }
 
   private fun validateBpInput(systolic: String, diastolic: String): Validation {
@@ -312,13 +287,91 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
   }
 
+  private fun combineDateInputs() = ObservableTransformer<UiEvent, UiEvent> { events ->
+    val dayChanges = events
+        .ofType<BloodPressureDayChanged>()
+        .map { it.day }
+
+    val monthChanges = events
+        .ofType<BloodPressureMonthChanged>()
+        .map { it.month }
+
+    val yearChanges = events
+        .ofType<BloodPressureYearChanged>()
+        .map { it.year }
+
+    val combinedDates = Observables
+        .combineLatest(dayChanges, monthChanges, yearChanges)
+        .map { (d, m, y) -> BloodPressureDateChanged(date = "$d/$m/$y") }
+    events.mergeWith(combinedDates)
+  }
+
+  private fun validateDateInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
+    val screenChanges = events.ofType<BloodPressureScreenChanged>()
+
+    val saveBpClicks = events.ofType<BloodPressureSaveClicked>()
+        .withLatestFrom(screenChanges)
+        .filter { (_, screen) -> screen.type == ScreenType.DATE_ENTRY }
+
+    val dateChanges = events
+        .ofType<BloodPressureDateChanged>()
+        .map { it.date }
+
+    val validations = saveBpClicks
+        .withLatestFrom(dateChanges) { _, date ->
+          BloodPressureDateValidated(date = date)
+        }
+    events.mergeWith(validations)
+  }
+
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    // TODO.
-    return Observable.empty()
+    return events.ofType<BloodPressureDateValidated>()
+        .map { it.result(dateValidator) }
+        .filter { it != VALID }
+        .map<UiChange> {
+          when (it) {
+            VALID -> throw AssertionError()
+            INVALID_PATTERN -> { ui: Ui -> ui.showInvalidDateError() }
+            DATE_IS_IN_FUTURE -> { ui: Ui -> ui.showDateIsInFutureError() }
+          }
+        }
   }
 
   private fun saveBpWhenDateEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
-    // TODO
-    return Observable.empty()
+    val openAs = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+
+    val validDates = events
+        .ofType<BloodPressureDateValidated>()
+        .filter { it.result(dateValidator) == VALID }
+        .map { it.date }
+
+    data class BP(val systolic: Int, val diastolic: Int)
+
+    val systolicChanges = events
+        .ofType<BloodPressureSystolicTextChanged>()
+        .map { it.systolic }
+
+    val diastolicChanges = events
+        .ofType<BloodPressureDiastolicTextChanged>()
+        .map { it.diastolic }
+
+    val bpChanges = validDates
+        .withLatestFrom(systolicChanges, diastolicChanges)
+        .map { (_, systolic, diastolic) -> BP(systolic.toInt(), diastolic.toInt()) }
+
+    val patientUuidStream = openAs
+        .ofType<OpenAs.New>()
+        .map { it.patientUuid }
+
+    return validDates
+        .withLatestFrom(bpChanges, patientUuidStream)
+        .flatMapSingle { (dateString: String, bp, patientUuid) ->
+          val localDate = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(dateString))
+          val dateToInstant = localDate.atStartOfDay(UTC).toInstant()
+          bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateToInstant)
+        }
+        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
   }
 }

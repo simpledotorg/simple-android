@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
@@ -20,11 +21,19 @@ import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
+import org.simple.clinic.bp.entry.ScreenType.DATE_ENTRY
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.INVALID_PATTERN
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -112,7 +121,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("140"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicLessThanDiastolicError()
   }
 
@@ -123,7 +132,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("55"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicLowError()
   }
 
@@ -134,7 +143,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("88"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicHighError()
   }
 
@@ -145,7 +154,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("33"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showDiastolicLowError()
   }
 
@@ -156,7 +165,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showDiastolicHighError()
   }
 
@@ -167,7 +176,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showSystolicEmptyError()
   }
 
@@ -178,7 +187,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged(""))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).showDiastolicEmptyError()
   }
 
@@ -208,41 +217,32 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged(diastolic))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet, never()).setBpSavedResultAndFinish()
   }
 
-//  @Test
-//  @Parameters(method = "params for checking valid BP input")
-//  fun `when save is clicked, BP entry is active and input is valid then show date entry`(openAs: OpenAs) {
-//    if (openAs is OpenAs.Update) {
-//      val bpUuid = openAs.bpUuid
-//
-//      val alreadyPresentBp = PatientMocker.bp(uuid = bpUuid, patientUuid = patientUuid, systolic = 120, diastolic = 80)
-//      whenever(bloodPressureRepository.measurement(bpUuid)).thenReturn(Observable.just(alreadyPresentBp))
-//      whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
-//      whenever(bloodPressureRepository.deletedMeasurements(any())).thenReturn(Observable.never())
-//
-//    } else if (openAs is OpenAs.New) {
-//      whenever(bloodPressureRepository.saveMeasurement(openAs.patientUuid, 142, 80)).thenReturn(Single.just(PatientMocker.bp()))
-//    }
-//
-//    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
-//    uiEvents.onNext(BloodPressureSystolicTextChanged("142"))
-//    uiEvents.onNext(BloodPressureDiastolicTextChanged("80"))
-//    uiEvents.onNext(BloodPressureSaveClicked)
-//    uiEvents.onNext(BloodPressureSaveClicked)
-//    uiEvents.onNext(BloodPressureSaveClicked)
-//
-//    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any())
-//    verify(bloodPressureRepository, never()).updateMeasurement(any())
-//    verify(sheet).showDateEntryScreen()
-//  }
-//
-//  @Suppress("Unused")
-//  private fun `params for checking valid BP input`(): List<Any> {
-//    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
-//  }
+  @Test
+  @Parameters(method = "params for checking valid BP input")
+  fun `when save is clicked, BP entry is active and input is valid then show date entry`(openAs: OpenAs) {
+    if (openAs is OpenAs.Update) {
+      whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+    }
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
+    uiEvents.onNext(BloodPressureSystolicTextChanged("142"))
+    uiEvents.onNext(BloodPressureDiastolicTextChanged("80"))
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
+    uiEvents.onNext(BloodPressureSaveClicked)
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).updateMeasurement(any())
+    verify(sheet).showDateEntryScreen()
+  }
+
+  @Suppress("Unused")
+  private fun `params for checking valid BP input`(): List<Any> {
+    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
+  }
 
   @Test
   @Parameters(method = "params for prefilling bp measurements")
@@ -377,4 +377,89 @@ class BloodPressureEntrySheetControllerTestV2 {
     bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
     verify(sheet).setBpSavedResultAndFinish()
   }
+
+  @Test
+  @Suppress("IMPLICIT_CAST_TO_ANY")
+  @Parameters(method = "params for checking valid date input")
+  fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
+      openAs: OpenAs,
+      result: DateOfBirthFormatValidator.Result
+  ) {
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+    whenever(dateValidator.validate("dummy/dummy/dummy")).thenReturn(result)
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
+    uiEvents.onNext(BloodPressureScreenChanged(DATE_ENTRY))
+    uiEvents.onNext(BloodPressureDayChanged("dummy"))
+    uiEvents.onNext(BloodPressureMonthChanged("dummy"))
+    uiEvents.onNext(BloodPressureYearChanged("dummy"))
+    uiEvents.onNext(BloodPressureSaveClicked)
+
+    when (openAs) {
+      is OpenAs.New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+      is OpenAs.Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
+    }.exhaustive()
+
+    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(dateValidator, times(3)).validate("dummy/dummy/dummy")
+  }
+
+  /**
+   * TODO: Consider hardcoding all values instead of logic.
+   */
+  @Suppress("Unused")
+  private fun `params for checking valid date input`(): List<Any> {
+    return listOf(
+        listOf(OpenAs.New(patientUuid), INVALID_PATTERN),
+        listOf(OpenAs.New(patientUuid), DATE_IS_IN_FUTURE),
+        listOf(OpenAs.Update(UUID.randomUUID()), INVALID_PATTERN),
+        listOf(OpenAs.Update(UUID.randomUUID()), DATE_IS_IN_FUTURE))
+
+    //    return DateOfBirthFormatValidator.Result
+    //        .values()
+    //        .filter { it != DateOfBirthFormatValidator.Result.VALID }
+    //        .flatMap { result ->
+    //          listOf(OpenAs.New(patientUuid), result) + listOf(OpenAs.Update(UUID.randomUUID()), result)
+    //        }
+  }
+
+  @Test
+  fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(dateValidator.validate(any())).thenReturn(VALID)
+
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.New(patientUuid)))
+      onNext(BloodPressureSystolicTextChanged("120"))
+      onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureDayChanged("13"))
+      onNext(BloodPressureMonthChanged("01"))
+      onNext(BloodPressureYearChanged("1990"))
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureSaveClicked)
+    }
+
+    val entryDateAsInstant = LocalDate.of(1990, 1, 13).atStartOfDay(UTC).toInstant()
+
+    verify(bloodPressureRepository, never()).updateMeasurement(any())
+
+    verify(bloodPressureRepository).saveMeasurement(
+        patientUuid,
+        systolic = 120,
+        diastolic = 110,
+        createdAt = entryDateAsInstant)
+    verify(sheet).setBpSavedResultAndFinish()
+  }
+
+  @Test
+  fun `when save is clicked while updating a BP, date entry is active and input is valid then a BP measurement should be saved`() {
+    // TODO
+  }
+
+  @Test
+  fun `when date entry is active and back is pressed then BP entry should be shown`() {
+    // TODO
+  }
+
+  // TODO: Date validation tests.
 }

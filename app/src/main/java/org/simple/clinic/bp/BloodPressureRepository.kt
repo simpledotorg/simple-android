@@ -25,7 +25,7 @@ class BloodPressureRepository @Inject constructor(
     private val clock: Clock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
-  fun saveMeasurement(patientUuid: UUID, systolic: Int, diastolic: Int): Single<BloodPressureMeasurement> {
+  fun saveMeasurement(patientUuid: UUID, systolic: Int, diastolic: Int, createdAt: Instant = Instant.now(clock)): Single<BloodPressureMeasurement> {
     if (systolic < 0 || diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
     }
@@ -47,8 +47,8 @@ class BloodPressureRepository @Inject constructor(
               userUuid = user!!.uuid,
               facilityUuid = facility.uuid,
               patientUuid = patientUuid,
-              createdAt = Instant.now(clock),
-              updatedAt = Instant.now(clock),
+              createdAt = createdAt,
+              updatedAt = createdAt,
               deletedAt = null)
         }
         .flatMap {

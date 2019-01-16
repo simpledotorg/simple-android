@@ -60,9 +60,9 @@ class BloodPressureRepository @Inject constructor(
     return Completable.fromAction { dao.save(records) }
   }
 
-  fun updateMeasurement(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
+  fun updateMeasurement(measurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {
-      val updatedMeasurement = bloodPressureMeasurement.copy(
+      val updatedMeasurement = measurement.copy(
           updatedAt = Instant.now(clock),
           syncStatus = SyncStatus.PENDING
       )

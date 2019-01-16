@@ -16,6 +16,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 class DosagePickerSheet : BottomSheetActivity() {
@@ -55,7 +56,8 @@ class DosagePickerSheet : BottomSheetActivity() {
 
   private fun sheetCreates(): Observable<UiEvent> {
     val drugName = intent.getStringExtra(KEY_DRUG_NAME)
-    return Observable.just(DosagePickerSheetCreated(drugName))
+    val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
+    return Observable.just(DosagePickerSheetCreated(drugName, patientUuid))
   }
 
   private fun displayDrugName() {
@@ -69,10 +71,12 @@ class DosagePickerSheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_DRUG_NAME = "drugName"
+    private const val KEY_PATIENT_UUID = "patientUuid"
 
-    fun intent(context: Context, drugName: String): Intent {
+    fun intent(context: Context, drugName: String, patientUuid: UUID): Intent {
       val intent = Intent(context, DosagePickerSheet::class.java)
       intent.putExtra(KEY_DRUG_NAME, drugName)
+      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
       return intent
     }
   }

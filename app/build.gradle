@@ -165,7 +165,7 @@ dependencies {
   androidTestImplementation "androidx.test:rules:$versions.supportTest"
   androidTestImplementation "com.google.truth:truth:$versions.truth"
   androidTestImplementation "com.github.blocoio:faker:$versions.faker"
-  androidTestImplementation "androidx.room:room-testing:$versions.archComponents"
+  androidTestImplementation "androidx.room:room-testing:$versions.room"
   androidTestImplementation "androidx.arch.core:core-testing:$versions.archComponents"
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
@@ -179,12 +179,12 @@ dependencies {
   implementation("androidx.legacy:legacy-support-v4:$versions.supportLib") {
     because "Play Services Auth exposes an older version of this dependency"
   }
-  implementation "androidx.recyclerview:recyclerview:$versions.supportLib"
-  implementation "com.google.android.material:material:$versions.supportLib"
-  implementation "androidx.cardview:cardview:$versions.supportLib"
-  implementation "androidx.room:room-runtime:$versions.archComponents"
+  implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"
+  implementation "com.google.android.material:material:$versions.material"
+  implementation "androidx.cardview:cardview:$versions.cardview"
+  implementation "androidx.room:room-runtime:$versions.room"
   kapt "androidx.room:room-compiler:$versions.archComponents"
-  implementation "androidx.room:room-rxjava2:$versions.archComponents"
+  implementation "androidx.room:room-rxjava2:$versions.room"
   implementation "android.arch.work:work-runtime-ktx:$versions.workRuntimeKtx"
 
   implementation "com.jakewharton.timber:timber:$versions.timber"

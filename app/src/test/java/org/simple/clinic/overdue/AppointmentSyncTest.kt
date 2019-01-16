@@ -14,11 +14,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.DataPullResponse
 import org.simple.clinic.sync.DataPushResponse
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.threeten.bp.Duration
 import org.threeten.bp.Period
 
 @Suppress("UNCHECKED_CAST")
@@ -35,20 +38,28 @@ class AppointmentSyncTest {
   private val lastPullToken = mock<Preference<Optional<String>>>()
 
   private lateinit var config: AppointmentConfig
-
   private lateinit var sync: AppointmentSync
+  private lateinit var syncConfig: SyncConfig
 
   @Before
   fun setup() {
-    sync = AppointmentSync(syncCoordinator, repository, apiV1, apiV2, Single.fromCallable { config }, lastPullToken)
+    sync = AppointmentSync(
+        syncCoordinator,
+        repository,
+        apiV1,
+        apiV2,
+        Single.fromCallable { config },
+        lastPullToken,
+        Single.fromCallable { syncConfig }
+    )
   }
 
   @Test
   @Parameters("true", "false")
   fun `when pulling appointments, v2 API should only be called if its enabled`(v2ApiEnabled: Boolean) {
-    whenever(syncCoordinator.pull(eq(repository), eq(lastPullToken), any())).thenAnswer { invocation ->
-      val pullNetworkCall = invocation.arguments[2] as (Int, String?) -> Single<out DataPullResponse<Appointment>>
-      pullNetworkCall.invoke(10, "lastPullToken")
+    whenever(syncCoordinator.pull(eq(repository), eq(lastPullToken), any(), any())).thenAnswer { invocation ->
+      val pullNetworkCall = invocation.arguments[3] as (String?) -> Single<out DataPullResponse<Appointment>>
+      pullNetworkCall.invoke("lastPullToken")
       Completable.complete()
     }
 
@@ -56,6 +67,11 @@ class AppointmentSyncTest {
         v2ApiEnabled = v2ApiEnabled,
         minimumOverduePeriodForHighRisk = Period.ofDays(1),
         overduePeriodForLowestRiskLevel = Period.ofDays(1))
+
+    syncConfig = SyncConfig(
+        Duration.ZERO,
+        Duration.ZERO,
+        batchSizeEnum = BatchSize.VERY_SMALL)
 
     sync.pull().blockingAwait()
 

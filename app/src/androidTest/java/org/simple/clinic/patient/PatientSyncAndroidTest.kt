@@ -2,6 +2,7 @@ package org.simple.clinic.patient
 
 import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
@@ -14,6 +15,7 @@ import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV2
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -37,6 +39,9 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
 
   @Inject
   lateinit var testData: TestData
+
+  @Inject
+  lateinit var configProvider: Single<SyncConfig>
 
   private val authenticationRule = AuthenticationRule()
 
@@ -65,4 +70,6 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<PatientPayload>) = syncApi.push(PatientPushRequest(payloads))
+
+  override fun batchSize() = configProvider.blockingGet().batchSize
 }

@@ -32,7 +32,7 @@ class SyncCoordinatorTest {
     repository = mock()
     lastSyncTimestamp = mock()
 
-    syncCoordinator = SyncCoordinator(Single.fromCallable { syncConfig })
+    syncCoordinator = SyncCoordinator()
 
     whenever(repository.setSyncStatus(from = SyncStatus.IN_FLIGHT, to = SyncStatus.PENDING)).thenReturn(Completable.complete())
   }

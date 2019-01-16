@@ -23,6 +23,7 @@ import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
 import org.simple.clinic.util.RxErrorsRule
+import org.threeten.bp.Duration
 import org.threeten.bp.Period
 
 @RunWith(JUnitParamsRunner::class)
@@ -33,15 +34,43 @@ class ModelSyncTest {
 
   @Suppress("Unused")
   private fun `sync models that both push and pull`(): List<List<Any>> {
+    val syncConfigProvider = Single.fromCallable {
+      SyncConfig(
+          frequency = Duration.ZERO,
+          backOffDelay = Duration.ZERO,
+          batchSizeEnum = BatchSize.VERY_SMALL)
+    }
+
     return listOf(
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> PatientSync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              PatientSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
             setOf(PUSH, PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> BloodPressureSync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              BloodPressureSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
             setOf(PUSH, PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> PrescriptionSync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              PrescriptionSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
             setOf(PUSH, PULL)),
         listOf<Any>(
             { syncCoordinator: SyncCoordinator ->
@@ -54,7 +83,8 @@ class ModelSyncTest {
                       v2ApiEnabled = true,
                       minimumOverduePeriodForHighRisk = Period.ofDays(1),
                       overduePeriodForLowestRiskLevel = Period.ofDays(1))),
-                  lastPullToken = mock()
+                  lastPullToken = mock(),
+                  syncConfigProvider = syncConfigProvider
               )
             },
             setOf(PUSH, PULL)),
@@ -69,21 +99,50 @@ class ModelSyncTest {
                       v2ApiEnabled = false,
                       minimumOverduePeriodForHighRisk = Period.ofDays(1),
                       overduePeriodForLowestRiskLevel = Period.ofDays(1))),
-                  lastPullToken = mock()
+                  lastPullToken = mock(),
+                  syncConfigProvider = syncConfigProvider
               )
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> CommunicationSync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              CommunicationSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  configProvider = syncConfigProvider,
+                  lastPullToken = mock())
+            },
             setOf(PUSH, PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> MedicalHistorySync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              MedicalHistorySync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
             setOf(PUSH, PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> FacilitySync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              FacilitySync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
             setOf(PULL)),
         listOf<Any>(
-            { syncCoordinator: SyncCoordinator -> ProtocolSync(syncCoordinator, mock(), mock(), mock()) },
+            { syncCoordinator: SyncCoordinator ->
+              ProtocolSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  api = mock(),
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
+            },
             setOf(PULL)
         )
     )
@@ -102,8 +161,9 @@ class ModelSyncTest {
     val syncCoordinator = mock<SyncCoordinator>()
     var pullCompleted = false
 
-    whenever(syncCoordinator.push(any<SynceableRepository<T, P>>(), any())).thenReturn(Completable.error(RuntimeException()))
-    whenever(syncCoordinator.pull(any<SynceableRepository<T, P>>(), any(), any()))
+    whenever(syncCoordinator.push(any<SynceableRepository<T, P>>(), any()))
+        .thenReturn(Completable.error(RuntimeException()))
+    whenever(syncCoordinator.pull(any<SynceableRepository<T, P>>(), any(), any(), any()))
         .thenReturn(Completable.complete().doOnComplete { pullCompleted = true })
 
     val modelSync = modelSyncProvider(syncCoordinator)
@@ -128,7 +188,8 @@ class ModelSyncTest {
     val syncCoordinator = mock<SyncCoordinator>()
     var pushCompleted = false
 
-    whenever(syncCoordinator.pull(any<SynceableRepository<T, P>>(), any(), any())).thenReturn(Completable.error(RuntimeException()))
+    whenever(syncCoordinator.pull(any<SynceableRepository<T, P>>(), any(), any(), any()))
+        .thenReturn(Completable.error(RuntimeException()))
     whenever(syncCoordinator.push(any<SynceableRepository<T, P>>(), any()))
         .thenReturn(Completable.complete().doOnComplete { pushCompleted = true })
 

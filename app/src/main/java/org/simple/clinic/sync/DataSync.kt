@@ -11,7 +11,6 @@ import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.protocol.sync.ProtocolSync
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.exhaustive
@@ -19,7 +18,6 @@ import timber.log.Timber
 import javax.inject.Inject
 
 class DataSync @Inject constructor(
-    private val userSession: UserSession,
     private val patientSync: PatientSync,
     private val bloodPressureSync: BloodPressureSync,
     private val prescriptionSync: PrescriptionSync,
@@ -31,23 +29,12 @@ class DataSync @Inject constructor(
     private val crashReporter: CrashReporter
 ) {
 
-  fun syncIfUserIsApproved(): Completable {
+  fun sync(): Completable {
     ClinicApp.appComponent.inject(this)
 
-    return userSession.loggedInUser()
-        .firstOrError()
-        .map { (user) -> user?.isApprovedForSyncing() ?: false }
-        .flatMapCompletable { isApproved ->
-          when {
-            isApproved -> sync()
-            else -> Completable.complete()
-          }
-        }
-  }
-
-  private fun sync(): Completable {
-    return patientSync.sync()
-        .andThen(Completable.mergeArrayDelayError(
+    return Completable
+        .mergeArrayDelayError(
+            patientSync.sync(),
             bloodPressureSync.sync(),
             prescriptionSync.sync(),
             appointmentSync.sync(),
@@ -55,7 +42,7 @@ class DataSync @Inject constructor(
             medicalHistorySync.sync(),
             facilitySync.sync(),
             protocolSync.sync()
-        ))
+        )
         .doOnError(logError())
         .onErrorComplete()
   }

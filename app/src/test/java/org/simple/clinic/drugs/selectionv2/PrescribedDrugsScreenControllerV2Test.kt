@@ -92,26 +92,26 @@ class PrescribedDrugsScreenControllerV2Test {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            dosage = amlodipine10mgPrescription.dosage),
+            prescribedDrug = amlodipine10mgPrescription),
         ProtocolDrugListItem(
             id = 1,
             drugName = telmisartan40mg.name,
-            dosage = null),
+            prescribedDrug = null),
         ProtocolDrugListItem(id = 2,
             drugName = telmisartan9000mgPrescription.name,
-            dosage = telmisartan9000mgPrescription.dosage),
+            prescribedDrug = telmisartan9000mgPrescription),
         ProtocolDrugListItem(
             id = 3,
             drugName = reesesPrescription.name,
-            dosage = reesesPrescription.dosage),
+            prescribedDrug = reesesPrescription),
         ProtocolDrugListItem(
             id = 4,
             drugName = fooPrescription.name,
-            dosage = fooPrescription.dosage),
+            prescribedDrug = fooPrescription),
         ProtocolDrugListItem(
             id = 5,
             drugName = barPrescription.name,
-            dosage = barPrescription.dosage))
+            prescribedDrug = barPrescription))
     verify(screen).populateDrugsList(expectedUiModels)
   }
 
@@ -140,8 +140,8 @@ class PrescribedDrugsScreenControllerV2Test {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
-    uiEvents.onNext(ProtocolDrugSelected(drugName = drugName))
+    uiEvents.onNext(ProtocolDrugSelected(drugName = drugName, prescribedDrug = null))
 
-    verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid)
+    verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
   }
 }

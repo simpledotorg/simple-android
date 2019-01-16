@@ -53,7 +53,7 @@ data class SummaryPrescribedDrugsItem(
           .sortedByDescending { it.updatedAt.toEpochMilli() }
           .first()
 
-      Timber.i("Last updated prescription: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
+      Timber.i("Last updated prescribedDrug: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
 
       val lastUpdatedTimestamp = RelativeTimestampGenerator().generate(lastUpdatedPrescription.updatedAt)
       holder.lastUpdatedTimestampTextView.text = lastUpdatedTimestamp.displayText(holder.itemView.context)

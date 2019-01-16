@@ -3,6 +3,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:clickable="true"
+  android:focusable="true"
+  android:foreground="?selectableItemBackground"
   android:orientation="vertical">
 
   <TextView
@@ -20,8 +23,8 @@
     android:id="@+id/prescribed_drug_list_item_divider"
     android:layout_width="match_parent"
     android:layout_height="1dp"
-    android:background="@color/grey3"
+    android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_24" />
+    android:background="@color/grey3" />
 
 </LinearLayout>

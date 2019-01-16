@@ -27,9 +27,9 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.INVALID_PATTERN
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Valid
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -382,10 +382,10 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Parameters(method = "params for checking valid date input")
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
       openAs: OpenAs,
-      result: DateOfBirthFormatValidator.Result
+      result: DateOfBirthFormatValidator.Result2
   ) {
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
-    whenever(dateValidator.validate("dummy/dummy/dummy")).thenReturn(result)
+    whenever(dateValidator.validate2("dummy/dummy/dummy")).thenReturn(result)
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
     uiEvents.onNext(BloodPressureScreenChanged(DATE_ENTRY))
@@ -401,7 +401,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     verify(sheet, never()).setBpSavedResultAndFinish()
-    verify(dateValidator, times(3)).validate("dummy/dummy/dummy")
+    verify(dateValidator, times(3)).validate2("dummy/dummy/dummy")
   }
 
   /**
@@ -410,10 +410,10 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Suppress("Unused")
   private fun `params for checking valid date input`(): List<Any> {
     return listOf(
-        listOf(OpenAs.New(patientUuid), INVALID_PATTERN),
-        listOf(OpenAs.New(patientUuid), DATE_IS_IN_FUTURE),
-        listOf(OpenAs.Update(UUID.randomUUID()), INVALID_PATTERN),
-        listOf(OpenAs.Update(UUID.randomUUID()), DATE_IS_IN_FUTURE))
+        listOf(OpenAs.New(patientUuid), InvalidPattern),
+        listOf(OpenAs.New(patientUuid), DateIsInFuture),
+        listOf(OpenAs.Update(UUID.randomUUID()), InvalidPattern),
+        listOf(OpenAs.Update(UUID.randomUUID()), DateIsInFuture))
 
     //    return DateOfBirthFormatValidator.Result
     //        .values()
@@ -425,8 +425,9 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
+    val inputDate = LocalDate.of(1990, 1, 13)
+    whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(inputDate))
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
-    whenever(dateValidator.validate(any())).thenReturn(VALID)
 
     uiEvents.run {
       onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.New(patientUuid)))
@@ -439,7 +440,7 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureSaveClicked)
     }
 
-    val entryDateAsInstant = LocalDate.of(1990, 1, 13).atStartOfDay(UTC).toInstant()
+    val entryDateAsInstant = inputDate.atStartOfDay(UTC).toInstant()
 
     verify(bloodPressureRepository, never()).updateMeasurement(any())
 

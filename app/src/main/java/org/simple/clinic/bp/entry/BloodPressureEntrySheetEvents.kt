@@ -26,7 +26,7 @@ object BloodPressureDiastolicBackspaceClicked : UiEvent
 
 // TODO: Find a better name or revert to using hardcoded values.
 data class BloodPressureDateValidated(val date: String) : UiEvent {
-  fun result(validator: DateOfBirthFormatValidator) = validator.validate(date)
+  fun result(validator: DateOfBirthFormatValidator) = validator.validate2(date)
 }
 
 data class BloodPressureScreenChanged(val type: ScreenType) : UiEvent

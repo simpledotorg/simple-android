@@ -27,7 +27,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.InvalidPattern
-import org.threeten.bp.LocalDate
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Valid
 import org.threeten.bp.ZoneOffset.UTC
 import javax.inject.Inject
@@ -365,12 +364,35 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<OpenAs.New>()
         .map { it.patientUuid }
 
-    return validDates
+    val existingBpUuidStream = openAs
+        .ofType<OpenAs.Update>()
+        .map { it.bpUuid }
+
+    val saveNewBp = validDates
         .withLatestFrom(bpChanges, patientUuidStream)
         .flatMapSingle { (date, bp, patientUuid) ->
-          val dateToInstant = date.atStartOfDay(UTC).toInstant()
-          bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateToInstant)
+          val dateAsInstant = date.atStartOfDay(UTC).toInstant()
+          bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+
+    val updateExistingBp = validDates
+        .withLatestFrom(bpChanges, existingBpUuidStream)
+        .flatMap { (date, newBp, existingBpUuid) ->
+          bloodPressureRepository.measurement(existingBpUuid)
+              .take(1)
+              .map { existingBp ->
+                val dateAsInstant = date.atStartOfDay(UTC).toInstant()
+                existingBp.copy(
+                    systolic = newBp.systolic,
+                    diastolic = newBp.diastolic,
+                    createdAt = dateAsInstant,
+                    updatedAt = dateAsInstant)
+              }
+              .flatMapCompletable { bloodPressureRepository.updateMeasurement(it) }
+              .andThen(Observable.just({ ui: Ui -> ui.setBpSavedResultAndFinish() }))
+        }
+
+    return saveNewBp.mergeWith(updateExistingBp)
   }
 }

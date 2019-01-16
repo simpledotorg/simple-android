@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selectionv2
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
@@ -52,6 +53,7 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -81,7 +83,6 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked() }
-
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     // Replace the default fade animator with another animator that
@@ -117,7 +118,7 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
     screenRouter.pop()
   }
 
-  fun showDosageSelectionSheet(drugName: String, patientUuid: UUID) {
-    activity.startActivity(DosagePickerSheet.intent(context, drugName, patientUuid))
+  fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?) {
+    activity.startActivity(DosagePickerSheet.intent(context, drugName, patientUuid, prescribedDrugUuid))
   }
 }

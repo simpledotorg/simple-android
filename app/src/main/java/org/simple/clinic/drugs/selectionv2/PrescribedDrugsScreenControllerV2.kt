@@ -63,20 +63,22 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
           // Select protocol drugs if prescriptions exist for them.
           val protocolDrugSelectionItems = protocolDrugs
               .mapIndexed { index: Int, drugAndDosages: ProtocolDrugAndDosages ->
-                val prescribedDrugDosage =
+                val matchingPrescribedDrug =
                     prescribedProtocolDrugs
                         .firstOrNull { it.name == drugAndDosages.drugName }
 
                 ProtocolDrugListItem(
                     id = index,
                     drugName = drugAndDosages.drugName,
-                    dosage = prescribedDrugDosage?.dosage)
+                    prescribedDrug = matchingPrescribedDrug)
               }
 
           val customPrescribedDrugItems = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .mapIndexed { index: Int, drugAndDosages: PrescribedDrug -> ProtocolDrugListItem(index + protocolDrugSelectionItems.size, drugAndDosages.name, drugAndDosages.dosage) }
+              .mapIndexed { index: Int, drugAndDosages: PrescribedDrug ->
+                ProtocolDrugListItem(index + protocolDrugSelectionItems.size, drugAndDosages.name, drugAndDosages)
+              }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }
@@ -89,13 +91,18 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
         .map { it.patientUuid }
         .take(1)
 
-    val selectedDrug = events
+    return events
         .ofType<ProtocolDrugSelected>()
-        .map { it.drugName }
-
-    return selectedDrug
         .withLatestFrom(patientUuids)
-        .map { (drugSelected, patientUuid) -> { ui: Ui -> ui.showDosageSelectionSheet(drugName = drugSelected, patientUuid = patientUuid) } }
+        .map { (selectedDrug, patientUuid) ->
+          { ui: Ui ->
+            ui.showDosageSelectionSheet(
+                drugName = selectedDrug.drugName,
+                patientUuid = patientUuid,
+                prescribedDrugUuid = selectedDrug.prescribedDrug?.uuid
+            )
+          }
+        }
   }
 
   private fun addNewPrescription(events: Observable<UiEvent>): Observable<UiChange> {

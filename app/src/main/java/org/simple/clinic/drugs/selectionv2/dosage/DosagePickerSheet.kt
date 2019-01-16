@@ -72,11 +72,18 @@ class DosagePickerSheet : BottomSheetActivity() {
   companion object {
     private const val KEY_DRUG_NAME = "drugName"
     private const val KEY_PATIENT_UUID = "patientUuid"
+    private const val KEY_PRESCRIBED_DRUG_UUID = "prescribedDrugUuid"
 
-    fun intent(context: Context, drugName: String, patientUuid: UUID): Intent {
+    fun intent(
+        context: Context,
+        drugName: String,
+        patientUuid: UUID,
+        prescribedDrugUuid: UUID?
+    ): Intent {
       val intent = Intent(context, DosagePickerSheet::class.java)
       intent.putExtra(KEY_DRUG_NAME, drugName)
       intent.putExtra(KEY_PATIENT_UUID, patientUuid)
+      intent.putExtra(KEY_PRESCRIBED_DRUG_UUID, prescribedDrugUuid)
       return intent
     }
   }

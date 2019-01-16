@@ -63,8 +63,8 @@ class DosagePickerSheetControllerTest {
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUUID))
 
     verify(screen).populateDosageList(listOf(
-        DosageListItem(DosageOption.Dosage("5 mg")),
-        DosageListItem(DosageOption.Dosage("10 mg")),
+        DosageListItem(DosageOption.Dosage(protocolDrug1)),
+        DosageListItem(DosageOption.Dosage(protocolDrug2)),
         DosageListItem(DosageOption.None)
     ))
   }

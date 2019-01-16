@@ -40,7 +40,7 @@ class DosageViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         dividerView.visibility = View.GONE
       }
       is DosageOption.Dosage -> {
-        dosageTextView.text = dosageType.dosage
+        dosageTextView.text = dosageType.protocolDrug.dosage
         dividerView.visibility = View.VISIBLE
       }
     }.exhaustive()
@@ -52,7 +52,7 @@ data class DosageListItem(val dosageOption: DosageOption)
 class PrescribedDosageDiffer : DiffUtil.ItemCallback<DosageListItem>() {
   override fun areItemsTheSame(oldItem: DosageListItem, newItem: DosageListItem): Boolean {
     return if (oldItem.dosageOption is DosageOption.Dosage && newItem.dosageOption is DosageOption.Dosage) {
-      oldItem.dosageOption.dosage == newItem.dosageOption.dosage
+      oldItem.dosageOption.protocolDrug.uuid == newItem.dosageOption.protocolDrug.uuid
     } else {
       false
     }

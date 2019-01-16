@@ -44,7 +44,7 @@ class DosagePickerSheetController @Inject constructor(
         .combineLatest(drugName, protocolUuid)
         .switchMap { (drugName, protocolUuid) -> protocolRepository.drugsByNameOrDefault(drugName = drugName, protocolUuid = protocolUuid) }
         .map { dosages ->
-          val dosageItems = dosages.map { DosageListItem(DosageOption.Dosage(it.dosage)) }
+          val dosageItems = dosages.map { DosageListItem(DosageOption.Dosage(it)) }
           dosageItems + DosageListItem(DosageOption.None)
         }
         .map { dosages -> { ui: Ui -> ui.populateDosageList(dosages) } }

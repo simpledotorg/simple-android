@@ -41,7 +41,7 @@ class DosagePickerSheet : BottomSheetActivity() {
     recyclerView.layoutManager = LinearLayoutManager(this)
     displayDrugName()
 
-    Observable.mergeArray(sheetCreates())
+    Observable.mergeArray(sheetCreates(), adapter.itemClicks)
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())

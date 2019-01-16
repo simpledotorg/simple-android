@@ -15,7 +15,6 @@ import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
-import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
@@ -24,7 +23,6 @@ import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
 import org.simple.clinic.util.RxErrorsRule
 import org.threeten.bp.Duration
-import org.threeten.bp.Period
 
 @RunWith(JUnitParamsRunner::class)
 class ModelSyncTest {
@@ -77,30 +75,9 @@ class ModelSyncTest {
               AppointmentSync(
                   syncCoordinator = syncCoordinator,
                   repository = mock(),
-                  apiV1 = mock(),
-                  apiV2 = mock(),
-                  configProvider = Single.just(AppointmentConfig(
-                      v2ApiEnabled = true,
-                      minimumOverduePeriodForHighRisk = Period.ofDays(1),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(1))),
+                  api = mock(),
                   lastPullToken = mock(),
-                  syncConfigProvider = syncConfigProvider
-              )
-            },
-            setOf(PUSH, PULL)),
-        listOf<Any>(
-            { syncCoordinator: SyncCoordinator ->
-              AppointmentSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  apiV1 = mock(),
-                  apiV2 = mock(),
-                  configProvider = Single.just(AppointmentConfig(
-                      v2ApiEnabled = false,
-                      minimumOverduePeriodForHighRisk = Period.ofDays(1),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(1))),
-                  lastPullToken = mock(),
-                  syncConfigProvider = syncConfigProvider
+                  configProvider = syncConfigProvider
               )
             },
             setOf(PUSH, PULL)),

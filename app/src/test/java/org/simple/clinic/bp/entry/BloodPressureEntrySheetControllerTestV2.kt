@@ -6,6 +6,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
@@ -401,7 +402,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     verify(sheet, never()).setBpSavedResultAndFinish()
-    verify(dateValidator, times(3)).validate2("dummy/dummy/dummy")
+    verify(dateValidator, times(5)).validate2("dummy/dummy/dummy")
   }
 
   /**
@@ -433,10 +434,10 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.New(patientUuid)))
       onNext(BloodPressureSystolicTextChanged("120"))
       onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("13"))
       onNext(BloodPressureMonthChanged("01"))
       onNext(BloodPressureYearChanged("1990"))
-      onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureSaveClicked)
     }
 
@@ -453,14 +454,32 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when save is clicked while updating a BP, date entry is active and input is valid then a BP measurement should be saved`() {
-    // TODO
-  }
+  fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
+    val oldCreatedAt = LocalDate.of(1990, 1, 13).atStartOfDay(UTC).toInstant()
+    val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt)
 
-  @Test
-  fun `when date entry is active and back is pressed then BP entry should be shown`() {
-    // TODO
-  }
+    val newInputDate = LocalDate.of(1991, 2, 14)
+    whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
+    whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
 
-  // TODO: Date validation tests.
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(existingBp.uuid)))
+      onNext(BloodPressureSystolicTextChanged("120"))
+      onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureDayChanged("14"))
+      onNext(BloodPressureMonthChanged("02"))
+      onNext(BloodPressureYearChanged("1991"))
+      onNext(BloodPressureSaveClicked)
+    }
+
+    val newInputDateAsInstant = newInputDate.atStartOfDay(UTC).toInstant()
+    val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, createdAt = newInputDateAsInstant, updatedAt = newInputDateAsInstant)
+    verify(bloodPressureRepository).updateMeasurement(updatedBp)
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(sheet).setBpSavedResultAndFinish()
+  }
 }

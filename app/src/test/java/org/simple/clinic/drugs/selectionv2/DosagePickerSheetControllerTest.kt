@@ -2,18 +2,22 @@ package org.simple.clinic.drugs.selectionv2
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selectionv2.dosage.DosageListItem
 import org.simple.clinic.drugs.selectionv2.dosage.DosageOption
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheetController
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheetCreated
+import org.simple.clinic.drugs.selectionv2.dosage.DosageSelected
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolRepository
@@ -32,13 +36,14 @@ class DosagePickerSheetControllerTest {
   private val userSession = mock<UserSession>()
   private val screen = mock<DosagePickerSheet>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private lateinit var controller: DosagePickerSheetController
 
   @Before
   fun setUp() {
-    controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository)
+    controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
 
     uiEvents
         .compose(controller)
@@ -67,5 +72,25 @@ class DosagePickerSheetControllerTest {
         DosageListItem(DosageOption.Dosage(protocolDrug2)),
         DosageListItem(DosageOption.None)
     ))
+  }
+
+  @Test
+  fun `when a dosage is selected, it should be saved as prescription`() {
+    val protocolUuid = UUID.randomUUID()
+    val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
+    val patientUUID = UUID.randomUUID()
+    val drugName = "Amlodipine"
+    val dosageSelected = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
+
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser()))
+    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
+    whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
+    whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUUID))
+    uiEvents.onNext(DosageSelected(dosageSelected))
+
+    verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected)
+    verify(screen).finish()
   }
 }

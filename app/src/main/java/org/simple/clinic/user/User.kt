@@ -96,8 +96,4 @@ data class User(
       deleteUser(user)
     }
   }
-
-  fun isApprovedForSyncing(): Boolean {
-    return loggedInStatus == LoggedInStatus.LOGGED_IN && status == UserStatus.APPROVED_FOR_SYNCING
-  }
 }

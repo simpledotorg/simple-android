@@ -24,13 +24,12 @@ import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Valid
 import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
@@ -344,8 +343,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validDates = events
         .ofType<BloodPressureDateValidated>()
-        .filter { it.result(dateValidator) == VALID }
-        .map { it.date }
+        .map { it.result(dateValidator) }
+        .ofType<Valid>()
+        .map { it.parsedDate }
 
     data class BP(val systolic: Int, val diastolic: Int)
 
@@ -367,9 +367,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     return validDates
         .withLatestFrom(bpChanges, patientUuidStream)
-        .flatMapSingle { (dateString: String, bp, patientUuid) ->
-          val localDate = LocalDate.from(DateTimeFormatter.ofPattern("dd/MM/yyyy").parse(dateString))
-          val dateToInstant = localDate.atStartOfDay(UTC).toInstant()
+        .flatMapSingle { (date, bp, patientUuid) ->
+          val dateToInstant = date.atStartOfDay(UTC).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateToInstant)
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }

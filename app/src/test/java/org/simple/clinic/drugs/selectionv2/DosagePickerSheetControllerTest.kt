@@ -49,6 +49,7 @@ class DosagePickerSheetControllerTest {
   fun `when sheet is created, list of dosages for that drug should be displayed`() {
     val protocolUuid = UUID.randomUUID()
     val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
+    val patientUUID = UUID.randomUUID()
     val drugName = "Amlodipine"
 
     val protocolDrug1 = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
@@ -59,7 +60,7 @@ class DosagePickerSheetControllerTest {
     whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf(protocolDrug1, protocolDrug2)))
 
-    uiEvents.onNext(DosagePickerSheetCreated(drugName))
+    uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUUID))
 
     verify(screen).populateDosageList(listOf(
         DosageListItem(DosageOption.Dosage("5 mg")),

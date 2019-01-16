@@ -21,8 +21,8 @@ class RegistrationWorker(context: Context, workerParams: WorkerParameters) : Wor
     return userSession.register()
         .map { result ->
           when (result) {
-            is RegistrationResult.Success -> Result.SUCCESS
-            is RegistrationResult.Error -> Result.RETRY
+            is RegistrationResult.Success -> Result.success()
+            is RegistrationResult.Error -> Result.retry()
           }
         }
         .blockingGet()

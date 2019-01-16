@@ -9,8 +9,8 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.drugs.selectionv2.dosage.DosageOption
 import org.simple.clinic.drugs.selectionv2.dosage.DosageListItem
+import org.simple.clinic.drugs.selectionv2.dosage.DosageOption
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheetController
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheetCreated
@@ -51,9 +51,13 @@ class DosagePickerSheetControllerTest {
     val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
     val drugName = "Amlodipine"
 
+    val protocolDrug1 = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
+    val protocolDrug2 = PatientMocker.protocolDrug(name = drugName, dosage = "10 mg")
+
+
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser()))
     whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
-    whenever(protocolRepository.dosagesForDrugOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf("5 mg", "10 mg")))
+    whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf(protocolDrug1, protocolDrug2)))
 
     uiEvents.onNext(DosagePickerSheetCreated(drugName))
 

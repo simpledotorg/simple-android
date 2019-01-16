@@ -76,7 +76,7 @@ class CommunicationSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Communicatio
     val registeredFacilityUuid = facilityRepository
         .currentFacilityUuid(userSession.loggedInUserImmediate()!!)!!
 
-    val appointmentPayload = testData.appointmentPayload(uuid = appointmentUuid, apiV2Enabled = true, facilityUuid = registeredFacilityUuid)
+    val appointmentPayload = testData.appointmentPayload(uuid = appointmentUuid, facilityUuid = registeredFacilityUuid)
     val pushRequest = AppointmentPushRequest(listOf(appointmentPayload))
 
     appointmentSyncApi

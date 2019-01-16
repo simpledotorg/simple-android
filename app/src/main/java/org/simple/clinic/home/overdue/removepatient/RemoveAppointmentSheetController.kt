@@ -3,12 +3,10 @@ package org.simple.clinic.home.overdue.removepatient
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentCancelReason.Dead
-import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
@@ -19,8 +17,7 @@ typealias UiChange = (Ui) -> Unit
 
 class RemoveAppointmentSheetController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
-    private val patientRepository: PatientRepository,
-    private val configProvider: Single<AppointmentConfig>
+    private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(event: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -28,13 +25,11 @@ class RemoveAppointmentSheetController @Inject constructor(
 
     return Observable.merge(
         reasonClicks(replayedEvents),
-        doneClicks(replayedEvents),
-        enableV2ApiReasons(replayedEvents))
+        doneClicks(replayedEvents))
   }
 
   private fun reasonClicks(events: Observable<UiEvent>): Observable<UiChange> {
     val mergedReasons = Observable.merge(
-        events.ofType<AlreadyVisitedReasonClicked>(),
         events.ofType<CancelReasonClicked>(),
         events.ofType<PatientDeadClicked>())
 
@@ -47,23 +42,14 @@ class RemoveAppointmentSheetController @Inject constructor(
     val appointmentUuids = events.ofType<RemoveAppointmentSheetCreated>()
         .map { it.appointmentUuid }
 
-    val alreadyVisitedClicks = events.ofType<AlreadyVisitedReasonClicked>()
     val cancelReasonClicks = events.ofType<CancelReasonClicked>()
     val diedReasonClicks = events.ofType<PatientDeadClicked>()
 
-    val mergedReasons = Observable.merge(alreadyVisitedClicks, cancelReasonClicks, diedReasonClicks)
+    val mergedReasons = Observable.merge(cancelReasonClicks, diedReasonClicks)
 
     val doneWithLatestFromReasons = events
         .ofType<RemoveReasonDoneClicked>()
         .withLatestFrom(appointmentUuids, mergedReasons)
-
-    val markAsVisitedStream = doneWithLatestFromReasons
-        .filter { (_, _, reason) -> reason is AlreadyVisitedReasonClicked }
-        .flatMap { (_, uuid, _) ->
-          appointmentRepository
-              .markAsAlreadyVisited(uuid)
-              .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
-        }
 
     val markPatientStatusDeadStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is PatientDeadClicked }
@@ -82,12 +68,6 @@ class RemoveAppointmentSheetController @Inject constructor(
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
-    return Observable.merge(markAsVisitedStream, cancelWithReasonStream, markPatientStatusDeadStream)
-  }
-
-  private fun enableV2ApiReasons(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<RemoveAppointmentSheetCreated>()
-        .flatMapSingle { configProvider }
-        .map { config -> { ui: Ui -> ui.setV2ApiReasonsEnabled(config.v2ApiEnabled) } }
+    return Observable.merge(cancelWithReasonStream, markPatientStatusDeadStream)
   }
 }

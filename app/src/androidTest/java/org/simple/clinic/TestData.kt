@@ -409,13 +409,12 @@ class TestData @Inject constructor(
 
   fun appointment(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
-      apiV2Enabled: Boolean,
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = qaUserFacilityUuid(),
       scheduledDate: LocalDate = LocalDate.now(UTC).plusDays(30),
       status: Appointment.Status = randomOfEnum(Appointment.Status::class),
-      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(apiV2Enabled),
+      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
       createdAt: Instant = Instant.now(),
@@ -443,8 +442,9 @@ class TestData @Inject constructor(
       date: LocalDate = LocalDate.now(UTC).plusDays(30),
       facilityUuid: UUID = qaUserFacilityUuid(),
       status: Appointment.Status = randomOfEnum(Appointment.Status::class),
-      apiV2Enabled: Boolean = false,
-      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(apiV2Enabled),
+      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
+      remindOn: LocalDate? = null,
+      agreedToVisit: Boolean? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -456,8 +456,8 @@ class TestData @Inject constructor(
         date = date,
         status = status,
         cancelReason = cancelReason,
-        remindOn = null,
-        agreedToVisit = null,
+        remindOn = remindOn,
+        agreedToVisit = agreedToVisit,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

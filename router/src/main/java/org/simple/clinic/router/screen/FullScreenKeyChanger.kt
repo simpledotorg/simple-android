@@ -2,10 +2,10 @@ package org.simple.clinic.router.screen
 
 import android.app.Activity
 import android.content.Context
-import android.support.annotation.ColorRes
-import android.support.annotation.IdRes
-import android.support.v4.content.ContextCompat
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import androidx.annotation.ColorRes
+import androidx.annotation.IdRes
+import androidx.core.content.ContextCompat
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout

@@ -1,6 +1,6 @@
 package org.simple.clinic.widgets
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.google.common.truth.Truth.assertThat
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
 import com.nhaarman.mockito_kotlin.mock

@@ -1,7 +1,7 @@
 package org.simple.clinic.patient
 
-import android.arch.persistence.db.SimpleSQLiteQuery
-import android.arch.persistence.db.SupportSQLiteOpenHelper
+import androidx.sqlite.db.SimpleSQLiteQuery
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import io.reactivex.Single
 import io.reactivex.SingleTransformer
 import java.util.UUID

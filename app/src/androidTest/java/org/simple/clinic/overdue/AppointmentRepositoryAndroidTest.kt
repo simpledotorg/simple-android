@@ -1,6 +1,6 @@
 package org.simple.clinic.overdue
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
 import org.junit.After

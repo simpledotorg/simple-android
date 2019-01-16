@@ -2,10 +2,10 @@ package org.simple.clinic.security.pin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.transition.AutoTransition
-import android.support.transition.TransitionManager
-import android.support.v4.view.animation.FastOutSlowInInterpolator
-import android.support.v7.widget.CardView
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.cardview.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View

@@ -1,6 +1,6 @@
 package org.simple.clinic.util
 
-import android.arch.persistence.room.TypeConverter
+import androidx.room.TypeConverter
 
 abstract class RoomEnumTypeConverter<T : Enum<T>>(private val enumClass: Class<T>) {
 

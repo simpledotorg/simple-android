@@ -1,9 +1,9 @@
 package org.simple.clinic.home.overdue
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Ignore
-import android.arch.persistence.room.Query
+import androidx.room.Dao
+import androidx.room.Embedded
+import androidx.room.Ignore
+import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.medicalhistory.MedicalHistory

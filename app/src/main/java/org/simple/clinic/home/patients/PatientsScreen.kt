@@ -2,8 +2,8 @@ package org.simple.clinic.home.patients
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.IdRes
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import androidx.annotation.IdRes
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.animation.AnimationUtils
 import android.widget.Button

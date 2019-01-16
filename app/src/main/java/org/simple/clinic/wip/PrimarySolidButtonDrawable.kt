@@ -11,7 +11,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.StateListDrawable
 import android.os.Build
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.util.DisplayMetrics
 import timber.log.Timber
 

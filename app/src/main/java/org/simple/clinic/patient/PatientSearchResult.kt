@@ -1,8 +1,8 @@
 package org.simple.clinic.patient
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Query
+import androidx.room.Dao
+import androidx.room.Embedded
+import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
 import org.intellij.lang.annotations.Language

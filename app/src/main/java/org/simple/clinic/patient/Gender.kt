@@ -1,7 +1,7 @@
 package org.simple.clinic.patient
 
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import com.squareup.moshi.Json
 import org.simple.clinic.R
 import org.simple.clinic.util.RoomEnumTypeConverter

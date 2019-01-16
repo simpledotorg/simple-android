@@ -1,9 +1,9 @@
 package org.simple.clinic
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.room.migration.Migration
-import android.arch.persistence.room.testing.MigrationTestHelper
-import android.support.test.InstrumentationRegistry
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.migration.Migration
+import androidx.room.testing.MigrationTestHelper
+import androidx.test.InstrumentationRegistry
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 
 private const val TEST_DB_NAME = "migration-test"

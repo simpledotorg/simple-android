@@ -3,9 +3,9 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorInt
-import android.support.v4.graphics.drawable.DrawableCompat
-import android.support.v7.widget.Toolbar
+import androidx.annotation.ColorInt
+import androidx.core.graphics.drawable.DrawableCompat
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import org.simple.clinic.R
 

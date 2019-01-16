@@ -1,7 +1,7 @@
 package org.simple.clinic.user
 
 import android.content.SharedPreferences
-import android.support.annotation.WorkerThread
+import androidx.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
 import io.reactivex.Completable

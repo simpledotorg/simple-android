@@ -39,20 +39,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patientedit_full_name_inputlayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-          <android.support.design.widget.TextInputEditText
+          <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/patientedit_full_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_full_name"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textPersonName|textCapWords" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
           style="@style/Clinic.Button.ClearEditText"
@@ -67,20 +67,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patientedit_phone_number_inputlayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-          <android.support.design.widget.TextInputEditText
+          <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/patientedit_phone_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_phone_number"
             android:imeOptions="flagNoFullscreen"
             android:inputType="phone|textCapSentences" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
           style="@style/Clinic.Button.ClearEditText"
@@ -104,13 +104,13 @@
           android:layout_height="wrap_content"
           android:layout_weight="0.6">
 
-          <android.support.design.widget.TextInputLayout
+          <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/patientedit_age_inputlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
               android:id="@+id/patientedit_age"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
               android:imeOptions="flagNoFullscreen"
               android:inputType="number"
               android:maxLength="3" />
-          </android.support.design.widget.TextInputLayout>
+          </com.google.android.material.textfield.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
             style="@style/Clinic.Button.ClearEditText"
@@ -145,7 +145,7 @@
           android:layout_height="wrap_content"
           android:layout_weight="1">
 
-          <android.support.design.widget.TextInputLayout
+          <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/patientedit_date_of_birth_inputlayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -160,7 +160,7 @@
               android:inputType="number"
               app:allowed_chars="1234567890"
               app:mask="##/##/####" />
-          </android.support.design.widget.TextInputLayout>
+          </com.google.android.material.textfield.TextInputLayout>
 
           <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
             style="@style/Clinic.Button.ClearEditText"
@@ -178,7 +178,7 @@
         android:layout_marginTop="@dimen/spacing_16"
         android:orientation="horizontal">
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
           android:id="@+id/patientedit_gender_female"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -187,7 +187,7 @@
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
           android:textColor="@color/editpatient_radio_button" />
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
           android:id="@+id/patientedit_gender_male"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -196,7 +196,7 @@
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
           android:textColor="@color/editpatient_radio_button" />
 
-        <android.support.v7.widget.AppCompatRadioButton
+        <androidx.appcompat.widget.AppCompatRadioButton
           android:id="@+id/patientedit_gender_transgender"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -224,20 +224,20 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patientedit_colony_or_village_inputlayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-          <android.support.design.widget.TextInputEditText
+          <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/patientedit_colony_or_village"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_colony_or_village"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
           style="@style/Clinic.Button.ClearEditText"
@@ -254,7 +254,7 @@
         android:baselineAligned="false"
         android:orientation="horizontal">
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patientedit_district_inputlayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -262,16 +262,16 @@
           android:layout_weight="1"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-          <android.support.design.widget.TextInputEditText
+          <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/patientedit_district"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_district"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patientedit_state_inputlayout"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -279,14 +279,14 @@
           android:layout_weight="1"
           app:errorTextAppearance="@style/Clinic.TextAppearance.TextInputLayoutError">
 
-          <android.support.design.widget.TextInputEditText
+          <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/patientedit_state"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/patientedit_state"
             android:imeOptions="flagNoFullscreen"
             android:inputType="textPostalAddress|textCapSentences" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
       </LinearLayout>
     </LinearLayout>
   </ScrollView>

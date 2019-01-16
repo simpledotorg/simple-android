@@ -11,7 +11,7 @@ import org.simple.clinic.util.Optional
 import timber.log.Timber
 import javax.inject.Inject
 
-class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>) {
+class SyncCoordinator @Inject constructor() {
 
   fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,
@@ -59,21 +59,19 @@ class SyncCoordinator @Inject constructor(val configProvider: Single<SyncConfig>
   fun <T : Any, P> pull(
       repository: SynceableRepository<T, P>,
       lastPullToken: Preference<Optional<String>>,
-      pullNetworkCall: (recordsToPull: Int, lastPull: String?) -> Single<out DataPullResponse<P>>
+      batchSize: Int,
+      pullNetworkCall: (lastPull: String?) -> Single<out DataPullResponse<P>>
   ): Completable {
-    return configProvider
-        .flatMapCompletable { config ->
-          lastPullToken.asObservable()
-              .take(1)
-              .flatMapSingle { (lastPull) -> pullNetworkCall(config.batchSize, lastPull) }
-              .flatMap { response ->
-                repository.mergeWithLocalData(response.payloads)
-                    .andThen(Completable.fromAction { lastPullToken.set(Just(response.processToken)) })
-                    .andThen(Observable.just(response))
-              }
-              .repeat()
-              .takeWhile { response -> response.payloads.size >= config.batchSize }
-              .ignoreElements()
+    return lastPullToken.asObservable()
+        .take(1)
+        .flatMapSingle { (lastPull) -> pullNetworkCall(lastPull) }
+        .flatMap { response ->
+          repository.mergeWithLocalData(response.payloads)
+              .andThen(Completable.fromAction { lastPullToken.set(Just(response.processToken)) })
+              .andThen(Observable.just(response))
         }
+        .repeat()
+        .takeWhile { response -> response.payloads.size >= batchSize }
+        .ignoreElements()
   }
 }

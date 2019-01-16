@@ -16,6 +16,7 @@ import org.simple.clinic.overdue.AppointmentSyncApiV2
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -50,6 +51,9 @@ class CommunicationSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Communicatio
 
   @Inject
   lateinit var appointmentSyncApi: AppointmentSyncApiV2
+
+  @Inject
+  lateinit var configProvider: Single<SyncConfig>
 
   private val authenticationRule = AuthenticationRule()
 
@@ -102,4 +106,6 @@ class CommunicationSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Communicatio
     val request = CommunicationPushRequest(payloads)
     return syncApi.push(request)
   }
+
+  override fun batchSize() = configProvider.blockingGet().batchSize
 }

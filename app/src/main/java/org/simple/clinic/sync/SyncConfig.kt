@@ -8,5 +8,7 @@ data class SyncConfig(
 
     val backOffDelay: Duration,
 
-    val batchSize: Int // Number of records to sync in per network call
-)
+    val batchSizeEnum: BatchSize
+) {
+  val batchSize = batchSizeEnum.numberOfRecords
+}

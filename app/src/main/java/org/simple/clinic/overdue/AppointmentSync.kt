@@ -3,7 +3,9 @@ package org.simple.clinic.overdue
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Completable
 import io.reactivex.Single
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.sync.ModelSync
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
@@ -15,8 +17,9 @@ class AppointmentSync @Inject constructor(
     private val apiV1: AppointmentSyncApiV1,
     private val apiV2: AppointmentSyncApiV2,
     private val configProvider: Single<AppointmentConfig>,
-    @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>
-): ModelSync {
+    @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>,
+    private val syncConfigProvider: Single<SyncConfig>
+) : ModelSync {
 
   override fun sync(): Completable {
     return Completable.mergeArrayDelayError(push(), pull())
@@ -34,12 +37,13 @@ class AppointmentSync @Inject constructor(
   }
 
   override fun pull(): Completable {
-    return configProvider
-        .flatMapCompletable { config ->
-          if (config.v2ApiEnabled) {
-            syncCoordinator.pull(repository, lastPullToken, apiV2::pull)
+    return syncConfigProvider
+        .zipWith(configProvider) { syncConfig, appointmentConfig -> syncConfig.batchSize to appointmentConfig.v2ApiEnabled }
+        .flatMapCompletable { (batchSize, v2ApiEnabled) ->
+          if (v2ApiEnabled) {
+            syncCoordinator.pull(repository, lastPullToken, batchSize) { apiV2.pull(batchSize, it) }
           } else {
-            syncCoordinator.pull(repository, lastPullToken, apiV1::pull)
+            syncCoordinator.pull(repository, lastPullToken, batchSize) { apiV1.pull(batchSize, it) }
           }
         }
   }

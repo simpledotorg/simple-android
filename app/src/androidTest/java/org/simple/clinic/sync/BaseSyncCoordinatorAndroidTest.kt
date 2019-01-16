@@ -13,13 +13,9 @@ import org.simple.clinic.patient.SyncStatus.IN_FLIGHT
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import javax.inject.Inject
 
 // TODO: Use this class for all data sync tests.
 abstract class BaseSyncCoordinatorAndroidTest<T, P> {
-
-  @Inject
-  lateinit var configProvider: Single<SyncConfig>
 
   @After
   fun tearDown() {
@@ -51,7 +47,7 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
 
     lastPullToken().set(None)
 
-    val recordsToInsert = 2 * configProvider.blockingGet().batchSize + 7
+    val recordsToInsert = 2 * batchSize() + 7
     val payloads = (0 until recordsToInsert).map { (::generatePayload)() }
 
     pushNetworkCall(payloads)
@@ -109,4 +105,6 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
   abstract fun lastPullToken(): Preference<Optional<String>>
 
   abstract fun pushNetworkCall(payloads: List<P>): Single<DataPushResponse>
+
+  abstract fun batchSize(): Int
 }

@@ -24,9 +24,10 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.INVALID_PATTERN
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.InvalidPattern
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
@@ -327,12 +328,11 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<BloodPressureDateValidated>()
         .map { it.result(dateValidator) }
-        .filter { it != VALID }
+        .ofType<Invalid>()
         .map<UiChange> {
           when (it) {
-            VALID -> throw AssertionError()
-            INVALID_PATTERN -> { ui: Ui -> ui.showInvalidDateError() }
-            DATE_IS_IN_FUTURE -> { ui: Ui -> ui.showDateIsInFutureError() }
+            is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
+            is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }
           }
         }
   }

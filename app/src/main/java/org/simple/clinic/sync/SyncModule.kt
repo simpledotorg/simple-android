@@ -30,6 +30,6 @@ open class SyncModule {
         SyncConfig(
             frequency = Duration.ofMinutes(16),
             backOffDelay = Duration.ofMinutes(5),
-            batchSize = 50))
+            batchSizeEnum = BatchSize.SMALL))
   }
 }

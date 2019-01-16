@@ -2,6 +2,7 @@ package org.simple.clinic.drugs.sync
 
 import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
+import io.reactivex.Single
 import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
@@ -15,6 +16,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.RegisterPatientRule
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -47,6 +49,9 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   @Inject
   lateinit var facilityRepository: FacilityRepository
+
+  @Inject
+  lateinit var configProvider: Single<SyncConfig>
 
   private val user: User
     get() = userSession.loggedInUserImmediate()!!
@@ -93,4 +98,6 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
   override fun pushNetworkCall(payloads: List<PrescribedDrugPayload>) = syncApi.push(PrescriptionPushRequest(payloads))
+
+  override fun batchSize() = configProvider.blockingGet().batchSize
 }

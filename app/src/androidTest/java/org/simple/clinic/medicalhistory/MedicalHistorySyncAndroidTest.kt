@@ -18,6 +18,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.RegisterPatientRule
+import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
@@ -42,6 +43,9 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
 
   @Inject
   lateinit var testData: TestData
+
+  @Inject
+  lateinit var configProvider: Single<SyncConfig>
 
   private val authenticationRule = AuthenticationRule()
 
@@ -82,4 +86,6 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
     val request = MedicalHistoryPushRequest(payloads)
     return syncApi.push(request)
   }
+
+  override fun batchSize() = configProvider.blockingGet().batchSize
 }

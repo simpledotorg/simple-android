@@ -28,6 +28,7 @@ import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
@@ -81,7 +82,7 @@ class TestClinicApp : ClinicApp() {
                 SyncConfig(
                     frequency = Duration.ofMinutes(16),
                     backOffDelay = Duration.ofMinutes(5),
-                    batchSize = 10))
+                    batchSizeEnum = BatchSize.VERY_SMALL))
           }
         })
         .patientModule(object : PatientModule() {

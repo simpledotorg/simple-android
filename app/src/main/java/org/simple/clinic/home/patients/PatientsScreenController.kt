@@ -106,10 +106,10 @@ class PatientsScreenController @Inject constructor(
         .onErrorComplete()
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
 
-    val syncData = userSession.loggedInUser()
+    val syncData = userSession.canSyncData()
         .take(1)
         .observeOn(io())
-        .filter { (user) -> user?.isApprovedForSyncing() ?: false }
+        .filter { canSyncData -> canSyncData }
         .flatMapCompletable { syncScheduler.syncImmediately() }
 
     refreshUser

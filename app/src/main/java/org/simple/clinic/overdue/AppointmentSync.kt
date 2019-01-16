@@ -6,6 +6,7 @@ import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
@@ -15,12 +16,22 @@ class AppointmentSync @Inject constructor(
     private val repository: AppointmentRepository,
     private val api: AppointmentSyncApiV2,
     @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>
+    private val configProvider: Single<SyncConfig>,
+    val userSession: UserSession
 ) : ModelSync {
 
-  override fun sync(): Completable {
-    return Completable.mergeArrayDelayError(push(), pull())
-  }
+  private fun canSyncData() = userSession.canSyncData().firstOrError()
+
+  override fun sync(): Completable =
+      canSyncData()
+          .flatMapCompletable { canSync ->
+            if (canSync) {
+              Completable.mergeArrayDelayError(push(), pull())
+
+            } else {
+              Completable.complete()
+            }
+          }
 
   override fun push(): Completable {
     return syncCoordinator.push(repository) { api.push(toRequest(it)) }

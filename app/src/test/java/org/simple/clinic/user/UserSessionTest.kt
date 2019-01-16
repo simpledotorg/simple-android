@@ -12,12 +12,14 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import com.squareup.moshi.Moshi
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import okhttp3.MediaType
@@ -49,6 +51,14 @@ import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -475,7 +485,7 @@ class UserSessionTest {
         .test()
         .await()
 
-    verify(userDao).updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
+    verify(userDao).updateLoggedInStatusForUser(user.uuid, RESETTING_PIN)
   }
 
   @Test
@@ -508,7 +518,7 @@ class UserSessionTest {
       pin: String,
       hashed: String
   ) {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just(hashed))
@@ -525,7 +535,7 @@ class UserSessionTest {
 
   @Test
   fun `when the password hashing fails on resetting PIN, an expected error must be thrown`() {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     val exception = RuntimeException()
@@ -541,7 +551,7 @@ class UserSessionTest {
       apiResult: Single<ForgotPinResponse>,
       expectedResult: ForgotPinResult
   ) {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
@@ -565,8 +575,8 @@ class UserSessionTest {
   fun `whenever the forgot pin api succeeds, the logged in users password digest and logged in status must be updated`() {
     val currentUser = PatientMocker.loggedInUser(
         pinDigest = "old-digest",
-        loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
-        status = UserStatus.APPROVED_FOR_SYNCING
+        loggedInStatus = RESETTING_PIN,
+        status = APPROVED_FOR_SYNCING
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
@@ -578,7 +588,7 @@ class UserSessionTest {
             name = currentUser.fullName,
             phone = currentUser.phoneNumber,
             pinDigest = "new-digest",
-            status = UserStatus.WAITING_FOR_APPROVAL,
+            status = WAITING_FOR_APPROVAL,
             createdAt = currentUser.createdAt,
             updatedAt = currentUser.updatedAt
         ),
@@ -590,8 +600,8 @@ class UserSessionTest {
 
     verify(userDao).createOrUpdate(currentUser.copy(
         pinDigest = "new-digest",
-        loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
-        status = UserStatus.WAITING_FOR_APPROVAL
+        loggedInStatus = RESET_PIN_REQUESTED,
+        status = WAITING_FOR_APPROVAL
     ))
   }
 
@@ -599,8 +609,8 @@ class UserSessionTest {
   fun `whenever the forgot pin api succeeds, the access token must be updated`() {
     val currentUser = PatientMocker.loggedInUser(
         pinDigest = "old-digest",
-        loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
-        status = UserStatus.APPROVED_FOR_SYNCING
+        loggedInStatus = RESETTING_PIN,
+        status = APPROVED_FOR_SYNCING
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
@@ -612,7 +622,7 @@ class UserSessionTest {
             name = currentUser.fullName,
             phone = currentUser.phoneNumber,
             pinDigest = "new-digest",
-            status = UserStatus.WAITING_FOR_APPROVAL,
+            status = WAITING_FOR_APPROVAL,
             createdAt = currentUser.createdAt,
             updatedAt = currentUser.updatedAt
         ),
@@ -627,7 +637,7 @@ class UserSessionTest {
 
   @Test
   fun `whenever the forgot pin api call fails, the logged in user must not be updated`() {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
@@ -640,7 +650,7 @@ class UserSessionTest {
 
   @Test
   fun `whenever the forgot pin api call fails, the access token must not be updated`() {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("hashed"))
@@ -657,7 +667,7 @@ class UserSessionTest {
       errorToThrow: Throwable?,
       expectedResult: ForgotPinResult
   ) {
-    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = User.LoggedInStatus.RESETTING_PIN)
+    val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     errorToThrow?.let { whenever(userDao.createOrUpdate(any())).doThrow(it) }
@@ -670,7 +680,7 @@ class UserSessionTest {
             name = currentUser.fullName,
             phone = currentUser.phoneNumber,
             pinDigest = "new-digest",
-            status = UserStatus.WAITING_FOR_APPROVAL,
+            status = WAITING_FOR_APPROVAL,
             createdAt = currentUser.createdAt,
             updatedAt = currentUser.updatedAt
         ),
@@ -720,6 +730,87 @@ class UserSessionTest {
         listOf(Single.error<LoginResponse>(NullPointerException()), false),
         listOf(Single.error<LoginResponse>(unauthorizedHttpError<LoginResponse>()), false),
         listOf(Single.error<LoginResponse>(IOException()), false)
+    )
+  }
+
+  @Test
+  fun `user approved for syncing changes should be notified correctly`() {
+    fun createUser(loggedInStatus: User.LoggedInStatus, userStatus: UserStatus): List<User> {
+      return listOf(PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus))
+    }
+
+    val userSubject = PublishSubject.create<List<User>>()
+    whenever(userDao.user())
+        .thenReturn(userSubject.toFlowable(BackpressureStrategy.BUFFER))
+
+    val observer = userSession.canSyncData().test()
+
+    userSubject.apply {
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = DISAPPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = DISAPPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = DISAPPROVED_FOR_SYNCING))
+
+      onNext(emptyList())
+
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = DISAPPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = DISAPPROVED_FOR_SYNCING))
+
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+
+      onNext(emptyList())
+    }
+
+    observer.assertValues(
+        false,
+        true,
+        false,
+
+        false,
+        false,
+        false,
+
+        true,
+
+        false,
+        false,
+        false,
+
+        false,
+
+        true,
+
+        false,
+        false,
+        false,
+
+        true,
+
+        false,
+        false,
+        false,
+
+        true,
+
+        false
     )
   }
 }

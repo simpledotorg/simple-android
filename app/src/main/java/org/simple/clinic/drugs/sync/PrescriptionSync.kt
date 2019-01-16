@@ -8,6 +8,7 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
@@ -17,10 +18,22 @@ class PrescriptionSync @Inject constructor(
     private val api: PrescriptionSyncApiV2,
     private val repository: PrescriptionRepository,
     @Named("last_prescription_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>
+    private val configProvider: Single<SyncConfig>,
+    val userSession: UserSession
 ) : ModelSync {
 
-  override fun sync(): Completable = Completable.mergeArrayDelayError(push(), pull())
+  private fun canSyncData() = userSession.canSyncData().firstOrError()
+
+  override fun sync(): Completable =
+      canSyncData()
+          .flatMapCompletable { canSync ->
+            if (canSync) {
+              Completable.mergeArrayDelayError(push(), pull())
+
+            } else {
+              Completable.complete()
+            }
+          }
 
   override fun push() = syncCoordinator.push(repository) { api.push(toRequest(it)) }
 

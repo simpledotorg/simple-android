@@ -164,8 +164,8 @@ class ProtocolRepositoryAndroidTest {
     val telmisartan80mg = testData.protocolDrug(name = "Telmisartan", dosage = "80mg", protocolUuid = protocol2.uuid)
     database.protocolDrugDao().save(listOf(amlodipine5mg, amlodipine10mg, amlodipine20mg, telmisartan40mg, telmisartan80mg))
 
-    val dosages = protocolRepository.dosagesForDrugOrDefault(drugName = "Amlodipine", protocolUuid = protocol1.uuid).blockingFirst()
-    assertThat(dosages).isEqualTo(listOf("5mg", "10mg"))
+    val matchingDrugs = protocolRepository.drugsByNameOrDefault(drugName = "Amlodipine", protocolUuid = protocol1.uuid).blockingFirst()
+    assertThat(matchingDrugs).isEqualTo(listOf(amlodipine5mg, amlodipine10mg))
   }
 
   @Test
@@ -178,12 +178,12 @@ class ProtocolRepositoryAndroidTest {
     val amlodipine20mg = testData.protocolDrug(name = drugName, dosage = "20mg", protocolUuid = protocol.uuid)
     database.protocolDrugDao().save(listOf(amlodipine20mg))
 
-    val defaultDosages = protocolRepository.defaultProtocolDrugs()
+    val defaultDrugs = protocolRepository.defaultProtocolDrugs()
         .filter { it.drugName == drugName }
-        .flatMap { drugAndDosages -> drugAndDosages.drugs.map { it.dosage } }
+        .flatMap { drugAndDosages -> drugAndDosages.drugs }
 
-    val dosages = protocolRepository.dosagesForDrugOrDefault(drugName = drugName, protocolUuid = null).blockingFirst()
+    val matchingDrugs = protocolRepository.drugsByNameOrDefault(drugName = drugName, protocolUuid = null).blockingFirst()
 
-    assertThat(dosages).isEqualTo(defaultDosages)
+    assertThat(matchingDrugs).isEqualTo(defaultDrugs)
   }
 }

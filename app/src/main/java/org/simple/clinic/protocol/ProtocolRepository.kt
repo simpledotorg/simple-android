@@ -96,17 +96,16 @@ class ProtocolRepository @Inject constructor(
     return syncedDrugs.mergeWith(defaultDrugs)
   }
 
-  fun dosagesForDrugOrDefault(drugName: String, protocolUuid: UUID?): Observable<List<String>> {
-    val defaultDosages = defaultProtocolDrugs()
-        .filter { it.drugName == drugName }
-        .flatMap { drugAndDosages -> drugAndDosages.drugs.map { it.dosage } }
-
+  fun drugsByNameOrDefault(drugName: String, protocolUuid: UUID?): Observable<List<ProtocolDrug>> {
     if (protocolUuid == null) {
-      return Observable.just(defaultDosages)
+      val defaultDrugs = defaultProtocolDrugs()
+          .filter { it.drugName == drugName }
+          .flatMap { protocolDrugs -> protocolDrugs.drugs }
+      return Observable.just(defaultDrugs)
     }
 
     return protocolDrugsDao
-        .dosagesForDrug(drugName, protocolUuid)
+        .drugByName(drugName, protocolUuid)
         .toObservable()
   }
 

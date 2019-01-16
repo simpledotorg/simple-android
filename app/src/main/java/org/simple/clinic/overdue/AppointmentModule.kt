@@ -21,7 +21,6 @@ class AppointmentModule {
   @Provides
   fun config(): Single<AppointmentConfig> {
     return Single.just(AppointmentConfig(
-        v2ApiEnabled = true,
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
         overduePeriodForLowestRiskLevel = Period.ofDays(365)))
   }
@@ -37,12 +36,7 @@ class AppointmentModule {
   }
 
   @Provides
-  fun syncApiV1(retrofit: Retrofit): AppointmentSyncApiV1 {
-    return retrofit.create(AppointmentSyncApiV1::class.java)
-  }
-
-  @Provides
-  fun syncApiV2(retrofit: Retrofit): AppointmentSyncApiV2 {
+  fun syncApi(retrofit: Retrofit): AppointmentSyncApiV2 {
     return retrofit.create(AppointmentSyncApiV2::class.java)
   }
 

@@ -10,10 +10,6 @@ object RemoveReasonDoneClicked : UiEvent {
   override val analyticsName = "Remove Appointment with Reason:Done clicked"
 }
 
-object AlreadyVisitedReasonClicked : UiEvent {
-  override val analyticsName = "Remove Appointment with Reason:Reason changed to patient already visited"
-}
-
 data class PatientDeadClicked(val patientUuid: UUID) : UiEvent {
   override val analyticsName = "Remove Appointment with Reason:Reason changed to Patient Dead"
 }

@@ -1,12 +1,12 @@
 package org.simple.clinic.patient
 
-import android.arch.persistence.room.Dao
-import android.arch.persistence.room.Embedded
-import android.arch.persistence.room.Entity
-import android.arch.persistence.room.ForeignKey
-import android.arch.persistence.room.Index
-import android.arch.persistence.room.PrimaryKey
-import android.arch.persistence.room.Query
+import androidx.room.Dao
+import androidx.room.Embedded
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.storage.DaoWithUpsert
 import org.threeten.bp.Instant

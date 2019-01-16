@@ -52,7 +52,7 @@
     android:layout_alignTop="@+id/enterotp_card"
     android:background="?colorPrimary" />
 
-  <android.support.v7.widget.CardView
+  <androidx.cardview.widget.CardView
     android:id="@+id/enterotp_card"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/enterotp_logo_container"
@@ -116,6 +116,6 @@
         android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1"
         android:textColor="?colorAccent" />
     </LinearLayout>
-  </android.support.v7.widget.CardView>
+  </androidx.cardview.widget.CardView>
 
 </org.simple.clinic.enterotp.EnterOtpScreen>

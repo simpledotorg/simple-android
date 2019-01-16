@@ -1,7 +1,7 @@
 package org.simple.clinic.search
 
 import android.content.Context
-import android.support.design.widget.TextInputLayout
+import com.google.android.material.textfield.TextInputLayout
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText

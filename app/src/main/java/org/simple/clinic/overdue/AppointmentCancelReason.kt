@@ -1,7 +1,7 @@
 package org.simple.clinic.overdue
 
-import android.arch.persistence.room.TypeConverter
-import android.support.annotation.VisibleForTesting
+import androidx.room.TypeConverter
+import androidx.annotation.VisibleForTesting
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 

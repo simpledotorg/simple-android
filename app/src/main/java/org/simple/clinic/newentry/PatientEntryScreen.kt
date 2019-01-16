@@ -1,12 +1,12 @@
 package org.simple.clinic.newentry
 
 import android.content.Context
-import android.support.design.widget.TextInputLayout
-import android.support.transition.ChangeBounds
-import android.support.transition.Fade
-import android.support.transition.TransitionManager
-import android.support.transition.TransitionSet
-import android.support.v4.view.animation.FastOutSlowInInterpolator
+import com.google.android.material.textfield.TextInputLayout
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup

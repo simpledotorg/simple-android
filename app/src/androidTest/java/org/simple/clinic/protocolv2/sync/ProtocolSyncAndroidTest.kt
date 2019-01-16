@@ -1,6 +1,6 @@
 package org.simple.clinic.protocolv2.sync
 
-import android.support.test.runner.AndroidJUnit4
+import androidx.test.runner.AndroidJUnit4
 import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import org.junit.Before

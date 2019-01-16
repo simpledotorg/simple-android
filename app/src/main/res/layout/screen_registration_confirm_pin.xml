@@ -27,7 +27,7 @@
     style="@style/Clinic.LoginLogoContainerOverflow"
     android:layout_below="@+id/registrationconfirmpin_logo_container" />
 
-  <android.support.v7.widget.CardView
+  <androidx.cardview.widget.CardView
     android:id="@+id/registrationconfirmpin_card"
     style="@style/Clinic.LoginCard"
     android:layout_below="@+id/registrationconfirmpin_logo_container">
@@ -84,5 +84,5 @@
           android:text="@string/registrationconfirmpin_reset_pin" />
       </LinearLayout>
     </LinearLayout>
-  </android.support.v7.widget.CardView>
+  </androidx.cardview.widget.CardView>
 </org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen>

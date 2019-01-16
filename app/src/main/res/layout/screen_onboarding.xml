@@ -21,7 +21,7 @@
     android:layout_height="52dp"
     android:layout_below="@+id/onboarding_logo_container" />
 
-  <android.support.v4.widget.NestedScrollView
+  <androidx.core.widget.NestedScrollView
     android:id="@+id/onboarding_scrolling_container"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -62,7 +62,7 @@
         android:background="@drawable/ic_onboarding_03_call_list"
         tools:ignore="ContentDescription" />
     </LinearLayout>
-  </android.support.v4.widget.NestedScrollView>
+  </androidx.core.widget.NestedScrollView>
 
   <Button
     android:id="@+id/onboarding_get_started"

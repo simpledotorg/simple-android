@@ -1,9 +1,9 @@
 package org.simple.clinic.storage
 
-import android.arch.persistence.room.Insert
-import android.arch.persistence.room.OnConflictStrategy
-import android.arch.persistence.room.Transaction
-import android.arch.persistence.room.Update
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Transaction
+import androidx.room.Update
 
 /**
  * Mimics sqlite's `upsert` conflict strategy because Room's grammar doesn't understand it.

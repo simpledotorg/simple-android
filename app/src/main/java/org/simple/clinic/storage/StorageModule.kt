@@ -1,9 +1,9 @@
 package org.simple.clinic.storage
 
 import android.app.Application
-import android.arch.persistence.db.SupportSQLiteOpenHelper
-import android.arch.persistence.room.Room
-import android.arch.persistence.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteOpenHelper
+import androidx.room.Room
+import androidx.room.migration.Migration
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
 import com.f2prateek.rx.preferences2.RxSharedPreferences

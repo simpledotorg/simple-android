@@ -2,7 +2,7 @@ package org.simple.clinic
 
 import android.app.Application
 import android.content.Context
-import android.support.test.runner.AndroidJUnitRunner
+import androidx.test.runner.AndroidJUnitRunner
 
 /**
  * Runs [TestClinicApp] instead of the actual Application class in Android tests.

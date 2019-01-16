@@ -1,7 +1,7 @@
 package org.simple.clinic.onboarding
 
 import android.content.Context
-import android.support.v4.widget.NestedScrollView
+import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.ImageView

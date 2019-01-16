@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
-  <android.support.v7.widget.Toolbar
+  <androidx.appcompat.widget.Toolbar
     android:id="@+id/registrationlocation_toolbar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -50,7 +50,7 @@
     android:src="@drawable/illustration_location"
     tools:ignore="ContentDescription" />
 
-  <android.support.v7.widget.CardView
+  <androidx.cardview.widget.CardView
     android:id="@+id/registrationlocation_rationale_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
         android:text="@string/registrationlocation_permission_rationale_description"
         android:textColor="@color/black_opacity_50" />
     </LinearLayout>
-  </android.support.v7.widget.CardView>
+  </androidx.cardview.widget.CardView>
 
   <Button
     android:id="@+id/registrationlocation_allow_access"

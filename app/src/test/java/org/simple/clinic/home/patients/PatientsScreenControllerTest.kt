@@ -87,6 +87,7 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
     whenever(patientSummaryResult.get()).thenReturn(NotSaved)
@@ -130,6 +131,7 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
     whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
@@ -206,6 +208,7 @@ class PatientsScreenControllerTest {
   @Test
   fun `when checking the user's status fails with any error then the error should be silently swallowed`() {
     val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
@@ -234,17 +237,14 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(
-      "WAITING_FOR_APPROVAL, false",
-      "APPROVED_FOR_SYNCING, true",
-      "DISAPPROVED_FOR_SYNCING, false")
-  fun `when user is refreshed then patient data should be synced depending on the new approval status`(
-      statusAfterRefresh: UserStatus,
-      shouldSync: Boolean
+  @Parameters("false", "true")
+  fun `when user is refreshed then patient data should be synced if the can sync data flag is set`(
+      canUserSyncData: Boolean
   ) {
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL))))
-        .thenReturn(Observable.just(Just(PatientMocker.loggedInUser(status = statusAfterRefresh))))
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL).toOptional()))
+
+    whenever(userSession.canSyncData()).thenReturn(Observable.just(canUserSyncData))
 
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
@@ -257,7 +257,7 @@ class PatientsScreenControllerTest {
 
     verify(userSession).refreshLoggedInUser()
 
-    if (shouldSync) {
+    if (canUserSyncData) {
       verify(syncScheduler).syncImmediately()
     } else {
       verify(syncScheduler, never()).syncImmediately()
@@ -284,6 +284,7 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
+    whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
@@ -317,6 +318,7 @@ class PatientsScreenControllerTest {
   ) {
     val user = PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
+    whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)

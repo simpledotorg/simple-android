@@ -36,6 +36,13 @@ import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
+import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -95,7 +102,7 @@ class UserSession @Inject constructor(
               .toSingleDefault(LoginResult.Success as LoginResult)
         }
         .doOnSuccess { syncOnLoginResult() }
-        .doOnSuccess { clearOngoingLoginEntry().subscribe()}
+        .doOnSuccess { clearOngoingLoginEntry().subscribe() }
         .onErrorReturn { error ->
           when {
             error is IOException -> LoginResult.NetworkError
@@ -136,7 +143,7 @@ class UserSession @Inject constructor(
           loginApi.requestLoginOtp(it.uuid)
               .andThen(Completable.fromAction {
                 appDatabase.userDao()
-                    .updateLoggedInStatusForUser(it.uuid, User.LoggedInStatus.OTP_REQUESTED)
+                    .updateLoggedInStatusForUser(it.uuid, OTP_REQUESTED)
               })
               .toSingleDefault(LoginResult.Success as LoginResult)
         }
@@ -165,8 +172,8 @@ class UserSession @Inject constructor(
               pinDigest = passwordDigest,
               createdAt = entry.createdAt!!,
               updatedAt = entry.createdAt,
-              status = UserStatus.WAITING_FOR_APPROVAL,
-              loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN)
+              status = WAITING_FOR_APPROVAL,
+              loggedInStatus = NOT_LOGGED_IN)
           storeUser(user, entry.facilityIds!!)
         }
         .andThen(clearOngoingRegistrationEntry())
@@ -193,7 +200,7 @@ class UserSession @Inject constructor(
         .flatMap { result ->
           when (result) {
             is Success -> {
-              Single.just(userFromPayload(loggedInUserPayload, User.LoggedInStatus.NOT_LOGGED_IN))
+              Single.just(userFromPayload(loggedInUserPayload, NOT_LOGGED_IN))
                   .flatMap {
                     storeUser(it, loggedInUserPayload.facilityUuids)
                         .toSingleDefault(SaveUserLocallyResult.Success() as SaveUserLocallyResult)
@@ -217,8 +224,8 @@ class UserSession @Inject constructor(
                 // not get set to LOGGED_IN when the PIN reset request is approved. See if it can
                 // be done in a better way since there are many places where this sort of logic is
                 // littered all over the app currently.
-                val finalLoggedInStatus = if (userPayload.status == UserStatus.APPROVED_FOR_SYNCING) {
-                  User.LoggedInStatus.LOGGED_IN
+                val finalLoggedInStatus = if (userPayload.status == APPROVED_FOR_SYNCING) {
+                  LOGGED_IN
 
                 } else {
                   loggedInUser.loggedInStatus
@@ -307,7 +314,7 @@ class UserSession @Inject constructor(
     Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
     return storeUser(
-        userFromPayload(response.loggedInUser, User.LoggedInStatus.LOGGED_IN),
+        userFromPayload(response.loggedInUser, LOGGED_IN),
         response.loggedInUser.facilityUuids)
   }
 
@@ -315,7 +322,7 @@ class UserSession @Inject constructor(
     Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
 
-    val user = userFromPayload(response.loggedInUser, User.LoggedInStatus.RESET_PIN_REQUESTED)
+    val user = userFromPayload(response.loggedInUser, RESET_PIN_REQUESTED)
     return storeUser(user, response.loggedInUser.facilityUuids)
   }
 
@@ -323,7 +330,7 @@ class UserSession @Inject constructor(
     Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
 
-    val user = userFromPayload(response.userPayload, User.LoggedInStatus.LOGGED_IN)
+    val user = userFromPayload(response.userPayload, LOGGED_IN)
     val userFacilityIds = response.userPayload.facilityUuids
 
     if (userFacilityIds.isEmpty()) {
@@ -425,7 +432,7 @@ class UserSession @Inject constructor(
         .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
           // TODO: Move this to a separate method which can be called from wherever
           Completable.fromAction {
-            appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, User.LoggedInStatus.RESETTING_PIN)
+            appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, RESETTING_PIN)
           }
         })
   }
@@ -450,6 +457,17 @@ class UserSession @Inject constructor(
               ForgotPinResult.UnexpectedError(it)
             }
             else -> ForgotPinResult.UnexpectedError(it)
+          }
+        }
+  }
+
+  fun canSyncData(): Observable<Boolean> {
+    return loggedInUser()
+        .map { (user) ->
+          when {
+            user == null -> false
+            user.loggedInStatus == LOGGED_IN && user.status == APPROVED_FOR_SYNCING -> true
+            else -> false
           }
         }
   }

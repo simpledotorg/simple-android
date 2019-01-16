@@ -40,7 +40,7 @@ class SyncScheduler @Inject constructor(
   }
 
   fun syncImmediately(): Completable {
-    return dataSync.get().syncIfUserIsApproved()
+    return dataSync.get().sync()
   }
 
   fun cancelAll() {

@@ -17,7 +17,7 @@ class SyncWorker(context: Context, workerParams: WorkerParameters) : Worker(cont
 
   override fun doWork(): Result {
     ClinicApp.appComponent.inject(this)
-    dataSync.syncIfUserIsApproved().blockingAwait()
+    dataSync.sync().blockingAwait()
     return Result.success()
   }
 }

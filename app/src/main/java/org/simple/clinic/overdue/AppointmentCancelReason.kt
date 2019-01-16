@@ -31,11 +31,6 @@ sealed class AppointmentCancelReason {
     override fun toString() = "MovedToPrivatePractitioner"
   }
 
-  @Deprecated(message = "Removed in V2 API")
-  object Moved : AppointmentCancelReason() {
-    override fun toString() = "Moved"
-  }
-
   object Dead : AppointmentCancelReason() {
     override fun toString() = "Dead"
   }
@@ -56,7 +51,6 @@ sealed class AppointmentCancelReason {
 
     val KNOWN_MAPPINGS = mapOf(
         PatientNotResponding to "not_responding",
-        Moved to "moved",
         InvalidPhoneNumber to "invalid_phone_number",
         TransferredToAnotherPublicHospital to "public_hospital_transfer",
         MovedToPrivatePractitioner to "moved_to_private",
@@ -110,12 +104,6 @@ sealed class AppointmentCancelReason {
     }
 
     @VisibleForTesting
-    fun random(apiV2Enabled: Boolean): AppointmentCancelReason {
-      return if (apiV2Enabled) {
-        TypeAdapter.KNOWN_MAPPINGS.keys.shuffled().first()
-      } else {
-        listOf(PatientNotResponding, Moved, Dead, Other).shuffled().first()
-      }
-    }
+    fun random() = TypeAdapter.KNOWN_MAPPINGS.keys.shuffled().first()
   }
 }

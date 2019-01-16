@@ -12,7 +12,6 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
-import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -33,10 +32,7 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   lateinit var sync: AppointmentSync
 
   @Inject
-  lateinit var syncApiV1: AppointmentSyncApiV1
-
-  @Inject
-  lateinit var syncApiV2: AppointmentSyncApiV2
+  lateinit var syncApi: AppointmentSyncApiV2
 
   @Inject
   lateinit var testData: TestData
@@ -70,21 +66,13 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun repository() = repository
 
-  override fun generateRecord(syncStatus: SyncStatus) = testData.appointment(syncStatus, config.v2ApiEnabled)
+  override fun generateRecord(syncStatus: SyncStatus) = testData.appointment(syncStatus)
 
-  override fun generatePayload() = testData.appointmentPayload(apiV2Enabled = config.v2ApiEnabled)
+  override fun generatePayload() = testData.appointmentPayload()
 
   override fun lastPullToken(): Preference<Optional<String>> = lastPullToken
 
-  override fun pushNetworkCall(payloads: List<AppointmentPayload>): Single<DataPushResponse> {
-    val request = AppointmentPushRequest(payloads)
-    return if (config.v2ApiEnabled) {
-      syncApiV2.push(request)
-
-    } else {
-      syncApiV1.push(request)
-    }
-  }
+  override fun pushNetworkCall(payloads: List<AppointmentPayload>) = syncApi.push(AppointmentPushRequest(payloads))
 
   override fun batchSize() = syncConfigProvider.blockingGet().batchSize
 }

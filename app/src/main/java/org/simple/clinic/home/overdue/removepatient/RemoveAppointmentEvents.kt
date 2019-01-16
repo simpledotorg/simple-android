@@ -10,6 +10,7 @@ object RemoveReasonDoneClicked : UiEvent {
   override val analyticsName = "Remove Appointment with Reason:Done clicked"
 }
 
+@Deprecated(message = "removed in appointment v2")
 object AlreadyVisitedReasonClicked : UiEvent {
   override val analyticsName = "Remove Appointment with Reason:Reason changed to patient already visited"
 }

@@ -1,7 +1,7 @@
 package org.simple.clinic.registration.facility
 
-import android.support.v4.content.ContextCompat
-import android.support.v7.recyclerview.extensions.ListAdapter
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ListAdapter
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.style.ForegroundColorSpan

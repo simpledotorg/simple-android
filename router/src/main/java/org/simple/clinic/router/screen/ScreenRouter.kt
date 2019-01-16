@@ -4,7 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.os.Parcelable
-import android.support.annotation.CheckResult
+import androidx.annotation.CheckResult
 import android.view.View
 import flow.Flow
 import flow.History

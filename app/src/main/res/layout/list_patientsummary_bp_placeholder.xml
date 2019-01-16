@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
@@ -24,4 +24,4 @@
     android:layout_gravity="bottom"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginStart="@dimen/spacing_24" />
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

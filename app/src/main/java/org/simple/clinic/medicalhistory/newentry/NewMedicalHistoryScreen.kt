@@ -1,7 +1,7 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import android.content.Context
-import android.support.v7.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView

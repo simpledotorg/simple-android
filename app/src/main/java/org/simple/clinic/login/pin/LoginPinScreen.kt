@@ -2,7 +2,7 @@ package org.simple.clinic.login.pin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.widget.ImageButton
 import android.widget.RelativeLayout

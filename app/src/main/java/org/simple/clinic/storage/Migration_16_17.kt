@@ -1,7 +1,7 @@
 package org.simple.clinic.storage
 
-import android.arch.persistence.db.SupportSQLiteDatabase
-import android.arch.persistence.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import androidx.room.migration.Migration
 
 @Suppress("ClassName")
 class Migration_16_17 : Migration(16, 17) {

@@ -1,7 +1,7 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
-import android.support.annotation.ColorInt
+import androidx.annotation.ColorInt
 import android.util.AttributeSet
 import android.widget.FrameLayout
 import org.simple.clinic.R

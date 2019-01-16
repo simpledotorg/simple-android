@@ -1,6 +1,6 @@
 package org.simple.clinic.widgets
 
-import android.support.v7.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RecyclerViewScrollEvent
 import io.reactivex.ObservableTransformer
 import kotlin.math.absoluteValue

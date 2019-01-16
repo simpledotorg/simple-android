@@ -2,7 +2,7 @@ package org.simple.clinic.forgotpin.confirmpin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.support.annotation.StringRes
+import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo

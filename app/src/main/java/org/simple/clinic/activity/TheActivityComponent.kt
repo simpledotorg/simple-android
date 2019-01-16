@@ -1,6 +1,6 @@
 package org.simple.clinic.activity
 
-import android.support.v4.app.FragmentManager
+import androidx.fragment.app.FragmentManager
 import com.f2prateek.rx.preferences2.Preference
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.BindsInstance

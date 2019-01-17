@@ -161,8 +161,14 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           .map { Ui::showDateEntryScreen }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
+    val screenChanges = events
+        .ofType<BloodPressureScreenChanged>()
+        .map { it.type }
+
     val saveBpClicks = events
         .ofType<BloodPressureSaveClicked>()
+        .withLatestFrom(screenChanges)
+        .filter { (_, screen) -> screen == ScreenType.BP_ENTRY }
 
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()

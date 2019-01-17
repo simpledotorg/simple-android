@@ -513,11 +513,6 @@ class BloodPressureEntrySheetControllerTestV2 {
     verify(sheet).showDateEntryScreen()
   }
 
-  @Suppress("Unused")
-  private fun `params for OpenAs types`(): List<Any> {
-    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
-  }
-
   @Test
   @Parameters(method = "params for OpenAs and bp validation errors")
   fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`(
@@ -559,8 +554,16 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when BP entry is active and previous arrow is pressed then date entry should be shown`() {
-    // TODO
+  @Parameters(method = "params for OpenAs types")
+  fun `when date entry is active and previous arrow is pressed then BP entry should be shown`(
+      openAs: OpenAs
+  ) {
+    uiEvents.run {
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressurePreviousArrowClicked)
+    }
+
+    verify(sheet).showBpEntryScreen()
   }
 
   @Test
@@ -571,5 +574,10 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
     // TODO
+  }
+
+  @Suppress("Unused")
+  private fun `params for OpenAs types`(): List<Any> {
+    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
   }
 }

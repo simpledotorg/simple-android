@@ -16,7 +16,7 @@ class FacilitySync @Inject constructor(
     private val repository: FacilityRepository,
     private val api: FacilitySyncApiV2,
     @Named("last_facility_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>
+    @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
 ) : ModelSync {
 
   override fun sync() = pull()

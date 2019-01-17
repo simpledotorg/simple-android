@@ -11,6 +11,7 @@ import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.communication.CommunicationModule
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
+import javax.inject.Named
 
 @Module(includes = [
   PatientSyncModule::class,
@@ -21,12 +22,28 @@ import org.simple.clinic.protocol.ProtocolModule
   CommunicationModule::class,
   MedicalHistoryModule::class,
   ProtocolModule::class])
-open class SyncModule {
+class SyncModule {
 
-  @Provides
-  open fun syncConfig(): Single<SyncConfig> {
+  fun syncConfig(): Single<SyncConfig> {
     return Single.just(SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         batchSizeEnum = BatchSize.SMALL))
+  }
+
+  @Provides
+  @Named("sync_config_frequent")
+  fun frequentSyncConfig(): Single<SyncConfig> {
+    return Single.just(SyncConfig(
+        syncInterval = SyncInterval.FREQUENT,
+        batchSizeEnum = BatchSize.MEDIUM))
+  }
+
+  @Provides
+  @Named("sync_config_daily")
+  fun dailySyncConfig(): Single<SyncConfig> {
+    return Single.just(SyncConfig(
+        syncInterval = SyncInterval.DAILY,
+        batchSizeEnum = BatchSize.MEDIUM
+    ))
   }
 }

@@ -24,7 +24,7 @@ object BloodPressureRemoveClicked : UiEvent {
 
 object BloodPressureDiastolicBackspaceClicked : UiEvent
 
-data class BloodPressureBpValidated(val result: BloodPressureEntrySheetControllerV2.Validation) : UiEvent
+data class BloodPressureBpValidated(val result: BpValidator.Validation) : UiEvent
 
 data class BloodPressureDateValidated(val date: String) : UiEvent {
   fun result(validator: DateOfBirthFormatValidator) = validator.validate2(date)

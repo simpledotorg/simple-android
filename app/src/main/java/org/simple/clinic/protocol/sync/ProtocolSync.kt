@@ -8,6 +8,7 @@ import org.simple.clinic.protocol.ProtocolSyncApiV2
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
 import javax.inject.Named
@@ -30,5 +31,9 @@ class ProtocolSync @Inject constructor(
         .flatMapCompletable { batchSize ->
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
+  }
+
+  override fun syncInterval(): Single<SyncInterval> {
+    return configProvider.map { it.syncInterval }
   }
 }

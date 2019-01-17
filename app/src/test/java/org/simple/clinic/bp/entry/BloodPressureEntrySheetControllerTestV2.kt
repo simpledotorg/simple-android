@@ -409,7 +409,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     }.exhaustive()
 
     verify(sheet, never()).setBpSavedResultAndFinish()
-    verify(dateValidator, times(5)).validate2("dummy/dummy/dummy")
+    verify(dateValidator, times(3)).validate2("dummy/dummy/dummy")
   }
 
   /**
@@ -439,8 +439,10 @@ class BloodPressureEntrySheetControllerTestV2 {
 
     uiEvents.run {
       onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.New(patientUuid)))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
       onNext(BloodPressureSystolicTextChanged("120"))
       onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureSaveClicked)
       onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("13"))
       onNext(BloodPressureMonthChanged("01"))
@@ -473,8 +475,10 @@ class BloodPressureEntrySheetControllerTestV2 {
 
     uiEvents.run {
       onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(existingBp.uuid)))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
       onNext(BloodPressureSystolicTextChanged("120"))
       onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureSaveClicked)
       onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("14"))
       onNext(BloodPressureMonthChanged("02"))

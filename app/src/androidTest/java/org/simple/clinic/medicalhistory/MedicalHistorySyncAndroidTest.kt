@@ -16,9 +16,11 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV2
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
@@ -44,8 +46,9 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   @Inject
   lateinit var testData: TestData
 
-  @Inject
-  lateinit var configProvider: Single<SyncConfig>
+  private val configProvider = Single.just(SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSizeEnum = BatchSize.VERY_SMALL))
 
   private val authenticationRule = AuthenticationRule()
 

@@ -13,6 +13,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -57,7 +58,8 @@ class DosagePickerSheet : BottomSheetActivity() {
   private fun sheetCreates(): Observable<UiEvent> {
     val drugName = intent.getStringExtra(KEY_DRUG_NAME)
     val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
-    return Observable.just(DosagePickerSheetCreated(drugName, patientUuid))
+    val prescribedDrugUuid = intent.getSerializableExtra(KEY_PRESCRIBED_DRUG_UUID) as UUID
+    return Observable.just(DosagePickerSheetCreated(drugName, patientUuid, prescribedDrugUuid.toOptional()))
   }
 
   private fun displayDrugName() {

@@ -21,6 +21,9 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.router.screen.BackPressInterceptCallback
+import org.simple.clinic.router.screen.BackPressInterceptor
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -35,6 +38,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   @Inject
   @field:Named("bp_entry_controller")
   lateinit var controller: ObservableTransformer<UiEvent, UiChange>
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
@@ -77,15 +83,17 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(
-    sheetCreates(),
-    screenDestroys,
-    systolicTextChanges(),
-    diastolicTextChanges(),
-    diastolicImeOptionClicks(),
-    diastolicBackspaceClicks(),
-    removeClicks())
-    .observeOn(Schedulers.io())
+    Observable
+        .mergeArray(
+            sheetCreates(),
+            screenDestroys,
+            systolicTextChanges(),
+            diastolicTextChanges(),
+            diastolicImeOptionClicks(),
+            diastolicBackspaceClicks(),
+            removeClicks(),
+            hardwareBackPresses())
+        .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(screenDestroys)
@@ -140,6 +148,19 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   private fun removeClicks(): Observable<UiEvent> =
       RxView.clicks(removeBloodPressureButton).map { BloodPressureRemoveClicked }
+
+  private fun hardwareBackPresses(): Observable<UiEvent> {
+    return Observable.create { emitter ->
+      val interceptor = object : BackPressInterceptor {
+        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
+          emitter.onNext(BloodPressureBackPressed)
+          callback.markBackPressIntercepted()
+        }
+      }
+      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
+      screenRouter.registerBackPressInterceptor(interceptor)
+    }
+  }
 
   fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()

@@ -177,8 +177,20 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
   }
 
   private fun showBpEntryWhenBackArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+    val previousArrowClicks = events
         .ofType<BloodPressurePreviousArrowClicked>()
+
+    val screenChanges = events
+        .ofType<BloodPressureScreenChanged>()
+        .map { it.type }
+
+    val backPresses = events
+        .ofType<BloodPressureBackPressed>()
+        .withLatestFrom(screenChanges)
+        .filter { (_, screen) -> screen == DATE_ENTRY }
+
+    return Observable
+        .merge(previousArrowClicks, backPresses)
         .map { { ui: Ui -> ui.showBpEntryScreen() } }
   }
 

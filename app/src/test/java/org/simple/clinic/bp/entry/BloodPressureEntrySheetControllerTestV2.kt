@@ -51,6 +51,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   private lateinit var controller: BloodPressureEntrySheetControllerV2
 
   private val dateValidator = mock<DateOfBirthFormatValidator>()
+  private val bpValidator = BpValidator()
 
   @Before
   fun setUp() {
@@ -59,7 +60,8 @@ class BloodPressureEntrySheetControllerTestV2 {
     controller = BloodPressureEntrySheetControllerV2(
         bloodPressureRepository = bloodPressureRepository,
         configProvider = configEmitter.firstOrError(),
-        dateValidator = dateValidator)
+        dateValidator = dateValidator,
+        bpValidator = bpValidator)
 
     uiEvents
         .compose(controller)

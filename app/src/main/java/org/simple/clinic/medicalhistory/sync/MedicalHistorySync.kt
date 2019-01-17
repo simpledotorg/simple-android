@@ -8,6 +8,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
@@ -45,6 +46,10 @@ class MedicalHistorySync @Inject constructor(
         .flatMapCompletable { batchSize ->
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
+  }
+
+  override fun syncInterval(): Single<SyncInterval> {
+    return configProvider.map { it.syncInterval }
   }
 
   private fun toRequest(histories: List<MedicalHistory>): MedicalHistoryPushRequest {

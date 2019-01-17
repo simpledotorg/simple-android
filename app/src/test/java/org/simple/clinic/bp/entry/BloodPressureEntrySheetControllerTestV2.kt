@@ -125,7 +125,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  @Parameters(method = "params for bp validation errors")
+  @Parameters(method = "params for bp validation errors and expected ui changes")
   fun `when BP entry is active, and BP readings are invalid then show error`(
       error: BpValidator.Validation,
       uiChangeVerification: UiChange
@@ -145,7 +145,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Suppress("unused")
-  fun `params for bp validation errors`(): List<Any> {
+  fun `params for bp validation errors and expected ui changes`(): List<Any> {
     return listOf(
         listOf<Any>(ErrorSystolicEmpty, { ui: Ui -> verify(ui).showSystolicEmptyError() }),
         listOf<Any>(ErrorDiastolicEmpty, { ui: Ui -> verify(ui).showDiastolicEmptyError() }),
@@ -519,8 +519,43 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`() {
-    // TODO
+  @Parameters(method = "params for OpenAs and bp validation errors")
+  fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`(
+      openAs: OpenAs,
+      error: BpValidator.Validation
+  ) {
+    whenever(bpValidator.validate(any(), any())).thenReturn(error)
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = openAs))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged("-"))
+      onNext(BloodPressureDiastolicTextChanged("-"))
+      onNext(BloodPressureNextArrowClicked)
+    }
+
+    verify(sheet, never()).showDateEntryScreen()
+  }
+
+  @Suppress("unused")
+  fun `params for OpenAs and bp validation errors`(): List<Any> {
+    val bpUuid = UUID.randomUUID()
+    return listOf(
+        listOf(OpenAs.New(patientUuid), ErrorSystolicEmpty),
+        listOf(OpenAs.New(patientUuid), ErrorDiastolicEmpty),
+        listOf(OpenAs.New(patientUuid), ErrorSystolicTooHigh),
+        listOf(OpenAs.New(patientUuid), ErrorSystolicTooLow),
+        listOf(OpenAs.New(patientUuid), ErrorDiastolicTooHigh),
+        listOf(OpenAs.New(patientUuid), ErrorDiastolicTooLow),
+        listOf(OpenAs.New(patientUuid), ErrorSystolicLessThanDiastolic),
+        listOf(OpenAs.Update(bpUuid), ErrorSystolicEmpty),
+        listOf(OpenAs.Update(bpUuid), ErrorDiastolicEmpty),
+        listOf(OpenAs.Update(bpUuid), ErrorSystolicTooHigh),
+        listOf(OpenAs.Update(bpUuid), ErrorSystolicTooLow),
+        listOf(OpenAs.Update(bpUuid), ErrorDiastolicTooHigh),
+        listOf(OpenAs.Update(bpUuid), ErrorDiastolicTooLow),
+        listOf(OpenAs.Update(bpUuid), ErrorSystolicLessThanDiastolic))
   }
 
   @Test

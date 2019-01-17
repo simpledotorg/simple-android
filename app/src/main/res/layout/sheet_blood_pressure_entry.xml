@@ -79,6 +79,7 @@
           android:importantForAutofill="no"
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_systolic_diastolic_separator"
+          app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute"
           tools:text="120">
 
@@ -113,6 +114,7 @@
           android:importantForAutofill="no"
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_systolic_diastolic_separator"
+          app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
 
         <TextView
@@ -163,6 +165,7 @@
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_day_month_separator"
           app:layout_constraintHorizontal_chainStyle="packed"
           app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
 
         <TextView
@@ -193,6 +196,7 @@
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month_year_separator"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day_month_separator"
+          app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
 
         <TextView
@@ -223,6 +227,7 @@
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
           app:layout_constraintEnd_toEndOf="parent"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month_year_separator"
+          app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
 
         <TextView

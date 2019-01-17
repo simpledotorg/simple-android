@@ -482,4 +482,66 @@ class BloodPressureEntrySheetControllerTestV2 {
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(sheet).setBpSavedResultAndFinish()
   }
+
+  @Test
+  @Suppress("IMPLICIT_CAST_TO_ANY")
+  @Parameters(method = "params for showing date validation errors")
+  fun `when save is clicked, date entry is active and input is invalid then validation errors should be shown`(
+      openAs: OpenAs,
+      errorResult: DateOfBirthFormatValidator.Result2,
+      errorUiChangeVerifications: UiChange
+  ) {
+    whenever(dateValidator.validate2(any(), any())).thenReturn(errorResult)
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = openAs))
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureDayChanged("14"))
+      onNext(BloodPressureMonthChanged("02"))
+      onNext(BloodPressureYearChanged("1991"))
+      onNext(BloodPressureSaveClicked)
+    }
+
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).updateMeasurement(any())
+    verify(sheet, never()).setBpSavedResultAndFinish()
+
+    errorUiChangeVerifications(sheet)
+  }
+
+  @Suppress("unused")
+  fun `params for showing date validation errors`(): List<Any> {
+    val existingBpUuid = UUID.randomUUID()
+    return listOf(
+        listOf(OpenAs.New(patientUuid), InvalidPattern, { ui: Ui -> verify(ui).showInvalidDateError() }),
+        listOf(OpenAs.Update(existingBpUuid), InvalidPattern, { ui: Ui -> verify(ui).showInvalidDateError() }),
+        listOf(OpenAs.New(patientUuid), DateIsInFuture, { ui: Ui -> verify(ui).showDateIsInFutureError() }),
+        listOf(OpenAs.Update(existingBpUuid), DateIsInFuture, { ui: Ui -> verify(ui).showDateIsInFutureError() }))
+  }
+
+  @Test
+  fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`() {
+    // TODO
+  }
+
+  @Test
+  fun `when BP entry is active, BP readings are invalid and next arrow is pressed then date entry should not be shown`() {
+    // TODO
+  }
+
+  @Test
+  fun `when BP entry is active and previous arrow is pressed then date entry should be shown`() {
+    // TODO
+  }
+
+  @Test
+  fun `when date entry is active and back is pressed then BP entry should be shown`() {
+    // TODO
+  }
+
+  @Test
+  fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
+    // TODO
+  }
 }

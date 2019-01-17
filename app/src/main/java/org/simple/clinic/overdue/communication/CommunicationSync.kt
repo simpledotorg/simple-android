@@ -15,9 +15,9 @@ class CommunicationSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: CommunicationRepository,
     private val api: CommunicationSyncApiV2,
-    private val configProvider: Single<SyncConfig>,
     private val userSession: UserSession,
-    @Named("last_communication_pull_token") private val lastPullToken: Preference<Optional<String>>
+    @Named("last_communication_pull_token") private val lastPullToken: Preference<Optional<String>>,
+    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>
 ) : ModelSync {
 
   private fun canSyncData() = userSession.canSyncData().firstOrError()

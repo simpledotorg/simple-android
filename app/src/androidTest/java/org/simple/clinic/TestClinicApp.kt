@@ -28,9 +28,6 @@ import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
-import org.simple.clinic.sync.BatchSize
-import org.simple.clinic.sync.SyncConfig
-import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserSession
@@ -74,11 +71,6 @@ class TestClinicApp : ClinicApp() {
         })
         .storageModule(object : StorageModule(databaseName = "ignored", runDatabaseQueriesOnMainThread = true) {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
-        })
-        .syncModule(object : SyncModule() {
-          override fun syncConfig(): Single<SyncConfig> {
-            return super.syncConfig().map { it.copy(batchSizeEnum = BatchSize.VERY_SMALL) }
-          }
         })
         .patientModule(object : PatientModule() {
           override fun provideAgeFuzzer(clock: Clock): AgeFuzzer {

@@ -39,4 +39,6 @@ enum class ScreenType {
 data class BloodPressureDayChanged(val day: String) : UiEvent
 data class BloodPressureMonthChanged(val month: String) : UiEvent
 data class BloodPressureYearChanged(val year: String) : UiEvent
-data class BloodPressureDateChanged(val date: String): UiEvent
+data class BloodPressureDateChanged(val date: String) : UiEvent
+
+object BloodPressureNextArrowClicked : UiEvent

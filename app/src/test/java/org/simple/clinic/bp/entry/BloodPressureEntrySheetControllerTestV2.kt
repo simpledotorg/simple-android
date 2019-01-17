@@ -22,6 +22,14 @@ import org.junit.runner.RunWith
 import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
+import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.ScreenType.DATE_ENTRY
 import org.simple.clinic.patient.PatientMocker
@@ -52,7 +60,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   private lateinit var controller: BloodPressureEntrySheetControllerV2
 
   private val dateValidator = mock<DateOfBirthFormatValidator>()
-  private val bpValidator = BpValidator()
+  private val bpValidator = mock<BpValidator>()
 
   @Before
   fun setUp() {
@@ -118,87 +126,36 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when in BP entry screen, and systolic is less than diastolic, show error`() {
+  @Parameters(method = "params for bp validation errors")
+  fun `when BP entry is active, and BP readings are invalid then show error`(
+      error: BpValidator.Validation,
+      uiChangeVerification: UiChange
+  ) {
+    whenever(bpValidator.validate(any(), any())).thenReturn(error)
+
     uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("90"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("140"))
+    uiEvents.onNext(BloodPressureSystolicTextChanged("-"))
+    uiEvents.onNext(BloodPressureDiastolicTextChanged("-"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showSystolicLessThanDiastolicError()
+    verify(bloodPressureRepository, never()).updateMeasurement(any())
+
+    uiChangeVerification(sheet)
   }
 
-  @Test
-  fun `when in BP entry screen, and systolic is less than minimum possible, show error`() {
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
-    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("55"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("55"))
-    uiEvents.onNext(BloodPressureSaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showSystolicLowError()
-  }
-
-  @Test
-  fun `when in BP entry screen, and systolic is more than maximum possible, show error`() {
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
-    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("333"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("88"))
-    uiEvents.onNext(BloodPressureSaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showSystolicHighError()
-  }
-
-  @Test
-  fun `when in BP entry screen, and diastolic is less than minimum possible, show error`() {
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
-    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("110"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("33"))
-    uiEvents.onNext(BloodPressureSaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showDiastolicLowError()
-  }
-
-  @Test
-  fun `when in BP entry screen, and diastolic is more than maximum possible, show error`() {
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
-    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("233"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
-    uiEvents.onNext(BloodPressureSaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showDiastolicHighError()
-  }
-
-  @Test
-  fun `when in BP entry screen, and systolic is empty, show error`() {
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
-    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged(""))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
-    uiEvents.onNext(BloodPressureSaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showSystolicEmptyError()
-  }
-
-  @Test
-  fun `when in BP entry screen, and diastolic is empty, show error`() {
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
-    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
-    uiEvents.onNext(BloodPressureSystolicTextChanged("120"))
-    uiEvents.onNext(BloodPressureDiastolicTextChanged(""))
-    uiEvents.onNext(BloodPressureSaveClicked)
-
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).showDiastolicEmptyError()
+  @Suppress("unused")
+  fun `params for bp validation errors`(): List<Any> {
+    return listOf(
+        listOf<Any>(ErrorSystolicEmpty, { ui: Ui -> verify(ui).showSystolicEmptyError() }),
+        listOf<Any>(ErrorDiastolicEmpty, { ui: Ui -> verify(ui).showDiastolicEmptyError() }),
+        listOf<Any>(ErrorSystolicTooHigh, { ui: Ui -> verify(ui).showSystolicHighError() }),
+        listOf<Any>(ErrorSystolicTooLow, { ui: Ui -> verify(ui).showSystolicLowError() }),
+        listOf<Any>(ErrorDiastolicTooHigh, { ui: Ui -> verify(ui).showDiastolicHighError() }),
+        listOf<Any>(ErrorDiastolicTooLow, { ui: Ui -> verify(ui).showDiastolicLowError() }),
+        listOf<Any>(ErrorSystolicLessThanDiastolic, { ui: Ui -> verify(ui).showSystolicLessThanDiastolicError() })
+    )
   }
 
   @Test
@@ -234,6 +191,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Test
   @Parameters(method = "params for checking valid BP input")
   fun `when save is clicked, BP entry is active and input is valid then show date entry`(openAs: OpenAs) {
+    whenever(bpValidator.validate(any(), any())).thenReturn(Success(142, 80))
+
     if (openAs is OpenAs.Update) {
       whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
     }
@@ -436,6 +395,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 1, 13)
+    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
     whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(inputDate))
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
 
@@ -471,6 +431,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
     val newInputDate = LocalDate.of(1991, 2, 14)
     whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
+    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
@@ -502,7 +463,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   fun `when save is clicked, date entry is active and input is invalid then validation errors should be shown`(
       openAs: OpenAs,
       errorResult: DateOfBirthFormatValidator.Result2,
-      errorUiChangeVerifications: UiChange
+      uiChangeVerification: UiChange
   ) {
     whenever(dateValidator.validate2(any(), any())).thenReturn(errorResult)
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
@@ -520,7 +481,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(sheet, never()).setBpSavedResultAndFinish()
 
-    errorUiChangeVerifications(sheet)
+    uiChangeVerification(sheet)
   }
 
   @Suppress("unused")
@@ -538,6 +499,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`(
       openAs: OpenAs
   ) {
+    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
 
     uiEvents.run {

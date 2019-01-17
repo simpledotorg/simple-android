@@ -36,7 +36,6 @@ import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
-import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.UUID
 import javax.inject.Inject
@@ -78,11 +77,7 @@ class TestClinicApp : ClinicApp() {
         })
         .syncModule(object : SyncModule() {
           override fun syncConfig(): Single<SyncConfig> {
-            return Single.just(
-                SyncConfig(
-                    frequency = Duration.ofMinutes(16),
-                    backOffDelay = Duration.ofMinutes(5),
-                    batchSizeEnum = BatchSize.VERY_SMALL))
+            return super.syncConfig().map { it.copy(batchSizeEnum = BatchSize.VERY_SMALL) }
           }
         })
         .patientModule(object : PatientModule() {

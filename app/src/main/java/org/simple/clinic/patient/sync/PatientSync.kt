@@ -19,7 +19,7 @@ class PatientSync @Inject constructor(
     private val repository: PatientRepository,
     private val api: PatientSyncApiV2,
     @Named("last_patient_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>,
+    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>,
     private val userSession: UserSession
 ) : ModelSync {
 

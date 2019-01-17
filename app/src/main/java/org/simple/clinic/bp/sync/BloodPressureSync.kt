@@ -18,7 +18,7 @@ class BloodPressureSync @Inject constructor(
     private val api: BloodPressureSyncApiV2,
     private val repository: BloodPressureRepository,
     @Named("last_bp_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>,
+    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>,
     private val userSession: UserSession
 ) : ModelSync {
 

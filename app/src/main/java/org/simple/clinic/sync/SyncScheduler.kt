@@ -10,10 +10,11 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    private val syncConfigProvider: Single<SyncConfig>,
+    @Named("sync_config_frequent") private val syncConfigProvider: Single<SyncConfig>,
     private val dataSync: Lazy<DataSync>
 ) {
 

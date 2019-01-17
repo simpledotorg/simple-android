@@ -12,7 +12,9 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -37,14 +39,9 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   @Inject
   lateinit var testData: TestData
 
-  @Inject
-  lateinit var appointmentConfigProvider: Single<AppointmentConfig>
-
-  @Inject
-  lateinit var syncConfigProvider: Single<SyncConfig>
-
-  val config: AppointmentConfig
-    get() = appointmentConfigProvider.blockingGet()
+  private val configProvider = Single.just(SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSizeEnum = BatchSize.VERY_SMALL))
 
   private val authenticationRule = AuthenticationRule()
 
@@ -74,5 +71,5 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun pushNetworkCall(payloads: List<AppointmentPayload>) = syncApi.push(AppointmentPushRequest(payloads))
 
-  override fun batchSize() = syncConfigProvider.blockingGet().batchSize
+  override fun batchSize() = configProvider.blockingGet().batchSize
 }

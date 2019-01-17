@@ -18,7 +18,7 @@ class PrescriptionSync @Inject constructor(
     private val api: PrescriptionSyncApiV2,
     private val repository: PrescriptionRepository,
     @Named("last_prescription_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>,
+    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>,
     val userSession: UserSession
 ) : ModelSync {
 

@@ -18,7 +18,7 @@ class MedicalHistorySync @Inject constructor(
     private val repository: MedicalHistoryRepository,
     private val api: MedicalHistorySyncApiV2,
     @Named("last_medicalhistory_pull_token") private val lastPullToken: Preference<Optional<String>>,
-    private val configProvider: Single<SyncConfig>,
+    @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>,
     val userSession: UserSession
 ) : ModelSync {
 

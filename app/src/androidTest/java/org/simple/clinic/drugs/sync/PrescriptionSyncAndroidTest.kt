@@ -15,8 +15,10 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -50,8 +52,9 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   @Inject
   lateinit var facilityRepository: FacilityRepository
 
-  @Inject
-  lateinit var configProvider: Single<SyncConfig>
+  private val configProvider = Single.just(SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSizeEnum = BatchSize.VERY_SMALL))
 
   private val user: User
     get() = userSession.loggedInUserImmediate()!!

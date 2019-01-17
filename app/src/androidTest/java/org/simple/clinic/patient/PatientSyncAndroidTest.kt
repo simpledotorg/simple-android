@@ -15,7 +15,9 @@ import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncApiV2
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -40,8 +42,9 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
   @Inject
   lateinit var testData: TestData
 
-  @Inject
-  lateinit var configProvider: Single<SyncConfig>
+  private val configProvider = Single.just(SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSizeEnum = BatchSize.VERY_SMALL))
 
   private val authenticationRule = AuthenticationRule()
 

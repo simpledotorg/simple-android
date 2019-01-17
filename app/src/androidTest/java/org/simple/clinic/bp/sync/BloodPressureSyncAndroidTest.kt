@@ -14,7 +14,9 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
+import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import javax.inject.Inject
@@ -39,8 +41,9 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
   @Inject
   lateinit var testData: TestData
 
-  @Inject
-  lateinit var configProvider: Single<SyncConfig>
+  private val configProvider = Single.just(SyncConfig(
+      syncInterval = SyncInterval.FREQUENT,
+      batchSizeEnum = BatchSize.VERY_SMALL))
 
   private val authenticationRule = AuthenticationRule()
 

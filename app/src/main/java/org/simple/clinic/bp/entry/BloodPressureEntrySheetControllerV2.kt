@@ -177,7 +177,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
   }
 
   private fun showBpEntryWhenBackArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
-    return Observable.never()
+    return events
+        .ofType<BloodPressurePreviousArrowClicked>()
+        .map { { ui: Ui -> ui.showBpEntryScreen() } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->

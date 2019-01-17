@@ -39,3 +39,4 @@ data class BloodPressureDateChanged(val date: String) : UiEvent
 
 object BloodPressureNextArrowClicked : UiEvent
 object BloodPressurePreviousArrowClicked : UiEvent
+object BloodPressureBackPressed : UiEvent

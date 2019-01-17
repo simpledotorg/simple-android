@@ -1,6 +1,8 @@
 package org.simple.clinic.drugs.selectionv2
 
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
@@ -13,7 +15,8 @@ import org.simple.clinic.widgets.UiEvent
 data class ProtocolDrugListItem(
     val id: Int,
     val drugName: String,
-    val prescribedDrug: PrescribedDrug?
+    val prescribedDrug: PrescribedDrug?,
+    val hideDivider: Boolean
 ) : GroupieItemWithUiEvents<ProtocolDrugListItem.DrugViewHolder>(adapterId = id.toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
@@ -30,10 +33,12 @@ data class ProtocolDrugListItem(
     holder.rootView.setOnClickListener {
       uiEvents.onNext(ProtocolDrugSelected(drugName, prescribedDrug))
     }
+    holder.dividerView.visibility = if (hideDivider) GONE else VISIBLE
   }
 
   class DrugViewHolder(val rootView: View, val uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {
     val nameTextView by bindView<TextView>(R.id.protocoldrug_item_name)
     val dosageTextView by bindView<TextView>(R.id.protocoldrug_item_dosage)
+    val dividerView by bindView<View>(R.id.protocoldrug_item_divider)
   }
 }

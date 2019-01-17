@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
+import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -92,26 +93,17 @@ class PrescribedDrugsScreenControllerV2Test {
         ProtocolDrugListItem(
             id = 0,
             drugName = amlodipine10mg.name,
-            prescribedDrug = amlodipine10mgPrescription),
+            prescribedDrug = amlodipine10mgPrescription,
+            hideDivider = false),
         ProtocolDrugListItem(
             id = 1,
             drugName = telmisartan40mg.name,
-            prescribedDrug = null),
-        ProtocolDrugListItem(id = 2,
-            drugName = telmisartan9000mgPrescription.name,
-            prescribedDrug = telmisartan9000mgPrescription),
-        ProtocolDrugListItem(
-            id = 3,
-            drugName = reesesPrescription.name,
-            prescribedDrug = reesesPrescription),
-        ProtocolDrugListItem(
-            id = 4,
-            drugName = fooPrescription.name,
-            prescribedDrug = fooPrescription),
-        ProtocolDrugListItem(
-            id = 5,
-            drugName = barPrescription.name,
-            prescribedDrug = barPrescription))
+            prescribedDrug = null,
+            hideDivider = false),
+        CustomPrescribedDrugListItem(telmisartan9000mgPrescription),
+        CustomPrescribedDrugListItem(reesesPrescription),
+        CustomPrescribedDrugListItem(fooPrescription),
+        CustomPrescribedDrugListItem(barPrescription))
     verify(screen).populateDrugsList(expectedUiModels)
   }
 

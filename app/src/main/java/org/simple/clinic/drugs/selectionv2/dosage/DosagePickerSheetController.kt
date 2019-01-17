@@ -16,7 +16,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
-import timber.log.Timber
 import javax.inject.Inject
 
 private typealias Ui = DosagePickerSheet
@@ -37,7 +36,8 @@ class DosagePickerSheetController @Inject constructor(
 
     return Observable.mergeArray(
         displayDosageList(replayedEvents),
-        savePrescription(replayedEvents))
+        savePrescription(replayedEvents),
+        noneSelected(replayedEvents))
   }
 
   private fun displayDosageList(events: Observable<UiEvent>): Observable<UiChange> {
@@ -65,9 +65,9 @@ class DosagePickerSheetController @Inject constructor(
       val dosageType = events
           .ofType<DosageItemClicked>()
           .map {
-            when (it.dosage) {
-              is DosageOption.Dosage -> DosageSelected(it.dosage.protocolDrug)
-              is DosageOption.None -> TODO()
+            when (it.dosageOption) {
+              is DosageOption.Dosage -> DosageSelected(it.dosageOption.protocolDrug)
+              is DosageOption.None -> NoneSelected
             }
           }
       events.mergeWith(dosageType)
@@ -102,9 +102,7 @@ class DosagePickerSheetController @Inject constructor(
 
     val savePrescription = protocolDrug
         .withLatestFrom(patientUuids)
-        .doOnNext { Timber.e("save prescription withLatestFrom") }
         .flatMap { (drug, patientUuid) ->
-          Timber.e("save prescription flatmap")
           prescriptionRepository
               .savePrescription(
                   patientUuid = patientUuid,
@@ -113,5 +111,26 @@ class DosagePickerSheetController @Inject constructor(
         }
 
     return softDeleteOldPrescription.andThen(savePrescription)
+  }
+
+  private fun noneSelected(events: Observable<UiEvent>): Observable<UiChange> {
+    val sheetCreated = events
+        .ofType<DosagePickerSheetCreated>()
+
+    val existingPrescription = sheetCreated
+        .map { it.existingPrescribedDrugUuid }
+
+    val noneSelected = events
+        .ofType<NoneSelected>()
+
+    return noneSelected
+        .withLatestFrom(existingPrescription)
+        .firstOrError()
+        .flatMapCompletable { (_, existingPrescriptionUuid) ->
+          when (existingPrescriptionUuid) {
+            is Just -> prescriptionRepository.softDeletePrescription(existingPrescriptionUuid.value)
+            is None -> Completable.complete()
+          }
+        }.andThen(Observable.just { ui: Ui -> ui.finish() })
   }
 }

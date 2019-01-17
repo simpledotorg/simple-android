@@ -307,10 +307,10 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
   private fun validateDateInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val screenChanges = events.ofType<BloodPressureScreenChanged>()
+        .filter { it.type == ScreenType.DATE_ENTRY }
 
     val saveBpClicks = events.ofType<BloodPressureSaveClicked>()
         .withLatestFrom(screenChanges)
-        .filter { (_, screen) -> screen.type == ScreenType.DATE_ENTRY }
 
     val dateChanges = events
         .ofType<BloodPressureDateChanged>()

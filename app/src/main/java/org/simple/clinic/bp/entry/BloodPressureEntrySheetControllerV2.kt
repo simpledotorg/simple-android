@@ -12,6 +12,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorDiastolicEmpty
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorDiastolicTooHigh
@@ -57,7 +58,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         prefillWhenUpdatingABloodPressure(replayedEvents),
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
-        //        updateBp(replayedEvents),
+        showDateEntryWhenNextArrowIsPressed(replayedEvents),
+        showBpEntryWhenBackArrowIsPressed(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
         showConfirmRemoveBloodPressureDialog(replayedEvents),
@@ -161,15 +163,31 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           .filter { it.result is Success }
           .map { Ui::showDateEntryScreen }
 
+  private fun showDateEntryWhenNextArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
+    val bpValidationResults = events
+        .ofType<BloodPressureBpValidated>()
+        .map { it.result }
+
+    return events
+        .ofType<BloodPressureNextArrowClicked>()
+        .withLatestFrom(bpValidationResults)
+        .filter { (_, result) -> result is Success }
+        .map { { ui: Ui -> ui.showDateEntryScreen() } }
+  }
+
+  private fun showBpEntryWhenBackArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
+    return Observable.never()
+  }
+
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val screenChanges = events
         .ofType<BloodPressureScreenChanged>()
         .map { it.type }
 
-    val saveBpClicks = events
-        .ofType<BloodPressureSaveClicked>()
+    val saveBpClicks = Observable
+        .merge(events.ofType<BloodPressureSaveClicked>(), events.ofType<BloodPressureNextArrowClicked>())
         .withLatestFrom(screenChanges)
-        .filter { (_, screen) -> screen == ScreenType.BP_ENTRY }
+        .filter { (_, screen) -> screen == BP_ENTRY }
 
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()

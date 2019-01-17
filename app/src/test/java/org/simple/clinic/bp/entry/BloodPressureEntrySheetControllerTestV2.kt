@@ -528,8 +528,26 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`() {
-    // TODO
+  @Parameters(method = "params for OpenAs types")
+  fun `when BP entry is active, BP readings are valid and next arrow is pressed then date entry should be shown`(
+      openAs: OpenAs
+  ) {
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = openAs))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged("120"))
+      onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureNextArrowClicked)
+    }
+
+    verify(sheet).showDateEntryScreen()
+  }
+
+  @Suppress("Unused")
+  private fun `params for OpenAs types`(): List<Any> {
+    return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
   }
 
   @Test

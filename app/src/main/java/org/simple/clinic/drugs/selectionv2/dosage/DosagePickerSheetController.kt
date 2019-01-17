@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selectionv2.dosage
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -12,7 +13,10 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.widgets.UiEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 private typealias Ui = DosagePickerSheet
@@ -71,22 +75,43 @@ class DosagePickerSheetController @Inject constructor(
   }
 
   private fun savePrescription(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuids = events
+    val sheetCreated = events
         .ofType<DosagePickerSheetCreated>()
+
+    val existingPrescription = sheetCreated
+        .map { it.existingPrescribedDrugUuid }
+
+    val dosageSelected = events
+        .ofType<DosageSelected>()
+
+    val softDeleteOldPrescription = dosageSelected
+        .withLatestFrom(existingPrescription)
+        .firstOrError()
+        .flatMapCompletable { (_, existingPrescriptionUuid) ->
+          when (existingPrescriptionUuid) {
+            is Just -> prescriptionRepository.softDeletePrescription(existingPrescriptionUuid.value)
+            is None -> Completable.complete()
+          }
+        }
+
+    val patientUuids = sheetCreated
         .map { it.patientUuid }
 
-    val protocolDrug = events
-        .ofType<DosageSelected>()
+    val protocolDrug = dosageSelected
         .map { it.protocolDrug }
 
-    return protocolDrug
+    val savePrescription = protocolDrug
         .withLatestFrom(patientUuids)
+        .doOnNext { Timber.e("save prescription withLatestFrom") }
         .flatMap { (drug, patientUuid) ->
+          Timber.e("save prescription flatmap")
           prescriptionRepository
               .savePrescription(
                   patientUuid = patientUuid,
                   drug = drug)
               .andThen(Observable.just { ui: Ui -> ui.finish() })
         }
+
+    return softDeleteOldPrescription.andThen(savePrescription)
   }
 }

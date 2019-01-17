@@ -115,7 +115,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when systolic is less than diastolic, show error`() {
+  fun `when in BP entry screen, and systolic is less than diastolic, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("90"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("140"))
@@ -126,7 +127,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when systolic is less than minimum possible, show error`() {
+  fun `when in BP entry screen, and systolic is less than minimum possible, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("55"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("55"))
@@ -137,7 +139,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when systolic is more than maximum possible, show error`() {
+  fun `when in BP entry screen, and systolic is more than maximum possible, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("333"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("88"))
@@ -148,7 +151,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when diastolic is less than minimum possible, show error`() {
+  fun `when in BP entry screen, and diastolic is less than minimum possible, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("110"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("33"))
@@ -159,7 +163,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when diastolic is more than maximum possible, show error`() {
+  fun `when in BP entry screen, and diastolic is more than maximum possible, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("233"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
@@ -170,7 +175,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when systolic is empty, show error`() {
+  fun `when in BP entry screen, and systolic is empty, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged(""))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("190"))
@@ -181,7 +187,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when diastolic is empty, show error`() {
+  fun `when in BP entry screen, and diastolic is empty, show error`() {
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("120"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged(""))

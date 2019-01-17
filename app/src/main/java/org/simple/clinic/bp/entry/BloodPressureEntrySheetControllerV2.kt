@@ -14,14 +14,14 @@ import org.simple.clinic.bp.BloodPressureConfig
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorDiastolicEmpty
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorDiastolicTooHigh
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorDiastolicTooLow
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorSystolicEmpty
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorSystolicLessThanDiastolic
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorSystolicTooHigh
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ErrorSystolicTooLow
-import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.Success
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicEmpty
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooHigh
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorDiastolicTooLow
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicEmpty
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDiastolic
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
+import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
+import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
@@ -41,7 +41,8 @@ typealias UiChange = (Ui) -> Unit
 class BloodPressureEntrySheetControllerV2 @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val configProvider: Single<BloodPressureConfig>,
-    private val dateValidator: DateOfBirthFormatValidator
+    private val dateValidator: DateOfBirthFormatValidator,
+    private val bpValidator: BpValidator
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -199,45 +200,10 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validations = saveBpClicks
         .withLatestFrom(systolicChanges, diastolicChanges)
-        .map { (_, systolic, diastolic) -> BloodPressureBpValidated(bpResult(systolic, diastolic)) }
+        .map { (_, systolic, diastolic) -> bpValidator.validate(systolic, diastolic) }
+        .map(::BloodPressureBpValidated)
 
     events.mergeWith(validations)
-  }
-
-  private fun bpResult(systolic: String, diastolic: String): Validation {
-    if (systolic.isBlank()) {
-      return ErrorSystolicEmpty
-    }
-    if (diastolic.isBlank()) {
-      return ErrorDiastolicEmpty
-    }
-
-    val systolicNumber = systolic.trim().toInt()
-    val diastolicNumber = diastolic.trim().toInt()
-
-    return when {
-      systolicNumber < 70 -> ErrorSystolicTooLow
-      systolicNumber > 300 -> ErrorSystolicTooHigh
-      diastolicNumber < 40 -> ErrorDiastolicTooLow
-      diastolicNumber > 180 -> ErrorDiastolicTooHigh
-      systolicNumber < diastolicNumber -> ErrorSystolicLessThanDiastolic
-      else -> Success(systolicNumber, diastolicNumber)
-    }
-  }
-
-  sealed class Validation {
-    data class Success(
-        val systolic: Int,
-        val diastolic: Int
-    ) : Validation()
-
-    object ErrorSystolicEmpty : Validation()
-    object ErrorDiastolicEmpty : Validation()
-    object ErrorSystolicTooHigh : Validation()
-    object ErrorSystolicTooLow : Validation()
-    object ErrorDiastolicTooHigh : Validation()
-    object ErrorDiastolicTooLow : Validation()
-    object ErrorSystolicLessThanDiastolic : Validation()
   }
 
   private fun toggleRemoveBloodPressureButton(events: Observable<UiEvent>): Observable<UiChange> {

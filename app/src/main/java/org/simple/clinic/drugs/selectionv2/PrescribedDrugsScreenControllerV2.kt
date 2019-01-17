@@ -7,9 +7,9 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
+import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.drugs.selection.PrescribedDrugsDoneClicked
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -60,25 +60,22 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
         .map { (protocolDrugs, prescribedDrugs) ->
 
           val prescribedProtocolDrugs = prescribedDrugs.filter { it.isProtocolDrug }
-          // Select protocol drugs if prescriptions exist for them.
+          val isAtLeastOneCustomDrugPrescribed = prescribedDrugs.any { it.isProtocolDrug.not() }
+          // Show dosage if prescriptions exist for them.
           val protocolDrugSelectionItems = protocolDrugs
               .mapIndexed { index: Int, drugAndDosages: ProtocolDrugAndDosages ->
-                val matchingPrescribedDrug =
-                    prescribedProtocolDrugs
-                        .firstOrNull { it.name == drugAndDosages.drugName }
-
+                val matchingPrescribedDrug = prescribedProtocolDrugs.firstOrNull { it.name == drugAndDosages.drugName }
                 ProtocolDrugListItem(
                     id = index,
                     drugName = drugAndDosages.drugName,
-                    prescribedDrug = matchingPrescribedDrug)
+                    prescribedDrug = matchingPrescribedDrug,
+                    hideDivider = isAtLeastOneCustomDrugPrescribed.not() && index == protocolDrugs.lastIndex)
               }
 
           val customPrescribedDrugItems = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .mapIndexed { index: Int, drugAndDosages: PrescribedDrug ->
-                ProtocolDrugListItem(index + protocolDrugSelectionItems.size, drugAndDosages.name, drugAndDosages)
-              }
+              .map { prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }

@@ -26,7 +26,6 @@ import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.threeten.bp.Duration
 
 @RunWith(JUnitParamsRunner::class)
 class ModelSyncTest {
@@ -35,10 +34,7 @@ class ModelSyncTest {
   val rxErrorsRule = RxErrorsRule()
 
   val syncConfigProvider = Single.fromCallable {
-    SyncConfig(
-        frequency = Duration.ZERO,
-        backOffDelay = Duration.ZERO,
-        batchSizeEnum = BatchSize.VERY_SMALL)
+    SyncConfig(syncInterval = SyncInterval.FREQUENT, batchSizeEnum = BatchSize.VERY_SMALL)
   }
 
   @Suppress("Unused")

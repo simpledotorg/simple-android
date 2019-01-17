@@ -144,14 +144,14 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           .map {
             { ui: Ui ->
               when (it.result) {
-                ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
-                ErrorSystolicTooHigh -> ui.showSystolicHighError()
-                ErrorSystolicTooLow -> ui.showSystolicLowError()
-                ErrorDiastolicTooHigh -> ui.showDiastolicHighError()
-                ErrorDiastolicTooLow -> ui.showDiastolicLowError()
-                ErrorSystolicEmpty -> ui.showSystolicEmptyError()
-                ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
-                Success -> {
+                is ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
+                is ErrorSystolicTooHigh -> ui.showSystolicHighError()
+                is ErrorSystolicTooLow -> ui.showSystolicLowError()
+                is ErrorDiastolicTooHigh -> ui.showDiastolicHighError()
+                is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
+                is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
+                is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
+                is Success -> {
                   // Nothing to do here, SUCCESS handled below separately!
                 }
               }.exhaustive()
@@ -221,12 +221,16 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
       diastolicNumber < 40 -> ErrorDiastolicTooLow
       diastolicNumber > 180 -> ErrorDiastolicTooHigh
       systolicNumber < diastolicNumber -> ErrorSystolicLessThanDiastolic
-      else -> Success
+      else -> Success(systolicNumber, diastolicNumber)
     }
   }
 
   sealed class Validation {
-    object Success : Validation()
+    data class Success(
+        val systolic: Int,
+        val diastolic: Int
+    ) : Validation()
+
     object ErrorSystolicEmpty : Validation()
     object ErrorDiastolicEmpty : Validation()
     object ErrorSystolicTooHigh : Validation()
@@ -363,19 +367,10 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<Valid>()
         .map { it.parsedDate }
 
-    data class BP(val systolic: Int, val diastolic: Int)
-
-    val systolicChanges = events
-        .ofType<BloodPressureSystolicTextChanged>()
-        .map { it.systolic }
-
-    val diastolicChanges = events
-        .ofType<BloodPressureDiastolicTextChanged>()
-        .map { it.diastolic }
-
-    val bpChanges = validDates
-        .withLatestFrom(systolicChanges, diastolicChanges)
-        .map { (_, systolic, diastolic) -> BP(systolic.toInt(), diastolic.toInt()) }
+    val validBps = events
+        .ofType<BloodPressureBpValidated>()
+        .map { it.result }
+        .ofType<Success>()
 
     val patientUuidStream = openAs
         .ofType<OpenAs.New>()
@@ -386,7 +381,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { it.bpUuid }
 
     val saveNewBp = validDates
-        .withLatestFrom(bpChanges, patientUuidStream)
+        .withLatestFrom(validBps, patientUuidStream)
         .flatMapSingle { (date, bp, patientUuid) ->
           val dateAsInstant = date.atStartOfDay(UTC).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
@@ -394,7 +389,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
 
     val updateExistingBp = validDates
-        .withLatestFrom(bpChanges, existingBpUuidStream)
+        .withLatestFrom(validBps, existingBpUuidStream)
         .flatMap { (date, newBp, existingBpUuid) ->
           bloodPressureRepository.measurement(existingBpUuid)
               .take(1)

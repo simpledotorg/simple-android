@@ -568,7 +568,12 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   fun `when date entry is active and back is pressed then BP entry should be shown`() {
-    // TODO
+    uiEvents.run {
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureBackPressed)
+    }
+
+    verify(sheet).showBpEntryScreen()
   }
 
   @Test

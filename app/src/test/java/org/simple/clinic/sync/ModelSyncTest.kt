@@ -34,7 +34,10 @@ class ModelSyncTest {
   val rxErrorsRule = RxErrorsRule()
 
   val syncConfigProvider = Single.fromCallable {
-    SyncConfig(syncInterval = SyncInterval.FREQUENT, batchSizeEnum = BatchSize.VERY_SMALL)
+    SyncConfig(
+        syncInterval = SyncInterval.FREQUENT,
+        batchSizeEnum = BatchSize.VERY_SMALL,
+        syncGroupId = "test_sync_config")
   }
 
   @Suppress("Unused")

@@ -114,7 +114,7 @@ class DebugClinicApp : ClinicApp() {
         .bloodPressureModule(object : BloodPressureModule() {
           override fun provideBloodPressureEntryConfig(): BloodPressureConfig {
             return super.provideBloodPressureEntryConfig()
-                .copy(deleteBloodPressureFeatureEnabled = true, dateEntryEnabled = false)
+                .copy(deleteBloodPressureFeatureEnabled = true, dateEntryEnabled = true)
           }
         })
         .build()

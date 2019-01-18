@@ -34,6 +34,7 @@ import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.ScreenType.DATE_ENTRY
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
@@ -53,14 +54,15 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   private val sheet = mock<BloodPressureEntrySheet>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
-  private val patientUuid = UUID.randomUUID()
+  private val dateValidator = mock<DateOfBirthFormatValidator>()
+  private val bpValidator = mock<BpValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configEmitter = PublishSubject.create<BloodPressureConfig>()
   private lateinit var controller: BloodPressureEntrySheetControllerV2
 
-  private val dateValidator = mock<DateOfBirthFormatValidator>()
-  private val bpValidator = mock<BpValidator>()
+  private val patientUuid = UUID.randomUUID()
+  private val testClock = TestClock()
 
   @Before
   fun setUp() {
@@ -70,7 +72,8 @@ class BloodPressureEntrySheetControllerTestV2 {
         bloodPressureRepository = bloodPressureRepository,
         configProvider = configEmitter.firstOrError(),
         dateValidator = dateValidator,
-        bpValidator = bpValidator)
+        bpValidator = bpValidator,
+        clock = testClock)
 
     uiEvents
         .compose(controller)
@@ -578,7 +581,22 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
-    // TODO
+    val currentDate = LocalDate.now(testClock)
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
+
+    verify(sheet).setDate(currentDate.dayOfMonth, currentDate.monthValue, currentDate.year)
+  }
+
+  @Test
+  fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's existing date`() {
+    val existingBp = PatientMocker.bp()
+    whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp, existingBp))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.Update(existingBp.uuid)))
+
+    val createdAtAsDate = existingBp.createdAt.atZone(testClock.zone).toLocalDate()
+    verify(sheet, times(1)).setDate(createdAtAsDate.dayOfMonth, createdAtAsDate.monthValue, createdAtAsDate.year)
   }
 
   @Suppress("Unused")

@@ -256,4 +256,8 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   fun showDateIsInFutureError() {
     TODO()
   }
+
+  fun setDate(dayOfMonth: Int, month: Int, year: Int) {
+    TODO()
+  }
 }

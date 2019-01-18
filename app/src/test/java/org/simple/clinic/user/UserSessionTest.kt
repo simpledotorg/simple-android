@@ -50,6 +50,7 @@ import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -98,7 +99,7 @@ class UserSessionTest {
       }"""
 
   private lateinit var userSession: UserSession
-  private lateinit var syncScheduler: SyncScheduler
+  private lateinit var dataSync: DataSync
 
   private lateinit var medicalHistoryPullToken: Preference<Optional<String>>
   private lateinit var communicationPullToken: Preference<Optional<String>>
@@ -114,7 +115,7 @@ class UserSessionTest {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     loginOtpSmsListener = mock()
-    syncScheduler = mock()
+    dataSync = mock()
     medicalHistoryPullToken = mock()
     communicationPullToken = mock()
     appointmentPullToken = mock()
@@ -131,7 +132,7 @@ class UserSessionTest {
         sharedPreferences = sharedPrefs,
         appDatabase = appDatabase,
         passwordHasher = passwordHasher,
-        syncScheduler = syncScheduler,
+        dataSync = dagger.Lazy { dataSync },
         loginOtpSmsListener = loginOtpSmsListener,
         accessTokenPreference = accessTokenPref,
         bruteForceProtection = bruteForceProtection,
@@ -174,7 +175,7 @@ class UserSessionTest {
       expectedResultType: Class<LoginResult>
   ) {
     whenever(loginApi.login(any())).thenReturn(response)
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
 
     val result = userSession.loginWithOtp("000000").blockingGet()
@@ -201,14 +202,14 @@ class UserSessionTest {
     var syncInvoked = false
 
     whenever(loginApi.login(any())).thenReturn(response)
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
+    whenever(dataSync.sync()).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
 
     userSession.loginWithOtp("000000").blockingGet()
 
     if (shouldTriggerSync) {
       assertThat(syncInvoked).isTrue()
     } else {
-      verifyZeroInteractions(syncScheduler)
+      verifyZeroInteractions(dataSync)
     }
   }
 
@@ -229,7 +230,7 @@ class UserSessionTest {
   ])
   fun `error in sync should not affect login result`(syncWillFail: Boolean) {
     whenever(loginApi.login(any())).thenReturn(Single.just(LoginResponse("accessToken", PatientMocker.loggedInUserPayload())))
-    whenever(syncScheduler.syncImmediately()).thenAnswer {
+    whenever(dataSync.sync()).thenAnswer {
       if (syncWillFail) Completable.error(RuntimeException()) else Completable.complete()
     }
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
@@ -395,14 +396,14 @@ class UserSessionTest {
 
   @Test
   fun `when performing sync and clear data, the sync must be triggered`() {
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
 
     userSession.syncAndClearData(patientRepository).blockingAwait()
 
-    verify(syncScheduler).syncImmediately()
+    verify(dataSync).sync()
   }
 
   @Test
@@ -416,7 +417,7 @@ class UserSessionTest {
           if (retryIndex == retryCount - 1) Completable.complete() else Completable.error(RuntimeException())
         }.toTypedArray()
 
-    whenever(syncScheduler.syncImmediately())
+    whenever(dataSync.sync())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
 
     val user = PatientMocker.loggedInUser()
@@ -434,7 +435,7 @@ class UserSessionTest {
     val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
         .map { Completable.error(RuntimeException()) }.toTypedArray()
 
-    whenever(syncScheduler.syncImmediately())
+    whenever(dataSync.sync())
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
 
     val user = PatientMocker.loggedInUser()
@@ -448,7 +449,7 @@ class UserSessionTest {
 
   @Test
   fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -462,7 +463,7 @@ class UserSessionTest {
 
   @Test
   fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -476,7 +477,7 @@ class UserSessionTest {
 
   @Test
   fun `after clearing patient related data during forgot PIN flow, the user status must be set to RESETTING_PIN`() {
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -490,7 +491,7 @@ class UserSessionTest {
 
   @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -711,7 +712,7 @@ class UserSessionTest {
     var entryCleared = false
 
     whenever(loginApi.login(any())).thenReturn(response)
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete().doOnComplete { entryCleared = true })
 
     userSession.loginWithOtp("000000").blockingGet()

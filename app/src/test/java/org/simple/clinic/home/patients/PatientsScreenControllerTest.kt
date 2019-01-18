@@ -27,7 +27,6 @@ import org.simple.clinic.patient.PatientSummaryResult.NotSaved
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus

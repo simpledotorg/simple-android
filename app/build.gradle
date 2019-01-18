@@ -166,7 +166,7 @@ dependencies {
   androidTestImplementation "com.google.truth:truth:$versions.truth"
   androidTestImplementation "com.github.blocoio:faker:$versions.faker"
   androidTestImplementation "androidx.room:room-testing:$versions.room"
-  androidTestImplementation "androidx.arch.core:core-testing:$versions.archComponents"
+  androidTestImplementation "androidx.arch.core:core-testing:$versions.coreTesting"
   kaptAndroidTest "com.google.dagger:dagger-compiler:$versions.dagger"
 
   debugImplementation "com.facebook.stetho:stetho:$versions.stetho"
@@ -183,7 +183,7 @@ dependencies {
   implementation "com.google.android.material:material:$versions.material"
   implementation "androidx.cardview:cardview:$versions.cardview"
   implementation "androidx.room:room-runtime:$versions.room"
-  kapt "androidx.room:room-compiler:$versions.archComponents"
+  kapt "androidx.room:room-compiler:$versions.room"
   implementation "androidx.room:room-rxjava2:$versions.room"
   implementation "android.arch.work:work-runtime-ktx:$versions.workRuntimeKtx"
 

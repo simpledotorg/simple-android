@@ -9,7 +9,6 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
 import javax.inject.Inject
@@ -47,9 +46,7 @@ class PatientSync @Inject constructor(
         }
   }
 
-  override fun syncInterval(): Single<SyncInterval> {
-    return configProvider.map { it.syncInterval }
-  }
+  override fun syncConfig() = configProvider
 
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(

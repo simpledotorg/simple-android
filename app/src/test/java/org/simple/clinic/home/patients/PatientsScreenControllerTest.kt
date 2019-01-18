@@ -26,6 +26,7 @@ import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.NotSaved
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
@@ -54,7 +55,7 @@ class PatientsScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
-  private val syncScheduler = mock<SyncScheduler>()
+  private val dataSync = mock<DataSync>()
   private val patientRepository = mock<PatientRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
@@ -68,7 +69,7 @@ class PatientsScreenControllerTest {
     // operation on the IO thread, which was causing flakiness in this test.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    controller = PatientsScreenController(userSession, syncScheduler, patientRepository, appointmentRepository, approvalStatusApprovedAt, hasUserDismissedApprovedStatus, patientSummaryResult)
+    controller = PatientsScreenController(userSession, dataSync, patientRepository, appointmentRepository, approvalStatusApprovedAt, hasUserDismissedApprovedStatus, patientSummaryResult)
 
     uiEvents
         .compose(controller)
@@ -250,7 +251,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
-    whenever(syncScheduler.syncImmediately()).thenReturn(Completable.complete())
+    whenever(dataSync.sync()).thenReturn(Completable.complete())
     whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
@@ -258,9 +259,9 @@ class PatientsScreenControllerTest {
     verify(userSession).refreshLoggedInUser()
 
     if (canUserSyncData) {
-      verify(syncScheduler).syncImmediately()
+      verify(dataSync).sync()
     } else {
-      verify(syncScheduler, never()).syncImmediately()
+      verify(dataSync, never()).sync()
     }
   }
 

@@ -15,7 +15,7 @@ import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
-import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -39,7 +39,7 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val syncScheduler: SyncScheduler,
+    private val dataSync: DataSync,
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
@@ -110,7 +110,7 @@ class PatientsScreenController @Inject constructor(
         .take(1)
         .observeOn(io())
         .filter { canSyncData -> canSyncData }
-        .flatMapCompletable { syncScheduler.syncImmediately() }
+        .flatMapCompletable { dataSync.sync() }
 
     refreshUser
         .andThen(syncData)

@@ -7,5 +7,5 @@ interface ModelSync {
   fun sync(): Completable
   fun push(): Completable
   fun pull(): Completable
-  fun syncInterval(): Single<SyncInterval>
+  fun syncConfig(): Single<SyncConfig>
 }

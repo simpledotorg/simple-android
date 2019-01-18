@@ -6,7 +6,6 @@ import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncCoordinator
-import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import java.io.IOException
 import javax.inject.Inject
@@ -32,9 +31,7 @@ class FacilitySync @Inject constructor(
         }
   }
 
-  override fun syncInterval(): Single<SyncInterval> {
-    return configProvider.map { it.syncInterval }
-  }
+  override fun syncConfig() = configProvider
 
   fun pullWithResult(): Single<FacilityPullResult> {
     return pull()

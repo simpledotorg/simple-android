@@ -63,7 +63,6 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         prefillDate(replayedEvents),
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
-        showDateEntryWhenNextArrowIsPressed(replayedEvents),
         showBpEntryWhenBackArrowIsPressed(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
@@ -195,18 +194,6 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
       events.ofType<BloodPressureBpValidated>()
           .filter { it.result is Success }
           .map { Ui::showDateEntryScreen }
-
-  private fun showDateEntryWhenNextArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
-    val bpValidationResults = events
-        .ofType<BloodPressureBpValidated>()
-        .map { it.result }
-
-    return events
-        .ofType<BloodPressureNextArrowClicked>()
-        .withLatestFrom(bpValidationResults)
-        .filter { (_, result) -> result is Success }
-        .map { { ui: Ui -> ui.showDateEntryScreen() } }
-  }
 
   private fun showBpEntryWhenBackArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
     val previousArrowClicks = events

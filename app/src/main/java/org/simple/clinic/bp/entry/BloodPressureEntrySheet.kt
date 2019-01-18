@@ -10,6 +10,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -49,6 +50,12 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
+  private val nextArrowButton by bindView<View>(R.id.bloodpressureentry_next_arrow)
+  private val previousArrowButton by bindView<View>(R.id.bloodpressureentry_previous_arrow)
+  private val dayEditText by bindView<EditText>(R.id.bloodpressureentry_day)
+  private val monthEditText by bindView<EditText>(R.id.bloodpressureentry_month)
+  private val yearEditText by bindView<EditText>(R.id.bloodpressureentry_year)
+  private val viewFlipper by bindView<ViewFlipper>(R.id.bloodpressureentry_view_flipper)
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
@@ -87,7 +94,13 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             diastolicImeOptionClicks(),
             diastolicBackspaceClicks(),
             removeClicks(),
-            hardwareBackPresses())
+            nextArrowClicks(),
+            previousArrowClicks(),
+            hardwareBackPresses(),
+            screenTypeChanges(),
+            dayTextChanges(),
+            monthTextChanges(),
+            yearTextChanges())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -142,7 +155,19 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   private fun removeClicks(): Observable<UiEvent> =
-      RxView.clicks(removeBloodPressureButton).map { BloodPressureRemoveClicked }
+      RxView
+          .clicks(removeBloodPressureButton)
+          .map { BloodPressureRemoveClicked }
+
+  private fun nextArrowClicks(): Observable<UiEvent> =
+      RxView
+          .clicks(nextArrowButton)
+          .map { BloodPressureNextArrowClicked }
+
+  private fun previousArrowClicks(): Observable<UiEvent> =
+      RxView
+          .clicks(previousArrowButton)
+          .map { BloodPressurePreviousArrowClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->
@@ -156,6 +181,28 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       screenRouter.registerBackPressInterceptor(interceptor)
     }
   }
+
+  private fun screenTypeChanges(): Observable<UiEvent> {
+    // RxViewFlipper
+    //     .displayedChildChanges
+    //     .map()
+    return Observable.just(BloodPressureScreenChanged(ScreenType.BP_ENTRY))
+  }
+
+  private fun dayTextChanges() =
+      RxTextView.textChanges(dayEditText)
+          .map(CharSequence::toString)
+          .map(::BloodPressureDayChanged)
+
+  private fun monthTextChanges() =
+      RxTextView.textChanges(monthEditText)
+          .map(CharSequence::toString)
+          .map(::BloodPressureMonthChanged)
+
+  private fun yearTextChanges() =
+      RxTextView.textChanges(yearEditText)
+          .map(CharSequence::toString)
+          .map(::BloodPressureYearChanged)
 
   fun changeFocusToDiastolic() {
     diastolicEditText.requestFocus()
@@ -242,11 +289,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun showBpEntryScreen() {
-    TODO()
+    viewFlipper.displayedChild = 0
   }
 
   fun showDateEntryScreen() {
-    TODO()
+    viewFlipper.displayedChild = 1
   }
 
   fun showInvalidDateError() {
@@ -258,6 +305,8 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun setDate(dayOfMonth: Int, month: Int, year: Int) {
-    TODO()
+    dayEditText.setText(dayOfMonth.toString())
+    monthEditText.setText(month.toString())
+    yearEditText.setText(year.toString())
   }
 }

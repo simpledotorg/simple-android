@@ -11,6 +11,7 @@
   android:paddingTop="@dimen/spacing_16">
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+    android:id="@+id/bloodpressureentry_view_flipper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:debug_displayedChild="1">
@@ -127,6 +128,18 @@
           app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_diastolic"
           app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_diastolic"
           app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_diastolic" />
+
+        <ImageView
+          android:id="@+id/bloodpressureentry_next_arrow"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="16dp"
+          android:background="?selectableItemBackgroundBorderless"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
+          tools:ignore="ContentDescription" />
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <TextView
@@ -156,6 +169,19 @@
       <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <ImageView
+          android:id="@+id/bloodpressureentry_previous_arrow"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginStart="16dp"
+          android:background="?selectableItemBackgroundBorderless"
+          android:rotation="180"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent"
+          app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
+          tools:ignore="ContentDescription" />
 
         <EditText
           android:id="@+id/bloodpressureentry_day"

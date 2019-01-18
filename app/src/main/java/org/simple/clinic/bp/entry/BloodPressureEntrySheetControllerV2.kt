@@ -20,7 +20,7 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_SYSTOLIC_TOO_HIGH
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.ERROR_SYSTOLIC_TOO_LOW
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetControllerV2.Validation.SUCCESS
-import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator

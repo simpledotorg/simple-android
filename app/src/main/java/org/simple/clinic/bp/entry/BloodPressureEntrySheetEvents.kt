@@ -1,5 +1,6 @@
 package org.simple.clinic.bp.entry
 
+import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
 
 data class BloodPressureEntrySheetCreated(val openAs: OpenAs) : UiEvent
@@ -23,8 +24,3 @@ object BloodPressureRemoveClicked : UiEvent {
 object BloodPressureDiastolicBackspaceClicked : UiEvent
 
 data class BloodPressureScreenChanged(val type: ScreenType) : UiEvent
-
-enum class ScreenType {
-  BP_ENTRY,
-  DATE_ENTRY
-}

@@ -29,6 +29,8 @@ import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Re
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Valid
+import org.threeten.bp.Clock
+import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import javax.inject.Inject
 
@@ -42,7 +44,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val configProvider: Single<BloodPressureConfig>,
     private val dateValidator: DateOfBirthFormatValidator,
-    private val bpValidator: BpValidator
+    private val bpValidator: BpValidator,
+    private val clock: Clock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -56,7 +59,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return Observable.mergeArray(
         automaticFocusChanges(replayedEvents),
         validationErrorResets(replayedEvents),
-        prefillWhenUpdatingABloodPressure(replayedEvents),
+        prefillBpWhenUpdatingABloodPressure(replayedEvents),
+        prefillDate(replayedEvents),
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showDateEntryWhenNextArrowIsPressed(replayedEvents),
@@ -118,7 +122,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return Observable.merge(systolicChanges, diastolicChanges)
   }
 
-  private fun prefillWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<BloodPressureEntrySheetCreated>()
         .filter { it.openAs is OpenAs.Update }
@@ -138,6 +142,34 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
             ui.setDiastolic(bloodPressure.diastolic.toString())
           }
         }
+  }
+
+  private fun prefillDate(events: Observable<UiEvent>): Observable<UiChange> {
+    val openAsStream = events
+        .ofType<BloodPressureEntrySheetCreated>()
+        .map { it.openAs }
+
+    val prefillForNewBp = openAsStream
+        .ofType<OpenAs.New>()
+        .map {
+          { ui: Ui ->
+            val currentDate = LocalDate.now(clock)
+            ui.setDate(currentDate.dayOfMonth, currentDate.monthValue, currentDate.year)
+          }
+        }
+
+    val prefillForExistingBp = openAsStream
+        .ofType<OpenAs.Update>()
+        .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
+        .take(1)
+        .map {
+          { ui: Ui ->
+            val createdAtAsDate = it.createdAt.atZone(clock.zone).toLocalDate()
+            ui.setDate(createdAtAsDate.dayOfMonth, createdAtAsDate.monthValue, createdAtAsDate.year)
+          }
+        }
+
+    return prefillForNewBp.mergeWith(prefillForExistingBp)
   }
 
   private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> =

@@ -46,6 +46,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
+  enum class ScreenType {
+    BP_ENTRY,
+    DATE_ENTRY
+  }
+
   companion object {
     private const val KEY_OPEN_AS = "openAs"
     private const val EXTRA_WAS_BP_SAVED = "wasBpSaved"

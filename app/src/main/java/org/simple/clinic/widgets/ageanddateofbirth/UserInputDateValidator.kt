@@ -7,10 +7,11 @@ import org.threeten.bp.format.DateTimeParseException
 import javax.inject.Inject
 import javax.inject.Named
 
-class DateOfBirthFormatValidator @Inject constructor(
+class UserInputDateValidator @Inject constructor(
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
 
+  @Deprecated(message = "deprecated in favor of Result2")
   enum class Result {
     VALID,
     INVALID_PATTERN,

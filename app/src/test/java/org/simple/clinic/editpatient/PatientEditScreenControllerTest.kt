@@ -53,7 +53,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -77,7 +77,7 @@ class PatientEditScreenControllerTest {
   private lateinit var controller: PatientEditScreenController
 
   private lateinit var errorConsumer: (Throwable) -> Unit
-  lateinit var dateOfBirthFormatValidator: DateOfBirthFormatValidator
+  lateinit var dobValidator: UserInputDateValidator
   val dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
   @Before
@@ -85,13 +85,13 @@ class PatientEditScreenControllerTest {
     screen = mock()
     patientRepository = mock()
     numberValidator = mock()
-    dateOfBirthFormatValidator = mock()
+    dobValidator = mock()
 
     controller = PatientEditScreenController(
         patientRepository,
         numberValidator,
         clock,
-        dateOfBirthFormatValidator,
+        dobValidator,
         dateOfBirthFormat)
 
     errorConsumer = { throw it }
@@ -330,7 +330,7 @@ class PatientEditScreenControllerTest {
 
   @Test
   fun `when save is clicked, the state should be validated`() {
-    whenever(dateOfBirthFormatValidator.validate(any(), any())).thenReturn(DateOfBirthFormatValidator.Result.VALID)
+    whenever(dobValidator.validate(any(), any())).thenReturn(UserInputDateValidator.Result.VALID)
     whenever(numberValidator.validate(any(), any())).thenReturn(PhoneNumberValidator.Result.VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
@@ -387,10 +387,10 @@ class PatientEditScreenControllerTest {
   ])
   fun `when save is clicked, the date of birth should be validated`(
       dateOfBirth: String,
-      dateOfBirthValidationResult: DateOfBirthFormatValidator.Result,
+      userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
       expectedError: PatientEditValidationError
   ) {
-    whenever(dateOfBirthFormatValidator.validate(any(), any())).thenReturn(dateOfBirthValidationResult)
+    whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
@@ -423,7 +423,7 @@ class PatientEditScreenControllerTest {
       district: String,
       state: String,
       age: String?,
-      dateOfBirthValidationResult: DateOfBirthFormatValidator.Result?,
+      userInputDateOfBirthValidationResult: UserInputDateValidator.Result?,
       dateOfBirth: String?,
       expectedErrors: Set<PatientEditValidationError>
   ) {
@@ -435,8 +435,8 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updateAddressForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.updatePatient(any())).thenReturn(Completable.complete())
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
-    if (dateOfBirthValidationResult != null) {
-      whenever(dateOfBirthFormatValidator.validate(any(), any())).thenReturn(dateOfBirthValidationResult)
+    if (userInputDateOfBirthValidationResult != null) {
+      whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
     }
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
@@ -547,7 +547,7 @@ class PatientEditScreenControllerTest {
             "District",
             "",
             null,
-            DateOfBirthFormatValidator.Result.INVALID_PATTERN,
+            UserInputDateValidator.Result.INVALID_PATTERN,
             "01/01/2000",
             setOf(PHONE_NUMBER_LENGTH_TOO_LONG, COLONY_OR_VILLAGE_EMPTY, STATE_EMPTY, INVALID_DATE_OF_BIRTH)
         ),
@@ -571,7 +571,7 @@ class PatientEditScreenControllerTest {
             "District",
             "",
             null,
-            DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
+            UserInputDateValidator.Result.DATE_IS_IN_FUTURE,
             "01/01/2000",
             setOf(FULL_NAME_EMPTY, STATE_EMPTY, DATE_OF_BIRTH_IN_FUTURE)
         ),
@@ -607,7 +607,7 @@ class PatientEditScreenControllerTest {
             "District",
             "State",
             null,
-            DateOfBirthFormatValidator.Result.VALID,
+            UserInputDateValidator.Result.VALID,
             "01/01/2000",
             emptySet<PatientEditValidationError>()
         )
@@ -662,7 +662,7 @@ class PatientEditScreenControllerTest {
       existingSavedAddress: PatientAddress,
       existingSavedPhoneNumber: PatientPhoneNumber?,
       numberValidationResult: PhoneNumberValidator.Result,
-      dateOfBirthValidationResult: DateOfBirthFormatValidator.Result,
+      userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
       advanceClockBy: Duration,
       inputEvents: List<UiEvent>,
       shouldSavePatient: Boolean,
@@ -678,7 +678,7 @@ class PatientEditScreenControllerTest {
     whenever(patientRepository.updatePhoneNumberForPatient(any(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.createPhoneNumberForPatient(any(), any(), any(), any())).thenReturn(Completable.complete())
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
-    whenever(dateOfBirthFormatValidator.validate(any(), any())).thenReturn(dateOfBirthValidationResult)
+    whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
     clock.advanceBy(advanceClockBy)
     uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))
@@ -749,7 +749,7 @@ class PatientEditScreenControllerTest {
     fun generateTestData(
         patientProfile: PatientProfile,
         numberValidationResult: PhoneNumberValidator.Result = VALID,
-        dateOfBirthValidationResult: DateOfBirthFormatValidator.Result = DateOfBirthFormatValidator.Result.VALID,
+        userInputDateOfBirthValidationResult: UserInputDateValidator.Result = UserInputDateValidator.Result.VALID,
         advanceClockBy: Duration = Duration.ZERO,
         inputEvents: List<UiEvent>,
         shouldSavePatient: Boolean,
@@ -784,7 +784,7 @@ class PatientEditScreenControllerTest {
           patientProfile.address,
           patientProfile.phoneNumbers.firstOrNull(),
           numberValidationResult,
-          dateOfBirthValidationResult,
+          userInputDateOfBirthValidationResult,
           advanceClockBy,
           preCreateInputEvents + inputEvents,
           shouldSavePatient,
@@ -950,7 +950,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.INVALID_PATTERN,
+            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.INVALID_PATTERN,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -964,7 +964,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
+            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.DATE_IS_IN_FUTURE,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -991,7 +991,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE,
+            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.DATE_IS_IN_FUTURE,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
@@ -1006,7 +1006,7 @@ class PatientEditScreenControllerTest {
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
-            dateOfBirthValidationResult = DateOfBirthFormatValidator.Result.INVALID_PATTERN,
+            userInputDateOfBirthValidationResult = UserInputDateValidator.Result.INVALID_PATTERN,
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),

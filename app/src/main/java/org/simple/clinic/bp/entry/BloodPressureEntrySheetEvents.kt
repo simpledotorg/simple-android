@@ -2,7 +2,7 @@ package org.simple.clinic.bp.entry
 
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
 data class BloodPressureEntrySheetCreated(val openAs: OpenAs) : UiEvent
 
@@ -27,7 +27,7 @@ object BloodPressureDiastolicBackspaceClicked : UiEvent
 data class BloodPressureBpValidated(val result: BpValidator.Validation) : UiEvent
 
 data class BloodPressureDateValidated(val date: String) : UiEvent {
-  fun result(validator: DateOfBirthFormatValidator) = validator.validate2(date)
+  fun result(validator: UserInputDateValidator) = validator.validate2(date)
 }
 
 data class BloodPressureScreenChanged(val type: ScreenType) : UiEvent

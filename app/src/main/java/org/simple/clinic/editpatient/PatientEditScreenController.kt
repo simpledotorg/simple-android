@@ -37,7 +37,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -52,7 +52,7 @@ class PatientEditScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val numberValidator: PhoneNumberValidator,
     private val clock: Clock,
-    private val dateOfBirthFormatValidator: DateOfBirthFormatValidator,
+    private val dobValidator: UserInputDateValidator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -215,7 +215,7 @@ class PatientEditScreenController @Inject constructor(
           ongoingEditPatientEntry to phoneNumber
         }
         .map { (ongoingEditPatientEntry, phoneNumber) ->
-          ongoingEditPatientEntry.validate(phoneNumber.toNullable(), numberValidator, dateOfBirthFormatValidator)
+          ongoingEditPatientEntry.validate(phoneNumber.toNullable(), numberValidator, dobValidator)
         }
         .filter { it.isNotEmpty() }
         .map { errors ->
@@ -260,7 +260,7 @@ class PatientEditScreenController @Inject constructor(
     val validEntry = saveClicks
         .withLatestFrom(entryChanges, savedNumbers)
         .filter { (_, entry, savedNumber) ->
-          val validationErrors = entry.validate(savedNumber.toNullable(), numberValidator, dateOfBirthFormatValidator)
+          val validationErrors = entry.validate(savedNumber.toNullable(), numberValidator, dobValidator)
           validationErrors.isEmpty()
         }
         .map { (_, entry) -> entry }

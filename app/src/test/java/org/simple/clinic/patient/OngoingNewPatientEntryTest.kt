@@ -7,8 +7,8 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
@@ -38,7 +38,7 @@ class OngoingNewPatientEntryTest {
         address = Address(colonyOrVillage, district, state),
         phoneNumber = PhoneNumber(""))
 
-    val dobValidator = DateOfBirthFormatValidator(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+    val dobValidator = UserInputDateValidator(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
     val numValidator = mock<PhoneNumberValidator>()
     whenever(numValidator.validate("", LANDLINE_OR_MOBILE)).thenReturn(phoneValidationResult)
 
@@ -70,7 +70,7 @@ class OngoingNewPatientEntryTest {
         address = Address("colony", "district", "state"),
         phoneNumber = PhoneNumber("phone-number"))
 
-    val mockDobValidator = mock<DateOfBirthFormatValidator>()
+    val mockDobValidator = mock<UserInputDateValidator>()
     whenever(mockDobValidator.validate("01/01/3000")).thenReturn(Result.DATE_IS_IN_FUTURE)
 
     val mockNumValidator = mock<PhoneNumberValidator>()

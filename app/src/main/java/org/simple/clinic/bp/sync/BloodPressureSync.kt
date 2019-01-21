@@ -41,7 +41,7 @@ class BloodPressureSync @Inject constructor(
     return configProvider
         .map { it.batchSize }
         .flatMapCompletable { batchSize ->
-          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
+          syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize.numberOfRecords, it) }
         }
   }
 

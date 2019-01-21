@@ -67,7 +67,7 @@ class DataSyncTest {
       val modelSync = mock<ModelSync>()
       val syncConfig = SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
-          batchSizeEnum = BatchSize.VERY_SMALL,
+          batchSize = BatchSize.VERY_SMALL,
           syncGroupId = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
       whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
@@ -106,7 +106,7 @@ class DataSyncTest {
       val modelSync = mock<ModelSync>()
       val syncConfig = SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
-          batchSizeEnum = BatchSize.VERY_SMALL,
+          batchSize = BatchSize.VERY_SMALL,
           syncGroupId = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
       whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
@@ -142,7 +142,7 @@ class DataSyncTest {
       val modelSync = mock<ModelSync>()
       val syncConfig = SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
-          batchSizeEnum = BatchSize.VERY_SMALL,
+          batchSize = BatchSize.VERY_SMALL,
           syncGroupId = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
       whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))

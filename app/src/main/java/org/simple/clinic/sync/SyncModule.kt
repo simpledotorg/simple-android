@@ -37,7 +37,7 @@ class SyncModule {
   fun frequentSyncConfig(): Single<SyncConfig> {
     return Single.just(SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSizeEnum = BatchSize.MEDIUM,
+        batchSize = BatchSize.MEDIUM,
         syncGroupId = "sync_group_frequent"))
   }
 
@@ -46,7 +46,7 @@ class SyncModule {
   fun dailySyncConfig(): Single<SyncConfig> {
     return Single.just(SyncConfig(
         syncInterval = SyncInterval.DAILY,
-        batchSizeEnum = BatchSize.MEDIUM,
+        batchSize = BatchSize.MEDIUM,
         syncGroupId = "sync_group_daily"))
   }
 

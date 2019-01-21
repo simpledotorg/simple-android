@@ -54,7 +54,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSizeEnum = BatchSize.VERY_SMALL,
+      batchSize = BatchSize.VERY_SMALL,
       syncGroupId = "test-sync-group"))
 
   private val user: User
@@ -103,5 +103,5 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
 
   override fun pushNetworkCall(payloads: List<PrescribedDrugPayload>) = syncApi.push(PrescriptionPushRequest(payloads))
 
-  override fun batchSize() = configProvider.blockingGet().batchSize
+  override fun batchSize(): BatchSize = configProvider.blockingGet().batchSize
 }

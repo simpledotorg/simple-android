@@ -30,6 +30,7 @@ import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -190,9 +191,14 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   private fun screenTypeChanges(): Observable<UiEvent> =
-      viewFlipper.displayedChildChanges
+      viewFlipper
+          .displayedChildChanges
           .map {
-            BloodPressureScreenChanged(if (it == 0) BP_ENTRY else DATE_ENTRY)
+            BloodPressureScreenChanged(when (viewFlipper.displayedChildResId) {
+              R.id.bloodpressureentry_flipper_bp_entry -> BP_ENTRY
+              R.id.bloodpressureentry_flipper_date_entry -> DATE_ENTRY
+              else -> throw AssertionError()
+            })
           }
 
   private fun dayTextChanges() =
@@ -295,11 +301,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun showBpEntryScreen() {
-    viewFlipper.displayedChild = 0
+    viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_bp_entry
   }
 
   fun showDateEntryScreen() {
-    viewFlipper.displayedChild = 1
+    viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_date_entry
   }
 
   fun showInvalidDateError() {

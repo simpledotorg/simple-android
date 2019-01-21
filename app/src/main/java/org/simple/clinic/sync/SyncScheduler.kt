@@ -38,8 +38,10 @@ class SyncScheduler @Inject constructor(
           .setRequiresBatteryNotLow(true)
           .build()
 
-      PeriodicWorkRequestBuilder<SyncWorker>(syncConfig.frequency.toMinutes(), TimeUnit.MINUTES)
-          .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncConfig.backOffDelay.toMinutes(), TimeUnit.MINUTES)
+      val syncInterval = syncConfig.syncInterval
+
+      PeriodicWorkRequestBuilder<SyncWorker>(syncInterval.frequency.toMinutes(), TimeUnit.MINUTES)
+          .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncInterval.backOffDelay.toMinutes(), TimeUnit.MINUTES)
           .setConstraints(constraints)
           .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
           .addTag(SyncWorker.TAG)

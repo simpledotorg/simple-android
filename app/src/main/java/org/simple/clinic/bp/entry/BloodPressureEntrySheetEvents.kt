@@ -37,6 +37,14 @@ data class BloodPressureMonthChanged(val month: String) : UiEvent
 data class BloodPressureYearChanged(val year: String) : UiEvent
 data class BloodPressureDateChanged(val date: String) : UiEvent
 
-object BloodPressureNextArrowClicked : UiEvent
-object BloodPressurePreviousArrowClicked : UiEvent
-object BloodPressureBackPressed : UiEvent
+object BloodPressureNextArrowClicked : UiEvent {
+  override val analyticsName = "Blood Pressure Entry:Next Arrow Clicked"
+}
+
+object BloodPressurePreviousArrowClicked : UiEvent {
+  override val analyticsName = "Blood Pressure Entry:Previous Arrow Clicked"
+}
+
+object BloodPressureBackPressed : UiEvent {
+  override val analyticsName = "Blood Pressure Entry:Hardware Back Pressed"
+}

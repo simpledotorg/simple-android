@@ -14,7 +14,7 @@ import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 
 data class OngoingEditPatientEntry(
     val name: String,
@@ -28,7 +28,7 @@ data class OngoingEditPatientEntry(
   fun validate(
       alreadySavedNumber: PatientPhoneNumber?,
       numberValidator: PhoneNumberValidator,
-      dateOfBirthFormatValidator: DateOfBirthFormatValidator
+      dobValidator: UserInputDateValidator
   ): Set<PatientEditValidationError> {
     val errors = mutableSetOf<PatientEditValidationError>()
 
@@ -63,16 +63,16 @@ data class OngoingEditPatientEntry(
     }
 
     if (ageOrDateOfBirth is EitherAgeOrDateOfBirth.EntryWithDateOfBirth) {
-      val validationResult = dateOfBirthFormatValidator.validate(ageOrDateOfBirth.dateOfBirth)
+      val validationResult = dobValidator.validate(ageOrDateOfBirth.dateOfBirth)
 
       when (validationResult) {
-        DateOfBirthFormatValidator.Result.INVALID_PATTERN -> {
+        UserInputDateValidator.Result.INVALID_PATTERN -> {
           errors.add(INVALID_DATE_OF_BIRTH)
         }
-        DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE -> {
+        UserInputDateValidator.Result.DATE_IS_IN_FUTURE -> {
           errors.add(DATE_OF_BIRTH_IN_FUTURE)
         }
-        DateOfBirthFormatValidator.Result.VALID -> {
+        UserInputDateValidator.Result.VALID -> {
           // Nothing to do here.
         }
       }

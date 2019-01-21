@@ -5,16 +5,16 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Valid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
-class DateOfBirthFormatValidatorTest {
+class UserInputDateValidatorTest {
 
   @Test
   @Parameters(value = [
@@ -28,15 +28,15 @@ class DateOfBirthFormatValidatorTest {
   fun `validate (v1)`(date: String, expectedResult: Result) {
     val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
-    assertThat(DateOfBirthFormatValidator(format).validate(date)).isEqualTo(expectedResult)
+    assertThat(UserInputDateValidator(format).validate(date)).isEqualTo(expectedResult)
   }
 
   @Test
   @Parameters(method = "params for v2 validation")
-  fun `validate (v2)`(date: String, expectedResult: DateOfBirthFormatValidator.Result2) {
+  fun `validate (v2)`(date: String, expectedResult: UserInputDateValidator.Result2) {
     val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
 
-    assertThat(DateOfBirthFormatValidator(format).validate2(date)).isEqualTo(expectedResult)
+    assertThat(UserInputDateValidator(format).validate2(date)).isEqualTo(expectedResult)
   }
 
   @Suppress("unused")
@@ -53,7 +53,7 @@ class DateOfBirthFormatValidatorTest {
   @Test
   fun `validate future date (v1)`() {
     val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-    val dobValidator = DateOfBirthFormatValidator(format)
+    val dobValidator = UserInputDateValidator(format)
     val futureDateResult = dobValidator.validate("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
 
     assertThat(futureDateResult).isEqualTo(Result.DATE_IS_IN_FUTURE)
@@ -62,7 +62,7 @@ class DateOfBirthFormatValidatorTest {
   @Test
   fun `validate future date (v2)`() {
     val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-    val dobValidator = DateOfBirthFormatValidator(format)
+    val dobValidator = UserInputDateValidator(format)
     val futureDateResult = dobValidator.validate2("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
 
     assertThat(futureDateResult).isEqualTo(Invalid.DateIsInFuture)

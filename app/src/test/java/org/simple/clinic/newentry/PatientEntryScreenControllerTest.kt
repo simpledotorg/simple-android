@@ -40,8 +40,8 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenControllerTest {
@@ -53,7 +53,7 @@ class PatientEntryScreenControllerTest {
   private val patientRepository = mock<PatientRepository>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
-  private val dobValidator = mock<DateOfBirthFormatValidator>()
+  private val dobValidator = mock<UserInputDateValidator>()
   private val numberValidator = mock<PhoneNumberValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()

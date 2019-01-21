@@ -10,7 +10,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.ViewFlipper
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -22,12 +21,15 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bp.entry.ScreenType.BP_ENTRY
+import org.simple.clinic.bp.entry.ScreenType.DATE_ENTRY
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
 import org.simple.clinic.widgets.setTextAndCursor
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -55,7 +57,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val dayEditText by bindView<EditText>(R.id.bloodpressureentry_day)
   private val monthEditText by bindView<EditText>(R.id.bloodpressureentry_month)
   private val yearEditText by bindView<EditText>(R.id.bloodpressureentry_year)
-  private val viewFlipper by bindView<ViewFlipper>(R.id.bloodpressureentry_view_flipper)
+  private val viewFlipper by bindView<ViewFlipperWithDebugPreview>(R.id.bloodpressureentry_view_flipper)
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
@@ -182,12 +184,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     }
   }
 
-  private fun screenTypeChanges(): Observable<UiEvent> {
-    // RxViewFlipper
-    //     .displayedChildChanges
-    //     .map()
-    return Observable.just(BloodPressureScreenChanged(ScreenType.BP_ENTRY))
-  }
+  private fun screenTypeChanges(): Observable<UiEvent> =
+      viewFlipper.displayedChildChanges
+          .map {
+            BloodPressureScreenChanged(if (it == 0) BP_ENTRY else DATE_ENTRY)
+          }
 
   private fun dayTextChanges() =
       RxTextView.textChanges(dayEditText)

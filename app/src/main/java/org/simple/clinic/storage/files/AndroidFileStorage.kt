@@ -26,8 +26,14 @@ class AndroidFileStorage @Inject constructor(
     WriteFileResult.Failure(e)
   }
 
-  override fun readFromFile(file: File): ReadFileResult {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  override fun readFromFile(file: File) = try {
+    val content = file
+        .bufferedReader()
+        .use { reader -> reader.readText() }
+
+    ReadFileResult.Success(content)
+  } catch (e: Throwable) {
+    ReadFileResult.Failure(e)
   }
 
   private fun createFileIfItDoesNotExist(file: File) {

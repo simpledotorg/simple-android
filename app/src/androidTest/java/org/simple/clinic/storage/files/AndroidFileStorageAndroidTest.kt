@@ -88,4 +88,16 @@ class AndroidFileStorageAndroidTest {
     assertThat(result).isSameAs(WriteFileResult.Success)
     assertThat(file.readText()).isEqualTo(text)
   }
+
+  @Test
+  fun reading_from_a_file_must_work_as_expected() {
+    val file = testDirectory.resolve("file.txt")
+    file.createNewFile()
+    val text = "Draco Dormiens Nunquam Titillandus"
+    file.writeText(text)
+
+    val result = fileStorage.readFromFile(file)
+
+    assertThat(result).isEqualTo(ReadFileResult.Success(content = text))
+  }
 }

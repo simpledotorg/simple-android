@@ -27,7 +27,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
@@ -45,7 +45,7 @@ class PatientRepositoryTest {
   private lateinit var patientAddressDao: PatientAddress.RoomDao
   private lateinit var patientPhoneNumberDao: PatientPhoneNumber.RoomDao
   private lateinit var fuzzyPatientSearchDao: PatientFuzzySearch.PatientFuzzySearchDao
-  private lateinit var dobValidator: DateOfBirthFormatValidator
+  private lateinit var dobValidator: UserInputDateValidator
   private lateinit var userSession: UserSession
   private lateinit var facilityRepository: FacilityRepository
   private lateinit var numberValidator: PhoneNumberValidator

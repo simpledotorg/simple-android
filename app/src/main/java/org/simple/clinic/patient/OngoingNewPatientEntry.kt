@@ -1,9 +1,9 @@
 package org.simple.clinic.patient
 
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.DATE_IS_IN_FUTURE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.INVALID_PATTERN
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result.VALID
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.DATE_IS_IN_FUTURE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.INVALID_PATTERN
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.VALID
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -35,7 +35,7 @@ data class OngoingNewPatientEntry(
     val phoneNumber: PhoneNumber? = null
 ) {
 
-  fun validationErrors(dobValidator: DateOfBirthFormatValidator, numberValidator: PhoneNumberValidator): ArrayList<PatientEntryValidationError> {
+  fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): ArrayList<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 
     if (personalDetails == null) {

@@ -37,10 +37,10 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator.Result2.Valid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -54,7 +54,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   private val sheet = mock<BloodPressureEntrySheet>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
-  private val dateValidator = mock<DateOfBirthFormatValidator>()
+  private val dateValidator = mock<UserInputDateValidator>()
   private val bpValidator = mock<BpValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -355,7 +355,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Parameters(method = "params for checking valid date input")
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
       openAs: OpenAs,
-      result: DateOfBirthFormatValidator.Result2
+      result: UserInputDateValidator.Result2
   ) {
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
     whenever(dateValidator.validate2("dummy/dummy/dummy")).thenReturn(result)
@@ -387,9 +387,9 @@ class BloodPressureEntrySheetControllerTestV2 {
         listOf(OpenAs.Update(UUID.randomUUID()), InvalidPattern),
         listOf(OpenAs.Update(UUID.randomUUID()), DateIsInFuture))
 
-    //    return DateOfBirthFormatValidator.Result
+    //    return UserInputDateValidator.Result
     //        .values()
-    //        .filter { it != DateOfBirthFormatValidator.Result.VALID }
+    //        .filter { it != UserInputDateValidator.Result.VALID }
     //        .flatMap { result ->
     //          listOf(OpenAs.New(patientUuid), result) + listOf(OpenAs.Update(UUID.randomUUID()), result)
     //        }
@@ -465,7 +465,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Parameters(method = "params for showing date validation errors")
   fun `when save is clicked, date entry is active and input is invalid then validation errors should be shown`(
       openAs: OpenAs,
-      errorResult: DateOfBirthFormatValidator.Result2,
+      errorResult: UserInputDateValidator.Result2,
       uiChangeVerification: UiChange
   ) {
     whenever(dateValidator.validate2(any(), any())).thenReturn(errorResult)

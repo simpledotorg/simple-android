@@ -17,6 +17,7 @@
     app:debug_displayedChild="1">
 
     <LinearLayout
+      android:id="@+id/bloodpressureentry_flipper_bp_entry"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">
@@ -153,6 +154,7 @@
     </LinearLayout>
 
     <LinearLayout
+      android:id="@+id/bloodpressureentry_flipper_date_entry"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="vertical">

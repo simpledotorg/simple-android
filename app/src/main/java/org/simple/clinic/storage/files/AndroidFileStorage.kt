@@ -16,8 +16,14 @@ class AndroidFileStorage @Inject constructor(
     GetFileResult.Failure(e)
   }
 
-  override fun writeToFile(file: File, string: String): WriteFileResult {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  override fun writeToFile(file: File, text: String) = try {
+    file
+        .bufferedWriter()
+        .use { writer -> writer.write(text) }
+
+    WriteFileResult.Success
+  } catch (e: Throwable) {
+    WriteFileResult.Failure(e)
   }
 
   override fun readFromFile(file: File): ReadFileResult {

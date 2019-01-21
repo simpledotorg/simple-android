@@ -36,7 +36,7 @@ class ModelSyncTest {
   val syncConfigProvider = Single.fromCallable {
     SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
-        batchSizeEnum = BatchSize.VERY_SMALL,
+        batchSize = BatchSize.VERY_SMALL,
         syncGroupId = "test_sync_config")
   }
 

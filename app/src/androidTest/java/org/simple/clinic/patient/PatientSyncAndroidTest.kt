@@ -44,7 +44,7 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSizeEnum = BatchSize.VERY_SMALL,
+      batchSize = BatchSize.VERY_SMALL,
       syncGroupId = "test-sync-group"))
 
   private val authenticationRule = AuthenticationRule()
@@ -75,5 +75,5 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
 
   override fun pushNetworkCall(payloads: List<PatientPayload>) = syncApi.push(PatientPushRequest(payloads))
 
-  override fun batchSize() = configProvider.blockingGet().batchSize
+  override fun batchSize(): BatchSize = configProvider.blockingGet().batchSize
 }

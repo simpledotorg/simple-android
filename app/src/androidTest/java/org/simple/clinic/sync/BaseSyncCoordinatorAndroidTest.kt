@@ -47,7 +47,7 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
 
     lastPullToken().set(None)
 
-    val recordsToInsert = 2 * batchSize() + 7
+    val recordsToInsert = 2 * batchSize().numberOfRecords + 7
     val payloads = (0 until recordsToInsert).map { (::generatePayload)() }
 
     pushNetworkCall(payloads)
@@ -106,5 +106,5 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
 
   abstract fun pushNetworkCall(payloads: List<P>): Single<DataPushResponse>
 
-  abstract fun batchSize(): Int
+  abstract fun batchSize(): BatchSize
 }

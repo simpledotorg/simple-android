@@ -3,7 +3,9 @@ package org.simple.clinic.widgets
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ViewFlipper
-
+import io.reactivex.Observable
+import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import org.simple.clinic.R
 
 /** Exposes a way to set the displayed child in layout preview. */
@@ -11,12 +13,16 @@ class ViewFlipperWithDebugPreview(context: Context, attrs: AttributeSet) : ViewF
 
   private var childToDisplayPostInflate: Int = 0
 
+  private val displayedChildChangesSubject: Subject<Int> = BehaviorSubject.create()
+  val displayedChildChanges: Observable<Int> = displayedChildChangesSubject.hide()
+
   init {
     if (isInEditMode) {
       val attributes = context.obtainStyledAttributes(attrs, R.styleable.ViewFlipperWithDebugPreview)
       childToDisplayPostInflate = attributes.getInt(R.styleable.ViewFlipperWithDebugPreview_debug_displayedChild, 0)
       attributes.recycle()
     }
+    displayedChildChangesSubject.onNext(displayedChild)
   }
 
   override fun onFinishInflate() {
@@ -28,5 +34,10 @@ class ViewFlipperWithDebugPreview(context: Context, attrs: AttributeSet) : ViewF
       }
       displayedChild = childToDisplayPostInflate
     }
+  }
+
+  override fun setDisplayedChild(whichChild: Int) {
+    super.setDisplayedChild(whichChild)
+    displayedChildChangesSubject.onNext(whichChild)
   }
 }

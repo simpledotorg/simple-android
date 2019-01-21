@@ -1,17 +1,19 @@
 package org.simple.clinic.storage
 
 import android.app.Application
-import androidx.sqlite.db.SupportSQLiteOpenHelper
-import androidx.room.Room
-import androidx.room.migration.Migration
 import android.content.SharedPreferences
 import android.preference.PreferenceManager
+import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
+import org.simple.clinic.storage.files.AndroidFileStorage
+import org.simple.clinic.storage.files.FileStorage
 
 @Module
 open class StorageModule(
@@ -81,4 +83,9 @@ open class StorageModule(
 
   @Provides
   open fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory()
+
+  @Provides
+  fun fileStorage(application: Application): FileStorage {
+    return AndroidFileStorage(application)
+  }
 }

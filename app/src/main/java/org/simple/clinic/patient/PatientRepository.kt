@@ -18,7 +18,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthFormatValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -34,7 +34,7 @@ typealias FacilityUuid = UUID
 @AppScope
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
-    private val dobValidator: DateOfBirthFormatValidator,
+    private val dobValidator: UserInputDateValidator,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,

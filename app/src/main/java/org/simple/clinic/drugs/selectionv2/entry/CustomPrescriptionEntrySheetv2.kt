@@ -93,6 +93,30 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
     drugDosageEditText.post { drugDosageEditText.setSelection(0) }
   }
 
+  fun showEnterNewPrescriptionTitle(){
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  fun showEditPrescriptionTitle() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  fun showRemoveButton() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  fun hideRemoveButton() {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  fun setMedicineName(drugName: String) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
+  fun setDosage(dosage: String?) {
+    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  }
+
   companion object {
     private const val KEY_OPEN_AS = "openAs"
 

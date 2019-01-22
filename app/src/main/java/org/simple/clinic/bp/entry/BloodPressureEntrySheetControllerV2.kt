@@ -32,6 +32,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
@@ -414,16 +415,27 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<OpenAs.Update>()
         .map { it.bpUuid }
 
-    val saveNewBp = validDates
-        .withLatestFrom(validBps, patientUuidStream)
+    val screenChanges = events
+        .ofType<BloodPressureScreenChanged>()
+        .map { it.type }
+        .doOnNext { Timber.i("screen changed to $it") }
+
+    val saveClicks = events
+        .ofType<BloodPressureSaveClicked>()
+        .doOnNext { Timber.i("save clicked") }
+        .withLatestFrom(screenChanges)
+        .filter { (_, screen) -> screen == DATE_ENTRY }
+
+    val saveNewBp = saveClicks
+        .withLatestFrom(validDates, validBps, patientUuidStream) { _, date, bp, patientUuid -> Triple(date, bp, patientUuid) }
         .flatMapSingle { (date, bp, patientUuid) ->
           val dateAsInstant = date.atStartOfDay(UTC).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
 
-    val updateExistingBp = validDates
-        .withLatestFrom(validBps, existingBpUuidStream)
+    val updateExistingBp = saveClicks
+        .withLatestFrom(validDates, validBps, existingBpUuidStream) { _, date, bp, existingBpUuid -> Triple(date, bp, existingBpUuid) }
         .flatMap { (date, newBp, existingBpUuid) ->
           bloodPressureRepository.measurement(existingBpUuid)
               .take(1)

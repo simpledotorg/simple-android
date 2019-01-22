@@ -624,4 +624,45 @@ class BloodPressureEntrySheetControllerTestV2 {
     verify(sheet, times(2)).setNextArrowEnabled(false)
     verify(sheet, times(1)).setNextArrowEnabled(true)
   }
+
+  @Test
+  @Parameters(method = "params for OpenAs types")
+  fun `when save is clicked, user input is complete, but date entry is not active then BP should not be saved`(
+      openAs: OpenAs
+  ) {
+    val newInputDate = LocalDate.of(1991, 2, 14)
+    whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
+    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
+
+    if (openAs is OpenAs.Update) {
+      val oldCreatedAt = LocalDate.of(1990, 1, 13).atStartOfDay(UTC).toInstant()
+      val existingBp = PatientMocker.bp(
+          uuid = openAs.bpUuid,
+          systolic = 9000,
+          diastolic = 8999,
+          createdAt = oldCreatedAt,
+          updatedAt = oldCreatedAt)
+      whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
+    }
+
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = openAs))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged("120"))
+      onNext(BloodPressureDiastolicTextChanged("110"))
+      onNext(BloodPressureSaveClicked)
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureDayChanged("14"))
+      onNext(BloodPressureMonthChanged("02"))
+      onNext(BloodPressureYearChanged("91"))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSaveClicked)
+    }
+
+    verify(bloodPressureRepository, never()).updateMeasurement(any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(sheet, never()).setBpSavedResultAndFinish()
+  }
 }

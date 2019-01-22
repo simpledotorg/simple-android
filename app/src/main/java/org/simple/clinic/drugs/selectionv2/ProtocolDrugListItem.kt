@@ -30,13 +30,13 @@ data class ProtocolDrugListItem(
   override fun bind(holder: DrugViewHolder, position: Int) {
     holder.nameTextView.text = drugName
     holder.dosageTextView.text = prescribedDrug?.dosage
-    holder.rootView.setOnClickListener {
+    holder.itemView.setOnClickListener {
       uiEvents.onNext(ProtocolDrugSelected(drugName, prescribedDrug))
     }
     holder.dividerView.visibility = if (hideDivider) GONE else VISIBLE
   }
 
-  class DrugViewHolder(val rootView: View, val uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {
+  class DrugViewHolder(rootView: View, val uiEvents: Subject<UiEvent>) : ViewHolder(rootView) {
     val nameTextView by bindView<TextView>(R.id.protocoldrug_item_name)
     val dosageTextView by bindView<TextView>(R.id.protocoldrug_item_dosage)
     val dividerView by bindView<View>(R.id.protocoldrug_item_divider)

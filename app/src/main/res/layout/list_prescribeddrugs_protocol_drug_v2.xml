@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView android:id="@+id/prescribeddrug_item_protocoldrug_rootlayout"
+<androidx.cardview.widget.CardView android:id="@+id/prescribeddrug_item_protocoldrug_rootlayout"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
@@ -40,4 +40,4 @@
     android:id="@+id/protocoldrug_item_divider"
     style="@style/Clinic.V2.ListSeparator"
     android:layout_gravity="bottom" />
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

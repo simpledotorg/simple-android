@@ -5,11 +5,12 @@ import java.io.File
 import javax.inject.Inject
 
 class AndroidFileStorage @Inject constructor(
-    private val application: Application
+    private val application: Application,
+    private val fileCreator: FileCreator
 ) : FileStorage {
   override fun getFile(filePath: String) = try {
     val file = application.filesDir.resolve(filePath)
-    createFileIfItDoesNotExist(file)
+    fileCreator.createFileIfItDoesNotExist(file)
 
     if (file.isFile) GetFileResult.Success(file) else GetFileResult.NotAFile(filePath)
   } catch (e: Throwable) {
@@ -34,20 +35,5 @@ class AndroidFileStorage @Inject constructor(
     ReadFileResult.Success(content)
   } catch (e: Throwable) {
     ReadFileResult.Failure(e)
-  }
-
-  private fun createFileIfItDoesNotExist(file: File) {
-    if (!file.exists()) {
-      val parentExists = file.parentFile.exists() || file.parentFile.mkdirs()
-      if (parentExists) {
-        val fileCreated = file.createNewFile()
-        if (!fileCreated) {
-          throw RuntimeException("Could not create file: ${file.path}")
-        }
-
-      } else {
-        throw RuntimeException("Could not create directory: ${file.parentFile.path}")
-      }
-    }
   }
 }

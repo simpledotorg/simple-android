@@ -70,7 +70,7 @@ class AndroidFileStorageAndroidTest {
   }
 
   @Test
-  fun getting_a_writeable_file_that_points_to_a_directory_should_return_the_appropriate_result() {
+  fun getting_a_writable_file_that_points_to_a_directory_should_return_not_a_file_result() {
     val path = testDirectory.name
     val result = fileStorage.getFile(path)
 

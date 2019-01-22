@@ -22,7 +22,7 @@ class AndroidFileStorage @Inject constructor(
         .bufferedWriter()
         .use { writer -> writer.write(text) }
 
-    WriteFileResult.Success
+    WriteFileResult.Success(file)
   } catch (e: Throwable) {
     WriteFileResult.Failure(e)
   }

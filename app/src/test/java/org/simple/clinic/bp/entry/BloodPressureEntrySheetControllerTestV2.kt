@@ -603,4 +603,25 @@ class BloodPressureEntrySheetControllerTestV2 {
   private fun `params for OpenAs types`(): List<Any> {
     return listOf(OpenAs.New(patientUuid), OpenAs.Update(UUID.randomUUID()))
   }
+
+  @Test
+  fun `while BP readings are invalid, next arrow should remain disabled`() {
+    whenever(bpValidator.validate(any(), any()))
+        .thenReturn(BpValidator.Validation.ErrorDiastolicEmpty)
+        .thenReturn(BpValidator.Validation.ErrorDiastolicTooHigh)
+        .thenReturn(BpValidator.Validation.Success(systolic = 0, diastolic = 0))
+        .thenReturn(BpValidator.Validation.ErrorSystolicLessThanDiastolic)
+
+    uiEvents.run {
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged("-"))
+      onNext(BloodPressureDiastolicTextChanged("-"))
+      onNext(BloodPressureSystolicTextChanged("-"))
+      onNext(BloodPressureDiastolicTextChanged("-"))
+      onNext(BloodPressureDiastolicTextChanged("-"))
+    }
+
+    verify(sheet, times(2)).setNextArrowEnabled(false)
+    verify(sheet, times(1)).setNextArrowEnabled(true)
+  }
 }

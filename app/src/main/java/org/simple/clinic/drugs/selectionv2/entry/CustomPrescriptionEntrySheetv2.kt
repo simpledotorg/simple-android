@@ -61,8 +61,8 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
-    val patientUuid = intent.getSerializableExtra(KEY_PATIENT_UUID) as UUID
-    return Observable.just(CustomPrescriptionSheetCreated(patientUuid))
+    val openAs = intent.getParcelableExtra(KEY_OPEN_AS) as OpenAs
+    return Observable.just(CustomPrescriptionSheetCreated(openAs))
   }
 
   private fun drugNameChanges() = drugNameEditText.textChanges(::CustomPrescriptionDrugNameTextChanged)
@@ -94,11 +94,17 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
   }
 
   companion object {
-    private const val KEY_PATIENT_UUID = "patientUuid"
+    private const val KEY_OPEN_AS = "openAs"
 
-    fun intent(context: Context, patientUuid: UUID): Intent {
+    fun intentForAddNewPrescription(context: Context, patientUuid: UUID): Intent {
       val intent = Intent(context, CustomPrescriptionEntrySheetv2::class.java)
-      intent.putExtra(KEY_PATIENT_UUID, patientUuid)
+      intent.putExtra(KEY_OPEN_AS, OpenAs.New(patientUuid))
+      return intent
+    }
+
+    fun intentForUpdatePrescription(context: Context, prescribedDrugUuid: UUID): Intent {
+      val intent = Intent(context, CustomPrescriptionEntrySheetv2::class.java)
+      intent.putExtra(KEY_OPEN_AS, OpenAs.Update(prescribedDrugUuid))
       return intent
     }
   }

@@ -85,7 +85,7 @@ class AndroidFileStorageAndroidTest {
     val text = "Some text data"
     val result = fileStorage.writeToFile(file, text)
 
-    assertThat(result).isSameAs(WriteFileResult.Success)
+    assertThat(result).isEqualTo(WriteFileResult.Success(file))
     assertThat(file.readText()).isEqualTo(text)
   }
 

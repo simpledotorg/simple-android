@@ -4,12 +4,12 @@ import java.io.File
 
 sealed class GetFileResult {
   data class Success(val file: File) : GetFileResult()
-  data class NotAFile(val name: String): GetFileResult()
+  data class NotAFile(val name: String) : GetFileResult()
   data class Failure(val cause: Throwable) : GetFileResult()
 }
 
 sealed class WriteFileResult {
-  object Success : WriteFileResult()
+  data class Success(val file: File) : WriteFileResult()
   data class Failure(val cause: Throwable) : WriteFileResult()
 }
 

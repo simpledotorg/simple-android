@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -15,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.UiEvent
@@ -29,6 +31,7 @@ class CustomPrescriptionEntryControllerv2Test {
   private val sheet = mock<CustomPrescriptionEntrySheetv2>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.randomUUID()
+  private val prescriptionUuid = UUID.randomUUID()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private lateinit var controller: CustomPrescriptionEntryControllerv2
@@ -92,5 +95,60 @@ class CustomPrescriptionEntryControllerv2Test {
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
 
     verify(sheet).moveDrugDosageCursorToBeginning()
+  }
+
+  @Test
+  @Parameters(method = "params for showing title")
+  fun `when sheet is created then correct title should be populated`(openAs: OpenAs, showNewEntryTitle: Boolean) {
+    whenever(prescriptionRepository.prescription(any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
+
+    if (showNewEntryTitle) {
+      verify(sheet).showEnterNewPrescriptionTitle()
+    } else {
+      verify(sheet).showEditPrescriptionTitle()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for showing title`(): List<List<Any>> {
+    return listOf(
+        listOf(OpenAs.New(patientUuid), true),
+        listOf(OpenAs.Update(prescriptionUuid), false)
+    )
+  }
+
+  @Parameters(method = "params for showing remove button")
+  @Test
+  fun `the remove button should when the sheet is opened for edit`(openAs: OpenAs, showRemoveButton: Boolean) {
+    whenever(prescriptionRepository.prescription(any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(CustomPrescriptionSheetCreated(openAs))
+
+    if (showRemoveButton) {
+      verify(sheet).showRemoveButton()
+    } else {
+      verify(sheet).hideRemoveButton()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for showing remove button`(): List<List<Any>> {
+    return listOf(
+        listOf(OpenAs.New(patientUuid), false),
+        listOf(OpenAs.Update(prescriptionUuid), true)
+    )
+  }
+
+  @Test
+  fun `when sheet is opened to edit prescription then the drug name and dosage should be pre-filled`() {
+    val prescription = PatientMocker.prescription(uuid = prescriptionUuid)
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescription))
+
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+
+    verify(sheet).setMedicineName(prescription.name)
+    verify(sheet).setDosage(prescription.dosage)
   }
 }

@@ -40,6 +40,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -357,13 +358,13 @@ class BloodPressureEntrySheetControllerTestV2 {
       result: UserInputDateValidator.Result2
   ) {
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
-    whenever(dateValidator.validate2("dummy/dummy/dummy")).thenReturn(result)
+    whenever(dateValidator.validate2(any(), any())).thenReturn(result)
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
     uiEvents.onNext(BloodPressureScreenChanged(DATE_ENTRY))
-    uiEvents.onNext(BloodPressureDayChanged("dummy"))
-    uiEvents.onNext(BloodPressureMonthChanged("dummy"))
-    uiEvents.onNext(BloodPressureYearChanged("dummy"))
+    uiEvents.onNext(BloodPressureDayChanged("1"))
+    uiEvents.onNext(BloodPressureMonthChanged("4"))
+    uiEvents.onNext(BloodPressureYearChanged("90"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
     when (openAs) {
@@ -373,7 +374,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     verify(sheet, never()).setBpSavedResultAndFinish()
-    verify(dateValidator, times(3)).validate2("dummy/dummy/dummy")
+    verify(dateValidator, times(3)).validate2("01/04/1990")
   }
 
   /**
@@ -411,7 +412,7 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("13"))
       onNext(BloodPressureMonthChanged("01"))
-      onNext(BloodPressureYearChanged("1990"))
+      onNext(BloodPressureYearChanged("90"))
       onNext(BloodPressureSaveClicked)
     }
 
@@ -448,7 +449,7 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("14"))
       onNext(BloodPressureMonthChanged("02"))
-      onNext(BloodPressureYearChanged("1991"))
+      onNext(BloodPressureYearChanged("91"))
       onNext(BloodPressureSaveClicked)
     }
 
@@ -581,22 +582,31 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
-    val currentDate = LocalDate.now(testClock)
+    val currentDate = LocalDate.of(2018, 4, 23)
+    testClock.advanceBy(Duration.ofSeconds(currentDate.atStartOfDay().toEpochSecond(UTC)))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
 
-    verify(sheet).setDate(currentDate.dayOfMonth, currentDate.monthValue, currentDate.year)
+    verify(sheet).setDate(
+        dayOfMonth = "23",
+        month = "04",
+        twoDigitYear = "18")
   }
 
   @Test
   fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's existing date`() {
-    val existingBp = PatientMocker.bp()
+    val createdAtDate = LocalDate.of(2018, 4, 23)
+    val createdAtDateAsInstant = createdAtDate.atStartOfDay().toInstant(UTC)
+    val existingBp = PatientMocker.bp(createdAt = createdAtDateAsInstant)
+
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp, existingBp))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.Update(existingBp.uuid)))
 
-    val createdAtAsDate = existingBp.createdAt.atZone(testClock.zone).toLocalDate()
-    verify(sheet, times(1)).setDate(createdAtAsDate.dayOfMonth, createdAtAsDate.monthValue, createdAtAsDate.year)
+    verify(sheet, times(1)).setDate(
+        dayOfMonth = "23",
+        month = "04",
+        twoDigitYear = "18")
   }
 
   @Suppress("Unused")

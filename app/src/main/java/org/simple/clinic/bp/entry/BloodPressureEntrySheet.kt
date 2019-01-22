@@ -316,9 +316,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     TODO()
   }
 
-  fun setDate(dayOfMonth: Int, month: Int, year: Int) {
-    dayEditText.setText(dayOfMonth.toString())
-    monthEditText.setText(month.toString())
-    yearEditText.setText(year.toString())
+  fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {
+    dayEditText.setTextAndCursor(dayOfMonth)
+    monthEditText.setTextAndCursor(month)
+    yearEditText.setTextAndCursor(twoDigitYear)
   }
 }

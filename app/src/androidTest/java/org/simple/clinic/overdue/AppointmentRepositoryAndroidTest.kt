@@ -620,7 +620,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentHasBeenOverdueFor = threeSixtyFiveDays)
 
     savePatientAndAppointment(
-        fullName = "BP == 110/80, overdue between 30 days and 1 year",
+        fullName = "BP == 110/80, overdue between 30 days and 1 twoDigitYear",
         bpMeasurements = listOf(BP(systolic = 110, diastolic = 80)),
         appointmentHasBeenOverdueFor = Duration.ofDays(80))
 
@@ -651,7 +651,7 @@ class AppointmentRepositoryAndroidTest {
         "Diastolic == 90, overdue == 30 days" to REGULAR,
         "BP == 139/89, overdue == 366 days" to LOW,
         "BP == 110/80, overdue == 366 days" to LOW,
-        "BP == 110/80, overdue between 30 days and 1 year" to NONE,
+        "BP == 110/80, overdue between 30 days and 1 twoDigitYear" to NONE,
         "Has diabetes, overdue == 27 days" to NONE,
         "Has had a stroke, overdue == 20 days" to NONE,
         "Systolic > 180, overdue == 4 days" to NONE,

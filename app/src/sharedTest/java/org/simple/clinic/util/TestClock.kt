@@ -19,7 +19,7 @@ class TestClock : Clock() {
 
   fun setYear(year: Int) {
     if (year < 1970) {
-      throw AssertionError("year should be >= 1970!")
+      throw AssertionError("twoDigitYear should be >= 1970!")
     }
     val numberOfYearsToAdvanceFromEpoch = (year - 1970).toLong()
 

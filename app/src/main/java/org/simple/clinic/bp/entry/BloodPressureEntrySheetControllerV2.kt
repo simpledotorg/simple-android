@@ -148,13 +148,20 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.openAs }
 
+    val showDateOnUi = { date: LocalDate ->
+      { ui: Ui ->
+        val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = '0')
+        val monthString = date.monthValue.toString().padStart(length = 2, padChar = '0')
+        val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
+        ui.setDate(dayString, monthString, yearString)
+      }
+    }
+
     val prefillForNewBp = openAsStream
         .ofType<OpenAs.New>()
         .map {
-          { ui: Ui ->
-            val currentDate = LocalDate.now(clock)
-            ui.setDate(currentDate.dayOfMonth, currentDate.monthValue, currentDate.year)
-          }
+          val currentDate = LocalDate.now(clock)
+          showDateOnUi(currentDate)
         }
 
     val prefillForExistingBp = openAsStream
@@ -162,10 +169,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
         .take(1)
         .map {
-          { ui: Ui ->
-            val createdAtAsDate = it.createdAt.atZone(clock.zone).toLocalDate()
-            ui.setDate(createdAtAsDate.dayOfMonth, createdAtAsDate.monthValue, createdAtAsDate.year)
-          }
+          val createdAtAsDate = it.createdAt.atZone(clock.zone).toLocalDate()
+          showDateOnUi(createdAtAsDate)
         }
 
     return prefillForNewBp.mergeWith(prefillForExistingBp)
@@ -316,11 +321,17 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val yearChanges = events
         .ofType<BloodPressureYearChanged>()
-        .map { it.year }
+        .map { it.twoDigitYear }
 
     val combinedDates = Observables
         .combineLatest(dayChanges, monthChanges, yearChanges)
-        .map { (d, m, y) -> BloodPressureDateChanged(date = "$d/$m/$y") }
+        .map { (dd, mm, yy) ->
+          val paddedDay = dd.padStart(length = 2, padChar = '0')
+          val paddedMonth = mm.padStart(length = 2, padChar = '0')
+          val firstTwoDigitsOfYear = LocalDate.now(clock).year.toString().substring(0, 2)
+          val yyyy = firstTwoDigitsOfYear + yy
+          BloodPressureDateChanged(date = "$paddedDay/$paddedMonth/$yyyy")
+        }
     events.mergeWith(combinedDates)
   }
 

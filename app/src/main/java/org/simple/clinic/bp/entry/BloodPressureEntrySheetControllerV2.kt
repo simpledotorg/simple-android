@@ -58,12 +58,13 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     return Observable.mergeArray(
         automaticFocusChanges(replayedEvents),
-        validationErrorResets(replayedEvents),
         prefillBpWhenUpdatingABloodPressure(replayedEvents),
         prefillDate(replayedEvents),
+        bpValidationErrorResets(replayedEvents),
         showBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntryWhenBackArrowIsPressed(replayedEvents),
+        enableNextArrowWhileBpIsValid(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
         showConfirmRemoveBloodPressureDialog(replayedEvents),
@@ -109,7 +110,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .mergeWith(deleteLastDigitOfSystolic)
   }
 
-  private fun validationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun bpValidationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {
     val systolicChanges = events.ofType<BloodPressureSystolicTextChanged>()
         .distinctUntilChanged()
         .map { { ui: Ui -> ui.hideErrorMessage() } }
@@ -236,6 +237,14 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return Observable
         .merge(previousArrowClicks, backPresses)
         .map { { ui: Ui -> ui.showBpEntryScreen() } }
+  }
+
+  private fun enableNextArrowWhileBpIsValid(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<BloodPressureBpValidated>()
+        .map { it.result is Success }
+        .distinctUntilChanged()
+        .map { isBpValid -> { ui: Ui -> ui.setNextArrowEnabled(isBpValid) } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->

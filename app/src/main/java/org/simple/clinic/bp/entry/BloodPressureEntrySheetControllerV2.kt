@@ -176,29 +176,49 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return prefillForNewBp.mergeWith(prefillForExistingBp)
   }
 
-  private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> =
-      events.ofType<BloodPressureBpValidated>()
-          .map {
-            { ui: Ui ->
-              when (it.result) {
-                is ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
-                is ErrorSystolicTooHigh -> ui.showSystolicHighError()
-                is ErrorSystolicTooLow -> ui.showSystolicLowError()
-                is ErrorDiastolicTooHigh -> ui.showDiastolicHighError()
-                is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
-                is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
-                is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
-                is Success -> {
-                  // Nothing to do here, SUCCESS handled below separately!
-                }
-              }.exhaustive()
-            }
-          }
+  private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
+    val saveClicks = Observable.merge(
+        events.ofType<BloodPressureNextArrowClicked>(),
+        events.ofType<BloodPressureSaveClicked>())
 
-  private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> =
-      events.ofType<BloodPressureBpValidated>()
-          .filter { it.result is Success }
-          .map { Ui::showDateEntryScreen }
+    val validations = events
+        .ofType<BloodPressureBpValidated>()
+        .map { it.result }
+
+    return saveClicks
+        .withLatestFrom(validations)
+        .map { (_, result) ->
+          { ui: Ui ->
+            when (result) {
+              is ErrorSystolicLessThanDiastolic -> ui.showSystolicLessThanDiastolicError()
+              is ErrorSystolicTooHigh -> ui.showSystolicHighError()
+              is ErrorSystolicTooLow -> ui.showSystolicLowError()
+              is ErrorDiastolicTooHigh -> ui.showDiastolicHighError()
+              is ErrorDiastolicTooLow -> ui.showDiastolicLowError()
+              is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
+              is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
+              is Success -> {
+                // Nothing to do here, SUCCESS handled below separately!
+              }
+            }.exhaustive()
+          }
+        }
+  }
+
+  private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
+    val saveClicks = Observable.merge(
+        events.ofType<BloodPressureNextArrowClicked>(),
+        events.ofType<BloodPressureSaveClicked>())
+
+    val validations = events
+        .ofType<BloodPressureBpValidated>()
+        .map { it.result }
+
+    return saveClicks
+        .withLatestFrom(validations)
+        .filter { (_, result) -> result is Success }
+        .map { Ui::showDateEntryScreen }
+  }
 
   private fun showBpEntryWhenBackArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
     val previousArrowClicks = events
@@ -223,11 +243,6 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<BloodPressureScreenChanged>()
         .map { it.type }
 
-    val saveBpClicks = Observable
-        .merge(events.ofType<BloodPressureSaveClicked>(), events.ofType<BloodPressureNextArrowClicked>())
-        .withLatestFrom(screenChanges)
-        .filter { (_, screen) -> screen == BP_ENTRY }
-
     val systolicChanges = events
         .ofType<BloodPressureSystolicTextChanged>()
         .map { it.systolic }
@@ -236,9 +251,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<BloodPressureDiastolicTextChanged>()
         .map { it.diastolic }
 
-    val validations = saveBpClicks
-        .withLatestFrom(systolicChanges, diastolicChanges)
-        .map { (_, systolic, diastolic) -> bpValidator.validate(systolic, diastolic) }
+    val validations = Observables.combineLatest(systolicChanges, diastolicChanges, screenChanges)
+        .filter { (_, _, screen) -> screen == BP_ENTRY }
+        .map { (systolic, diastolic, _) -> bpValidator.validate(systolic, diastolic) }
         .map(::BloodPressureBpValidated)
 
     events.mergeWith(validations)
@@ -266,7 +281,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return hideRemoveBpButton.mergeWith(showRemoveBpButton)
   }
 
-  private fun updateSheetTitle(events: Observable<UiEvent>): Observable<out UiChange>? {
+  private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
     val openAsStream = events
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.openAs }
@@ -282,7 +297,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return showEnterBloodPressureTitle.mergeWith(showEditBloodPressureTitle)
   }
 
-  private fun showConfirmRemoveBloodPressureDialog(events: Observable<UiEvent>): Observable<out UiChange>? {
+  private fun showConfirmRemoveBloodPressureDialog(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressureMeasurementUuidStream = events
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.openAs }
@@ -296,7 +311,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { (_, uuid) -> { ui: Ui -> ui.showConfirmRemoveBloodPressureDialog(uuid) } }
   }
 
-  private fun closeSheetWhenEditedBpIsDeleted(events: Observable<UiEvent>): Observable<UiChange>? {
+  private fun closeSheetWhenEditedBpIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressureMeasurementUuidStream = events
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.openAs }

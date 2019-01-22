@@ -377,9 +377,6 @@ class BloodPressureEntrySheetControllerTestV2 {
     verify(dateValidator, times(3)).validate2("01/04/1909")
   }
 
-  /**
-   * TODO: Consider hardcoding all values instead of logic.
-   */
   @Suppress("Unused")
   private fun `params for checking valid date input`(): List<Any> {
     return listOf(
@@ -387,13 +384,6 @@ class BloodPressureEntrySheetControllerTestV2 {
         listOf(OpenAs.New(patientUuid), DateIsInFuture),
         listOf(OpenAs.Update(UUID.randomUUID()), InvalidPattern),
         listOf(OpenAs.Update(UUID.randomUUID()), DateIsInFuture))
-
-    //    return UserInputDateValidator.Result
-    //        .values()
-    //        .filter { it != UserInputDateValidator.Result.VALID }
-    //        .flatMap { result ->
-    //          listOf(OpenAs.New(patientUuid), result) + listOf(OpenAs.Update(UUID.randomUUID()), result)
-    //        }
   }
 
   @Test

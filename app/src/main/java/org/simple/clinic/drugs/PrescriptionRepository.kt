@@ -13,6 +13,7 @@ import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
+import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -22,7 +23,8 @@ class PrescriptionRepository @Inject constructor(
     private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
     private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val clock: Clock
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
   fun savePrescription(patientUuid: UUID, drug: ProtocolDrug): Completable {
@@ -111,5 +113,17 @@ class PrescriptionRepository @Inject constructor(
     return dao
         .forPatient(patientUuid)
         .toObservable()
+  }
+
+  fun prescription(prescriptionUuid: UUID): Observable<PrescribedDrug> = dao.prescription(prescriptionUuid).toObservable()
+
+  fun updatePrescription(prescription: PrescribedDrug): Completable {
+    return Completable.fromAction {
+      val updatedPrescription = prescription.copy(
+          updatedAt = Instant.now(clock),
+          syncStatus = SyncStatus.PENDING
+      )
+      dao.save(listOf(updatedPrescription))
+    }
   }
 }

@@ -31,7 +31,7 @@ data class ProtocolDrugListItem(
     holder.nameTextView.text = drugName
     holder.dosageTextView.text = prescribedDrug?.dosage
     holder.itemView.setOnClickListener {
-      uiEvents.onNext(ProtocolDrugSelected(drugName, prescribedDrug))
+      uiEvents.onNext(ProtocolDrugClicked(drugName, prescribedDrug))
     }
     holder.dividerView.visibility = if (hideDivider) GONE else VISIBLE
   }

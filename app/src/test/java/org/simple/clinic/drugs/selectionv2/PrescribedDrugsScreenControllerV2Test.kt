@@ -132,8 +132,16 @@ class PrescribedDrugsScreenControllerV2Test {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 
     uiEvents.onNext(PrescribedDrugsScreenCreated(patientUuid))
-    uiEvents.onNext(ProtocolDrugSelected(drugName = drugName, prescribedDrug = null))
+    uiEvents.onNext(ProtocolDrugClicked(drugName = drugName, prescriptionForProtocolDrug = null))
 
     verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
+  }
+
+  @Test
+  fun `when a custom prescription is clicked then open upate custom prescription screen`(){
+    val prescribedDrug = PatientMocker.prescription()
+    uiEvents.onNext(CustomPrescriptionClicked(prescribedDrug))
+
+    verify(screen).showUpdateCustomPrescriptionSheet(prescribedDrug)
   }
 }

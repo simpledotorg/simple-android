@@ -3,6 +3,7 @@ package org.simple.clinic.drugs
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -15,11 +16,18 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestClock
+import org.threeten.bp.Clock
+import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
 class PrescriptionRepositoryAndroidTest {
+
+  @Inject
+  lateinit var clock: Clock
 
   @Inject
   lateinit var database: AppDatabase
@@ -45,9 +53,18 @@ class PrescriptionRepositoryAndroidTest {
       .outerRule(authenticationRule)
       .around(rxErrorsRule)!!
 
+  private val testClock: TestClock
+    get() = clock as TestClock
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+    (clock as TestClock).setYear(2000)
+  }
+
+  @After
+  fun tearDown() {
+    (clock as TestClock).resetToEpoch()
   }
 
   @Test
@@ -108,5 +125,31 @@ class PrescriptionRepositoryAndroidTest {
 
     val storedPrescription = database.prescriptionDao().getOne(correctedPrescription.uuid)!!
     assertThat(storedPrescription.name).isEqualTo(correctedPrescription.name)
+  }
+
+  @Test
+  fun updating_a_prescription_should_update_it_correctly() {
+    val prescription = testData.prescription(
+        name = "Atenolol",
+        createdAt = Instant.now(clock),
+        updatedAt = Instant.now(clock),
+        syncStatus = SyncStatus.DONE)
+    database.prescriptionDao().save(listOf(prescription))
+
+    val correctedPrescription = prescription.copy(name = "Amlodipine")
+
+    val durationToAdvanceBy = Duration.ofMinutes(15L)
+    testClock.advanceBy(durationToAdvanceBy)
+
+    repository.updatePrescription(correctedPrescription).blockingAwait()
+
+    val expected = prescription.copy(
+        name = "Amlodipine",
+        updatedAt = prescription.updatedAt.plus(durationToAdvanceBy),
+        syncStatus = SyncStatus.PENDING
+    )
+
+    val storedPrescription = database.prescriptionDao().getOne(correctedPrescription.uuid)!!
+    assertThat(storedPrescription).isEqualTo(expected)
   }
 }

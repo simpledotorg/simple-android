@@ -9,8 +9,8 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
-import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
 import org.simple.clinic.drugs.selection.PrescribedDrugsDoneClicked
+import org.simple.clinic.drugs.selectionv2.entry.CustomPrescribedDrugListItemV2
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
@@ -75,7 +75,7 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
           val customPrescribedDrugItems = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .map { prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug) }
+              .map { prescribedDrug -> CustomPrescribedDrugListItemV2(prescribedDrug) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }

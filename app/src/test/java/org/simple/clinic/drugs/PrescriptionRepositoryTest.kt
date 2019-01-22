@@ -19,6 +19,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestClock
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -31,12 +32,13 @@ class PrescriptionRepositoryTest {
   private val dao = mock<PrescribedDrug.RoomDao>()
   private val facilityRepository = mock<FacilityRepository>()
   private val userSession = mock<UserSession>()
+  private val testClock = TestClock()
 
   private lateinit var repository: PrescriptionRepository
 
   @Before
   fun setUp() {
-    repository = PrescriptionRepository(database, dao, facilityRepository, userSession)
+    repository = PrescriptionRepository(database, dao, facilityRepository, userSession, testClock)
   }
 
   @Test

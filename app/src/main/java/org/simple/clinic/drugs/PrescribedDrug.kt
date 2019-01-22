@@ -92,5 +92,8 @@ data class PrescribedDrug(
 
     @Query("DELETE FROM prescribeddrug")
     fun clearData(): Int
+
+    @Query("SELECT * FROM PrescribedDrug WHERE uuid = :prescriptionUuid")
+    fun prescription(prescriptionUuid: UUID): Flowable<PrescribedDrug>
   }
 }

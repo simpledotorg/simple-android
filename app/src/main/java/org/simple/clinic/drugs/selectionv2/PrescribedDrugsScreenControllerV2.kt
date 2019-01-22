@@ -35,7 +35,8 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
         handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents),
         addNewPrescription(replayedEvents),
-        selectDosage(replayedEvents))
+        selectDosage(replayedEvents),
+        updateCustomPrescription(replayedEvents))
   }
 
   private fun populateDrugsList(events: Observable<UiEvent>): Observable<UiChange> {
@@ -111,6 +112,12 @@ class PrescribedDrugsScreenControllerV2 @Inject constructor(
     return events.ofType<AddNewPrescriptionClicked>()
         .withLatestFrom(patientUuids) { _, patientUuid -> patientUuid }
         .map { patientUuid -> { ui: Ui -> ui.showNewPrescriptionEntrySheet(patientUuid) } }
+  }
+
+  private fun updateCustomPrescription(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<UpdateCustomPrescription>()
+        .map { { ui: Ui -> ui.showUpdateCustomPrescriptionScreen(it.prescribedDrug) } }
   }
 
   private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {

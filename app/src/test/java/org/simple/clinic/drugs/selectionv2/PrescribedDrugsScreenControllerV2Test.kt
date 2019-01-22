@@ -136,4 +136,12 @@ class PrescribedDrugsScreenControllerV2Test {
 
     verify(screen).showDosageSelectionSheet(drugName = drugName, patientUuid = patientUuid, prescribedDrugUuid = null)
   }
+
+  @Test
+  fun `when a custom prescription is clicked then open upate custom prescription screen`(){
+    val prescribedDrug = PatientMocker.prescription()
+    uiEvents.onNext(UpdateCustomPrescription(prescribedDrug))
+
+    verify(screen).showUpdateCustomPrescriptionScreen(prescribedDrug)
+  }
 }

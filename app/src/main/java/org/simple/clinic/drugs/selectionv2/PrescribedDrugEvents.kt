@@ -7,3 +7,5 @@ import java.util.UUID
 data class ProtocolDrugSelected(val drugName: String, val prescribedDrug: PrescribedDrug?) : UiEvent
 
 data class PrescribedDrugsScreenCreated(val patientUuid: UUID) : UiEvent
+
+data class UpdateCustomPrescription(val prescribedDrug: PrescribedDrug) : UiEvent

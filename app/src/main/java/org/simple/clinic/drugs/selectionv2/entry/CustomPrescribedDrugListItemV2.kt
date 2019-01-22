@@ -7,6 +7,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
+import org.simple.clinic.drugs.selectionv2.UpdateCustomPrescription
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 
@@ -20,6 +21,9 @@ data class CustomPrescribedDrugListItemV2(
 
   override fun createViewHolder(itemView: View): DrugViewHolder {
     val holder = DrugViewHolder(itemView)
+    holder.itemView.setOnClickListener {
+      uiEvents.onNext(UpdateCustomPrescription(prescription))
+    }
     return holder
   }
 

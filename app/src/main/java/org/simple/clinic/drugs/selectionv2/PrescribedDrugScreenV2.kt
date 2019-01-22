@@ -20,6 +20,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.AddNewPrescriptionListItem
 import org.simple.clinic.drugs.selection.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
@@ -121,5 +122,9 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
 
   fun showDosageSelectionSheet(drugName: String, patientUuid: UUID, prescribedDrugUuid: UUID?) {
     activity.startActivity(DosagePickerSheet.intent(context, drugName, patientUuid, prescribedDrugUuid))
+  }
+
+  fun showUpdateCustomPrescriptionScreen(prescribedDrug: PrescribedDrug) {
+    activity.startActivity(CustomPrescriptionEntrySheetv2.intentForUpdatePrescription(context, prescribedDrug.uuid))
   }
 }

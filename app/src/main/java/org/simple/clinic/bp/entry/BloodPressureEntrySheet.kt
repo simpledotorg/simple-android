@@ -306,6 +306,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   fun showDateEntryScreen() {
     viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_date_entry
+    yearEditText.requestFocus()
   }
 
   fun showInvalidDateError() {
@@ -320,5 +321,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     dayEditText.setTextAndCursor(dayOfMonth)
     monthEditText.setTextAndCursor(month)
     yearEditText.setTextAndCursor(twoDigitYear)
+  }
+
+  fun setNextArrowEnabled(enabled: Boolean) {
+    nextArrowButton.isEnabled = enabled
   }
 }

@@ -58,7 +58,7 @@ class CustomPrescriptionEntryControllerv2Test {
     whenever(prescriptionRepository.savePrescription(patientUuid, "Amlodipine", dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false))
         .thenReturn(Completable.complete())
 
-    uiEvents.onNext(CustomPrescriptionSheetCreated(patientUuid))
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Amlodipine"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(dosage))
     uiEvents.onNext(SaveCustomPrescriptionClicked())
@@ -79,11 +79,11 @@ class CustomPrescriptionEntryControllerv2Test {
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(true))
-    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("10${org.simple.clinic.drugs.selection.entry.DOSAGE_PLACEHOLDER}"))
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("10$DOSAGE_PLACEHOLDER"))
     uiEvents.onNext(CustomPrescriptionDrugDosageFocusChanged(false))
 
     verify(sheet, times(1)).setDrugDosageText(eq(""))
-    verify(sheet, times(1)).setDrugDosageText(eq(org.simple.clinic.drugs.selection.entry.DOSAGE_PLACEHOLDER))
+    verify(sheet, times(1)).setDrugDosageText(eq(DOSAGE_PLACEHOLDER))
   }
 
   @Test
@@ -93,6 +93,4 @@ class CustomPrescriptionEntryControllerv2Test {
 
     verify(sheet).moveDrugDosageCursorToBeginning()
   }
-
-
 }

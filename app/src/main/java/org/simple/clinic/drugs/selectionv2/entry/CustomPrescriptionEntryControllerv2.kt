@@ -13,6 +13,7 @@ import javax.inject.Inject
 
 private typealias Ui = CustomPrescriptionEntrySheetv2
 private typealias UiChange = (Ui) -> Unit
+
 const val DOSAGE_PLACEHOLDER = "mg"
 
 class CustomPrescriptionEntryControllerv2 @Inject constructor(
@@ -39,6 +40,8 @@ class CustomPrescriptionEntryControllerv2 @Inject constructor(
   private fun savePrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.New }
+        .map { it.openAs as OpenAs.New }
         .map { it.patientUuid }
         .take(1)
 

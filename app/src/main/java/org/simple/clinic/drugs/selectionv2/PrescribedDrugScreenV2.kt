@@ -112,7 +112,7 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    activity.startActivity(CustomPrescriptionEntrySheetv2.intent(context, patientUuid))
+    activity.startActivity(CustomPrescriptionEntrySheetv2.intentForAddNewPrescription(context, patientUuid))
   }
 
   fun goBackToPatientSummary() {

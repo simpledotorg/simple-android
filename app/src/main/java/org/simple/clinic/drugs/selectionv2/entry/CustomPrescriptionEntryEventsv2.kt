@@ -1,9 +1,8 @@
 package org.simple.clinic.drugs.selectionv2.entry
 
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
-data class CustomPrescriptionSheetCreated(val patientUuid: UUID) : UiEvent {
+data class CustomPrescriptionSheetCreated(val openAs: OpenAs) : UiEvent {
   override val analyticsName = "Drugs:Custom:Show Prescription Sheet"
 }
 

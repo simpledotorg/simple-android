@@ -15,7 +15,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.AddNewPrescriptionClicked
-import org.simple.clinic.drugs.selection.CustomPrescribedDrugListItem
+import org.simple.clinic.drugs.selectionv2.entry.CustomPrescribedDrugListItemV2
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
@@ -100,10 +100,10 @@ class PrescribedDrugsScreenControllerV2Test {
             drugName = telmisartan40mg.name,
             prescribedDrug = null,
             hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan9000mgPrescription),
-        CustomPrescribedDrugListItem(reesesPrescription),
-        CustomPrescribedDrugListItem(fooPrescription),
-        CustomPrescribedDrugListItem(barPrescription))
+        CustomPrescribedDrugListItemV2(telmisartan9000mgPrescription),
+        CustomPrescribedDrugListItemV2(reesesPrescription),
+        CustomPrescribedDrugListItemV2(fooPrescription),
+        CustomPrescribedDrugListItemV2(barPrescription))
     verify(screen).populateDrugsList(expectedUiModels)
   }
 

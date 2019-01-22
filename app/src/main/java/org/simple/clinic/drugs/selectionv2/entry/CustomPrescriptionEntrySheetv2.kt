@@ -3,8 +3,11 @@ package org.simple.clinic.drugs.selectionv2.entry
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
+import android.widget.TextView
 import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -17,6 +20,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
 import java.util.UUID
 import javax.inject.Inject
@@ -26,6 +30,9 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
   private val drugDosageEditText by bindView<TextInputEditText>(R.id.customprescription_drug_dosage)
   private val saveButton by bindView<Button>(R.id.customprescription_save)
+  private val enterMedicineTextView by bindView<TextView>(R.id.customprescription_enter_prescription)
+  private val editMedicineTextView by bindView<TextView>(R.id.customprescription_edit_prescription)
+  private val removeMedicineButton by bindView<Button>(R.id.customprescription_remove_button)
 
   @Inject
   lateinit var controller: CustomPrescriptionEntryControllerv2
@@ -93,28 +100,28 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
     drugDosageEditText.post { drugDosageEditText.setSelection(0) }
   }
 
-  fun showEnterNewPrescriptionTitle(){
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+  fun showEnterNewPrescriptionTitle() {
+    enterMedicineTextView.visibility = VISIBLE
   }
 
   fun showEditPrescriptionTitle() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    editMedicineTextView.visibility = VISIBLE
   }
 
   fun showRemoveButton() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    removeMedicineButton.visibility = VISIBLE
   }
 
   fun hideRemoveButton() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    removeMedicineButton.visibility = GONE
   }
 
   fun setMedicineName(drugName: String) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    drugNameEditText.setTextAndCursor(drugName)
   }
 
   fun setDosage(dosage: String?) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    drugDosageEditText.setTextAndCursor(dosage?:"")
   }
 
   companion object {

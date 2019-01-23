@@ -15,7 +15,7 @@
     android:id="@+id/bloodpressureentry_view_flipper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:debug_displayedChild="0">
+    app:debug_displayedChild="1">
 
     <LinearLayout
       android:id="@+id/bloodpressureentry_flipper_bp_entry"
@@ -159,13 +159,14 @@
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <TextView
-        android:id="@+id/bloodpressureentry_error"
+        android:id="@+id/bloodpressureentry_bp_error"
         style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_8"
         android:gravity="center_horizontal"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:text="@string/bloodpressureentry_error_diastolic_180" />
     </LinearLayout>
 
     <LinearLayout
@@ -297,6 +298,16 @@
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_year"
           app:layout_constraintTop_toTopOf="parent" />
       </androidx.constraintlayout.widget.ConstraintLayout>
+
+      <TextView
+        android:id="@+id/bloodpressureentry_date_error"
+        style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        tools:text="@string/bloodpressureentry_error_date_is_in_future" />
     </LinearLayout>
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener>

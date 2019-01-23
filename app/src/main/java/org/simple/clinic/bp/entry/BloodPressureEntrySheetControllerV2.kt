@@ -61,8 +61,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         automaticFocusChanges(replayedEvents),
         prefillBpWhenUpdatingABloodPressure(replayedEvents),
         prefillDate(replayedEvents),
-        bpValidationErrorResets(replayedEvents),
         showBpValidationErrors(replayedEvents),
+        hideBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntryWhenBackArrowIsPressed(replayedEvents),
         enableNextArrowWhileBpIsValid(replayedEvents),
@@ -71,6 +71,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         showConfirmRemoveBloodPressureDialog(replayedEvents),
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
+        hideDateValidationErrors(replayedEvents),
         saveBpWhenDateEntryIsDone(replayedEvents))
   }
 
@@ -111,16 +112,13 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .mergeWith(deleteLastDigitOfSystolic)
   }
 
-  private fun bpValidationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun hideBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val systolicChanges = events.ofType<BloodPressureSystolicTextChanged>()
-        .distinctUntilChanged()
-        .map { { ui: Ui -> ui.hideErrorMessage() } }
-
     val diastolicChanges = events.ofType<BloodPressureDiastolicTextChanged>()
-        .distinctUntilChanged()
-        .map { { ui: Ui -> ui.hideErrorMessage() } }
 
-    return Observable.merge(systolicChanges, diastolicChanges)
+    return Observable
+        .merge(systolicChanges, diastolicChanges)
+        .map { { ui: Ui -> ui.hideBpErrorMessage() } }
   }
 
   private fun prefillBpWhenUpdatingABloodPressure(events: Observable<UiEvent>): Observable<UiChange> {
@@ -402,6 +400,12 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
             }
           }
         }
+  }
+
+  private fun hideDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<BloodPressureDateChanged>()
+        .map { { ui: Ui -> ui.hideDateErrorMessage() } }
   }
 
   private fun saveBpWhenDateEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {

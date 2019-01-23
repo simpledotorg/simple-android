@@ -19,7 +19,6 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,7 +27,6 @@ import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -144,8 +142,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
 
     val prescriptions = listOf(
@@ -166,8 +163,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
@@ -200,8 +196,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 3,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -317,8 +312,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
 
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
@@ -422,14 +416,13 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
-    verify(screen).showUpdatePrescribedDrugsScreenv1(patientUuid)
+    verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   @Test
@@ -597,8 +590,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = false)
     configSubject.onNext(config)
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -676,8 +668,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -705,8 +696,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true,
-        isNewPrescriptionScreenEnabled = false )
+        isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -724,8 +714,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -741,8 +730,7 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -764,30 +752,13 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true,
-        isNewPrescriptionScreenEnabled = false)
+        isUpdatePhoneDialogEnabled = true)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
-
-  @Test
-  fun `when new prescription screen config is enabled, then the new screen should open`() {
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true,
-        isNewPrescriptionScreenEnabled = true)
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
-
-    verify(screen).showUpdatePrescribedDrugsScreenv2(patientUuid)
-  }
-
 
   @Suppress("unused")
   fun `appointment cancelation reasons`() = AppointmentCancelReason.values()

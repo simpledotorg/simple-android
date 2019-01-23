@@ -18,7 +18,7 @@ class AddNewPrescriptionListItem : GroupieItemWithUiEvents<AddNewPrescriptionLis
 
   override fun createViewHolder(itemView: View): AddNewViewHolder {
     val holder = AddNewViewHolder(itemView)
-    holder.addNewPrescriptionButton.setOnClickListener { uiEvents.onNext(AddNewPrescriptionClicked()) }
+    holder.addNewPrescriptionButton.setOnClickListener { uiEvents.onNext(AddNewPrescriptionClicked) }
     return holder
   }
 

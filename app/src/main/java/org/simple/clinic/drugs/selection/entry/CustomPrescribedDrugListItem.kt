@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2.entry
+package org.simple.clinic.drugs.selection.entry
 
 import android.view.View
 import android.widget.TextView
@@ -7,17 +7,17 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.selectionv2.CustomPrescriptionClicked
+import org.simple.clinic.drugs.selection.CustomPrescriptionClicked
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.UiEvent
 
-data class CustomPrescribedDrugListItemV2(
+data class CustomPrescribedDrugListItem(
     val prescription: PrescribedDrug
-) : GroupieItemWithUiEvents<CustomPrescribedDrugListItemV2.DrugViewHolder>(prescription.hashCode().toLong()) {
+) : GroupieItemWithUiEvents<CustomPrescribedDrugListItem.DrugViewHolder>(prescription.hashCode().toLong()) {
 
   override lateinit var uiEvents: Subject<UiEvent>
 
-  override fun getLayout() = R.layout.list_prescribeddrugs_custom_drug_v2
+  override fun getLayout() = R.layout.list_prescribeddrugs_custom_drug
 
   override fun createViewHolder(itemView: View): DrugViewHolder {
     val holder = DrugViewHolder(itemView)

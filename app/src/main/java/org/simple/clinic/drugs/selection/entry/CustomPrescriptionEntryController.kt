@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.util.nullIfBlank
@@ -13,6 +14,7 @@ import javax.inject.Inject
 
 private typealias Ui = CustomPrescriptionEntrySheet
 private typealias UiChange = (Ui) -> Unit
+
 const val DOSAGE_PLACEHOLDER = "mg"
 
 class CustomPrescriptionEntryController @Inject constructor(
@@ -24,8 +26,14 @@ class CustomPrescriptionEntryController @Inject constructor(
 
     return Observable.mergeArray(
         toggleSaveButton(replayedEvents),
-        savePrescriptionsAndDismiss(replayedEvents),
-        showDefaultDosagePlaceholder(replayedEvents))
+        saveNewPrescriptionsAndDismiss(replayedEvents),
+        updatePrescriptionAndDismiss(replayedEvents),
+        showDefaultDosagePlaceholder(replayedEvents),
+        updateSheetTitle(replayedEvents),
+        toggleRemoveButton(replayedEvents),
+        prefillPrescription(replayedEvents),
+        removePrescription(replayedEvents),
+        closeSheetWhenPrescriptionIsDeleted(replayedEvents))
   }
 
   private fun toggleSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
@@ -36,9 +44,11 @@ class CustomPrescriptionEntryController @Inject constructor(
         .map { canBeSaved -> { ui: Ui -> ui.setSaveButtonEnabled(canBeSaved) } }
   }
 
-  private fun savePrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun saveNewPrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.New }
+        .map { it.openAs as OpenAs.New }
         .map { it.patientUuid }
         .take(1)
 
@@ -58,6 +68,32 @@ class CustomPrescriptionEntryController @Inject constructor(
         .flatMap { (patientUuid, name, dosage) ->
           prescriptionRepository
               .savePrescription(patientUuid, name, dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
+              .andThen(Observable.just({ ui: Ui -> ui.finish() }))
+        }
+  }
+
+  private fun updatePrescriptionAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
+    val prescribedDrugs = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .flatMap { prescriptionRepository.prescription(it.prescribedDrugUuid) }
+        .take(1)
+
+    val nameChanges = events
+        .ofType<CustomPrescriptionDrugNameTextChanged>()
+        .map { it.name }
+
+    val dosageChanges = events
+        .ofType<CustomPrescriptionDrugDosageTextChanged>()
+        .map { it.dosage }
+
+    val saveClicks = events
+        .ofType<SaveCustomPrescriptionClicked>()
+
+    return Observables.combineLatest(prescribedDrugs, nameChanges, dosageChanges, saveClicks) { prescribedDrug, name, dosage, _ -> Triple(prescribedDrug, name, dosage) }
+        .flatMap { (prescribedDrug, name, dosage) ->
+          prescriptionRepository.updatePrescription(prescribedDrug.copy(name = name, dosage = dosage))
               .andThen(Observable.just({ ui: Ui -> ui.finish() }))
         }
   }
@@ -91,5 +127,81 @@ class CustomPrescriptionEntryController @Inject constructor(
         .map { { ui: Ui -> ui.moveDrugDosageCursorToBeginning() } }
 
     return Observable.merge(setPlaceholder, resetPlaceholder, moveCursorToStart)
+  }
+
+  private fun updateSheetTitle(events: Observable<UiEvent>): Observable<UiChange> {
+    val openAsStream = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .map { it.openAs }
+
+    val showEnterNewPrescription = openAsStream
+        .filter { it is OpenAs.New }
+        .map { { ui: Ui -> ui.showEnterNewPrescriptionTitle() } }
+
+    val showEditPrescription = openAsStream
+        .filter { it is OpenAs.Update }
+        .map { { ui: Ui -> ui.showEditPrescriptionTitle() } }
+
+    return showEnterNewPrescription.mergeWith(showEditPrescription)
+  }
+
+  private fun toggleRemoveButton(events: Observable<UiEvent>): Observable<UiChange> {
+    val openAsStream = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .map { it.openAs }
+
+    val hideRemoveButton = openAsStream
+        .filter { it is OpenAs.New }
+        .map { { ui: Ui -> ui.hideRemoveButton() } }
+
+    val showRemoveButton = openAsStream
+        .filter { it is OpenAs.Update }
+        .map { { ui: Ui -> ui.showRemoveButton() } }
+
+    return showRemoveButton.mergeWith(hideRemoveButton)
+  }
+
+  private fun prefillPrescription(events: Observable<UiEvent>): Observable<UiChange> {
+    val openAsUpdate = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+
+    return openAsUpdate
+        .flatMap { prescriptionRepository.prescription(it.prescribedDrugUuid).take(1) }
+        .map {
+          { ui: Ui ->
+            ui.setMedicineName(it.name)
+            ui.setDosage(it.dosage)
+          }
+        }
+  }
+
+  private fun removePrescription(events: Observable<UiEvent>): Observable<UiChange> {
+    val openAsUpdate = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .map { it.prescribedDrugUuid }
+        .take(1)
+
+    return events
+        .ofType<RemoveCustomPrescriptionClicked>()
+        .withLatestFrom(openAsUpdate)
+        .map { (_, prescribedDrugUuid) -> { ui: Ui -> ui.showConfirmRemoveMedicineDialog(prescribedDrugUuid) } }
+  }
+
+  private fun closeSheetWhenPrescriptionIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
+    val prescribedDrugUuuids = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .map { it.prescribedDrugUuid }
+
+    return prescribedDrugUuuids
+        .flatMap(prescriptionRepository::prescription)
+        .filter { it.isDeleted }
+        .take(1)
+        .map { { ui: Ui -> ui.finish() } }
   }
 }

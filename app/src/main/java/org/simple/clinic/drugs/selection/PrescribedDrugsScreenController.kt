@@ -71,10 +71,11 @@ class PrescribedDrugsScreenController @Inject constructor(
                     hideDivider = isAtLeastOneCustomDrugPrescribed.not() && index == protocolDrugs.lastIndex)
               }
 
-          val customPrescribedDrugItems = prescribedDrugs
+          val customDrugs = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
+          val customPrescribedDrugItems = customDrugs
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .map { prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug) }
+              .mapIndexed { index, prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug, index == customDrugs.lastIndex) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }

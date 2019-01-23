@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.util.nullIfBlank
@@ -30,7 +31,9 @@ class CustomPrescriptionEntryControllerv2 @Inject constructor(
         showDefaultDosagePlaceholder(replayedEvents),
         updateSheetTitle(replayedEvents),
         toggleRemoveButton(replayedEvents),
-        prefillPrescription(replayedEvents))
+        prefillPrescription(replayedEvents),
+        removePrescription(replayedEvents),
+        closeSheetWhenPrescriptionIsDeleted(replayedEvents))
   }
 
   private fun toggleSaveButton(events: Observable<UiEvent>): Observable<UiChange> {
@@ -172,5 +175,33 @@ class CustomPrescriptionEntryControllerv2 @Inject constructor(
             ui.setDosage(it.dosage)
           }
         }
+  }
+
+  private fun removePrescription(events: Observable<UiEvent>): Observable<UiChange> {
+    val openAsUpdate = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .map { it.prescribedDrugUuid }
+        .take(1)
+
+    return events
+        .ofType<RemoveCustomPrescriptionClicked>()
+        .withLatestFrom(openAsUpdate)
+        .map { (_, prescribedDrugUuid) -> { ui: Ui -> ui.showConfirmRemoveMedicineDialog(prescribedDrugUuid) } }
+  }
+
+  private fun closeSheetWhenPrescriptionIsDeleted(events: Observable<UiEvent>): Observable<UiChange> {
+    val prescribedDrugUuuids = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .map { it.prescribedDrugUuid }
+
+    return prescribedDrugUuuids
+        .flatMap(prescriptionRepository::prescription)
+        .filter { it.isDeleted }
+        .take(1)
+        .map { { ui: Ui -> ui.finish() } }
   }
 }

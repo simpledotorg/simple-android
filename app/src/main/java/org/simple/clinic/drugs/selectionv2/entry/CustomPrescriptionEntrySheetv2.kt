@@ -18,6 +18,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.drugs.selectionv2.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
@@ -44,7 +45,14 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
     setContentView(R.layout.sheet_custom_prescription_entry_v2)
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(sheetCreates(), drugNameChanges(), drugDosageChanges(), drugDosageFocusChanges(), saveClicks())
+    Observable
+        .mergeArray(
+            sheetCreates(),
+            drugNameChanges(),
+            drugDosageChanges(),
+            drugDosageFocusChanges(),
+            saveClicks(),
+            removeClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -84,8 +92,13 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
 
     return RxView.clicks(saveButton)
         .mergeWith(dosageImeClicks)
-        .map { SaveCustomPrescriptionClicked() }
+        .map { SaveCustomPrescriptionClicked }
   }
+
+  private fun removeClicks(): Observable<UiEvent> =
+      RxView
+          .clicks(removeMedicineButton)
+          .map { RemoveCustomPrescriptionClicked }
 
   fun setSaveButtonEnabled(enabled: Boolean) {
     saveButton.isEnabled = enabled
@@ -121,7 +134,11 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
   }
 
   fun setDosage(dosage: String?) {
-    drugDosageEditText.setTextAndCursor(dosage?:"")
+    drugDosageEditText.setTextAndCursor(dosage ?: "")
+  }
+
+  fun showConfirmRemoveMedicineDialog(prescribedDrugUuid: UUID) {
+    ConfirmRemovePrescriptionDialog.showForPrescription(prescribedDrugUuid, supportFragmentManager)
   }
 
   companion object {

@@ -150,14 +150,15 @@ object PatientMocker {
       facilityUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      isDeleted: Boolean = false
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
         name = name,
         dosage = dosage,
         rxNormCode = "rx-norm-code",
-        isDeleted = false,
+        isDeleted = isDeleted,
         isProtocolDrug = isProtocolDrug,
         patientUuid = patientUuid,
         facilityUuid = facilityUuid,

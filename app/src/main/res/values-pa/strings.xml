@@ -44,10 +44,6 @@
     <string name="customprescription_save_drug">ਡਰੱਗ ਸੰਭਾਲੋ</string>
     <string name="customprescription_drug_dosage_hint">ਦਵਾਈ ਦੀ ਮਾਤਰਾ</string>
     <string name="customprescription_drug_name_hint">ਦਵਾਈ ਦਾ ਨਾਮ</string>
-    <string name="customprescription_delete_title">ਦਵਾਈਆਂ ਕੱਟੋ</string>
-    <string name="customprescription_delete_message">ਕੀ ਤੁਸੀਂ ਸੁਨਿਸ਼ਚਿਤ ਹੋ ਕਿ ਤੁਸੀਂ ਦਵਾਈ ਕੱਟਣਾ ਚਾਹੁੰਦੇ ਹੋ?</string>
-    <string name="customprescription_delete_confirm">ਹਾਂ</string>
-    <string name="customprescription_delete_cancel">ਨਹੀਂ</string>
     <string name="patientsummary_prescriptions_add">ਨਵੀਂ ਦਵਾਈ</string>
     <string name="loginpin_go_back">ਵਾਪਸ ਫੋਨ ਨੰਬਰ ਦੇ ਪਰਦੇ ਤੇ ਜਾਓ</string>
     <string name="loginpin_error_check_internet_connection">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ.</string>

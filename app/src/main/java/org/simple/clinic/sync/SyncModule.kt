@@ -19,6 +19,7 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
+import org.simple.clinic.reports.ReportsModule
 import javax.inject.Named
 
 @Module(includes = [
@@ -29,7 +30,8 @@ import javax.inject.Named
   AppointmentModule::class,
   CommunicationModule::class,
   MedicalHistoryModule::class,
-  ProtocolModule::class])
+  ProtocolModule::class,
+  ReportsModule::class])
 class SyncModule {
 
   @Provides

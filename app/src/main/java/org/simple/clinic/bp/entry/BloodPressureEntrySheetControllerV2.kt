@@ -32,7 +32,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.OffsetTime
 import java.util.UUID
 import javax.inject.Inject
 
@@ -449,7 +449,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
         .ofType<NewBpData.ReadyToSave>()
         .flatMapSingle { (date, bp, patientUuid) ->
-          val dateAsInstant = date.atStartOfDay(UTC).toInstant()
+          val dateAsInstant = date.atTime(OffsetTime.now(clock)).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
@@ -461,7 +461,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           bloodPressureRepository.measurement(existingBpUuid)
               .firstOrError()
               .map { existingBp ->
-                val dateAsInstant = date.atStartOfDay(UTC).toInstant()
+                val dateAsInstant = date.atTime(OffsetTime.now(clock)).toInstant()
                 existingBp.copy(
                     systolic = updatedBp.systolic,
                     diastolic = updatedBp.diastolic,

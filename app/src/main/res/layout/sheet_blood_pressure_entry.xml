@@ -8,13 +8,14 @@
   android:animateLayoutChanges="true"
   android:orientation="vertical"
   android:paddingBottom="@dimen/spacing_24"
-  android:paddingTop="@dimen/spacing_16">
+  android:paddingTop="@dimen/spacing_16"
+  tools:context=".bp.entry.BloodPressureEntrySheet">
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
     android:id="@+id/bloodpressureentry_view_flipper"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:debug_displayedChild="1">
+    app:debug_displayedChild="0">
 
     <LinearLayout
       android:id="@+id/bloodpressureentry_flipper_bp_entry"
@@ -72,18 +73,26 @@
         android:layout_marginTop="@dimen/spacing_16"
         android:gravity="center_horizontal">
 
-        <!-- Contains an awkward bottom-padding to keep
-               the label visible even when the keyboard is up. -->
+        <Space
+          android:id="@+id/bloodpressureentry_bp_space"
+          android:layout_width="@dimen/bloodpressureentry_navigation_arrow_width"
+          android:layout_height="wrap_content"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_systolic"
+          app:layout_constraintHorizontal_chainStyle="spread_inside"
+          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintTop_toTopOf="parent" />
+
         <EditText
           android:id="@+id/bloodpressureentry_systolic"
           style="@style/Clinic.V2.BloodPressureInput.BpReading"
-          android:layout_marginEnd="@dimen/spacing_12"
           android:importantForAutofill="no"
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_systolic_diastolic_separator"
+          app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_bp_space"
           app:layout_constraintTop_toTopOf="parent"
-          tools:ignore="UnusedAttribute"
-          tools:text="120">
+          tools:ignore="UnusedAttribute">
 
           <requestFocus />
         </EditText>
@@ -102,19 +111,17 @@
         <TextView
           android:id="@+id/bloodpressureentry_systolic_diastolic_separator"
           style="@style/Clinic.V2.BloodPressureInputSeparator"
-          android:layout_marginEnd="@dimen/spacing_12"
-          android:layout_marginStart="@dimen/spacing_12"
           app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_systolic"
-          app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_diastolic"
+          app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_systolic"
           app:layout_constraintTop_toTopOf="@+id/bloodpressureentry_systolic" />
 
         <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
           android:id="@+id/bloodpressureentry_diastolic"
           style="@style/Clinic.V2.BloodPressureInput.BpReading"
-          android:layout_marginStart="@dimen/spacing_12"
           android:importantForAutofill="no"
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+          app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_next_arrow"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_systolic_diastolic_separator"
           app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
@@ -130,17 +137,25 @@
           app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_diastolic"
           app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_diastolic" />
 
-        <ImageView
+        <FrameLayout
           android:id="@+id/bloodpressureentry_next_arrow"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="16dp"
+          android:layout_height="0dp"
           android:background="?selectableItemBackgroundBorderless"
+          android:paddingEnd="@dimen/spacing_16"
+          android:paddingStart="@dimen/spacing_8"
           app:layout_constraintBottom_toBottomOf="parent"
           app:layout_constraintEnd_toEndOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
-          tools:ignore="ContentDescription" />
+          app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_diastolic"
+          app:layout_constraintTop_toTopOf="parent">
+
+          <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
+            tools:ignore="ContentDescription,RtlSymmetry" />
+        </FrameLayout>
       </androidx.constraintlayout.widget.ConstraintLayout>
 
       <TextView
@@ -172,18 +187,27 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <ImageView
+        <FrameLayout
           android:id="@+id/bloodpressureentry_previous_arrow"
           android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="16dp"
+          android:layout_height="0dp"
           android:background="?selectableItemBackgroundBorderless"
-          android:rotation="180"
+          android:paddingEnd="@dimen/spacing_8"
+          android:paddingStart="@dimen/spacing_16"
           app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_day"
+          app:layout_constraintHorizontal_chainStyle="spread"
           app:layout_constraintStart_toStartOf="parent"
-          app:layout_constraintTop_toTopOf="parent"
-          app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
-          tools:ignore="ContentDescription" />
+          app:layout_constraintTop_toTopOf="parent">
+
+          <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:rotation="180"
+            app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
+            tools:ignore="ContentDescription,RtlSymmetry" />
+        </FrameLayout>
 
         <EditText
           android:id="@+id/bloodpressureentry_day"
@@ -191,8 +215,7 @@
           android:importantForAutofill="no"
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_day_month_separator"
-          app:layout_constraintHorizontal_chainStyle="packed"
-          app:layout_constraintStart_toStartOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_previous_arrow"
           app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
 
@@ -210,8 +233,6 @@
         <TextView
           android:id="@+id/bloodpressureentry_day_month_separator"
           style="@style/Clinic.V2.BloodPressureInputSeparator"
-          android:layout_marginEnd="@dimen/spacing_12"
-          android:layout_marginStart="@dimen/spacing_12"
           app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_day"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day"
@@ -241,8 +262,6 @@
         <TextView
           android:id="@+id/bloodpressureentry_month_year_separator"
           style="@style/Clinic.V2.BloodPressureInputSeparator"
-          android:layout_marginEnd="@dimen/spacing_12"
-          android:layout_marginStart="@dimen/spacing_12"
           app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_month"
           app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_year"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month"
@@ -253,7 +272,7 @@
           style="@style/Clinic.V2.BloodPressureInput.Date"
           android:importantForAutofill="no"
           android:theme="@style/Clinic.V2.BloodPressureInputTheme"
-          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_date_space"
           app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month_year_separator"
           app:layout_constraintTop_toTopOf="parent"
           tools:ignore="UnusedAttribute" />
@@ -268,6 +287,15 @@
           app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_year"
           app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_year"
           app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_year" />
+
+        <Space
+          android:id="@+id/bloodpressureentry_date_space"
+          android:layout_width="@dimen/bloodpressureentry_navigation_arrow_width"
+          android:layout_height="wrap_content"
+          app:layout_constraintBottom_toBottomOf="parent"
+          app:layout_constraintEnd_toEndOf="parent"
+          app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_year"
+          app:layout_constraintTop_toTopOf="parent" />
       </androidx.constraintlayout.widget.ConstraintLayout>
     </LinearLayout>
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>

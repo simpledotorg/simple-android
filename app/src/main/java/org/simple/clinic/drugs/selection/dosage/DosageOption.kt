@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2.dosage
+package org.simple.clinic.drugs.selection.dosage
 
 import org.simple.clinic.protocol.ProtocolDrug
 

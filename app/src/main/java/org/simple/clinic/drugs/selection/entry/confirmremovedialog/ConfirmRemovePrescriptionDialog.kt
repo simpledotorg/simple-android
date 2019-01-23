@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2.entry.confirmremovedialog
+package org.simple.clinic.drugs.selection.entry.confirmremovedialog
 
 import android.app.Dialog
 import android.content.DialogInterface

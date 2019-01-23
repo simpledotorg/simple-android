@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selection
 
 import android.view.View
 import android.view.View.GONE
@@ -21,7 +21,7 @@ data class ProtocolDrugListItem(
 
   override lateinit var uiEvents: Subject<UiEvent>
 
-  override fun getLayout() = R.layout.list_prescribeddrugs_protocol_drug_v2
+  override fun getLayout() = R.layout.list_prescribeddrugs_protocol_drug
 
   override fun createViewHolder(itemView: View): DrugViewHolder {
     return DrugViewHolder(itemView, uiEvents)

@@ -24,9 +24,6 @@
   <dimen name="textsize_20">20sp</dimen>
   <dimen name="textsize_34">34sp</dimen>
 
-  <dimen name="prescribeddrugs_protocol_drug_selected_padding">16dp</dimen>
-  <dimen name="prescribeddrugs_protocol_drug_unselected_padding">0dp</dimen>
-
   <dimen name="medicalhistory_selected_padding">10dp</dimen>
   <dimen name="medicalhistory_unselected_padding">20dp</dimen>
 

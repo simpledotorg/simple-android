@@ -39,7 +39,6 @@
     <string name="timestamp_days">%d ਦਿਨ ਪਹਿਲਾਂ</string>
     <string name="patient_prescribeddrugs_screen_title">ਬੀ ਪੀ ਦੀਆਂ ਦਵਾਈਆਂ</string>
     <string name="patient_prescribeddrugs_add_custom_prescription">ਹੋਰ ਦਵਾਈ ਜੋੜੋ</string>
-    <string name="prescribeddrug_delete_custom_drug">ਦਵਾਈਆਂ ਕੱਟੋ</string>
     <string name="customprescription_enter_medicine">ਹੋਰ ਦਵਾਈ ਜੋੜੋ</string>
     <string name="customprescription_save_drug">ਡਰੱਗ ਸੰਭਾਲੋ</string>
     <string name="customprescription_drug_dosage_hint">ਦਵਾਈ ਦੀ ਮਾਤਰਾ</string>

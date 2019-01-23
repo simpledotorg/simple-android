@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2.entry.confirmremovedialog
+package org.simple.clinic.drugs.selection.entry.confirmremovedialog
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource

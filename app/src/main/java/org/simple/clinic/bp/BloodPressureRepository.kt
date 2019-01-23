@@ -132,4 +132,10 @@ class BloodPressureRepository @Inject constructor(
       dao.save(listOf(deletedBloodPressureMeasurement))
     }
   }
+
+  fun bloodPressureCount(patientUuid: UUID): Observable<Int> {
+    return dao
+        .recordedBloodPressureCountForPatient(patientUuid)
+        .toObservable()
+  }
 }

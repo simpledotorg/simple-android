@@ -16,6 +16,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.cast
+import io.reactivex.rxkotlin.toObservable
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
@@ -32,6 +33,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
+import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -134,6 +136,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     val openAs = intent.extras!!.getParcelable(KEY_OPEN_AS) as OpenAs
     return Observable
         .just(BloodPressureEntrySheetCreated(openAs))
+        // TODO: Update: Now that we've moved to ReplayUntilScreenIsDestroyed, is this still required?
         // This delay stops the race condition (?) that happens frequently with replay().refCount()
         // in the controller. Temporary workaround until we figure out what exactly is going on.
         .delay(100L, TimeUnit.MILLISECONDS)
@@ -149,10 +152,10 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       .map(::BloodPressureDiastolicTextChanged)
 
   private fun diastolicImeOptionClicks(): Observable<BloodPressureSaveClicked> {
-    return Observable
-        .merge(
-            RxTextView.editorActions(systolicEditText) { actionId -> actionId == EditorInfo.IME_ACTION_DONE },
-            RxTextView.editorActions(diastolicEditText) { actionId -> actionId == EditorInfo.IME_ACTION_DONE })
+    return listOf(systolicEditText, diastolicEditText, dayEditText, monthEditText, yearEditText)
+        .map { RxTextView.editorActions(it) { actionId -> actionId == EditorInfo.IME_ACTION_DONE } }
+        .toObservable()
+        .flatMap { it }
         .map { BloodPressureSaveClicked }
   }
 
@@ -310,11 +313,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun showInvalidDateError() {
-    TODO()
+    Timber.w("TODO: showInvalidDateError")
   }
 
   fun showDateIsInFutureError() {
-    TODO()
+    Timber.w("TODO: showDateIsInFutureError")
   }
 
   fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {

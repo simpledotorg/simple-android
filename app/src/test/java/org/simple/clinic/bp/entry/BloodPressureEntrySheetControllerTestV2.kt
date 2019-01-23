@@ -43,6 +43,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.OffsetTime
 import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 
@@ -415,21 +416,21 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureSaveClicked)
     }
 
-    val entryDateAsInstant = inputDate.atStartOfDay(UTC).toInstant()
-
     verify(bloodPressureRepository, never()).updateMeasurement(any())
 
+    val entryDateAsInstant = inputDate.atTime(OffsetTime.now(testClock)).toInstant()
     verify(bloodPressureRepository).saveMeasurement(
         patientUuid,
         systolic = 130,
         diastolic = 110,
         createdAt = entryDateAsInstant)
+
     verify(sheet).setBpSavedResultAndFinish()
   }
 
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
-    val oldCreatedAt = LocalDate.of(1990, 1, 13).atStartOfDay(UTC).toInstant()
+    val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testClock)).toInstant()
     val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt)
 
     val newInputDate = LocalDate.of(1991, 2, 14)
@@ -452,7 +453,7 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureSaveClicked)
     }
 
-    val newInputDateAsInstant = newInputDate.atStartOfDay(UTC).toInstant()
+    val newInputDateAsInstant = newInputDate.atTime(OffsetTime.now(testClock)).toInstant()
     val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, createdAt = newInputDateAsInstant, updatedAt = newInputDateAsInstant)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
@@ -646,7 +647,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
 
     if (openAs is OpenAs.Update) {
-      val oldCreatedAt = LocalDate.of(1990, 1, 13).atStartOfDay(UTC).toInstant()
+      val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testClock)).toInstant()
       val existingBp = PatientMocker.bp(
           uuid = openAs.bpUuid,
           systolic = 9000,

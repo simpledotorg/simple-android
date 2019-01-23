@@ -33,7 +33,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
-import timber.log.Timber
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -51,7 +50,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
-  private val errorTextView by bindView<TextView>(R.id.bloodpressureentry_error)
+  private val bpErrorTextView by bindView<TextView>(R.id.bloodpressureentry_bp_error)
   private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
@@ -61,6 +60,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val monthEditText by bindView<EditText>(R.id.bloodpressureentry_month)
   private val yearEditText by bindView<EditText>(R.id.bloodpressureentry_year)
   private val viewFlipper by bindView<ViewFlipperWithDebugPreview>(R.id.bloodpressureentry_view_flipper)
+  private val dateErrorTextView by bindView<TextView>(R.id.bloodpressureentry_date_error)
 
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
@@ -235,42 +235,42 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun hideErrorMessage() {
-    errorTextView.visibility = View.GONE
+    bpErrorTextView.visibility = View.GONE
   }
 
   fun showSystolicLessThanDiastolicError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_more)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_more)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun showSystolicLowError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_70)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_70)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun showSystolicHighError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_300)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_300)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun showDiastolicLowError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_40)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_40)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun showDiastolicHighError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_180)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_180)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun showSystolicEmptyError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_systolic_empty)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_systolic_empty)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun showDiastolicEmptyError() {
-    errorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_empty)
-    errorTextView.visibility = View.VISIBLE
+    bpErrorTextView.text = getString(R.string.bloodpressureentry_error_diastolic_empty)
+    bpErrorTextView.visibility = View.VISIBLE
   }
 
   fun setSystolic(systolic: String) {
@@ -313,11 +313,13 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun showInvalidDateError() {
-    Timber.w("TODO: showInvalidDateError")
+    dateErrorTextView.setText(R.string.bloodpressureentry_error_date_invalid_pattern)
+    dateErrorTextView.visibility = View.VISIBLE
   }
 
   fun showDateIsInFutureError() {
-    Timber.w("TODO: showDateIsInFutureError")
+    dateErrorTextView.setText(R.string.bloodpressureentry_error_date_is_in_future)
+    dateErrorTextView.visibility = View.VISIBLE
   }
 
   fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {

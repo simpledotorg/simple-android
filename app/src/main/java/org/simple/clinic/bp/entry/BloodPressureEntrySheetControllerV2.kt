@@ -26,7 +26,6 @@ import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
@@ -201,7 +200,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
               is ErrorSystolicEmpty -> ui.showSystolicEmptyError()
               is ErrorDiastolicEmpty -> ui.showDiastolicEmptyError()
               is Success -> {
-                // Nothing to do here, SUCCESS handled below separately!
+                // Nothing to do here.
               }
             }.exhaustive()
           }
@@ -391,7 +390,6 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     val validations = events
         .ofType<BloodPressureDateValidated>()
         .map { it.result }
-        .ofType<Invalid>()
 
     return saveClicks
         .withLatestFrom(validations)
@@ -399,6 +397,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           when (result) {
             is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
             is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }
+            is Valid -> { ui: Ui ->
+              // Nothing to do here.
+            }
           }
         }
   }

@@ -3,6 +3,7 @@ package org.simple.clinic.drugs.selectionv2.entry
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -57,7 +58,7 @@ class CustomPrescriptionEntryControllerv2Test {
 
   @Test
   @Parameters(value = ["", "10mg"])
-  fun `when save is clicked then a new prescription should be saved`(dosage: String) {
+  fun `when sheet is opened in new mode and save is clicked then a new prescription should be saved`(dosage: String) {
     whenever(prescriptionRepository.savePrescription(patientUuid, "Amlodipine", dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false))
         .thenReturn(Completable.complete())
 
@@ -150,5 +151,22 @@ class CustomPrescriptionEntryControllerv2Test {
 
     verify(sheet).setMedicineName(prescription.name)
     verify(sheet).setDosage(prescription.dosage)
+  }
+
+  @Test
+  fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`() {
+    val prescribedDrug = PatientMocker.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
+
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
+    whenever(prescriptionRepository.updatePrescription(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
+    uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
+    uiEvents.onNext(SaveCustomPrescriptionClicked())
+
+    verify(prescriptionRepository).updatePrescription(prescribedDrug.copy(name = "Atenolol", dosage = "5mg"))
+    verify(prescriptionRepository, never()).savePrescription(any(), any())
+    verify(sheet).finish()
   }
 }

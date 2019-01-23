@@ -279,6 +279,8 @@ class PatientSummaryScreenController @Inject constructor(
     val patientUuids = events
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
+        .replay()
+        .refCount()
 
     val bloodPressureSaves = events
         .ofType<PatientSummaryBloodPressureClosed>()
@@ -289,7 +291,16 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryRestoredWithBPSaved>()
         .map { it.wasBloodPressureSaved }
 
-    val mergedBpSaves = Observable.merge(bloodPressureSaves, bloodPressureSaveRestores)
+    val mergedBloodPressureSaves = bloodPressureSaves.mergeWith(bloodPressureSaveRestores)
+
+    val allBpsForPatientDeleted = patientUuids
+        .switchMap(bpRepository::bloodPressureCount)
+        .map { recordedBpCount -> recordedBpCount == 0 }
+
+    val shouldShowAppointmentSheet = Observables
+        .combineLatest(mergedBloodPressureSaves, allBpsForPatientDeleted) { wasBloodPressureSaved, recordedBpsAreDeleted ->
+          if (recordedBpsAreDeleted) false else wasBloodPressureSaved
+        }
 
     val backClicks = events
         .ofType<PatientSummaryBackClicked>()
@@ -298,13 +309,13 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val doneOrBackClicksWithBpSaved = Observable.merge(doneClicks, backClicks)
-        .withLatestFrom(mergedBpSaves, patientUuids)
-        .filter { (_, saved, _) -> saved }
+        .withLatestFrom(shouldShowAppointmentSheet, patientUuids)
+        .filter { (_, showScheduleAppointmentSheet, _) -> showScheduleAppointmentSheet }
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
     val backClicksWithBpNotSaved = backClicks
-        .withLatestFrom(mergedBpSaves, callers)
-        .filter { (_, saved, _) -> saved.not() }
+        .withLatestFrom(shouldShowAppointmentSheet, callers)
+        .filter { (_, showScheduleAppointmentSheet, _) -> showScheduleAppointmentSheet.not() }
         .map { (_, _, caller) ->
           { ui: Ui ->
             when (caller!!) {
@@ -315,8 +326,8 @@ class PatientSummaryScreenController @Inject constructor(
         }
 
     val doneClicksWithBpNotSaved = doneClicks
-        .withLatestFrom(mergedBpSaves)
-        .filter { (_, saved) -> saved.not() }
+        .withLatestFrom(shouldShowAppointmentSheet)
+        .filter { (_, showScheduleAppointmentSheet) -> showScheduleAppointmentSheet.not() }
         .map { { ui: Ui -> ui.goBackToHome() } }
 
     return Observable.mergeArray(

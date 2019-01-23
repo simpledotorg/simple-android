@@ -183,10 +183,10 @@
   <string name="customprescription_dosage_placeholder" translatable="false">mg</string>
   <string name="customprescription_drug_dosage_hint">Dosage</string>
 
-  <string name="customprescription_delete_title">Delete medicine</string>
-  <string name="customprescription_delete_message">Are you sure you want to delete the medicine?</string>
-  <string name="customprescription_delete_confirm">Yes</string>
-  <string name="customprescription_delete_cancel">No</string>
+  <string name="customprescription_delete_title">Remove medicine</string>
+  <string name="customprescription_delete_message">Are you sure you want to remove this medicine?</string>
+  <string name="customprescription_delete_confirm">Remove</string>
+  <string name="customprescription_delete_cancel">Cancel</string>
 
   <!-- Login -->
   <string name="loginpin_go_back">Go back to phone number screen</string>

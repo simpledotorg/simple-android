@@ -1,70 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView android:id="@+id/prescribeddrug_item_protocoldrug_rootlayout"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="@color/white"
-  android:orientation="vertical">
+  android:background="@color/white100"
+  android:clickable="true"
+  android:focusable="true"
+  android:foreground="?selectableItemBackground"
+  android:orientation="vertical"
+  app:cardCornerRadius="0dp">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/spacing_8"
-    android:paddingStart="@dimen/spacing_16">
+    android:padding="@dimen/spacing_16">
 
     <TextView
-      android:id="@+id/prescribeddrug_item_protocoldrug_name"
+      android:id="@+id/protocoldrug_item_name"
+      style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_gravity="center_vertical"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
-      android:paddingBottom="@dimen/spacing_16"
-      android:paddingTop="@dimen/spacing_16"
-      android:textSize="@dimen/textsize_16"
       tools:text="Amlodipine" />
 
-    <RadioGroup
+    <TextView
+      android:id="@+id/protocoldrug_item_dosage"
+      style="@style/Clinic.V2.TextAppearance.Body1Left.Blue1"
       android:layout_width="wrap_content"
-      android:layout_height="match_parent"
-      android:orientation="horizontal">
-
-      <CheckBox
-        android:id="@+id/prescribeddrug_item_protocoldrug_dosage_1"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="@drawable/selector_prescribeddrug_background"
-        android:button="@null"
-        android:drawablePadding="@dimen/spacing_4"
-        android:gravity="center"
-        android:minEms="6"
-        android:paddingEnd="@dimen/spacing_24"
-        android:paddingStart="@dimen/spacing_24"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
-        tools:text="5mg" />
-
-      <CheckBox
-        android:id="@+id/prescribeddrug_item_protocoldrug_dosage_2"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginStart="@dimen/spacing_16"
-        android:background="@drawable/selector_prescribeddrug_background"
-        android:button="@null"
-        android:gravity="center"
-        android:minEms="6"
-        android:paddingEnd="@dimen/spacing_16"
-        android:paddingStart="@dimen/spacing_16"
-        android:textAllCaps="false"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
-        tools:text="10mg" />
-    </RadioGroup>
+      android:layout_height="wrap_content"
+      tools:text="10 mg" />
   </LinearLayout>
 
   <View
-    style="@style/Clinic.Separator.VerticalContent"
-    android:layout_gravity="bottom"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="@dimen/spacing_16" />
+    android:id="@+id/protocoldrug_item_divider"
+    style="@style/Clinic.V2.ListSeparator"
+    android:layout_gravity="bottom" />
 </androidx.cardview.widget.CardView>

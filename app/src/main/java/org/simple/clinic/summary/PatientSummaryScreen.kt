@@ -27,8 +27,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
-import org.simple.clinic.drugs.selectionv2.PrescribedDrugScreenV2
+import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.editpatient.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.patient.Gender
@@ -310,12 +309,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         }
   }
 
-  fun showUpdatePrescribedDrugsScreenv1(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugsScreen.KEY(patientUuid))
-  }
-
-  fun showUpdatePrescribedDrugsScreenv2(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugScreenV2.KEY(patientUuid))
+  fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
+    screenRouter.push(PrescribedDrugScreen.KEY(patientUuid))
   }
 }
 

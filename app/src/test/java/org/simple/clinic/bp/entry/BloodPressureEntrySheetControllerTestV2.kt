@@ -388,21 +388,30 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
-    val inputDate = LocalDate.of(1990, 1, 13)
-    whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
-    whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(inputDate))
+    val inputDate = LocalDate.of(1990, 2, 13)
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+
+    whenever(bpValidator.validate(any(), any()))
+        .thenReturn(ErrorSystolicEmpty)
+        .thenReturn(Success(130, 110))
+
+    whenever(dateValidator.validate2(any(), any()))
+        .thenReturn(InvalidPattern)
+        .thenReturn(Valid(inputDate))
 
     uiEvents.run {
       onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.New(patientUuid)))
       onNext(BloodPressureScreenChanged(BP_ENTRY))
-      onNext(BloodPressureSystolicTextChanged("120"))
+      onNext(BloodPressureSystolicTextChanged("invalid"))
+      onNext(BloodPressureDiastolicTextChanged("invalid"))
+      onNext(BloodPressureSystolicTextChanged("130"))
       onNext(BloodPressureDiastolicTextChanged("110"))
       onNext(BloodPressureSaveClicked)
       onNext(BloodPressureScreenChanged(DATE_ENTRY))
       onNext(BloodPressureDayChanged("13"))
-      onNext(BloodPressureMonthChanged("01"))
+      onNext(BloodPressureMonthChanged("02"))
       onNext(BloodPressureYearChanged("90"))
+      onNext(BloodPressureMonthChanged("invalid"))
       onNext(BloodPressureSaveClicked)
     }
 
@@ -412,7 +421,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
     verify(bloodPressureRepository).saveMeasurement(
         patientUuid,
-        systolic = 120,
+        systolic = 130,
         diastolic = 110,
         createdAt = entryDateAsInstant)
     verify(sheet).setBpSavedResultAndFinish()

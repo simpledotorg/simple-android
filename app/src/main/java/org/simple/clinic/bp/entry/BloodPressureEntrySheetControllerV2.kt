@@ -263,7 +263,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validations = Observables.combineLatest(systolicChanges, diastolicChanges, screenChanges)
         .filter { (_, _, screen) -> screen == BP_ENTRY }
-        .map { (systolic, diastolic, _) -> bpValidator.validate(systolic, diastolic) }
+        .map { (systolic, diastolic) -> bpValidator.validate(systolic, diastolic) }
         .map(::BloodPressureBpValidated)
 
     events.mergeWith(validations)
@@ -365,28 +365,30 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
   private fun validateDateInput() = ObservableTransformer<UiEvent, UiEvent> { events ->
     val screenChanges = events
         .ofType<BloodPressureScreenChanged>()
-        .filter { it.type == DATE_ENTRY }
-
-    val saveBpClicks = events.ofType<BloodPressureSaveClicked>()
-        .withLatestFrom(screenChanges)
 
     val dateChanges = events
         .ofType<BloodPressureDateChanged>()
         .map { it.date }
 
-    val validations = saveBpClicks
-        .withLatestFrom(dateChanges) { _, date ->
-          BloodPressureDateValidated(date = date)
-        }
+    val validations = Observables.combineLatest(screenChanges, dateChanges)
+        .filter { (screen) -> screen.type == DATE_ENTRY }
+        .map { (_, date) -> BloodPressureDateValidated(date = date) }
+
     events.mergeWith(validations)
   }
 
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<BloodPressureDateValidated>()
+    val saveClicks = events.ofType<BloodPressureSaveClicked>()
+
+    val validations = events
+        .ofType<BloodPressureDateValidated>()
         .map { it.result(dateValidator) }
         .ofType<Invalid>()
-        .map<UiChange> {
-          when (it) {
+
+    return saveClicks
+        .withLatestFrom(validations)
+        .map<UiChange> { (_, result) ->
+          when (result) {
             is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
             is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }
           }
@@ -420,11 +422,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     val screenChanges = events
         .ofType<BloodPressureScreenChanged>()
         .map { it.type }
-        .doOnNext { Timber.i("screen changed to $it") }
 
     val saveClicks = events
         .ofType<BloodPressureSaveClicked>()
-        .doOnNext { Timber.i("save clicked") }
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == DATE_ENTRY }
 

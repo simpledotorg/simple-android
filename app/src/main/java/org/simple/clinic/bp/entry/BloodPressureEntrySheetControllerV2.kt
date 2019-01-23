@@ -22,6 +22,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -32,6 +33,7 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
@@ -402,16 +404,13 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<BloodPressureEntrySheetCreated>()
         .map { it.openAs }
 
-    val validDates = events
+    val dateValidations = events
         .ofType<BloodPressureDateValidated>()
         .map { it.result }
-        .ofType<Valid>()
-        .map { it.parsedDate }
 
-    val validBps = events
+    val bpValidations = events
         .ofType<BloodPressureBpValidated>()
         .map { it.result }
-        .ofType<Success>()
 
     val patientUuidStream = openAs
         .ofType<OpenAs.New>()
@@ -430,8 +429,25 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == DATE_ENTRY }
 
+    val newBpDataStream = Observables.combineLatest(dateValidations, bpValidations, patientUuidStream)
+        .map { (dateResult, bpResult, patientUuid) ->
+          when {
+            dateResult is Valid && bpResult is Success -> NewBpData.ReadyToSave(dateResult.parsedDate, bpResult, patientUuid)
+            else -> NewBpData.NeedsCorrection
+          }
+        }
+
+    val updateBpDataStream = Observables.combineLatest(dateValidations, bpValidations, existingBpUuidStream)
+        .map { (dateResult, bpResult, bpUuid) ->
+          when {
+            dateResult is Valid && bpResult is Success -> UpdateBpData.ReadyToSave(dateResult.parsedDate, bpResult, bpUuid)
+            else -> UpdateBpData.NeedsCorrection
+          }
+        }
+
     val saveNewBp = saveClicks
-        .withLatestFrom(validDates, validBps, patientUuidStream) { _, date, bp, patientUuid -> Triple(date, bp, patientUuid) }
+        .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
+        .ofType<NewBpData.ReadyToSave>()
         .flatMapSingle { (date, bp, patientUuid) ->
           val dateAsInstant = date.atStartOfDay(UTC).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
@@ -439,22 +455,33 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
 
     val updateExistingBp = saveClicks
-        .withLatestFrom(validDates, validBps, existingBpUuidStream) { _, date, bp, existingBpUuid -> Triple(date, bp, existingBpUuid) }
-        .flatMap { (date, newBp, existingBpUuid) ->
+        .withLatestFrom(updateBpDataStream) { _, updateBp -> updateBp }
+        .ofType<UpdateBpData.ReadyToSave>()
+        .flatMapSingle { (date, updatedBp, existingBpUuid) ->
           bloodPressureRepository.measurement(existingBpUuid)
-              .take(1)
+              .firstOrError()
               .map { existingBp ->
                 val dateAsInstant = date.atStartOfDay(UTC).toInstant()
                 existingBp.copy(
-                    systolic = newBp.systolic,
-                    diastolic = newBp.diastolic,
+                    systolic = updatedBp.systolic,
+                    diastolic = updatedBp.diastolic,
                     createdAt = dateAsInstant,
                     updatedAt = dateAsInstant)
               }
               .flatMapCompletable { bloodPressureRepository.updateMeasurement(it) }
-              .andThen(Observable.just({ ui: Ui -> ui.setBpSavedResultAndFinish() }))
+              .andThen(Single.just({ ui: Ui -> ui.setBpSavedResultAndFinish() }))
         }
 
     return saveNewBp.mergeWith(updateExistingBp)
+  }
+
+  sealed class NewBpData {
+    data class ReadyToSave(val parsedDate: LocalDate, val bpResult: Success, val patientUuid: PatientUuid) : NewBpData()
+    object NeedsCorrection : NewBpData()
+  }
+
+  sealed class UpdateBpData {
+    data class ReadyToSave(val parsedDate: LocalDate, val bpResult: Success, val bpUuid: UUID) : UpdateBpData()
+    object NeedsCorrection : UpdateBpData()
   }
 }

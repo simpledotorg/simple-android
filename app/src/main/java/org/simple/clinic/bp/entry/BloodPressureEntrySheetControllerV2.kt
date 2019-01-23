@@ -213,13 +213,17 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         events.ofType<BloodPressureNextArrowClicked>(),
         events.ofType<BloodPressureSaveClicked>())
 
+    val screenChanges = events
+        .ofType<BloodPressureScreenChanged>()
+        .map { it.type }
+
     val validations = events
         .ofType<BloodPressureBpValidated>()
         .map { it.result }
 
     return saveClicks
-        .withLatestFrom(validations)
-        .filter { (_, result) -> result is Success }
+        .withLatestFrom(screenChanges, validations)
+        .filter { (_, screen, result) -> screen == BP_ENTRY && result is Success }
         .map { Ui::showDateEntryScreen }
   }
 

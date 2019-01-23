@@ -25,7 +25,8 @@ class CustomPrescriptionEntryControllerv2 @Inject constructor(
 
     return Observable.mergeArray(
         toggleSaveButton(replayedEvents),
-        savePrescriptionsAndDismiss(replayedEvents),
+        saveNewPrescriptionsAndDismiss(replayedEvents),
+        updatePrescriptionAndDismiss(replayedEvents),
         showDefaultDosagePlaceholder(replayedEvents),
         updateSheetTitle(replayedEvents),
         toggleRemoveButton(replayedEvents),
@@ -40,7 +41,7 @@ class CustomPrescriptionEntryControllerv2 @Inject constructor(
         .map { canBeSaved -> { ui: Ui -> ui.setSaveButtonEnabled(canBeSaved) } }
   }
 
-  private fun savePrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun saveNewPrescriptionsAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<CustomPrescriptionSheetCreated>()
         .filter { it.openAs is OpenAs.New }
@@ -64,6 +65,32 @@ class CustomPrescriptionEntryControllerv2 @Inject constructor(
         .flatMap { (patientUuid, name, dosage) ->
           prescriptionRepository
               .savePrescription(patientUuid, name, dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
+              .andThen(Observable.just({ ui: Ui -> ui.finish() }))
+        }
+  }
+
+  private fun updatePrescriptionAndDismiss(events: Observable<UiEvent>): Observable<UiChange> {
+    val prescribedDrugs = events
+        .ofType<CustomPrescriptionSheetCreated>()
+        .filter { it.openAs is OpenAs.Update }
+        .map { it.openAs as OpenAs.Update }
+        .flatMap { prescriptionRepository.prescription(it.prescribedDrugUuid) }
+        .take(1)
+
+    val nameChanges = events
+        .ofType<CustomPrescriptionDrugNameTextChanged>()
+        .map { it.name }
+
+    val dosageChanges = events
+        .ofType<CustomPrescriptionDrugDosageTextChanged>()
+        .map { it.dosage }
+
+    val saveClicks = events
+        .ofType<SaveCustomPrescriptionClicked>()
+
+    return Observables.combineLatest(prescribedDrugs, nameChanges, dosageChanges, saveClicks) { prescribedDrug, name, dosage, _ -> Triple(prescribedDrug, name, dosage) }
+        .flatMap { (prescribedDrug, name, dosage) ->
+          prescriptionRepository.updatePrescription(prescribedDrug.copy(name = name, dosage = dosage))
               .andThen(Observable.just({ ui: Ui -> ui.finish() }))
         }
   }

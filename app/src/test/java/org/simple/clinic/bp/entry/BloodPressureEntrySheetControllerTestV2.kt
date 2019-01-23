@@ -163,7 +163,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   }
 
   @Test
-  fun `when systolic or diastolic values change, hide the error message`() {
+  fun `when systolic or diastolic values change, hide any error message`() {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged("12"))
     uiEvents.onNext(BloodPressureSystolicTextChanged("120"))
@@ -171,7 +171,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("90"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("99"))
 
-    verify(sheet, times(5)).hideErrorMessage()
+    verify(sheet, times(5)).hideBpErrorMessage()
   }
 
   @Test
@@ -496,6 +496,17 @@ class BloodPressureEntrySheetControllerTestV2 {
         listOf(OpenAs.Update(existingBpUuid), InvalidPattern, { ui: Ui -> verify(ui).showInvalidDateError() }),
         listOf(OpenAs.New(patientUuid), DateIsInFuture, { ui: Ui -> verify(ui).showDateIsInFutureError() }),
         listOf(OpenAs.Update(existingBpUuid), DateIsInFuture, { ui: Ui -> verify(ui).showDateIsInFutureError() }))
+  }
+
+  @Test
+  fun `when date values change, hide any error message`() {
+    uiEvents.run {
+      onNext(BloodPressureDayChanged("14"))
+      onNext(BloodPressureMonthChanged("02"))
+      onNext(BloodPressureYearChanged("1991"))
+    }
+
+    verify(sheet).hideDateErrorMessage()
   }
 
   @Test

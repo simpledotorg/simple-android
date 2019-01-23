@@ -188,7 +188,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("90"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("99"))
 
-    verify(sheet, times(5)).hideErrorMessage()
+    verify(sheet, times(5)).hideBpErrorMessage()
   }
 
   @Test

@@ -234,7 +234,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     finish()
   }
 
-  fun hideErrorMessage() {
+  fun hideBpErrorMessage() {
     bpErrorTextView.visibility = View.GONE
   }
 
@@ -320,6 +320,10 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   fun showDateIsInFutureError() {
     dateErrorTextView.setText(R.string.bloodpressureentry_error_date_is_in_future)
     dateErrorTextView.visibility = View.VISIBLE
+  }
+
+  fun hideDateErrorMessage() {
+    dateErrorTextView.visibility = View.GONE
   }
 
   fun setDate(dayOfMonth: String, month: String, twoDigitYear: String) {

@@ -99,10 +99,10 @@ class PrescribedDrugsScreenControllerTest {
             drugName = telmisartan40mg.name,
             prescribedDrug = null,
             hideDivider = false),
-        CustomPrescribedDrugListItem(telmisartan9000mgPrescription),
-        CustomPrescribedDrugListItem(reesesPrescription),
-        CustomPrescribedDrugListItem(fooPrescription),
-        CustomPrescribedDrugListItem(barPrescription))
+        CustomPrescribedDrugListItem(telmisartan9000mgPrescription, false),
+        CustomPrescribedDrugListItem(reesesPrescription, false),
+        CustomPrescribedDrugListItem(fooPrescription, false),
+        CustomPrescribedDrugListItem(barPrescription, true))
     verify(screen).populateDrugsList(expectedUiModels)
   }
 

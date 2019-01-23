@@ -91,11 +91,11 @@ class BloodPressureEntrySheetController @Inject constructor(
   private fun validationErrorResets(events: Observable<UiEvent>): Observable<UiChange> {
     val systolicChanges = events.ofType<BloodPressureSystolicTextChanged>()
         .distinctUntilChanged()
-        .map { { ui: Ui -> ui.hideErrorMessage() } }
+        .map { { ui: Ui -> ui.hideBpErrorMessage() } }
 
     val diastolicChanges = events.ofType<BloodPressureDiastolicTextChanged>()
         .distinctUntilChanged()
-        .map { { ui: Ui -> ui.hideErrorMessage() } }
+        .map { { ui: Ui -> ui.hideBpErrorMessage() } }
 
     return Observable.merge(systolicChanges, diastolicChanges)
   }

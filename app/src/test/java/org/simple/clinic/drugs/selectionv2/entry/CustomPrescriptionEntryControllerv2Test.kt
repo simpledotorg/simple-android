@@ -64,7 +64,7 @@ class CustomPrescriptionEntryControllerv2Test {
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Amlodipine"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(dosage))
-    uiEvents.onNext(SaveCustomPrescriptionClicked())
+    uiEvents.onNext(SaveCustomPrescriptionClicked)
 
     verify(prescriptionRepository).savePrescription(patientUuid, "Amlodipine", dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
     verify(sheet).finish()
@@ -153,7 +153,7 @@ class CustomPrescriptionEntryControllerv2Test {
   }
 
   @Test
-  fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`(){
+  fun `when sheet is opened in edit mode and save is clicked after making changes, then the prescription should be updated`() {
     val prescribedDrug = PatientMocker.prescription(uuid = prescriptionUuid, name = "Atnlol", dosage = "20mg")
 
     whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(prescribedDrug))
@@ -162,9 +162,28 @@ class CustomPrescriptionEntryControllerv2Test {
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Atenolol"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged("5mg"))
-    uiEvents.onNext(SaveCustomPrescriptionClicked())
+    uiEvents.onNext(SaveCustomPrescriptionClicked)
 
     verify(prescriptionRepository).updatePrescription(prescribedDrug.copy(name = "Atenolol", dosage = "5mg"))
+    verify(sheet).finish()
+  }
+
+  @Test
+  fun `when remove is clicked, the prescription should be deleted`() {
+    whenever(prescriptionRepository.prescription(any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+    uiEvents.onNext(RemoveCustomPrescriptionClicked)
+
+    verify(sheet).showConfirmRemoveMedicineDialog(prescriptionUuid)
+  }
+
+  @Test
+  fun `when prescription is deleted then close the sheet`(){
+    whenever(prescriptionRepository.prescription(prescriptionUuid)).thenReturn(Observable.just(PatientMocker.prescription(uuid = prescriptionUuid, isDeleted = true)))
+
+    uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
+
     verify(sheet).finish()
   }
 }

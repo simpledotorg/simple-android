@@ -44,10 +44,6 @@
     <string name="customprescription_save_drug">दवा सहेजें</string>
     <string name="customprescription_drug_dosage_hint">मात्रा</string>
     <string name="customprescription_drug_name_hint">दवा का नाम</string>
-    <string name="customprescription_delete_title">दवा हटाएं</string>
-    <string name="customprescription_delete_message">क्या आप वाकई दवा को हटाना चाहते हैं?</string>
-    <string name="customprescription_delete_cancel">नहीं</string>
-    <string name="customprescription_delete_confirm">हाँ</string>
     <string name="patientsummary_prescriptions_add">नई दवा</string>
     <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>
     <string name="loginpin_error_check_internet_connection">कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>

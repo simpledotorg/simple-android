@@ -13,10 +13,12 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.ofType
 import org.simple.clinic.util.toOptional
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Named
 
-class ReportsRepository(
+class ReportsRepository @Inject constructor(
     private val fileStorage: FileStorage,
-    private val reportsFilePath: String
+    @Named("reports_file_path") private val reportsFilePath: String
 ) {
   private val fileChangedSubject = PublishSubject.create<Optional<File>>()
 

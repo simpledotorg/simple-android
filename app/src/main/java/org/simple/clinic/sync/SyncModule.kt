@@ -20,6 +20,7 @@ import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.reports.ReportsModule
+import org.simple.clinic.reports.ReportsSync
 import javax.inject.Named
 
 @Module(includes = [
@@ -61,12 +62,13 @@ class SyncModule {
       medicalHistorySync: MedicalHistorySync,
       appointmentSync: AppointmentSync,
       communicationSync: CommunicationSync,
-      prescriptionSync: PrescriptionSync
+      prescriptionSync: PrescriptionSync,
+      reportsSync: ReportsSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
-        communicationSync, prescriptionSync
+        communicationSync, prescriptionSync, reportsSync
     )
   }
 }

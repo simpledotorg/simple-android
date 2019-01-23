@@ -510,12 +510,12 @@
     <item name="android:textSize">40sp</item>
     <item name="android:textColor">@color/grey0</item>
     <item name="android:lineSpacingExtra">16sp</item>
-    <item name="android:paddingStart">@dimen/spacing_12</item>
-    <item name="android:paddingEnd">@dimen/spacing_12</item>
+    <item name="android:paddingStart">@dimen/spacing_8</item>
+    <item name="android:paddingEnd">@dimen/spacing_8</item>
   </style>
 
   <style name="Clinic.V2.BloodPressureInput.BpReading">
-    <item name="android:minEms">2</item>
+    <item name="android:minWidth">84sp</item>
     <item name="android:maxLength">3</item>
   </style>
 
@@ -536,6 +536,8 @@
     <item name="android:gravity">center_vertical</item>
     <item name="android:textColor">@color/grey2</item>
     <item name="android:textSize">40sp</item>
+    <item name="android:layout_marginStart">@dimen/spacing_8</item>
+    <item name="android:layout_marginEnd">@dimen/spacing_8</item>
   </style>
 
   <style name="Clinic.V2.ListSeparator">

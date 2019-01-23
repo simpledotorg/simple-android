@@ -39,7 +39,6 @@
     <string name="timestamp_days">%d दिन पहले</string>
     <string name="patient_prescribeddrugs_screen_title">बी. पी. की दवाएं</string>
     <string name="patient_prescribeddrugs_add_custom_prescription">अन्य दवा जोड़ें</string>
-    <string name="prescribeddrug_delete_custom_drug">दवा हटाएं</string>
     <string name="customprescription_enter_medicine">दवा दर्ज करें</string>
     <string name="customprescription_save_drug">दवा सहेजें</string>
     <string name="customprescription_drug_dosage_hint">मात्रा</string>

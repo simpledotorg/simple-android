@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selection
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -21,11 +21,8 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.drugs.PrescribedDrug
-import org.simple.clinic.drugs.selection.AddNewPrescriptionListItem
-import org.simple.clinic.drugs.selection.PrescribedDrugsDoneClicked
+import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
-import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheet
-import org.simple.clinic.drugs.selectionv2.entry.CustomPrescriptionEntrySheetv2
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
@@ -33,24 +30,24 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
+class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
   companion object {
-    val KEY: (UUID) -> PrescribedDrugsScreenKeyV2 = ::PrescribedDrugsScreenKeyV2
+    val KEY: (UUID) -> PrescribedDrugsScreenKey = ::PrescribedDrugsScreenKey
   }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var controller: PrescribedDrugsScreenControllerV2
+  lateinit var controller: PrescribedDrugsScreenController
 
   @Inject
   lateinit var activity: TheActivity
 
-  private val toolbar by bindView<Toolbar>(R.id.prescribeddrugsv2_toolbar)
-  private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugsv2_recyclerview)
-  private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.prescribeddrugsv2_done)
+  private val toolbar by bindView<Toolbar>(R.id.prescribeddrugs_toolbar)
+  private val recyclerView by bindView<RecyclerView>(R.id.prescribeddrugs_recyclerview)
+  private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.prescribeddrugs_done)
   private val groupieAdapter = GroupAdapter<ViewHolder>()
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
@@ -80,11 +77,11 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   private fun screenCreates(): Observable<UiEvent> {
-    val screenKey = screenRouter.key<PrescribedDrugsScreenKeyV2>(this)
+    val screenKey = screenRouter.key<PrescribedDrugsScreenKey>(this)
     return Observable.just(PrescribedDrugsScreenCreated(screenKey.patientUuid))
   }
 
-  private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked() }
+  private fun doneClicks() = RxView.clicks(doneButtonFrame.button).map { PrescribedDrugsDoneClicked }
 
   fun populateDrugsList(protocolDrugItems: List<GroupieItemWithUiEvents<out ViewHolder>>) {
     // Replace the default fade animator with another animator that
@@ -113,7 +110,7 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    activity.startActivity(CustomPrescriptionEntrySheetv2.intentForAddNewPrescription(context, patientUuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForAddNewPrescription(context, patientUuid))
   }
 
   fun goBackToPatientSummary() {
@@ -125,6 +122,6 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   fun showUpdateCustomPrescriptionScreen(prescribedDrug: PrescribedDrug) {
-    activity.startActivity(CustomPrescriptionEntrySheetv2.intentForUpdatePrescription(context, prescribedDrug.uuid))
+    activity.startActivity(CustomPrescriptionEntrySheet.intentForUpdatePrescription(context, prescribedDrug.uuid))
   }
 }

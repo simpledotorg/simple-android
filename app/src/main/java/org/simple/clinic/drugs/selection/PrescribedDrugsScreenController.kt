@@ -7,9 +7,8 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selection.ProtocolDrugSelectionListItem.DosageOption
+import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolDrugAndDosages
 import org.simple.clinic.protocol.ProtocolRepository
@@ -17,10 +16,8 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = PrescribedDrugsScreen
+typealias Ui = PrescribedDrugScreen
 typealias UiChange = (Ui) -> Unit
-typealias DrugName = String
-typealias DrugDosage = String
 
 class PrescribedDrugsScreenController @Inject constructor(
     private val userSession: UserSession,
@@ -35,10 +32,9 @@ class PrescribedDrugsScreenController @Inject constructor(
     return Observable.mergeArray(
         handleDoneClicks(replayedEvents),
         populateDrugsList(replayedEvents),
-        savePrescriptions(replayedEvents),
-        selectPrescription(replayedEvents),
-        unselectPrescriptions(replayedEvents),
-        showConfirmDeletePrescriptionDialog(replayedEvents))
+        addNewPrescription(replayedEvents),
+        selectDosage(replayedEvents),
+        updateCustomPrescription(replayedEvents))
   }
 
   private fun populateDrugsList(events: Observable<UiEvent>): Observable<UiChange> {
@@ -61,70 +57,51 @@ class PrescribedDrugsScreenController @Inject constructor(
     return Observables
         .combineLatest(protocolDrugsStream, prescribedDrugsStream)
         .map { (protocolDrugs, prescribedDrugs) ->
-          val protocolPrescribedDrugsMap = HashMap<Pair<DrugName, DrugDosage>, PrescribedDrug>(prescribedDrugs.size)
-          prescribedDrugs
-              .filter { it.isProtocolDrug }
-              .forEach { protocolPrescribedDrugsMap[it.name to it.dosage!!] = it }
 
-          // Select protocol drugs if prescriptions exist for them.
+          val prescribedProtocolDrugs = prescribedDrugs.filter { it.isProtocolDrug }
+          val isAtLeastOneCustomDrugPrescribed = prescribedDrugs.any { it.isProtocolDrug.not() }
+          // Show dosage if prescriptions exist for them.
           val protocolDrugSelectionItems = protocolDrugs
               .mapIndexed { index: Int, drugAndDosages: ProtocolDrugAndDosages ->
-                val drug1 = drugAndDosages.drugs[0]
-                val drug2 = drugAndDosages.drugs[1]
-
-                val isDosage1Prescribed = protocolPrescribedDrugsMap.contains(drug1.name to drug1.dosage)
-                val isDosage2Prescribed = protocolPrescribedDrugsMap.contains(drug2.name to drug2.dosage)
-
-                ProtocolDrugSelectionListItem(
+                val matchingPrescribedDrug = prescribedProtocolDrugs.firstOrNull { it.name == drugAndDosages.drugName }
+                ProtocolDrugListItem(
                     id = index,
                     drugName = drugAndDosages.drugName,
-                    option1 = when {
-                      isDosage1Prescribed -> DosageOption.Selected(drug1, prescription = protocolPrescribedDrugsMap[drug1.name to drug1.dosage]!!)
-                      else -> DosageOption.Unselected(drug1)
-                    },
-                    option2 = when {
-                      isDosage2Prescribed -> DosageOption.Selected(drug2, prescription = protocolPrescribedDrugsMap[drug2.name to drug2.dosage]!!)
-                      else -> DosageOption.Unselected(drug2)
-                    })
+                    prescribedDrug = matchingPrescribedDrug,
+                    hideDivider = isAtLeastOneCustomDrugPrescribed.not() && index == protocolDrugs.lastIndex)
               }
 
           val customPrescribedDrugItems = prescribedDrugs
               .filter { it.isProtocolDrug.not() }
               .sortedBy { it.updatedAt.toEpochMilli() }
-              .map { CustomPrescribedDrugListItem(it) }
+              .map { prescribedDrug -> CustomPrescribedDrugListItem(prescribedDrug) }
 
           protocolDrugSelectionItems + customPrescribedDrugItems
         }
         .map { { ui: Ui -> ui.populateDrugsList(it) } }
   }
 
-  private fun savePrescriptions(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun selectDosage(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
         .take(1)
 
-    return events.ofType<ProtocolDrugDosageSelected>()
-        .withLatestFrom(patientUuids)
-        .flatMap { (selectedEvent, patientUuid) ->
-          prescriptionRepository
-              .savePrescription(patientUuid, selectedEvent.drug)
-              .andThen(Observable.never<UiChange>())
-        }
-  }
-
-  private fun unselectPrescriptions(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<ProtocolDrugDosageUnselected>()
-        .map { it.prescription }
-        .flatMap {
-          prescriptionRepository
-              .softDeletePrescription(it.uuid)
-              .andThen(Observable.never<UiChange>())
+        .ofType<ProtocolDrugSelected>()
+        .withLatestFrom(patientUuids)
+        .map { (selectedDrug, patientUuid) ->
+          { ui: Ui ->
+            ui.showDosageSelectionSheet(
+                drugName = selectedDrug.drugName,
+                patientUuid = patientUuid,
+                prescribedDrugUuid = selectedDrug.prescribedDrug?.uuid
+            )
+          }
         }
   }
 
-  private fun selectPrescription(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun addNewPrescription(events: Observable<UiEvent>): Observable<UiChange> {
     val patientUuids = events
         .ofType<PrescribedDrugsScreenCreated>()
         .map { it.patientUuid }
@@ -135,11 +112,10 @@ class PrescribedDrugsScreenController @Inject constructor(
         .map { patientUuid -> { ui: Ui -> ui.showNewPrescriptionEntrySheet(patientUuid) } }
   }
 
-  private fun showConfirmDeletePrescriptionDialog(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun updateCustomPrescription(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<DeleteCustomPrescriptionClicked>()
-        .map { it.prescription }
-        .map { { ui: Ui -> ui.showDeleteConfirmationDialog(prescription = it) } }
+        .ofType<UpdateCustomPrescription>()
+        .map { { ui: Ui -> ui.showUpdateCustomPrescriptionScreen(it.prescribedDrug) } }
   }
 
   private fun handleDoneClicks(events: Observable<UiEvent>): Observable<UiChange> {

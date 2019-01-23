@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selectionv2
+package org.simple.clinic.drugs.selection
 
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
@@ -13,13 +13,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.drugs.selectionv2.dosage.DosageListItem
-import org.simple.clinic.drugs.selectionv2.dosage.DosageOption
-import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheet
-import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheetController
-import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheetCreated
-import org.simple.clinic.drugs.selectionv2.dosage.DosageSelected
-import org.simple.clinic.drugs.selectionv2.dosage.NoneSelected
+import org.simple.clinic.drugs.selection.dosage.DosageListItem
+import org.simple.clinic.drugs.selection.dosage.DosageOption
+import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
+import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetController
+import org.simple.clinic.drugs.selection.dosage.DosagePickerSheetCreated
+import org.simple.clinic.drugs.selection.dosage.DosageSelected
+import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolRepository

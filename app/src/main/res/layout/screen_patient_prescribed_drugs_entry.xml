@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<org.simple.clinic.drugs.selection.PrescribedDrugsScreen android:id="@+id/prescribeddrugs_root"
+<org.simple.clinic.drugs.selection.PrescribedDrugScreen android:id="@+id/prescribeddrugs_root"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_width="match_parent"
@@ -17,16 +17,14 @@
     android:id="@+id/prescribeddrugs_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="0dp"
-    android:layout_above="@+id/prescribeddrugs_done"
-    android:layout_below="@+id/prescribeddrugs_toolbar"
+    android:layout_margin="@dimen/spacing_8"
     android:layout_weight="1"
     android:clipToPadding="false"
-    android:paddingBottom="@dimen/textsize_18" />
+    android:paddingBottom="@dimen/spacing_16" />
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/prescribeddrugs_done"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
-    android:layout_alignParentBottom="true"
     app:buttonBackgroundDisabled="@color/grey2"
     app:buttonBackgroundEnabled="@color/blue1"
     app:frameBackgroundDisabled="@color/grey3"
@@ -40,4 +38,4 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
 
-</org.simple.clinic.drugs.selection.PrescribedDrugsScreen>
+</org.simple.clinic.drugs.selection.PrescribedDrugScreen>

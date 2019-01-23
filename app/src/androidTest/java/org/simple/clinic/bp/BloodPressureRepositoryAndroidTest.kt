@@ -17,8 +17,7 @@ import org.simple.clinic.util.TestClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import org.threeten.bp.temporal.ChronoUnit
-import org.threeten.bp.temporal.ChronoUnit.*
+import org.threeten.bp.temporal.ChronoUnit.DAYS
 import java.util.UUID
 import javax.inject.Inject
 
@@ -173,5 +172,30 @@ class BloodPressureRepositoryAndroidTest {
     val savedBloodPressure = appDatabase.bloodPressureDao().getOne(expected.uuid)!!
 
     assertThat(savedBloodPressure).isEqualTo(expected)
+  }
+
+  @Test
+  fun getting_the_blood_pressure_count_for_a_patient_should_work_correctly() {
+    val patientUuidWithOnlyDeletedBloodPressures = UUID.randomUUID()
+    val patientUuidWithBloodPressures = UUID.randomUUID()
+
+    val now = Instant.now(clock)
+    val bpsForPatientWithOnlyDeletedBloodPressures = listOf(
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithOnlyDeletedBloodPressures, deletedAt = now),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithOnlyDeletedBloodPressures, deletedAt = now),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithOnlyDeletedBloodPressures, deletedAt = now)
+    )
+
+    val bpsForPatientWithBloodPressures = listOf(
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithBloodPressures, deletedAt = now),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithBloodPressures),
+        testData.bloodPressureMeasurement(patientUuid = patientUuidWithBloodPressures, deletedAt = now)
+    )
+
+    appDatabase.bloodPressureDao().save(bpsForPatientWithOnlyDeletedBloodPressures + bpsForPatientWithBloodPressures)
+    assertThat(appDatabase.bloodPressureDao().count().blockingFirst()).isEqualTo(6)
+
+    assertThat(repository.bloodPressureCount(patientUuidWithOnlyDeletedBloodPressures).blockingFirst()).isEqualTo(0)
+    assertThat(repository.bloodPressureCount(patientUuidWithBloodPressures).blockingFirst()).isEqualTo(1)
   }
 }

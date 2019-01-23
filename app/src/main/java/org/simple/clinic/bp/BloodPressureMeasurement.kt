@@ -78,6 +78,13 @@ data class BloodPressureMeasurement (
     fun count(): Flowable<Int>
 
     @Query("""
+      SELECT COUNT(uuid)
+      FROM bloodpressuremeasurement
+      WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+    """)
+    fun recordedBloodPressureCountForPatient(patientUuid: UUID): Flowable<Int>
+
+    @Query("""
       SELECT * FROM bloodpressuremeasurement
         WHERE patientUuid = :patientUuid AND deletedAt IS NULL
         ORDER BY createdAt DESC LIMIT :limit

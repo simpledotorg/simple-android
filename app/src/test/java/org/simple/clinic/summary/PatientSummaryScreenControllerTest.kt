@@ -110,6 +110,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(1))
 
     Analytics.addReporter(reporter)
   }
@@ -401,6 +402,58 @@ class PatientSummaryScreenControllerTest {
       verify(screen).goBackToHome()
       verify(screen, never()).showScheduleAppointmentSheet(any())
     }
+  }
+
+  @Test
+  @Parameters(method = "bpSavedAndPatientSummaryCallers")
+  fun `when all BPs for the patient are deleted and back is clicked, the schedule appointment sheet must not be shown`(
+      wasBloodPressureSaved: Boolean,
+      patientSummaryCaller: PatientSummaryCaller
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryBackClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+      verify(screen).goBackToHome()
+    } else {
+      verify(screen).goBackToPatientSearch()
+    }
+  }
+
+  @Test
+  @Parameters(method = "bpSavedAndPatientSummaryCallers")
+  fun `when all BPs for the patient are deleted and done is clicked, the schedule appointment sheet must not be shown`(
+      wasBloodPressureSaved: Boolean,
+      patientSummaryCaller: PatientSummaryCaller
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(screen).goBackToHome()
+  }
+
+  @Test
+  @Parameters(method = "bpSavedAndPatientSummaryCallers")
+  fun `when all bps for the patient are deleted and when summary screen is restored with bp saved earlier, the schedule appointment sheet must not be shown on clicking back or done`(
+      wasBloodPressureSaved: Boolean,
+      patientSummaryCaller: PatientSummaryCaller
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryRestoredWithBPSaved(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(screen).goBackToHome()
   }
 
   @Suppress("unused")
@@ -697,12 +750,38 @@ class PatientSummaryScreenControllerTest {
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100,
         isUpdatePhoneDialogEnabled = true)
+
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
+
+  @Test
+  @Parameters(method = "appointment cancelation reasons")
+  fun `when update phone dialog feature is disabled then it should never be shown`(
+      cancelReason: AppointmentCancelReason
+  ) {
+    val appointmentStream = Observable.just(
+        None,
+        Just(PatientMocker.appointment(cancelReason = null)),
+        Just(PatientMocker.appointment(cancelReason = cancelReason)))
+    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
+
+    val config = PatientSummaryConfig(
+        numberOfBpPlaceholders = 0,
+        numberOfBpsToDisplay = 100,
+        isUpdatePhoneDialogEnabled = true)
+    configSubject.onNext(config)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Suppress("unused")
+  fun `appointment cancelation reasons`() = AppointmentCancelReason.values()
 
   @Test
   fun `when screen is opened and a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
@@ -737,29 +816,4 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
-
-  @Test
-  @Parameters(method = "appointment cancelation reasons")
-  fun `when update phone dialog feature is disabled then it should never be shown`(
-      cancelReason: AppointmentCancelReason
-  ) {
-    val appointmentStream = Observable.just(
-        None,
-        Just(PatientMocker.appointment(cancelReason = null)),
-        Just(PatientMocker.appointment(cancelReason = cancelReason)))
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
-
-    val config = PatientSummaryConfig(
-        numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true)
-    configSubject.onNext(config)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
-
-    verify(screen, never()).showUpdatePhoneDialog(patientUuid)
-  }
-
-  @Suppress("unused")
-  fun `appointment cancelation reasons`() = AppointmentCancelReason.values()
 }

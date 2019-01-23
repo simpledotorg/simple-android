@@ -374,7 +374,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     verify(sheet, never()).setBpSavedResultAndFinish()
-    verify(dateValidator, times(3)).validate2("01/04/1909")
+    verify(dateValidator).validate2("01/04/1909")
   }
 
   @Suppress("Unused")

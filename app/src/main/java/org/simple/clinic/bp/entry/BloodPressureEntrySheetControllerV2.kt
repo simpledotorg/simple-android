@@ -32,7 +32,6 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = BloodPressureEntrySheet
@@ -372,7 +371,10 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validations = Observables.combineLatest(screenChanges, dateChanges)
         .filter { (screen) -> screen.type == DATE_ENTRY }
-        .map { (_, date) -> BloodPressureDateValidated(date = date) }
+        .map { (_, date) ->
+          val validationResult = dateValidator.validate2(date)
+          BloodPressureDateValidated(date, validationResult)
+        }
 
     events.mergeWith(validations)
   }
@@ -382,7 +384,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validations = events
         .ofType<BloodPressureDateValidated>()
-        .map { it.result(dateValidator) }
+        .map { it.result }
         .ofType<Invalid>()
 
     return saveClicks
@@ -402,7 +404,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validDates = events
         .ofType<BloodPressureDateValidated>()
-        .map { it.result(dateValidator) }
+        .map { it.result }
         .ofType<Valid>()
         .map { it.parsedDate }
 

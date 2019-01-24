@@ -26,9 +26,6 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
-import org.simple.clinic.router.screen.BackPressInterceptCallback
-import org.simple.clinic.router.screen.BackPressInterceptor
-import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -45,9 +42,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   @Inject
   @field:Named("bp_entry_controller")
   lateinit var controller: ObservableTransformer<UiEvent, UiChange>
-
-  @Inject
-  lateinit var screenRouter: ScreenRouter
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
@@ -118,9 +112,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
         .observeOn(AndroidSchedulers.mainThread())
         .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
-
-    // Dismiss this sheet when the keyboard is dismissed.
-    rootLayout.backKeyPressInterceptor = { super.onBackgroundClick() }
   }
 
   override fun onDestroy() {
@@ -184,14 +175,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->
-      val interceptor = object : BackPressInterceptor {
-        override fun onInterceptBackPress(callback: BackPressInterceptCallback) {
-          emitter.onNext(BloodPressureBackPressed)
-          callback.markBackPressIntercepted()
-        }
+      val interceptor = {
+        emitter.onNext(BloodPressureBackPressed)
       }
-      emitter.setCancellable { screenRouter.unregisterBackPressInterceptor(interceptor) }
-      screenRouter.registerBackPressInterceptor(interceptor)
+      emitter.setCancellable { rootLayout.backKeyPressInterceptor = null }
+      rootLayout.backKeyPressInterceptor = interceptor
     }
   }
 

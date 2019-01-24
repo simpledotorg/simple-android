@@ -615,6 +615,17 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     verify(sheet).showBpEntryScreen()
+    verify(sheet, never()).finish()
+  }
+
+  @Test
+  fun `when BP entry is active and back is pressed then the sheet should be closed`() {
+    uiEvents.run {
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureBackPressed)
+    }
+
+    verify(sheet).finish()
   }
 
   @Test

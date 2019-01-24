@@ -2,7 +2,6 @@ package org.simple.clinic.medicalhistory
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.core.content.ContextCompat
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -51,11 +51,11 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     LayoutInflater.from(context).inflate(R.layout.list_medical_history_question, this, true)
 
     val attributes = context.obtainStyledAttributes(attrs, R.styleable.MedicalHistoryQuestionView)
-    val startPadding = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_startPadding, 0)
-    val endPadding = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_endPadding, 0)
+    val contentPaddingStart = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_contentPaddingStart, 0)
+    val contentPaddingEnd = attributes.getDimensionPixelSize(R.styleable.MedicalHistoryQuestionView_contentPaddingEnd, 0)
     attributes.recycle()
 
-    contentLayout.setPadding(startPadding, paddingTop, endPadding, paddingBottom)
+    contentLayout.setPadding(contentPaddingStart, contentLayout.paddingTop, contentPaddingEnd, contentLayout.paddingBottom)
 
     yesCheckBox.setOnCheckedChangeListener(checkboxChangeListener)
     noCheckBox.setOnCheckedChangeListener(checkboxChangeListener)

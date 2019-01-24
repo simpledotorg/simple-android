@@ -20,7 +20,7 @@
   </declare-styleable>
 
   <declare-styleable name="MedicalHistoryQuestionView">
-    <attr name="startPadding" format="dimension" />
-    <attr name="endPadding" format="dimension" />
+    <attr name="contentPaddingStart" format="dimension" />
+    <attr name="contentPaddingEnd" format="dimension" />
   </declare-styleable>
 </resources>

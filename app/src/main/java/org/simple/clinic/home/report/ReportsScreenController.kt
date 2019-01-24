@@ -10,11 +10,12 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import javax.inject.Inject
 
 typealias Ui = ReportsScreen
 typealias UiChange = (Ui) -> Unit
 
-class ReportsScreenController(
+class ReportsScreenController @Inject constructor(
     private val reportsRepository: ReportsRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 

@@ -209,3 +209,7 @@ fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {
       .map { it.toString() }
       .map(mapper)
 }
+
+fun View.visibleOrGone(isVisible: Boolean) {
+  visibility = if (isVisible) View.VISIBLE else View.GONE
+}

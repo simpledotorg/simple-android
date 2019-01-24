@@ -66,7 +66,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         showBpValidationErrors(replayedEvents),
         hideBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
-        showBpEntryWhenBackArrowIsPressed(replayedEvents),
+        showBpEntryWhenPreviousArrowIsPressed(replayedEvents),
+        dismissSheetWhenBackIsPressedOnBp(replayedEvents),
         enableNextArrowWhileBpIsValid(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
@@ -226,7 +227,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { Ui::showDateEntryScreen }
   }
 
-  private fun showBpEntryWhenBackArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun showBpEntryWhenPreviousArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
     val previousArrowClicks = events
         .ofType<BloodPressurePreviousArrowClicked>()
 
@@ -242,6 +243,18 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return Observable
         .merge(previousArrowClicks, backPresses)
         .map { { ui: Ui -> ui.showBpEntryScreen() } }
+  }
+
+  private fun dismissSheetWhenBackIsPressedOnBp(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenChanges = events
+        .ofType<BloodPressureScreenChanged>()
+        .map { it.type }
+
+    return events
+        .ofType<BloodPressureBackPressed>()
+        .withLatestFrom(screenChanges)
+        .filter { (_, screen) -> screen == BP_ENTRY }
+        .map { { ui: Ui -> ui.finish() } }
   }
 
   private fun enableNextArrowWhileBpIsValid(events: Observable<UiEvent>): Observable<UiChange> {

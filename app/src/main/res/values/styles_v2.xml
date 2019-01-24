@@ -385,7 +385,18 @@
     <item name="android:textColor">@color/red1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.TextFieldLarge">
+    <item name="android:textSize">40sp</item>
+    <item name="android:fontFamily">sans-serif</item>
+    <item name="android:lineSpacingExtra">16sp</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.TextFieldLarge.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <!-- Screen/feature specific styles start here. -->
+
   <style name="Clinic.V2.BottomAlignedButtonFrame">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
@@ -501,15 +512,11 @@
     <item name="android:drawablePadding">6dp</item>
   </style>
 
-  <style name="Clinic.V2.BloodPressureInput">
+  <style name="Clinic.V2.BloodPressureInput" parent="Clinic.V2.TextAppearance.TextFieldLarge.Grey0">
     <item name="android:layout_width">wrap_content</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:fontFamily">sans-serif</item>
     <item name="android:gravity">center|top</item>
     <item name="android:inputType">number</item>
-    <item name="android:textSize">40sp</item>
-    <item name="android:textColor">@color/grey0</item>
-    <item name="android:lineSpacingExtra">16sp</item>
     <item name="android:paddingStart">@dimen/spacing_8</item>
     <item name="android:paddingEnd">@dimen/spacing_8</item>
   </style>

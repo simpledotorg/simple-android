@@ -153,7 +153,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:background="@null"
+            android:duplicateParentState="true"
             app:srcCompat="@drawable/ic_round_arrow_forward_24dp"
+            app:tint="@color/selector_bloodpressureentry_next_arrow_tint"
             tools:ignore="ContentDescription,RtlSymmetry" />
         </FrameLayout>
       </LinearLayout>
@@ -203,6 +206,7 @@
             android:layout_gravity="center"
             android:rotation="180"
             app:srcCompat="@drawable/ic_round_arrow_forward_24dp"
+            app:tint="@color/selector_bloodpressureentry_next_arrow_tint"
             tools:ignore="ContentDescription,RtlSymmetry" />
         </FrameLayout>
 

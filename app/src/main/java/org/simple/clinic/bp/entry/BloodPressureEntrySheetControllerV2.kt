@@ -84,8 +84,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     }
 
     val moveFocusToDiastolic = events.ofType<BloodPressureSystolicTextChanged>()
-        .filter { isSystolicValueComplete(it.systolic) }
         .distinctUntilChanged()
+        .filter { isSystolicValueComplete(it.systolic) }
         .map { { ui: Ui -> ui.changeFocusToDiastolic() } }
 
     data class BloodPressure(val systolic: String, val diastolic: String)

@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
@@ -16,9 +17,14 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.reports.ReportsRepository
+import org.simple.clinic.reports.ReportsSync
+import org.simple.clinic.storage.files.DeleteFileResult
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
+import java.io.File
 
 class FacilityChangeScreenControllerTest {
 
@@ -28,7 +34,9 @@ class FacilityChangeScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<FacilityChangeScreen>()
   private val facilityRepository = mock<FacilityRepository>()
+  private val reportsRepository = mock<ReportsRepository>()
   private val userSession = mock<UserSession>()
+  private val reportsSync: ReportsSync = mock()
 
   private val user = PatientMocker.loggedInUser()
 
@@ -36,7 +44,7 @@ class FacilityChangeScreenControllerTest {
 
   @Before
   fun setUp() {
-    controller = FacilityChangeScreenController(facilityRepository, userSession)
+    controller = FacilityChangeScreenController(facilityRepository, reportsRepository, userSession, reportsSync)
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
@@ -85,11 +93,33 @@ class FacilityChangeScreenControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
+    whenever(reportsRepository.reportsFile()).thenReturn(Observable.just(File("").toOptional()))
+
+    whenever(reportsRepository.deleteReportsFile()).thenReturn(Single.just(DeleteFileResult.Success))
+    whenever(reportsSync.sync()).thenReturn(Completable.complete())
 
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     val inOrder = inOrder(facilityRepository, screen)
     inOrder.verify(facilityRepository).associateUserWithFacility(user, newFacility)
     inOrder.verify(screen).goBack()
+  }
+
+  @Test
+  fun `when a facility is changed then the report has to be deleted and synced`() {
+    val newFacility = PatientMocker.facility()
+    whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
+    whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
+
+    val deleteReport: Single<DeleteFileResult> = Single.just(DeleteFileResult.Success)
+    whenever(reportsRepository.deleteReportsFile()).thenReturn(deleteReport)
+
+    val reportsSyncCompletable = Completable.complete()
+    whenever(reportsSync.sync()).thenReturn(reportsSyncCompletable)
+
+    uiEvents.onNext(FacilityChangeClicked(newFacility))
+
+    deleteReport.test().assertSubscribed()
+    reportsSyncCompletable.test().assertSubscribed()
   }
 }

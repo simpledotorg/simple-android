@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:gravity="center_horizontal"
+  android:orientation="vertical">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:text="@string/customprescription_enter_medicine"
+    android:textAllCaps="true"
+    android:textColor="@color/black_opacity_75"
+    android:textSize="14sp" />
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_24"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:orientation="horizontal">
+
+    <EditText
+      android:id="@+id/customprescription_drug_name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="0.6"
+      android:hint="@string/customprescription_drug_name_hint"
+      android:imeOptions="actionNext"
+      android:inputType="textCapWords"
+      android:textSize="20sp" />
+
+    <EditText
+      android:id="@+id/customprescription_drug_dosage"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_weight="0.4"
+      android:hint="@string/customprescription_drug_dosage_hint"
+      android:imeOptions="actionDone"
+      android:inputType="textCapSentences"
+      android:text="@string/customprescription_dosage_placeholder"
+      android:textSize="20sp" />
+  </LinearLayout>
+
+  <Button
+    android:id="@+id/customprescription_save"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?colorAccent"
+    android:foreground="?attr/selectableItemBackground"
+    android:text="@string/customprescription_save_drug"
+    android:textColor="@color/white" />
+</LinearLayout>

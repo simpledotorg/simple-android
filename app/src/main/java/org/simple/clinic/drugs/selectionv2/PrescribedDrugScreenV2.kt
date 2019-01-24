@@ -24,6 +24,7 @@ import org.simple.clinic.drugs.selection.AddNewPrescriptionListItem
 import org.simple.clinic.drugs.selection.PrescribedDrugsDoneClicked
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheet
+import org.simple.clinic.drugs.selectionv2.entry.CustomPrescriptionEntrySheetv2
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
@@ -111,7 +112,7 @@ class PrescribedDrugScreenV2(context: Context, attrs: AttributeSet) : LinearLayo
   }
 
   fun showNewPrescriptionEntrySheet(patientUuid: UUID) {
-    activity.startActivity(CustomPrescriptionEntrySheet.intent(context, patientUuid))
+    activity.startActivity(CustomPrescriptionEntrySheetv2.intent(context, patientUuid))
   }
 
   fun goBackToPatientSummary() {

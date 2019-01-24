@@ -5,7 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
-import android.widget.EditText
+import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -17,13 +17,14 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.textChanges
 import java.util.UUID
 import javax.inject.Inject
 
 class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
 
-  private val drugNameEditText by bindView<EditText>(R.id.customprescription_drug_name)
-  private val drugDosageEditText by bindView<EditText>(R.id.customprescription_drug_dosage)
+  private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
+  private val drugDosageEditText by bindView<TextInputEditText>(R.id.customprescription_drug_dosage)
   private val saveButton by bindView<Button>(R.id.customprescription_save)
 
   @Inject
@@ -50,8 +51,8 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
   }
 
   override fun onBackgroundClick() {
-    val drugNameEmpty = drugNameEditText.text.isEmpty()
-    val dosageEmpty = drugDosageEditText.text.isEmpty()
+    val drugNameEmpty = drugNameEditText.text.isNullOrEmpty()
+    val dosageEmpty = drugDosageEditText.text.isNullOrEmpty()
         || drugDosageEditText.text.toString().trim() == getString(R.string.customprescription_dosage_placeholder)
 
     if (drugNameEmpty && dosageEmpty) {
@@ -64,13 +65,9 @@ class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
     return Observable.just(CustomPrescriptionSheetCreated(patientUuid))
   }
 
-  private fun drugNameChanges() = RxTextView.textChanges(drugNameEditText)
-      .map(CharSequence::toString)
-      .map(::CustomPrescriptionDrugNameTextChanged)
+  private fun drugNameChanges() = drugNameEditText.textChanges(::CustomPrescriptionDrugNameTextChanged)
 
-  private fun drugDosageChanges() = RxTextView.textChanges(drugDosageEditText)
-      .map(CharSequence::toString)
-      .map(::CustomPrescriptionDrugDosageTextChanged)
+  private fun drugDosageChanges() = drugDosageEditText.textChanges(::CustomPrescriptionDrugDosageTextChanged)
 
   private fun drugDosageFocusChanges() = RxView.focusChanges(drugDosageEditText)
       .map(::CustomPrescriptionDrugDosageFocusChanged)

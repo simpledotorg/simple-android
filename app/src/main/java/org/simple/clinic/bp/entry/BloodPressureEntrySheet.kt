@@ -6,10 +6,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -304,10 +306,26 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   }
 
   fun showBpEntryScreen() {
+    viewFlipper.inAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.bloodpressureentry_bp_entry_from_left)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
+    viewFlipper.outAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.bloodpressureentry_date_exit_to_right)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
     viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_bp_entry
   }
 
   fun showDateEntryScreen() {
+    viewFlipper.inAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.bloodpressureentry_date_entry_from_right)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
+    viewFlipper.outAnimation = AnimationUtils
+        .loadAnimation(this, R.anim.bloodpressureentry_bp_exit_to_left)
+        .apply { interpolator = FastOutSlowInInterpolator() }
+
     viewFlipper.displayedChildResId = R.id.bloodpressureentry_flipper_date_entry
     yearEditText.requestFocus()
   }

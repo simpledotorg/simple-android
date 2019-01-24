@@ -96,9 +96,11 @@ class BloodPressureEntrySheetControllerTestV2 {
   fun `when valid systolic value is entered, move cursor to diastolic field`(sampleSystolicBp: String, shouldMove: Boolean) {
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(BloodPressureSystolicTextChanged(sampleSystolicBp))
+    uiEvents.onNext(BloodPressureSystolicTextChanged(""))
+    uiEvents.onNext(BloodPressureSystolicTextChanged(sampleSystolicBp))
 
     when (shouldMove) {
-      true -> verify(sheet).changeFocusToDiastolic()
+      true -> verify(sheet, times(2)).changeFocusToDiastolic()
       false -> verify(sheet, never()).changeFocusToDiastolic()
     }
   }

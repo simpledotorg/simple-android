@@ -26,6 +26,7 @@ import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderShe
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentSheet
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
+import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
@@ -93,6 +94,7 @@ interface TheActivityComponent {
   fun inject(target: DosagePickerSheet)
   fun inject(target: PrescribedDrugScreen)
   fun inject(target: ConfirmRemovePrescriptionDialog)
+  fun inject(target: ReportsScreen)
 
   @Subcomponent.Builder
   interface Builder {

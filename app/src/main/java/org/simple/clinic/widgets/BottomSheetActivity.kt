@@ -2,12 +2,12 @@ package org.simple.clinic.widgets
 
 import android.content.Context
 import android.os.Bundle
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.appcompat.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotterknife.bindView
 import org.simple.clinic.BuildConfig

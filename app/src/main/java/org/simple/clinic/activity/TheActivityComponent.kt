@@ -15,6 +15,7 @@ import org.simple.clinic.drugs.selection.PrescribedDrugsScreen
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.drugs.selectionv2.PrescribedDrugScreenV2
 import org.simple.clinic.drugs.selectionv2.dosage.DosagePickerSheet
+import org.simple.clinic.drugs.selectionv2.entry.CustomPrescriptionEntrySheetv2
 import org.simple.clinic.editpatient.ConfirmDiscardChangesDialog
 import org.simple.clinic.editpatient.PatientEditScreen
 import org.simple.clinic.enterotp.EnterOtpScreen
@@ -72,6 +73,7 @@ interface TheActivityComponent {
   fun inject(target: PrescribedDrugsScreen)
   fun inject(target: BloodPressureEntrySheet)
   fun inject(target: CustomPrescriptionEntrySheet)
+  fun inject(target: CustomPrescriptionEntrySheetv2)
   fun inject(target: ConfirmDeletePrescriptionDialog)
   fun inject(target: RegistrationPhoneScreen)
   fun inject(target: RegistrationFullNameScreen)

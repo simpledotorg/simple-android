@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.selection.entry
+package org.simple.clinic.drugs.selectionv2.entry
 
 import android.content.Context
 import android.content.Intent
@@ -20,29 +20,23 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class CustomPrescriptionEntrySheet : BottomSheetActivity() {
+class CustomPrescriptionEntrySheetv2 : BottomSheetActivity() {
 
   private val drugNameEditText by bindView<EditText>(R.id.customprescription_drug_name)
   private val drugDosageEditText by bindView<EditText>(R.id.customprescription_drug_dosage)
   private val saveButton by bindView<Button>(R.id.customprescription_save)
 
   @Inject
-  lateinit var controller: CustomPrescriptionEntryController
+  lateinit var controller: CustomPrescriptionEntryControllerv2
 
   private val onDestroys = PublishSubject.create<Any>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.sheet_custom_prescription_entry)
+    setContentView(R.layout.sheet_custom_prescription_entry_v2)
     TheActivity.component.inject(this)
 
-    Observable
-        .mergeArray(
-            sheetCreates(),
-            drugNameChanges(),
-            drugDosageChanges(),
-            drugDosageFocusChanges(),
-            saveClicks())
+    Observable.mergeArray(sheetCreates(), drugNameChanges(), drugDosageChanges(), drugDosageFocusChanges(), saveClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -106,7 +100,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
     private const val KEY_PATIENT_UUID = "patientUuid"
 
     fun intent(context: Context, patientUuid: UUID): Intent {
-      val intent = Intent(context, CustomPrescriptionEntrySheet::class.java)
+      val intent = Intent(context, CustomPrescriptionEntrySheetv2::class.java)
       intent.putExtra(KEY_PATIENT_UUID, patientUuid)
       return intent
     }

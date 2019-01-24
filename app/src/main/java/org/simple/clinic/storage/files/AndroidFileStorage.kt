@@ -8,6 +8,7 @@ class AndroidFileStorage @Inject constructor(
     private val application: Application,
     private val fileCreator: FileCreator
 ) : FileStorage {
+
   override fun getFile(filePath: String) = try {
     val file = application.filesDir.resolve(filePath)
     fileCreator.createFileIfItDoesNotExist(file)
@@ -35,5 +36,14 @@ class AndroidFileStorage @Inject constructor(
     ReadFileResult.Success(content)
   } catch (e: Throwable) {
     ReadFileResult.Failure(e)
+  }
+
+  override fun delete(file: File): DeleteFileResult = try {
+    val isDeleted = file.delete()
+    if (isDeleted.not()) throw RuntimeException("File: ${file.name} could not be deleted")
+
+    DeleteFileResult.Success
+  } catch (e: Throwable) {
+    DeleteFileResult.Failure(e)
   }
 }

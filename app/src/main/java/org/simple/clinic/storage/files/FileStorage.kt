@@ -18,6 +18,11 @@ sealed class ReadFileResult {
   data class Failure(val cause: Throwable) : ReadFileResult()
 }
 
+sealed class DeleteFileResult {
+  object Success : DeleteFileResult()
+  data class Failure(val cause: Throwable) : DeleteFileResult()
+}
+
 interface FileStorage {
 
   fun getFile(filePath: String): GetFileResult
@@ -25,4 +30,6 @@ interface FileStorage {
   fun writeToFile(file: File, text: String): WriteFileResult
 
   fun readFromFile(file: File): ReadFileResult
+
+  fun delete(file: File): DeleteFileResult
 }

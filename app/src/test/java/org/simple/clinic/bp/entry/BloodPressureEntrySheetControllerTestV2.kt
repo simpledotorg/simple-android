@@ -679,8 +679,8 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureDiastolicTextChanged("-"))
     }
 
-    verify(sheet, times(2)).setNextArrowEnabled(false)
-    verify(sheet, times(1)).setNextArrowEnabled(true)
+    verify(sheet, times(2)).setNextArrowIconEnabled(false)
+    verify(sheet, times(1)).setNextArrowIconEnabled(true)
   }
 
   @Test

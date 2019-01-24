@@ -262,7 +262,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .ofType<BloodPressureReadingsValidated>()
         .map { it.result is Success }
         .distinctUntilChanged()
-        .map { isBpValid -> { ui: Ui -> ui.setNextArrowEnabled(isBpValid) } }
+        .map { isBpValid -> { ui: Ui -> ui.setNextArrowIconEnabled(isBpValid) } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->

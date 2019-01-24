@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import org.simple.clinic.di.AppScope
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.storage.files.WriteFileResult
@@ -16,6 +17,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+@AppScope
 class ReportsRepository @Inject constructor(
     private val fileStorage: FileStorage,
     @Named("reports_file_path") private val reportsFilePath: String

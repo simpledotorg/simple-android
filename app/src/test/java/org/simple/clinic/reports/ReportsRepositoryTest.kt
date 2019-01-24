@@ -4,19 +4,26 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.storage.files.DeleteFileResult
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.storage.files.WriteFileResult
 import org.simple.clinic.util.None
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
 import java.io.File
 
 class ReportsRepositoryTest {
 
+  @get:Rule
+  val rxErrorsRule = RxErrorsRule()
+
   private val fileStorage = mock<FileStorage>()
   private val file = mock<File>()
-  private val repository = ReportsRepository(fileStorage, "test.html")
+  private val reportsFileName = "test.html"
+  private val repository = ReportsRepository(fileStorage, reportsFileName)
 
   @Test
   fun `updating the reports should save it to the file`() {
@@ -103,5 +110,17 @@ class ReportsRepositoryTest {
     fileStreamObserver.assertValues(
         file.toOptional(),
         file.toOptional())
+  }
+
+  @Test
+  fun `when file is deleted then trigger a None file notification`() {
+    whenever(fileStorage.delete(file)).thenReturn(DeleteFileResult.Success)
+    whenever(file.length()).thenReturn(1)
+    whenever(fileStorage.getFile(reportsFileName)).thenReturn(GetFileResult.Success(file))
+
+    val reportsFileStream = repository.reportsFile().test()
+    repository.deleteReportsFile().test().assertNoErrors()
+
+    reportsFileStream.assertValues(file.toOptional(), None)
   }
 }

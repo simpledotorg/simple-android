@@ -100,4 +100,16 @@ class AndroidFileStorageAndroidTest {
 
     assertThat(result).isEqualTo(ReadFileResult.Success(content = text))
   }
+
+  @Test
+  fun deleting_a_file_should_work_as_expected() {
+    val file = testDirectory.resolve("file.txt")
+    file.createNewFile()
+    assertThat(file.exists()).isTrue()
+
+    val result = fileStorage.delete(file)
+
+    assertThat(file.exists()).isFalse()
+    assertThat(result).isEqualTo(DeleteFileResult.Success)
+  }
 }

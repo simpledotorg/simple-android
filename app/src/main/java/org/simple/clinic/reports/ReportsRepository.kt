@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.di.AppScope
+import org.simple.clinic.storage.files.DeleteFileResult
 import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.storage.files.GetFileResult
 import org.simple.clinic.storage.files.WriteFileResult
@@ -46,4 +47,13 @@ class ReportsRepository @Inject constructor(
           .ofType(WriteFileResult.Success::class.java)
           .doOnSuccess { fileChangedSubject.onNext(it.file.toOptional()) }
           .ignoreElement()
+
+  fun deleteReportsFile(): Single<DeleteFileResult> =
+      Single.fromCallable { fileStorage.getFile(reportsFilePath) }
+          .ofType<GetFileResult.Success>()
+          .map { fileStorage.delete(it.file) }
+          .doOnSuccess {
+            if (it is DeleteFileResult.Success) fileChangedSubject.onNext(None)
+          }
+          .toSingle(DeleteFileResult.Success)
 }

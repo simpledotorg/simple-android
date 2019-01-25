@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
@@ -72,9 +73,17 @@ class FacilityChangeScreenController @Inject constructor(
                     .associateUserWithFacility(it, facility)
                     .andThen(facilityRepository.setCurrentFacility(it, facility))
               }
-              .andThen(reportsRepository.deleteReportsFile().toCompletable())
-              .andThen(reportsSync.sync().onErrorComplete())
+              .doOnComplete { clearAndSyncReports() }
               .andThen(Single.just(Ui::goBack))
         }
+  }
+
+  private fun clearAndSyncReports() {
+    reportsRepository
+        .deleteReportsFile()
+        .toCompletable()
+        .andThen(reportsSync.sync().onErrorComplete())
+        .subscribeOn(Schedulers.io())
+        .subscribe()
   }
 }

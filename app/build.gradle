@@ -84,6 +84,15 @@ android {
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
+    sandbox {
+      dimension 'track'
+      applicationIdSuffix ".sandbox"
+      versionNameSuffix "-sandbox"
+      buildConfigField "String", "API_ENDPOINT", "\"" + sandboxApiEndpoint + "\""
+      buildConfigField "String", "HEAP_ID", "\"" + sandboxHeapId + "\""
+      buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
+    }
+
     production {
       dimension 'track'
       buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
@@ -95,6 +104,7 @@ android {
   variantFilter { variant ->
     if (variant.name == "qaRelease" ||
         variant.name == "stagingDebug" ||
+        variant.name == "sandboxDebug" ||
         variant.name == "productionDebug"
     ) {
       setIgnore(true)
@@ -145,7 +155,7 @@ android {
   }
 
   afterEvaluate {
-    tasks.findAll { it.name in ["assembleStagingRelease", "assembleProductionRelease"] }
+    tasks.findAll { it.name in ["assembleStagingRelease", "assembleSandboxRelease", "assembleProductionRelease"] }
         .forEach { it.finalizedBy deleteProguardMappings }
   }
 }

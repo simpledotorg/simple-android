@@ -9,10 +9,15 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.plugins.RxJavaPlugins
+import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
@@ -26,6 +31,7 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.io.File
 
+@RunWith(JUnitParamsRunner::class)
 class FacilityChangeScreenControllerTest {
 
   @get:Rule
@@ -44,6 +50,7 @@ class FacilityChangeScreenControllerTest {
 
   @Before
   fun setUp() {
+    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
     controller = FacilityChangeScreenController(facilityRepository, reportsRepository, userSession, reportsSync)
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
@@ -106,20 +113,30 @@ class FacilityChangeScreenControllerTest {
   }
 
   @Test
-  fun `when a facility is changed then the report has to be deleted and synced`() {
+  @Parameters(method = "params for when a facility is changed then the report has to be deleted and synced")
+  fun `when a facility is changed then the report has to be deleted and synced`(
+      deleteReport: Single<DeleteFileResult>,
+      reportsSyncCompletable: Completable
+  ) {
     val newFacility = PatientMocker.facility()
     whenever(facilityRepository.associateUserWithFacility(user, newFacility)).thenReturn(Completable.complete())
     whenever(facilityRepository.setCurrentFacility(user, newFacility)).thenReturn(Completable.complete())
-
-    val deleteReport: Single<DeleteFileResult> = Single.just(DeleteFileResult.Success)
     whenever(reportsRepository.deleteReportsFile()).thenReturn(deleteReport)
-
-    val reportsSyncCompletable = Completable.complete()
     whenever(reportsSync.sync()).thenReturn(reportsSyncCompletable)
 
     uiEvents.onNext(FacilityChangeClicked(newFacility))
 
     deleteReport.test().assertSubscribed()
     reportsSyncCompletable.test().assertSubscribed()
+    verify(screen).goBack()
   }
+
+  @Suppress("Unused")
+  private fun `params for when a facility is changed then the report has to be deleted and synced`(): List<List<Any>> =
+      listOf(
+          listOf(Single.just(DeleteFileResult.Success), Completable.complete()),
+          listOf(Single.just(DeleteFileResult.Success), Completable.error(Exception())),
+          listOf(Single.just(DeleteFileResult.Failure(Exception())), Completable.complete()),
+          listOf(Single.just(DeleteFileResult.Failure(Exception())), Completable.error(Exception()))
+      )
 }

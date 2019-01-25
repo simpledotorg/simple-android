@@ -17,7 +17,6 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.observers.TestObserver
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
@@ -63,6 +62,7 @@ import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.assertLatestValue
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -802,10 +802,5 @@ class UserSessionTest {
       onNext(emptyList())
       observer.assertLatestValue(false)
     }
-  }
-
-  private fun <T> TestObserver<T>.assertLatestValue(value: T) {
-    @Suppress("UnstableApiUsage")
-    assertValueAt(valueCount() - 1, value)
   }
 }

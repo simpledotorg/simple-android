@@ -443,22 +443,22 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     val newBpDataStream = Observables.combineLatest(dateValidations, bpValidations, patientUuidStream)
         .map { (dateResult, bpResult, patientUuid) ->
           when {
-            dateResult is Valid && bpResult is Success -> NewBpData.ReadyToSave(dateResult.parsedDate, bpResult, patientUuid)
-            else -> NewBpData.NeedsCorrection
+            dateResult is Valid && bpResult is Success -> SaveBpData.ReadyToCreate(dateResult.parsedDate, bpResult, patientUuid)
+            else -> SaveBpData.NeedsCorrection
           }
         }
 
     val updateBpDataStream = Observables.combineLatest(dateValidations, bpValidations, existingBpUuidStream)
         .map { (dateResult, bpResult, bpUuid) ->
           when {
-            dateResult is Valid && bpResult is Success -> UpdateBpData.ReadyToSave(dateResult.parsedDate, bpResult, bpUuid)
-            else -> UpdateBpData.NeedsCorrection
+            dateResult is Valid && bpResult is Success -> SaveBpData.ReadyToUpdate(dateResult.parsedDate, bpResult, bpUuid)
+            else -> SaveBpData.NeedsCorrection
           }
         }
 
     val saveNewBp = saveClicks
         .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
-        .ofType<NewBpData.ReadyToSave>()
+        .ofType<SaveBpData.ReadyToCreate>()
         .flatMapSingle { (date, bp, patientUuid) ->
           val dateAsInstant = date.atTime(OffsetTime.now(clock)).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
@@ -467,7 +467,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val updateExistingBp = saveClicks
         .withLatestFrom(updateBpDataStream) { _, updateBp -> updateBp }
-        .ofType<UpdateBpData.ReadyToSave>()
+        .ofType<SaveBpData.ReadyToUpdate>()
         .flatMapSingle { (date, updatedBp, existingBpUuid) ->
           bloodPressureRepository.measurement(existingBpUuid)
               .firstOrError()
@@ -485,13 +485,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     return saveNewBp.mergeWith(updateExistingBp)
   }
 
-  sealed class NewBpData {
-    data class ReadyToSave(val parsedDate: LocalDate, val bpResult: Success, val patientUuid: PatientUuid) : NewBpData()
-    object NeedsCorrection : NewBpData()
-  }
-
-  sealed class UpdateBpData {
-    data class ReadyToSave(val parsedDate: LocalDate, val bpResult: Success, val bpUuid: UUID) : UpdateBpData()
-    object NeedsCorrection : UpdateBpData()
+  sealed class SaveBpData {
+    data class ReadyToCreate(val parsedDate: LocalDate, val bpResult: Success, val patientUuid: PatientUuid) : SaveBpData()
+    data class ReadyToUpdate(val parsedDate: LocalDate, val bpResult: Success, val bpUuid: UUID) : SaveBpData()
+    object NeedsCorrection : SaveBpData()
   }
 }

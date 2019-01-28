@@ -202,14 +202,34 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureSystolicTextChanged("142"))
     uiEvents.onNext(BloodPressureDiastolicTextChanged("80"))
-    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
     uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(sheet).showDateEntryScreen()
+  }
+
+  @Test
+  @Parameters(method = "params for OpenAs and bp validation errors")
+  fun `when BP entry is active, BP readings are invalid and save is clicked then date entry should not be shown`(
+      openAs: OpenAs,
+      error: BpValidator.Validation
+  ) {
+    whenever(bpValidator.validate(any(), any())).thenReturn(error)
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
+
+    uiEvents.run {
+      onNext(BloodPressureEntrySheetCreated(openAs = openAs))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged("-"))
+      onNext(BloodPressureDiastolicTextChanged("-"))
+      onNext(BloodPressureSaveClicked)
+    }
+
+    verify(sheet, never()).showDateEntryScreen()
   }
 
   @Suppress("Unused")

@@ -42,6 +42,8 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 
 @RunWith(JUnitParamsRunner::class)
 class PatientEntryScreenControllerTest {
@@ -65,6 +67,7 @@ class PatientEntryScreenControllerTest {
   @Before
   fun setUp() {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
+    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(UTC))
 
     errorConsumer = { throw it }
 

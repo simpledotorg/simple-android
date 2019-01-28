@@ -194,7 +194,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   @Parameters(method = "params for checking valid BP input")
-  fun `when save is clicked, BP entry is active and input is valid then show date entry`(openAs: OpenAs) {
+  fun `when BP entry is active, BP readings are valid and save is clicked then date entry should be shown`(openAs: OpenAs) {
     whenever(bpValidator.validate(any(), any())).thenReturn(Success(142, 80))
 
     if (openAs is OpenAs.Update) {

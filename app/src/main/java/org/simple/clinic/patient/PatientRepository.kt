@@ -13,6 +13,7 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
@@ -41,7 +42,8 @@ class PatientRepository @Inject constructor(
     private val clock: Clock,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
     private val searchPatientByName: SearchPatientByName,
-    private val configProvider: Single<PatientConfig>
+    private val configProvider: Single<PatientConfig>,
+    private val reportsRepository: ReportsRepository
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -365,17 +367,19 @@ class PatientRepository @Inject constructor(
   }
 
   fun clearPatientData(): Completable {
-    return Completable.fromCallable {
-      database.runInTransaction {
-        database.patientDao().clear()
-        database.phoneNumberDao().clear()
-        database.addressDao().clear()
-        database.bloodPressureDao().clearData()
-        database.prescriptionDao().clearData()
-        database.appointmentDao().clear()
-        database.communicationDao().clear()
-        database.medicalHistoryDao().clear()
-      }
-    }
+    return Completable
+        .fromCallable {
+          database.runInTransaction {
+            database.patientDao().clear()
+            database.phoneNumberDao().clear()
+            database.addressDao().clear()
+            database.bloodPressureDao().clearData()
+            database.prescriptionDao().clearData()
+            database.appointmentDao().clear()
+            database.communicationDao().clear()
+            database.medicalHistoryDao().clear()
+          }
+        }
+        .andThen(reportsRepository.deleteReportsFile().toCompletable())
   }
 }

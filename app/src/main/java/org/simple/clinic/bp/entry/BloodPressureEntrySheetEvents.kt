@@ -24,7 +24,7 @@ object BloodPressureRemoveClicked : UiEvent {
 
 object BloodPressureDiastolicBackspaceClicked : UiEvent
 
-data class BloodPressureBpValidated(val result: BpValidator.Validation) : UiEvent
+data class BloodPressureReadingsValidated(val result: BpValidator.Validation) : UiEvent
 
 data class BloodPressureDateValidated(val date: String, val result: UserInputDateValidator.Result2) : UiEvent
 

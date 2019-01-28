@@ -267,7 +267,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val validations = Observables.combineLatest(systolicChanges, diastolicChanges, screenChanges)
         .filter { (_, _, screen) -> screen == BP_ENTRY }
-        .map { (systolic, diastolic) -> bpValidator.validate(systolic, diastolic) }
+        .map { (systolic, diastolic, _) -> bpValidator.validate(systolic, diastolic) }
         .map(::BloodPressureBpValidated)
 
     events.mergeWith(validations)

@@ -184,7 +184,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         events.ofType<BloodPressureSaveClicked>())
 
     val validations = events
-        .ofType<BloodPressureBpValidated>()
+        .ofType<BloodPressureReadingsValidated>()
         .map { it.result }
 
     return saveClicks
@@ -217,7 +217,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { it.type }
 
     val validations = events
-        .ofType<BloodPressureBpValidated>()
+        .ofType<BloodPressureReadingsValidated>()
         .map { it.result }
 
     return saveClicks
@@ -246,7 +246,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
   private fun enableNextArrowWhileBpIsValid(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<BloodPressureBpValidated>()
+        .ofType<BloodPressureReadingsValidated>()
         .map { it.result is Success }
         .distinctUntilChanged()
         .map { isBpValid -> { ui: Ui -> ui.setNextArrowEnabled(isBpValid) } }
@@ -268,7 +268,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     val validations = Observables.combineLatest(systolicChanges, diastolicChanges, screenChanges)
         .filter { (_, _, screen) -> screen == BP_ENTRY }
         .map { (systolic, diastolic, _) -> bpValidator.validate(systolic, diastolic) }
-        .map(::BloodPressureBpValidated)
+        .map(::BloodPressureReadingsValidated)
 
     events.mergeWith(validations)
   }
@@ -420,7 +420,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .map { it.result }
 
     val bpValidations = events
-        .ofType<BloodPressureBpValidated>()
+        .ofType<BloodPressureReadingsValidated>()
         .map { it.result }
 
     val patientUuidStream = openAs

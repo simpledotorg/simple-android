@@ -10,11 +10,16 @@ import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 @RunWith(JUnitParamsRunner::class)
 class UserInputDateValidatorTest {
+
+  private val validator = UserInputDateValidator(
+      userTimeZone = UTC,
+      dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
 
   @Test
   @Parameters(value = [
@@ -26,17 +31,13 @@ class UserInputDateValidatorTest {
     " , INVALID_PATTERN"
   ])
   fun `validate (v1)`(date: String, expectedResult: Result) {
-    val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-
-    assertThat(UserInputDateValidator(format).validate(date)).isEqualTo(expectedResult)
+    assertThat(validator.validate(date)).isEqualTo(expectedResult)
   }
 
   @Test
   @Parameters(method = "params for v2 validation")
   fun `validate (v2)`(date: String, expectedResult: UserInputDateValidator.Result2) {
-    val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-
-    assertThat(UserInputDateValidator(format).validate2(date)).isEqualTo(expectedResult)
+    assertThat(validator.validate2(date)).isEqualTo(expectedResult)
   }
 
   @Suppress("unused")
@@ -52,18 +53,14 @@ class UserInputDateValidatorTest {
 
   @Test
   fun `validate future date (v1)`() {
-    val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-    val dobValidator = UserInputDateValidator(format)
-    val futureDateResult = dobValidator.validate("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
+    val futureDateResult = validator.validate("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
 
     assertThat(futureDateResult).isEqualTo(Result.DATE_IS_IN_FUTURE)
   }
 
   @Test
   fun `validate future date (v2)`() {
-    val format = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH)
-    val dobValidator = UserInputDateValidator(format)
-    val futureDateResult = dobValidator.validate2("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
+    val futureDateResult = validator.validate2("01/01/3000", nowDate = LocalDate.parse("2018-07-16"))
 
     assertThat(futureDateResult).isEqualTo(Invalid.DateIsInFuture)
   }

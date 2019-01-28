@@ -70,6 +70,8 @@ class BloodPressureEntrySheetControllerTestV2 {
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
+    whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testClock))
+
     controller = BloodPressureEntrySheetControllerV2(
         bloodPressureRepository = bloodPressureRepository,
         configProvider = configEmitter.firstOrError(),

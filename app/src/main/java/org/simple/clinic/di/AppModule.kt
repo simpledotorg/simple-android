@@ -55,5 +55,5 @@ open class AppModule(private val appContext: Application) {
 
   @Provides
   @AppScope
-  fun systemDefaultZone() = ZoneId.systemDefault()
+  fun systemDefaultZone(): ZoneId = ZoneId.systemDefault()
 }

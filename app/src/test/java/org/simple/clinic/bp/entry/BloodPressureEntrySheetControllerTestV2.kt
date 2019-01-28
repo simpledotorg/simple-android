@@ -454,7 +454,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     }
 
     val newInputDateAsInstant = newInputDate.atTime(OffsetTime.now(testClock)).toInstant()
-    val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, createdAt = newInputDateAsInstant, updatedAt = newInputDateAsInstant)
+    val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, createdAt = newInputDateAsInstant, updatedAt = oldCreatedAt)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())

@@ -70,15 +70,16 @@ class PatientRepositoryTest {
     searchPatientByName = mock()
 
     repository = PatientRepository(
-        database,
-        dobValidator,
-        facilityRepository,
-        userSession,
-        numberValidator,
-        clock,
-        dateOfBirthFormat,
-        searchPatientByName,
-        Single.fromCallable { config })
+        database = database,
+        dobValidator = dobValidator,
+        facilityRepository = facilityRepository,
+        userSession = userSession,
+        numberValidator = numberValidator,
+        clock = clock,
+        dateOfBirthFormat = dateOfBirthFormat,
+        searchPatientByName = searchPatientByName,
+        configProvider = Single.fromCallable { config },
+        reportsRepository = mock())
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

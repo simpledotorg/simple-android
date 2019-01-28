@@ -21,6 +21,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
@@ -29,6 +30,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -51,6 +53,9 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var medicalHistoryRepository: MedicalHistoryRepository
+
+  @Inject
+  lateinit var reportsRepository: ReportsRepository
 
   @Inject
   lateinit var database: AppDatabase
@@ -94,6 +99,7 @@ class PatientRepositoryAndroidTest {
   @After
   fun tearDown() {
     (clock as TestClock).resetToEpoch()
+    reportsRepository.deleteReportsFile().blockingGet()
   }
 
   @Test
@@ -362,6 +368,9 @@ class PatientRepositoryAndroidTest {
         medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
     ).blockingAwait()
 
+    reportsRepository.updateReports("test reports!").blockingAwait()
+    val (reportsFile) = reportsRepository.reportsFile().blockingFirst()
+
     // We need to ensure that ONLY the tables related to the patient get cleared,
     // and the ones referring to the user must be left untouched
 
@@ -376,6 +385,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.appointmentDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.communicationDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isGreaterThan(0)
+    assertThat(reportsFile!!.exists()).isTrue()
 
     patientRepository.clearPatientData().blockingAwait()
 
@@ -387,6 +397,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.communicationDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isEqualTo(0)
+    assertThat(reportsFile.exists()).isFalse()
 
     assertThat(database.facilityDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.userDao().userImmediate()).isNotNull()

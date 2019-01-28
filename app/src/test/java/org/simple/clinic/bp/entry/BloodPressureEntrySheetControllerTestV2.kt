@@ -35,6 +35,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
@@ -74,7 +75,8 @@ class BloodPressureEntrySheetControllerTestV2 {
         configProvider = configEmitter.firstOrError(),
         dateValidator = dateValidator,
         bpValidator = bpValidator,
-        clock = testClock)
+        clock = testClock,
+        inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'))
 
     uiEvents
         .compose(controller)

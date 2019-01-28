@@ -17,8 +17,10 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
 import org.simple.clinic.util.StringPreferenceConverter
+import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.UiEvent
 import retrofit2.Retrofit
+import java.util.Locale
 import javax.inject.Named
 
 @Module
@@ -68,6 +70,14 @@ open class BloodPressureModule {
     return when {
       config.dateEntryEnabled -> controllerV2.get()
       else -> controllerV1.get()
+    }
+  }
+
+  @Provides
+  fun userInputDatePaddingCharacter(locale: Locale): UserInputDatePaddingCharacter {
+    return when (locale) {
+      Locale.ENGLISH -> UserInputDatePaddingCharacter('0')
+      else -> throw UnsupportedOperationException()
     }
   }
 }

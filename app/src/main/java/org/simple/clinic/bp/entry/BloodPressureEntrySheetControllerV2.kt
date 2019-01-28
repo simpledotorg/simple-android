@@ -23,6 +23,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -46,7 +47,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     private val configProvider: Single<BloodPressureConfig>,
     private val dateValidator: UserInputDateValidator,
     private val bpValidator: BpValidator,
-    private val clock: Clock
+    private val clock: Clock,
+    private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -150,8 +152,8 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
 
     val showDateOnUi = { date: LocalDate ->
       { ui: Ui ->
-        val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = '0')
-        val monthString = date.monthValue.toString().padStart(length = 2, padChar = '0')
+        val dayString = date.dayOfMonth.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
+        val monthString = date.monthValue.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
         val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
         ui.setDate(dayString, monthString, yearString)
       }
@@ -353,9 +355,9 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     val combinedDates = Observables
         .combineLatest(dayChanges, monthChanges, yearChanges)
         .map { (dd, mm, yy) ->
-          val paddedDd = dd.padStart(length = 2, padChar = '0')
-          val paddedMm = mm.padStart(length = 2, padChar = '0')
-          val paddedYy = yy.padStart(length = 2, padChar = '0')
+          val paddedDd = dd.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
+          val paddedMm = mm.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
+          val paddedYy = yy.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
 
           val firstTwoDigitsOfYear = LocalDate.now(clock).year.toString().substring(0, 2)
           val paddedYyyy = firstTwoDigitsOfYear + paddedYy

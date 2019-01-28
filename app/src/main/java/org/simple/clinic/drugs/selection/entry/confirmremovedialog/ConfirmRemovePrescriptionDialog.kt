@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.entry.confirmremovedialog
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -32,6 +33,7 @@ class ConfirmRemovePrescriptionDialog : AppCompatDialogFragment() {
   private val onStarts = PublishSubject.create<Any>()
   private val screenDestroys = PublishSubject.create<ScreenDestroyed>()
 
+  @SuppressLint("CheckResult")
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
     val dialog = AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle_Destructive)
         .setTitle(R.string.customprescription_delete_title)

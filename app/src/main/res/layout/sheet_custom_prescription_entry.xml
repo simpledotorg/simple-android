@@ -16,10 +16,11 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_centerHorizontal="true"
-      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_24"
       android:layout_marginTop="@dimen/spacing_24"
       android:text="@string/customprescription_enter_medicine"
-      android:visibility="gone" />
+      android:visibility="gone"
+      tools:visibility="gone" />
 
     <TextView
       android:id="@+id/customprescription_edit_prescription"
@@ -27,7 +28,7 @@
       android:layout_height="wrap_content"
       android:layout_alignParentStart="true"
       android:layout_centerVertical="true"
-      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_32"
       android:layout_marginStart="@dimen/spacing_16"
       android:layout_marginTop="@dimen/spacing_24"
       android:layout_toStartOf="@id/customprescription_remove_button"
@@ -46,29 +47,26 @@
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
       android:layout_centerVertical="true"
-      android:layout_marginBottom="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_16"
-      android:layout_marginTop="@dimen/spacing_24"
       android:text="@string/bloodpressureentry_remove"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Red1"
       android:visibility="gone"
       tools:visibility="visible" />
-
   </RelativeLayout>
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_24"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_12"
+    android:layout_marginStart="@dimen/spacing_12"
     android:baselineAligned="true"
     android:orientation="horizontal">
 
     <com.google.android.material.textfield.TextInputLayout
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_weight="0.6">
+      android:layout_weight="1">
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/customprescription_drug_name"
@@ -83,14 +81,14 @@
     <com.google.android.material.textfield.TextInputLayout
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_weight="0.4">
+      android:layout_marginStart="@dimen/spacing_8"
+      android:layout_weight="0.46">
 
       <com.google.android.material.textfield.TextInputEditText
         android:id="@+id/customprescription_drug_dosage"
         style="@style/Clinic.V2.TextAppearance.Body1Left.Grey0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_16"
         android:hint="@string/customprescription_drug_dosage_hint"
         android:imeOptions="actionDone"
         android:inputType="textCapSentences"

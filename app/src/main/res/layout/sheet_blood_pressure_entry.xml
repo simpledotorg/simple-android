@@ -153,7 +153,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
+            app:srcCompat="@drawable/ic_round_arrow_forward_24dp"
             tools:ignore="ContentDescription,RtlSymmetry" />
         </FrameLayout>
       </androidx.constraintlayout.widget.ConstraintLayout>
@@ -206,7 +206,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:rotation="180"
-            app:srcCompat="@drawable/ic_round_arrow_forward_ios_24px"
+            app:srcCompat="@drawable/ic_round_arrow_forward_24dp"
             tools:ignore="ContentDescription,RtlSymmetry" />
         </FrameLayout>
 

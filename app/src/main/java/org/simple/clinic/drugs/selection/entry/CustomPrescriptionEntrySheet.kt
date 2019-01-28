@@ -19,6 +19,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.UiEvent
@@ -29,6 +30,7 @@ import javax.inject.Inject
 
 class CustomPrescriptionEntrySheet : BottomSheetActivity() {
 
+  private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.customprescription_root)
   private val drugNameEditText by bindView<TextInputEditText>(R.id.customprescription_drug_name)
   private val drugDosageEditText by bindView<TextInputEditText>(R.id.customprescription_drug_dosage)
   private val saveButton by bindView<Button>(R.id.customprescription_save)
@@ -60,6 +62,9 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
         .observeOn(mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
+
+    // Dismiss this sheet when the keyboard is dismissed.
+    rootLayout.backKeyPressInterceptor = { super.onBackgroundClick() }
   }
 
   override fun onDestroy() {

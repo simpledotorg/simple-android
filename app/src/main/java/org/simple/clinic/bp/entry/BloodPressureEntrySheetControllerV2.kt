@@ -474,8 +474,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
                 existingBp.copy(
                     systolic = updatedBp.systolic,
                     diastolic = updatedBp.diastolic,
-                    createdAt = dateAsInstant,
-                    updatedAt = dateAsInstant)
+                    createdAt = dateAsInstant)
               }
               .flatMapCompletable { bloodPressureRepository.updateMeasurement(it) }
               .andThen(Single.just({ ui: Ui -> ui.setBpSavedResultAndFinish() }))

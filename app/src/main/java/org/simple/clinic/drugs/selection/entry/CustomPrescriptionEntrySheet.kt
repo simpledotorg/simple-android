@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.entry
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -40,6 +41,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<Any>()
 
+  @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_custom_prescription_entry)
@@ -66,8 +68,8 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   }
 
   override fun onBackgroundClick() {
-    val drugNameEmpty = drugNameEditText.text.isNullOrEmpty()
-    val dosageEmpty = drugDosageEditText.text.isNullOrEmpty()
+    val drugNameEmpty = drugNameEditText.text.isNullOrBlank()
+    val dosageEmpty = drugDosageEditText.text.isNullOrBlank()
         || drugDosageEditText.text.toString().trim() == getString(R.string.customprescription_dosage_placeholder)
 
     if (drugNameEmpty && dosageEmpty) {

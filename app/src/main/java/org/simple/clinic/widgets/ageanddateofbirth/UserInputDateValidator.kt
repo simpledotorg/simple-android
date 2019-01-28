@@ -1,13 +1,15 @@
 package org.simple.clinic.widgets.ageanddateofbirth
 
+import androidx.annotation.VisibleForTesting
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeParseException
 import javax.inject.Inject
 import javax.inject.Named
 
 class UserInputDateValidator @Inject constructor(
+    val userTimeZone: ZoneId,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
 
@@ -29,7 +31,7 @@ class UserInputDateValidator @Inject constructor(
   @Deprecated(
       message = "use validate2 instead which uses sealed classes instead of enums",
       replaceWith = ReplaceWith("validate2(dateText, nowDate)"))
-  fun validate(dateText: String, nowDate: LocalDate = LocalDate.now(UTC)): Result {
+  fun validate(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result {
     return when (validate2(dateText, nowDate)) {
       is Result2.Valid -> Result.VALID
       is Result2.Invalid.InvalidPattern -> Result.INVALID_PATTERN
@@ -37,7 +39,7 @@ class UserInputDateValidator @Inject constructor(
     }
   }
 
-  fun validate2(dateText: String, nowDate: LocalDate = LocalDate.now(UTC)): Result2 {
+  fun validate2(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result2 {
     try {
       if (dateText.isBlank()) {
         return Result2.Invalid.InvalidPattern
@@ -55,5 +57,10 @@ class UserInputDateValidator @Inject constructor(
         else -> throw e
       }
     }
+  }
+
+  @VisibleForTesting
+  fun dateInUserTimeZone(): LocalDate {
+    return LocalDate.now(userTimeZone)
   }
 }

@@ -87,6 +87,8 @@ class PatientEditScreenControllerTest {
     numberValidator = mock()
     dobValidator = mock()
 
+    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(clock))
+
     controller = PatientEditScreenController(
         patientRepository,
         numberValidator,

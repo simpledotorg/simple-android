@@ -7,14 +7,16 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.OngoingNewPatientEntry.PhoneNumber
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
@@ -38,7 +40,10 @@ class OngoingNewPatientEntryTest {
         address = Address(colonyOrVillage, district, state),
         phoneNumber = PhoneNumber(""))
 
-    val dobValidator = UserInputDateValidator(DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+    val dobValidator = UserInputDateValidator(
+        userTimeZone = UTC,
+        dateOfBirthFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy", Locale.ENGLISH))
+
     val numValidator = mock<PhoneNumberValidator>()
     whenever(numValidator.validate("", LANDLINE_OR_MOBILE)).thenReturn(phoneValidationResult)
 
@@ -71,6 +76,7 @@ class OngoingNewPatientEntryTest {
         phoneNumber = PhoneNumber("phone-number"))
 
     val mockDobValidator = mock<UserInputDateValidator>()
+    whenever(mockDobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(UTC))
     whenever(mockDobValidator.validate("01/01/3000")).thenReturn(Result.DATE_IS_IN_FUTURE)
 
     val mockNumValidator = mock<PhoneNumberValidator>()

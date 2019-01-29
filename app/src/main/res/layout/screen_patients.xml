@@ -36,7 +36,7 @@
     android:layout_marginTop="@dimen/spacing_16"
     android:adjustViewBounds="true"
     android:scaleType="fitXY"
-    android:src="@drawable/register_illustration"
+    android:src="@drawable/illustrations_homescreen"
     tools:ignore="ContentDescription" />
 
   <FrameLayout

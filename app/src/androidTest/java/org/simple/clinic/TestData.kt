@@ -9,6 +9,7 @@ import org.simple.clinic.drugs.sync.PrescribedDrugPayload
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
@@ -77,7 +78,7 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       generatePhoneNumber: Boolean = faker.bool.bool()
   ): PatientProfile {
-    val phoneNumbers = if(generatePhoneNumber) listOf(patientPhoneNumber(patientUuid = patientUuid)) else emptyList()
+    val phoneNumbers = if (generatePhoneNumber) listOf(patientPhoneNumber(patientUuid = patientUuid)) else emptyList()
 
     return PatientProfile(
         patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
@@ -241,6 +242,9 @@ class TestData @Inject constructor(
       pinCode: String? = null,
       protocolUuid: UUID? = UUID.randomUUID(),
       groupUuid: UUID? = UUID.randomUUID(),
+      location: Coordinates? = Coordinates(
+          latitude = faker.number.between(1.908537, 59.299800),
+          longitude = faker.number.between(73.537524, 18.209118)),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
@@ -258,6 +262,7 @@ class TestData @Inject constructor(
         pinCode = pinCode,
         protocolUuid = protocolUuid,
         groupUuid = groupUuid,
+        location = location,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
@@ -276,6 +281,8 @@ class TestData @Inject constructor(
       villageOrColony: String? = null,
       country: String = faker.address.country(),
       pinCode: String? = null,
+      locationLatitude: Double? = faker.number.between(1.908537, 59.299800),
+      locationLongitude: Double? = faker.number.between(73.537524, 18.209118),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -292,6 +299,8 @@ class TestData @Inject constructor(
         pinCode = pinCode,
         protocolUuid = protocolUuid,
         groupUuid = groupUuid,
+        locationLatitude = locationLatitude,
+        locationLongitude = locationLongitude,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

@@ -1,12 +1,14 @@
 package org.simple.clinic.facility
 
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -40,6 +42,9 @@ data class Facility(
     // Nullable because existing facilities will not
     // have group UUID until they're synced again.
     val groupUuid: UUID?,
+
+    @Embedded(prefix = "location_")
+    val location: Coordinates?,
 
     val createdAt: Instant,
 

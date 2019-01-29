@@ -341,7 +341,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .flatMap(bloodPressureRepository::measurement)
         .filter { it.deletedAt != null }
         .take(1)
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+        .map { { ui: Ui -> ui.finish() } }
   }
 
   private fun combineDateInputs() = ObservableTransformer<UiEvent, UiEvent> { events ->
@@ -468,7 +468,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           val dateAsInstant = date.atTime(OffsetTime.now(clock)).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
         }
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+        .map { { ui: Ui -> ui.finish() } }
 
     val updateExistingBp = saveClicks
         .withLatestFrom(updateBpDataStream) { _, updateBp -> updateBp }
@@ -484,7 +484,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
                     createdAt = dateAsInstant)
               }
               .flatMapCompletable { bloodPressureRepository.updateMeasurement(it) }
-              .andThen(Single.just({ ui: Ui -> ui.setBpSavedResultAndFinish() }))
+              .andThen(Single.just({ ui: Ui -> ui.finish() }))
         }
 
     return saveNewBp.mergeWith(updateExistingBp)

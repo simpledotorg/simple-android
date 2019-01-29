@@ -184,7 +184,7 @@ class BloodPressureEntrySheetController @Inject constructor(
                   createdAt = Instant.now(clock)
               )
         }
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+        .map { { ui: Ui -> ui.finish() } }
   }
 
   private fun updateBp(events: Observable<UiEvent>): Observable<UiChange> {
@@ -217,7 +217,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { (savedBp, systolic, diastolic) -> savedBp.copy(systolic = systolic.toInt(), diastolic = diastolic.toInt()) }
         .flatMapSingle { bloodPressureMeasurement ->
           bloodPressureRepository.updateMeasurement(bloodPressureMeasurement)
-              .toSingleDefault({ ui: Ui -> ui.setBpSavedResultAndFinish() })
+              .toSingleDefault({ ui: Ui -> ui.finish() })
         }
   }
 
@@ -310,6 +310,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .flatMap(bloodPressureRepository::measurement)
         .filter { it.deletedAt != null }
         .take(1)
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+        .map { { ui: Ui -> ui.finish() } }
   }
 }

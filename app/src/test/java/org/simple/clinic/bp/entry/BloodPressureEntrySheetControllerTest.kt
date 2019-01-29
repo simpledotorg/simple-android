@@ -204,7 +204,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
   }
 
   @Test
@@ -238,7 +238,7 @@ class BloodPressureEntrySheetControllerTest {
       verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
       verify(bloodPressureRepository).updateMeasurement(alreadyPresentBp!!.copy(systolic = 142, diastolic = 80))
     }
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(sheet).finish()
   }
 
   @Suppress("Unused")
@@ -343,10 +343,10 @@ class BloodPressureEntrySheetControllerTest {
     val bloodPressureSubject = BehaviorSubject.createDefault<BloodPressureMeasurement>(bloodPressure)
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(bloodPressureSubject)
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
 
     bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
 
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(sheet).finish()
   }
 }

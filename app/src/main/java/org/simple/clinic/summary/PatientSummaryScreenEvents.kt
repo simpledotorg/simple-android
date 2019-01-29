@@ -25,10 +25,6 @@ class PatientSummaryUpdateDrugsClicked : UiEvent {
   override val analyticsName = "Patient Summary:Update Drugs Clicked"
 }
 
-data class PatientSummaryBloodPressureClosed(val wasBloodPressureSaved: Boolean) : UiEvent {
-  override val analyticsName = "Patient Summary:New Blood Pressure Saved"
-}
-
 class ScheduleAppointmentSheetClosed : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
@@ -39,8 +35,6 @@ data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuesti
   override val analyticsName = "Patient Summary:Answer for $question set to $answer"
 }
 
-data class PatientSummaryRestoredWithBPSaved(val wasBloodPressureSaved: Boolean) : UiEvent
+data class PatientSummaryBpClicked(val bloodPressureMeasurement: BloodPressureMeasurement) : UiEvent
 
-data class PatientSummaryBpClicked(val bloodPressureMeasurement: BloodPressureMeasurement): UiEvent
-
-data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItems): UiEvent
+data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItems) : UiEvent

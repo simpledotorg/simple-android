@@ -3,15 +3,15 @@ package org.simple.clinic.summary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
@@ -60,8 +60,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   companion object {
     val KEY = ::PatientSummaryScreenKey
 
-    const val REQCODE_BP_SAVED = 1
-    const val REQCODE_SCHEDULE_APPOINTMENT = 2
+    const val REQCODE_SCHEDULE_APPOINTMENT = 1
   }
 
   @Inject
@@ -87,24 +86,18 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val bloodPressureSection = Section()
   private val medicalHistorySection = Section()
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
-  private val bpWasSavedEvents = PublishSubject.create<UiEvent>()
 
   private var bpEntrySheetAlreadyShownOnStart: Boolean = false
-  private var bloodPressureWasSaved: Boolean = false
 
   override fun onSaveInstanceState(): Parcelable {
     return PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
-        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart,
-        bloodPressureWasSaved = bloodPressureWasSaved)
+        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart)
   }
 
   override fun onRestoreInstanceState(state: Parcelable) {
-    val (superSavedState, bpEntryShownOnStart, bpWasSaved) = state as PatientSummaryScreenSavedState
+    val (superSavedState, bpEntryShownOnStart) = state as PatientSummaryScreenSavedState
     bpEntrySheetAlreadyShownOnStart = bpEntryShownOnStart
-    bloodPressureWasSaved = bpWasSaved
-
-    bpWasSavedEvents.onNext(PatientSummaryRestoredWithBPSaved(bpWasSaved))
 
     super.onRestoreInstanceState(superSavedState)
   }
@@ -132,8 +125,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             backClicks(),
             doneClicks(),
             adapterUiEvents,
-            bloodPressureSaves(),
-            bpWasSavedEvents,
             appointmentScheduledSuccess(),
             appointmentScheduleSheetClosed())
         .observeOn(io())
@@ -174,13 +165,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .mergeWith(hardwareBackKeyClicks)
         .map { PatientSummaryBackClicked() }
   }
-
-  private fun bloodPressureSaves() = screenRouter.streamScreenResults()
-      .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_BP_SAVED && it.succeeded() }
-      .map { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
-      .doOnNext { saved -> bloodPressureWasSaved = saved }
-      .map { saved -> PatientSummaryBloodPressureClosed(saved) }
 
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
@@ -279,12 +263,12 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    activity.startActivityForResult(intent, REQCODE_BP_SAVED)
+    activity.startActivity(intent)
   }
 
   fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForUpdateBp(context, bloodPressureMeasurementUuid)
-    activity.startActivityForResult(intent, REQCODE_BP_SAVED)
+    activity.startActivity(intent)
   }
 
   fun showScheduleAppointmentSheet(patientUuid: UUID) {
@@ -317,6 +301,5 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 @Parcelize
 data class PatientSummaryScreenSavedState(
     val superSavedState: Parcelable?,
-    val bpEntryShownOnStart: Boolean,
-    val bloodPressureWasSaved: Boolean
+    val bpEntryShownOnStart: Boolean
 ) : Parcelable

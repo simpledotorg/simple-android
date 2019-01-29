@@ -346,125 +346,6 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when back is clicked, then user should be taken back to search, or schedule appointment sheet should open`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    if (wasBloodPressureSaved) {
-      verify(screen).showScheduleAppointmentSheet(patientUuid)
-    } else {
-      if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
-        verify(screen).goBackToHome()
-      } else {
-        verify(screen).goBackToPatientSearch()
-      }
-    }
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when save button is clicked, then user should be taken back to the home screen, or schedule appointment sheet should open`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    if (wasBloodPressureSaved) {
-      verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome()
-    } else {
-      verify(screen).goBackToHome()
-      verify(screen, never()).showScheduleAppointmentSheet(any())
-    }
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when summary screen is restored, and bp was saved earlier, schedule appointment sheet should open, on clicking back or done`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryRestoredWithBPSaved(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    if (wasBloodPressureSaved) {
-      verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome()
-    } else {
-      verify(screen).goBackToHome()
-      verify(screen, never()).showScheduleAppointmentSheet(any())
-    }
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when all BPs for the patient are deleted and back is clicked, the schedule appointment sheet must not be shown`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
-      verify(screen).goBackToHome()
-    } else {
-      verify(screen).goBackToPatientSearch()
-    }
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when all BPs for the patient are deleted and done is clicked, the schedule appointment sheet must not be shown`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    verify(screen).goBackToHome()
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when all bps for the patient are deleted and when summary screen is restored with bp saved earlier, the schedule appointment sheet must not be shown on clicking back or done`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryRestoredWithBPSaved(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    verify(screen).goBackToHome()
-  }
-
-  @Suppress("unused")
-  fun bpSavedAndPatientSummaryCallers() = arrayOf(
-      arrayOf(true, PatientSummaryCaller.NEW_PATIENT),
-      arrayOf(true, PatientSummaryCaller.SEARCH),
-      arrayOf(false, PatientSummaryCaller.NEW_PATIENT),
-      arrayOf(false, PatientSummaryCaller.SEARCH)
-  )
-
-  @Test
   fun `when update medicines is clicked then BP medicines screen should be shown`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
@@ -815,5 +696,65 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Test
+  @Parameters(method = "params for showing schedule appointment sheet")
+  fun `when at least one BP recorded and back is pressed, show schedule appointment sheet`(
+      noOfRecordedBps: Int,
+      caller: PatientSummaryCaller
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(noOfRecordedBps))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryBackClicked())
+    verify(screen).showScheduleAppointmentSheet(patientUuid)
+  }
+
+  @Test
+  @Parameters(method = "params for showing schedule appointment sheet")
+  fun `when at least one BP recorded and save is clicked, show schedule appointment sheet`(
+      noOfRecordedBps: Int,
+      caller: PatientSummaryCaller
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(noOfRecordedBps))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+    verify(screen).showScheduleAppointmentSheet(patientUuid)
+  }
+
+  fun `params for showing schedule appointment sheet`() =
+      listOf(
+          listOf(1, PatientSummaryCaller.NEW_PATIENT),
+          listOf(1, PatientSummaryCaller.SEARCH),
+          listOf(2, PatientSummaryCaller.NEW_PATIENT),
+          listOf(2, PatientSummaryCaller.SEARCH)
+      )
+
+  @Test
+  fun `when there are no BPs recorded and back is pressed and its a new patient, then do not show schedule appointment sheet and go back to home`() {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryBackClicked())
+    verify(screen, never()).showScheduleAppointmentSheet(any())
+    verify(screen).goBackToHome()
+  }
+
+  @Test
+  fun `when there are no BPs recorded and back is pressed and its a search result, do not show schedule appointment sheet and go back to search results`() {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryBackClicked())
+    verify(screen, never()).showScheduleAppointmentSheet(any())
+    verify(screen).goBackToPatientSearch()
+  }
+
+  @Test
+  @Parameters(value = ["SEARCH", "NEW_PATIENT"])
+  fun `when there are no BPs recorded and save is clicked, do not show schedule appointment sheet and go back to home`(caller: PatientSummaryCaller) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+    verify(screen, never()).showScheduleAppointmentSheet(any())
+    verify(screen).goBackToHome()
   }
 }

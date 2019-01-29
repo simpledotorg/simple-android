@@ -4,7 +4,9 @@ import com.nhaarman.mockito_kotlin.mock
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
@@ -117,6 +119,7 @@ object PatientMocker {
       pinCode: String? = null,
       protocolUuid: UUID? = UUID.randomUUID(),
       groupUuid: UUID? = UUID.randomUUID(),
+      location: Coordinates? = Coordinates(latitude = 1.908537, longitude = 73.537524),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -134,9 +137,47 @@ object PatientMocker {
         pinCode = pinCode,
         protocolUuid = protocolUuid,
         groupUuid = groupUuid,
+        location = location,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,
+        deletedAt = deletedAt)
+  }
+
+  fun facilityPayload(
+      uuid: UUID = mock(),
+      name: String = "some facility",
+      streetAddress: String? = "some street",
+      district: String = "district",
+      state: String = "state",
+      facilityType: String? = null,
+      villageOrColony: String? = null,
+      country: String = "India",
+      pinCode: String? = null,
+      protocolUuid: UUID = UUID.randomUUID(),
+      groupUuid: UUID = UUID.randomUUID(),
+      locationLatitude: Double? = 1.908537,
+      locationLongitude: Double? = 73.537524,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): FacilityPayload {
+    return FacilityPayload(
+        uuid = uuid,
+        name = name,
+        facilityType = facilityType,
+        streetAddress = streetAddress,
+        villageOrColony = villageOrColony,
+        district = district,
+        state = state,
+        country = country,
+        pinCode = pinCode,
+        protocolUuid = protocolUuid,
+        groupUuid = groupUuid,
+        locationLatitude = locationLatitude,
+        locationLongitude = locationLongitude,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
         deletedAt = deletedAt)
   }
 

@@ -2,6 +2,7 @@ package org.simple.clinic.facility
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
+import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -42,6 +43,12 @@ data class FacilityPayload(
     @Json(name = "facility_group_id")
     val groupUuid: UUID,
 
+    @Json(name = "latitude")
+    val locationLatitude: Double?,
+
+    @Json(name = "longitude")
+    val locationLongitude: Double?,
+
     @Json(name = "created_at")
     val createdAt: Instant,
 
@@ -53,6 +60,14 @@ data class FacilityPayload(
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): Facility {
+    val coordinates = if (locationLatitude != null && locationLongitude != null) {
+      Coordinates(
+          latitude = locationLatitude,
+          longitude = locationLongitude)
+    } else {
+      null
+    }
+
     return Facility(
         uuid = uuid,
         name = name,
@@ -65,6 +80,7 @@ data class FacilityPayload(
         pinCode = pinCode,
         protocolUuid = protocolUuid,
         groupUuid = groupUuid,
+        location = coordinates,
         createdAt = createdAt,
         updatedAt = updatedAt,
         syncStatus = syncStatus,

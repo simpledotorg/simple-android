@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.test.runner.AndroidJUnit4
+import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth
 import com.google.common.truth.Truth.assertThat
 import com.google.common.truth.Truth.assertWithMessage
@@ -14,8 +15,12 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.simple.clinic.storage.inTransaction
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import java.util.UUID
 import javax.inject.Inject
+import javax.inject.Named
 
 @Suppress("LocalVariableName")
 @RunWith(AndroidJUnit4::class)
@@ -29,6 +34,10 @@ class DatabaseMigrationAndroidTest {
 
   @Inject
   lateinit var migrations: ArrayList<Migration>
+
+  @Inject
+  @field:Named("last_facility_pull_token")
+  lateinit var lastFacilityPullToken: Preference<Optional<String>>
 
   @Before
   fun setup() {
@@ -798,6 +807,59 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("groupUuid")).isNull()
       assertThat(it.columnCount).isEqualTo(15)
     }
+  }
+
+  @Test
+  fun migration_27_to_28() {
+    val db_v27 = helper.createDatabase(version = 27)
+    db_v27.assertColumnCount(tableName = "Facility", expectedCount = 15)
+
+    db_v27.execSQL("""
+      INSERT INTO "Facility" VALUES (
+        'facility-uuid',
+        'facility-name',
+        'facility-type',
+        'street-address',
+        'village-or-colony',
+        'district',
+        'state',
+        'country',
+        'pin code',
+        'protocol-uuid',
+        'group-uuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'PENDING',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    lastFacilityPullToken.set(Just("old-token"))
+
+    val db_v28 = helper.migrateTo(28)
+    db_v28.query("""SELECT * FROM Facility""").use {
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(17)
+
+      assertThat(it.string("uuid")).isEqualTo("facility-uuid")
+      assertThat(it.string("name")).isEqualTo("facility-name")
+      assertThat(it.string("facilityType")).isEqualTo("facility-type")
+      assertThat(it.string("streetAddress")).isEqualTo("street-address")
+      assertThat(it.string("villageOrColony")).isEqualTo("village-or-colony")
+      assertThat(it.string("district")).isEqualTo("district")
+      assertThat(it.string("state")).isEqualTo("state")
+      assertThat(it.string("country")).isEqualTo("country")
+      assertThat(it.string("pinCode")).isEqualTo("pin code")
+      assertThat(it.string("protocolUuid")).isEqualTo("protocol-uuid")
+      assertThat(it.string("groupUuid")).isEqualTo("group-uuid")
+      assertThat(it.string("location_latitude")).isNull()
+      assertThat(it.string("location_longitude")).isNull()
+      assertThat(it.string("createdAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("updatedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+      assertThat(it.string("deletedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+    }
+
+    assertThat(lastFacilityPullToken.get()).isEqualTo(None)
   }
 }
 

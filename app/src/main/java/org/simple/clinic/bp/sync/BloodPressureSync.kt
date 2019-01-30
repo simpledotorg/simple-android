@@ -45,6 +45,8 @@ class BloodPressureSync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   private fun toRequest(measurements: List<BloodPressureMeasurement>): BloodPressurePushRequest {
     val payloads = measurements.map { it.toPayload() }
     return BloodPressurePushRequest(payloads)

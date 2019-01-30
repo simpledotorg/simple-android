@@ -45,6 +45,8 @@ class CommunicationSync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   private fun toRequest(schedules: List<Communication>): CommunicationPushRequest {
     val payloads = schedules
         .map {

@@ -5,39 +5,46 @@ import androidx.work.Constraints
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import dagger.Lazy
+import androidx.work.WorkRequest
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class SyncScheduler @Inject constructor(
     private val workManager: WorkManager,
-    @Named("sync_config_frequent") private val syncConfigProvider: Single<SyncConfig>,
-    private val dataSync: Lazy<DataSync>
+    private val syncs: ArrayList<ModelSync>
 ) {
 
   fun schedule(): Completable {
-    return syncConfigProvider
-        .map { config ->
-          val constraints = Constraints.Builder()
-              .setRequiredNetworkType(NetworkType.CONNECTED)
-              .setRequiresBatteryNotLow(true)
-              .build()
-
-          PeriodicWorkRequestBuilder<SyncWorker>(config.frequency.toMinutes(), TimeUnit.MINUTES)
-              .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, config.frequency.toMinutes(), TimeUnit.MINUTES)
-              .setConstraints(constraints)
-              .addTag(SyncWorker.TAG)
-              .build()
-        }
-        .flatMapCompletable { request ->
+    return Observable.fromIterable(syncs)
+        .flatMapSingle { it.syncConfig() }
+        .distinct()
+        .flatMapSingle(this::createWorkRequest)
+        .toList()
+        .flatMapCompletable { workRequests ->
           Completable.fromAction {
             workManager.cancelAllWorkByTag(SyncWorker.TAG)
-            workManager.enqueue(request)
+            workManager.enqueue(workRequests)
           }
         }
+  }
+
+  private fun createWorkRequest(syncConfig: SyncConfig): Single<WorkRequest> {
+    return Single.fromCallable {
+      val constraints = Constraints.Builder()
+          .setRequiredNetworkType(NetworkType.CONNECTED)
+          .setRequiresBatteryNotLow(true)
+          .build()
+
+      PeriodicWorkRequestBuilder<SyncWorker>(syncConfig.frequency.toMinutes(), TimeUnit.MINUTES)
+          .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, syncConfig.backOffDelay.toMinutes(), TimeUnit.MINUTES)
+          .setConstraints(constraints)
+          .setInputData(SyncWorker.createWorkDataForSyncConfig(syncConfig))
+          .addTag(SyncWorker.TAG)
+          .build()
+    }
   }
 
   fun cancelAll() {

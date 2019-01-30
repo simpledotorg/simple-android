@@ -31,6 +31,8 @@ class FacilitySync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   fun pullWithResult(): Single<FacilityPullResult> {
     return pull()
         .toSingleDefault(FacilityPullResult.Success() as FacilityPullResult)

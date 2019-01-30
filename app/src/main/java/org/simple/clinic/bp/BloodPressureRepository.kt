@@ -53,7 +53,7 @@ class BloodPressureRepository @Inject constructor(
               facilityUuid = facility.uuid,
               patientUuid = patientUuid,
               createdAt = createdAt,
-              updatedAt = createdAt,
+              updatedAt = Instant.now(clock),
               deletedAt = null)
         }
         .flatMap {

@@ -51,12 +51,30 @@ class BloodPressureRepositoryAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestClock).setYear(2000)
+    testClock.setYear(2000)
   }
 
   @After
   fun tearDown() {
-    (clock as TestClock).resetToEpoch()
+    testClock.resetToEpoch()
+  }
+
+  @Test
+  fun saving_a_blood_pressure_with_an_older_created_time_should_set_the_updated_time_to_the_current_time() {
+    val now = Instant.now(clock)
+    val oneWeek = Duration.ofDays(7L)
+    testClock.advanceBy(oneWeek)
+
+    val savedBloodPressure = repository
+        .saveMeasurement(
+            patientUuid = UUID.randomUUID(),
+            systolic = 120,
+            diastolic = 80,
+            createdAt = now)
+        .blockingGet()
+
+    assertThat(savedBloodPressure.createdAt).isEqualTo(now)
+    assertThat(savedBloodPressure.updatedAt).isEqualTo(now.plus(oneWeek))
   }
 
   @Test

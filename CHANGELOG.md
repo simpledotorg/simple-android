@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## XXXX-4Feb
+- Blood pressures can be entered for dates in the past
+- New prescription drugs screen design
+- New medicine dosage picker design
+
 ## 2301-04Jan
 - Age and date of birth fields removed from patient search screen 
 - Improved patient search algorithm
@@ -54,4 +59,3 @@
 ## 1356-07Oct
 - Fix: crash if multiple histories are present for the same patient 
 - Fix: crash if empty systolic or diastolic blood pressure value is submitted
- 

@@ -46,6 +46,8 @@ class PatientSync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(
         patients.map { (patient, address, phoneNumbers) ->

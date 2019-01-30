@@ -31,4 +31,6 @@ class ProtocolSync @Inject constructor(
           syncCoordinator.pull(repository, lastPullToken, batchSize) { api.pull(batchSize, it) }
         }
   }
+
+  override fun syncConfig() = configProvider
 }

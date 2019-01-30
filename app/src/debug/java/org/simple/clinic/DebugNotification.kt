@@ -9,7 +9,7 @@ import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import io.reactivex.schedulers.Schedulers.io
-import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.sync.DataSync
 import javax.inject.Inject
 
 object DebugNotification {
@@ -50,13 +50,12 @@ object DebugNotification {
 class DebugNotificationActionReceiver : BroadcastReceiver() {
 
   @Inject
-  lateinit var syncScheduler: SyncScheduler
+  lateinit var dataSync: DataSync
 
   override fun onReceive(context: Context?, intent: Intent?) {
     DebugClinicApp.appComponent().inject(this)
 
-    syncScheduler.cancelAll()
-    syncScheduler.syncImmediately()
+    dataSync.sync()
         .subscribeOn(io())
         .subscribe()
   }

@@ -40,10 +40,6 @@ class SyncScheduler @Inject constructor(
         }
   }
 
-  fun syncImmediately(): Completable {
-    return dataSync.get().sync()
-  }
-
   fun cancelAll() {
     workManager.cancelAllWorkByTag(SyncWorker.TAG)
   }

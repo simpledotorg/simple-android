@@ -35,7 +35,7 @@ import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
-import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
@@ -65,7 +65,9 @@ class UserSession @Inject constructor(
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
     private val passwordHasher: PasswordHasher,
-    private val syncScheduler: SyncScheduler,
+    // This is Lazy to work around a cyclic dependency between
+    // DataSync, UserSession, and PatientRepository.
+    private val dataSync: dagger.Lazy<DataSync>,
     private val loginOtpSmsListener: LoginOtpSmsListener,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
@@ -120,8 +122,9 @@ class UserSession @Inject constructor(
   }
 
   private fun syncOnLoginResult() {
-    syncScheduler
-        .syncImmediately()
+    dataSync
+        .get()
+        .sync()
         .subscribeOn(Schedulers.io())
         .onErrorComplete()
         .subscribe()
@@ -414,7 +417,9 @@ class UserSession @Inject constructor(
   fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
     Timber.i("Syncing and clearing all patient related data")
 
-    return syncScheduler.syncImmediately()
+    return dataSync
+        .get()
+        .sync()
         .subscribeOn(Schedulers.io())
         .retry(syncRetryCount.toLong())
         .timeout(timeoutSeconds, TimeUnit.SECONDS)

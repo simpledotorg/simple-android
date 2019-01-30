@@ -47,6 +47,8 @@ class MedicalHistorySync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   private fun toRequest(histories: List<MedicalHistory>): MedicalHistoryPushRequest {
     val payloads = histories
         .map {

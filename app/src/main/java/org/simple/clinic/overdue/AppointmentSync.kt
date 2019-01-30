@@ -45,6 +45,8 @@ class AppointmentSync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   private fun toRequest(appointments: List<Appointment>): AppointmentPushRequest {
     val payloads = appointments
         .map {

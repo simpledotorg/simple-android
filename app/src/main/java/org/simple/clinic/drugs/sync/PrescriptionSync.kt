@@ -45,6 +45,8 @@ class PrescriptionSync @Inject constructor(
         }
   }
 
+  override fun syncConfig() = configProvider
+
   private fun toRequest(drugs: List<PrescribedDrug>): PrescriptionPushRequest {
     val payloads = drugs.map { it.toPayload() }
     return PrescriptionPushRequest(payloads)

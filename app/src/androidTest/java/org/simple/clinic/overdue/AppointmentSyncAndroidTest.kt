@@ -41,7 +41,8 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
-      batchSizeEnum = BatchSize.VERY_SMALL))
+      batchSizeEnum = BatchSize.VERY_SMALL,
+      syncGroupId = "test-sync-group"))
 
   private val authenticationRule = AuthenticationRule()
 

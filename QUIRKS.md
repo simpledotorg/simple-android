@@ -1,4 +1,4 @@
-# Quirks That You Should Probably Be Aware Of.
+# Quirks That You Should Probably Be Aware Of
 
 ### lazythreetenbp for backported Java 8 date-time API
 

@@ -286,36 +286,33 @@ class PatientSummaryScreenController @Inject constructor(
         .switchMap(bpRepository::bloodPressureCount)
         .map { recordedBpCount -> recordedBpCount == 0 }
 
-    val backClicks = events
-        .ofType<PatientSummaryBackClicked>()
-
     val doneClicks = events
         .ofType<PatientSummaryDoneClicked>()
 
-    val doneOrBackClicksWithBpSaved = Observable.merge(doneClicks, backClicks)
+    val showScheduleAppointmentSheet = doneClicks
         .withLatestFrom(allBpsForPatientDeleted, patientUuids)
         .filter { (_, allBpsForPatientDeleted, _) -> allBpsForPatientDeleted.not() }
         .map { (_, _, uuid) -> { ui: Ui -> ui.showScheduleAppointmentSheet(patientUuid = uuid) } }
 
-    val backClicksWithBpNotSaved = backClicks
-        .withLatestFrom(allBpsForPatientDeleted, callers)
-        .filter { (_, allBpsForPatientDeleted, _) -> allBpsForPatientDeleted }
-        .map { (_, _, caller) ->
+    val doneClicksWithNoBpsForPatient = doneClicks
+        .withLatestFrom(allBpsForPatientDeleted)
+        .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted }
+        .map { Ui::goBackToHome }
+
+    val handleBackClicks = events
+        .ofType<PatientSummaryBackClicked>()
+        .withLatestFrom(callers)
+        .map { (_, caller) ->
           when (caller!!) {
             SEARCH -> Ui::goBackToPatientSearch
             NEW_PATIENT -> Ui::goBackToHome
           }
         }
 
-    val doneClicksWithBpNotSaved = doneClicks
-        .withLatestFrom(allBpsForPatientDeleted)
-        .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted }
-        .map { Ui::goBackToHome }
-
     return Observable.mergeArray(
-        doneOrBackClicksWithBpSaved,
-        backClicksWithBpNotSaved,
-        doneClicksWithBpNotSaved
+        showScheduleAppointmentSheet,
+        handleBackClicks,
+        doneClicksWithNoBpsForPatient
     )
   }
 

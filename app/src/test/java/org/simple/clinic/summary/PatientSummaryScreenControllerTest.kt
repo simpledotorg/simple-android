@@ -700,18 +700,6 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   @Parameters(method = "params for showing schedule appointment sheet")
-  fun `when at least one BP recorded and back is pressed, show schedule appointment sheet`(
-      noOfRecordedBps: Int,
-      caller: PatientSummaryCaller
-  ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(noOfRecordedBps))
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBackClicked())
-    verify(screen).showScheduleAppointmentSheet(patientUuid)
-  }
-
-  @Test
-  @Parameters(method = "params for showing schedule appointment sheet")
   fun `when at least one BP recorded and save is clicked, show schedule appointment sheet`(
       noOfRecordedBps: Int,
       caller: PatientSummaryCaller
@@ -731,8 +719,11 @@ class PatientSummaryScreenControllerTest {
       )
 
   @Test
-  fun `when there are no BPs recorded and back is pressed and its a new patient, then do not show schedule appointment sheet and go back to home`() {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+  @Parameters(value = ["0", "1", "10"])
+  fun `when back is pressed and its a new patient, then do not show schedule appointment sheet and go back to home`(
+      countOfRecordedBps: Int
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(countOfRecordedBps))
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryBackClicked())
     verify(screen, never()).showScheduleAppointmentSheet(any())
@@ -740,8 +731,11 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when there are no BPs recorded and back is pressed and its a search result, do not show schedule appointment sheet and go back to search results`() {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+  @Parameters(value = ["0", "1", "10"])
+  fun `when back is pressed and its a search result, do not show schedule appointment sheet and go back to search results`(
+      countOfRecordedBps: Int
+  ) {
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(countOfRecordedBps))
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryBackClicked())
     verify(screen, never()).showScheduleAppointmentSheet(any())

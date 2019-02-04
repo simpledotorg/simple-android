@@ -29,7 +29,7 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
-import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -170,6 +170,6 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
   }
 
   fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 }

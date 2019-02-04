@@ -34,10 +34,6 @@ import javax.inject.Inject
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  companion object {
-    val KEY = PatientsScreenKey()
-  }
-
   @Inject
   lateinit var screenRouter: ScreenRouter
 

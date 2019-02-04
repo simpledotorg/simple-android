@@ -29,7 +29,7 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.editpatient.PatientEditScreenKey
-import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -297,7 +297,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun goBackToHome() {
-    screenRouter.clearHistoryAndPush(HomeScreen.KEY, direction = BACKWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey(), direction = BACKWARD)
   }
 
   @SuppressLint("CheckResult")

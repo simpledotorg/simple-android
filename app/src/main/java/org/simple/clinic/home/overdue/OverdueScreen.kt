@@ -30,10 +30,6 @@ private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 
 class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  companion object {
-    val KEY = OverdueScreenKey()
-  }
-
   @Inject
   lateinit var activity: TheActivity
 

@@ -31,10 +31,6 @@ import javax.inject.Inject
 
 class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  companion object {
-    val KEY = FacilityChangeScreenKey()
-  }
-
   @Inject
   lateinit var controller: FacilityChangeScreenController
 

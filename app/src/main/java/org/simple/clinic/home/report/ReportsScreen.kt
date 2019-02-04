@@ -20,10 +20,6 @@ import javax.inject.Inject
 
 class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
-  companion object {
-    val KEY = ReportsScreenKey()
-  }
-
   @Inject
   lateinit var controller: ReportsScreenController
 

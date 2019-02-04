@@ -18,7 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
-import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.patient.PatientMocker
@@ -205,15 +205,15 @@ class TheActivityControllerTest {
   private fun `params for local user initial screen key`(): Array<Array<Any>> {
     return arrayOf(
         arrayOf<Any>(true, NOT_LOGGED_IN, RegistrationPhoneScreen.KEY::class.java),
-        arrayOf<Any>(true, OTP_REQUESTED, HomeScreen.KEY::class.java),
-        arrayOf<Any>(true, RESET_PIN_REQUESTED, HomeScreen.KEY::class.java),
+        arrayOf<Any>(true, OTP_REQUESTED, HomeScreenKey()::class.java),
+        arrayOf<Any>(true, RESET_PIN_REQUESTED, HomeScreenKey()::class.java),
         arrayOf<Any>(true, RESETTING_PIN, ForgotPinCreateNewPinScreenKey::class.java),
-        arrayOf<Any>(true, LOGGED_IN, HomeScreen.KEY::class.java),
+        arrayOf<Any>(true, LOGGED_IN, HomeScreenKey()::class.java),
         arrayOf<Any>(false, NOT_LOGGED_IN, OnboardingScreen.KEY::class.java),
-        arrayOf<Any>(false, OTP_REQUESTED, HomeScreen.KEY::class.java),
-        arrayOf<Any>(false, RESET_PIN_REQUESTED, HomeScreen.KEY::class.java),
+        arrayOf<Any>(false, OTP_REQUESTED, HomeScreenKey()::class.java),
+        arrayOf<Any>(false, RESET_PIN_REQUESTED, HomeScreenKey()::class.java),
         arrayOf<Any>(false, RESETTING_PIN, OnboardingScreen.KEY::class.java),
-        arrayOf<Any>(false, LOGGED_IN, HomeScreen.KEY::class.java)
+        arrayOf<Any>(false, LOGGED_IN, HomeScreenKey()::class.java)
     )
   }
 

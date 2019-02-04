@@ -19,7 +19,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.UiEvent
@@ -122,7 +122,7 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   }
 
   fun goToHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreen.KEY, RouterDirection.FORWARD)
+    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 
   private fun showError(@StringRes errorMessageResId: Int) {

@@ -14,17 +14,13 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.change.FacilityChangeScreen
+import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  companion object {
-    val KEY = HomeScreenKey()
-  }
 
   private val rootLayout by bindView<ViewGroup>(R.id.home_root)
   private val viewPager by bindView<ViewPager>(R.id.home_viewpager)
@@ -69,6 +65,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
   }
 
   fun openFacilitySelection() {
-    screenRouter.push(FacilityChangeScreen.KEY)
+    screenRouter.push(FacilityChangeScreenKey())
   }
 }

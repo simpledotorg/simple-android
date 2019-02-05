@@ -18,7 +18,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.pin.RegistrationPinScreen
+import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.widgets.setTextAndCursor
@@ -88,10 +88,6 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openRegistrationPinEntryScreen() {
-    screenRouter.push(RegistrationPinScreen.KEY)
-  }
-
-  companion object {
-    val KEY = RegistrationNameScreenKey()
+    screenRouter.push(RegistrationPinScreenKey())
   }
 }

@@ -6,7 +6,6 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
@@ -63,7 +62,8 @@ class PatientsScreenController @Inject constructor(
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
         showSummarySavedNotification(replayedEvents),
-        toggleVisibilityOfScanCardButton(replayedEvents))
+        toggleVisibilityOfScanCardButton(replayedEvents),
+        openScanSimpleIdCardScreen(replayedEvents))
   }
 
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -211,4 +211,9 @@ class PatientsScreenController @Inject constructor(
           { ui: Ui -> ui.setScanCardButtonEnabled(isScanCardFeatureEnabled) }
         }
   }
+
+  private fun openScanSimpleIdCardScreen(events: Observable<UiEvent>): Observable<UiChange> =
+      events
+          .ofType<ScanCardIdButtonClicked>()
+          .map { Ui::openScanSimpleIdCardScreen }
 }

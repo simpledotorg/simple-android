@@ -13,3 +13,7 @@ class UserApprovedStatusDismissed : UiEvent {
 class PatientsEnterCodeManuallyClicked : UiEvent {
   override val analyticsName = "Patients:Enter Code Manually Clicked"
 }
+
+object ScanCardIdButtonClicked : UiEvent {
+  override val analyticsName = "Patients:Scan Simple Card Clicked"
+}

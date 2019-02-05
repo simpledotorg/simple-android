@@ -14,7 +14,7 @@ import org.simple.clinic.ClinicApp
 import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
-import org.simple.clinic.login.applock.AppLockScreen
+import org.simple.clinic.login.applock.AppLockScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -103,7 +103,7 @@ class TheActivity : AppCompatActivity() {
   }
 
   fun showAppLockScreen() {
-    screenRouter.push(AppLockScreen.KEY)
+    screenRouter.push(AppLockScreenKey())
   }
 
   // This is here because we need to show the same alert in multiple

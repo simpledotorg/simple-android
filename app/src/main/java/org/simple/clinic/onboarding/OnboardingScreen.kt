@@ -20,11 +20,6 @@ import javax.inject.Inject
 
 class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
 
-  companion object {
-    @JvmField
-    val KEY = OnboardingScreenKey()
-  }
-
   @Inject
   lateinit var router: ScreenRouter
 

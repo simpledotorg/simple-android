@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDialogFragment
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
+import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -43,7 +44,7 @@ class ConfirmResetPinDialog : AppCompatDialogFragment() {
         .setTitle(R.string.applock_reset_pin_alert_title)
         .setMessage(R.string.applock_reset_pin_alert_message)
         .setPositiveButton(R.string.applock_reset_pin_alert_confirm) { _, _ ->
-          screenRouter.clearHistoryAndPush(ForgotPinCreateNewPinScreen.KEY(), RouterDirection.REPLACE)
+          screenRouter.clearHistoryAndPush(ForgotPinCreateNewPinScreenKey(), RouterDirection.REPLACE)
         }
         .setNegativeButton(R.string.applock_reset_pin_alert_cancel, null)
         .create()

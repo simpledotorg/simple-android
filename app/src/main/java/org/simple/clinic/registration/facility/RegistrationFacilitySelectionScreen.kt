@@ -2,10 +2,6 @@ package org.simple.clinic.registration.facility
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +10,10 @@ import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.appcompat.widget.Toolbar
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -34,6 +34,7 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
@@ -67,11 +68,14 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), searchQueryChanges(), retryClicks(), facilityClicks())
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+
+    Observable
+        .mergeArray(screenCreates(), screenDestroys, searchQueryChanges(), retryClicks(), facilityClicks())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
 
     toolbarViewWithSearch.setNavigationOnClickListener {

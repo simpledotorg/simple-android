@@ -12,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.phone.RegistrationPhoneScreen
+import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.clamp
@@ -61,6 +61,6 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
       RxView.clicks(getStartedButton).map { OnboardingGetStartedClicked() }
 
   fun moveToRegistrationScreen() {
-    router.clearHistoryAndPush(RegistrationPhoneScreen.KEY, RouterDirection.FORWARD)
+    router.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.FORWARD)
   }
 }

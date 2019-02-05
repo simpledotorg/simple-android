@@ -11,7 +11,7 @@ import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.onboarding.OnboardingScreenKey
-import org.simple.clinic.registration.phone.RegistrationPhoneScreen
+import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.user.NewlyVerifiedUser
 import org.simple.clinic.user.User
@@ -114,7 +114,7 @@ class TheActivityController @Inject constructor(
         return if (localUser?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN) {
           ForgotPinCreateNewPinScreenKey()
         } else {
-          RegistrationPhoneScreen.KEY
+          RegistrationPhoneScreenKey()
         }
       }
     }

@@ -40,10 +40,6 @@ import javax.inject.Inject
 
 class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  companion object {
-    val KEY = RegistrationFacilitySelectionScreenKey()
-  }
-
   @Inject
   lateinit var controller: RegistrationFacilitySelectionScreenController
 

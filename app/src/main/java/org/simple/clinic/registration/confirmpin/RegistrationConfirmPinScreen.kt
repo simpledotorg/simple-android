@@ -19,8 +19,8 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
-import org.simple.clinic.registration.pin.RegistrationPinScreen
+import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
+import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -92,14 +92,10 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   }
 
   fun openFacilitySelectionScreen() {
-    screenRouter.push(RegistrationLocationPermissionScreen.KEY)
+    screenRouter.push(RegistrationLocationPermissionScreenKey())
   }
 
   fun goBackToPinScreen() {
-    screenRouter.push(RegistrationPinScreen.KEY)
-  }
-
-  companion object {
-    val KEY = RegistrationConfirmPinScreenKey()
+    screenRouter.push(RegistrationPinScreenKey())
   }
 }

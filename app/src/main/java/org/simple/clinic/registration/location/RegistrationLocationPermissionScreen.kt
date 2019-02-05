@@ -14,7 +14,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
+import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
@@ -25,10 +25,6 @@ private const val REQUESTCODE_LOCATION_PERMISSION = 0
 private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_COARSE_LOCATION
 
 class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  companion object {
-    val KEY = RegistrationLocationPermissionScreenKey()
-  }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -87,6 +83,6 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
   }
 
   fun openFacilitySelectionScreen() {
-    screenRouter.push(RegistrationFacilitySelectionScreen.KEY)
+    screenRouter.push(RegistrationFacilitySelectionScreenKey())
   }
 }

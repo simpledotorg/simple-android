@@ -346,74 +346,42 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when back is clicked, then user should be taken back to search, or schedule appointment sheet should open`(
-      wasBloodPressureSaved: Boolean,
+  @Parameters(method = "patient summary callers")
+  fun `when there are patient summary changes and all bps are not deleted, clicking on back must show the schedule appointment sheet`(
       patientSummaryCaller: PatientSummaryCaller
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
+    val patientSummaryItems = mock<PatientSummaryItems>()
+    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        caller = patientSummaryCaller,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    if (wasBloodPressureSaved) {
-      verify(screen).showScheduleAppointmentSheet(patientUuid)
-    } else {
-      if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
-        verify(screen).goBackToHome()
-      } else {
-        verify(screen).goBackToPatientSearch()
-      }
-    }
+    verify(screen, never()).goBackToPatientSearch()
+    verify(screen, never()).goBackToHome()
+    verify(screen).showScheduleAppointmentSheet(patientUuid)
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when save button is clicked, then user should be taken back to the home screen, or schedule appointment sheet should open`(
-      wasBloodPressureSaved: Boolean,
+  @Parameters(method = "patient summary callers")
+  fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
       patientSummaryCaller: PatientSummaryCaller
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
+    val patientSummaryItems = mock<PatientSummaryItems>()
+    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
 
-    if (wasBloodPressureSaved) {
-      verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome()
-    } else {
-      verify(screen).goBackToHome()
-      verify(screen, never()).showScheduleAppointmentSheet(any())
-    }
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when summary screen is restored, and bp was saved earlier, schedule appointment sheet should open, on clicking back or done`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryRestoredWithBPSaved(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    if (wasBloodPressureSaved) {
-      verify(screen).showScheduleAppointmentSheet(patientUuid)
-      verify(screen, never()).goBackToHome()
-    } else {
-      verify(screen).goBackToHome()
-      verify(screen, never()).showScheduleAppointmentSheet(any())
-    }
-  }
-
-  @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when all BPs for the patient are deleted and back is clicked, the schedule appointment sheet must not be shown`(
-      wasBloodPressureSaved: Boolean,
-      patientSummaryCaller: PatientSummaryCaller
-  ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
-
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        caller = patientSummaryCaller,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
@@ -425,44 +393,112 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when all BPs for the patient are deleted and done is clicked, the schedule appointment sheet must not be shown`(
-      wasBloodPressureSaved: Boolean,
+  @Parameters(method = "patient summary callers")
+  fun `when there are no patient summary changes and all bps are not deleted, clicking on back must go back`(
       patientSummaryCaller: PatientSummaryCaller
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+    val patientSummaryItems = mock<PatientSummaryItems>()
+    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryBloodPressureClosed(wasBloodPressureSaved))
-    uiEvents.onNext(PatientSummaryDoneClicked())
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        caller = patientSummaryCaller,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
+    uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    verify(screen).goBackToHome()
+    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+      verify(screen).goBackToHome()
+    } else {
+      verify(screen).goBackToPatientSearch()
+    }
   }
 
   @Test
-  @Parameters(method = "bpSavedAndPatientSummaryCallers")
-  fun `when all bps for the patient are deleted and when summary screen is restored with bp saved earlier, the schedule appointment sheet must not be shown on clicking back or done`(
-      wasBloodPressureSaved: Boolean,
+  @Parameters(method = "patient summary callers")
+  fun `when there are no patient summary changes and all bps are deleted, clicking on back must go back`(
       patientSummaryCaller: PatientSummaryCaller
   ) {
-    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0))
+    val patientSummaryItems = mock<PatientSummaryItems>()
+    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = patientSummaryCaller, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryRestoredWithBPSaved(wasBloodPressureSaved))
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        caller = patientSummaryCaller,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
+    uiEvents.onNext(PatientSummaryBackClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+      verify(screen).goBackToHome()
+    } else {
+      verify(screen).goBackToPatientSearch()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `patient summary callers`() = PatientSummaryCaller.values()
+
+  @Test
+  @Parameters(method = "patient summary callers and summary item changed")
+  fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet`(
+      patientSummaryCaller: PatientSummaryCaller,
+      patientSummaryItemChanged: Boolean
+  ) {
+    val patientSummaryItems = mock<PatientSummaryItems>()
+    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(patientSummaryItemChanged)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        caller = patientSummaryCaller,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    verify(screen).showScheduleAppointmentSheet(patientUuid)
+    verify(screen, never()).goBackToHome()
+    verify(screen, never()).goBackToPatientSearch()
+  }
+
+  @Test
+  @Parameters(method = "patient summary callers and summary item changed")
+  fun `when all bps are deleted, clicking on save must go to the home screen`(
+      patientSummaryCaller: PatientSummaryCaller,
+      patientSummaryItemChanged: Boolean
+  ) {
+    val patientSummaryItems = mock<PatientSummaryItems>()
+    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(patientSummaryItemChanged)
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        caller = patientSummaryCaller,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(screen, never()).goBackToPatientSearch()
     verify(screen).goBackToHome()
   }
 
-  @Suppress("unused")
-  fun bpSavedAndPatientSummaryCallers() = arrayOf(
-      arrayOf(true, PatientSummaryCaller.NEW_PATIENT),
-      arrayOf(true, PatientSummaryCaller.SEARCH),
-      arrayOf(false, PatientSummaryCaller.NEW_PATIENT),
-      arrayOf(false, PatientSummaryCaller.SEARCH)
-  )
+  @Suppress("Unused")
+  private fun `patient summary callers and summary item changed`(): List<List<Any>> {
+    return listOf(
+        listOf(PatientSummaryCaller.SEARCH, true),
+        listOf(PatientSummaryCaller.SEARCH, false),
+        listOf(PatientSummaryCaller.NEW_PATIENT, true),
+        listOf(PatientSummaryCaller.NEW_PATIENT, false))
+  }
 
   @Test
   fun `when update medicines is clicked then BP medicines screen should be shown`() {

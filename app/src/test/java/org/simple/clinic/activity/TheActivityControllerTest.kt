@@ -20,7 +20,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.onboarding.OnboardingScreen
+import org.simple.clinic.onboarding.OnboardingScreenKey
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.router.screen.FullScreenKey
@@ -209,10 +209,10 @@ class TheActivityControllerTest {
         arrayOf<Any>(true, RESET_PIN_REQUESTED, HomeScreenKey()::class.java),
         arrayOf<Any>(true, RESETTING_PIN, ForgotPinCreateNewPinScreenKey::class.java),
         arrayOf<Any>(true, LOGGED_IN, HomeScreenKey()::class.java),
-        arrayOf<Any>(false, NOT_LOGGED_IN, OnboardingScreen.KEY::class.java),
+        arrayOf<Any>(false, NOT_LOGGED_IN, OnboardingScreenKey()::class.java),
         arrayOf<Any>(false, OTP_REQUESTED, HomeScreenKey()::class.java),
         arrayOf<Any>(false, RESET_PIN_REQUESTED, HomeScreenKey()::class.java),
-        arrayOf<Any>(false, RESETTING_PIN, OnboardingScreen.KEY::class.java),
+        arrayOf<Any>(false, RESETTING_PIN, OnboardingScreenKey()::class.java),
         arrayOf<Any>(false, LOGGED_IN, HomeScreenKey()::class.java)
     )
   }
@@ -233,7 +233,7 @@ class TheActivityControllerTest {
   private fun `params for missing user initial screen key`(): Array<Array<Any>> {
     return arrayOf(
         arrayOf<Any>(true, RegistrationPhoneScreen.KEY::class.java),
-        arrayOf<Any>(false, OnboardingScreen.KEY::class.java)
+        arrayOf<Any>(false, OnboardingScreenKey()::class.java)
     )
   }
 }

@@ -444,4 +444,10 @@ class PatientsScreenControllerTest {
 
     verify(screen).setScanCardButtonEnabled(scanCardFeatureEnabled)
   }
+
+  @Test
+  fun `when the user clicks scan card id button, open ScanSimpleIdCardScreen`() {
+    uiEvents.onNext(ScanCardIdButtonClicked)
+    verify(screen).openScanSimpleIdCardScreen()
+  }
 }

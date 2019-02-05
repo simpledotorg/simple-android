@@ -21,6 +21,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -77,7 +78,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             activityStarts(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
-            enterCodeManuallyClicks())
+            enterCodeManuallyClicks(),
+            scanCardIdButtonClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -102,6 +104,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun dismissApprovedStatusClicks() = RxView.clicks(dismissApprovedStatusButton).map { UserApprovedStatusDismissed() }
 
   private fun enterCodeManuallyClicks() = RxView.clicks(enterOtpManuallyButton).map { PatientsEnterCodeManuallyClicked() }
+
+  private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked }
 
   fun openNewPatientScreen() {
     screenRouter.push(PatientSearchScreenKey())
@@ -172,5 +176,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun setScanCardButtonEnabled(enabled: Boolean) {
     scanSimpleCardButton.visibleOrGone(enabled)
+  }
+
+  fun openScanSimpleIdCardScreen() {
+    screenRouter.push(ScanSimpleIdScreenKey())
   }
 }

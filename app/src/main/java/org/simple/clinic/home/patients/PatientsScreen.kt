@@ -1,5 +1,6 @@
 package org.simple.clinic.home.patients
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
@@ -20,12 +21,15 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
@@ -33,6 +37,9 @@ import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+
+private const val REQUESTCODE_CAMERA_PERMISSION = 0
+private const val CAMERA_PERMISSION = Manifest.permission.CAMERA
 
 open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
@@ -44,6 +51,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Inject
   lateinit var activityLifecycle: Observable<TheActivityLifecycle>
+
+  @Inject
+  lateinit var activity: TheActivity
 
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
@@ -68,7 +78,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     setupApprovalStatusAnimations()
 
-
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
     Observable
@@ -79,7 +88,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
             enterCodeManuallyClicks(),
-            scanCardIdButtonClicks())
+            scanCardIdButtonClicks(),
+            cameraPermissionChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -126,6 +136,14 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun showUserAccountStatus(@IdRes statusViewId: Int) {
     showStatus(statusViewId)
     currentStatusViewId = approvalStatusViewFlipper.currentView.id
+  }
+
+  private fun cameraPermissionChanges(): Observable<UiEvent> {
+    return screenRouter.streamScreenResults()
+        .ofType<ActivityPermissionResult>()
+        .filter { result -> result.requestCode == REQUESTCODE_CAMERA_PERMISSION }
+        .map { RuntimePermissions.check(activity, CAMERA_PERMISSION) }
+        .map(::PatientsScreenCameraPermissionChanged)
   }
 
   override fun onDetachedFromWindow() {
@@ -180,5 +198,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun openScanSimpleIdCardScreen() {
     screenRouter.push(ScanSimpleIdScreenKey())
+  }
+
+  fun requestCameraPermissions() {
+    RuntimePermissions.request(activity, CAMERA_PERMISSION, REQUESTCODE_CAMERA_PERMISSION)
   }
 }

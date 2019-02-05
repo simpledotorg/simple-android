@@ -32,6 +32,7 @@ import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toOptional
@@ -446,8 +447,30 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when the user clicks scan card id button, open ScanSimpleIdCardScreen`() {
+  fun `when the user clicks scan card id button, request for camera permissions`() {
     uiEvents.onNext(ScanCardIdButtonClicked)
-    verify(screen).openScanSimpleIdCardScreen()
+    verify(screen).requestCameraPermissions()
+  }
+
+  @Test
+  @Parameters(method = "params for opening scan card screen on camera permissions")
+  fun `when the camera permissions are granted, the scan card screen must be opened`(
+      permissionResult: RuntimePermissionResult,
+      shouldOpenScreen: Boolean
+  ) {
+    uiEvents.onNext(PatientsScreenCameraPermissionChanged(permissionResult))
+    if (shouldOpenScreen) {
+      verify(screen).openScanSimpleIdCardScreen()
+    } else {
+      verify(screen, never()).openScanSimpleIdCardScreen()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for opening scan card screen on camera permissions`(): List<List<Any>> {
+    return listOf(
+        listOf(RuntimePermissionResult.GRANTED, true),
+        listOf(RuntimePermissionResult.DENIED, false),
+        listOf(RuntimePermissionResult.NEVER_ASK_AGAIN, false))
   }
 }

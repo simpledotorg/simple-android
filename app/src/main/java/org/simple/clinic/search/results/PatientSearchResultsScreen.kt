@@ -1,14 +1,14 @@
 package org.simple.clinic.search.results
 
 import android.content.Context
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -17,11 +17,11 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.newentry.PatientEntryScreen
+import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
-import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.threeten.bp.Clock
@@ -30,10 +30,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  companion object {
-    val KEY = ::PatientSearchResultsScreenKey
-  }
 
   @Inject
   lateinit var adapter: PatientSearchResultsAdapter
@@ -105,11 +101,11 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
   }
 
   fun openPatientEntryScreen() {
-    screenRouter.push(PatientEntryScreen.KEY)
+    screenRouter.push(PatientEntryScreenKey())
   }
 
   fun setEmptyStateVisible(visible: Boolean) {

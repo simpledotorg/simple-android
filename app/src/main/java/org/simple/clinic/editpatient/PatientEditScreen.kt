@@ -61,11 +61,6 @@ import javax.inject.Named
 
 class PatientEditScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
 
-  companion object {
-    @JvmField
-    val KEY = ::PatientEditScreenKey
-  }
-
   @Inject
   lateinit var controller: PatientEditScreenController
 

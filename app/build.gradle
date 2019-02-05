@@ -250,4 +250,6 @@ dependencies {
   androidTestImplementation "androidx.test.espresso:espresso-core:$versions.espresso"
   debugImplementation "com.squareup.leakcanary:leakcanary-android:$versions.leakCanary"
   debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$versions.leakCanary"
+
+  implementation "com.budiyev.android:code-scanner:$versions.codeScanner"
 }

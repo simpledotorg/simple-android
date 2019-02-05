@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
 import com.squareup.leakcanary.LeakCanary
-import dagger.Provides
 import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
@@ -19,8 +18,6 @@ import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.registration.RegistrationConfig
-import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncScheduler
@@ -90,12 +87,6 @@ class DebugClinicApp : ClinicApp() {
         .loginModule(object : LoginModule() {
           override fun appLockConfig(): Single<AppLockConfig> {
             return Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.SECONDS.toMillis(4)))
-          }
-        })
-        .registrationModule(object : RegistrationModule() {
-          @Provides
-          override fun registrationConfig(): Single<RegistrationConfig> {
-            return Single.just(RegistrationConfig(retryBackOffDelayInMinutes = 1))
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

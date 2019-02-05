@@ -32,10 +32,6 @@ import javax.inject.Inject
 
 class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
-  companion object {
-    val KEY: (UUID) -> PrescribedDrugsScreenKey = ::PrescribedDrugsScreenKey
-  }
-
   @Inject
   lateinit var screenRouter: ScreenRouter
 

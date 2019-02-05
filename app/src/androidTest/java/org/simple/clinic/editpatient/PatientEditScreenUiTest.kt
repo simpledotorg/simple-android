@@ -48,7 +48,7 @@ class PatientEditScreenUiTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     activityTestRule.runOnUiThread {
-      activityTestRule.activity.screenRouter.clearHistoryAndPush(PatientEditScreen.KEY(patientProfile.patient.uuid), RouterDirection.FORWARD)
+      activityTestRule.activity.screenRouter.clearHistoryAndPush(PatientEditScreenKey(patientProfile.patient.uuid), RouterDirection.FORWARD)
     }
 
     onView(withId(R.id.patientedit_date_of_birth)).check(matches(withText("25/05/1990")))

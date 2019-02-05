@@ -22,10 +22,6 @@ import javax.inject.Inject
 
 class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
-  companion object {
-    val KEY = AppLockScreenKey()
-  }
-
   @Inject
   lateinit var screenRouter: ScreenRouter
 

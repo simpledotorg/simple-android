@@ -20,6 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
@@ -61,6 +62,7 @@ class PatientsScreenControllerTest {
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
+  private val configEmitter = PublishSubject.create<PatientConfig>()
 
   @Before
   fun setUp() {
@@ -68,11 +70,22 @@ class PatientsScreenControllerTest {
     // operation on the IO thread, which was causing flakiness in this test.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    controller = PatientsScreenController(userSession, dataSync, patientRepository, appointmentRepository, approvalStatusApprovedAt, hasUserDismissedApprovedStatus, patientSummaryResult)
+    controller = PatientsScreenController(
+        userSession = userSession,
+        dataSync = dataSync,
+        patientRepository = patientRepository,
+        appointmentRepository = appointmentRepository,
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
+        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
+        patientSummaryResult = patientSummaryResult,
+        configProvider = configEmitter
+    )
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
+
+    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = false))
   }
 
   @Test
@@ -417,5 +430,18 @@ class PatientsScreenControllerTest {
   fun `when the user decides to enter the login code manually, the enter otp screen must be opened`() {
     uiEvents.onNext(PatientsEnterCodeManuallyClicked())
     verify(screen).openEnterCodeManuallyScreen()
+  }
+
+  @Test
+  @Parameters(value = ["true", "false"])
+  fun `the scan card button must be toggled based on the scan simple card feature flag`(scanCardFeatureEnabled: Boolean) {
+    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled))
+    whenever(userSession.loggedInUser()).thenReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.never())
+    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).setScanCardButtonEnabled(scanCardFeatureEnabled)
   }
 }

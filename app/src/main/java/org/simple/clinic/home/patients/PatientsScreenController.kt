@@ -6,13 +6,16 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.sync.DataSync
@@ -42,6 +45,7 @@ class PatientsScreenController @Inject constructor(
     private val dataSync: DataSync,
     private val patientRepository: PatientRepository,
     private val appointmentRepository: AppointmentRepository,
+    private val configProvider: Observable<PatientConfig>,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
     @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>
@@ -58,7 +62,8 @@ class PatientsScreenController @Inject constructor(
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
-        showSummarySavedNotification(replayedEvents))
+        showSummarySavedNotification(replayedEvents),
+        toggleVisibilityOfScanCardButton(replayedEvents))
   }
 
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -193,5 +198,17 @@ class PatientsScreenController @Inject constructor(
         }
 
     return Observable.merge(savedStream, scheduledStream)
+  }
+
+  private fun toggleVisibilityOfScanCardButton(events: Observable<UiEvent>): Observable<UiChange> {
+    val isScanCardFeatureEnabledStream = configProvider
+        .map { it.scanSimpleCardFeatureEnabled }
+
+    return events
+        .ofType<ScreenCreated>()
+        .withLatestFrom(isScanCardFeatureEnabledStream)
+        .map { (_, isScanCardFeatureEnabled) ->
+          { ui: Ui -> ui.setScanCardButtonEnabled(isScanCardFeatureEnabled) }
+        }
   }
 }

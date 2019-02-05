@@ -3,6 +3,7 @@ package org.simple.clinic
 import android.app.Application
 import com.tspoon.traceur.Traceur
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import org.simple.clinic.TestClinicApp.Companion.appComponent
@@ -96,7 +97,7 @@ class TestClinicApp : ClinicApp() {
             }
           }
 
-          override fun providePatientConfig(): Single<PatientConfig> {
+          override fun providePatientConfig(): Observable<PatientConfig> {
             return super.providePatientConfig()
                 .map { it.copy(limitOfSearchResults = 50) }
           }

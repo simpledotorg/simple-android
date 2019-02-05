@@ -7,7 +7,7 @@ package org.simple.clinic.patient
  * */
 const val MAXIMUM_SQLITE_QUERY_LIMIT = 1000
 
-data class PatientConfig(val limitOfSearchResults: Int) {
+data class PatientConfig(val limitOfSearchResults: Int, val scanSimpleCardFeatureEnabled: Boolean) {
   init {
     if (limitOfSearchResults !in 1 until MAXIMUM_SQLITE_QUERY_LIMIT) {
       throw AssertionError("limit of search results must be within [1, 999]")

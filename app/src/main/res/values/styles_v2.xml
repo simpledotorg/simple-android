@@ -127,6 +127,10 @@
     <item name="android:textColor">@color/grey0</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body0Left.White100">
+    <item name="android:textColor">@color/white100</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body1Left">
     <item name="android:textSize">@dimen/textsize_16</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>
@@ -275,6 +279,15 @@
   <style name="Clinic.V2.Button.WithIcon.Blue2">
     <item name="android:background">#e0f0ff</item>
     <item name="android:textColor">?colorAccent</item>
+    <item name="android:paddingTop">0dp</item>
+    <item name="android:paddingBottom">0dp</item>
+    <item name="android:drawablePadding">8dp</item>
+  </style>
+
+  <style name="Clinic.V2.Button.WithIcon.Blue1">
+    <item name="android:background">@drawable/background_button_solid_blue1</item>
+    <item name="android:foreground">?selectableItemBackground</item>
+    <item name="android:textColor">@color/white100</item>
     <item name="android:paddingTop">0dp</item>
     <item name="android:paddingBottom">0dp</item>
     <item name="android:drawablePadding">8dp</item>

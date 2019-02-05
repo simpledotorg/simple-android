@@ -1,3 +1,9 @@
 package org.simple.clinic.registration
 
-data class RegistrationConfig constructor(val retryBackOffDelayInMinutes: Long)
+import org.threeten.bp.Duration
+
+data class RegistrationConfig(
+    val retryBackOffDelayInMinutes: Long, // TODO: convert to Duration
+    val locationListenerExpiry: Duration,
+    val locationUpdateInterval: Duration
+)

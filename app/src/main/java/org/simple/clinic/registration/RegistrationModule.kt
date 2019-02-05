@@ -5,19 +5,23 @@ import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.threeten.bp.Duration
 import retrofit2.Retrofit
 
 @Module
 open class RegistrationModule {
 
   @Provides
-  fun registrationApi(retrofit: Retrofit): RegistrationApiV1 {
+  fun api(retrofit: Retrofit): RegistrationApiV1 {
     return retrofit.create(RegistrationApiV1::class.java)
   }
 
   @Provides
-  open fun registrationConfig(): Single<RegistrationConfig> {
-    return Single.just(RegistrationConfig(retryBackOffDelayInMinutes = 1))
+  open fun config(): Single<RegistrationConfig> {
+    return Single.just(RegistrationConfig(
+        retryBackOffDelayInMinutes = 1,
+        locationListenerExpiry = Duration.ofSeconds(5),
+        locationUpdateInterval = Duration.ofSeconds(1)))
   }
 
   @Provides

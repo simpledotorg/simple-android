@@ -27,6 +27,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -63,7 +64,8 @@ class PatientsScreenController @Inject constructor(
         dismissApprovalStatus(replayedEvents),
         showSummarySavedNotification(replayedEvents),
         toggleVisibilityOfScanCardButton(replayedEvents),
-        openScanSimpleIdCardScreen(replayedEvents))
+        requestCameraPermissions(replayedEvents),
+        openScanSimpleIdScreen(replayedEvents))
   }
 
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -212,8 +214,16 @@ class PatientsScreenController @Inject constructor(
         }
   }
 
-  private fun openScanSimpleIdCardScreen(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<ScanCardIdButtonClicked>()
-          .map { Ui::openScanSimpleIdCardScreen }
+  private fun requestCameraPermissions(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScanCardIdButtonClicked>()
+        .map { Ui::requestCameraPermissions }
+  }
+
+  private fun openScanSimpleIdScreen(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientsScreenCameraPermissionChanged>()
+        .filter { it.permissionResult == RuntimePermissionResult.GRANTED }
+        .map { Ui::openScanSimpleIdCardScreen }
+  }
 }

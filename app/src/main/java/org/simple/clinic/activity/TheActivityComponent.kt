@@ -42,6 +42,7 @@ import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchModule
 import org.simple.clinic.search.PatientSearchScreen
@@ -50,6 +51,7 @@ import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.InstantRxPreferencesConverter
+import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.threeten.bp.Instant
@@ -95,6 +97,8 @@ interface TheActivityComponent {
   fun inject(target: PrescribedDrugScreen)
   fun inject(target: ConfirmRemovePrescriptionDialog)
   fun inject(target: ReportsScreen)
+  fun inject(target: ScanSimpleIdScreen)
+  fun inject(target: QrCodeScannerView)
 
   @Subcomponent.Builder
   interface Builder {

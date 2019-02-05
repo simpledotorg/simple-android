@@ -1,12 +1,12 @@
 package org.simple.clinic.search
 
 import android.content.Context
-import com.google.android.material.textfield.TextInputLayout
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -15,18 +15,14 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.newentry.PatientEntryScreen
+import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.search.results.PatientSearchResultsScreen
+import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
 class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  companion object {
-    val KEY = PatientSearchScreenKey()
-  }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -89,11 +85,11 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun openPatientEntryScreen() {
-    screenRouter.push(PatientEntryScreen.KEY)
+    screenRouter.push(PatientEntryScreenKey())
   }
 
   fun openPatientSearchResultsScreen(name: String) {
-    screenRouter.push(PatientSearchResultsScreen.KEY(name))
+    screenRouter.push(PatientSearchResultsScreenKey(name))
   }
 
   fun setEmptyFullNameErrorVisible(visible: Boolean) {

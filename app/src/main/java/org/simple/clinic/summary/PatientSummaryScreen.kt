@@ -3,15 +3,15 @@ package org.simple.clinic.summary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
@@ -27,7 +27,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
-import org.simple.clinic.drugs.selection.PrescribedDrugScreen
+import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.PatientEditScreenKey
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.patient.Gender
@@ -58,8 +58,6 @@ import javax.inject.Inject
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
-    val KEY = ::PatientSummaryScreenKey
-
     const val REQCODE_BP_SAVED = 1
     const val REQCODE_SCHEDULE_APPOINTMENT = 2
   }
@@ -310,7 +308,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
-    screenRouter.push(PrescribedDrugScreen.KEY(patientUuid))
+    screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }
 }
 

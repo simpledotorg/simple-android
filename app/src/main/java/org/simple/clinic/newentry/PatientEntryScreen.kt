@@ -28,7 +28,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
-import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
+import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
@@ -49,10 +49,6 @@ import org.simple.clinic.widgets.textChanges
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  companion object {
-    val KEY = PatientEntryScreenKey()
-  }
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -183,7 +179,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   }
 
   fun openMedicalHistoryEntryScreen() {
-    screenRouter.push(NewMedicalHistoryScreen.KEY)
+    screenRouter.push(NewMedicalHistoryScreenKey())
   }
 
   fun setDateOfBirthAndAgeVisibility(visibility: DateOfBirthAndAgeVisibility) {

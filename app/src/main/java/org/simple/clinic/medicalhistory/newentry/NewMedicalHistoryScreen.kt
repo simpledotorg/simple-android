@@ -1,9 +1,9 @@
 package org.simple.clinic.medicalhistory.newentry
 
 import android.content.Context
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -21,7 +21,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_F
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
-import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -32,10 +32,6 @@ import java.util.UUID
 import javax.inject.Inject
 
 class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  companion object {
-    val KEY = NewMedicalHistoryScreenKey()
-  }
 
   @Inject
   lateinit var controller: NewMedicalHistoryScreenController
@@ -109,7 +105,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
           .map { SaveMedicalHistoryClicked() }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreen.KEY(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
   }
 
   fun setPatientName(patientName: String) {

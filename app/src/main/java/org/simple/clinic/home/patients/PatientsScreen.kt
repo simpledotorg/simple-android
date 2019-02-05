@@ -21,7 +21,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.search.PatientSearchScreen
+import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -101,7 +101,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private fun enterCodeManuallyClicks() = RxView.clicks(enterOtpManuallyButton).map { PatientsEnterCodeManuallyClicked() }
 
   fun openNewPatientScreen() {
-    screenRouter.push(PatientSearchScreen.KEY)
+    screenRouter.push(PatientSearchScreenKey())
   }
 
   private fun showStatus(@IdRes statusViewId: Int) {

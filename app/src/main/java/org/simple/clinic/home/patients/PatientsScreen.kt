@@ -2,14 +2,14 @@ package org.simple.clinic.home.patients
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.annotation.IdRes
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.annotation.IdRes
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -26,6 +26,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.indexOfChildId
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
@@ -50,6 +51,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val nameInStatusSavedText by bindView<TextView>(R.id.patients_summary_saved_name)
   private val nameInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_name)
   private val dateInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_date)
+  private val scanSimpleCardButton by bindView<Button>(R.id.patients_scan_simple_card)
 
   @IdRes
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
@@ -64,6 +66,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     TheActivity.component.inject(this)
 
     setupApprovalStatusAnimations()
+
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
@@ -165,5 +168,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun openEnterCodeManuallyScreen() {
     screenRouter.push(EnterOtpScreenKey())
+  }
+
+  fun setScanCardButtonEnabled(enabled: Boolean) {
+    scanSimpleCardButton.visibleOrGone(enabled)
   }
 }

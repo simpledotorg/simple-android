@@ -2,7 +2,7 @@ package org.simple.clinic.patient
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
@@ -29,5 +29,8 @@ open class PatientModule {
       resultsComparator = SortByWeightedNameParts())
 
   @Provides
-  open fun providePatientConfig(): Single<PatientConfig> = Single.just(PatientConfig(limitOfSearchResults = 100))
+  open fun providePatientConfig(): Observable<PatientConfig> = Observable.just(PatientConfig(
+      limitOfSearchResults = 100,
+      scanSimpleCardFeatureEnabled = false
+  ))
 }

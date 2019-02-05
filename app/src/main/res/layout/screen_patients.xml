@@ -27,13 +27,29 @@
     app:drawableTint="?colorAccent"
     tools:ignore="MissingPrefix,RtlSymmetry" />
 
+  <org.simple.clinic.widgets.OmegaCenterIconButton
+    android:id="@+id/patients_scan_simple_card"
+    style="@style/Clinic.V2.Button.WithIcon.Blue1"
+    android:layout_width="match_parent"
+    android:layout_height="56dp"
+    android:layout_below="@id/patients_search_patients"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_16"
+    android:drawableStart="@drawable/patient_id_card"
+    android:gravity="center"
+    android:text="@string/patients_scan_simple_card"
+    android:textAllCaps="false"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
+    app:drawableTint="@color/white100"
+    tools:ignore="MissingPrefix,RtlSymmetry" />
+
   <ImageView
     android:id="@+id/patients_record_bp_illustration"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_below="@id/patients_search_patients"
+    android:layout_below="@id/patients_scan_simple_card"
     android:layout_centerHorizontal="true"
-    android:layout_marginTop="@dimen/spacing_16"
     android:adjustViewBounds="true"
     android:scaleType="fitXY"
     android:src="@drawable/illustrations_homescreen"
@@ -49,8 +65,8 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center"
-      android:layout_marginEnd="@dimen/spacing_56"
-      android:layout_marginStart="@dimen/spacing_56"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginStart="@dimen/spacing_16"
       android:text="@string/patients_record_every_patient" />
   </FrameLayout>
 
@@ -59,6 +75,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_alignParentBottom="true"
+    android:layout_marginBottom="0dp"
     app:debug_displayedChild="2">
 
     <View

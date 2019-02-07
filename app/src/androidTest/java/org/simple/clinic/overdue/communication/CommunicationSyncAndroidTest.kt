@@ -18,6 +18,7 @@ import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Optional
@@ -57,7 +58,7 @@ class CommunicationSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Communicatio
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = BatchSize.VERY_SMALL,
-      syncGroupId = "test-sync-group"))
+      syncGroupId = SyncGroup.FREQUENT))
 
   private val authenticationRule = AuthenticationRule()
 

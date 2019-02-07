@@ -18,7 +18,7 @@ class DataSync @Inject constructor(
     return runAndSwallowErrors(modelSyncs.map { it.sync() })
   }
 
-  fun syncGroup(syncGroupId: String): Completable {
+  fun syncGroup(syncGroupId: SyncGroup): Completable {
     return Observable
         .fromIterable(modelSyncs)
         .flatMapSingle { modelSync ->

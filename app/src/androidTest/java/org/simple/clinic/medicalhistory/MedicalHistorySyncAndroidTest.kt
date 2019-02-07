@@ -20,6 +20,7 @@ import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.sync.SyncConfig
+import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -49,7 +50,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = BatchSize.VERY_SMALL,
-      syncGroupId = "test-sync-group"))
+      syncGroupId = SyncGroup.FREQUENT))
 
   private val authenticationRule = AuthenticationRule()
 

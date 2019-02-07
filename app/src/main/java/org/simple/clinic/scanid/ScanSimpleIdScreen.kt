@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.Toast
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
@@ -29,6 +30,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   lateinit var controller: ScanSimpleIdScreenController
 
   private val qrCodeScannerView by bindView<QrCodeScannerView>(R.id.scansimpleid_code_scanner_view)
+  private val toolBar by bindView<Toolbar>(R.id.scansimpleid_toolbar)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -40,6 +42,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     // It is possible that going back via the app bar from future screens will come back to this
     // screen with the keyboard open. So, we hide it here.
     hideKeyboard()
+    toolBar.setNavigationOnClickListener { screenRouter.pop() }
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 

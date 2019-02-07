@@ -33,6 +33,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.UiEvent
@@ -62,19 +63,21 @@ class BloodPressureEntrySheetControllerTestV2 {
   private lateinit var controller: BloodPressureEntrySheetControllerV2
 
   private val patientUuid = UUID.randomUUID()
-  private val testClock = TestUtcClock()
+  private val testUtcClock = TestUtcClock()
+  private val testUserClock = TestUserClock()
 
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
-    whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testClock))
+    whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testUtcClock))
 
     controller = BloodPressureEntrySheetControllerV2(
         bloodPressureRepository = bloodPressureRepository,
         dateValidator = dateValidator,
         bpValidator = bpValidator,
-        utcClock = testClock,
+        utcClock = testUtcClock,
+        userClock = testUserClock,
         inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'))
 
     uiEvents
@@ -411,7 +414,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
     verify(bloodPressureRepository, never()).updateMeasurement(any())
 
-    val entryDateAsInstant = inputDate.atTime(OffsetTime.now(testClock)).toInstant()
+    val entryDateAsInstant = inputDate.atTime(OffsetTime.now(testUtcClock)).toInstant()
     verify(bloodPressureRepository).saveMeasurement(
         patientUuid,
         systolic = 130,
@@ -423,7 +426,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
-    val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testClock)).toInstant()
+    val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testUtcClock)).toInstant()
     val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt)
 
     val newInputDate = LocalDate.of(1991, 2, 14)
@@ -446,7 +449,7 @@ class BloodPressureEntrySheetControllerTestV2 {
       onNext(BloodPressureSaveClicked)
     }
 
-    val newInputDateAsInstant = newInputDate.atTime(OffsetTime.now(testClock)).toInstant()
+    val newInputDateAsInstant = newInputDate.atTime(OffsetTime.now(testUtcClock)).toInstant()
     val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, createdAt = newInputDateAsInstant, updatedAt = oldCreatedAt)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
@@ -598,7 +601,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   @Test
   fun `when screen is opened for a new BP, then the date should be prefilled with the current date`() {
     val currentDate = LocalDate.of(2018, 4, 23)
-    testClock.advanceBy(Duration.ofSeconds(currentDate.atStartOfDay().toEpochSecond(UTC)))
+    testUserClock.advanceBy(Duration.ofSeconds(currentDate.atStartOfDay().toEpochSecond(UTC)))
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
 
@@ -662,7 +665,7 @@ class BloodPressureEntrySheetControllerTestV2 {
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
 
     if (openAs is OpenAs.Update) {
-      val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testClock)).toInstant()
+      val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testUtcClock)).toInstant()
       val existingBp = PatientMocker.bp(
           uuid = openAs.bpUuid,
           systolic = 9000,

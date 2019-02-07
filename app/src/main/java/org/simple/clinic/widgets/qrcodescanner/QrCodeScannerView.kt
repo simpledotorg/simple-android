@@ -79,12 +79,24 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
       isFlashEnabled = false
       setAutoFocusInterval(1000L)
 
-      // Callbacks
-      decodeCallback = DecodeCallback {
-        Timber.i("Decode: ${it.barcodeFormat} - ${it.text}")
-      }
       errorCallback = ErrorCallback {
+        // Intentionally pushing this because we don't know what are the errors that can
+        // happen when trying to scan QR codes.
         Timber.e(it)
+      }
+    }
+  }
+
+  fun scans(): Observable<String> {
+    return Observable.create { emitter ->
+      codeScanner.decodeCallback = DecodeCallback { result ->
+        if (result.barcodeFormat == BarcodeFormat.QR_CODE) {
+          emitter.onNext(result.text)
+        }
+      }
+
+      emitter.setCancellable {
+        codeScanner.decodeCallback = null
       }
     }
   }
@@ -96,6 +108,10 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
   }
 
   fun startScanning() {
-    codeScanner.startPreview()
+    // If a keyboard is open on a screen later in the user flow, and hitting back on that screen
+    // pops the navigation stack where we hide the keyboard, there is a weird bug where the camera
+    // preview is sometimes distorted because the view size is reported incorrectly. This is a
+    // "fix" (insert :sad-parrot gif) for this bug.
+    postDelayed({ codeScanner.startPreview() }, 100L)
   }
 }

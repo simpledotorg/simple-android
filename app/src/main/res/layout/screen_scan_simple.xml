@@ -18,4 +18,14 @@
     app:layout_constraintTop_toBottomOf="@id/scansimpleid_toolbar"
     app:layout_constraintBottom_toBottomOf="parent"/>
 
+  <ImageView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:srcCompat="@drawable/ic_scan_qr_viewfinder"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    />
+
 </org.simple.clinic.scanid.ScanSimpleIdScreen>

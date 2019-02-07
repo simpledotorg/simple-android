@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.threeten.bp.LocalDate
 
 data class BloodPressureEntrySheetCreated(val openAs: OpenAs) : UiEvent
 
@@ -34,6 +35,15 @@ data class BloodPressureDayChanged(val day: String) : UiEvent
 data class BloodPressureMonthChanged(val month: String) : UiEvent
 data class BloodPressureYearChanged(val twoDigitYear: String) : UiEvent
 data class BloodPressureDateChanged(val date: String) : UiEvent
+
+data class BloodPressureDateToPrefillCalculated(val date: LocalDate) : UiEvent
+
+data class BloodPressureSaved(val wasDateChanged: Boolean) : UiEvent {
+  override val analyticsName = when {
+    wasDateChanged -> "Blood Pressure Entry:BP Saved With Current Date"
+    else -> "Blood Pressure Entry:BP Saved With An Older Date"
+  }
+}
 
 object BloodPressureNextArrowClicked : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Next Arrow Clicked"

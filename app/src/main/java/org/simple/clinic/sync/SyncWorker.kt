@@ -16,7 +16,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     fun createWorkDataForSyncConfig(syncConfig: SyncConfig): Data {
       return Data
           .Builder()
-          .putString("sync_group_id", syncConfig.syncGroupId)
+          .putString("sync_group_id", syncConfig.syncGroupId.name)
           .build()
     }
 
@@ -36,7 +36,7 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
       dataSync.sync()
 
     } else {
-      dataSync.syncGroup(syncGroupId)
+      dataSync.syncGroup(SyncGroup.valueOf(syncGroupId))
     }
 
     completable.blockingAwait()

@@ -250,7 +250,7 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
-    whenever(dataSync.sync()).thenReturn(Completable.complete())
+    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
     whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
@@ -258,9 +258,9 @@ class PatientsScreenControllerTest {
     verify(userSession).refreshLoggedInUser()
 
     if (canUserSyncData) {
-      verify(dataSync).sync()
+      verify(dataSync).sync(null)
     } else {
-      verify(dataSync, never()).sync()
+      verify(dataSync, never()).sync(null)
     }
   }
 

@@ -33,10 +33,10 @@ class SyncWorker(context: Context, private val workerParams: WorkerParameters) :
     val syncGroupId = readSyncGroupId(workerParams = workerParams)
 
     val completable = if (syncGroupId == NO_GROUP_ID) {
-      dataSync.sync()
+      dataSync.sync(null)
 
     } else {
-      dataSync.syncGroup(SyncGroup.valueOf(syncGroupId))
+      dataSync.sync(SyncGroup.valueOf(syncGroupId))
     }
 
     completable.blockingAwait()

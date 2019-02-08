@@ -17,19 +17,22 @@ class DataSyncTest {
     val modelSync3 = mock<ModelSync>()
 
     val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
+    whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     whenever(modelSync1.sync()).thenReturn(sync1Completable)
 
     val (sync2Completable, sync2Consumer) = Completable.complete().subscriptionTest()
+    whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     whenever(modelSync2.sync()).thenReturn(sync2Completable)
 
     val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
+    whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
     whenever(modelSync3.sync()).thenReturn(sync3Completable)
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock())
 
-    dataSync.sync().blockingAwait()
+    dataSync.sync(null).blockingAwait()
 
     sync1Consumer.assertInvoked()
     sync2Consumer.assertInvoked()
@@ -43,24 +46,34 @@ class DataSyncTest {
     val modelSync3 = mock<ModelSync>()
 
     val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
+    whenever(modelSync1.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     whenever(modelSync1.sync()).thenReturn(sync1Completable)
 
     val sync2Completable = Completable.error(RuntimeException("TEST"))
+    whenever(modelSync2.syncConfig()).thenReturn(createSyncConfig(SyncGroup.DAILY))
     whenever(modelSync2.sync()).thenReturn(sync2Completable)
 
     val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
+    whenever(modelSync3.syncConfig()).thenReturn(createSyncConfig(SyncGroup.FREQUENT))
     whenever(modelSync3.sync()).thenReturn(sync3Completable)
 
     val dataSync = DataSync(
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
         crashReporter = mock())
 
-    dataSync.sync().blockingAwait()
+    dataSync.sync(null).blockingAwait()
 
     sync1Consumer.assertInvoked()
     sync1Completable.test().assertNoErrors()
     sync3Consumer.assertInvoked()
   }
+
+  fun createSyncConfig(syncGroup: SyncGroup) =
+      Single.just(SyncConfig(
+          syncInterval = SyncInterval.FREQUENT,
+          batchSize = BatchSize.VERY_SMALL,
+          syncGroupId = syncGroup))
+
 
   @Test
   fun `when syncing a particular group, only the syncs which are a part of that group must be synced`() {
@@ -92,45 +105,12 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
         crashReporter = mock())
 
-    dataSync.syncGroup(SyncGroup.FREQUENT).blockingAwait()
+    dataSync.sync(SyncGroup.FREQUENT).blockingAwait()
     sync1Consumer.assertInvoked()
     sync2Consumer.assertNotInvoked()
     sync3Consumer.assertNotInvoked()
     sync4Consumer.assertInvoked()
   }
-
-//  @Test
-//  fun `when syncing a particular group that does not exist, none of the syncs should be executed`() {
-//    fun createModelSync(syncGroup: String, syncOperation: Completable): ModelSync {
-//      val modelSync = mock<ModelSync>()
-//      val syncConfig = SyncConfig(
-//          syncInterval = SyncInterval.FREQUENT,
-//          batchSize = BatchSize.VERY_SMALL,
-//          syncGroupId = syncGroup)
-//      whenever(modelSync.sync()).thenReturn(syncOperation)
-//      whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
-//
-//      return modelSync
-//    }
-//
-//    val (sync1Completable, sync1Consumer) = Completable.complete().subscriptionTest()
-//    val modelSync1 = createModelSync(syncGroup = "group_1", syncOperation = sync1Completable)
-//
-//    val (sync2Completable, sync2Consumer) = Completable.complete().subscriptionTest()
-//    val modelSync2 = createModelSync(syncGroup = "group_2", syncOperation = sync2Completable)
-//
-//    val (sync3Completable, sync3Consumer) = Completable.complete().subscriptionTest()
-//    val modelSync3 = createModelSync(syncGroup = "group_3", syncOperation = sync3Completable)
-//
-//    val dataSync = DataSync(
-//        modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3),
-//        crashReporter = mock())
-//
-//    dataSync.syncGroup("missing_group").blockingAwait()
-//    sync1Consumer.assertNotInvoked()
-//    sync2Consumer.assertNotInvoked()
-//    sync3Consumer.assertNotInvoked()
-//  }
 
   @Test
   fun `when syncing a particular group, errors in syncing any should not affect another syncs`() {
@@ -161,7 +141,7 @@ class DataSyncTest {
         modelSyncs = arrayListOf(modelSync1, modelSync2, modelSync3, modelSync4),
         crashReporter = mock())
 
-    dataSync.syncGroup(SyncGroup.FREQUENT).blockingAwait()
+    dataSync.sync(SyncGroup.FREQUENT).blockingAwait()
     sync1Consumer.assertInvoked()
     sync4Consumer.assertInvoked()
   }

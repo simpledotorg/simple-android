@@ -110,7 +110,7 @@ class PatientsScreenController @Inject constructor(
         .take(1)
         .observeOn(io())
         .filter { canSyncData -> canSyncData }
-        .flatMapCompletable { dataSync.sync() }
+        .flatMapCompletable { dataSync.sync(null) }
 
     refreshUser
         .andThen(syncData)

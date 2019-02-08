@@ -14,11 +14,16 @@ class DataSync @Inject constructor(
     private val crashReporter: CrashReporter
 ) {
 
-  fun sync(): Completable {
-    return runAndSwallowErrors(modelSyncs.map { it.sync() })
+  fun sync(syncGroupId: SyncGroup?): Completable {
+    return if (syncGroupId == null) {
+      val allSyncGroups = SyncGroup.values()
+      Completable.merge(allSyncGroups.map { syncGroup(it) })
+    } else {
+      syncGroup(syncGroupId)
+    }
   }
 
-  fun syncGroup(syncGroupId: SyncGroup): Completable {
+  private fun syncGroup(syncGroupId: SyncGroup): Completable {
     return Observable
         .fromIterable(modelSyncs)
         .flatMapSingle { modelSync ->

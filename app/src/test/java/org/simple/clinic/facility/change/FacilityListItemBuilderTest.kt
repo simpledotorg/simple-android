@@ -27,16 +27,16 @@ class FacilityListItemBuilderTest {
         name = Name.Plain(facility.name))
 
     val searchQuery1 = ""
-    val listItem1 = FacilityListItemBuilder.build(facility, searchQuery1)
-    assertThat(listItem1).isEqualTo(template.copy(name = Name.Plain(facility.name)))
+    val listItems1 = FacilityListItemBuilder.build(listOf(facility), searchQuery1).first()
+    assertThat(listItems1).isEqualTo(template.copy(name = Name.Plain(facility.name)))
 
     val searchQuery2 = "Death"
-    val listItem2 = FacilityListItemBuilder.build(facility, searchQuery2)
-    assertThat(listItem2).isEqualTo(template.copy(name = Name.Plain(facility.name)))
+    val listItems2 = FacilityListItemBuilder.build(listOf(facility), searchQuery2).first()
+    assertThat(listItems2).isEqualTo(template.copy(name = Name.Plain(facility.name)))
 
     val searchQuery3 = "Goth"
-    val listItem3 = FacilityListItemBuilder.build(facility, searchQuery3)
-    assertThat(listItem3).isEqualTo(template.copy(name = Name.Highlighted(facility.name, highlightStart = 9, highlightEnd = 13)))
+    val listItems3 = FacilityListItemBuilder.build(listOf(facility), searchQuery3).first()
+    assertThat(listItems3).isEqualTo(template.copy(name = Name.Highlighted(facility.name, highlightStart = 9, highlightEnd = 13)))
   }
 
   @Test
@@ -50,7 +50,7 @@ class FacilityListItemBuilderTest {
     val nameUiModel = Name.Plain(facilityWithStreet.name)
     val searchQuery = ""
 
-    val listItem1 = FacilityListItemBuilder.build(facilityWithStreet, searchQuery)
+    val listItem1 = FacilityListItemBuilder.build(listOf(facilityWithStreet), searchQuery).first()
     assertThat(listItem1).isEqualTo(FacilityListItem(
         facility = facilityWithStreet,
         name = nameUiModel,
@@ -60,7 +60,7 @@ class FacilityListItemBuilderTest {
             state = facilityWithStreet.state)))
 
     val facilityWithBlankStreet = facilityWithStreet.copy(streetAddress = " ")
-    val listItem2 = FacilityListItemBuilder.build(facilityWithBlankStreet, searchQuery)
+    val listItem2 = FacilityListItemBuilder.build(listOf(facilityWithBlankStreet), searchQuery).first()
     assertThat(listItem2).isEqualTo(FacilityListItem(
         facility = facilityWithBlankStreet,
         name = nameUiModel,
@@ -69,7 +69,7 @@ class FacilityListItemBuilderTest {
             state = facilityWithBlankStreet.state)))
 
     val facilityWithNullStreet = facilityWithStreet.copy(streetAddress = null)
-    val listItem3 = FacilityListItemBuilder.build(facilityWithNullStreet, searchQuery)
+    val listItem3 = FacilityListItemBuilder.build(listOf(facilityWithNullStreet), searchQuery).first()
     assertThat(listItem3).isEqualTo(FacilityListItem(
         facility = facilityWithNullStreet,
         name = nameUiModel,

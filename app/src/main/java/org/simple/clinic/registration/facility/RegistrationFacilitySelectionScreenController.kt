@@ -20,7 +20,7 @@ import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
-import org.simple.clinic.location.LocationUpdate.TurnedOff
+import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
@@ -58,9 +58,10 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     val locationWaitExpiry = {
       configProvider
           .flatMapObservable { Observable.timer(it.locationListenerExpiry.toMillis(), TimeUnit.MILLISECONDS) }
-          .map { LocationUpdate.TurnedOff }
+          .map { LocationUpdate.Unavailable }
     }
 
+    // TODO: Handle the situation when location permission isn't granted.
     val fetchLocation = {
       configProvider
           .flatMapObservable { locationRepository.streamUserLocation(it.locationUpdateInterval) }
@@ -130,7 +131,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .switchMap { (query, locationUpdate, config) ->
           val userLocation = when (locationUpdate) {
             is Available -> locationUpdate.location
-            is TurnedOff -> null
+            is Unavailable -> null
           }
 
           facilityRepository

@@ -18,7 +18,7 @@ data class RegistrationFacilitySearchQueryChanged(val query: String) : UiEvent {
 
 data class RegistrationUserLocationUpdated(val location: LocationUpdate) : UiEvent {
   override val analyticsName = "Registration:Facility Selection:Location Updated ${when (location) {
-    is LocationUpdate.TurnedOff -> "TurnedOff"
+    is LocationUpdate.Unavailable -> "TurnedOff"
     is LocationUpdate.Available -> "Available"
   }}"
 }

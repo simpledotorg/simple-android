@@ -4,7 +4,11 @@ import org.simple.clinic.facility.Facility
 
 object FacilityListItemBuilder {
 
-  fun build(facility: Facility, searchQuery: String): FacilityListItem {
+  fun build(facilities: List<Facility>, searchQuery: String): List<FacilityListItem> {
+    return facilities.map { uiModel(it, searchQuery) }
+  }
+
+  private fun uiModel(facility: Facility, searchQuery: String): FacilityListItem {
     val canHighlight = searchQuery.isNotBlank() && facility.name.contains(searchQuery, ignoreCase = true)
 
     val highlightedName = if (canHighlight) {

@@ -115,7 +115,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .switchMap { query ->
           facilityRepository
               .facilities(query)
-              .map { facilities -> facilities.map { FacilityListItemBuilder.build(it, query) } }
+              .map { FacilityListItemBuilder.build(it, query) }
         }
         .replay()
         .refCount()

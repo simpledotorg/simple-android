@@ -5,6 +5,7 @@ import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.util.Kilometers
 import org.threeten.bp.Duration
 import retrofit2.Retrofit
 
@@ -21,7 +22,8 @@ open class RegistrationModule {
     return Single.just(RegistrationConfig(
         retryBackOffDelayInMinutes = 1,
         locationListenerExpiry = Duration.ofSeconds(5),
-        locationUpdateInterval = Duration.ofSeconds(1)))
+        locationUpdateInterval = Duration.ofSeconds(1),
+        proximityThresholdForNearbyFacilities = Kilometers(2.0)))   // TODO: Verify this value with design team.
   }
 
   @Provides

@@ -26,13 +26,16 @@ import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItemBuilder
+import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.LocationRepository
+import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.TurnedOff
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Kilometers
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -61,7 +64,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val configTemplate = RegistrationConfig(
       retryBackOffDelayInMinutes = 0,
       locationListenerExpiry = Duration.ofSeconds(0),
-      locationUpdateInterval = Duration.ofSeconds(0))
+      locationUpdateInterval = Duration.ofSeconds(0),
+      proximityThresholdForNearbyFacilities = Kilometers(0.0))
   private val configProvider = BehaviorSubject.createDefault(configTemplate)
 
   @Before
@@ -144,17 +148,43 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when both facilities and location are fetched only then should facilities be shown`() {
-    // TODO
-  }
+    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
 
-  @Test
-  fun `when facilities are fetched but location is still ongoing then facilities shouldn't be shown`() {
-    // TODO
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+
+    val locationUpdates = PublishSubject.create<LocationUpdate>()
+    whenever(locationRepository.streamUserLocation(any())).thenReturn(locationUpdates)
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    verify(screen, never()).updateFacilities(any(), any())
+
+    locationUpdates.onNext(LocationUpdate.Available(Coordinates(0.0, 0.0)))
+    verify(screen).updateFacilities(any(), any())
   }
 
   @Test
   fun `when facilities are fetched, but location listener expires then facilities should still be shown`() {
-    // TODO
+    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
+
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+    whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged("f"))
+    verify(screen, never()).updateFacilities(any(), any())
+
+    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
+    verify(screen).updateFacilities(any(), any())
   }
 
   @Test
@@ -180,6 +210,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationUserLocationUpdated(TurnedOff))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "F"))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fa"))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fac"))
@@ -198,8 +229,9 @@ class RegistrationFacilitySelectionScreenControllerTest {
         .thenReturn(Single.just(FacilityPullResult.UnexpectedError()))
         .thenReturn(Single.just(FacilityPullResult.NetworkError()))
 
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationUserLocationUpdated(TurnedOff))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
+    uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
 
     verify(screen).showNetworkError()
@@ -213,7 +245,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
     whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.just(TurnedOff))
 
-    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationUserLocationUpdated(TurnedOff))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
 
     verify(screen).hideError()
@@ -233,6 +265,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val searchQuery = ""
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationUserLocationUpdated(TurnedOff))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
     val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery)

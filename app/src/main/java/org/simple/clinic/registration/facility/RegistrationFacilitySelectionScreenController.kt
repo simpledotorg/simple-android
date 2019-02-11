@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityPullResult.NetworkError
 import org.simple.clinic.facility.FacilityPullResult.Success
 import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
@@ -18,6 +19,8 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
+import org.simple.clinic.location.LocationUpdate.Available
+import org.simple.clinic.location.LocationUpdate.TurnedOff
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
@@ -74,17 +77,22 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
   }
 
   private fun fetchFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val retryClicks = events.ofType<RegistrationFacilitySelectionRetryClicked>()
-
-    val triggerOnScreenStart = events
+    val fetchFacilitiesOnStart = events
         .ofType<ScreenCreated>()
         .flatMap { facilityRepository.recordCount() }
         .take(1)
-        .filter { count -> count == 0 }
+        .flatMapSingle { count ->
+          when (count) {
+            0 -> facilitySync.pullWithResult()
+            else -> Single.just(FacilityPullResult.Success())
+          }
+        }
 
-    val fetchFacilities = Observable
-        .merge(triggerOnScreenStart, retryClicks)
-        .flatMapSingle { facilitySync.pullWithResult() }
+    val fetchFacilitiesOnRetry = events
+        .ofType<RegistrationFacilitySelectionRetryClicked>()
+        .switchMap { facilitySync.pullWithResult().toObservable() }
+
+    val fetchFacilities = fetchFacilitiesOnStart.mergeWith(fetchFacilitiesOnRetry)
 
     val locationUpdates = events.ofType<RegistrationUserLocationUpdated>()
 
@@ -109,13 +117,31 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val filteredFacilityListItems = events
+    val searchQueryChanges = events
         .ofType<RegistrationFacilitySearchQueryChanged>()
         .map { it.query }
-        .switchMap { query ->
+
+    val locationUpdates = events
+        .ofType<RegistrationUserLocationUpdated>()
+        .map { it.location }
+
+    val filteredFacilityListItems = Observables
+        .combineLatest(searchQueryChanges, locationUpdates, configProvider.toObservable())
+        .switchMap { (query, locationUpdate, config) ->
+          val userLocation = when (locationUpdate) {
+            is Available -> locationUpdate.location
+            is TurnedOff -> null
+          }
+
           facilityRepository
               .facilities(query)
-              .map { FacilityListItemBuilder.build(it, query) }
+              .map {
+                FacilityListItemBuilder.build(
+                    facilities = it,
+                    searchQuery = query,
+                    userLocation = userLocation,
+                    proximityThreshold = config.proximityThresholdForNearbyFacilities)
+              }
         }
         .replay()
         .refCount()

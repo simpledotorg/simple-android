@@ -20,6 +20,7 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.util.concurrent.TimeUnit
 
 @Module
 open class NetworkModule {
@@ -67,6 +68,11 @@ open class NetworkModule {
             loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
             addInterceptor(loggingInterceptor)
           }
+
+          // When syncing large amounts of data, the default read timeout(10s) has been seen to
+          // timeout frequently for larger models. Through trial and error, 15s was found to be a
+          // good number for syncing large batch sizes.
+          readTimeout(15L, TimeUnit.SECONDS)
         }
         .build()
   }

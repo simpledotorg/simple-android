@@ -41,7 +41,7 @@ class FacilityChangeScreenController @Inject constructor(
         .switchMap { query ->
           userSession.requireLoggedInUser()
               .switchMap { user -> facilityRepository.facilitiesInCurrentGroup(query, user) }
-              .map { facilities -> facilities.map { FacilityListItem.Builder.build(it, query) } }
+              .map { facilities -> facilities.map { FacilityListItemBuilder.build(it, query) } }
         }
         .replay()
         .refCount()

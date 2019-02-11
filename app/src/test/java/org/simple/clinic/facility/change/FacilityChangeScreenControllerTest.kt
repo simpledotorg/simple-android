@@ -70,8 +70,8 @@ class FacilityChangeScreenControllerTest {
     val searchQuery = ""
     uiEvents.onNext(FacilityChangeSearchQueryChanged(searchQuery))
 
-    val facility1ListItem = FacilityListItem.Builder.build(facility1, searchQuery)
-    val facility2ListItem = FacilityListItem.Builder.build(facility2, searchQuery)
+    val facility1ListItem = FacilityListItemBuilder.build(facility1, searchQuery)
+    val facility2ListItem = FacilityListItemBuilder.build(facility2, searchQuery)
 
     verify(screen).updateFacilities(listOf(facility1ListItem, facility2ListItem), FIRST_UPDATE)
     verify(screen).updateFacilities(listOf(facility1ListItem, facility2ListItem), SUBSEQUENT_UPDATE)

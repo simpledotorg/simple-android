@@ -25,7 +25,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
-import org.simple.clinic.facility.change.FacilityListItem
+import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate.TurnedOff
 import org.simple.clinic.patient.PatientMocker
@@ -235,8 +235,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
-    val facility1ListItem = FacilityListItem.Builder.build(facility1, searchQuery)
-    val facility2ListItem = FacilityListItem.Builder.build(facility2, searchQuery)
+    val facility1ListItem = FacilityListItemBuilder.build(facility1, searchQuery)
+    val facility2ListItem = FacilityListItemBuilder.build(facility2, searchQuery)
 
     verify(screen).updateFacilities(listOf(facility1ListItem, facility2ListItem), FIRST_UPDATE)
     verify(screen).updateFacilities(listOf(facility1ListItem, facility2ListItem), SUBSEQUENT_UPDATE)

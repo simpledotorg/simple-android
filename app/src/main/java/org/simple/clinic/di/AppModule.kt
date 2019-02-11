@@ -15,6 +15,7 @@ import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
+import org.simple.clinic.sync.indicator.SyncIndicatorModule
 import org.threeten.bp.Clock
 import org.threeten.bp.ZoneId
 import java.util.Locale
@@ -30,7 +31,8 @@ import java.util.Locale
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,
   DateFormatterModule::class,
-  PatientModule::class
+  PatientModule::class,
+  SyncIndicatorModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

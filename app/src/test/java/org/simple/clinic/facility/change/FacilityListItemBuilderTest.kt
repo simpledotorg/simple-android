@@ -4,7 +4,6 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.change.FacilityListItem.Address
-import org.simple.clinic.facility.change.FacilityListItem.Builder
 import org.simple.clinic.facility.change.FacilityListItem.Name
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
@@ -28,15 +27,15 @@ class FacilityListItemBuilderTest {
         name = Name.Plain(facility.name))
 
     val searchQuery1 = ""
-    val listItem1 = Builder.build(facility, searchQuery1)
+    val listItem1 = FacilityListItemBuilder.build(facility, searchQuery1)
     assertThat(listItem1).isEqualTo(template.copy(name = Name.Plain(facility.name)))
 
     val searchQuery2 = "Death"
-    val listItem2 = Builder.build(facility, searchQuery2)
+    val listItem2 = FacilityListItemBuilder.build(facility, searchQuery2)
     assertThat(listItem2).isEqualTo(template.copy(name = Name.Plain(facility.name)))
 
     val searchQuery3 = "Goth"
-    val listItem3 = Builder.build(facility, searchQuery3)
+    val listItem3 = FacilityListItemBuilder.build(facility, searchQuery3)
     assertThat(listItem3).isEqualTo(template.copy(name = Name.Highlighted(facility.name, highlightStart = 9, highlightEnd = 13)))
   }
 
@@ -51,7 +50,7 @@ class FacilityListItemBuilderTest {
     val nameUiModel = Name.Plain(facilityWithStreet.name)
     val searchQuery = ""
 
-    val listItem1 = Builder.build(facilityWithStreet, searchQuery)
+    val listItem1 = FacilityListItemBuilder.build(facilityWithStreet, searchQuery)
     assertThat(listItem1).isEqualTo(FacilityListItem(
         facility = facilityWithStreet,
         name = nameUiModel,
@@ -61,7 +60,7 @@ class FacilityListItemBuilderTest {
             state = facilityWithStreet.state)))
 
     val facilityWithBlankStreet = facilityWithStreet.copy(streetAddress = " ")
-    val listItem2 = Builder.build(facilityWithBlankStreet, searchQuery)
+    val listItem2 = FacilityListItemBuilder.build(facilityWithBlankStreet, searchQuery)
     assertThat(listItem2).isEqualTo(FacilityListItem(
         facility = facilityWithBlankStreet,
         name = nameUiModel,
@@ -70,7 +69,7 @@ class FacilityListItemBuilderTest {
             state = facilityWithBlankStreet.state)))
 
     val facilityWithNullStreet = facilityWithStreet.copy(streetAddress = null)
-    val listItem3 = Builder.build(facilityWithNullStreet, searchQuery)
+    val listItem3 = FacilityListItemBuilder.build(facilityWithNullStreet, searchQuery)
     assertThat(listItem3).isEqualTo(FacilityListItem(
         facility = facilityWithNullStreet,
         name = nameUiModel,

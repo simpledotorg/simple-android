@@ -15,7 +15,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
-import org.simple.clinic.facility.change.FacilityListItem
+import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.registration.RegistrationConfig
@@ -115,7 +115,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .switchMap { query ->
           facilityRepository
               .facilities(query)
-              .map { facilities -> facilities.map { FacilityListItem.Builder.build(it, query) } }
+              .map { facilities -> facilities.map { FacilityListItemBuilder.build(it, query) } }
         }
         .replay()
         .refCount()

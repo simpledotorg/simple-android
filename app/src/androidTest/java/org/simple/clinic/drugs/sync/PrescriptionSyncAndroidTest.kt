@@ -56,7 +56,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = BatchSize.VERY_SMALL,
-      syncGroupId = SyncGroup.FREQUENT))
+      syncGroup = SyncGroup.FREQUENT))
 
   private val user: User
     get() = userSession.loggedInUserImmediate()!!

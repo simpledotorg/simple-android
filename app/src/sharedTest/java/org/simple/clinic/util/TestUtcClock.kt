@@ -7,11 +7,11 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.ZoneOffset.UTC
 
-class TestClock : Clock() {
+class TestUtcClock() : UtcClock() {
 
   private var clock = fixed(Instant.EPOCH, UTC)
 
-  override fun withZone(zoneId: ZoneId?): Clock = clock.withZone(zoneId)
+  override fun withZone(zone: ZoneId): Clock = clock.withZone(zone)
 
   override fun getZone(): ZoneId = clock.zone
 

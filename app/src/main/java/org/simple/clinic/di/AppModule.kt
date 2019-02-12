@@ -16,7 +16,8 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.ZoneId
 import java.util.Locale
 
@@ -49,7 +50,11 @@ open class AppModule(private val appContext: Application) {
 
   @Provides
   @AppScope
-  open fun clock(): Clock = Clock.systemUTC()
+  open fun utcClock() = UtcClock()
+
+  @Provides
+  @AppScope
+  fun userClock(userTimeZone: ZoneId) = UserClock(userTimeZone)
 
   @Provides
   @AppScope

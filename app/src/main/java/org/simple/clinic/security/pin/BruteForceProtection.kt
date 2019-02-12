@@ -9,13 +9,13 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowe
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BruteForceProtection @Inject constructor(
-    private val clock: Clock,
+    private val utcClock: UtcClock,
     private val configProvider: Single<BruteForceProtectionConfig>,
     private val statePreference: Preference<BruteForceProtectionState>
 ) {
@@ -36,7 +36,7 @@ class BruteForceProtection @Inject constructor(
 
             val isLimitReached = newFailedAuthCount >= config.limitOfFailedAttempts
             if (isLimitReached && state.limitReachedAt is None) {
-              updatedState = updatedState.copy(limitReachedAt = Just(Instant.now(clock)))
+              updatedState = updatedState.copy(limitReachedAt = Just(Instant.now(utcClock)))
             }
 
             statePreference.set(updatedState)
@@ -64,7 +64,7 @@ class BruteForceProtection @Inject constructor(
 
           } else {
             val blockExpiresAt = blockedAt + config.blockDuration
-            val now = Instant.now(clock)
+            val now = Instant.now(utcClock)
 
             // It's possible that the block duration gets updated by a config update
             // from the server, potentially resulting in a situation where the expiry

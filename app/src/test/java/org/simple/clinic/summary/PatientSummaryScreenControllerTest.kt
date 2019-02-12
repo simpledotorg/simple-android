@@ -50,8 +50,8 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneOffset.UTC
@@ -73,7 +73,7 @@ class PatientSummaryScreenControllerTest {
   private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.randomUUID()
-  private val clock = Clock.fixed(Instant.EPOCH, UTC)
+  private val clock = TestUtcClock()
   private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()

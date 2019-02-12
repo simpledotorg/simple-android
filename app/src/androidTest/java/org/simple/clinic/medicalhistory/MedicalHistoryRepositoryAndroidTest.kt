@@ -12,7 +12,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import java.util.UUID
@@ -30,7 +30,7 @@ class MedicalHistoryRepositoryAndroidTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var clock: UtcClock
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()

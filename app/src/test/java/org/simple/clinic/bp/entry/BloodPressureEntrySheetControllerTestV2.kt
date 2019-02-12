@@ -33,7 +33,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -62,7 +62,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   private lateinit var controller: BloodPressureEntrySheetControllerV2
 
   private val patientUuid = UUID.randomUUID()
-  private val testClock = TestClock()
+  private val testClock = TestUtcClock()
 
   @Before
   fun setUp() {
@@ -74,7 +74,7 @@ class BloodPressureEntrySheetControllerTestV2 {
         bloodPressureRepository = bloodPressureRepository,
         dateValidator = dateValidator,
         bpValidator = bpValidator,
-        clock = testClock,
+        utcClock = testClock,
         inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'))
 
     uiEvents

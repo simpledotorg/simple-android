@@ -26,7 +26,7 @@ import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
@@ -51,7 +51,7 @@ class PatientRepositoryTest {
   private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var config: PatientConfig
 
-  private val clock = TestClock()
+  private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
 
   @Before
@@ -75,7 +75,7 @@ class PatientRepositoryTest {
         facilityRepository = facilityRepository,
         userSession = userSession,
         numberValidator = numberValidator,
-        clock = clock,
+        utcClock = clock,
         dateOfBirthFormat = dateOfBirthFormat,
         searchPatientByName = searchPatientByName,
         configProvider = Single.fromCallable { config },

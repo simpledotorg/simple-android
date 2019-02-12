@@ -34,10 +34,10 @@ import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
@@ -55,7 +55,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
-    private val clock: Clock,
+    private val utcClock: UtcClock,
     private val zoneId: ZoneId,
     private val configProvider: Single<PatientSummaryConfig>,
     @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>,
@@ -136,7 +136,7 @@ class PatientSummaryScreenController @Inject constructor(
 
       val bloodPressureItems = bloodPressures
           .map { bps ->
-            val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(clock.zone).toLocalDate() }
+            val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(utcClock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->
               measurementList.map { measurement ->
                 val timestamp = timestampGenerator.generate(measurement.createdAt)
@@ -183,7 +183,7 @@ class PatientSummaryScreenController @Inject constructor(
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
         .map { it ->
           val bpList = it.patientSummaryItems.bloodPressureListItems
-          bpList.groupBy { item -> item.measurement.createdAt.atZone(clock.zone).toLocalDate() }
+          bpList.groupBy { item -> item.measurement.createdAt.atZone(utcClock.zone).toLocalDate() }
         }
         .map { it.size }
         .withLatestFrom(configProvider.toObservable())

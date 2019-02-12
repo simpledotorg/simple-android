@@ -16,7 +16,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -27,7 +27,7 @@ class AppointmentRepository @Inject constructor(
     private val overdueDao: OverdueAppointment.RoomDao,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val clock: Clock,
+    private val utcClock: UtcClock,
     private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
@@ -46,8 +46,8 @@ class AppointmentRepository @Inject constructor(
               remindOn = null,
               agreedToVisit = null,
               syncStatus = SyncStatus.PENDING,
-              createdAt = Instant.now(clock),
-              updatedAt = Instant.now(clock),
+              createdAt = Instant.now(utcClock),
+              updatedAt = Instant.now(utcClock),
               deletedAt = null)
         }
         .flatMap { appointment ->
@@ -64,7 +64,7 @@ class AppointmentRepository @Inject constructor(
           updatedStatus = VISITED,
           scheduledStatus = SCHEDULED,
           newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(clock)
+          newUpdatedAt = Instant.now(utcClock)
       )
     }
   }
@@ -75,7 +75,7 @@ class AppointmentRepository @Inject constructor(
           appointmentUUID = appointmentUuid,
           reminderDate = reminderDate,
           newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(clock)
+          newUpdatedAt = Instant.now(utcClock)
       )
     }
   }
@@ -84,9 +84,9 @@ class AppointmentRepository @Inject constructor(
     return Completable.fromAction {
       appointmentDao.markAsAgreedToVisit(
           appointmentUUID = appointmentUuid,
-          reminderDate = LocalDate.now(clock).plusDays(30),
+          reminderDate = LocalDate.now(utcClock).plusDays(30),
           newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(clock))
+          newUpdatedAt = Instant.now(utcClock))
     }
   }
 
@@ -96,7 +96,7 @@ class AppointmentRepository @Inject constructor(
           appointmentUuid = appointmentUuid,
           newStatus = VISITED,
           newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(clock))
+          newUpdatedAt = Instant.now(utcClock))
     }
   }
 
@@ -107,7 +107,7 @@ class AppointmentRepository @Inject constructor(
           cancelReason = reason,
           newStatus = CANCELLED,
           newSyncStatus = SyncStatus.PENDING,
-          newUpdatedAt = Instant.now(clock))
+          newUpdatedAt = Instant.now(utcClock))
     }
   }
 
@@ -129,7 +129,7 @@ class AppointmentRepository @Inject constructor(
 
     return Observables.combineLatest(facilityUuidStream, appointmentConfigStream)
         .flatMap { (facilityUuid, appointmentConfig) ->
-          val today = LocalDate.now(clock)
+          val today = LocalDate.now(utcClock)
           overdueDao
               .appointmentsForFacility(
                   facilityUuid = facilityUuid,

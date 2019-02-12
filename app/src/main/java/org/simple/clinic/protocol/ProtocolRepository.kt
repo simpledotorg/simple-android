@@ -10,6 +10,7 @@ import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -17,7 +18,7 @@ import javax.inject.Inject
 
 class ProtocolRepository @Inject constructor(
     private val appDatabase: AppDatabase,
-    private val clock: Clock
+    private val utcClock: UtcClock
 ) : SynceableRepository<ProtocolAndProtocolDrugs, ProtocolPayload> {
 
   private val protocolDao = appDatabase.protocolDao()
@@ -118,8 +119,8 @@ class ProtocolRepository @Inject constructor(
           name = name,
           rxNormCode = "rxNormCode-1",
           dosage = dosage,
-          createdAt = Instant.now(clock),
-          updatedAt = Instant.now(clock),
+          createdAt = Instant.now(utcClock),
+          updatedAt = Instant.now(utcClock),
           deletedAt = null,
           order = 0
       )

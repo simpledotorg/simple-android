@@ -18,7 +18,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -31,7 +31,7 @@ class BloodPressureRepositoryTest {
   private val dao = mock<BloodPressureMeasurement.RoomDao>()
   private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val testClock = TestClock()
+  private val testClock = TestUtcClock()
 
   private lateinit var repository: BloodPressureRepository
 

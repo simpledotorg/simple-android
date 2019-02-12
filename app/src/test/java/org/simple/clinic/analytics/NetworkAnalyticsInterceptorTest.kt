@@ -1,6 +1,9 @@
 package org.simple.clinic.analytics
 
+import android.net.NetworkCapabilities
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import okhttp3.Call
@@ -15,6 +18,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.net.SocketException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.util.concurrent.TimeUnit
 
 private fun <T> throwError(): T {
@@ -38,12 +44,15 @@ private fun responseBuilder(
 class NetworkAnalyticsInterceptorTest {
 
   private val mockReporter = MockAnalyticsReporter()
+  private val networkCapabilitiesProvider = mock<NetworkCapabilitiesProvider>()
+  private val networkCapabilities = mock<NetworkCapabilities>()
 
   private lateinit var interceptor: NetworkAnalyticsInterceptor
 
   @Before
   fun setUp() {
-    interceptor = NetworkAnalyticsInterceptor()
+    whenever(networkCapabilitiesProvider.activeNetworkCapabilities()).thenReturn(networkCapabilities)
+    interceptor = NetworkAnalyticsInterceptor(networkCapabilitiesProvider)
     Analytics.addReporter(mockReporter)
   }
 
@@ -192,6 +201,192 @@ class NetworkAnalyticsInterceptorTest {
     assertThat(reportedContentLength).isEqualTo(-1)
   }
 
+  @Test
+  @Parameters(method = "params for failing request with a timeout")
+  fun `if the request fails with an exception, it must report it to analytics only if it's a timeout`(
+      cause: Throwable,
+      shouldReportTimeout: Boolean
+  ) {
+    val request = requestBuilder("https://simple.org").build()
+    val chain = FailingChain(request, cause)
+
+    // Intentionally not using ExpectedException here because it seems to have a problem where it
+    // does not fail the test if the assertions fail. We verify the exception manually.
+    var thrownException: Throwable? = null
+    try {
+      interceptor.intercept(chain)
+    } catch (e: Throwable) {
+      thrownException = e
+    }
+
+    if (shouldReportTimeout) {
+      val props = mockReporter.receivedEvents.first().props
+      assertThat(props["url"] as String).isEqualTo("https://simple.org")
+      assertThat(props["method"] as String).isEqualTo("GET")
+    } else {
+      assertThat(mockReporter.receivedEvents.isEmpty()).isTrue()
+    }
+    assertThat(thrownException).isSameAs(cause)
+  }
+
+  @Suppress("Unused")
+  private fun `params for failing request with a timeout`(): List<List<Any>> {
+    return listOf(
+        listOf(SocketTimeoutException(), true),
+        listOf(RuntimeException(), false),
+        listOf(SocketException(), false),
+        listOf(UnknownHostException(), false)
+    )
+  }
+
+  @Test
+  fun `if the request fails with a timeout, it must not report it to analytics if there is no active network`() {
+    val request = requestBuilder("https://simple.org").build()
+    val cause = SocketTimeoutException()
+    val chain = FailingChain(request, cause)
+    whenever(networkCapabilitiesProvider.activeNetworkCapabilities()).thenReturn(null)
+
+    // Intentionally not using ExpectedException here because it seems to have a problem where it
+    // does not fail the test if the assertions fail. We verify the exception manually.
+    var thrownException: Throwable? = null
+    try {
+      interceptor.intercept(chain)
+    } catch (e: Throwable) {
+      thrownException = e
+    }
+
+    assertThat(mockReporter.receivedEvents).isEmpty()
+    assertThat(thrownException).isSameAs(cause)
+  }
+
+  @Test
+  @Parameters(method = "params for network timeout capabilities")
+  fun `when reporting a network timeout, the network capabilities must be reported`(
+      meteredConnection: Boolean,
+      wifiTransport: Boolean,
+      bluetoothTransport: Boolean,
+      cellularTransport: Boolean,
+      ethernetTransport: Boolean,
+      lowPanTransport: Boolean,
+      vpnTransport: Boolean,
+      wifiAwareTransport: Boolean,
+      linkDownstreamKbps: Int,
+      linkUpstreamKbps: Int,
+      transportType: Analytics.NetworkTransportType
+  ) {
+    val request = requestBuilder("https://simple.org").build()
+    val chain = FailingChain(request, SocketTimeoutException())
+    whenever(networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_NOT_METERED)).thenReturn(meteredConnection.not())
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)).thenReturn(wifiTransport)
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_BLUETOOTH)).thenReturn(bluetoothTransport)
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)).thenReturn(cellularTransport)
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)).thenReturn(ethernetTransport)
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_LOWPAN)).thenReturn(lowPanTransport)
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_VPN)).thenReturn(vpnTransport)
+    whenever(networkCapabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI_AWARE)).thenReturn(wifiAwareTransport)
+    whenever(networkCapabilities.linkDownstreamBandwidthKbps).thenReturn(linkDownstreamKbps)
+    whenever(networkCapabilities.linkUpstreamBandwidthKbps).thenReturn(linkUpstreamKbps)
+
+    try {
+      interceptor.intercept(chain)
+    } catch (ignored: Throwable) {
+      // Nothing to do here
+    }
+
+    val props = mockReporter.receivedEvents.first().props
+    assertThat(props["metered"] as Boolean).isEqualTo(meteredConnection)
+    assertThat(props["transport"] as Analytics.NetworkTransportType).isEqualTo(transportType)
+    assertThat(props["downstreamKbps"] as Int).isEqualTo(linkDownstreamKbps)
+    assertThat(props["upstreamKbps"] as Int).isEqualTo(linkUpstreamKbps)
+  }
+
+  @Suppress("Unused")
+  private fun `params for network timeout capabilities`(): List<List<Any>> {
+    fun testCase(
+        meteredConnection: Boolean,
+        wifiTransport: Boolean,
+        bluetoothTransport: Boolean,
+        cellularTransport: Boolean,
+        ethernetTransport: Boolean,
+        lowPanTransport: Boolean,
+        vpnTransport: Boolean,
+        wifiAwareTransport: Boolean,
+        linkDownstreamKbps: Int,
+        linkUpstreamKbps: Int,
+        transportType: Analytics.NetworkTransportType
+    ): List<Any> {
+      return listOf(
+          meteredConnection,
+          wifiTransport,
+          bluetoothTransport,
+          cellularTransport,
+          ethernetTransport,
+          lowPanTransport,
+          vpnTransport,
+          wifiAwareTransport,
+          linkDownstreamKbps,
+          linkUpstreamKbps,
+          transportType)
+    }
+
+    return listOf(
+        testCase(
+            meteredConnection = false,
+            wifiTransport = true,
+            bluetoothTransport = false,
+            cellularTransport = false,
+            ethernetTransport = false,
+            lowPanTransport = false,
+            vpnTransport = false,
+            wifiAwareTransport = false,
+            linkDownstreamKbps = 150,
+            linkUpstreamKbps = 100,
+            transportType = Analytics.NetworkTransportType.WIFI
+        ),
+        testCase(
+            meteredConnection = true,
+            wifiTransport = false,
+            bluetoothTransport = false,
+            cellularTransport = true,
+            ethernetTransport = false,
+            lowPanTransport = false,
+            vpnTransport = false,
+            wifiAwareTransport = false,
+            linkDownstreamKbps = 750,
+            linkUpstreamKbps = 1000,
+            transportType = Analytics.NetworkTransportType.CELLULAR
+        ),
+        testCase(
+            meteredConnection = false,
+            wifiTransport = false,
+            bluetoothTransport = true,
+            cellularTransport = false,
+            ethernetTransport = false,
+            lowPanTransport = false,
+            vpnTransport = false,
+            wifiAwareTransport = false,
+            linkDownstreamKbps = 1500,
+            linkUpstreamKbps = 10,
+            transportType = Analytics.NetworkTransportType.BLUETOOTH
+        ),
+        testCase(
+            meteredConnection = true,
+            wifiTransport = false,
+            bluetoothTransport = false,
+            cellularTransport = false,
+            ethernetTransport = false,
+            lowPanTransport = false,
+            vpnTransport = false,
+            wifiAwareTransport = false,
+            linkDownstreamKbps = 0,
+            linkUpstreamKbps = 0,
+            transportType = Analytics.NetworkTransportType.OTHER
+        )
+    )
+  }
+
+
+
   private class SuccessfulChain(val request: Request, val response: Response, val requestTimeMillis: Int = 0) : FakeChain() {
 
     override fun proceed(request: Request): Response {
@@ -199,6 +394,15 @@ class NetworkAnalyticsInterceptorTest {
         Thread.sleep(requestTimeMillis.toLong())
       }
       return response
+    }
+
+    override fun request() = request
+  }
+
+  private class FailingChain(val request: Request, val throwable: Throwable) : FakeChain() {
+
+    override fun proceed(request: Request): Response {
+      throw throwable
     }
 
     override fun request() = request

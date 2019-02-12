@@ -40,7 +40,23 @@ class AnalyticsTest {
 
   @Test
   fun `when reporting a network call without any reporters, no error should be thrown`() {
-    Analytics.reportNetworkCall("test", "get", 1, 1, 1)
+    Analytics.reportNetworkCall(
+        url = "test",
+        method = "get",
+        responseCode = 1,
+        contentLength = 1,
+        durationMillis = 1)
+  }
+
+  @Test
+  fun `when reporting a network timeout without any reporters, no error should be thrown`() {
+    Analytics.reportNetworkTimeout(
+        url = "test",
+        method = "get",
+        metered = true,
+        networkTransportType = Analytics.NetworkTransportType.WIFI,
+        downstreamBandwidthKbps = 100,
+        upstreamBandwidthKbps = 100)
   }
 
   @Test
@@ -77,6 +93,18 @@ class AnalyticsTest {
   fun `when a reporter fails sending a network event, no error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportNetworkCall("test", "get", 1, 1, 1)
+  }
+
+  @Test
+  fun `when a reporter fails sending a network timeout event, no error should be thrown`() {
+    Analytics.addReporter(FailingAnalyticsReporter())
+    Analytics.reportNetworkTimeout(
+        url = "test",
+        method = "get",
+        metered = true,
+        networkTransportType = Analytics.NetworkTransportType.WIFI,
+        downstreamBandwidthKbps = 100,
+        upstreamBandwidthKbps = 100)
   }
 
   @Test
@@ -121,9 +149,23 @@ class AnalyticsTest {
     Analytics.reportInputValidationError("Error 1")
     Analytics.reportInputValidationError("Error 2")
     Analytics.reportNetworkCall("Test 1", "GET", 200, 500, 400)
+    Analytics.reportNetworkTimeout(
+        url = "Test 1",
+        method = "GET",
+        metered = true,
+        networkTransportType = Analytics.NetworkTransportType.WIFI,
+        downstreamBandwidthKbps = 100,
+        upstreamBandwidthKbps = 50)
     Analytics.reportViewedPatient(uuid1, "Test 2")
     Analytics.reportViewedPatient(uuid2, "Test 1")
     Analytics.reportNetworkCall("Test 2", "POST", 400, 1000, 300)
+    Analytics.reportNetworkTimeout(
+        url = "Test 3",
+        method = "POST",
+        metered = false,
+        networkTransportType = Analytics.NetworkTransportType.CELLULAR,
+        downstreamBandwidthKbps = 50,
+        upstreamBandwidthKbps = 100)
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -135,10 +177,26 @@ class AnalyticsTest {
         Event("NetworkCall", mapOf(
             "url" to "Test 1", "method" to "GET", "responseCode" to 200, "contentLength" to 500, "durationMs" to 400)
         ),
+        Event("NetworkTimeout", mapOf(
+            "url" to "Test 1",
+            "method" to "GET",
+            "metered" to true,
+            "transport" to Analytics.NetworkTransportType.WIFI,
+            "downstreamKbps" to 100,
+            "upstreamKbps" to 50)
+        ),
         Event("ViewedPatient", mapOf("patientId" to uuid1.toString(), "from" to "Test 2")),
         Event("ViewedPatient", mapOf("patientId" to uuid2.toString(), "from" to "Test 1")),
         Event("NetworkCall", mapOf(
             "url" to "Test 2", "method" to "POST", "responseCode" to 400, "contentLength" to 1000, "durationMs" to 300)
+        ),
+        Event("NetworkTimeout", mapOf(
+            "url" to "Test 3",
+            "method" to "POST",
+            "metered" to false,
+            "transport" to Analytics.NetworkTransportType.CELLULAR,
+            "downstreamKbps" to 50,
+            "upstreamKbps" to 100)
         )
     )
 

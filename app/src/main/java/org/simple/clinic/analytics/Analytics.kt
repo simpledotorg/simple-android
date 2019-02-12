@@ -1,9 +1,10 @@
 package org.simple.clinic.analytics
 
+import android.net.NetworkCapabilities
+import android.net.NetworkCapabilities.*
 import java.util.UUID
 
 object Analytics {
-
   private var reporters: List<AnalyticsReporter> = emptyList()
 
   fun addReporter(vararg reportersToAdd: AnalyticsReporter) {
@@ -71,6 +72,54 @@ object Analytics {
             "contentLength" to contentLength,
             "durationMs" to durationMillis
         ))
+      }
+    }
+  }
+
+  fun reportNetworkTimeout(
+      url: String,
+      method: String,
+      metered: Boolean,
+      networkTransportType: NetworkTransportType,
+      downstreamBandwidthKbps: Int,
+      upstreamBandwidthKbps: Int
+  ) {
+    reporters.forEach {
+      it.safely("Error reporting network timeout") {
+        createEvent("NetworkTimeout", mapOf(
+            "url" to url,
+            "method" to method,
+            "metered" to metered,
+            "transport" to networkTransportType,
+            "downstreamKbps" to downstreamBandwidthKbps,
+            "upstreamKbps" to upstreamBandwidthKbps
+        ))
+      }
+    }
+  }
+
+  enum class NetworkTransportType {
+    BLUETOOTH,
+    CELLULAR,
+    ETHERNET,
+    LOWPAN,
+    VPN,
+    WIFI,
+    WIFI_AWARE,
+    OTHER;
+
+    companion object {
+      fun fromNetworkCapabilities(capabilities: NetworkCapabilities): NetworkTransportType {
+        return when {
+          capabilities.hasTransport(TRANSPORT_WIFI) -> WIFI
+          capabilities.hasTransport(TRANSPORT_CELLULAR) -> CELLULAR
+          capabilities.hasTransport(TRANSPORT_ETHERNET) -> ETHERNET
+          capabilities.hasTransport(TRANSPORT_VPN) -> VPN
+          capabilities.hasTransport(TRANSPORT_LOWPAN) -> LOWPAN
+          capabilities.hasTransport(TRANSPORT_WIFI_AWARE) -> WIFI_AWARE
+          capabilities.hasTransport(TRANSPORT_BLUETOOTH) -> BLUETOOTH
+          else -> OTHER
+        }
       }
     }
   }

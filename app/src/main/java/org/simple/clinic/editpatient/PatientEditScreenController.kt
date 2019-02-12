@@ -30,6 +30,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.None
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.util.unwrapJust
@@ -51,7 +52,7 @@ typealias UiChange = (Ui) -> Unit
 class PatientEditScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val numberValidator: PhoneNumberValidator,
-    private val clock: Clock,
+    private val utcClock: UtcClock,
     private val dobValidator: UserInputDateValidator,
     @Named("date_for_user_input") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -125,7 +126,7 @@ class PatientEditScreenController @Inject constructor(
         .filter { it.age != null }
         .map {
           { ui: Ui ->
-            val estimatedAge = estimateCurrentAge(it.age!!.value, it.age.updatedAt, clock)
+            val estimatedAge = estimateCurrentAge(it.age!!.value, it.age.updatedAt, utcClock)
             ui.setPatientAge(estimatedAge)
           }
         }
@@ -367,8 +368,8 @@ class PatientEditScreenController @Inject constructor(
       else -> {
         Age(
             value = enteredAgeValue,
-            updatedAt = Instant.now(clock),
-            computedDateOfBirth = LocalDate.now(clock).minusYears(enteredAgeValue.toLong()))
+            updatedAt = Instant.now(utcClock),
+            computedDateOfBirth = LocalDate.now(utcClock).minusYears(enteredAgeValue.toLong()))
       }
     }
   }

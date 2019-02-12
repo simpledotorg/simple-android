@@ -22,16 +22,18 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
-import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.OffsetTime
+import org.threeten.bp.ZoneId
 import java.util.UUID
 import javax.inject.Inject
 
@@ -45,7 +47,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val dateValidator: UserInputDateValidator,
     private val bpValidator: BpValidator,
-    private val clock: Clock,
+    private val utcClock: UtcClock,
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -161,7 +163,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     val prefillForNewBp = openAsStream
         .ofType<OpenAs.New>()
         .map {
-          val currentDate = LocalDate.now(clock)
+          val currentDate = LocalDate.now(utcClock)
           showDateOnUi(currentDate)
         }
 
@@ -170,7 +172,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
         .take(1)
         .map {
-          val createdAtAsDate = it.createdAt.atZone(clock.zone).toLocalDate()
+          val createdAtAsDate = it.createdAt.atZone(utcClock.zone).toLocalDate()
           showDateOnUi(createdAtAsDate)
         }
 
@@ -364,7 +366,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           val paddedMm = mm.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
           val paddedYy = yy.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
 
-          val firstTwoDigitsOfYear = LocalDate.now(clock).year.toString().substring(0, 2)
+          val firstTwoDigitsOfYear = LocalDate.now(utcClock).year.toString().substring(0, 2)
           val paddedYyyy = firstTwoDigitsOfYear + paddedYy
           BloodPressureDateChanged(date = "$paddedDd/$paddedMm/$paddedYyyy")
         }
@@ -465,7 +467,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
         .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
         .ofType<SaveBpData.ReadyToCreate>()
         .flatMapSingle { (date, bp, patientUuid) ->
-          val dateAsInstant = date.atTime(OffsetTime.now(clock)).toInstant()
+          val dateAsInstant = date.atTime(OffsetTime.now(utcClock)).toInstant()
           bloodPressureRepository.saveMeasurement(patientUuid, bp.systolic, bp.diastolic, dateAsInstant)
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
@@ -477,7 +479,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           bloodPressureRepository.measurement(existingBpUuid)
               .firstOrError()
               .map { existingBp ->
-                val dateAsInstant = date.atTime(OffsetTime.now(clock)).toInstant()
+                val dateAsInstant = date.atTime(OffsetTime.now(utcClock)).toInstant()
                 existingBp.copy(
                     systolic = updatedBp.systolic,
                     diastolic = updatedBp.diastolic,

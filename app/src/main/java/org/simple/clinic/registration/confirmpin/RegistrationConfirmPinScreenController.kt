@@ -7,8 +7,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ typealias UiChange = (Ui) -> Unit
 
 class RegistrationConfirmPinScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val clock: Clock
+    private val utcClock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -85,7 +85,7 @@ class RegistrationConfirmPinScreenController @Inject constructor(
         .filter { it.valid }
         .flatMap {
           userSession.ongoingRegistrationEntry()
-              .map { entry -> entry.copy(pinConfirmation = it.confirmPin, createdAt = Instant.now(clock)) }
+              .map { entry -> entry.copy(pinConfirmation = it.confirmPin, createdAt = Instant.now(utcClock)) }
               .flatMapCompletable { entry -> userSession.saveOngoingRegistrationEntry(entry) }
               .andThen(Observable.just({ ui: Ui -> ui.openFacilitySelectionScreen() }))
         }

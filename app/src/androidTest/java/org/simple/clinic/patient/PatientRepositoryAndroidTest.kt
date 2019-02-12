@@ -24,13 +24,12 @@ import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.unwrapJust
-import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -70,7 +69,7 @@ class PatientRepositoryAndroidTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var clock: UtcClock
 
   @Inject
   lateinit var configProvider: Single<PatientConfig>
@@ -93,12 +92,12 @@ class PatientRepositoryAndroidTest {
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestClock).setYear(2018)
+    (clock as TestUtcClock).setYear(2018)
   }
 
   @After
   fun tearDown() {
-    (clock as TestClock).resetToEpoch()
+    (clock as TestUtcClock).resetToEpoch()
     reportsRepository.deleteReportsFile().blockingGet()
   }
 
@@ -642,7 +641,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestClock).advanceBy(updatedAfter)
+    (clock as TestUtcClock).advanceBy(updatedAfter)
 
     val oldSavedAddress = patientRepository.address(patient.addressUuid)
         .unwrapJust()
@@ -704,7 +703,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestClock).advanceBy(updatedAfter)
+    (clock as TestUtcClock).advanceBy(updatedAfter)
 
     val newPatientToSave = originalSavedPatient.copy(
         fullName = "New Name",
@@ -762,7 +761,7 @@ class PatientRepositoryAndroidTest {
         .blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestClock).advanceBy(updatedAfter)
+    (clock as TestUtcClock).advanceBy(updatedAfter)
 
     val phoneNumberToUpdate = patientProfile.phoneNumbers[1].copy(number = "12345678", phoneType = PatientPhoneNumberType.LANDLINE)
 
@@ -812,7 +811,7 @@ class PatientRepositoryAndroidTest {
         .blockingAwait()
 
     val updatedAfter = Duration.ofDays(1L)
-    (clock as TestClock).advanceBy(updatedAfter)
+    (clock as TestUtcClock).advanceBy(updatedAfter)
 
     patientRepository.createPhoneNumberForPatient(
         patientUuid = originalSavedPatient.uuid,

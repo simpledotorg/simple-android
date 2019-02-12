@@ -16,8 +16,8 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Allowed
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocked
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
-import org.threeten.bp.Clock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class BruteForceProtectionAndroidTest {
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var clock: UtcClock
 
   @Inject
   lateinit var bruteForceProtection: BruteForceProtection
@@ -42,7 +42,7 @@ class BruteForceProtectionAndroidTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val testClock
-    get() = clock as TestClock
+    get() = clock as TestUtcClock
 
   private val config
     get() = configProvider.blockingGet()

@@ -17,12 +17,12 @@ class TimeFunctionsTest {
   @Test
   @Parameters(method = "params for estimating current age from recorded age")
   fun `estimated ages from recorded age should be calculated properly`(
-      clock: TestClock,
+      utcClock: TestUtcClock,
       recordedAge: Int,
       ageRecordedAt: Instant,
       expectedEstimatedAge: Int
   ) {
-    val estimatedAge = estimateCurrentAge(recordedAge, ageRecordedAt, clock)
+    val estimatedAge = estimateCurrentAge(recordedAge, ageRecordedAt, utcClock)
 
     assertThat(estimatedAge).isEqualTo(expectedEstimatedAge)
   }
@@ -33,9 +33,9 @@ class TimeFunctionsTest {
     val twoYears = Period.ofYears(2)
     val thirtyDays = Period.ofDays(30)
 
-    fun daysBetweenNowAndPeriod(clock: TestClock, period: Period): Duration {
-      val now = LocalDate.now(clock)
-      val then = LocalDate.now(clock).plus(period)
+    fun daysBetweenNowAndPeriod(utcClock: TestUtcClock, period: Period): Duration {
+      val now = LocalDate.now(utcClock)
+      val then = LocalDate.now(utcClock).plus(period)
 
       return Duration.ofDays(ChronoUnit.DAYS.between(now, then))
     }
@@ -47,7 +47,7 @@ class TimeFunctionsTest {
         turnBackAgeRecordedAtBy: Period,
         expectedEstimatedAge: Int
     ): List<Any> {
-      val clock = TestClock()
+      val clock = TestUtcClock()
       clock.setYear(year)
 
       val ageRecordedAt = Instant.now(clock).minus(daysBetweenNowAndPeriod(clock, turnBackAgeRecordedAtBy))
@@ -95,11 +95,11 @@ class TimeFunctionsTest {
   @Test
   @Parameters(method = "params for estimating current age from recorded date of birth")
   fun `estimated ages from recorded date of birth should be calculated properly`(
-      clock: TestClock,
+      utcClock: TestUtcClock,
       recordedDateOfBirth: LocalDate,
       expectedEstimatedAge: Int
   ) {
-    val estimatedAge = estimateCurrentAge(recordedDateOfBirth, clock)
+    val estimatedAge = estimateCurrentAge(recordedDateOfBirth, utcClock)
 
     assertThat(estimatedAge).isEqualTo(estimatedAge)
   }
@@ -109,9 +109,9 @@ class TimeFunctionsTest {
     val twoYears = Period.ofYears(2)
     val thirtyDays = Period.ofDays(30)
 
-    fun daysBetweenNowAndPeriod(clock: TestClock, period: Period): Duration {
-      val now = LocalDate.now(clock)
-      val then = LocalDate.now(clock).plus(period)
+    fun daysBetweenNowAndPeriod(utcClock: TestUtcClock, period: Period): Duration {
+      val now = LocalDate.now(utcClock)
+      val then = LocalDate.now(utcClock).plus(period)
 
       return Duration.ofDays(ChronoUnit.DAYS.between(now, then))
     }
@@ -122,7 +122,7 @@ class TimeFunctionsTest {
         advanceClockBy: Period,
         expectedEstimatedAge: Int
     ): List<Any> {
-      val clock = TestClock()
+      val clock = TestUtcClock()
       clock.setYear(year)
       clock.advanceBy(daysBetweenNowAndPeriod(clock, advanceClockBy))
 

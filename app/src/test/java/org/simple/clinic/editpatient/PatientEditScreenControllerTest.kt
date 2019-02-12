@@ -47,7 +47,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
@@ -69,7 +69,7 @@ class PatientEditScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  val clock: TestClock = TestClock()
+  val utcClock: TestUtcClock = TestUtcClock()
 
   private lateinit var screen: PatientEditScreen
   private lateinit var patientRepository: PatientRepository
@@ -87,12 +87,12 @@ class PatientEditScreenControllerTest {
     numberValidator = mock()
     dobValidator = mock()
 
-    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(clock))
+    whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(utcClock))
 
     controller = PatientEditScreenController(
         patientRepository,
         numberValidator,
-        clock,
+        utcClock,
         dobValidator,
         dateOfBirthFormat)
 
@@ -159,8 +159,8 @@ class PatientEditScreenControllerTest {
     ): List<Any?> {
       val patientToReturn = PatientMocker.patient(age = Age(
           value = age,
-          updatedAt = Instant.now(clock),
-          computedDateOfBirth = LocalDate.now(clock)
+          updatedAt = Instant.now(utcClock),
+          computedDateOfBirth = LocalDate.now(utcClock)
       ), dateOfBirth = null)
       val addressToReturn = PatientMocker.address(uuid = patientToReturn.addressUuid, colonyOrVillage = colonyOrVillage)
       val phoneNumberToReturn = phoneNumber?.let { PatientMocker.phoneNumber(patientUuid = patientToReturn.uuid, number = it) }
@@ -682,7 +682,7 @@ class PatientEditScreenControllerTest {
     whenever(numberValidator.validate(any(), any())).thenReturn(numberValidationResult)
     whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
 
-    clock.advanceBy(advanceClockBy)
+    utcClock.advanceBy(advanceClockBy)
     uiEvents.onNext(PatientEditScreenCreated(existingSavedPatient.uuid))
     inputEvents.forEach { uiEvents.onNext(it) }
     uiEvents.onNext(PatientEditSaveClicked())
@@ -728,7 +728,7 @@ class PatientEditScreenControllerTest {
       val patient = if (shouldHaveAge) {
         PatientMocker.patient(
             uuid = patientUuid,
-            age = Age(value = 20, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
+            age = Age(value = 20, updatedAt = Instant.now(utcClock), computedDateOfBirth = LocalDate.now(utcClock)),
             dateOfBirth = null,
             addressUuid = addressUuid)
 
@@ -736,7 +736,7 @@ class PatientEditScreenControllerTest {
         PatientMocker.patient(
             uuid = patientUuid,
             age = null,
-            dateOfBirth = LocalDate.now(clock),
+            dateOfBirth = LocalDate.now(utcClock),
             addressUuid = addressUuid
         )
       }
@@ -832,7 +832,7 @@ class PatientEditScreenControllerTest {
             createExpectedPatient = {
               val expectedAge = Age(
                   value = 22,
-                  updatedAt = Instant.now(clock).plus(oneYear),
+                  updatedAt = Instant.now(utcClock).plus(oneYear),
                   computedDateOfBirth = LocalDate.parse("1949-01-01"))
 
               it.copy(fullName = "Name", gender = MALE, dateOfBirth = null, age = expectedAge)
@@ -866,7 +866,7 @@ class PatientEditScreenControllerTest {
             createExpectedPatient = {
               val expectedAge = Age(
                   value = 25,
-                  updatedAt = Instant.now(clock),
+                  updatedAt = Instant.now(utcClock),
                   computedDateOfBirth = LocalDate.parse("1945-01-01"))
 
               it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
@@ -911,7 +911,7 @@ class PatientEditScreenControllerTest {
             createExpectedPatient = {
               val expectedAge = Age(
                   value = 25,
-                  updatedAt = Instant.now(clock).plus(twoYears),
+                  updatedAt = Instant.now(utcClock).plus(twoYears),
                   computedDateOfBirth = LocalDate.parse("1947-01-01"))
 
               it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
@@ -1194,7 +1194,7 @@ class PatientEditScreenControllerTest {
 
       }.let { profile ->
         if (ageValue != null) {
-          val age = Age(value = ageValue, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock))
+          val age = Age(value = ageValue, updatedAt = Instant.now(utcClock), computedDateOfBirth = LocalDate.now(utcClock))
           return@let profile.copy(patient = profile.patient.copy(age = age, dateOfBirth = null))
 
         } else if (dateOfBirthString != null) {

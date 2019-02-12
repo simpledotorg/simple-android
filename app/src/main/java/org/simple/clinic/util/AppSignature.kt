@@ -1,8 +1,11 @@
 package org.simple.clinic.util
 
 import android.annotation.SuppressLint
+import android.annotation.TargetApi
 import android.content.Context
 import android.content.pm.PackageManager
+import android.content.pm.Signature
+import android.os.Build
 import android.util.Base64
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
@@ -27,11 +30,31 @@ class AppSignature(private val context: Context) {
   // For each signature create a compatible hash
   val appSignatures by lazy {
     val packageName = context.packageName
+
+    signatures(packageName).joinToString { hash(packageName, it.toCharsString()) }
+  }
+
+  private fun signatures(packageName: String): List<Signature> {
     val packageManager = context.packageManager
 
-    val signatures = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures
+    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      signaturesV28(packageManager, packageName)
+    } else {
+      packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES).signatures.toList()
+    }
+  }
 
-    signatures.joinToString { hash(packageName, it.toCharsString()) }
+  @TargetApi(Build.VERSION_CODES.P)
+  private fun signaturesV28(packageManager: PackageManager, packageName: String): List<Signature> {
+    val signingInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNING_CERTIFICATES).signingInfo
+
+    val signatures = if (signingInfo.hasMultipleSigners()) {
+      signingInfo.apkContentsSigners
+    } else {
+      signingInfo.signingCertificateHistory
+    }
+
+    return signatures.toList()
   }
 
   private fun hash(packageName: String, signature: String): String {

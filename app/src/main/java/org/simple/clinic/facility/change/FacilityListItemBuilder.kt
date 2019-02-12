@@ -13,10 +13,9 @@ object FacilityListItemBuilder {
       userLocation: Coordinates?,
       proximityThreshold: Distance
   ): List<FacilityListItem> {
-    val nearbyFacilities = when {
-      userLocation != null -> facilitiesNearbyUser(facilities, userLocation, proximityThreshold)
-      else -> emptyList()
-    }
+    val nearbyFacilities = userLocation
+        ?.let { facilitiesNearbyUser(facilities, userLocation, proximityThreshold) }
+        ?: emptyList()
 
     // TODO: Generate section headers
     val nearbyFacilityListItems = nearbyFacilities.map { uiModel(it, searchQuery) }
@@ -58,7 +57,7 @@ object FacilityListItemBuilder {
 
     val highlightedName = if (canHighlight) {
       FacilityListItem.Name.Highlighted(
-          name = facility.name,
+          text = facility.name,
           highlightStart = facility.name.indexOf(searchQuery, ignoreCase = true),
           highlightEnd = facility.name.indexOf(searchQuery, ignoreCase = true) + searchQuery.length)
     } else {

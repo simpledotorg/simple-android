@@ -61,13 +61,13 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<Facility>) : ViewHold
     val name = facilityListItem.name
     when (name) {
       is Name.Highlighted -> {
-        val highlightedName = SpannableStringBuilder(name.name)
+        val highlightedName = SpannableStringBuilder(name.text)
         val highlightColor = ContextCompat.getColor(itemView.context, R.color.facility_search_query_highlight)
         highlightedName.setSpan(ForegroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         nameTextView.text = highlightedName
       }
       is Name.Plain -> {
-        nameTextView.text = name.name
+        nameTextView.text = name.text
       }
     }.exhaustive()
 

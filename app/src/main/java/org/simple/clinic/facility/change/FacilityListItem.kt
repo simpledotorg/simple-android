@@ -9,9 +9,9 @@ data class FacilityListItem(
     val address: Address
 ) {
 
-  sealed class Name {
-    data class Highlighted(val name: String, val highlightStart: Int, val highlightEnd: Int) : Name()
-    data class Plain(val name: String) : Name()
+  sealed class Name(open val text: String) {
+    data class Highlighted(override val text: String, val highlightStart: Int, val highlightEnd: Int) : Name(text)
+    data class Plain(override val text: String) : Name(text)
   }
 
   sealed class Address {

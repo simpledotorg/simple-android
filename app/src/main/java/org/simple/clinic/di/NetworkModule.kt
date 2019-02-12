@@ -55,13 +55,14 @@ open class NetworkModule {
   @AppScope
   open fun okHttpClient(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
-      appInfoHttpInterceptor: AppInfoHttpInterceptor
+      appInfoHttpInterceptor: AppInfoHttpInterceptor,
+      networkAnalyticsInterceptor: NetworkAnalyticsInterceptor
   ): OkHttpClient {
     return OkHttpClient.Builder()
         .apply {
           addInterceptor(appInfoHttpInterceptor)
           addInterceptor(loggedInInterceptor)
-          addInterceptor(NetworkAnalyticsInterceptor())
+          addInterceptor(networkAnalyticsInterceptor)
 
           if (BuildConfig.DEBUG) {
             val loggingInterceptor = HttpLoggingInterceptor()

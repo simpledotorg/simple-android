@@ -6,6 +6,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import org.simple.clinic.TestClinicApp.Companion.appComponent
+import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.crash.NoOpCrashReporter
 import org.simple.clinic.di.AppComponent
@@ -116,9 +117,10 @@ class TestClinicApp : ClinicApp() {
         .networkModule(object : NetworkModule() {
           override fun okHttpClient(
               loggedInInterceptor: LoggedInUserHttpInterceptor,
-              appInfoHttpInterceptor: AppInfoHttpInterceptor
+              appInfoHttpInterceptor: AppInfoHttpInterceptor,
+              networkAnalyticsInterceptor: NetworkAnalyticsInterceptor
           ): OkHttpClient {
-            return super.okHttpClient(loggedInInterceptor, appInfoHttpInterceptor)
+            return super.okHttpClient(loggedInInterceptor, appInfoHttpInterceptor, networkAnalyticsInterceptor)
                 .newBuilder()
                 .addInterceptor(FailAllNetworkCallsInterceptor)
                 .build()

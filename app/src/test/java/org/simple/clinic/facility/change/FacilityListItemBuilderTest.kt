@@ -5,7 +5,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.change.FacilityListItem.Address
 import org.simple.clinic.facility.change.FacilityListItem.Name
+import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 
 class FacilityListItemBuilderTest {
@@ -76,5 +78,67 @@ class FacilityListItemBuilderTest {
         address = Address.WithoutStreet(
             district = facilityWithNullStreet.district,
             state = facilityWithNullStreet.state)))
+  }
+
+  @Test
+  fun `when user location is present then facilities nearby user should be correctly identified`() {
+    val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
+
+    val facilities = listOf(
+        PatientMocker.facility(
+            name = "Exactly at proximity threshold",
+            location = Coordinates(latitude = 51.864038, longitude = 17.608030)
+        ),
+        PatientMocker.facility(
+            name = "Within proximity threshold",
+            location = Coordinates(latitude = 51.914804, longitude = 17.649183)
+        ),
+        PatientMocker.facility(
+            name = "Without location",
+            location = null
+        ),
+        PatientMocker.facility(
+            name = "Outside of proximity threshold",
+            location = Coordinates(latitude = userLocation.latitude + 1, longitude = userLocation.longitude + 1)
+        ))
+
+    val searchQuery = "proximity"
+    val proximityThreshold = Distance.ofKilometers(6.703436187871307)
+
+    val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+
+    assertThat(facilityListItems.map { it.name.text }).isEqualTo(listOf(
+        "Within proximity threshold",
+        "Exactly at proximity threshold",
+        "Exactly at proximity threshold",
+        "Within proximity threshold",
+        "Without location",
+        "Outside of proximity threshold"
+    ))
+  }
+
+  @Test
+  fun `when user location is absent then facilities nearby user should be empty`() {
+    val userLocation = null
+
+    val facilities = listOf(
+        PatientMocker.facility(
+            name = "With location",
+            location = Coordinates(latitude = 51.864038, longitude = 17.608030)
+        ),
+        PatientMocker.facility(
+            name = "Without location",
+            location = null
+        ))
+
+    val searchQuery = "with"
+    val proximityThreshold = Distance.ofKilometers(2.0)
+
+    val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+
+    assertThat(facilityListItems.map { it.name.text }).isEqualTo(listOf(
+        "With location",
+        "Without location"
+    ))
   }
 }

@@ -50,7 +50,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   private val configProvider = Single.just(SyncConfig(
       syncInterval = SyncInterval.FREQUENT,
       batchSize = BatchSize.VERY_SMALL,
-      syncGroupId = SyncGroup.FREQUENT))
+      syncGroup = SyncGroup.FREQUENT))
 
   private val authenticationRule = AuthenticationRule()
 

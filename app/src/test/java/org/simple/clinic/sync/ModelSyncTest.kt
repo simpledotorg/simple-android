@@ -37,7 +37,7 @@ class ModelSyncTest {
     SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         batchSize = BatchSize.VERY_SMALL,
-        syncGroupId = SyncGroup.FREQUENT)
+        syncGroup = SyncGroup.FREQUENT)
   }
 
   @Suppress("Unused")

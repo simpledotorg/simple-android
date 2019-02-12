@@ -40,8 +40,8 @@ import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
-import org.threeten.bp.Clock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -77,10 +77,10 @@ class AppointmentRepositoryAndroidTest {
   lateinit var faker: Faker
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var clock: UtcClock
 
-  private val testClock: TestClock
-    get() = clock as TestClock
+  private val testClock: TestUtcClock
+    get() = clock as TestUtcClock
 
   private val authenticationRule = AuthenticationRule()
 

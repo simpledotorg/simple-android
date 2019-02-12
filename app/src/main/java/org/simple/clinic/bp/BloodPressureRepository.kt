@@ -12,7 +12,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.user.UserSession
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -22,14 +22,14 @@ class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val clock: Clock
+    private val utcClock: UtcClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
   fun saveMeasurement(
       patientUuid: UUID,
       systolic: Int,
       diastolic: Int,
-      createdAt: Instant = Instant.now(clock)
+      createdAt: Instant = Instant.now(utcClock)
   ): Single<BloodPressureMeasurement> {
     if (systolic < 0 || diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
@@ -53,7 +53,7 @@ class BloodPressureRepository @Inject constructor(
               facilityUuid = facility.uuid,
               patientUuid = patientUuid,
               createdAt = createdAt,
-              updatedAt = Instant.now(clock),
+              updatedAt = Instant.now(utcClock),
               deletedAt = null)
         }
         .flatMap {
@@ -68,7 +68,7 @@ class BloodPressureRepository @Inject constructor(
   fun updateMeasurement(measurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {
       val updatedMeasurement = measurement.copy(
-          updatedAt = Instant.now(clock),
+          updatedAt = Instant.now(utcClock),
           syncStatus = SyncStatus.PENDING
       )
 
@@ -123,7 +123,7 @@ class BloodPressureRepository @Inject constructor(
 
   fun markBloodPressureAsDeleted(bloodPressureMeasurement: BloodPressureMeasurement): Completable {
     return Completable.fromAction {
-      val now = Instant.now(clock)
+      val now = Instant.now(utcClock)
       val deletedBloodPressureMeasurement = bloodPressureMeasurement.copy(
           updatedAt = now,
           deletedAt = now,

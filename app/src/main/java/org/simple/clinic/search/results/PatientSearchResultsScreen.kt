@@ -17,10 +17,13 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
+import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
@@ -41,7 +44,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   lateinit var controller: PatientSearchResultsController
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var utcClock: UtcClock
 
   private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsearchresults_results)
@@ -101,7 +104,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(utcClock)))
   }
 
   fun openPatientEntryScreen() {

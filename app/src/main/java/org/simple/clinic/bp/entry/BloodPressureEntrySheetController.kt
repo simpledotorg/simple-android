@@ -18,16 +18,16 @@ import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.E
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_HIGH
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.ERROR_SYSTOLIC_TOO_LOW
 import org.simple.clinic.bp.entry.BloodPressureEntrySheetController.Validation.SUCCESS
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import javax.inject.Inject
 
 @Deprecated(message = "Use BloodPressureEntrySheetControllerV2 instead")
 class BloodPressureEntrySheetController @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
-    private val clock: Clock
+    private val utcClock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -181,7 +181,7 @@ class BloodPressureEntrySheetController @Inject constructor(
                   patientUuid = patientId,
                   systolic = systolic.toInt(),
                   diastolic = diastolic.toInt(),
-                  createdAt = Instant.now(clock)
+                  createdAt = Instant.now(utcClock)
               )
         }
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }

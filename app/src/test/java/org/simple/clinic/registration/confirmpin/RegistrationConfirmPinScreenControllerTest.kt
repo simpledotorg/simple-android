@@ -18,7 +18,7 @@ import org.junit.Test
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -31,7 +31,7 @@ class RegistrationConfirmPinScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()!!
   private val screen = mock<RegistrationConfirmPinScreen>()
   private val userSession = mock<UserSession>()
-  private val clock = TestClock()
+  private val clock = TestUtcClock()
 
   private lateinit var controller: RegistrationConfirmPinScreenController
 

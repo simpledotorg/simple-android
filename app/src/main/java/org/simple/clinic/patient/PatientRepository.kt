@@ -19,6 +19,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
@@ -39,11 +40,11 @@ class PatientRepository @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
-    private val clock: Clock,
-    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter,
+    private val utcClock: UtcClock,
     private val searchPatientByName: SearchPatientByName,
     private val configProvider: Single<PatientConfig>,
-    private val reportsRepository: ReportsRepository
+    private val reportsRepository: ReportsRepository,
+    @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
@@ -210,8 +211,8 @@ class PatientRepository @Inject constructor(
                 colonyOrVillage = address!!.colonyOrVillage,
                 district = address.district,
                 state = address.state,
-                createdAt = Instant.now(clock),
-                updatedAt = Instant.now(clock),
+                createdAt = Instant.now(utcClock),
+                updatedAt = Instant.now(utcClock),
                 deletedAt = null)
           }
         }
@@ -231,14 +232,14 @@ class PatientRepository @Inject constructor(
                 dateOfBirth = convertToDate(personalDetails.dateOfBirth),
                 age = personalDetails.age?.let {
                   Age(value = personalDetails.age.toInt(),
-                      updatedAt = Instant.now(clock),
-                      computedDateOfBirth = LocalDate.now(clock).minusYears(personalDetails.age.toLong()))
+                      updatedAt = Instant.now(utcClock),
+                      computedDateOfBirth = LocalDate.now(utcClock).minusYears(personalDetails.age.toLong()))
                 },
 
                 status = PatientStatus.ACTIVE,
 
-                createdAt = Instant.now(clock),
-                updatedAt = Instant.now(clock),
+                createdAt = Instant.now(utcClock),
+                updatedAt = Instant.now(utcClock),
                 deletedAt = null,
                 syncStatus = PENDING)
           }
@@ -260,8 +261,8 @@ class PatientRepository @Inject constructor(
                   number = number,
                   phoneType = type,
                   active = active,
-                  createdAt = Instant.now(clock),
-                  updatedAt = Instant.now(clock),
+                  createdAt = Instant.now(utcClock),
+                  updatedAt = Instant.now(utcClock),
                   deletedAt = null)
             }
             savePhoneNumber(number)
@@ -279,7 +280,7 @@ class PatientRepository @Inject constructor(
     return Completable.fromAction {
       val patientToSave = patient.copy(
           searchableName = nameToSearchableForm(patient.fullName),
-          updatedAt = Instant.now(clock),
+          updatedAt = Instant.now(utcClock),
           syncStatus = PENDING
       )
       database.patientDao().save(patientToSave)
@@ -289,7 +290,7 @@ class PatientRepository @Inject constructor(
   fun updateAddressForPatient(patientUuid: UUID, patientAddress: PatientAddress): Completable {
     return Completable
         .fromAction {
-          val updatedPatientAddress = patientAddress.copy(updatedAt = Instant.now(clock))
+          val updatedPatientAddress = patientAddress.copy(updatedAt = Instant.now(utcClock))
           database.addressDao().save(updatedPatientAddress)
         }
         .andThen(Completable.fromAction {
@@ -298,7 +299,7 @@ class PatientRepository @Inject constructor(
   }
 
   fun updatePhoneNumberForPatient(patientUuid: UUID, phoneNumber: PatientPhoneNumber): Completable {
-    return savePhoneNumber(phoneNumber.copy(updatedAt = Instant.now(clock)))
+    return savePhoneNumber(phoneNumber.copy(updatedAt = Instant.now(utcClock)))
         .andThen(Completable.fromAction {
           database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
         })
@@ -307,7 +308,7 @@ class PatientRepository @Inject constructor(
   fun createPhoneNumberForPatient(patientUuid: UUID, number: String, phoneNumberType: PatientPhoneNumberType, active: Boolean): Completable {
     return Single
         .fromCallable {
-          val now = Instant.now(clock)
+          val now = Instant.now(utcClock)
 
           PatientPhoneNumber(
               uuid = UUID.randomUUID(),

@@ -31,7 +31,8 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Clock
 import timber.log.Timber
 import java.util.UUID
@@ -67,15 +68,15 @@ class TestClinicApp : ClinicApp() {
     // but we still have to provide a non-empty name for Room, otherwise it complains.
     return DaggerTestAppComponent.builder()
         .appModule(object : AppModule(this) {
-          override fun clock(): Clock = TestClock()
+          override fun utcClock(): UtcClock = TestUtcClock()
         })
         .storageModule(object : StorageModule(databaseName = "ignored", runDatabaseQueriesOnMainThread = true) {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
         })
         .patientModule(object : PatientModule() {
-          override fun provideAgeFuzzer(clock: Clock): AgeFuzzer {
+          override fun provideAgeFuzzer(utcClock: UtcClock): AgeFuzzer {
             val numberOfYearsToFuzzBy = 5
-            return AbsoluteFuzzer(clock, numberOfYearsToFuzzBy)
+            return AbsoluteFuzzer(utcClock, numberOfYearsToFuzzBy)
           }
 
           override fun provideFilterPatientByName(): SearchPatientByName {

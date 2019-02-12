@@ -1,17 +1,18 @@
 package org.simple.clinic.search.results
 
 import android.content.res.Resources
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
@@ -22,8 +23,8 @@ import javax.inject.Named
 
 class PatientSearchResultsAdapter @Inject constructor(
     private val phoneObfuscator: PhoneNumberObfuscator,
-    @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter,
-    private val clock: Clock
+    private val utcClock: UtcClock,
+    @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter
 ) : RecyclerView.Adapter<PatientSearchResultsAdapter.ViewHolder>() {
 
   val itemClicks: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
@@ -46,7 +47,7 @@ class PatientSearchResultsAdapter @Inject constructor(
 
   override fun onBindViewHolder(holder: ViewHolder, position: Int) {
     holder.searchResult = patients[position]
-    holder.render(phoneObfuscator, currentFacility, dateOfBirthFormatter, clock)
+    holder.render(phoneObfuscator, currentFacility, dateOfBirthFormatter, utcClock)
   }
 
   override fun getItemCount(): Int {

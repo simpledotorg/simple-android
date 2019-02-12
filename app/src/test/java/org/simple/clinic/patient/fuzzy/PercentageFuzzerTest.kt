@@ -6,13 +6,13 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.LocalDate
 
 @RunWith(JUnitParamsRunner::class)
 class PercentageFuzzerTest {
 
-  private val clock = TestClock()
+  private val clock = TestUtcClock()
 
   @Before
   fun setUp() {

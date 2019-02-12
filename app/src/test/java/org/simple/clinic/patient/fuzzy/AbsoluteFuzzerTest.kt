@@ -6,18 +6,17 @@ import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.LocalDate
-import java.lang.AssertionError
 
 @RunWith(JUnitParamsRunner::class)
 class AbsoluteFuzzerTest {
 
-  private val clock = TestClock()
+  private val testClock = TestUtcClock()
 
   @Before
   fun setUp() {
-    clock.setYear(2000)
+    testClock.setYear(2000)
   }
 
   @Test
@@ -34,7 +33,7 @@ class AbsoluteFuzzerTest {
   ) {
     val (expectedLowerDate, expectedUpperDate) = BoundedAge(lower = LocalDate.parse(expectedLower), upper = LocalDate.parse(expectedUpper))
 
-    val fuzzer = AbsoluteFuzzer(clock, fuzziness)
+    val fuzzer = AbsoluteFuzzer(testClock, fuzziness)
     val (lowerDate, upperDate) = fuzzer.bounded(age)
 
     assertThat(lowerDate).isEqualTo(expectedLowerDate)
@@ -51,7 +50,7 @@ class AbsoluteFuzzerTest {
       age: Int,
       fuzziness: Int
   ) {
-    val fuzzer = AbsoluteFuzzer(clock, fuzziness)
+    val fuzzer = AbsoluteFuzzer(testClock, fuzziness)
     fuzzer.bounded(age)
   }
 }

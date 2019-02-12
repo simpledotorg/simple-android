@@ -8,13 +8,13 @@ import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.PercentageFuzzer
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 
 @Module
 open class PatientModule {
 
   @Provides
-  open fun provideAgeFuzzer(clock: Clock): AgeFuzzer = PercentageFuzzer(clock = clock, fuzziness = 0.2F)
+  open fun provideAgeFuzzer(utcClock: UtcClock): AgeFuzzer = PercentageFuzzer(utcClock = utcClock, fuzziness = 0.2F)
 
   @Provides
   open fun provideFilterPatientByName(): SearchPatientByName = WeightedLevenshteinSearch(

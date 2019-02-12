@@ -22,11 +22,12 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -40,7 +41,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
   lateinit var screenRouter: ScreenRouter
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var utcClock: UtcClock
 
   private val toolbar by bindView<Toolbar>(R.id.newmedicalhistory_toolbar)
   private val diagnosedForHypertensionQuestionView by bindView<MedicalHistoryQuestionView>(R.id.newmedicalhistory_question_diagnosed_for_hypertension)
@@ -105,7 +106,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
           .map { SaveMedicalHistoryClicked() }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(utcClock)))
   }
 
   fun setPatientName(patientName: String) {

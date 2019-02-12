@@ -16,8 +16,8 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
-import org.threeten.bp.Clock
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -27,7 +27,7 @@ import javax.inject.Inject
 class PrescriptionRepositoryAndroidTest {
 
   @Inject
-  lateinit var clock: Clock
+  lateinit var clock: UtcClock
 
   @Inject
   lateinit var database: AppDatabase
@@ -53,18 +53,18 @@ class PrescriptionRepositoryAndroidTest {
       .outerRule(authenticationRule)
       .around(rxErrorsRule)!!
 
-  private val testClock: TestClock
-    get() = clock as TestClock
+  private val testUtcClock: TestUtcClock
+    get() = clock as TestUtcClock
 
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestClock).setYear(2000)
+    (clock as TestUtcClock).setYear(2000)
   }
 
   @After
   fun tearDown() {
-    (clock as TestClock).resetToEpoch()
+    (clock as TestUtcClock).resetToEpoch()
   }
 
   @Test
@@ -139,7 +139,7 @@ class PrescriptionRepositoryAndroidTest {
     val correctedPrescription = prescription.copy(name = "Amlodipine")
 
     val durationToAdvanceBy = Duration.ofMinutes(15L)
-    testClock.advanceBy(durationToAdvanceBy)
+    testUtcClock.advanceBy(durationToAdvanceBy)
 
     repository.updatePrescription(correctedPrescription).blockingAwait()
 

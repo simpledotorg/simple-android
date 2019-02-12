@@ -11,8 +11,8 @@ import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
@@ -24,7 +24,7 @@ typealias UiChange = (Ui) -> Unit
 class PinEntryCardController @Inject constructor(
     private val userSession: UserSession,
     private val passwordHasher: PasswordHasher,
-    private val clock: Clock,
+    private val utcClock: UtcClock,
     private val bruteForceProtection: BruteForceProtection
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -110,7 +110,7 @@ class PinEntryCardController @Inject constructor(
   }
 
   private fun formatTimeRemainingTill(futureTime: Instant): TimerDuration {
-    val secondsRemaining = futureTime.epochSecond - Instant.now(clock).epochSecond
+    val secondsRemaining = futureTime.epochSecond - Instant.now(utcClock).epochSecond
     val secondsPerHour = Duration.ofHours(1).seconds
     val secondsPerMinute = Duration.ofMinutes(1).seconds
 

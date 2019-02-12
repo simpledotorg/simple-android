@@ -25,7 +25,7 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -43,7 +43,7 @@ class  PinEntryCardControllerTest {
 
   private lateinit var controller: PinEntryCardController
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val clock = TestClock()
+  private val clock = TestUtcClock()
   private val loggedInUser = PatientMocker.loggedInUser()
 
   @Before

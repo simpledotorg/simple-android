@@ -13,7 +13,7 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestClock
+import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 
@@ -22,7 +22,7 @@ class BruteForceProtectionTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val clock = TestClock()
+  private val clock = TestUtcClock()
   private val state = mock<Preference<BruteForceProtectionState>>()
   private lateinit var config: BruteForceProtectionConfig
 

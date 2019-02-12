@@ -1,13 +1,13 @@
 package org.simple.clinic.patient.fuzzy
 
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.LocalDate
 import kotlin.math.floor
 
 /**
  * This fuzzes age by a percentage of the passed in age.
  **/
-class PercentageFuzzer(private val clock: Clock, private val fuzziness: Float) : AgeFuzzer {
+class PercentageFuzzer(private val utcClock: UtcClock, private val fuzziness: Float) : AgeFuzzer {
 
   init {
     if (fuzziness < 0F) {
@@ -24,7 +24,7 @@ class PercentageFuzzer(private val clock: Clock, private val fuzziness: Float) :
     if (age <= 0) {
       throw AssertionError("Age cannot be negative or zero")
     }
-    val dateToFuzz = LocalDate.now(clock).minusYears(age.toLong())
+    val dateToFuzz = LocalDate.now(utcClock).minusYears(age.toLong())
 
     val ageDelta = age * fuzziness
 

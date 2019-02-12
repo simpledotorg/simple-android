@@ -41,7 +41,7 @@ class SyncModule {
     return Single.just(SyncConfig(
         syncInterval = SyncInterval.FREQUENT,
         batchSize = BatchSize.MEDIUM,
-        syncGroupId = SyncGroup.FREQUENT))
+        syncGroup = SyncGroup.FREQUENT))
   }
 
   @Provides
@@ -50,7 +50,7 @@ class SyncModule {
     return Single.just(SyncConfig(
         syncInterval = SyncInterval.DAILY,
         batchSize = BatchSize.MEDIUM,
-        syncGroupId = SyncGroup.DAILY))
+        syncGroup = SyncGroup.DAILY))
   }
 
   @Provides

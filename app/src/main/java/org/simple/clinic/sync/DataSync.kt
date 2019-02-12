@@ -19,17 +19,17 @@ class DataSync @Inject constructor(
 
   private val syncResults = PublishSubject.create<Pair<SyncGroup, SyncGroupResult>>()
 
-  fun sync(syncGroupId: SyncGroup?): Completable {
-    return if (syncGroupId == null) {
+  fun sync(syncGroup: SyncGroup?): Completable {
+    return if (syncGroup == null) {
       val allSyncGroups = SyncGroup.values()
       Completable.merge(allSyncGroups.map { syncGroup(it) })
     } else {
-      syncGroup(syncGroupId)
+      syncGroup(syncGroup)
     }
   }
 
-  private fun syncGroup(syncGroupId: SyncGroup): Completable {
-    syncResults.onNext(Pair(syncGroupId, SyncGroupResult.SYNCING))
+  private fun syncGroup(syncGroup: SyncGroup): Completable {
+    syncResults.onNext(Pair(syncGroup, SyncGroupResult.SYNCING))
 
     return Observable
         .fromIterable(modelSyncs)
@@ -38,18 +38,18 @@ class DataSync @Inject constructor(
               .syncConfig()
               .map { config -> config to modelSync }
         }
-        .filter { (config, _) -> config.syncGroupId == syncGroupId }
+        .filter { (config, _) -> config.syncGroup == syncGroup }
         .map { (_, modelSync) -> modelSync.sync() }
         .toList()
-        .flatMapCompletable { runAndSwallowErrors(it, syncGroupId) }
+        .flatMapCompletable { runAndSwallowErrors(it, syncGroup) }
   }
 
-  private fun runAndSwallowErrors(completables: List<Completable>, syncGroupId: SyncGroup): Completable {
+  private fun runAndSwallowErrors(completables: List<Completable>, syncGroup: SyncGroup): Completable {
     return Completable
         .mergeDelayError(completables)
-        .doOnComplete { syncResults.onNext(Pair(syncGroupId, SyncGroupResult.SUCCESS)) }
+        .doOnComplete { syncResults.onNext(Pair(syncGroup, SyncGroupResult.SUCCESS)) }
         .doOnError {
-          syncResults.onNext(Pair(syncGroupId, SyncGroupResult.FAILURE))
+          syncResults.onNext(Pair(syncGroup, SyncGroupResult.FAILURE))
           logError()
         }
         .onErrorComplete()

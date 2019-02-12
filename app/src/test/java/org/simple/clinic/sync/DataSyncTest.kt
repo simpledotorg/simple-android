@@ -72,7 +72,7 @@ class DataSyncTest {
       Single.just(SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
           batchSize = BatchSize.VERY_SMALL,
-          syncGroupId = syncGroup))
+          syncGroup = syncGroup))
 
 
   @Test
@@ -82,7 +82,7 @@ class DataSyncTest {
       val syncConfig = SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
           batchSize = BatchSize.VERY_SMALL,
-          syncGroupId = syncGroup)
+          syncGroup = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
       whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
 
@@ -119,7 +119,7 @@ class DataSyncTest {
       val syncConfig = SyncConfig(
           syncInterval = SyncInterval.FREQUENT,
           batchSize = BatchSize.VERY_SMALL,
-          syncGroupId = syncGroup)
+          syncGroup = syncGroup)
       whenever(modelSync.sync()).thenReturn(syncOperation)
       whenever(modelSync.syncConfig()).thenReturn(Single.just(syncConfig))
 

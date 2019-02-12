@@ -69,4 +69,6 @@ class DataSync @Inject constructor(
       }
     }.exhaustive()
   }
+
+  fun streamSyncResults(): Observable<Pair<SyncGroup, SyncGroupResult>> = syncResults
 }

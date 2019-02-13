@@ -17,7 +17,7 @@ class DataSync @Inject constructor(
     private val crashReporter: CrashReporter
 ) {
 
-  private val syncProgress = PublishSubject.create<Pair<SyncGroup, SyncProgress>>()
+  private val syncProgress = PublishSubject.create<SyncGroupResult>()
 
   fun sync(syncGroup: SyncGroup?): Completable {
     return if (syncGroup == null) {
@@ -40,14 +40,14 @@ class DataSync @Inject constructor(
         .map { (_, modelSync) -> modelSync.sync() }
         .toList()
         .flatMapCompletable { runAndSwallowErrors(it, syncGroup) }
-        .doOnSubscribe { syncProgress.onNext(Pair(syncGroup, SyncProgress.SYNCING)) }
+        .doOnSubscribe { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SYNCING)) }
   }
 
   private fun runAndSwallowErrors(completables: List<Completable>, syncGroup: SyncGroup): Completable {
     return Completable
         .mergeDelayError(completables)
-        .doOnComplete { syncProgress.onNext(Pair(syncGroup, SyncProgress.SUCCESS)) }
-        .doOnError { syncProgress.onNext(Pair(syncGroup, SyncProgress.FAILURE)) }
+        .doOnComplete { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.SUCCESS)) }
+        .doOnError { syncProgress.onNext(SyncGroupResult(syncGroup, SyncProgress.FAILURE)) }
         .doOnError(logError())
         .onErrorComplete()
   }
@@ -67,5 +67,8 @@ class DataSync @Inject constructor(
     }.exhaustive()
   }
 
-  fun streamSyncResults(): Observable<Pair<SyncGroup, SyncProgress>> = syncProgress
+  fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
+
+  data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
+
 }

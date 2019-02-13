@@ -16,6 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.DataSync.*
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.Just
@@ -53,7 +54,7 @@ class SyncIndicatorStatusCalculatorTest {
     "FREQUENT|SYNCING"
   ])
   fun `when a frequent sync group is synced successfully, the preferences should be set`(syncGroup: SyncGroup, syncProgress: SyncProgress) {
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(Pair(syncGroup, syncProgress)))
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(syncGroup, syncProgress)))
     syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncTimestampPreference, syncResultPreference)
 
     when (syncGroup) {

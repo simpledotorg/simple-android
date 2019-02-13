@@ -372,7 +372,7 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
           val paddedMm = mm.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
           val paddedYy = yy.padStart(length = 2, padChar = inputDatePaddingCharacter.value)
 
-          val firstTwoDigitsOfYear = LocalDate.now(utcClock).year.toString().substring(0, 2)
+          val firstTwoDigitsOfYear = LocalDate.now(userClock).year.toString().substring(0, 2)
           val paddedYyyy = firstTwoDigitsOfYear + paddedYy
           BloodPressureDateChanged(date = "$paddedDd/$paddedMm/$paddedYyyy")
         }

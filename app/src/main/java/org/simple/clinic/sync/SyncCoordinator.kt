@@ -16,36 +16,20 @@ class SyncCoordinator @Inject constructor() {
   fun <T : Any, P> push(
       repository: SynceableRepository<T, P>,
       pushNetworkCall: (List<T>) -> Single<DataPushResponse>
-  ): Completable {
-    val recoverStuckRecordsFromPreviousSync = repository.setSyncStatus(SyncStatus.IN_FLIGHT, SyncStatus.PENDING)
-
-    val cachedPendingSyncRecords = repository.recordsWithSyncStatus(SyncStatus.PENDING)
-        .toObservable()
-        .filter { it.isNotEmpty() }
-        .cache()
-
-    val markAsInFlight = cachedPendingSyncRecords
-        .flatMapCompletable {
-          repository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.IN_FLIGHT)
-        }
-
-    val sendRecords = cachedPendingSyncRecords
-        .flatMapSingle { pushNetworkCall(it).doOnSuccess(logValidationErrorsIfAny(it)) }
-        .map { it.validationErrors }
-        .map { errors -> errors.map { it.uuid } }
-        .flatMapCompletable { recordIdsWithErrors ->
-          repository
-              .setSyncStatus(from = SyncStatus.IN_FLIGHT, to = SyncStatus.DONE)
-              .andThen(when {
-                recordIdsWithErrors.isEmpty() -> Completable.complete()
-                else -> repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
-              })
-        }
-
-    return recoverStuckRecordsFromPreviousSync
-        .andThen(markAsInFlight)
-        .andThen(sendRecords)
-  }
+  ): Completable = repository
+      .recordsWithSyncStatus(SyncStatus.PENDING)
+      .filter { it.isNotEmpty() }
+      .flatMapSingleElement { pushNetworkCall(it).doOnSuccess(logValidationErrorsIfAny(it)) }
+      .map { it.validationErrors }
+      .map { errors -> errors.map { it.uuid } }
+      .flatMapCompletable { recordIdsWithErrors ->
+        repository
+            .setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE)
+            .andThen(when {
+              recordIdsWithErrors.isEmpty() -> Completable.complete()
+              else -> repository.setSyncStatus(recordIdsWithErrors, SyncStatus.INVALID)
+            })
+      }
 
   private fun <T : Any> logValidationErrorsIfAny(records: List<T>): Consumer<in DataPushResponse> {
     return Consumer { response ->

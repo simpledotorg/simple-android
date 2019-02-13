@@ -9,7 +9,6 @@ import org.junit.Test
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
-import org.simple.clinic.patient.SyncStatus.IN_FLIGHT
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -57,33 +56,6 @@ abstract class BaseSyncCoordinatorAndroidTest<T, P> {
 
     val recordCountAfterPull = repository().recordCount().blockingFirst()
     assertThat(recordCountAfterPull).isAtLeast(recordsToInsert)
-  }
-
-  @Test(expected = FailAllNetworkCallsInterceptor.ForcedException::class)
-  fun before_starting_a_push_records_that_are_stuck_in_IN_FLIGHT_from_a_previous_sync_should_be_marked_as_PENDING_again() {
-    if (isPushEnabled().not()) {
-      return
-    }
-
-    FailAllNetworkCallsInterceptor.shouldFailAll = true
-
-    val repository = repository()
-    val records = (0 until 5).map { generateRecord(PENDING) }
-
-    repository.save(records)
-        .andThen(push())
-        .blockingAwait()
-
-    assertThat(recordsWithSyncStatus(IN_FLIGHT)).hasSize(records.size)
-    assertThat(recordsWithSyncStatus(PENDING)).hasSize(0)
-    assertThat(recordsWithSyncStatus(DONE)).hasSize(0)
-
-    FailAllNetworkCallsInterceptor.shouldFailAll = false
-    push().blockingAwait()
-
-    assertThat(recordsWithSyncStatus(IN_FLIGHT)).hasSize(0)
-    assertThat(recordsWithSyncStatus(PENDING)).hasSize(0)
-    assertThat(recordsWithSyncStatus(DONE)).hasSize(records.size)
   }
 
   private fun recordsWithSyncStatus(status: SyncStatus) = repository().recordsWithSyncStatus(status).blockingGet()

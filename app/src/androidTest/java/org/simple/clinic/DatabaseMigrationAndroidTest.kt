@@ -861,11 +861,481 @@ class DatabaseMigrationAndroidTest {
 
     assertThat(lastFacilityPullToken.get()).isEqualTo(None)
   }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_Patient() {
+    val tableName = "Patient"
+    val columnCount = 14
+
+    val db_v28 = helper.createDatabase(version = 28)
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
+
+    val addressUuid = "ddb15d83-f390-4f6b-96c5-b2f5064cae6d"
+
+    db_v28.execSQL("""
+      INSERT INTO "PatientAddress" VALUES(
+        '$addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "Patient" VALUES(
+        'patientUuid',
+        '$addressUuid',
+        'Ash Kumari',
+        'AshokKumar',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'IN_FLIGHT',
+        25,
+        '2018-09-25T11:20:42.008Z',
+        '1995-09-25');
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "Patient" VALUES(
+        'patientUuid2',
+        '$addressUuid',
+        'Ash Kumari',
+        'AshokKumar',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'DONE',
+        25,
+        '2018-09-25T11:20:42.008Z',
+        '1995-09-25');
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(columnCount)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_BloodPressureMeasurement() {
+    val db_v28 = helper.createDatabase(version = 28)
+    val tableName = "BloodPressureMeasurement"
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = 10)
+
+    db_v28.execSQL("""
+      INSERT INTO "$tableName" VALUES(
+        'uuid',
+        120,
+        110,
+        'IN_FLIGHT',
+        'userUuid',
+        'facilityUuid',
+        'patientUuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "$tableName" VALUES(
+        'uuid2',
+        120,
+        110,
+        'DONE',
+        'userUuid',
+        'facilityUuid',
+        'patientUuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(10)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_PrescribedDrug() {
+    val db_v28 = helper.createDatabase(version = 28)
+    val tableName = "PrescribedDrug"
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = 12)
+
+    db_v28.execSQL("""
+      INSERT INTO "PrescribedDrug" VALUES(
+        'uuid',
+        'Drug name',
+        'Dosage',
+        'rxNormCode',
+        0,
+        1,
+        'patientUuid',
+        'facilityUuid',
+        'IN_FLIGHT',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "PrescribedDrug" VALUES(
+        'uuid2',
+        'Drug name',
+        'Dosage',
+        'rxNormCode',
+        0,
+        1,
+        'patientUuid',
+        'facilityUuid',
+        'DONE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z')
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(12)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_Facility() {
+    val db_v28 = helper.createDatabase(version = 28)
+    db_v28.assertColumnCount(tableName = "Facility", expectedCount = 17)
+
+    db_v28.execSQL("""
+      INSERT INTO "Facility" VALUES (
+        'facility-uuid',
+        'facility-name',
+        'facility-type',
+        'street-address',
+        'village-or-colony',
+        'district',
+        'state',
+        'country',
+        'pin code',
+        'protocol-uuid',
+        'group-uuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'IN_FLIGHT',
+        '2018-09-25T11:20:42.008Z',
+        0.0,
+        1.0)
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "Facility" VALUES (
+        'facility-uuid2',
+        'facility-name',
+        'facility-type',
+        'street-address',
+        'village-or-colony',
+        'district',
+        'state',
+        'country',
+        'pin code',
+        'protocol-uuid',
+        'group-uuid',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'DONE',
+        '2018-09-25T11:20:42.008Z',
+        0.0,
+        1.0)
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM Facility""").use {
+      assertThat(it.columnCount).isEqualTo(17)
+
+      it.moveToNext()
+
+      assertThat(it.string("uuid")).isEqualTo("facility-uuid")
+      assertThat(it.string("name")).isEqualTo("facility-name")
+      assertThat(it.string("facilityType")).isEqualTo("facility-type")
+      assertThat(it.string("streetAddress")).isEqualTo("street-address")
+      assertThat(it.string("villageOrColony")).isEqualTo("village-or-colony")
+      assertThat(it.string("district")).isEqualTo("district")
+      assertThat(it.string("state")).isEqualTo("state")
+      assertThat(it.string("country")).isEqualTo("country")
+      assertThat(it.string("pinCode")).isEqualTo("pin code")
+      assertThat(it.string("protocolUuid")).isEqualTo("protocol-uuid")
+      assertThat(it.string("groupUuid")).isEqualTo("group-uuid")
+      assertThat(it.string("createdAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("updatedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+      assertThat(it.string("deletedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.double("location_latitude")).isEqualTo(0.0)
+      assertThat(it.double("location_longitude")).isEqualTo(1.0)
+
+      it.moveToNext()
+
+      assertThat(it.string("uuid")).isEqualTo("facility-uuid2")
+      assertThat(it.string("name")).isEqualTo("facility-name")
+      assertThat(it.string("facilityType")).isEqualTo("facility-type")
+      assertThat(it.string("streetAddress")).isEqualTo("street-address")
+      assertThat(it.string("villageOrColony")).isEqualTo("village-or-colony")
+      assertThat(it.string("district")).isEqualTo("district")
+      assertThat(it.string("state")).isEqualTo("state")
+      assertThat(it.string("country")).isEqualTo("country")
+      assertThat(it.string("pinCode")).isEqualTo("pin code")
+      assertThat(it.string("protocolUuid")).isEqualTo("protocol-uuid")
+      assertThat(it.string("groupUuid")).isEqualTo("group-uuid")
+      assertThat(it.string("createdAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("updatedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+      assertThat(it.string("deletedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.double("location_latitude")).isEqualTo(0.0)
+      assertThat(it.double("location_longitude")).isEqualTo(1.0)
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_Appointment() {
+    val tableName = "Appointment"
+    val columnCount = 12
+
+    val db_v28 = helper.createDatabase(version = 28)
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
+
+    db_v28.execSQL("""
+      INSERT INTO "Appointment" VALUES (
+        'uuid',
+        'patientUuid',
+        'facility-uuid',
+        'scheduled-date',
+        'status',
+        'reason',
+        'remind-on',
+        1,
+        'IN_FLIGHT',
+        'created-at',
+        'updated-at',
+        'deleted-at'
+      )
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "Appointment" VALUES (
+        'uuid2',
+        'patientUuid',
+        'facility-uuid',
+        'scheduled-date',
+        'status',
+        'reason',
+        'remind-on',
+        1,
+        'DONE',
+        'created-at',
+        'updated-at',
+        'deleted-at'
+      )
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(columnCount)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_Communication() {
+    val tableName = "Communication"
+    val columnCount = 9
+
+    val db_v28 = helper.createDatabase(version = 28)
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
+
+    db_v28.execSQL("""
+      INSERT INTO "Communication" VALUES (
+        'uuid',
+        'c6834f82-3305-4144-9dc8-5f77c908ebf1',
+        'c64f76b5-0d37-46e2-9426-554e4f809498',
+        'MANUAL_CALL',
+        'AGREED_TO_VISIT',
+        'IN_FLIGHT',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z');
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "Communication" VALUES (
+        'uuid2',
+        'c6834f82-3305-4144-9dc8-5f77c908ebf1',
+        'c64f76b5-0d37-46e2-9426-554e4f809498',
+        'MANUAL_CALL',
+        'AGREED_TO_VISIT',
+        'DONE',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z',
+        '2018-06-21T10:15:58.666Z');
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(columnCount)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_MedicalHistory() {
+    val tableName = "MedicalHistory"
+    val columnCount = 12
+
+    val db_v28 = helper.createDatabase(version = 28)
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
+
+    db_v28.execSQL("""
+      INSERT INTO "MedicalHistory" VALUES(
+        'uuid',
+        'patientUuid',
+        'yes',
+        'yes',
+        'yes',
+        'yes',
+        'yes',
+        'yes',
+        'IN_FLIGHT',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z'
+      )
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "MedicalHistory" VALUES(
+        'uuid2',
+        'patientUuid',
+        'yes',
+        'yes',
+        'yes',
+        'yes',
+        'yes',
+        'yes',
+        'DONE',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z'
+      )
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(columnCount)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
+
+  @Test
+  fun migration_28_to_29_verify_syncStatus_updated_for_Protocol() {
+    val tableName = "Protocol"
+    val columnCount = 7
+
+    val db_v28 = helper.createDatabase(version = 28)
+    db_v28.assertColumnCount(tableName = tableName, expectedCount = columnCount)
+
+    db_v28.execSQL("""
+      INSERT INTO "Protocol" VALUES(
+      'protocolUuid',
+      'protocol-1',
+      '0',
+      'created-at',
+      'updated-at',
+      'IN_FLIGHT',
+      'null')
+    """)
+
+    db_v28.execSQL("""
+      INSERT INTO "Protocol" VALUES(
+      'protocolUuid2',
+      'protocol-1',
+      '0',
+      'created-at',
+      'updated-at',
+      'DONE',
+      'null')
+    """)
+
+    val db_v29 = helper.migrateTo(29)
+    db_v29.query("""SELECT * FROM $tableName""").use {
+      assertThat(it.columnCount).isEqualTo(columnCount)
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+
+      it.moveToNext()
+
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+    }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
 private fun Cursor.boolean(column: String): Boolean? = getInt(getColumnIndex(column)) == 1
 private fun Cursor.integer(columnName: String): Int? = getInt(getColumnIndex(columnName))
+private fun Cursor.double(columnName: String): Double = getDouble(getColumnIndex(columnName))
 
 private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedCount: Int) {
   this.query("""

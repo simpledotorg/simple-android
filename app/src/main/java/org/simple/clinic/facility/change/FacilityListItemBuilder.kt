@@ -1,6 +1,7 @@
 package org.simple.clinic.facility.change
 
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.Haversine
@@ -12,7 +13,7 @@ object FacilityListItemBuilder {
       searchQuery: String,
       userLocation: Coordinates?,
       proximityThreshold: Distance
-  ): List<FacilityListItem> {
+  ): List<FacilityOption> {
     val nearbyFacilities = userLocation
         ?.let { facilitiesNearbyUser(facilities, userLocation, proximityThreshold) }
         ?: emptyList()
@@ -27,7 +28,7 @@ object FacilityListItemBuilder {
   fun build(
       facilities: List<Facility>,
       searchQuery: String
-  ): List<FacilityListItem> {
+  ): List<FacilityOption> {
     return build(
         facilities = facilities,
         searchQuery = searchQuery,
@@ -52,24 +53,24 @@ object FacilityListItemBuilder {
         .map { (facility, _) -> facility }
   }
 
-  private fun uiModel(facility: Facility, searchQuery: String): FacilityListItem {
+  private fun uiModel(facility: Facility, searchQuery: String): FacilityOption {
     val canHighlight = searchQuery.isNotBlank() && facility.name.contains(searchQuery, ignoreCase = true)
 
     val highlightedName = if (canHighlight) {
-      FacilityListItem.Name.Highlighted(
+      FacilityOption.Name.Highlighted(
           text = facility.name,
           highlightStart = facility.name.indexOf(searchQuery, ignoreCase = true),
           highlightEnd = facility.name.indexOf(searchQuery, ignoreCase = true) + searchQuery.length)
     } else {
-      FacilityListItem.Name.Plain(facility.name)
+      FacilityOption.Name.Plain(facility.name)
     }
 
     val fullAddress = if (facility.streetAddress.isNullOrBlank()) {
-      FacilityListItem.Address.WithoutStreet(district = facility.district, state = facility.state)
+      FacilityOption.Address.WithoutStreet(district = facility.district, state = facility.state)
     } else {
-      FacilityListItem.Address.WithStreet(street = facility.streetAddress, district = facility.district, state = facility.state)
+      FacilityOption.Address.WithStreet(street = facility.streetAddress, district = facility.district, state = facility.state)
     }
 
-    return FacilityListItem(facility = facility, name = highlightedName, address = fullAddress)
+    return FacilityOption(facility = facility, name = highlightedName, address = fullAddress)
   }
 }

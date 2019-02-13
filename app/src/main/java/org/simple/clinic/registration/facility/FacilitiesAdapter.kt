@@ -1,24 +1,23 @@
 package org.simple.clinic.registration.facility
 
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ListAdapter
-import android.text.Spannable
-import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
-import com.xwray.groupie.ViewHolder
-import io.reactivex.subjects.PublishSubject
-import io.reactivex.subjects.Subject
-import kotterknife.bindView
-import org.simple.clinic.R
-import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.change.FacilityListItem
-import org.simple.clinic.facility.change.FacilityListItem.Address
-import org.simple.clinic.facility.change.FacilityListItem.Name
-import org.simple.clinic.util.exhaustive
+ import android.text.Spannable
+ import android.text.SpannableStringBuilder
+ import android.text.style.ForegroundColorSpan
+ import android.view.LayoutInflater
+ import android.view.View
+ import android.view.ViewGroup
+ import android.widget.TextView
+ import androidx.core.content.ContextCompat
+ import androidx.recyclerview.widget.ListAdapter
+ import com.xwray.groupie.ViewHolder
+ import io.reactivex.subjects.PublishSubject
+ import kotterknife.bindView
+ import org.simple.clinic.R
+ import org.simple.clinic.facility.Facility
+ import org.simple.clinic.facility.change.FacilityListItem
+ import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
+ import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
+ import org.simple.clinic.util.exhaustive
 
 /**
  * FYI: We tried using Groupie for facility screen, but it was resulting in a weird
@@ -26,16 +25,41 @@ import org.simple.clinic.util.exhaustive
  */
 class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(FacilityListItem.Differ()) {
 
+  companion object {
+    const val VIEW_TYPE_HEADER = 1
+    const val VIEW_TYPE_FACILITY_OPTION = 2
+  }
+
   val facilityClicks = PublishSubject.create<Facility>()!!
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
-    val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection, parent, false)
-    return FacilityViewHolder(layout, facilityClicks)
+    return when (viewType) {
+      VIEW_TYPE_HEADER -> {
+        TODO()
+      }
+      VIEW_TYPE_FACILITY_OPTION -> {
+        val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection, parent, false)
+        val holder = FacilityViewHolder(layout)
+        holder.itemView.setOnClickListener {
+          facilityClicks.onNext(holder.facilityOption.facility)
+        }
+        holder
+      }
+      else -> throw AssertionError()
+    }
   }
 
   override fun onBindViewHolder(holder: FacilityViewHolder, position: Int) {
-    holder.facilityListItem = getItem(position)
-    holder.render()
+    val item = getItem(position)
+    when (item) {
+      is FacilityListItem.Header -> {
+        TODO()
+      }
+      is FacilityListItem.FacilityOption -> {
+        holder.facilityOption = item
+        holder.render()
+      }
+    }.exhaustive()
   }
 
   override fun getItemId(position: Int): Long {
@@ -45,20 +69,14 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   }
 }
 
-class FacilityViewHolder(rootView: View, uiEvents: Subject<Facility>) : ViewHolder(rootView) {
+class FacilityViewHolder(rootView: View) : ViewHolder(rootView) {
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
 
-  lateinit var facilityListItem: FacilityListItem
-
-  init {
-    itemView.setOnClickListener {
-      uiEvents.onNext(facilityListItem.facility)
-    }
-  }
+  lateinit var facilityOption: FacilityListItem.FacilityOption
 
   fun render() {
-    val name = facilityListItem.name
+    val name = facilityOption.name
     when (name) {
       is Name.Highlighted -> {
         val highlightedName = SpannableStringBuilder(name.text)
@@ -71,7 +89,7 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<Facility>) : ViewHold
       }
     }.exhaustive()
 
-    val address = facilityListItem.address
+    val address = facilityOption.address
     addressTextView.text = when (address) {
       is Address.WithStreet -> {
         itemView.resources.getString(
@@ -89,4 +107,3 @@ class FacilityViewHolder(rootView: View, uiEvents: Subject<Facility>) : ViewHold
     }
   }
 }
-

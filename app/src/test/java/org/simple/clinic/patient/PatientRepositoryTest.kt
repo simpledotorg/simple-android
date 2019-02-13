@@ -137,7 +137,6 @@ class PatientRepositoryTest {
   @Test
   @Parameters(value = [
     "PENDING, false",
-    "IN_FLIGHT, false",
     "INVALID, true",
     "DONE, true"])
   fun `when merging patients with server records, ignore records that already exist locally and are syncing or pending-sync`(
@@ -185,7 +184,6 @@ class PatientRepositoryTest {
   @Test
   @Parameters(value = [
     "PENDING, false",
-    "IN_FLIGHT, false",
     "INVALID, true",
     "DONE, true"])
   fun `that already exist locally and are syncing or pending-sync`(

@@ -23,7 +23,6 @@ class SyncCoordinatorTest {
   val rxErrorsRule = RxErrorsRule()
 
   private lateinit var syncCoordinator: SyncCoordinator
-  private lateinit var syncConfig: SyncConfig
   private lateinit var repository: SynceableRepository<Any, Any>
   private lateinit var lastSyncTimestamp: Preference<Optional<Instant>>
 
@@ -33,8 +32,6 @@ class SyncCoordinatorTest {
     lastSyncTimestamp = mock()
 
     syncCoordinator = SyncCoordinator()
-
-    whenever(repository.setSyncStatus(from = SyncStatus.IN_FLIGHT, to = SyncStatus.PENDING)).thenReturn(Completable.complete())
   }
 
   @Test
@@ -72,7 +69,6 @@ class SyncCoordinatorTest {
       Single.just(DataPushResponse(validationErrors))
     }.blockingAwait()
 
-    verify(repository).setSyncStatus(SyncStatus.PENDING, SyncStatus.IN_FLIGHT)
     verify(repository).setSyncStatus(validationErrors.map { it.uuid }, SyncStatus.INVALID)
   }
 }

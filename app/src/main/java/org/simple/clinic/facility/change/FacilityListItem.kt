@@ -5,7 +5,10 @@ import org.simple.clinic.facility.Facility
 
 sealed class FacilityListItem {
 
-  data class Header(val name: String): FacilityListItem()
+  sealed class Header: FacilityListItem() {
+    object SuggestedFacilities : Header()
+    object AllFacilities : Header()
+  }
 
   data class FacilityOption(
       val facility: Facility,

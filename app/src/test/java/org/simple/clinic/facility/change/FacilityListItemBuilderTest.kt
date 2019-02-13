@@ -82,6 +82,7 @@ class FacilityListItemBuilderTest {
   }
 
   @Test
+  @Suppress("IMPLICIT_CAST_TO_ANY")
   fun `when user location is present then facilities nearby user should be correctly identified`() {
     val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
 
@@ -103,14 +104,22 @@ class FacilityListItemBuilderTest {
             location = Coordinates(latitude = userLocation.latitude + 1, longitude = userLocation.longitude + 1)
         ))
 
-    val searchQuery = "proximity"
+    val searchQuery = ""
     val proximityThreshold = Distance.ofKilometers(6.703436187871307)
 
     val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+    val facilityNameOrHeader = facilityListItems.map {
+      when (it) {
+        is FacilityListItem.Header -> it
+        is FacilityOption -> it.name.text
+      }
+    }
 
-    assertThat(facilityListItems.map { it.name.text }).isEqualTo(listOf(
+    assertThat(facilityNameOrHeader).isEqualTo(listOf(
+        FacilityListItem.Header.SuggestedFacilities,
         "Within proximity threshold",
         "Exactly at proximity threshold",
+        FacilityListItem.Header.AllFacilities,
         "Exactly at proximity threshold",
         "Within proximity threshold",
         "Without location",
@@ -119,7 +128,7 @@ class FacilityListItemBuilderTest {
   }
 
   @Test
-  fun `when user location is absent then facilities nearby user should be empty`() {
+  fun `when user location is absent then facilities nearby user should be empty and headers should not be present`() {
     val userLocation = null
 
     val facilities = listOf(
@@ -136,8 +145,9 @@ class FacilityListItemBuilderTest {
     val proximityThreshold = Distance.ofKilometers(2.0)
 
     val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+    val facilityNames = facilityListItems.map { (it as FacilityOption).name.text }
 
-    assertThat(facilityListItems.map { it.name.text }).isEqualTo(listOf(
+    assertThat(facilityNames).isEqualTo(listOf(
         "With location",
         "Without location"
     ))

@@ -5,7 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.sync.EnumRxPreferenceConverter
-import org.simple.clinic.sync.SyncGroupResult
+import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -24,7 +24,7 @@ class SyncIndicatorModule {
 
   @Provides
   @Named("last_frequent_sync_result")
-  fun lastFrequentSyncResult(rxSharedPreferences: RxSharedPreferences): Preference<Optional<SyncGroupResult>> {
-    return rxSharedPreferences.getObject("last_frequent_sync_result", None, OptionalRxPreferencesConverter(EnumRxPreferenceConverter(SyncGroupResult::class.java)))
+  fun lastFrequentSyncResult(rxSharedPreferences: RxSharedPreferences): Preference<Optional<SyncProgress>> {
+    return rxSharedPreferences.getObject("last_frequent_sync_result", None, OptionalRxPreferencesConverter(EnumRxPreferenceConverter(SyncProgress::class.java)))
   }
 }

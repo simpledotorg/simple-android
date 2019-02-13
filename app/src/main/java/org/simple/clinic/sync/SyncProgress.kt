@@ -1,6 +1,6 @@
 package org.simple.clinic.sync
 
-enum class SyncGroupResult {
+enum class SyncProgress {
   SUCCESS,
   FAILURE,
   SYNCING

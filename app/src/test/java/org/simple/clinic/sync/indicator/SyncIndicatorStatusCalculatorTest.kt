@@ -17,7 +17,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup
-import org.simple.clinic.sync.SyncGroupResult
+import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -36,7 +36,7 @@ class SyncIndicatorStatusCalculatorTest {
   lateinit var syncCalculator: SyncIndicatorStatusCalculator
 
   private val syncTimestampPreference = mock<Preference<Optional<Instant>>>()
-  private val syncResultPreference = mock<Preference<Optional<SyncGroupResult>>>()
+  private val syncResultPreference = mock<Preference<Optional<SyncProgress>>>()
   private val clock = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)
 
   @Before
@@ -52,14 +52,14 @@ class SyncIndicatorStatusCalculatorTest {
     "DAILY|FAILURE",
     "FREQUENT|SYNCING"
   ])
-  fun `when a frequent sync group is synced successfully, the preferences should be set`(syncGroup: SyncGroup, syncGroupResult: SyncGroupResult) {
-    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(Pair(syncGroup, syncGroupResult)))
+  fun `when a frequent sync group is synced successfully, the preferences should be set`(syncGroup: SyncGroup, syncProgress: SyncProgress) {
+    whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(Pair(syncGroup, syncProgress)))
     syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncTimestampPreference, syncResultPreference)
 
     when (syncGroup) {
       SyncGroup.FREQUENT -> {
-        verify(syncResultPreference).set(Just(syncGroupResult))
-        if (syncGroupResult == SyncGroupResult.SUCCESS) {
+        verify(syncResultPreference).set(Just(syncProgress))
+        if (syncProgress == SyncProgress.SUCCESS) {
           verify(syncTimestampPreference).set(Just(Instant.now(clock)))
         } else {
           verify(syncTimestampPreference, never()).set(any())

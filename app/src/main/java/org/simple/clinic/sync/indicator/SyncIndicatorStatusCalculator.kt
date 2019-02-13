@@ -5,7 +5,7 @@ import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.SyncGroup
-import org.simple.clinic.sync.SyncGroupResult
+import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.threeten.bp.Clock
@@ -18,7 +18,7 @@ class SyncIndicatorStatusCalculator @Inject constructor(
     dataSync: DataSync,
     clock: Clock,
     @Named("last_frequent_sync_succeeded_timestamp") private val lastSyncSuccessTimestamp: Preference<Optional<Instant>>,
-    @Named("last_frequent_sync_result") private val lastSyncResult: Preference<Optional<SyncGroupResult>>
+    @Named("last_frequent_sync_result") private val lastSyncProgress: Preference<Optional<SyncProgress>>
 ) {
   init {
     saveSyncResults(dataSync, clock)
@@ -30,8 +30,8 @@ class SyncIndicatorStatusCalculator @Inject constructor(
         .distinctUntilChanged()
         .subscribeOn(io())
         .filter { (syncGroup, _) -> syncGroup == SyncGroup.FREQUENT }
-        .doOnNext { (_, result) -> lastSyncResult.set(Just(result)) }
-        .filter { (_, result) -> result == SyncGroupResult.SUCCESS }
+        .doOnNext { (_, result) -> lastSyncProgress.set(Just(result)) }
+        .filter { (_, result) -> result == SyncProgress.SUCCESS }
         .map { lastSyncSuccessTimestamp.set(Just(Instant.now(clock))) }
         .subscribe()
   }

@@ -17,7 +17,7 @@ class DataSync @Inject constructor(
     private val crashReporter: CrashReporter
 ) {
 
-  private val syncResults = PublishSubject.create<Pair<SyncGroup, SyncGroupResult>>()
+  private val syncProgress = PublishSubject.create<Pair<SyncGroup, SyncProgress>>()
 
   fun sync(syncGroup: SyncGroup?): Completable {
     return if (syncGroup == null) {
@@ -29,8 +29,6 @@ class DataSync @Inject constructor(
   }
 
   private fun syncGroup(syncGroup: SyncGroup): Completable {
-    syncResults.onNext(Pair(syncGroup, SyncGroupResult.SYNCING))
-
     return Observable
         .fromIterable(modelSyncs)
         .flatMapSingle { modelSync ->
@@ -42,16 +40,15 @@ class DataSync @Inject constructor(
         .map { (_, modelSync) -> modelSync.sync() }
         .toList()
         .flatMapCompletable { runAndSwallowErrors(it, syncGroup) }
+        .doOnSubscribe { syncProgress.onNext(Pair(syncGroup, SyncProgress.SYNCING)) }
   }
 
   private fun runAndSwallowErrors(completables: List<Completable>, syncGroup: SyncGroup): Completable {
     return Completable
         .mergeDelayError(completables)
-        .doOnComplete { syncResults.onNext(Pair(syncGroup, SyncGroupResult.SUCCESS)) }
-        .doOnError {
-          syncResults.onNext(Pair(syncGroup, SyncGroupResult.FAILURE))
-          logError()
-        }
+        .doOnComplete { syncProgress.onNext(Pair(syncGroup, SyncProgress.SUCCESS)) }
+        .doOnError { syncProgress.onNext(Pair(syncGroup, SyncProgress.FAILURE)) }
+        .doOnError(logError())
         .onErrorComplete()
   }
 
@@ -70,5 +67,5 @@ class DataSync @Inject constructor(
     }.exhaustive()
   }
 
-  fun streamSyncResults(): Observable<Pair<SyncGroup, SyncGroupResult>> = syncResults
+  fun streamSyncResults(): Observable<Pair<SyncGroup, SyncProgress>> = syncProgress
 }

@@ -13,22 +13,28 @@ object FacilityListItemBuilder {
       searchQuery: String,
       userLocation: Coordinates?,
       proximityThreshold: Distance
-  ): List<FacilityOption> {
+  ): List<FacilityListItem> {
     val nearbyFacilities = userLocation
         ?.let { facilitiesNearbyUser(facilities, userLocation, proximityThreshold) }
         ?: emptyList()
 
-    // TODO: Generate section headers
-    val nearbyFacilityListItems = nearbyFacilities.map { uiModel(it, searchQuery) }
-    val allFacilityListItems = facilities.map { uiModel(it, searchQuery) }
+    val nearbyFacilityItems = nearbyFacilities.map { uiModel(it, searchQuery) }
+    val allFacilityItems = facilities.map { uiModel(it, searchQuery) }
 
-    return nearbyFacilityListItems + allFacilityListItems
+    val listItems = mutableListOf<FacilityListItem>()
+    if (nearbyFacilityItems.isNotEmpty()) {
+      listItems.add(FacilityListItem.Header.SuggestedFacilities)
+      listItems.addAll(nearbyFacilityItems)
+      listItems.add(FacilityListItem.Header.AllFacilities)
+    }
+    listItems.addAll(allFacilityItems)
+    return listItems
   }
 
   fun build(
       facilities: List<Facility>,
       searchQuery: String
-  ): List<FacilityOption> {
+  ): List<FacilityListItem> {
     return build(
         facilities = facilities,
         searchQuery = searchQuery,

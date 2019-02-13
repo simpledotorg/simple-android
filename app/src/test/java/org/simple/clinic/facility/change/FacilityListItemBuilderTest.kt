@@ -3,8 +3,9 @@ package org.simple.clinic.facility.change
 import com.google.common.truth.Truth.assertThat
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.facility.change.FacilityListItem.Address
-import org.simple.clinic.facility.change.FacilityListItem.Name
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.Distance
@@ -23,7 +24,7 @@ class FacilityListItemBuilderTest {
         district = "Gotham City",
         state = "Gotham City")
 
-    val template = FacilityListItem(
+    val template = FacilityOption(
         facility = facility,
         address = Address.WithoutStreet(district = "Gotham City", state = "Gotham City"),
         name = Name.Plain(facility.name))
@@ -53,7 +54,7 @@ class FacilityListItemBuilderTest {
     val searchQuery = ""
 
     val listItem1 = FacilityListItemBuilder.build(listOf(facilityWithStreet), searchQuery).first()
-    assertThat(listItem1).isEqualTo(FacilityListItem(
+    assertThat(listItem1).isEqualTo(FacilityOption(
         facility = facilityWithStreet,
         name = nameUiModel,
         address = Address.WithStreet(
@@ -63,7 +64,7 @@ class FacilityListItemBuilderTest {
 
     val facilityWithBlankStreet = facilityWithStreet.copy(streetAddress = " ")
     val listItem2 = FacilityListItemBuilder.build(listOf(facilityWithBlankStreet), searchQuery).first()
-    assertThat(listItem2).isEqualTo(FacilityListItem(
+    assertThat(listItem2).isEqualTo(FacilityOption(
         facility = facilityWithBlankStreet,
         name = nameUiModel,
         address = Address.WithoutStreet(
@@ -72,7 +73,7 @@ class FacilityListItemBuilderTest {
 
     val facilityWithNullStreet = facilityWithStreet.copy(streetAddress = null)
     val listItem3 = FacilityListItemBuilder.build(listOf(facilityWithNullStreet), searchQuery).first()
-    assertThat(listItem3).isEqualTo(FacilityListItem(
+    assertThat(listItem3).isEqualTo(FacilityOption(
         facility = facilityWithNullStreet,
         name = nameUiModel,
         address = Address.WithoutStreet(

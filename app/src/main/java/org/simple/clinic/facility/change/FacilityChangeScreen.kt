@@ -2,13 +2,13 @@ package org.simple.clinic.facility.change
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.EditText
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView

@@ -69,7 +69,6 @@ class BloodPressureRepositoryTest {
   @Test
   @Parameters(value = [
     "PENDING, false",
-    "IN_FLIGHT, false",
     "INVALID, true",
     "DONE, true"])
   fun `when merging measurements with server records, ignore records that already exist locally and are syncing or pending-sync`(

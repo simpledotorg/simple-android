@@ -36,7 +36,7 @@ class LocationRepository @Inject constructor(private val appContext: Application
 
   private fun locationRequest(updateInterval: Duration): LocationRequest {
     return LocationRequest().apply {
-      priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY
+      priority = LocationRequest.PRIORITY_HIGH_ACCURACY
       interval = updateInterval.toMillis()
     }
   }

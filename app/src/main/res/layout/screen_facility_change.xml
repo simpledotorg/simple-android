@@ -39,5 +39,5 @@
     android:layout_below="@+id/facilitychange_toolbar"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical"
-    tools:listitem="@layout/list_facility_selection" />
+    tools:listitem="@layout/list_facility_selection_option" />
 </org.simple.clinic.facility.change.FacilityChangeScreen>

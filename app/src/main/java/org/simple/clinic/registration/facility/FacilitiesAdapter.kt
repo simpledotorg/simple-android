@@ -1,29 +1,32 @@
 package org.simple.clinic.registration.facility
 
- import android.text.Spannable
- import android.text.SpannableStringBuilder
- import android.text.style.ForegroundColorSpan
- import android.view.LayoutInflater
- import android.view.View
- import android.view.ViewGroup
- import android.widget.TextView
- import androidx.core.content.ContextCompat
- import androidx.recyclerview.widget.ListAdapter
- import com.xwray.groupie.ViewHolder
- import io.reactivex.subjects.PublishSubject
- import kotterknife.bindView
- import org.simple.clinic.R
- import org.simple.clinic.facility.Facility
- import org.simple.clinic.facility.change.FacilityListItem
- import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
- import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
- import org.simple.clinic.util.exhaustive
+import android.text.Spannable
+import android.text.SpannableStringBuilder
+import android.text.style.ForegroundColorSpan
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.xwray.groupie.ViewHolder
+import io.reactivex.subjects.PublishSubject
+import kotterknife.bindView
+import org.simple.clinic.R
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.change.FacilityListItem
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
+import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
+import org.simple.clinic.util.exhaustive
+import org.simple.clinic.widgets.setTopMargin
+import org.simple.clinic.widgets.setTopMarginRes
 
 /**
  * FYI: We tried using Groupie for facility screen, but it was resulting in a weird
  * error where a CheckBox click was leading to callbacks from two CheckBoxes in two rows.
  */
-class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(FacilityListItem.Differ()) {
+class FacilitiesAdapter : ListAdapter<FacilityListItem, RecyclerView.ViewHolder>(FacilityListItem.Differ()) {
 
   companion object {
     const val VIEW_TYPE_HEADER = 1
@@ -32,14 +35,23 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
 
   val facilityClicks = PublishSubject.create<Facility>()!!
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FacilityViewHolder {
+  override fun getItemViewType(position: Int): Int {
+    val item = getItem(position)
+    return when (item) {
+      is FacilityListItem.Header -> VIEW_TYPE_HEADER
+      is FacilityListItem.FacilityOption -> VIEW_TYPE_FACILITY_OPTION
+    }
+  }
+
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
     return when (viewType) {
       VIEW_TYPE_HEADER -> {
-        TODO()
+        val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection_header, parent, false)
+        FacilityHeaderViewHolder(layout)
       }
       VIEW_TYPE_FACILITY_OPTION -> {
-        val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection, parent, false)
-        val holder = FacilityViewHolder(layout)
+        val layout = LayoutInflater.from(parent.context).inflate(R.layout.list_facility_selection_option, parent, false)
+        val holder = FacilityOptionViewHolder(layout)
         holder.itemView.setOnClickListener {
           facilityClicks.onNext(holder.facilityOption.facility)
         }
@@ -49,14 +61,16 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
     }
   }
 
-  override fun onBindViewHolder(holder: FacilityViewHolder, position: Int) {
+  override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
     val item = getItem(position)
     when (item) {
       is FacilityListItem.Header -> {
-        TODO()
+        (holder as FacilityHeaderViewHolder).render(item)
+        val isFirstHeader = item is FacilityListItem.Header.SuggestedFacilities
+        holder.setSpacingWithPreviousSectionVisible(isFirstHeader.not())
       }
       is FacilityListItem.FacilityOption -> {
-        holder.facilityOption = item
+        (holder as FacilityOptionViewHolder).facilityOption = item
         holder.render()
       }
     }.exhaustive()
@@ -69,7 +83,25 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, FacilityViewHolder>(Faci
   }
 }
 
-class FacilityViewHolder(rootView: View) : ViewHolder(rootView) {
+class FacilityHeaderViewHolder(rootView: View) : ViewHolder(rootView) {
+  private val nameTextView by bindView<TextView>(R.id.facility_header_item_name)
+
+  fun render(header: FacilityListItem.Header) {
+    nameTextView.setText(when (header) {
+      FacilityListItem.Header.SuggestedFacilities -> R.string.registrationfacilities_header_suggested_facilities
+      FacilityListItem.Header.AllFacilities -> R.string.registrationfacilities_header_all_facilities
+    })
+  }
+
+  fun setSpacingWithPreviousSectionVisible(visible: Boolean) {
+    when {
+      visible -> itemView.setTopMarginRes(R.dimen.registrationfacilities_header_top_spacing_with_previous_section)
+      else -> itemView.setTopMargin(0)
+    }
+  }
+}
+
+class FacilityOptionViewHolder(rootView: View) : ViewHolder(rootView) {
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
 

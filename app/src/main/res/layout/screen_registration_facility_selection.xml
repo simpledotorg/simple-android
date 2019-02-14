@@ -5,7 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:animateLayoutChanges="true"
-  android:background="@color/white"
+  android:background="@color/grey4"
   android:orientation="vertical">
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
@@ -67,7 +67,7 @@
     android:layout_below="@+id/registrationfacilities_toolbar_container"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical"
-    tools:listitem="@layout/list_facility_selection" />
+    tools:listitem="@layout/list_facility_selection_option" />
 
   <LinearLayout
     android:id="@+id/registrationfacilities_error_container"

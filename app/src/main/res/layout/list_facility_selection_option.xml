@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout style="@style/Clinic.FacilitySelection.FacilityContainer"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:background="@color/white100"
+  android:foreground="?attr/selectableItemBackground">
+
+  <TextView
+    android:id="@+id/facility_item_name"
+    style="@style/Clinic.FacilitySelection.FacilityName"
+    tools:text="Facility name" />
+
+  <TextView
+    android:id="@+id/facility_item_address"
+    style="@style/Clinic.FacilitySelection.FacilityAddress"
+    tools:text="A really long address for this facility to test line wrapping" />
+
+  <View
+    style="@style/Clinic.FacilitySelection.FacilitySeparator"
+    android:layout_marginTop="@dimen/spacing_16" />
+</LinearLayout>

@@ -5,11 +5,6 @@ import android.content.res.Resources
 import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
-import androidx.annotation.DimenRes
-import androidx.annotation.DrawableRes
-import androidx.annotation.IdRes
-import androidx.annotation.StyleRes
-import androidx.core.content.ContextCompat
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +14,11 @@ import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.annotation.DimenRes
+import androidx.annotation.DrawableRes
+import androidx.annotation.IdRes
+import androidx.annotation.StyleRes
+import androidx.core.content.ContextCompat
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import timber.log.Timber
@@ -69,6 +69,12 @@ fun View.setHorizontalPadding(@DimenRes paddingRes: Int) {
 fun View.setTopMarginRes(@DimenRes topMarginRes: Int) {
   val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
   marginLayoutParams.topMargin = resources.getDimensionPixelSize(topMarginRes)
+  layoutParams = marginLayoutParams
+}
+
+fun View.setTopMargin(topMargin: Int) {
+  val marginLayoutParams = layoutParams as ViewGroup.MarginLayoutParams
+  marginLayoutParams.topMargin = topMargin
   layoutParams = marginLayoutParams
 }
 

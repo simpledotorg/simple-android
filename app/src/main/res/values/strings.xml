@@ -240,6 +240,8 @@
   <string name="registrationfacilities_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
   <string name="registrationfacilities_error_internet_connection_title">No internet connection</string>
   <string name="registrationfacilities_retry">Try again</string>
+  <string name="registrationfacilities_header_suggested_facilities">Suggested Clinics</string>
+  <string name="registrationfacilities_header_all_facilities">All Clinics</string>
 
   <!-- Onboarding -->
   <string name="onboarding_get_started">Get Started</string>

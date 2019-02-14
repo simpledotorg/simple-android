@@ -1,15 +1,19 @@
 package org.simple.clinic.util
 
-sealed class Distance {
-  abstract fun meters(): Double
-  abstract fun kilometers(): Double
+open class Distance(val millimeters: Long): Comparable<Distance> {
 
-  operator fun compareTo(other: Distance): Int {
-    return meters().compareTo(other.meters())
+  override operator fun compareTo(other: Distance): Int {
+    return millimeters.compareTo(other.millimeters)
   }
-}
 
-data class Kilometers(val km: Double): Distance() {
-  override fun meters() = km * 1000
-  override fun kilometers() = km
+  companion object {
+
+    fun ofKilometers(km: Double): Distance {
+      return ofMeters(km * 1000.0)
+    }
+
+    private fun ofMeters(m: Double): Distance {
+      return Distance(millimeters = (m * 1000).toLong())
+    }
+  }
 }

@@ -5,7 +5,7 @@ import dagger.Provides
 import io.reactivex.Single
 import org.simple.clinic.registration.phone.IndianPhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.util.Kilometers
+import org.simple.clinic.util.Distance
 import org.threeten.bp.Duration
 import retrofit2.Retrofit
 
@@ -23,7 +23,7 @@ open class RegistrationModule {
         retryBackOffDelayInMinutes = 1,
         locationListenerExpiry = Duration.ofSeconds(5),
         locationUpdateInterval = Duration.ofSeconds(1),
-        proximityThresholdForNearbyFacilities = Kilometers(2.0)))   // TODO: Verify this value with design team.
+        proximityThresholdForNearbyFacilities = Distance.ofKilometers(2.0)))
   }
 
   @Provides

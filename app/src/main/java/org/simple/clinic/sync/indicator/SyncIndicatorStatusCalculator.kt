@@ -1,38 +1,46 @@
 package org.simple.clinic.sync.indicator
 
+import android.annotation.SuppressLint
 import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup
-import org.simple.clinic.sync.SyncProgress
+import org.simple.clinic.sync.SyncProgress.FAILURE
+import org.simple.clinic.sync.SyncProgress.SUCCESS
+import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
-import org.threeten.bp.Clock
+import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import javax.inject.Inject
-import javax.inject.Named
 
 @AppScope
 class SyncIndicatorStatusCalculator @Inject constructor(
     dataSync: DataSync,
-    clock: Clock,
-    @Named("last_frequent_sync_succeeded_timestamp") private val lastSyncSuccessTimestamp: Preference<Optional<Instant>>,
-    @Named("last_frequent_sync_result") private val lastSyncProgress: Preference<Optional<SyncProgress>>
+    utcClock: UtcClock,
+    private val lastSyncProgress: Preference<LastSyncedState>
 ) {
   init {
-    saveSyncResults(dataSync, clock)
+    saveSyncResults(dataSync, utcClock)
   }
 
-  private fun saveSyncResults(dataSync: DataSync, clock: Clock) {
-    dataSync
+  @SuppressLint("CheckResult")
+  private fun saveSyncResults(dataSync: DataSync, utcClock: UtcClock) {
+    val syncResultsStream = dataSync
         .streamSyncResults()
         .distinctUntilChanged()
+
+    syncResultsStream
         .subscribeOn(io())
         .filter { (syncGroup, _) -> syncGroup == SyncGroup.FREQUENT }
-        .doOnNext { (_, result) -> lastSyncProgress.set(Just(result)) }
-        .filter { (_, result) -> result == SyncProgress.SUCCESS }
-        .map { lastSyncSuccessTimestamp.set(Just(Instant.now(clock))) }
-        .subscribe()
+        .map { (_, progress) ->
+          var updatedState = lastSyncProgress.get().copy(lastSyncProgress = Just(progress))
+          when (progress) {
+            SUCCESS -> updatedState.copy(lastSyncSuccessTimestamp = Just(Instant.now(utcClock)))
+            FAILURE, SYNCING -> updatedState
+          }
+        }
+        .subscribe { lastSyncProgress.set(it) }
   }
 }

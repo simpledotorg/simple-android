@@ -18,11 +18,16 @@ object FacilityListItemBuilder {
         ?.let { facilitiesNearbyUser(facilities, userLocation, proximityThreshold) }
         ?: emptyList()
 
-    val nearbyFacilityItems = nearbyFacilities.map { uiModel(it, searchQuery) }
-    val allFacilityItems = facilities.map { uiModel(it, searchQuery) }
+    val nearbyFacilityItems = nearbyFacilities.mapIndexed { index, facility ->
+      uiModel(facility, searchQuery, isLastItemInSection = index == nearbyFacilities.size - 1)
+    }
+
+    val allFacilityItems = facilities.mapIndexed { index, facility ->
+      uiModel(facility, searchQuery, isLastItemInSection = index == facilities.size - 1)
+    }
 
     val listItems = mutableListOf<FacilityListItem>()
-    if (nearbyFacilityItems.isNotEmpty()) {
+    if (searchQuery.isBlank() && nearbyFacilityItems.isNotEmpty()) {
       listItems.add(FacilityListItem.Header.SuggestedFacilities)
       listItems.addAll(nearbyFacilityItems)
       listItems.add(FacilityListItem.Header.AllFacilities)
@@ -59,7 +64,7 @@ object FacilityListItemBuilder {
         .map { (facility, _) -> facility }
   }
 
-  private fun uiModel(facility: Facility, searchQuery: String): FacilityOption {
+  private fun uiModel(facility: Facility, searchQuery: String, isLastItemInSection: Boolean): FacilityOption {
     val canHighlight = searchQuery.isNotBlank() && facility.name.contains(searchQuery, ignoreCase = true)
 
     val highlightedName = if (canHighlight) {
@@ -77,6 +82,10 @@ object FacilityListItemBuilder {
       FacilityOption.Address.WithStreet(street = facility.streetAddress, district = facility.district, state = facility.state)
     }
 
-    return FacilityOption(facility = facility, name = highlightedName, address = fullAddress)
+    return FacilityOption(
+        facility = facility,
+        name = highlightedName,
+        address = fullAddress,
+        showBottomDivider = isLastItemInSection.not())
   }
 }

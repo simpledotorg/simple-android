@@ -30,13 +30,13 @@
     <TextView
       style="@style/Clinic.FacilitySelection.FacilityAddress"
       android:layout_width="140dp"
+      android:layout_marginBottom="15dp"
       android:layout_marginTop="@dimen/spacing_8"
       android:background="@drawable/background_facility_progress_shimmer"
       android:textSize="@dimen/textsize_12" />
 
     <View
-      style="@style/Clinic.FacilitySelection.FacilitySeparator"
-      android:layout_marginTop="15dp"
+      style="@style/Clinic.Separator.VerticalContent"
       android:background="@drawable/background_facility_progress_shimmer" />
   </LinearLayout>
 </com.facebook.shimmer.ShimmerFrameLayout>

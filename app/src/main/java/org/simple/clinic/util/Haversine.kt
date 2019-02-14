@@ -6,6 +6,6 @@ object Haversine {
 
   fun distance(start: Coordinates, end: Coordinates): Distance {
     // TODO
-    return Kilometers(Double.MAX_VALUE)
+    return Distance.ofKilometers(Double.MAX_VALUE)
   }
 }

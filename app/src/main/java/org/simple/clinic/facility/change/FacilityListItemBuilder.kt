@@ -4,7 +4,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.Haversine
-import org.simple.clinic.util.Kilometers
 
 object FacilityListItemBuilder {
 
@@ -34,7 +33,7 @@ object FacilityListItemBuilder {
         facilities = facilities,
         searchQuery = searchQuery,
         userLocation = null,
-        proximityThreshold = Kilometers(0.0))
+        proximityThreshold = Distance.ofKilometers(0.0))
   }
 
   private fun facilitiesNearbyUser(
@@ -50,7 +49,7 @@ object FacilityListItemBuilder {
         .filter { (_, distance) -> distance <= proximityThreshold }
 
     return nearbyFacilities
-        .sortedBy { (_, distance) -> distance.kilometers() }
+        .sortedBy { (_, distance) -> distance }
         .map { (facility, _) -> facility }
   }
 

@@ -9,7 +9,6 @@ import dagger.Provides
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientModule
-import org.simple.clinic.qrscan.QrModule
 import org.simple.clinic.registration.RegistrationModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
@@ -23,7 +22,6 @@ import org.threeten.bp.ZoneId
 import java.util.Locale
 
 @Module(includes = [
-  QrModule::class,
   SyncModule::class,
   NetworkModule::class,
   StorageModule::class,

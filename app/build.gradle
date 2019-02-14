@@ -210,7 +210,6 @@ dependencies {
   implementation "com.jakewharton.rxbinding2:rxbinding:$versions.rxBinding"
   implementation "com.jakewharton.rxbinding2:rxbinding-recyclerview-v7:$versions.rxBinding"
   implementation "io.reactivex.rxjava2:rxkotlin:$versions.rxKotlin"
-  implementation "com.jcabi:jcabi-xml:$versions.jcabiXml"
   implementation "org.threeten:threetenbp:$versions.threeTenBp:no-tzdb"
   implementation "com.gabrielittner.threetenbp:lazythreetenbp:$versions.lazyThreeTenBp"
   implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
@@ -236,12 +235,6 @@ dependencies {
   implementation "io.requery:sqlite-android:$versions.sqliteAndroid"
 
   implementation "com.google.android.gms:play-services-auth:$versions.playServicesAuth"
-  implementation("com.github.nisrulz:qreader:$versions.qrReader") {
-    exclude group: 'com.google.android.gms', module: 'play-services-vision'
-  }
-  implementation("com.google.android.gms:play-services-vision:$versions.playServicesVision") {
-    because "com.github.nisrulz.qreader exposes an older version of this dependency"
-  }
   implementation "io.github.inflationx:viewpump:$versions.viewPump"
   implementation "com.heapanalytics.android:heap-android-client:$versions.heap"
   implementation "com.facebook.shimmer:shimmer:$versions.fbShimmer"

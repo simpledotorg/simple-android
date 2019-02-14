@@ -14,7 +14,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.summary.SummaryListAdapterIds.PRESCRIBED_DRUGS
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.setTopMargin
+import org.simple.clinic.widgets.setTopMarginRes
 import timber.log.Timber
 
 data class SummaryPrescribedDrugsItem(
@@ -59,7 +59,7 @@ data class SummaryPrescribedDrugsItem(
       holder.lastUpdatedTimestampTextView.text = lastUpdatedTimestamp.displayText(holder.itemView.context)
     }
 
-    holder.updateButton.setTopMargin(when {
+    holder.updateButton.setTopMarginRes(when {
       prescriptions.isEmpty() -> R.dimen.summary_prescriptions_update_when_empty
       else -> R.dimen.summary_prescriptions_update_when_non_empty
     })

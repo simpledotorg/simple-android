@@ -7,6 +7,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
+import io.reactivex.functions.Consumer
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import junitparams.JUnitParamsRunner
@@ -16,15 +17,18 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.sync.DataSync
-import org.simple.clinic.sync.DataSync.*
+import org.simple.clinic.sync.DataSync.SyncGroupResult
+import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncProgress
+import org.simple.clinic.sync.SyncProgress.FAILURE
+import org.simple.clinic.sync.SyncProgress.SUCCESS
+import org.simple.clinic.sync.SyncProgress.SYNCING
 import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
+import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
-import org.threeten.bp.Clock
+import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
-import org.threeten.bp.ZoneOffset
 
 @RunWith(JUnitParamsRunner::class)
 class SyncIndicatorStatusCalculatorTest {
@@ -36,9 +40,8 @@ class SyncIndicatorStatusCalculatorTest {
 
   lateinit var syncCalculator: SyncIndicatorStatusCalculator
 
-  private val syncTimestampPreference = mock<Preference<Optional<Instant>>>()
-  private val syncResultPreference = mock<Preference<Optional<SyncProgress>>>()
-  private val clock = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC)
+  private val syncResultPreference = mock<Preference<LastSyncedState>>()
+  private val clock = TestUtcClock()
 
   @Before
   fun setUp() {
@@ -53,25 +56,27 @@ class SyncIndicatorStatusCalculatorTest {
     "DAILY|FAILURE",
     "FREQUENT|SYNCING"
   ])
-  fun `when a frequent sync group is synced successfully, the preferences should be set`(syncGroup: SyncGroup, syncProgress: SyncProgress) {
+  fun `when the frequent sync group is synced successfully, the last synced state preference should be set`(
+      syncGroup: SyncGroup,
+      syncProgress: SyncProgress
+  ) {
     whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(syncGroup, syncProgress)))
-    syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncTimestampPreference, syncResultPreference)
+
+    val initialState = LastSyncedState(None, None)
+    whenever(syncResultPreference.get()).thenReturn(initialState)
+
+    syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference)
 
     when (syncGroup) {
       SyncGroup.FREQUENT -> {
-        verify(syncResultPreference).set(Just(syncProgress))
-        if (syncProgress == SyncProgress.SUCCESS) {
-          verify(syncTimestampPreference).set(Just(Instant.now(clock)))
-        } else {
-          verify(syncTimestampPreference, never()).set(any())
+        when (syncProgress) {
+          SUCCESS -> verify(syncResultPreference).set(LastSyncedState(Just(syncProgress), Just(Instant.now(clock))))
+          FAILURE, SYNCING -> verify(syncResultPreference).set(LastSyncedState(Just(syncProgress), initialState.lastSyncSuccessTimestamp))
         }
       }
       SyncGroup.DAILY -> {
         verify(syncResultPreference, never()).set(any())
-        verify(syncTimestampPreference, never()).set(any())
       }
     }
   }
-
-
 }

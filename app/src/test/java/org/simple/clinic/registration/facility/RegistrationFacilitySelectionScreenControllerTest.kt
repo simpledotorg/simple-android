@@ -35,7 +35,7 @@ import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Kilometers
+import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -65,7 +65,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
       retryBackOffDelayInMinutes = 0,
       locationListenerExpiry = Duration.ofSeconds(0),
       locationUpdateInterval = Duration.ofSeconds(0),
-      proximityThresholdForNearbyFacilities = Kilometers(0.0))
+      proximityThresholdForNearbyFacilities = Distance.ofKilometers(0.0))
   private val configProvider = BehaviorSubject.createDefault(configTemplate)
 
   @Before

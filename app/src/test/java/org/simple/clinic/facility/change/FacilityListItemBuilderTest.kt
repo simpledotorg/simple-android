@@ -27,7 +27,8 @@ class FacilityListItemBuilderTest {
     val template = FacilityOption(
         facility = facility,
         address = Address.WithoutStreet(district = "Gotham City", state = "Gotham City"),
-        name = Name.Plain(facility.name))
+        name = Name.Plain(facility.name),
+        showBottomDivider = false)
 
     val searchQuery1 = ""
     val listItems1 = FacilityListItemBuilder.build(listOf(facility), searchQuery1).first()
@@ -60,7 +61,8 @@ class FacilityListItemBuilderTest {
         address = Address.WithStreet(
             street = facilityWithStreet.streetAddress!!,
             district = facilityWithStreet.district,
-            state = facilityWithStreet.state)))
+            state = facilityWithStreet.state),
+        showBottomDivider = false))
 
     val facilityWithBlankStreet = facilityWithStreet.copy(streetAddress = " ")
     val listItem2 = FacilityListItemBuilder.build(listOf(facilityWithBlankStreet), searchQuery).first()
@@ -69,7 +71,8 @@ class FacilityListItemBuilderTest {
         name = nameUiModel,
         address = Address.WithoutStreet(
             district = facilityWithBlankStreet.district,
-            state = facilityWithBlankStreet.state)))
+            state = facilityWithBlankStreet.state),
+        showBottomDivider = false))
 
     val facilityWithNullStreet = facilityWithStreet.copy(streetAddress = null)
     val listItem3 = FacilityListItemBuilder.build(listOf(facilityWithNullStreet), searchQuery).first()
@@ -78,12 +81,13 @@ class FacilityListItemBuilderTest {
         name = nameUiModel,
         address = Address.WithoutStreet(
             district = facilityWithNullStreet.district,
-            state = facilityWithNullStreet.state)))
+            state = facilityWithNullStreet.state),
+        showBottomDivider = false))
   }
 
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
-  fun `when user location is present then facilities nearby user should be correctly identified`() {
+  fun `when user location is present and search query is empty then facilities nearby user should be correctly identified`() {
     val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
 
     val facilities = listOf(
@@ -108,14 +112,14 @@ class FacilityListItemBuilderTest {
     val proximityThreshold = Distance.ofKilometers(6.703436187871307)
 
     val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
-    val facilityNameOrHeader = facilityListItems.map {
+    val facilityNameOrHeaders = facilityListItems.map {
       when (it) {
         is FacilityListItem.Header -> it
         is FacilityOption -> it.name.text
       }
     }
 
-    assertThat(facilityNameOrHeader).isEqualTo(listOf(
+    assertThat(facilityNameOrHeaders).isEqualTo(listOf(
         FacilityListItem.Header.SuggestedFacilities,
         "Within proximity threshold",
         "Exactly at proximity threshold",
@@ -123,6 +127,38 @@ class FacilityListItemBuilderTest {
         "Exactly at proximity threshold",
         "Within proximity threshold",
         "Without location",
+        "Outside of proximity threshold"
+    ))
+  }
+
+  @Test
+  @Suppress("IMPLICIT_CAST_TO_ANY")
+  fun `when both user location and search query are present then nearby facilities should not be present`() {
+    val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
+
+    val facilities = listOf(
+        PatientMocker.facility(
+            name = "Within proximity threshold",
+            location = Coordinates(latitude = 51.914804, longitude = 17.649183)
+        ),
+        PatientMocker.facility(
+            name = "Outside of proximity threshold",
+            location = Coordinates(latitude = userLocation.latitude + 1, longitude = userLocation.longitude + 1)
+        ))
+
+    val searchQuery = "Gotham must burn"
+    val proximityThreshold = Distance.ofKilometers(6.703436187871307)
+
+    val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+    val facilityNameOrHeaders = facilityListItems.map {
+      when (it) {
+        is FacilityListItem.Header -> it
+        is FacilityOption -> it.name.text
+      }
+    }
+
+    assertThat(facilityNameOrHeaders).isEqualTo(listOf(
+        "Within proximity threshold",
         "Outside of proximity threshold"
     ))
   }
@@ -150,6 +186,50 @@ class FacilityListItemBuilderTest {
     assertThat(facilityNames).isEqualTo(listOf(
         "With location",
         "Without location"
+    ))
+  }
+
+  @Test
+  @Suppress("IMPLICIT_CAST_TO_ANY")
+  fun `when multiple sections are present then last item in each section should not show bottom divider`() {
+    val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
+
+    val facilities = listOf(
+        PatientMocker.facility(
+            name = "Exactly at proximity threshold",
+            location = Coordinates(latitude = 51.864038, longitude = 17.608030)
+        ),
+        PatientMocker.facility(
+            name = "Within proximity threshold",
+            location = Coordinates(latitude = 51.914804, longitude = 17.649183)
+        ),
+        PatientMocker.facility(
+            name = "Without location",
+            location = null
+        ))
+
+    val searchQuery = ""
+    val proximityThreshold = Distance.ofKilometers(6.703436187871307)
+
+    val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+    val facilityNameAndHeaders = facilityListItems.map {
+      when (it) {
+        is FacilityListItem.Header -> it
+        is FacilityOption -> it.name.text to it.showBottomDivider
+      }
+    }
+
+    val showDivider = true
+    val hideDivider = false
+
+    assertThat(facilityNameAndHeaders).isEqualTo(listOf(
+        FacilityListItem.Header.SuggestedFacilities,
+        "Within proximity threshold" to showDivider,
+        "Exactly at proximity threshold" to hideDivider,
+        FacilityListItem.Header.AllFacilities,
+        "Exactly at proximity threshold" to showDivider,
+        "Within proximity threshold" to showDivider,
+        "Without location" to hideDivider
     ))
   }
 }

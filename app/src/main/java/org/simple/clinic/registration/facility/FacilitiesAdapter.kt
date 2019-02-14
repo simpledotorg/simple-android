@@ -21,6 +21,7 @@ import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.setTopMargin
 import org.simple.clinic.widgets.setTopMarginRes
+import org.simple.clinic.widgets.visibleOrGone
 
 /**
  * FYI: We tried using Groupie for facility screen, but it was resulting in a weird
@@ -104,6 +105,7 @@ class FacilityHeaderViewHolder(rootView: View) : ViewHolder(rootView) {
 class FacilityOptionViewHolder(rootView: View) : ViewHolder(rootView) {
   private val nameTextView by bindView<TextView>(R.id.facility_item_name)
   private val addressTextView by bindView<TextView>(R.id.facility_item_address)
+  private val dividerView by bindView<View>(R.id.facility_item_divider)
 
   lateinit var facilityOption: FacilityListItem.FacilityOption
 
@@ -137,5 +139,8 @@ class FacilityOptionViewHolder(rootView: View) : ViewHolder(rootView) {
             address.state)
       }
     }
+
+    dividerView.visibility = if (facilityOption.showBottomDivider) View.VISIBLE else View.GONE
+    dividerView.visibleOrGone(facilityOption.showBottomDivider)
   }
 }

@@ -72,7 +72,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .ofType<ScreenCreated>()
         .flatMap { Observable.merge(locationWaitExpiry(), fetchLocation()) }
         .take(1)
-        .map { RegistrationUserLocationUpdated(it) }
+        .map { RegistrationFacilityUserLocationUpdated(it) }
 
     events.mergeWith(locationUpdates)
   }
@@ -95,7 +95,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
     val fetchFacilities = fetchFacilitiesOnStart.mergeWith(fetchFacilitiesOnRetry)
 
-    val locationUpdates = events.ofType<RegistrationUserLocationUpdated>()
+    val locationUpdates = events.ofType<RegistrationFacilityUserLocationUpdated>()
 
     // We don't care about the location here. We just want to show
     // progress until we receive an update, even if it's empty.
@@ -123,7 +123,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .map { it.query }
 
     val locationUpdates = events
-        .ofType<RegistrationUserLocationUpdated>()
+        .ofType<RegistrationFacilityUserLocationUpdated>()
         .map { it.location }
 
     val filteredFacilityListItems = Observables

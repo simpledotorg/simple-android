@@ -211,7 +211,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationUserLocationUpdated(Unavailable))
+    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "F"))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fa"))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = "Fac"))
@@ -230,7 +230,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         .thenReturn(Single.just(FacilityPullResult.UnexpectedError()))
         .thenReturn(Single.just(FacilityPullResult.NetworkError()))
 
-    uiEvents.onNext(RegistrationUserLocationUpdated(Unavailable))
+    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
@@ -246,7 +246,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
     whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.just(Unavailable))
 
-    uiEvents.onNext(RegistrationUserLocationUpdated(Unavailable))
+    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySelectionRetryClicked())
 
     verify(screen).hideError()
@@ -266,7 +266,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val searchQuery = ""
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationUserLocationUpdated(Unavailable))
+    uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
     val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery)

@@ -1,5 +1,6 @@
 package org.simple.clinic.location
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
 import android.location.Location
@@ -14,6 +15,7 @@ import org.threeten.bp.Duration
 import javax.inject.Inject
 
 typealias LocationProvider = FusedLocationProviderClient
+const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 @SuppressLint("MissingPermission")
 class LocationRepository @Inject constructor(private val appContext: Application) {

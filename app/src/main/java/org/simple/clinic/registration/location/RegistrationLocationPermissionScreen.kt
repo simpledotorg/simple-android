@@ -1,11 +1,10 @@
 package org.simple.clinic.registration.location
 
-import android.Manifest
 import android.content.Context
-import androidx.appcompat.widget.Toolbar
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -14,6 +13,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -22,7 +22,6 @@ import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
 private const val REQUESTCODE_LOCATION_PERMISSION = 0
-private const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 

@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.facility
 
+import android.annotation.SuppressLint
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -24,8 +25,12 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -54,23 +59,32 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         proceedOnFacilityClicks(replayedEvents))
   }
 
+  @SuppressLint("MissingPermission")
   private fun fetchLocation() = ObservableTransformer<UiEvent, UiEvent> { events ->
+    val locationPermissionChanges = events
+        .ofType<RegistrationFacilityLocationPermissionChanged>()
+        .map { it.result }
+
     val locationWaitExpiry = {
       configProvider
           .flatMapObservable { Observable.timer(it.locationListenerExpiry.toMillis(), TimeUnit.MILLISECONDS) }
           .map { LocationUpdate.Unavailable }
     }
 
-    // TODO: Handle the situation when location permission isn't granted.
     val fetchLocation = {
       configProvider
           .flatMapObservable { locationRepository.streamUserLocation(it.locationUpdateInterval) }
           .onErrorResumeNext(Observable.empty())
     }
 
-    val locationUpdates = events
-        .ofType<ScreenCreated>()
-        .flatMap { Observable.merge(locationWaitExpiry(), fetchLocation()) }
+    val locationUpdates = Observables
+        .combineLatest(events.ofType<ScreenCreated>(), locationPermissionChanges)
+        .switchMap { (_, permissionResult) ->
+          when (permissionResult!!) {
+            GRANTED -> Observable.merge(locationWaitExpiry(), fetchLocation())
+            DENIED, NEVER_ASK_AGAIN -> Observable.just(Unavailable)
+          }
+        }
         .take(1)
         .map { RegistrationFacilityUserLocationUpdated(it) }
 

@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -37,6 +38,10 @@ import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
+import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.util.RuntimePermissionResult.DENIED
+import org.simple.clinic.util.RuntimePermissionResult.GRANTED
+import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -101,15 +106,61 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
-  fun `when screen is started then location should be fetched`() {
+  fun `when screen is started and location permission is available then location should be fetched`() {
     configProvider.onNext(configTemplate.copy(locationUpdateInterval = Duration.ofDays(5)))
-
     whenever(facilityRepository.recordCount()).thenReturn(Observable.never())
     whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
 
     verify(locationRepository).streamUserLocation(updateInterval = Duration.ofDays(5))
+  }
+
+  @Test
+  @Parameters(method = "params for permission denials")
+  fun `when screen is started and location permission is unavailable then location should not be fetched and facilities should be shown`(
+      permissionResult: RuntimePermissionResult
+  ) {
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+    whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(permissionResult))
+
+    verify(locationRepository, never()).streamUserLocation(any())
+    verify(screen).updateFacilities(any(), any())
+  }
+
+  @Test
+  fun `when screen is started then location should only be read once`() {
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+    whenever(locationRepository.streamUserLocation(any())).thenReturn(
+        Observable.just(
+            Available(Coordinates(0.0, 0.0)),
+            Unavailable,
+            Available(Coordinates(0.0, 0.0))))
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
+
+    verify(locationRepository).streamUserLocation(any())
+    verify(screen, times(1)).updateFacilities(any(), any())
+  }
+
+  @Suppress("unused")
+  fun `params for permission denials`(): List<RuntimePermissionResult> {
+    return listOf(DENIED, NEVER_ASK_AGAIN)
   }
 
   @Test
@@ -126,6 +177,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
     verify(screen).showProgressIndicator()
 
     testComputationScheduler.advanceTimeBy(secondsSpentWaitingForLocation, TimeUnit.SECONDS)
@@ -141,6 +193,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(locationRepository.streamUserLocation(any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
 
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showProgressIndicator()
@@ -161,8 +214,11 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val locationUpdates = PublishSubject.create<LocationUpdate>()
     whenever(locationRepository.streamUserLocation(any())).thenReturn(locationUpdates)
 
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    uiEvents.run {
+      onNext(ScreenCreated())
+      onNext(RegistrationFacilitySearchQueryChanged(""))
+      onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
+    }
     verify(screen, never()).updateFacilities(any(), any())
 
     locationUpdates.onNext(LocationUpdate.Available(Coordinates(0.0, 0.0)))
@@ -182,6 +238,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged("f"))
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
     verify(screen, never()).updateFacilities(any(), any())
 
     testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)

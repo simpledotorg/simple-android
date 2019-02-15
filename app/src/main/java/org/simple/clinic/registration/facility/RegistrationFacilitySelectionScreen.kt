@@ -30,11 +30,14 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
@@ -46,6 +49,9 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var activity: TheActivity
 
   private val toolbarViewFlipper by bindView<ViewFlipper>(R.id.registrationfacilities_toolbar_container)
   private val toolbarViewWithSearch by bindView<Toolbar>(R.id.registrationfacilities_toolbar_with_search)
@@ -71,7 +77,13 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
     Observable
-        .mergeArray(screenCreates(), screenDestroys, searchQueryChanges(), retryClicks(), facilityClicks())
+        .mergeArray(
+            screenCreates(),
+            screenDestroys,
+            searchQueryChanges(),
+            retryClicks(),
+            facilityClicks(),
+            locationPermissionChanges())
         .observeOn(Schedulers.io())
         .compose(controller)
         .observeOn(AndroidSchedulers.mainThread())
@@ -107,7 +119,15 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
           .clicks(errorRetryButton)
           .map { RegistrationFacilitySelectionRetryClicked() }
 
-  private fun facilityClicks() = recyclerViewAdapter.facilityClicks.map(::RegistrationFacilityClicked)
+  private fun facilityClicks() =
+      recyclerViewAdapter
+          .facilityClicks
+          .map(::RegistrationFacilityClicked)
+
+  private fun locationPermissionChanges(): Observable<UiEvent> {
+    val permissionResult = RuntimePermissions.check(activity, LOCATION_PERMISSION)
+    return Observable.just(RegistrationFacilityLocationPermissionChanged(permissionResult))
+  }
 
   @SuppressLint("CheckResult")
   private fun hideKeyboardOnListScroll() {

@@ -7,19 +7,21 @@ import androidx.core.app.ActivityCompat
 enum class RuntimePermissionResult {
   GRANTED,
   DENIED,
-  NEVER_ASK_AGAIN;
+  NEVER_ASK_AGAIN
 }
 
 object RuntimePermissions {
 
   fun check(activity: Activity, permission: String): RuntimePermissionResult {
-    if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
+    return if (ActivityCompat.checkSelfPermission(activity, permission) != PackageManager.PERMISSION_GRANTED) {
       if (!ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
-        return RuntimePermissionResult.NEVER_ASK_AGAIN
+        RuntimePermissionResult.NEVER_ASK_AGAIN
+      } else {
+        RuntimePermissionResult.DENIED
       }
-      return RuntimePermissionResult.DENIED
+    } else {
+      RuntimePermissionResult.GRANTED
     }
-    return RuntimePermissionResult.GRANTED
   }
 
   fun request(activity: Activity, permission: String, requestCode: Int) {

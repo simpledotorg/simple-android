@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
 import android.location.Location
+import androidx.annotation.RequiresPermission
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationAvailability
 import com.google.android.gms.location.LocationCallback
@@ -22,6 +23,7 @@ class LocationRepository @Inject constructor(private val appContext: Application
 
   data class LocationStatus(val isUsable: Boolean)
 
+  @RequiresPermission(LOCATION_PERMISSION)
   fun streamUserLocation(updateInterval: Duration): Observable<LocationUpdate> {
     val locationProvider = LocationServices.getFusedLocationProviderClient(appContext)
     val request = locationRequest(updateInterval)

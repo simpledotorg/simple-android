@@ -70,12 +70,12 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     hideKeyboard()
   }
 
-  private fun locationPermissionChanges(): Observable<LocationPermissionChanged> {
+  private fun locationPermissionChanges(): Observable<RegistrationLocationPermissionChanged> {
     return screenRouter.streamScreenResults()
         .ofType<ActivityPermissionResult>()
         .filter { result -> result.requestCode == REQUESTCODE_LOCATION_PERMISSION }
         .map { RuntimePermissions.check(activity, LOCATION_PERMISSION) }
-        .map(::LocationPermissionChanged)
+        .map(::RegistrationLocationPermissionChanged)
   }
 
   private fun requestLocationPermission() {

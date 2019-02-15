@@ -22,7 +22,7 @@ class RegistrationLocationPermissionScreenController @Inject constructor() : Obs
 
   private fun handlePermissionGrants(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<LocationPermissionChanged>()
+        .ofType<RegistrationLocationPermissionChanged>()
         .filter { it.result == RuntimePermissionResult.GRANTED }
         .map { { ui: Ui -> ui.openFacilitySelectionScreen() } }
   }

@@ -2,6 +2,7 @@ package org.simple.clinic.registration.facility
 
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.location.LocationUpdate
+import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 
 class RegistrationFacilitySelectionRetryClicked : UiEvent {
@@ -21,4 +22,8 @@ data class RegistrationFacilityUserLocationUpdated(val location: LocationUpdate)
     is LocationUpdate.Unavailable -> "TurnedOff"
     is LocationUpdate.Available -> "Available"
   }}"
+}
+
+data class RegistrationFacilityLocationPermissionChanged(val result: RuntimePermissionResult) : UiEvent {
+  override val analyticsName = "Registration:Facility Selection:Location Permission Changed to $result"
 }

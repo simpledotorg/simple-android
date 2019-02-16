@@ -21,7 +21,6 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
@@ -125,9 +124,13 @@ class PatientRepository @Inject constructor(
 
   fun updatePatientStatusToDead(patientUuid: UUID): Completable {
     return Completable.fromAction {
-      database.patientDao()
-          .updatePatientStatus(patientUuid, PatientStatus.DEAD)
-      setSyncStatus(listOf(patientUuid), PENDING)
+      database
+          .patientDao()
+          .updatePatientStatus(
+              uuid = patientUuid,
+              newStatus = PatientStatus.DEAD,
+              newSyncStatus = SyncStatus.PENDING,
+              newUpdatedAt = Instant.now(utcClock))
     }
   }
 

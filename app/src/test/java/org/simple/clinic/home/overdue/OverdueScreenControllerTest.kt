@@ -132,6 +132,7 @@ class OverdueScreenControllerTest {
     assertThat(reporter.receivedEvents).contains(expectedEvent)
   }
 
+  @Suppress("unused")
   fun `params for permission-result dialer-method`(): Array<Array<Any>> {
     return arrayOf(
         arrayOf(RuntimePermissionResult.GRANTED, false),

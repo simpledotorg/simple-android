@@ -98,8 +98,17 @@ data class Patient (
     @Query("DELETE FROM patient")
     abstract fun clear()
 
-    @Query("UPDATE patient SET status = :newStatus WHERE uuid = :uuid")
-    abstract fun updatePatientStatus(uuid: UUID, newStatus: PatientStatus)
+    @Query("""
+      UPDATE patient
+      SET status = :newStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
+      WHERE uuid = :uuid
+      """)
+    abstract fun updatePatientStatus(
+        uuid: UUID,
+        newStatus: PatientStatus,
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant
+    )
 
     // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
     // support loading into constructor parameters and needs a settable property. Room does fix

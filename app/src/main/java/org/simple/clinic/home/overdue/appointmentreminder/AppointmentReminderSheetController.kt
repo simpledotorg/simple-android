@@ -26,7 +26,7 @@ class AppointmentReminderSheetController @Inject constructor(
         sheetCreates(replayedEvents),
         dateIncrements(replayedEvents),
         dateDecrements(replayedEvents),
-        reminderCreates(replayedEvents))
+        saveReminder(replayedEvents))
   }
 
   private fun sheetCreates(events: Observable<UiEvent>): Observable<UiChange> {
@@ -79,19 +79,22 @@ class AppointmentReminderSheetController @Inject constructor(
     return Observable.merge(updateDateStream, secondItemStream, notSecondItemStream, lastItemStream)
   }
 
-  private fun reminderCreates(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun saveReminder(events: Observable<UiEvent>): Observable<UiChange> {
     val toLocalDate = { amount: Int, chronoUnit: ChronoUnit ->
       LocalDate.now(ZoneOffset.UTC).plus(amount.toLong(), chronoUnit)
     }
 
-    val appointmentUuids = events.ofType<AppointmentReminderSheetCreated>()
+    val appointmentUuids = events
+        .ofType<AppointmentReminderSheetCreated>()
         .map { it.appointmentUuid }
 
-    return events.ofType<ReminderCreated>()
+    return events
+        .ofType<ReminderCreated>()
         .map { toLocalDate(it.selectedReminderState.timeAmount, it.selectedReminderState.chronoUnit) }
         .withLatestFrom(appointmentUuids)
         .flatMap { (date, uuid) ->
-          repository.createReminder(appointmentUuid = uuid, reminderDate = date)
+          repository
+              .createReminder(appointmentUuid = uuid, reminderDate = date)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
   }

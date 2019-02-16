@@ -35,9 +35,9 @@ class OverdueScreenController @Inject constructor(
         screenSetup(replayedEvents),
         phoneCallPermissionRequests(replayedEvents),
         patientCalls(replayedEvents),
-        appointmentMarkedAgreedToVisit(replayedEvents),
-        appointmentReminderSheetOpens(replayedEvents),
-        removeAppointmentSheetOpens(replayedEvents),
+        markedAsAgreedToVisit(replayedEvents),
+        rescheduleAppointment(replayedEvents),
+        removeAppointment(replayedEvents),
         reportViewedPatientEvent(replayedEvents))
   }
 
@@ -104,7 +104,8 @@ class OverdueScreenController @Inject constructor(
   }
 
   private fun phoneCallPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<CallPatientClicked>()
+    return events
+        .ofType<CallPatientClicked>()
         .map { { ui: Ui -> ui.requestCallPermission() } }
   }
 
@@ -138,21 +139,24 @@ class OverdueScreenController @Inject constructor(
     return withDialerCalls.mergeWith(withoutDialerCalls)
   }
 
-  private fun appointmentMarkedAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun markedAsAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<AgreedToVisitClicked>()
         .flatMap {
-          repository.markAsAgreedToVisit(it.appointmentUuid)
+          repository
+              .markAsAgreedToVisit(it.appointmentUuid)
               .toObservable<UiChange>()
         }
   }
 
-  private fun appointmentReminderSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<RemindToCallLaterClicked>()
+  private fun rescheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RemindToCallLaterClicked>()
         .map { { ui: Ui -> ui.showAppointmentReminderSheet(it.appointmentUuid) } }
   }
 
-  private fun removeAppointmentSheetOpens(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<RemoveFromListClicked>()
+  private fun removeAppointment(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RemoveFromListClicked>()
         .map { { ui: Ui -> ui.showRemovePatientReasonSheet(it.appointmentUuid, it.patientUuid) } }
   }
 }

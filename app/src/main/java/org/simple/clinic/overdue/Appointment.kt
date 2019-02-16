@@ -87,7 +87,7 @@ data class Appointment(
     )
 
     @Query("""
-      UPDATE Appointment
+       UPDATE Appointment
        SET remindOn = :reminderDate, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
        WHERE uuid = :appointmentUUID
     """)

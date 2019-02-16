@@ -89,10 +89,13 @@ class PatientRepositoryAndroidTest {
   val config: PatientConfig
     get() = configProvider.blockingGet()
 
+  private val testClock: TestUtcClock
+    get() = clock as TestUtcClock
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
-    (clock as TestUtcClock).setYear(2018)
+    testClock.setYear(2018)
   }
 
   @After
@@ -488,19 +491,49 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
-    val patient =
-        patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar", age = "20"))
-            .andThen(patientRepository.saveOngoingEntryAsPatient())
-            .blockingGet()
+    val patient = patientRepository
+        .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    val searchResults = patientRepository.search(name = "Ashok").blockingFirst()
+    assertThat(searchResults).isNotEmpty()
+    assertThat(searchResults.first().fullName).isEqualTo("Ashok Kumar")
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResult = patientRepository.search(name = "Ashok").blockingFirst()
-    val patientFirst = patientRepository.patient(patient.uuid).blockingFirst()
+    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok").blockingFirst()
+    assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
+    assertThat(searchResultsAfterUpdate).isEmpty()
+
+    val deadPatient: Patient = patientRepository.patient(patient.uuid)
+        .unwrapJust()
+        .blockingFirst()
 
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
-    assertThat(patientFirst).isNotNull()
-    assertThat(searchResult).isEmpty()
+    assertThat(deadPatient.status).isEqualTo(PatientStatus.DEAD)
+  }
+
+  @Test
+  fun when_patient_is_marked_dead_they_should_marked_as_pending_sync() {
+    val timeOfCreation = Instant.now(testClock)
+
+    val patient = patientRepository
+        .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+
+    testClock.advanceBy(Duration.ofDays(365))
+    val timeOfDeath = Instant.now(testClock)
+
+    patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
+    val deadPatient: Patient = patientRepository.patient(patient.uuid)
+        .unwrapJust()
+        .blockingFirst()
+
+    assertThat(deadPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(deadPatient.updatedAt).isNotEqualTo(timeOfCreation)
+    assertThat(deadPatient.updatedAt).isEqualTo(timeOfDeath)
   }
 
   /**

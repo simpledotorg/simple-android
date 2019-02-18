@@ -33,6 +33,8 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.ElapsedRealtimeClock
+import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserClock
@@ -75,6 +77,8 @@ class TestClinicApp : ClinicApp() {
           override fun utcClock(): UtcClock = TestUtcClock()
 
           override fun userClock(userTimeZone: ZoneId): UserClock = TestUserClock()
+
+          override fun elapsedRealtimeClock(): ElapsedRealtimeClock = TestElapsedRealtimeClock()
         })
         .storageModule(object : StorageModule(databaseName = "ignored", runDatabaseQueriesOnMainThread = true) {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)

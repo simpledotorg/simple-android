@@ -66,3 +66,18 @@ private fun clockFromYear(year: Int): Clock {
 
   return Clock.fixed(fixedInstant, UTC)
 }
+
+class TestElapsedRealtimeClock : ElapsedRealtimeClock() {
+
+  private var clock = fixed(Instant.EPOCH, UTC)
+
+  override fun withZone(zone: ZoneId): Clock = clock.withZone(zone)
+
+  override fun getZone(): ZoneId = clock.zone
+
+  override fun instant(): Instant = clock.instant()
+
+  fun advanceBy(duration: Duration) {
+    clock = Clock.offset(clock, duration)
+  }
+}

@@ -219,18 +219,15 @@
 
   <style name="Clinic.FacilitySelection" />
 
-  <style name="Clinic.FacilitySelection.FacilityName">
+  <style name="Clinic.FacilitySelection.FacilityName" parent="Clinic.V2.TextAppearance.Body1Left.Blue1">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
-    <item name="android:textColor">@color/black_opacity_90</item>
-    <item name="android:textSize">@dimen/textsize_16</item>
   </style>
 
-  <style name="Clinic.FacilitySelection.FacilityAddress">
+  <style name="Clinic.FacilitySelection.FacilityAddress" parent="Clinic.V2.TextAppearance.Body2Left.Grey1">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">wrap_content</item>
     <item name="android:layout_marginTop">2dp</item>
-    <item name="android:textColor">@color/black_opacity_50</item>
   </style>
 
   <style name="Clinic.FacilitySelection.FacilityContainer">

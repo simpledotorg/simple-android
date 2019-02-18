@@ -23,7 +23,8 @@ open class RegistrationModule {
         retryBackOffDelayInMinutes = 1,
         locationListenerExpiry = Duration.ofSeconds(5),
         locationUpdateInterval = Duration.ofSeconds(1),
-        proximityThresholdForNearbyFacilities = Distance.ofKilometers(2.0)))
+        proximityThresholdForNearbyFacilities = Distance.ofKilometers(2.0),
+        staleLocationThreshold = Duration.ofMinutes(10)))
   }
 
   @Provides

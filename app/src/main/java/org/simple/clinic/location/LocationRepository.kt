@@ -12,6 +12,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
+import org.simple.clinic.location.LocationUpdate.Available
 import org.threeten.bp.Duration
 import javax.inject.Inject
 
@@ -29,8 +30,6 @@ class LocationRepository @Inject constructor(private val appContext: Application
     val request = locationRequest(updateInterval)
 
     val availableStream = locationUpdates(locationProvider, request)
-        .map { LocationUpdate.Available(it) }
-
     val unavailableStream = locationStatusChanges(locationProvider, request)
         .filter { it.isUsable.not() }
         .map { LocationUpdate.Unavailable }
@@ -45,7 +44,7 @@ class LocationRepository @Inject constructor(private val appContext: Application
     }
   }
 
-  private fun locationUpdates(provider: LocationProvider, request: LocationRequest): Observable<Coordinates> {
+  private fun locationUpdates(provider: LocationProvider, request: LocationRequest): Observable<Available> {
     val locationChanges = Observable.create<LocationResult> { emitter ->
       val locationCallback = object : LocationCallback() {
         override fun onLocationResult(result: LocationResult) {
@@ -59,15 +58,24 @@ class LocationRepository @Inject constructor(private val appContext: Application
 
     return locationChanges
         .filter { it.lastLocation != null }
-        .map { Coordinates(it.lastLocation.latitude, it.lastLocation.longitude) }
+        .map { it.lastLocation }
+        .map {
+          // Location#time would have been easier to work with instead of nanos-elapsed-since-boot,
+          // but during our testing, the time was off by 12 hours. We only tested on the emulator.
+          Available(
+              location = Coordinates(it.latitude, it.longitude),
+              timeSinceBootWhenRecorded = Duration.ofNanos(it.elapsedRealtimeNanos))
+        }
         .startWith(lastKnownLocation(provider))
   }
 
-  private fun lastKnownLocation(provider: LocationProvider): Observable<Coordinates> {
-    return Observable.create<Coordinates> { emitter ->
+  private fun lastKnownLocation(provider: LocationProvider): Observable<Available> {
+    return Observable.create { emitter ->
       provider.lastLocation.addOnSuccessListener { location: Location? ->
-        if (location != null) {
-          emitter.onNext(Coordinates(location.latitude, location.longitude))
+        location?.run {
+          emitter.onNext(Available(
+              location = Coordinates(latitude, longitude),
+              timeSinceBootWhenRecorded = Duration.ofNanos(elapsedRealtimeNanos)))
         }
         emitter.onComplete()
       }

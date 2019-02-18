@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginBottom="8dp"
+  android:layout_marginEnd="8dp"
+  android:layout_marginStart="8dp">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="16dp">
+
+    <ImageView
+      android:id="@+id/recentpatient_item_gender"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:ignore="ContentDescription"
+      tools:src="@drawable/ic_patient_transgender" />
+
+    <TextView
+      android:id="@+id/recentpatient_item_title"
+      style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="16dp"
+      android:layout_marginStart="16dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toEndOf="@+id/recentpatient_item_gender"
+      app:layout_constraintTop_toTopOf="@+id/recentpatient_item_gender"
+      tools:text="Anish Acharya, 43" />
+
+    <TextView
+      android:id="@+id/recentpatient_item_last_bp_label"
+      style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="4dp"
+      android:text="@string/patientsearchresults_item_last_bp"
+      android:textAllCaps="true"
+      app:layout_constraintStart_toStartOf="@+id/recentpatient_item_title"
+      app:layout_constraintTop_toBottomOf="@+id/recentpatient_item_title" />
+
+    <TextView
+      android:id="@+id/recentpatient_item_last_bp"
+      style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_4"
+      android:ellipsize="end"
+      android:maxLines="1"
+      app:layout_constraintBaseline_toBaselineOf="@+id/recentpatient_item_last_bp_label"
+      app:layout_constraintStart_toEndOf="@+id/recentpatient_item_last_bp_label"
+      tools:text="140/90, Today" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

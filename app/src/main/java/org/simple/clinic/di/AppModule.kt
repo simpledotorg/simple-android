@@ -15,6 +15,7 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
+import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
@@ -54,6 +55,10 @@ open class AppModule(private val appContext: Application) {
   @Provides
   @AppScope
   open fun userClock(userTimeZone: ZoneId): UserClock= RealUserClock(userTimeZone)
+
+  @Provides
+  @AppScope
+  open fun elapsedRealtimeClock() = ElapsedRealtimeClock()
 
   @Provides
   @AppScope

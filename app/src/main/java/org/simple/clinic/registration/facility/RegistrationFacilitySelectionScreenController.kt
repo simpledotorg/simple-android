@@ -25,12 +25,12 @@ import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.registration.RegistrationConfig
 import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -43,7 +43,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     private val userSession: UserSession,
     private val registrationScheduler: RegistrationScheduler,
     private val locationRepository: LocationRepository,
-    private val configProvider: Single<RegistrationConfig>
+    private val configProvider: Single<RegistrationConfig>,
+    private val elapsedRealtimeClock: ElapsedRealtimeClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -73,7 +74,11 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
     val fetchLocation = {
       configProvider
-          .flatMapObservable { locationRepository.streamUserLocation(it.locationUpdateInterval) }
+          .flatMapObservable { config ->
+            locationRepository
+                .streamUserLocation(config.locationUpdateInterval)
+                .filter { isRecentLocation(it, config) }
+          }
           .onErrorResumeNext(Observable.empty())
     }
 
@@ -89,6 +94,13 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .map { RegistrationFacilityUserLocationUpdated(it) }
 
     events.mergeWith(locationUpdates)
+  }
+
+  private fun isRecentLocation(update: LocationUpdate, config: RegistrationConfig): Boolean {
+    return when (update) {
+      is Available -> update.age(elapsedRealtimeClock) <= config.staleLocationThreshold
+      is Unavailable -> true
+    }
   }
 
   private fun fetchFacilities(events: Observable<UiEvent>): Observable<UiChange> {

@@ -43,6 +43,7 @@ import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestElapsedRealtimeClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -64,6 +65,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val locationRepository = mock<LocationRepository>()
   private val userSession = mock<UserSession>()
   private val testComputationScheduler = TestScheduler()
+  private val elapsedRealtimeClock = TestElapsedRealtimeClock()
 
   private lateinit var controller: RegistrationFacilitySelectionScreenController
 
@@ -71,7 +73,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
       retryBackOffDelayInMinutes = 0,
       locationListenerExpiry = Duration.ofSeconds(0),
       locationUpdateInterval = Duration.ofSeconds(0),
-      proximityThresholdForNearbyFacilities = Distance.ofKilometers(0.0))
+      proximityThresholdForNearbyFacilities = Distance.ofKilometers(0.0),
+      staleLocationThreshold = Duration.ofSeconds(0))
   private val configProvider = BehaviorSubject.createDefault(configTemplate)
 
   @Before
@@ -85,7 +88,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
         userSession,
         registrationScheduler,
         locationRepository,
-        configProvider.firstOrError())
+        configProvider.firstOrError(),
+        elapsedRealtimeClock)
 
     uiEvents
         .compose(controller)
@@ -139,23 +143,67 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   fun `when screen is started then location should only be read once`() {
+    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
+
     val facilities = listOf(
         PatientMocker.facility(name = "Facility 1"),
         PatientMocker.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+
+    val timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis())
     whenever(locationRepository.streamUserLocation(any())).thenReturn(
         Observable.just(
-            Available(Coordinates(0.0, 0.0)),
+            Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded),
             Unavailable,
-            Available(Coordinates(0.0, 0.0))))
+            Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded)))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
     uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
 
+    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
+
     verify(locationRepository).streamUserLocation(any())
     verify(screen, times(1)).updateFacilities(any(), any())
+  }
+
+  @Test
+  fun `when the user's location updates are received then only one recent update should be read`() {
+    val config = configTemplate.copy(staleLocationThreshold = Duration.ofMinutes(10))
+    configProvider.onNext(config)
+
+    val facilities = listOf(PatientMocker.facility(name = "Facility 1"))
+    whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
+    whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
+
+    val locationUpdates = PublishSubject.create<LocationUpdate>()
+    whenever(locationRepository.streamUserLocation(any())).thenReturn(locationUpdates)
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(RegistrationFacilitySearchQueryChanged(""))
+    uiEvents.onNext(RegistrationFacilityLocationPermissionChanged(GRANTED))
+
+    val locationOlderThanStaleThreshold = Available(
+        location = Coordinates(0.0, 0.0),
+        timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis()))
+
+    elapsedRealtimeClock.advanceBy(config.staleLocationThreshold + Duration.ofSeconds(1))
+
+    locationUpdates.onNext(locationOlderThanStaleThreshold)
+    verify(screen, never()).updateFacilities(any(), any())
+
+    locationUpdates.onNext(locationOlderThanStaleThreshold)
+    verify(screen, never()).updateFacilities(any(), any())
+
+    elapsedRealtimeClock.advanceBy(config.staleLocationThreshold)
+
+    val locationNewerThanStaleThreshold = Available(
+        location = Coordinates(0.0, 0.0),
+        timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis()))
+
+    locationUpdates.onNext(locationNewerThanStaleThreshold)
+    verify(screen).updateFacilities(any(), any())
   }
 
   @Suppress("unused")
@@ -221,7 +269,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     }
     verify(screen, never()).updateFacilities(any(), any())
 
-    locationUpdates.onNext(LocationUpdate.Available(Coordinates(0.0, 0.0)))
+    locationUpdates.onNext(LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
     verify(screen).updateFacilities(any(), any())
   }
 

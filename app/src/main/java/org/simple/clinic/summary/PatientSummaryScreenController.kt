@@ -66,7 +66,6 @@ class PatientSummaryScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(ReportAnalyticsEvents())
         .compose(mergeWithPatientSummaryChanges())
-        .compose(mergeWithBloodPressureSaves())
         .compose(mergeWithAllBloodPressuresDeleted())
         .replay()
 
@@ -180,24 +179,6 @@ class PatientSummaryScreenController @Inject constructor(
           .distinctUntilChanged()
 
       events.mergeWith(summaryItemChanges)
-    }
-  }
-
-  private fun mergeWithBloodPressureSaves(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val bloodPressureSaves = events
-          .ofType<PatientSummaryBloodPressureClosed>()
-          .startWith(PatientSummaryBloodPressureClosed(false))
-          .map { it.wasBloodPressureSaved }
-
-      val bloodPressureSaveRestores = events
-          .ofType<PatientSummaryRestoredWithBPSaved>()
-          .map { it.wasBloodPressureSaved }
-
-      val mergedBloodPressureSaves = bloodPressureSaves.mergeWith(bloodPressureSaveRestores)
-          .map(::PatientSummaryBloodPressureSaved)
-
-      events.mergeWith(mergedBloodPressureSaves)
     }
   }
 

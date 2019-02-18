@@ -7,5 +7,6 @@ data class RegistrationConfig(
     val retryBackOffDelayInMinutes: Long, // TODO: convert to Duration
     val locationListenerExpiry: Duration,
     val locationUpdateInterval: Duration,
-    val proximityThresholdForNearbyFacilities: Distance
+    val proximityThresholdForNearbyFacilities: Distance,
+    val staleLocationThreshold: Duration
 )

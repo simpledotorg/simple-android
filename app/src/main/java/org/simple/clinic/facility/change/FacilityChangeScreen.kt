@@ -14,9 +14,9 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -26,6 +26,7 @@ import org.simple.clinic.registration.facility.FacilitiesAdapter
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -51,11 +52,13 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), searchQueryChanges(), facilityClicks())
-        .observeOn(Schedulers.io())
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+
+    Observable.mergeArray(screenCreates(), screenDestroys, searchQueryChanges(), facilityClicks())
+        .observeOn(io())
         .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(RxView.detaches(this))
+        .observeOn(mainThread())
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
 
     toolbar.setNavigationOnClickListener {
@@ -68,9 +71,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     // For some reasons, the keyboard stays
     // visible when coming from AppLockScreen.
     searchEditText.requestFocus()
-    post {
-      hideKeyboard()
-    }
+    post { hideKeyboard() }
 
     hideKeyboardOnListScroll()
   }

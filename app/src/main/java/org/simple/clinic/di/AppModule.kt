@@ -7,6 +7,7 @@ import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.crash.CrashReporterModule
+import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.registration.RegistrationModule
@@ -28,6 +29,7 @@ import java.util.Locale
   StorageModule::class,
   LoginModule::class,
   RegistrationModule::class,
+  FacilityChangeModule::class,
   CrashReporterModule::class,
   BruteForceProtectionModule::class,
   PatientSummaryModule::class,

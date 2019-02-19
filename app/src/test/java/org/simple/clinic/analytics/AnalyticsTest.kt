@@ -4,6 +4,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
+import org.threeten.bp.Duration
 import java.util.UUID
 
 class AnalyticsTest {
@@ -60,6 +61,13 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when reporting a time taken event without any reporters, no error should be thrown`() {
+    Analytics.reportTimeTaken(
+        operationName = "test",
+        timeTaken = Duration.ofMillis(500L))
+  }
+
+  @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportUserInteraction("Test")
@@ -108,6 +116,12 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when a reporter fails sending a time taken event, no error should be thrown`() {
+    Analytics.addReporter(FailingAnalyticsReporter())
+    Analytics.reportTimeTaken("test", Duration.ofMillis(100L))
+  }
+
+  @Test
   fun `when setting the user id, the property must also be set on the reporters`() {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
@@ -144,10 +158,12 @@ class AnalyticsTest {
 
     Analytics.reportUserInteraction("Test 1")
     Analytics.reportUserInteraction("Test 2")
+    Analytics.reportTimeTaken("Operation 1", Duration.ofMillis(500L))
     Analytics.reportUserInteraction("Test 3")
     Analytics.reportScreenChange("Screen 1", "Screen 2")
     Analytics.reportInputValidationError("Error 1")
     Analytics.reportInputValidationError("Error 2")
+    Analytics.reportTimeTaken("Operation 2", Duration.ofMinutes(1L).plusMillis(750L))
     Analytics.reportNetworkCall("Test 1", "GET", 200, 500, 400)
     Analytics.reportNetworkTimeout(
         url = "Test 1",
@@ -166,14 +182,22 @@ class AnalyticsTest {
         networkTransportType = Analytics.NetworkTransportType.CELLULAR,
         downstreamBandwidthKbps = 50,
         upstreamBandwidthKbps = 100)
+    Analytics.reportTimeTaken("Operation 1", Duration.ofHours(3L).plusMinutes(30L).plusMillis(1L))
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
         Event("UserInteraction", mapOf("name" to "Test 2")),
+        Event("TimeTaken", mapOf(
+            "operationName" to "Operation 1",
+            "timeTakenInMillis" to 500L)
+        ),
         Event("UserInteraction", mapOf("name" to "Test 3")),
         Event("ScreenChange", mapOf("outgoing" to "Screen 1", "incoming" to "Screen 2")),
         Event("InputValidationError", mapOf("name" to "Error 1")),
         Event("InputValidationError", mapOf("name" to "Error 2")),
+        Event("TimeTaken", mapOf(
+            "operationName" to "Operation 2",
+            "timeTakenInMillis" to 60750L)),
         Event("NetworkCall", mapOf(
             "url" to "Test 1", "method" to "GET", "responseCode" to 200, "contentLength" to 500, "durationMs" to 400)
         ),
@@ -197,6 +221,10 @@ class AnalyticsTest {
             "transport" to Analytics.NetworkTransportType.CELLULAR,
             "downstreamKbps" to 50,
             "upstreamKbps" to 100)
+        ),
+        Event("TimeTaken", mapOf(
+            "operationName" to "Operation 1",
+            "timeTakenInMillis" to 12600001L)
         )
     )
 

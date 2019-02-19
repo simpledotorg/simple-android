@@ -190,7 +190,7 @@ class FacilityChangeScreenControllerTest {
   @Test
   @Parameters(method = "params for permission denials")
   fun `when screen is started and location permission is unavailable then location should not be fetched and facilities should be shown`(
-      permissionResult: RuntimePermissionResult
+      deniedResult: RuntimePermissionResult
   ) {
     val facilities = listOf(
         PatientMocker.facility(name = "Facility 1"),
@@ -200,7 +200,7 @@ class FacilityChangeScreenControllerTest {
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeSearchQueryChanged(""))
-    uiEvents.onNext(FacilityChangeLocationPermissionChanged(permissionResult))
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(deniedResult))
 
     verify(locationRepository, never()).streamUserLocation(any(), any())
     verify(screen).updateFacilities(any(), any())
@@ -273,4 +273,65 @@ class FacilityChangeScreenControllerTest {
   fun `params for permission denials`(): List<RuntimePermissionResult> {
     return listOf(DENIED, NEVER_ASK_AGAIN)
   }
+
+  @Test
+  @Parameters("5", "6", "7", "8")
+  fun `when location is being fetched then it should expire after a fixed time duration`(
+      secondsSpentWaitingForLocation: Long
+  ) {
+    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
+
+    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(emptyList()))
+    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(GRANTED))
+    verify(screen).showProgressIndicator()
+
+    testComputationScheduler.advanceTimeBy(secondsSpentWaitingForLocation, SECONDS)
+    verify(screen).hideProgressIndicator()
+  }
+
+  @Test
+  fun `when screen starts and location permission is available then progress indicator should be shown`() {
+    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(GRANTED))
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(GRANTED))
+
+    verify(screen, times(1)).showProgressIndicator()
+  }
+
+  @Test
+  @Parameters(method = "params for permission denials")
+  fun `when screen starts and location permission is unavailable then progress indicator should not be shown`(
+      deniedResult: RuntimePermissionResult
+  ) {
+    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(deniedResult))
+
+    verify(screen, never()).showProgressIndicator()
+  }
+
+  @Test
+  @Parameters(method = "params for location updates")
+  fun `when a location update is received then progress indicator should be hidden`(
+      locationUpdate: LocationUpdate
+  ) {
+    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(locationUpdate))
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(FacilityChangeLocationPermissionChanged(GRANTED))
+
+    verify(screen).hideProgressIndicator()
+  }
+
+  @Suppress("unused")
+  fun `params for location updates`() = listOf(
+      LocationUpdate.Unavailable,
+      LocationUpdate.Available(location = Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0))
+  )
 }

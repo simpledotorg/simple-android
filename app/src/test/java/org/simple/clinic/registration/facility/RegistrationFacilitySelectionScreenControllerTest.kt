@@ -128,7 +128,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
 
   @Test
   @Parameters(method = "params for permission denials")
-  fun `when screen is started and location permission is unavailable then location should not be fetched and facilities should be shown`(
+  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`(
       permissionResult: RuntimePermissionResult
   ) {
     val facilities = listOf(

@@ -140,11 +140,9 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showProgressIndicator() {
     progressView.visibility = VISIBLE
-    facilityRecyclerView.visibility = GONE
   }
 
   fun hideProgressIndicator() {
     progressView.visibility = GONE
-    facilityRecyclerView.visibility = VISIBLE
   }
 }

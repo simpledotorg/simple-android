@@ -19,7 +19,7 @@ buildscript {
       stetho              : '1.5.0',
       sentry              : '1.7.14',
       slf4j               : '1.7.25',
-      groupie             : '2.1.0',
+      groupie             : '2.3.0',
       flow                : '1.0.0-alpha3',
       rxJava              : '2.1.9',
       rxAndroid           : '2.0.2',

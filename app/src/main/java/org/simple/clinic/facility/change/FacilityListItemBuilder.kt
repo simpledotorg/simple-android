@@ -4,7 +4,6 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.util.Distance
-import org.simple.clinic.util.Haversine
 
 object FacilityListItemBuilder {
 
@@ -54,7 +53,7 @@ object FacilityListItemBuilder {
   ): List<Facility> {
     val facilitiesToDistance = facilities
         .filter { it.location != null }
-        .map { it to Haversine.distance(userLocation, it.location!!) }
+        .map { it to Coordinates.haversineDistance(userLocation, it.location!!) }
 
     val nearbyFacilities = facilitiesToDistance
         .filter { (_, distance) -> distance <= proximityThreshold }

@@ -28,6 +28,8 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.LocationRepository
 import org.simple.clinic.location.LocationUpdate
+import org.simple.clinic.location.LocationUpdate.Available
+import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.reports.ReportsSync
@@ -45,6 +47,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import java.io.File
+import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeUnit.SECONDS
 
 @RunWith(JUnitParamsRunner::class)
@@ -105,6 +108,7 @@ class FacilityChangeScreenControllerTest {
     whenever(facilityRepository.facilitiesInCurrentGroup(user = user)).thenReturn(Observable.just(facilities, facilities))
 
     val searchQuery = ""
+    uiEvents.onNext(FacilityChangeUserLocationUpdated(Unavailable))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(searchQuery))
 
     val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery)
@@ -120,6 +124,8 @@ class FacilityChangeScreenControllerTest {
         PatientMocker.facility(name = "Facility 2"))
     whenever(facilityRepository.facilitiesInCurrentGroup(any(), eq(user))).thenReturn(Observable.just(facilities))
 
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(FacilityChangeUserLocationUpdated(Unavailable))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "F"))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fa"))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(query = "Fac"))
@@ -189,7 +195,7 @@ class FacilityChangeScreenControllerTest {
 
   @Test
   @Parameters(method = "params for permission denials")
-  fun `when screen is started and location permission is unavailable then location should not be fetched and facilities should be shown`(
+  fun `when screen is started and location permission was denied then location should not be fetched and facilities should be shown`(
       deniedResult: RuntimePermissionResult
   ) {
     val facilities = listOf(
@@ -206,6 +212,11 @@ class FacilityChangeScreenControllerTest {
     verify(screen).updateFacilities(any(), any())
   }
 
+  @Suppress("unused")
+  fun `params for permission denials`(): List<RuntimePermissionResult> {
+    return listOf(DENIED, NEVER_ASK_AGAIN)
+  }
+
   @Test
   fun `when screen is started then location should only be read once`() {
     configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
@@ -218,9 +229,9 @@ class FacilityChangeScreenControllerTest {
     val timeSinceBootWhenRecorded = Duration.ofMillis(elapsedRealtimeClock.millis())
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(
         Observable.just(
-            LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded),
-            LocationUpdate.Unavailable,
-            LocationUpdate.Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded)))
+            Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded),
+            Unavailable,
+            Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded)))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(FacilityChangeSearchQueryChanged(""))
@@ -269,11 +280,6 @@ class FacilityChangeScreenControllerTest {
     verify(screen).updateFacilities(any(), any())
   }
 
-  @Suppress("unused")
-  fun `params for permission denials`(): List<RuntimePermissionResult> {
-    return listOf(DENIED, NEVER_ASK_AGAIN)
-  }
-
   @Test
   @Parameters("5", "6", "7", "8")
   fun `when location is being fetched then it should expire after a fixed time duration`(
@@ -305,7 +311,7 @@ class FacilityChangeScreenControllerTest {
 
   @Test
   @Parameters(method = "params for permission denials")
-  fun `when screen starts and location permission is unavailable then progress indicator should not be shown`(
+  fun `when screen starts and location permission was denied then progress indicator should not be shown`(
       deniedResult: RuntimePermissionResult
   ) {
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
@@ -331,7 +337,51 @@ class FacilityChangeScreenControllerTest {
 
   @Suppress("unused")
   fun `params for location updates`() = listOf(
-      LocationUpdate.Unavailable,
-      LocationUpdate.Available(location = Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0))
+      Unavailable,
+      Available(location = Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0))
   )
+
+  @Test
+  fun `when both facilities and location are fetched only then should facilities be shown`() {
+    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
+
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
+
+    val locationUpdates = PublishSubject.create<LocationUpdate>()
+    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
+
+    uiEvents.run {
+      onNext(ScreenCreated())
+      onNext(FacilityChangeSearchQueryChanged(""))
+      onNext(FacilityChangeLocationPermissionChanged(GRANTED))
+    }
+    verify(screen, never()).updateFacilities(any(), any())
+
+    locationUpdates.onNext(Available(Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
+    verify(screen).updateFacilities(any(), any())
+  }
+
+  @Test
+  fun `when facilities are fetched, but location listener expires then facilities should still be shown`() {
+    configProvider.onNext(configTemplate.copy(locationListenerExpiry = Duration.ofSeconds(5)))
+
+    val facilities = listOf(
+        PatientMocker.facility(name = "Facility 1"),
+        PatientMocker.facility(name = "Facility 2"))
+    whenever(facilityRepository.facilitiesInCurrentGroup(any(), any())).thenReturn(Observable.just(facilities))
+    whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
+
+    uiEvents.run {
+      onNext(ScreenCreated())
+      onNext(FacilityChangeSearchQueryChanged("f"))
+      onNext(FacilityChangeLocationPermissionChanged(GRANTED))
+    }
+    verify(screen, never()).updateFacilities(any(), any())
+
+    testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
+    verify(screen).updateFacilities(any(), any())
+  }
 }

@@ -104,26 +104,44 @@ class FacilityChangeScreenController @Inject constructor(
         .ofType<FacilityChangeLocationPermissionChanged>()
         .map { it.result }
 
-    val showProgress = Observables.combineLatest(screenCreations, locationPermissionChanges)
+    val showProgressWhenPermissionIsAvailable = Observables.combineLatest(screenCreations, locationPermissionChanges)
         .take(1)
         .filter { (_, permissionResult) -> permissionResult == GRANTED }
-        .map { { ui: Ui -> ui.showProgressIndicator()} }
+        .map { { ui: Ui -> ui.showProgressIndicator() } }
 
     val hideProgress = events
         .ofType<FacilityChangeUserLocationUpdated>()
         .map { { ui: Ui -> ui.hideProgressIndicator() } }
 
-    return showProgress.mergeWith(hideProgress)
+    return showProgressWhenPermissionIsAvailable.mergeWith(hideProgress)
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {
-    val filteredFacilityListItems = events
+    val searchQueryChanges = events
         .ofType<FacilityChangeSearchQueryChanged>()
         .map { it.query }
-        .switchMap { query ->
+
+    val locationUpdates = events
+        .ofType<FacilityChangeUserLocationUpdated>()
+        .map { it.location }
+
+    val filteredFacilityListItems = Observables
+        .combineLatest(searchQueryChanges, locationUpdates, configProvider.toObservable())
+        .switchMap { (query, locationUpdate, config) ->
+          val userLocation = when (locationUpdate) {
+            is Available -> locationUpdate.location
+            is Unavailable -> null
+          }
+
           userSession.requireLoggedInUser()
               .switchMap { user -> facilityRepository.facilitiesInCurrentGroup(query, user) }
-              .map { FacilityListItemBuilder.build(it, query) }
+              .map {
+                FacilityListItemBuilder.build(
+                    facilities = it,
+                    searchQuery = query,
+                    userLocation = userLocation,
+                    proximityThreshold = config.proximityThresholdForNearbyFacilities)
+              }
         }
         .replay()
         .refCount()
@@ -136,8 +154,7 @@ class FacilityChangeScreenController @Inject constructor(
         .map { listItems -> listItems to SUBSEQUENT_UPDATE }
         .skip(1)
 
-    return firstUpdate
-        .mergeWith(subsequentUpdates)
+    return Observable.merge(firstUpdate, subsequentUpdates)
         .map { (listItems, updateType) ->
           { ui: Ui -> ui.updateFacilities(listItems, updateType) }
         }

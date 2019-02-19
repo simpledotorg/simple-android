@@ -12,11 +12,13 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import io.reactivex.Observable
+import io.reactivex.Scheduler
 import org.simple.clinic.location.LocationUpdate.Available
 import org.threeten.bp.Duration
 import javax.inject.Inject
 
 typealias LocationProvider = FusedLocationProviderClient
+
 const val LOCATION_PERMISSION = Manifest.permission.ACCESS_FINE_LOCATION
 
 @SuppressLint("MissingPermission")
@@ -24,8 +26,13 @@ class LocationRepository @Inject constructor(private val appContext: Application
 
   data class LocationStatus(val isUsable: Boolean)
 
+  /**
+   * @param updateScheduler [FusedLocationProviderClient] requires a looper to emit location updates.
+   * The easiest way to get one is from the Activity, but that results in the updates being received
+   * on the main thread. This param makes it explicit for the caller to think about this.
+   */
   @RequiresPermission(LOCATION_PERMISSION)
-  fun streamUserLocation(updateInterval: Duration): Observable<LocationUpdate> {
+  fun streamUserLocation(updateInterval: Duration, updateScheduler: Scheduler): Observable<LocationUpdate> {
     val locationProvider = LocationServices.getFusedLocationProviderClient(appContext)
     val request = locationRequest(updateInterval)
 
@@ -34,7 +41,9 @@ class LocationRepository @Inject constructor(private val appContext: Application
         .filter { it.isUsable.not() }
         .map { LocationUpdate.Unavailable }
 
-    return Observable.merge(availableStream, unavailableStream)
+    return Observable
+        .merge(availableStream, unavailableStream)
+        .observeOn(updateScheduler)
   }
 
   private fun locationRequest(updateInterval: Duration): LocationRequest {

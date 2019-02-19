@@ -217,7 +217,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   }
 
   @Test
-  @Parameters("6", "7", "8")
+  @Parameters("5", "6", "7", "8")
   fun `when location is being fetched then it should expire after a fixed time duration`(
       secondsSpentWaitingForLocation: Long
   ) {

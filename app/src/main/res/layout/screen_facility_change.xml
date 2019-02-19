@@ -32,6 +32,14 @@
       tools:ignore="UnusedAttribute" />
   </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
 
+  <include
+    android:id="@+id/facilitychange_progress"
+    layout="@layout/screen_registration_facility_selection_progress_state"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@+id/facilitychange_toolbar"
+    android:visibility="gone" />
+
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/facilitychange_list"
     android:layout_width="match_parent"

@@ -22,12 +22,16 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
+import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.registration.facility.FacilitiesAdapter
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import timber.log.Timber
 import javax.inject.Inject
 
 class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -37,6 +41,9 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  @Inject
+  lateinit var activity: TheActivity
 
   private val toolbar by bindView<Toolbar>(R.id.facilitychange_toolbar)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.facilitychange_list)
@@ -54,7 +61,13 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
-    Observable.mergeArray(screenCreates(), screenDestroys, searchQueryChanges(), facilityClicks())
+    Observable
+        .mergeArray(
+            screenCreates(),
+            screenDestroys,
+            searchQueryChanges(),
+            facilityClicks(),
+            locationPermissionChanges())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -88,6 +101,11 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
           .facilityClicks
           .map(::FacilityChangeClicked)
 
+  private fun locationPermissionChanges(): Observable<UiEvent> {
+    val permissionResult = RuntimePermissions.check(activity, LOCATION_PERMISSION)
+    return Observable.just(FacilityChangeLocationPermissionChanged(permissionResult))
+  }
+
   @SuppressLint("CheckResult")
   private fun hideKeyboardOnListScroll() {
     val scrollEvents = RxRecyclerView.scrollEvents(facilityRecyclerView)
@@ -117,5 +135,13 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun goBack() {
     screenRouter.pop()
+  }
+
+  fun showProgressIndicator() {
+    Timber.w("TODO: show progress")
+  }
+
+  fun hideProgressIndicator() {
+    Timber.w("TODO: hide progress")
   }
 }

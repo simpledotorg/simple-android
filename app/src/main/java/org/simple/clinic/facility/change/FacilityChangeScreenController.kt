@@ -8,6 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
@@ -49,6 +50,7 @@ class FacilityChangeScreenController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
+        showProgressForReadingLocation(replayedEvents),
         showFacilities(replayedEvents),
         changeFacilityAndExit(replayedEvents))
   }
@@ -69,7 +71,7 @@ class FacilityChangeScreenController @Inject constructor(
       configProvider
           .flatMapObservable { config ->
             locationRepository
-                .streamUserLocation(config.locationUpdateInterval, Schedulers.io())
+                .streamUserLocation(config.locationUpdateInterval, io())
                 .filter { isRecentLocation(it, config) }
           }
           .onErrorResumeNext(Observable.empty())
@@ -94,6 +96,24 @@ class FacilityChangeScreenController @Inject constructor(
       is Available -> update.age(elapsedRealtimeClock) <= config.staleLocationThreshold
       is Unavailable -> true
     }
+  }
+
+  private fun showProgressForReadingLocation(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreations = events.ofType<ScreenCreated>()
+    val locationPermissionChanges = events
+        .ofType<FacilityChangeLocationPermissionChanged>()
+        .map { it.result }
+
+    val showProgress = Observables.combineLatest(screenCreations, locationPermissionChanges)
+        .take(1)
+        .filter { (_, permissionResult) -> permissionResult == GRANTED }
+        .map { { ui: Ui -> ui.showProgressIndicator()} }
+
+    val hideProgress = events
+        .ofType<FacilityChangeUserLocationUpdated>()
+        .map { { ui: Ui -> ui.hideProgressIndicator() } }
+
+    return showProgress.mergeWith(hideProgress)
   }
 
   private fun showFacilities(events: Observable<UiEvent>): Observable<UiChange> {

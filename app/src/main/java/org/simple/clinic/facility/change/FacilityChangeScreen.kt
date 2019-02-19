@@ -3,6 +3,7 @@ package org.simple.clinic.facility.change
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
 import androidx.appcompat.widget.Toolbar
@@ -31,7 +32,6 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import timber.log.Timber
 import javax.inject.Inject
 
 class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -46,6 +46,7 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   lateinit var activity: TheActivity
 
   private val toolbar by bindView<Toolbar>(R.id.facilitychange_toolbar)
+  private val progressView by bindView<View>(R.id.facilitychange_progress)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.facilitychange_list)
   private val searchEditText by bindView<EditText>(R.id.facilitychange_search)
 
@@ -138,10 +139,12 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showProgressIndicator() {
-    Timber.w("TODO: show progress")
+    progressView.visibility = VISIBLE
+    facilityRecyclerView.visibility = GONE
   }
 
   fun hideProgressIndicator() {
-    Timber.w("TODO: hide progress")
+    progressView.visibility = GONE
+    facilityRecyclerView.visibility = VISIBLE
   }
 }

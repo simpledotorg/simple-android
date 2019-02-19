@@ -1,7 +1,14 @@
 package org.simple.clinic.analytics
 
 import android.net.NetworkCapabilities
-import android.net.NetworkCapabilities.*
+import android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH
+import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
+import android.net.NetworkCapabilities.TRANSPORT_ETHERNET
+import android.net.NetworkCapabilities.TRANSPORT_LOWPAN
+import android.net.NetworkCapabilities.TRANSPORT_VPN
+import android.net.NetworkCapabilities.TRANSPORT_WIFI
+import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
+import org.threeten.bp.Duration
 import java.util.UUID
 
 object Analytics {
@@ -93,6 +100,17 @@ object Analytics {
             "transport" to networkTransportType,
             "downstreamKbps" to downstreamBandwidthKbps,
             "upstreamKbps" to upstreamBandwidthKbps
+        ))
+      }
+    }
+  }
+
+  fun reportTimeTaken(operationName: String, timeTaken: Duration) {
+    reporters.forEach {
+      it.safely("Error reporting time taken event") {
+        createEvent("TimeTaken", mapOf(
+            "operationName" to operationName,
+            "timeTakenInMillis" to timeTaken.toMillis()
         ))
       }
     }

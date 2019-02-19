@@ -7,74 +7,84 @@
   android:layout_height="match_parent"
   android:background="@color/white100">
 
-  <org.simple.clinic.widgets.OmegaCenterIconButton
-    android:id="@+id/patients_search_patients"
+  <androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:background="@drawable/button_outline_ripple"
-    android:drawablePadding="@dimen/spacing_8"
-    android:drawableStart="@drawable/ic_search_24dp"
-    android:fontFamily="sans-serif"
-    android:gravity="center"
-    android:paddingStart="20dp"
-    android:text="@string/home_search_patient_name_phone"
-    android:textAllCaps="false"
-    android:textColor="?colorAccent"
-    android:textSize="@dimen/textsize_18"
-    app:drawableTint="?colorAccent"
-    tools:ignore="MissingPrefix,RtlSymmetry" />
+    android:layout_height="wrap_content">
 
-  <org.simple.clinic.widgets.OmegaCenterIconButton
-    android:id="@+id/patients_scan_simple_card"
-    style="@style/Clinic.V2.Button.WithIcon.Blue1"
-    android:layout_width="match_parent"
-    android:layout_height="56dp"
-    android:layout_below="@id/patients_search_patients"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="@dimen/spacing_16"
-    android:layout_marginTop="@dimen/spacing_16"
-    android:drawableStart="@drawable/patient_id_card"
-    android:gravity="center"
-    android:text="@string/patients_scan_simple_card"
-    android:textAllCaps="false"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
-    app:drawableTint="@color/white100"
-    tools:ignore="MissingPrefix,RtlSymmetry" />
-
-  <ImageView
-    android:id="@+id/patients_record_bp_illustration"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/patients_scan_simple_card"
-    android:layout_centerHorizontal="true"
-    android:adjustViewBounds="true"
-    android:scaleType="fitXY"
-    android:src="@drawable/illustrations_homescreen"
-    tools:ignore="ContentDescription" />
-
-  <FrameLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_below="@id/patients_record_bp_illustration">
-
-    <TextView
-      style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
+    <RelativeLayout
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:layout_marginEnd="@dimen/spacing_16"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:text="@string/patients_record_every_patient" />
-  </FrameLayout>
+      android:layout_height="wrap_content">
 
-  <org.simple.clinic.patient.recent.RecentPatientsView
-    android:id="@+id/patients_record_recent_patients"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_below="@id/patients_record_bp_illustration" />
+      <org.simple.clinic.widgets.OmegaCenterIconButton
+        android:id="@+id/patients_search_patients"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:background="@drawable/button_outline_ripple"
+        android:drawablePadding="@dimen/spacing_8"
+        android:drawableStart="@drawable/ic_search_24dp"
+        android:fontFamily="sans-serif"
+        android:gravity="center"
+        android:paddingStart="20dp"
+        android:text="@string/home_search_patient_name_phone"
+        android:textAllCaps="false"
+        android:textColor="?colorAccent"
+        android:textSize="@dimen/textsize_18"
+        app:drawableTint="?colorAccent"
+        tools:ignore="MissingPrefix,RtlSymmetry" />
+
+      <org.simple.clinic.widgets.OmegaCenterIconButton
+        android:id="@+id/patients_scan_simple_card"
+        style="@style/Clinic.V2.Button.WithIcon.Blue1"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/patients_search_patients"
+        android:layout_marginEnd="@dimen/spacing_16"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:drawableStart="@drawable/patient_id_card"
+        android:gravity="center"
+        android:text="@string/patients_scan_simple_card"
+        android:textAllCaps="false"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
+        app:drawableTint="@color/white100"
+        tools:ignore="MissingPrefix,RtlSymmetry" />
+
+      <ImageView
+        android:id="@+id/patients_record_bp_illustration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/patients_scan_simple_card"
+        android:layout_centerHorizontal="true"
+        android:adjustViewBounds="true"
+        android:scaleType="fitXY"
+        android:src="@drawable/illustrations_homescreen"
+        tools:ignore="ContentDescription" />
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/patients_record_bp_illustration">
+
+        <TextView
+          style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center"
+          android:layout_marginEnd="@dimen/spacing_16"
+          android:layout_marginStart="@dimen/spacing_16"
+          android:text="@string/patients_record_every_patient" />
+      </FrameLayout>
+
+      <org.simple.clinic.patient.recent.RecentPatientsView
+        android:id="@+id/patients_record_recent_patients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/patients_record_bp_illustration" />
+    </RelativeLayout>
+  </androidx.core.widget.NestedScrollView>
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
     android:id="@+id/patients_user_status_viewflipper"

@@ -45,7 +45,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     private val registrationScheduler: RegistrationScheduler,
     private val locationRepository: LocationRepository,
     private val configProvider: Single<RegistrationConfig>,
-    private val elapsedRealtimeClock: ElapsedRealtimeClock
+    private val elapsedRealtimeClock: ElapsedRealtimeClock,
+    private val listItemBuilder: FacilityListItemBuilder
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -164,7 +165,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
           facilityRepository
               .facilities(query)
               .map {
-                FacilityListItemBuilder.build(
+                listItemBuilder.build(
                     facilities = it,
                     searchQuery = query,
                     userLocation = userLocation,

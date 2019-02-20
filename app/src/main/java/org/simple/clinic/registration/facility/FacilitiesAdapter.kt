@@ -67,8 +67,7 @@ class FacilitiesAdapter : ListAdapter<FacilityListItem, RecyclerView.ViewHolder>
     when (item) {
       is FacilityListItem.Header -> {
         (holder as FacilityHeaderViewHolder).render(item)
-        val isFirstHeader = item is FacilityListItem.Header.SuggestedFacilities
-        holder.setSpacingWithPreviousSectionVisible(isFirstHeader.not())
+        holder.setSpacingWithPreviousSectionVisible(item.hasSpacingWithPreviousSection)
       }
       is FacilityListItem.FacilityOption -> {
         (holder as FacilityOptionViewHolder).facilityOption = item
@@ -89,8 +88,8 @@ class FacilityHeaderViewHolder(rootView: View) : ViewHolder(rootView) {
 
   fun render(header: FacilityListItem.Header) {
     nameTextView.setText(when (header) {
-      FacilityListItem.Header.SuggestedFacilities -> R.string.registrationfacilities_header_suggested_facilities
-      FacilityListItem.Header.AllFacilities -> R.string.registrationfacilities_header_all_facilities
+      is FacilityListItem.Header.SuggestedFacilities -> R.string.registrationfacilities_header_suggested_facilities
+      is FacilityListItem.Header.AllFacilities -> R.string.registrationfacilities_header_all_facilities
     })
   }
 

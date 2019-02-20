@@ -120,10 +120,10 @@ class FacilityListItemBuilderTest {
     }
 
     assertThat(facilityNameOrHeaders).isEqualTo(listOf(
-        FacilityListItem.Header.SuggestedFacilities,
+        FacilityListItem.Header.SuggestedFacilities(hasSpacingWithPreviousSection = false),
         "Within proximity threshold",
         "Exactly at proximity threshold",
-        FacilityListItem.Header.AllFacilities,
+        FacilityListItem.Header.AllFacilities(hasSpacingWithPreviousSection = true),
         "Exactly at proximity threshold",
         "Within proximity threshold",
         "Without location",
@@ -223,10 +223,10 @@ class FacilityListItemBuilderTest {
     val hideDivider = false
 
     assertThat(facilityNameAndHeaders).isEqualTo(listOf(
-        FacilityListItem.Header.SuggestedFacilities,
+        FacilityListItem.Header.SuggestedFacilities(hasSpacingWithPreviousSection = false),
         "Within proximity threshold" to showDivider,
         "Exactly at proximity threshold" to hideDivider,
-        FacilityListItem.Header.AllFacilities,
+        FacilityListItem.Header.AllFacilities(hasSpacingWithPreviousSection = true),
         "Exactly at proximity threshold" to showDivider,
         "Within proximity threshold" to showDivider,
         "Without location" to hideDivider

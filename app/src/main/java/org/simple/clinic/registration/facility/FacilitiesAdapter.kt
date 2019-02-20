@@ -2,7 +2,7 @@ package org.simple.clinic.registration.facility
 
 import android.text.Spannable
 import android.text.SpannableStringBuilder
-import android.text.style.ForegroundColorSpan
+import android.text.style.BackgroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -114,7 +114,7 @@ class FacilityOptionViewHolder(rootView: View) : ViewHolder(rootView) {
       is Name.Highlighted -> {
         val highlightedName = SpannableStringBuilder(name.text)
         val highlightColor = ContextCompat.getColor(itemView.context, R.color.facility_search_query_highlight)
-        highlightedName.setSpan(ForegroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        highlightedName.setSpan(BackgroundColorSpan(highlightColor), name.highlightStart, name.highlightEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
         nameTextView.text = highlightedName
       }
       is Name.Plain -> {

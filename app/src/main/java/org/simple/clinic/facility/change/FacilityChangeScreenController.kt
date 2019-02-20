@@ -53,6 +53,7 @@ class FacilityChangeScreenController @Inject constructor(
     return Observable.mergeArray(
         showProgressForReadingLocation(replayedEvents),
         showFacilities(replayedEvents),
+        toggleSearchFieldInToolbar(replayedEvents),
         changeFacilityAndExit(replayedEvents))
   }
 
@@ -159,6 +160,13 @@ class FacilityChangeScreenController @Inject constructor(
         .map { (listItems, updateType) ->
           { ui: Ui -> ui.updateFacilities(listItems, updateType) }
         }
+  }
+
+  private fun toggleSearchFieldInToolbar(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<FacilityChangeUserLocationUpdated>()
+        .map { { ui: Ui -> ui.showToolbarWithSearchField() } }
+        .startWith(Observable.just({ ui: Ui -> ui.showToolbarWithoutSearchField() }))
   }
 
   private fun changeFacilityAndExit(events: Observable<UiEvent>): Observable<UiChange> {

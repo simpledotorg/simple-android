@@ -5,46 +5,46 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:animateLayoutChanges="true"
-  android:background="@color/white"
+  android:background="@color/grey4"
   android:orientation="vertical"
   tools:ignore="Overdraw">
 
-  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
-    android:id="@+id/facilitychange_toolbar"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/white100"
-    android:elevation="3dp"
-    app:contentInsetStartWithNavigation="58dp"
-    app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:navigationIconTint="@color/grey1">
+  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
+    android:id="@+id/facilitychange_toolbar_container"
+    style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
+    app:debug_displayedChild="0">
 
-    <EditText
-      android:id="@+id/facilitychange_search"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:background="@null"
-      android:hint="@string/facilitychange_search_hint"
-      android:importantForAutofill="no"
-      android:inputType="textPostalAddress"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
-      android:textColorHint="@color/grey1"
-      tools:ignore="UnusedAttribute" />
-  </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+    <androidx.appcompat.widget.Toolbar
+      android:id="@+id/facilitychange_toolbar_without_search"
+      style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
+      app:title="@string/changefacility_screen_title" />
+
+    <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+      android:id="@+id/facilitychange_toolbar_with_search"
+      style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
+
+      <EditText
+        android:id="@+id/facilitychange_search"
+        style="@style/Clinic.V2.FacilitySelection.SearchField"
+        android:hint="@string/facilitychange_search_hint"
+        android:importantForAutofill="no"
+        tools:ignore="UnusedAttribute" />
+    </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
+  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 
   <include
     android:id="@+id/facilitychange_progress"
     layout="@layout/screen_registration_facility_selection_progress_state"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/facilitychange_toolbar"
+    android:layout_below="@+id/facilitychange_toolbar_container"
     android:visibility="gone" />
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/facilitychange_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@+id/facilitychange_toolbar"
+    android:layout_below="@+id/facilitychange_toolbar_container"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical"
     tools:listitem="@layout/list_facility_selection_option" />

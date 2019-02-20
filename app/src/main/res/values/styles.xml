@@ -238,4 +238,42 @@
     <item name="android:paddingStart">@dimen/spacing_24</item>
     <item name="android:paddingTop">@dimen/spacing_16</item>
   </style>
+
+  <style name="Clinic.V2.FacilitySelection" />
+
+  <style name="Clinic.V2.FacilitySelection.ToolbarFlipper">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:animateFirstView">false</item>
+    <item name="android:background">@color/white100</item>
+    <item name="android:elevation">3dp</item>
+    <item name="android:inAnimation">@anim/registrationfacilities_toolbar_entry</item>
+    <item name="android:outAnimation">@anim/registrationfacilities_toolbar_exit</item>
+  </style>
+
+  <style name="Clinic.V2.FacilitySelection.ToolbarWithoutSearch">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:elevation">@dimen/elevation_toolbar</item>
+    <item name="navigationIcon">@drawable/ic_arrow_back_24dp</item>
+  </style>
+
+  <style name="Clinic.V2.FacilitySelection.ToolbarWithSearch">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@color/white100</item>
+    <item name="android:elevation">3dp</item>
+    <item name="contentInsetStartWithNavigation">58dp</item>
+    <item name="navigationIcon">@drawable/ic_arrow_back_24dp</item>
+    <item name="navigationIconTint">@color/grey1</item>
+  </style>
+
+  <style name="Clinic.V2.FacilitySelection.SearchField">
+    <item name="android:layout_width">wrap_content</item>
+    <item name="android:layout_height">wrap_content</item>
+    <item name="android:background">@null</item>
+    <item name="android:inputType">textPostalAddress</item>
+    <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body0Left.Grey0</item>
+    <item name="android:textColorHint">@color/grey1</item>
+  </style>
 </resources>

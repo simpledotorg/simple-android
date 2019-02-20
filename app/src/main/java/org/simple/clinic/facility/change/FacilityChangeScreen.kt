@@ -6,6 +6,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.widget.EditText
 import android.widget.RelativeLayout
+import android.widget.ViewFlipper
 import androidx.appcompat.widget.Toolbar
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -31,6 +32,7 @@ import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -45,7 +47,9 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var activity: TheActivity
 
-  private val toolbar by bindView<Toolbar>(R.id.facilitychange_toolbar)
+  private val toolbarViewFlipper by bindView<ViewFlipper>(R.id.facilitychange_toolbar_container)
+  private val toolbarViewWithSearch by bindView<Toolbar>(R.id.facilitychange_toolbar_with_search)
+  private val toolbarViewWithoutSearch by bindView<Toolbar>(R.id.facilitychange_toolbar_without_search)
   private val progressView by bindView<View>(R.id.facilitychange_progress)
   private val facilityRecyclerView by bindView<RecyclerView>(R.id.facilitychange_list)
   private val searchEditText by bindView<EditText>(R.id.facilitychange_search)
@@ -75,7 +79,10 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
 
-    toolbar.setNavigationOnClickListener {
+    toolbarViewWithSearch.setNavigationOnClickListener {
+      screenRouter.pop()
+    }
+    toolbarViewWithoutSearch.setNavigationOnClickListener {
       screenRouter.pop()
     }
 
@@ -144,5 +151,13 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun hideProgressIndicator() {
     progressView.visibility = GONE
+  }
+
+  fun showToolbarWithSearchField() {
+    toolbarViewFlipper.displayedChildResId = R.id.facilitychange_toolbar_with_search
+  }
+
+  fun showToolbarWithoutSearchField() {
+    toolbarViewFlipper.displayedChildResId = R.id.facilitychange_toolbar_without_search
   }
 }

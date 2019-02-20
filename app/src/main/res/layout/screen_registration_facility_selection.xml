@@ -10,43 +10,23 @@
 
   <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
     android:id="@+id/registrationfacilities_toolbar_container"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:animateFirstView="false"
-    android:background="@color/white100"
-    android:elevation="3dp"
-    android:inAnimation="@anim/registrationfacilities_toolbar_entry"
-    android:outAnimation="@anim/registrationfacilities_toolbar_exit"
+    style="@style/Clinic.V2.FacilitySelection.ToolbarFlipper"
     app:debug_displayedChild="0">
 
     <androidx.appcompat.widget.Toolbar
       android:id="@+id/registrationfacilities_toolbar_without_search"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:elevation="@dimen/elevation_toolbar"
-      app:navigationIcon="@drawable/ic_arrow_back_24dp"
+      style="@style/Clinic.V2.FacilitySelection.ToolbarWithoutSearch"
       app:title="@string/registrationfacilities_screen_title" />
 
     <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
       android:id="@+id/registrationfacilities_toolbar_with_search"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:background="@color/white100"
-      android:elevation="3dp"
-      app:contentInsetStartWithNavigation="58dp"
-      app:navigationIcon="@drawable/ic_arrow_back_24dp"
-      app:navigationIconTint="@color/grey1">
+      style="@style/Clinic.V2.FacilitySelection.ToolbarWithSearch">
 
       <EditText
         android:id="@+id/registrationfacilities_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@null"
+        style="@style/Clinic.V2.FacilitySelection.SearchField"
         android:hint="@string/registrationfacilities_search_hint"
         android:importantForAutofill="no"
-        android:inputType="textPostalAddress"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
-        android:textColorHint="@color/grey1"
         tools:ignore="UnusedAttribute" />
     </org.simple.clinic.widgets.ToolbarWithTintedNavIcon>
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>

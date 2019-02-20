@@ -392,4 +392,25 @@ class FacilityChangeScreenControllerTest {
     testComputationScheduler.advanceTimeBy(6, TimeUnit.SECONDS)
     verify(screen).updateFacilities(any(), any())
   }
+
+  @Test
+  @Parameters(method = "params for user location updates")
+  fun `search field should only be shown when a user location update is received`(
+      locationUpdate: LocationUpdate
+  ) {
+    uiEvents.onNext(ScreenCreated())
+
+    val inOrder = inOrder(screen)
+    inOrder.verify(screen).showToolbarWithoutSearchField()
+
+    uiEvents.onNext(FacilityChangeUserLocationUpdated(Unavailable))
+    inOrder.verify(screen).showToolbarWithSearchField()
+  }
+
+  @Suppress("unused")
+  fun `params for user location updates`(): List<Any> {
+    return listOf(
+        Unavailable,
+        Available(location = Coordinates(0.0, 0.0), timeSinceBootWhenRecorded = Duration.ofNanos(0)))
+  }
 }

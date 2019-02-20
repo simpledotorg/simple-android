@@ -6,8 +6,9 @@ import org.simple.clinic.facility.Facility
 sealed class FacilityListItem {
 
   sealed class Header: FacilityListItem() {
-    object SuggestedFacilities : Header()
-    object AllFacilities : Header()
+    abstract val hasSpacingWithPreviousSection: Boolean
+    data class SuggestedFacilities(override val hasSpacingWithPreviousSection: Boolean) : Header()
+    data class AllFacilities(override val hasSpacingWithPreviousSection: Boolean) : Header()
   }
 
   data class FacilityOption(

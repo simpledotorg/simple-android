@@ -27,9 +27,9 @@ object FacilityListItemBuilder {
 
     val listItems = mutableListOf<FacilityListItem>()
     if (searchQuery.isBlank() && nearbyFacilityItems.isNotEmpty()) {
-      listItems.add(FacilityListItem.Header.SuggestedFacilities)
+      listItems.add(FacilityListItem.Header.SuggestedFacilities(hasSpacingWithPreviousSection = false))
       listItems.addAll(nearbyFacilityItems)
-      listItems.add(FacilityListItem.Header.AllFacilities)
+      listItems.add(FacilityListItem.Header.AllFacilities(hasSpacingWithPreviousSection = true))
     }
     listItems.addAll(allFacilityItems)
     return listItems

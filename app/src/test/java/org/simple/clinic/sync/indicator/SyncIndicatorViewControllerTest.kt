@@ -11,18 +11,19 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.sync.SyncProgress
+import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
+import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
+import org.threeten.bp.temporal.ChronoUnit
 
 @RunWith(JUnitParamsRunner::class)
 class SyncIndicatorViewControllerTest {
@@ -30,22 +31,21 @@ class SyncIndicatorViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val syncTimestampPreference = mock<Preference<Optional<Instant>>>()
-  private val syncResultPreference = mock<Preference<Optional<SyncProgress>>>()
+  private val lastSyncStatePreference = mock<Preference<LastSyncedState>>()
 
   lateinit var controller: SyncIndicatorViewController
-  private val syncProgressStream = PublishSubject.create<Optional<SyncProgress>>()
-  private val syncTimestampStream = PublishSubject.create<Optional<Instant>>()
+  private val lastSyncStateStream = PublishSubject.create<LastSyncedState>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   private val indicator = mock<SyncIndicatorView>()
 
+  private val utcClock = TestUtcClock()
+
   @Before
   fun setUp() {
-    controller = SyncIndicatorViewController(syncTimestampPreference, syncResultPreference)
-    whenever(syncResultPreference.asObservable()).thenReturn(syncProgressStream)
-    whenever(syncTimestampPreference.asObservable()).thenReturn(syncTimestampStream)
+    controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock)
+    whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
 
     uiEvents
         .compose(controller)
@@ -54,9 +54,9 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   @Parameters(method = "params for testing sync status indicator update")
-  fun `when sync result is updated, sync status indicator should change`(syncProgress: SyncProgress, expectedSyncState: SyncIndicatorState) {
+  fun `when sync result is updated, sync status indicator should change`(lastSyncState: LastSyncedState, expectedSyncState: SyncIndicatorState) {
     uiEvents.onNext(SyncIndicatorViewCreated)
-    syncProgressStream.onNext(Just(syncProgress))
+    lastSyncStateStream.onNext(lastSyncState)
 
     verify(indicator).updateState(expectedSyncState)
   }
@@ -64,9 +64,12 @@ class SyncIndicatorViewControllerTest {
   @Suppress("Unused")
   private fun `params for testing sync status indicator update`(): List<List<Any>> {
     return listOf(
-        listOf(SYNCING, Syncing),
-        listOf(SUCCESS, Synced),
-        listOf(FAILURE, SyncPending)
+        listOf(LastSyncedState(SYNCING), Syncing),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced),
+        listOf(LastSyncedState(FAILURE), SyncPending),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced)
     )
   }
 }

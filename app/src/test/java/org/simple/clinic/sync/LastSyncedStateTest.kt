@@ -3,7 +3,6 @@ package org.simple.clinic.sync
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.di.NetworkModule
-import org.simple.clinic.util.Just
 import org.threeten.bp.Instant
 
 class LastSyncedStateTest {
@@ -30,8 +29,8 @@ class LastSyncedStateTest {
     """
     val deserialized = adapter.fromJson(expectedJson)
     assertThat(deserialized).isEqualTo(LastSyncedState(
-        lastSyncProgress = Just(SyncProgress.SUCCESS),
-        lastSyncSuccessTimestamp = Just(Instant.EPOCH)
+        lastSyncProgress = SyncProgress.SUCCESS,
+        lastSyncSuccessTimestamp = Instant.EPOCH
     ))
   }
 }

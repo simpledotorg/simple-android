@@ -281,6 +281,7 @@
   <string name="removeappointment_other_reason">Other reason</string>
 
   <!-- Facility change -->
+  <string name="changefacility_screen_title">Select your clinic</string>
   <string name="facilitychange_search_hint">Search for your clinic</string>
 
   <!-- Enter OTP -->

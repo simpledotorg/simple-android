@@ -207,7 +207,11 @@ var ViewFlipper.displayedChildResId: Int
   set(@IdRes id) {
     val child = findViewById<View>(id)
     val childIndex = indexOfChild(child)
-    displayedChild = childIndex
+    if (childIndex == -1) {
+      throw AssertionError("No child found with ID ${resources.getResourceEntryName(id)}")
+    } else {
+      displayedChild = childIndex
+    }
   }
 
 fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {

@@ -62,7 +62,7 @@ class SyncIndicatorStatusCalculatorTest {
   ) {
     whenever(dataSync.streamSyncResults()).thenReturn(Observable.just(SyncGroupResult(syncGroup, syncProgress)))
 
-    val initialState = LastSyncedState(None, None)
+    val initialState = LastSyncedState()
     whenever(syncResultPreference.get()).thenReturn(initialState)
 
     syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference)
@@ -70,8 +70,8 @@ class SyncIndicatorStatusCalculatorTest {
     when (syncGroup) {
       SyncGroup.FREQUENT -> {
         when (syncProgress) {
-          SUCCESS -> verify(syncResultPreference).set(LastSyncedState(Just(syncProgress), Just(Instant.now(clock))))
-          FAILURE, SYNCING -> verify(syncResultPreference).set(LastSyncedState(Just(syncProgress), initialState.lastSyncSuccessTimestamp))
+          SUCCESS -> verify(syncResultPreference).set(LastSyncedState(syncProgress, Instant.now(clock)))
+          FAILURE, SYNCING -> verify(syncResultPreference).set(LastSyncedState(syncProgress, initialState.lastSyncSuccessTimestamp))
         }
       }
       SyncGroup.DAILY -> {

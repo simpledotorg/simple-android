@@ -30,6 +30,6 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   private fun screenCreates() = Observable.just(SyncIndicatorViewCreated)
 
   fun updateState(syncState: SyncIndicatorState) {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    TODO("not implemented") //Will be implemented when the UI is added.
   }
 }

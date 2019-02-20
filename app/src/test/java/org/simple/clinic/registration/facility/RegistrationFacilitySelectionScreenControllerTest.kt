@@ -28,6 +28,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
+import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.facility.change.FacilityListItemBuilder
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.location.LocationRepository
@@ -68,6 +69,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val testComputationScheduler = TestScheduler()
   private val elapsedRealtimeClock = TestElapsedRealtimeClock()
+  private val listItemBuilder = mock<FacilityListItemBuilder>()
 
   private lateinit var controller: RegistrationFacilitySelectionScreenController
 
@@ -88,13 +90,14 @@ class RegistrationFacilitySelectionScreenControllerTest {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     controller = RegistrationFacilitySelectionScreenController(
-        facilitySync,
-        facilityRepository,
-        userSession,
-        registrationScheduler,
-        locationRepository,
-        configProvider.firstOrError(),
-        elapsedRealtimeClock)
+        facilitySync = facilitySync,
+        facilityRepository = facilityRepository,
+        userSession = userSession,
+        registrationScheduler = registrationScheduler,
+        locationRepository = locationRepository,
+        configProvider = configProvider.firstOrError(),
+        elapsedRealtimeClock = elapsedRealtimeClock,
+        listItemBuilder = listItemBuilder)
 
     uiEvents
         .compose(controller)
@@ -374,13 +377,18 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size, facilities.size))
 
     val searchQuery = ""
+    val facilityListItems = emptyList<FacilityListItem>()
+    whenever(listItemBuilder.build(any(), any(), any(), any())).thenReturn(facilityListItems)
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(searchQuery))
 
-    val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery)
-
+    verify(listItemBuilder, times(2)).build(
+        facilities = facilities,
+        searchQuery = searchQuery,
+        userLocation = null,
+        proximityThreshold = configTemplate.proximityThresholdForNearbyFacilities)
     verify(screen).updateFacilities(facilityListItems, FIRST_UPDATE)
     verify(screen).updateFacilities(facilityListItems, SUBSEQUENT_UPDATE)
   }

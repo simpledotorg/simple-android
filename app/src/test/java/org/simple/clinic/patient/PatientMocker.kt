@@ -5,6 +5,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
+import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory

@@ -40,7 +40,8 @@ class FacilityChangeScreenController @Inject constructor(
     private val reportsSync: ReportsSync,
     private val locationRepository: LocationRepository,
     private val configProvider: Observable<FacilityChangeConfig>,
-    private val elapsedRealtimeClock: ElapsedRealtimeClock
+    private val elapsedRealtimeClock: ElapsedRealtimeClock,
+    private val listItemBuilder: FacilityListItemBuilder
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -136,7 +137,7 @@ class FacilityChangeScreenController @Inject constructor(
           userSession.requireLoggedInUser()
               .switchMap { user -> facilityRepository.facilitiesInCurrentGroup(query, user) }
               .map {
-                FacilityListItemBuilder.build(
+                listItemBuilder.build(
                     facilities = it,
                     searchQuery = query,
                     userLocation = userLocation,

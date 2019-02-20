@@ -4,8 +4,9 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.util.Distance
+import javax.inject.Inject
 
-object FacilityListItemBuilder {
+class FacilityListItemBuilder @Inject constructor() {
 
   fun build(
       facilities: List<Facility>,

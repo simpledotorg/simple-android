@@ -3,10 +3,11 @@ package org.simple.clinic.facility.change
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.location.Coordinates
+import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.util.Distance
 import javax.inject.Inject
 
-class FacilityListItemBuilder @Inject constructor() {
+class FacilityListItemBuilder @Inject constructor(val distanceCalculator: DistanceCalculator) {
 
   fun build(
       facilities: List<Facility>,
@@ -54,10 +55,10 @@ class FacilityListItemBuilder @Inject constructor() {
   ): List<Facility> {
     val facilitiesToDistance = facilities
         .filter { it.location != null }
-        .map { it to Coordinates.haversineDistance(userLocation, it.location!!) }
+        .map { it to distanceCalculator.between(userLocation, it.location!!) }
 
     val nearbyFacilities = facilitiesToDistance
-        .filter { (_, distance) -> distance <= proximityThreshold }
+        .filter { (facility, distance) -> distance <= proximityThreshold }
 
     return nearbyFacilities
         .sortedBy { (_, distance) -> distance }

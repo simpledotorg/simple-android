@@ -1,14 +1,14 @@
-package org.simple.clinic.util
+package org.simple.clinic.location
 
 import com.google.common.truth.Truth.assertThat
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.location.Coordinates
+import org.simple.clinic.util.Distance
 
 @RunWith(JUnitParamsRunner::class)
-class CoordinatesTest {
+class DistanceCalculatorTest {
 
   @Test
   @Parameters(method = "params for coordinates and distance")
@@ -18,8 +18,9 @@ class CoordinatesTest {
       expectedDistance: Distance
   ) {
 
-    val oneWay = Coordinates.haversineDistance(start, end)
-    val returnTrip = Coordinates.haversineDistance(end, start)
+    val calculator = DistanceCalculator()
+    val oneWay = calculator.between(start, end)
+    val returnTrip = calculator.between(end, start)
 
     assertThat(oneWay).isEqualTo(expectedDistance)
     assertThat(returnTrip).isEqualTo(expectedDistance)

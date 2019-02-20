@@ -1,12 +1,15 @@
 package org.simple.clinic.facility.change
 
 import com.google.common.truth.Truth.assertThat
+import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.whenever
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Address
 import org.simple.clinic.facility.change.FacilityListItem.FacilityOption.Name
 import org.simple.clinic.location.Coordinates
+import org.simple.clinic.location.DistanceCalculator
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.Distance
 import org.simple.clinic.util.RxErrorsRule
@@ -16,7 +19,8 @@ class FacilityListItemBuilderTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val listItemBuilder = FacilityListItemBuilder()
+  private val distanceCalculator = mock<DistanceCalculator>()
+  private val listItemBuilder = FacilityListItemBuilder(distanceCalculator)
 
   @Test
   fun `search query should be correctly highlighted`() {
@@ -90,29 +94,32 @@ class FacilityListItemBuilderTest {
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
   fun `when user location is present and search query is empty then facilities nearby user should be correctly identified`() {
-    val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
+    val userLocation = Coordinates(latitude = 1.0, longitude = 1.0)
 
-    val facilities = listOf(
-        PatientMocker.facility(
-            name = "Exactly at proximity threshold",
-            location = Coordinates(latitude = 51.864038, longitude = 17.608030)
-        ),
-        PatientMocker.facility(
-            name = "Within proximity threshold",
-            location = Coordinates(latitude = 51.914804, longitude = 17.649183)
-        ),
-        PatientMocker.facility(
-            name = "Without location",
-            location = null
-        ),
-        PatientMocker.facility(
-            name = "Outside of proximity threshold",
-            location = Coordinates(latitude = userLocation.latitude + 1, longitude = userLocation.longitude + 1)
-        ))
+    val facility1 = PatientMocker.facility(
+        name = "Exactly at proximity threshold",
+        location = Coordinates(0.0, 0.0))
+
+    val facility2 = PatientMocker.facility(
+        name = "Within proximity threshold",
+        location = Coordinates(2.0, 2.0))
+
+    val facility3 = PatientMocker.facility(
+        name = "Without location",
+        location = null)
+
+    val facility4 = PatientMocker.facility(
+        name = "Outside of proximity threshold",
+        location = Coordinates(100.0, 100.0))
+
+    val proximityThreshold = Distance.ofKilometers(2.0)
+    whenever(distanceCalculator.between(userLocation, facility1.location!!)).thenReturn(Distance.ofKilometers(2.0))
+    whenever(distanceCalculator.between(userLocation, facility2.location!!)).thenReturn(Distance.ofKilometers(1.0))
+    whenever(distanceCalculator.between(userLocation, facility4.location!!)).thenReturn(Distance.ofKilometers(100.0))
 
     val searchQuery = ""
-    val proximityThreshold = Distance.ofKilometers(6.703436187871307)
 
+    val facilities = listOf(facility1, facility2, facility3, facility4)
     val facilityListItems = listItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
     val facilityNameOrHeaders = facilityListItems.map {
       when (it) {
@@ -136,22 +143,25 @@ class FacilityListItemBuilderTest {
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
   fun `when both user location and search query are present then nearby facilities should not be present`() {
-    val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
+    val userLocation = Coordinates(latitude = 1.0, longitude = 1.0)
 
-    val facilities = listOf(
-        PatientMocker.facility(
-            name = "Within proximity threshold",
-            location = Coordinates(latitude = 51.914804, longitude = 17.649183)
-        ),
-        PatientMocker.facility(
-            name = "Outside of proximity threshold",
-            location = Coordinates(latitude = userLocation.latitude + 1, longitude = userLocation.longitude + 1)
-        ))
+    val facility1 = PatientMocker.facility(
+        name = "Within proximity threshold",
+        location = Coordinates(0.0, 0.0))
+
+    val facility2 = PatientMocker.facility(
+        name = "Outside of proximity threshold",
+        location = Coordinates(2.0, 2.0))
+
+    val proximityThreshold = Distance.ofKilometers(2.0)
+    whenever(distanceCalculator.between(userLocation, facility1.location!!)).thenReturn(Distance.ofKilometers(1.0))
+    whenever(distanceCalculator.between(userLocation, facility2.location!!)).thenReturn(Distance.ofKilometers(3.0))
 
     val searchQuery = "Gotham must burn"
-    val proximityThreshold = Distance.ofKilometers(6.703436187871307)
 
+    val facilities = listOf(facility1, facility2)
     val facilityListItems = listItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
+
     val facilityNameOrHeaders = facilityListItems.map {
       when (it) {
         is FacilityListItem.Header -> it
@@ -194,25 +204,27 @@ class FacilityListItemBuilderTest {
   @Test
   @Suppress("IMPLICIT_CAST_TO_ANY")
   fun `when multiple sections are present then last item in each section should not show bottom divider`() {
-    val userLocation = Coordinates(latitude = 51.919068, longitude = 17.647919)
+    val userLocation = Coordinates(latitude = 1.0, longitude = 1.0)
 
-    val facilities = listOf(
-        PatientMocker.facility(
-            name = "Exactly at proximity threshold",
-            location = Coordinates(latitude = 51.864038, longitude = 17.608030)
-        ),
-        PatientMocker.facility(
-            name = "Within proximity threshold",
-            location = Coordinates(latitude = 51.914804, longitude = 17.649183)
-        ),
-        PatientMocker.facility(
-            name = "Without location",
-            location = null
-        ))
+    val facility1 = PatientMocker.facility(
+        name = "Exactly at proximity threshold",
+        location = Coordinates(0.0, 0.0))
+
+    val facility2 = PatientMocker.facility(
+        name = "Within proximity threshold",
+        location = Coordinates(2.0, 2.0))
+
+    val facility3 = PatientMocker.facility(
+        name = "Without location",
+        location = null)
+
+    val proximityThreshold = Distance.ofKilometers(2.0)
+    whenever(distanceCalculator.between(userLocation, facility1.location!!)).thenReturn(Distance.ofKilometers(2.0))
+    whenever(distanceCalculator.between(userLocation, facility2.location!!)).thenReturn(Distance.ofKilometers(1.0))
 
     val searchQuery = ""
-    val proximityThreshold = Distance.ofKilometers(6.703436187871307)
 
+    val facilities = listOf(facility1, facility2, facility3)
     val facilityListItems = listItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
     val facilityNameAndHeaders = facilityListItems.map {
       when (it) {

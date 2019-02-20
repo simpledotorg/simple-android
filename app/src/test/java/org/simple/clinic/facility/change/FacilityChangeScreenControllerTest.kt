@@ -63,6 +63,7 @@ class FacilityChangeScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val reportsSync = mock<ReportsSync>()
   private val locationRepository = mock<LocationRepository>()
+  private val listItemBuilder = mock<FacilityListItemBuilder>()
   private val testComputationScheduler = TestScheduler()
   private val user = PatientMocker.loggedInUser()
   private val elapsedRealtimeClock = TestElapsedRealtimeClock()
@@ -91,7 +92,8 @@ class FacilityChangeScreenControllerTest {
         reportsSync = reportsSync,
         locationRepository = locationRepository,
         configProvider = configProvider,
-        elapsedRealtimeClock = elapsedRealtimeClock)
+        elapsedRealtimeClock = elapsedRealtimeClock,
+        listItemBuilder = listItemBuilder)
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
 
@@ -108,11 +110,17 @@ class FacilityChangeScreenControllerTest {
     whenever(facilityRepository.facilitiesInCurrentGroup(user = user)).thenReturn(Observable.just(facilities, facilities))
 
     val searchQuery = ""
+    val facilityListItems = emptyList<FacilityListItem>()
+    whenever(listItemBuilder.build(any(), any(), any(), any())).thenReturn(facilityListItems)
+
     uiEvents.onNext(FacilityChangeUserLocationUpdated(Unavailable))
     uiEvents.onNext(FacilityChangeSearchQueryChanged(searchQuery))
 
-    val facilityListItems = FacilityListItemBuilder.build(facilities, searchQuery)
-
+    verify(listItemBuilder, times(2)).build(
+        facilities = facilities,
+        searchQuery = searchQuery,
+        userLocation = null,
+        proximityThreshold = configTemplate.proximityThresholdForNearbyFacilities)
     verify(screen).updateFacilities(facilityListItems, FIRST_UPDATE)
     verify(screen).updateFacilities(facilityListItems, SUBSEQUENT_UPDATE)
   }

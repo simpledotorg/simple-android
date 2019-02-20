@@ -10,7 +10,6 @@ import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
-import org.simple.clinic.util.Just
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import javax.inject.Inject
@@ -35,9 +34,9 @@ class SyncIndicatorStatusCalculator @Inject constructor(
         .subscribeOn(io())
         .filter { (syncGroup, _) -> syncGroup == SyncGroup.FREQUENT }
         .map { (_, progress) ->
-          var updatedState = lastSyncProgress.get().copy(lastSyncProgress = Just(progress))
+          val updatedState = lastSyncProgress.get().copy(lastSyncProgress = progress)
           when (progress) {
-            SUCCESS -> updatedState.copy(lastSyncSuccessTimestamp = Just(Instant.now(utcClock)))
+            SUCCESS -> updatedState.copy(lastSyncSuccessTimestamp = Instant.now(utcClock))
             FAILURE, SYNCING -> updatedState
           }
         }

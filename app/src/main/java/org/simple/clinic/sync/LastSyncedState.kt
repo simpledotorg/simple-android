@@ -9,8 +9,8 @@ import org.threeten.bp.Instant
 
 @JsonClass(generateAdapter = true)
 data class LastSyncedState(
-    val lastSyncProgress: Optional<SyncProgress> = None,
-    val lastSyncSuccessTimestamp: Optional<Instant> = None
+    val lastSyncProgress: SyncProgress? = null,
+    val lastSyncSuccessTimestamp: Instant? = null
 ) {
 
   class RxPreferenceConverter(moshi: Moshi) : Preference.Converter<LastSyncedState> {

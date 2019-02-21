@@ -12,6 +12,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.filter.SearchPatientByName
+import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.reports.ReportsRepository
@@ -406,4 +407,9 @@ class PatientRepository @Inject constructor(
         }
         .andThen(reportsRepository.deleteReportsFile().toCompletable())
   }
+
+  fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =
+      database.recentPatientDao()
+          .recentPatients(facilityUuid)
+          .toObservable()
 }

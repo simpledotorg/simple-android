@@ -4,7 +4,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule

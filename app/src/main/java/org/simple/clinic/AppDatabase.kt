@@ -21,6 +21,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserFacilityMapping
@@ -108,4 +109,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun protocolDao(): Protocol.RoomDao
 
   abstract fun protocolDrugDao(): ProtocolDrug.RoomDao
+
+  abstract fun recentPatientDao(): RecentPatient.RoomDao
 }

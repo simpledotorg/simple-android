@@ -41,21 +41,36 @@ class SyncIndicatorViewController @Inject constructor(
 
   private fun updateIndicatorView(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreated = events.ofType<SyncIndicatorViewCreated>()
-    val syncStateStream = lastSyncState
+    val lastSyncedStateStream = lastSyncState
         .asObservable()
         .distinctUntilChanged()
-        .filter { it.lastSyncProgress != null }
 
-    return Observables
-        .combineLatest(screenCreated, syncStateStream)
+    val showDefaultSyncIndicatorState = lastSyncedStateStream
+        .filter { it.lastSyncProgress == null }
+        .map { { ui: Ui -> ui.updateState(SyncPending) } }
+
+    val syncProgress = lastSyncedStateStream.filter { it.lastSyncProgress != null }
+
+    val showSyncIndicatorState = Observables
+        .combineLatest(screenCreated, syncProgress)
         { _, stateStream ->
           val indicatorState = when (stateStream.lastSyncProgress!!) {
             SUCCESS -> syncIndicatorState(stateStream.lastSyncSuccessTimestamp)
-            FAILURE -> SyncPending
+            FAILURE -> syncedFailureState(stateStream.lastSyncSuccessTimestamp)
             SYNCING -> Syncing
           }
           { ui: Ui -> ui.updateState(indicatorState) }
         }
+
+    return showSyncIndicatorState.mergeWith(showDefaultSyncIndicatorState)
+  }
+
+  private fun syncedFailureState(timestamp: Instant?): SyncIndicatorState {
+    if (timestamp == null) {
+      return SyncPending
+    }
+
+    return syncIndicatorState(timestamp)
   }
 
   private fun syncIndicatorState(timestamp: Instant?): SyncIndicatorState {
@@ -70,6 +85,7 @@ class SyncIndicatorViewController @Inject constructor(
     return when {
       timeSinceLastSync > maxIntervalSinceLastSync -> ConnectToSync
       timeSinceLastSync > mostFrequentSyncInterval -> SyncPending
+      timeSinceLastSync.isNegative -> SyncPending
       else -> Synced
     }
   }

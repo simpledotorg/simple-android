@@ -53,6 +53,14 @@ class SyncIndicatorViewControllerTest {
   }
 
   @Test
+  fun `when sync progress is not set, sync status indicator should show sync pending`() {
+    uiEvents.onNext(SyncIndicatorViewCreated)
+    lastSyncStateStream.onNext(LastSyncedState())
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
   @Parameters(method = "params for testing sync status indicator update")
   fun `when sync result is updated, sync status indicator should change`(lastSyncState: LastSyncedState, expectedSyncState: SyncIndicatorState) {
     uiEvents.onNext(SyncIndicatorViewCreated)
@@ -65,11 +73,14 @@ class SyncIndicatorViewControllerTest {
   private fun `params for testing sync status indicator update`(): List<List<Any>> {
     return listOf(
         listOf(LastSyncedState(SYNCING), Syncing),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced),
         listOf(LastSyncedState(FAILURE), SyncPending),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
         listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending),
         listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced)
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending)
     )
   }
 }

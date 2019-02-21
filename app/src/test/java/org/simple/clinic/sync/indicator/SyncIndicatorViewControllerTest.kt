@@ -74,11 +74,11 @@ class SyncIndicatorViewControllerTest {
     return listOf(
         listOf(LastSyncedState(SYNCING), Syncing),
         listOf(LastSyncedState(FAILURE), SyncPending),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced(0)),
         listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
         listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending),
         listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced(12)),
         listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending),
         listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending)
     )

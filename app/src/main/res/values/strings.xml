@@ -333,4 +333,5 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">Scan card ID</string>
+  <string name="sync_indicator_status_pending">Sync pending</string>
 </resources>

@@ -52,6 +52,7 @@ import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
+import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -103,6 +104,7 @@ interface TheActivityComponent {
   fun inject(target: QrCodeScannerView)
   fun inject(target: RecentPatientsView)
   fun inject(patientsScreenKey: PatientsScreenKey)
+  fun inject(target: SyncIndicatorView)
 
   @Subcomponent.Builder
   interface Builder {

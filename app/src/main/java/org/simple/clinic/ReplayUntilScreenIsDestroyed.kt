@@ -1,7 +1,6 @@
 package org.simple.clinic
 
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.ofType
@@ -16,7 +15,7 @@ class ReplayUntilScreenIsDestroyed(private val events: Observable<UiEvent>) {
   private val disposables = CompositeDisposable()
 
   fun compose(transformer: ObservableTransformer<UiEvent, UiEvent>): ReplayUntilScreenIsDestroyed {
-    transforms += transformer
+    transforms = transforms + transformer
     return this
   }
 

@@ -49,8 +49,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .compose(fetchLocation())
+        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

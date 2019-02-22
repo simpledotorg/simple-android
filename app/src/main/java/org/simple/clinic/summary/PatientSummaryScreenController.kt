@@ -64,9 +64,9 @@ class PatientSummaryScreenController @Inject constructor(
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(ReportAnalyticsEvents())
         .compose(mergeWithPatientSummaryChanges())
         .compose(mergeWithAllBloodPressuresDeleted())
+        .compose(ReportAnalyticsEvents())
         .replay()
 
     return Observable.mergeArray(

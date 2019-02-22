@@ -74,7 +74,9 @@ class PatientRepository @Inject constructor(
 
   // TODO: Get user from caller.
   private fun sortByCurrentFacility(): ObservableTransformer<List<PatientSearchResult>, List<PatientSearchResult>> {
-    return ObservableTransformer { searchResults ->
+    return ObservableTransformer { upstream ->
+      val searchResults = upstream.replay().refCount()
+
       val currentFacilityUuidStream = userSession
           .requireLoggedInUser()
           .switchMap { facilityRepository.currentFacility(it) }

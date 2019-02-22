@@ -36,7 +36,7 @@ class SyncIndicatorStatusCalculator @Inject constructor(
         .map { (_, progress) ->
           val updatedState = lastSyncProgress.get().copy(lastSyncProgress = progress)
           when (progress) {
-            SUCCESS -> updatedState.copy(lastSyncSuccessTimestamp = Instant.now(utcClock))
+            SUCCESS -> updatedState.copy(lastSyncSucceededAt = Instant.now(utcClock))
             FAILURE, SYNCING -> updatedState
           }
         }

@@ -7,7 +7,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
-import io.reactivex.functions.Consumer
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import junitparams.JUnitParamsRunner
@@ -24,8 +23,6 @@ import org.simple.clinic.sync.SyncProgress
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
@@ -71,7 +68,7 @@ class SyncIndicatorStatusCalculatorTest {
       SyncGroup.FREQUENT -> {
         when (syncProgress) {
           SUCCESS -> verify(syncResultPreference).set(LastSyncedState(syncProgress, Instant.now(clock)))
-          FAILURE, SYNCING -> verify(syncResultPreference).set(LastSyncedState(syncProgress, initialState.lastSyncSuccessTimestamp))
+          FAILURE, SYNCING -> verify(syncResultPreference).set(LastSyncedState(syncProgress, initialState.lastSyncSucceededAt))
         }
       }
       SyncGroup.DAILY -> {

@@ -24,13 +24,13 @@ class LastSyncedStateTest {
     val expectedJson = """
       {
         "lastSyncProgress": "SUCCESS",
-        "lastSyncSuccessTimestamp" : "1970-01-01T00:00:00Z"
+        "lastSyncSucceededAt" : "1970-01-01T00:00:00Z"
       }
     """
     val deserialized = adapter.fromJson(expectedJson)
     assertThat(deserialized).isEqualTo(LastSyncedState(
         lastSyncProgress = SyncProgress.SUCCESS,
-        lastSyncSuccessTimestamp = Instant.EPOCH
+        lastSyncSucceededAt = Instant.EPOCH
     ))
   }
 }

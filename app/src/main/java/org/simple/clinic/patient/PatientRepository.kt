@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.analytics.OperationTimingTracker
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
@@ -49,10 +50,22 @@ class PatientRepository @Inject constructor(
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
   fun search(name: String): Observable<List<PatientSearchResult>> {
+    val timingTracker = OperationTimingTracker("Search Patient", utcClock)
+
+    val fetchPatientNameAnalytics = "Fetch Name and Id"
+    val fuzzyFilterPatientNameAnalytics = "Fuzzy Filtering By Name"
+    val fetchPatientDetailsAnalytics = "Fetch Patient Details"
+    val sortByVisitedFacilityAnalytics = "Sort By Visited Facility"
+
     val patientUuidsMatchingName = database.patientSearchDao()
         .nameAndId(PatientStatus.ACTIVE)
         .toObservable()
-        .switchMapSingle { searchPatientByName.search(name, it) }
+        .switchMapSingle {
+          timingTracker.stop(fetchPatientNameAnalytics)
+          timingTracker.start(fuzzyFilterPatientNameAnalytics)
+          searchPatientByName.search(name, it)
+              .doOnSuccess { timingTracker.stop(fuzzyFilterPatientNameAnalytics) }
+        }
 
     return Observables.combineLatest(patientUuidsMatchingName, configProvider)
         .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
@@ -62,14 +75,19 @@ class PatientRepository @Inject constructor(
             else -> {
               database.patientSearchDao()
                   .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
+                  .doOnSubscribe { timingTracker.start(fetchPatientDetailsAnalytics) }
                   .map { results ->
+                    timingTracker.stop(fetchPatientDetailsAnalytics)
                     val resultsByUuid = results.associateBy { it.uuid }
                     matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
                   }
             }
           }
         }
+        .doOnNext { timingTracker.start(sortByVisitedFacilityAnalytics) }
         .compose(sortByCurrentFacility())
+        .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
+        .doOnNext { timingTracker.stop(sortByVisitedFacilityAnalytics) }
   }
 
   // TODO: Get user from caller.

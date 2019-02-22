@@ -114,7 +114,7 @@ class DebugClinicApp : ClinicApp() {
         .patientModule(object : PatientModule() {
           override fun providePatientConfig(): Observable<PatientConfig> {
             return super.providePatientConfig()
-                .map { it.copy(scanSimpleCardFeatureEnabled = true, showRecentPatients = true) }
+                .map { it.copy(scanSimpleCardFeatureEnabled = true) }
           }
         })
         .build()

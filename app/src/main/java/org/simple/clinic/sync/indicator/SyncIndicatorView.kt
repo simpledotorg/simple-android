@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
-  val syncStatusTextView by bindView<TextView>(R.id.sync_indicator_status_text)
+  private val syncStatusTextView by bindView<TextView>(R.id.sync_indicator_status_text)
 
   @Inject
   lateinit var controller: SyncIndicatorViewController

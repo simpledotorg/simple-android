@@ -28,7 +28,8 @@ typealias UiChange = (Ui) -> Unit
 
 class SyncIndicatorViewController @Inject constructor(
     private val lastSyncState: Preference<LastSyncedState>,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    private val configProvider: Observable<SyncIndicatorConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -52,11 +53,10 @@ class SyncIndicatorViewController @Inject constructor(
     val syncProgress = lastSyncedStateStream.filter { it.lastSyncProgress != null }
 
     val showSyncIndicatorState = Observables
-        .combineLatest(screenCreated, syncProgress)
-        { _, stateStream ->
+        .combineLatest(screenCreated, syncProgress, configProvider)
+        { _, stateStream, config ->
           val indicatorState = when (stateStream.lastSyncProgress!!) {
-            SUCCESS -> syncIndicatorState(stateStream.lastSyncSuccessTimestamp)
-            FAILURE -> syncedFailureState(stateStream.lastSyncSuccessTimestamp)
+            SUCCESS, FAILURE -> syncIndicatorState(stateStream.lastSyncSucceededAt, config.syncFailureThreshold)
             SYNCING -> Syncing
           }
           { ui: Ui -> ui.updateState(indicatorState) }
@@ -65,23 +65,16 @@ class SyncIndicatorViewController @Inject constructor(
     return showSyncIndicatorState.mergeWith(showDefaultSyncIndicatorState)
   }
 
-  private fun syncedFailureState(timestamp: Instant?): SyncIndicatorState {
+  private fun syncIndicatorState(timestamp: Instant?, maxIntervalSinceLastSync: Duration): SyncIndicatorState {
     if (timestamp == null) {
       return SyncPending
     }
 
-    return syncIndicatorState(timestamp)
-  }
-
-  private fun syncIndicatorState(timestamp: Instant?): SyncIndicatorState {
     val now = Instant.now(utcClock)
     val timeSinceLastSync = Duration.between(timestamp, now)
-
-    val maxIntervalSinceLastSync = Duration.ofHours(12)
     val mostFrequentSyncInterval = enumValues<SyncInterval>()
         .map { it.frequency }
         .min()!!
-
     return when {
       timeSinceLastSync > maxIntervalSinceLastSync -> ConnectToSync
       timeSinceLastSync > mostFrequentSyncInterval -> SyncPending

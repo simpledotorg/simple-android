@@ -22,6 +22,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 
@@ -42,9 +43,11 @@ class SyncIndicatorViewControllerTest {
 
   private val utcClock = TestUtcClock()
 
+  private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
+
   @Before
   fun setUp() {
-    controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock)
+    controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock, configSubject)
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
 
     uiEvents
@@ -62,8 +65,15 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   @Parameters(method = "params for testing sync status indicator update")
-  fun `when sync result is updated, sync status indicator should change`(lastSyncState: LastSyncedState, expectedSyncState: SyncIndicatorState) {
+  fun `when sync result is updated, sync status indicator should change`(
+      lastSyncState: LastSyncedState,
+      expectedSyncState: SyncIndicatorState,
+      syncFailureThreshold: Long
+  ) {
     uiEvents.onNext(SyncIndicatorViewCreated)
+    val config = SyncIndicatorConfig(Duration.of(syncFailureThreshold, ChronoUnit.HOURS))
+
+    configSubject.onNext(config)
     lastSyncStateStream.onNext(lastSyncState)
 
     verify(indicator).updateState(expectedSyncState)
@@ -72,15 +82,15 @@ class SyncIndicatorViewControllerTest {
   @Suppress("Unused")
   private fun `params for testing sync status indicator update`(): List<List<Any>> {
     return listOf(
-        listOf(LastSyncedState(SYNCING), Syncing),
-        listOf(LastSyncedState(FAILURE), SyncPending),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced(0)),
-        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced(12)),
-        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending),
-        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending)
+        listOf(LastSyncedState(SYNCING), Syncing, 12),
+        listOf(LastSyncedState(FAILURE), SyncPending, 12),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock)), Synced(minAgo = 0), 12),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).minus(13, ChronoUnit.HOURS)), ConnectToSync, 11),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(20, ChronoUnit.MINUTES)), SyncPending, 11),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(14, ChronoUnit.HOURS)), ConnectToSync, 13),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).minus(12, ChronoUnit.MINUTES)), Synced(minAgo = 12), 12),
+        listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 12),
+        listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 13)
     )
   }
 }

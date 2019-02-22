@@ -64,21 +64,6 @@
         android:src="@drawable/illustrations_homescreen"
         tools:ignore="ContentDescription" />
 
-      <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/patients_record_bp_illustration">
-
-        <TextView
-          style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center"
-          android:layout_marginEnd="@dimen/spacing_16"
-          android:layout_marginStart="@dimen/spacing_16"
-          android:text="@string/patients_record_every_patient" />
-      </FrameLayout>
-
       <org.simple.clinic.patient.recent.RecentPatientsView
         android:id="@+id/patients_record_recent_patients"
         android:layout_width="match_parent"

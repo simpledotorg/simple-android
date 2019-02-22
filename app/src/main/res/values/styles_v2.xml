@@ -197,6 +197,10 @@
     <item name="android:gravity">center</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Subtitle1Center.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Subtitle1Center.Grey2">
     <item name="android:textColor">@color/grey2</item>
   </style>

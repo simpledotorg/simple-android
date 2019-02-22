@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.xwray.groupie.GroupAdapter
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.subscribeBy
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientConfig
@@ -17,23 +16,19 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(c
   @Inject
   lateinit var config: Observable<PatientConfig>
 
+  private val groupAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     TheActivity.component.inject(this)
 
-    config.subscribeBy(onNext = {
-      if (it.showRecentPatients) {
-        initView()
-      }
-    })
-  }
-
-  private fun initView() {
     layoutManager = LinearLayoutManager(context)
-
-    val groupAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
     adapter = groupAdapter
 
+    addDummyData()
+  }
+
+  private fun addDummyData() {
     groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
         title = "Anish Acharya, 43",
         lastBp = "140/90",

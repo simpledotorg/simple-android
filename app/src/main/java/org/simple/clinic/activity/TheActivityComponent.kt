@@ -26,6 +26,7 @@ import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderShe
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentSheet
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
+import org.simple.clinic.home.patients.PatientsScreenKey
 import org.simple.clinic.home.report.ReportsScreen
 import org.simple.clinic.login.applock.AppLockScreen
 import org.simple.clinic.login.applock.ConfirmResetPinDialog
@@ -52,9 +53,9 @@ import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.InstantRxPreferencesConverter
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.simple.clinic.widgets.RxTheActivityLifecycle
 import org.simple.clinic.widgets.TheActivityLifecycle
+import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.threeten.bp.Instant
 import javax.inject.Named
 
@@ -101,6 +102,7 @@ interface TheActivityComponent {
   fun inject(target: ScanSimpleIdScreen)
   fun inject(target: QrCodeScannerView)
   fun inject(target: RecentPatientsView)
+  fun inject(patientsScreenKey: PatientsScreenKey)
 
   @Subcomponent.Builder
   interface Builder {

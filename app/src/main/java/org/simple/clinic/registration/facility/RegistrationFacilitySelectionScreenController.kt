@@ -29,9 +29,9 @@ import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
+import org.simple.clinic.util.timer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 typealias Ui = RegistrationFacilitySelectionScreen
@@ -68,7 +68,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
 
     val locationWaitExpiry = {
       configProvider
-          .flatMapObservable { Observable.timer(it.locationListenerExpiry.toMillis(), TimeUnit.MILLISECONDS) }
+          .flatMapObservable { Observables.timer(it.locationListenerExpiry) }
           .map { LocationUpdate.Unavailable }
     }
 

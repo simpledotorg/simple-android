@@ -8,26 +8,35 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
+import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.threeten.bp.Duration
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
@@ -45,6 +54,7 @@ class PatientRepositoryTest {
   private lateinit var patientAddressDao: PatientAddress.RoomDao
   private lateinit var patientPhoneNumberDao: PatientPhoneNumber.RoomDao
   private lateinit var fuzzyPatientSearchDao: PatientFuzzySearch.PatientFuzzySearchDao
+  private lateinit var bloodPressureMeasurementDao: BloodPressureMeasurement.RoomDao
   private lateinit var dobValidator: UserInputDateValidator
   private lateinit var userSession: UserSession
   private lateinit var facilityRepository: FacilityRepository
@@ -63,6 +73,7 @@ class PatientRepositoryTest {
     patientAddressDao = mock()
     patientPhoneNumberDao = mock()
     fuzzyPatientSearchDao = mock()
+    bloodPressureMeasurementDao = mock()
     dobValidator = mock()
     userSession = mock()
     facilityRepository = mock()
@@ -84,10 +95,13 @@ class PatientRepositoryTest {
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(PatientMocker.facility()))
+    whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))
+    whenever(database.bloodPressureDao()).thenReturn(bloodPressureMeasurementDao)
+  }
 
-    val mockBloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
-    whenever(mockBloodPressureDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))
-    whenever(database.bloodPressureDao()).thenReturn(mockBloodPressureDao)
+  @After
+  fun tearDown() {
+    Analytics.clearReporters()
   }
 
   @Test
@@ -307,5 +321,76 @@ class PatientRepositoryTest {
     return listOf(
         generateTestData(6),
         generateTestData(10))
+  }
+
+  @Test
+  fun `the timing of all parts of search patient flow must be reported to analytics`() {
+    val reporter = MockAnalyticsReporter()
+    Analytics.addReporter(reporter)
+
+    val timeTakenToFetchPatientNameAndId = Duration.ofMinutes(1L)
+    val timeTakenToFuzzyFilterPatientNames = Duration.ofMinutes(5L)
+    val timeTakenToFetchPatientDetails = Duration.ofSeconds(45L)
+    val timeTakenToSortByFacility = Duration.ofDays(1L)
+
+    val patientUuid = UUID.randomUUID()
+
+    // The setup function in this test creates reactive sources that terminate immediately after
+    // emission (using just(), for example). This is fine for most of our tests, but the way this
+    // test is structured depends on the sources behaving as they do in reality
+    // (i.e, infinite sources). We replace the mocks for these tests with Subjects to do this.
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(BehaviorSubject.createDefault(PatientMocker.loggedInUser()))
+    whenever(patientSearchResultDao.nameAndId(any()))
+        .thenReturn(
+            BehaviorSubject.createDefault(listOf(PatientNameAndId(patientUuid, "Name")))
+                .doOnNext { clock.advanceBy(timeTakenToFetchPatientNameAndId) }
+                .toFlowable(BackpressureStrategy.LATEST)
+        )
+    whenever(searchPatientByName.search(any(), any()))
+        .thenReturn(
+            BehaviorSubject.createDefault(listOf(patientUuid))
+                .doOnNext { clock.advanceBy(timeTakenToFuzzyFilterPatientNames) }
+                .firstOrError()
+        )
+    whenever(patientSearchResultDao.searchByIds(any(), any()))
+        .thenReturn(
+            BehaviorSubject.createDefault(listOf(PatientMocker.patientSearchResult(uuid = patientUuid)))
+                .doOnNext { clock.advanceBy(timeTakenToFetchPatientDetails) }
+                .firstOrError()
+        )
+    whenever(facilityRepository.currentFacility(any<User>()))
+        .thenReturn(
+            BehaviorSubject.createDefault(PatientMocker.facility())
+                .doOnNext { clock.advanceBy(timeTakenToSortByFacility) }
+        )
+    whenever(bloodPressureMeasurementDao.patientToFacilityIds(any()))
+        .thenReturn(
+            BehaviorSubject.createDefault(emptyList<PatientToFacilityId>())
+                .toFlowable(BackpressureStrategy.LATEST)
+        )
+    whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
+
+    repository.search("search").blockingFirst()
+
+    val receivedEvents = reporter.receivedEvents
+    assertThat(receivedEvents).hasSize(4)
+
+    val (fetchNameAndId,
+        fuzzyFilterByName,
+        fetchPatientDetails,
+        sortByFacility) = receivedEvents
+
+    assertThat(fetchNameAndId.props["operationName"]).isEqualTo("Search Patient:Fetch Name and Id")
+    assertThat(fetchNameAndId.props["timeTakenInMillis"]).isEqualTo(timeTakenToFetchPatientNameAndId.toMillis())
+
+    assertThat(fuzzyFilterByName.props["operationName"]).isEqualTo("Search Patient:Fuzzy Filtering By Name")
+    assertThat(fuzzyFilterByName.props["timeTakenInMillis"]).isEqualTo(timeTakenToFuzzyFilterPatientNames.toMillis())
+
+    assertThat(fetchPatientDetails.props["operationName"]).isEqualTo("Search Patient:Fetch Patient Details")
+    assertThat(fetchPatientDetails.props["timeTakenInMillis"]).isEqualTo(timeTakenToFetchPatientDetails.toMillis())
+
+    assertThat(sortByFacility.props["operationName"]).isEqualTo("Search Patient:Sort By Visited Facility")
+    assertThat(sortByFacility.props["timeTakenInMillis"]).isEqualTo(timeTakenToSortByFacility.toMillis())
   }
 }

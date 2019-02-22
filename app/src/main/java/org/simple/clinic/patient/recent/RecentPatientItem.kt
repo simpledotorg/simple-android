@@ -6,21 +6,19 @@ import kotlinx.android.synthetic.main.recent_patient_item_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 
-class RecentPatientItem(private val data: Data) : Item<ViewHolder>() {
+class RecentPatientItem(
+    val title: String,
+    val lastBp: String,
+    val gender: Gender
+) : Item<ViewHolder>() {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
 
   override fun bind(viewHolder: ViewHolder, position: Int) {
     viewHolder.itemView.apply {
-      recentpatient_item_title.text = data.title
-      recentpatient_item_last_bp.text = data.lastBp
-      recentpatient_item_gender.setImageResource(data.gender.displayIconRes)
+      recentpatient_item_title.text = title
+      recentpatient_item_last_bp.text = lastBp
+      recentpatient_item_gender.setImageResource(gender.displayIconRes)
     }
   }
-
-  data class Data(
-      val title: String,
-      val lastBp: String,
-      val gender: Gender
-  )
 }

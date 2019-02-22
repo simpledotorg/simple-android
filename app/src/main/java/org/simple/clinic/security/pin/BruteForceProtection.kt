@@ -10,8 +10,9 @@ import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState.Blocke
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.timer
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class BruteForceProtection @Inject constructor(
@@ -70,7 +71,8 @@ class BruteForceProtection @Inject constructor(
             // from the server, potentially resulting in a situation where the expiry
             // time is now in the past.
             val millisTillExpiry = Math.max(blockExpiresAt.toEpochMilli() - now.toEpochMilli(), 0)
-            Observable.timer(millisTillExpiry + 1, TimeUnit.MILLISECONDS)
+            val resetIn = Duration.ofMillis(millisTillExpiry + 1)
+            Observables.timer(resetIn)
           }
         }
         .flatMapCompletable { resetFailedAttempts() }

@@ -39,14 +39,3 @@
 -keepnames @com.squareup.moshi.JsonClass class *
 
 -dontwarn com.jcabi.aspects.apt.**
-
-# Heap Analytics rules
--keep public class com.heapanalytics.android.internal.HeapInternal {
-    public static void captureClick(...);
-}
--keep public class **.BuildConfig {
-    *;
-}
--keep public class android.support.design.widget.TabLayout* {
-    *;
-}

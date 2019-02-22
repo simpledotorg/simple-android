@@ -46,7 +46,7 @@ buildscript {
       playServicesAuth    : '16.0.1',
       playServicesVision  : '16.2.0',
       viewPump            : '1.0.0',
-      heap                : '0.7.1',
+      heap                : '0.8.3',
       pinEntryEditText    : '2.0.6',
       fbShimmer           : '0.3.0',
       javaStringSimilarity: '1.1.0',
@@ -61,7 +61,6 @@ buildscript {
     google()
     mavenCentral()
     maven { url 'https://jitpack.io' }
-    maven { url 'https://heap-maven-public.s3.amazonaws.com/android-testing' }
     jcenter()
   }
 

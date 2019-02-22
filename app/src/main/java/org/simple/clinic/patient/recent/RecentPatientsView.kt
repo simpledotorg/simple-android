@@ -29,40 +29,40 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(c
   }
 
   private fun addDummyData() {
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    groupAdapter.add(RecentPatientItem(
         title = "Anish Acharya, 43",
         lastBp = "140/90",
         gender = Gender.TRANSGENDER
-    )))
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    ))
+    groupAdapter.add(RecentPatientItem(
         title = "Anish24 Acharya, 43",
         lastBp = "141/90",
         gender = Gender.MALE
-    )))
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    ))
+    groupAdapter.add(RecentPatientItem(
         title = "Anish3 Acharya, 43",
         lastBp = "142/90",
         gender = Gender.FEMALE
-    )))
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    ))
+    groupAdapter.add(RecentPatientItem(
         title = "Anish4 Acharya, 43",
         lastBp = "145/90",
         gender = Gender.TRANSGENDER
-    )))
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    ))
+    groupAdapter.add(RecentPatientItem(
         title = "Anish55 Acharya, 43",
         lastBp = "149/90",
         gender = Gender.MALE
-    )))
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    ))
+    groupAdapter.add(RecentPatientItem(
         title = "Anish6 Acharya, 43",
         lastBp = "141/90",
         gender = Gender.FEMALE
-    )))
-    groupAdapter.add(RecentPatientItem(RecentPatientItem.Data(
+    ))
+    groupAdapter.add(RecentPatientItem(
         title = "Anish7 Acharya, 43",
         lastBp = "142/90",
         gender = Gender.TRANSGENDER
-    )))
+    ))
   }
 }

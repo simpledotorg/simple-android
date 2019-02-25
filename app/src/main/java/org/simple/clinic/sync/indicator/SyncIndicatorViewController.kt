@@ -79,7 +79,7 @@ class SyncIndicatorViewController @Inject constructor(
       timeSinceLastSync > maxIntervalSinceLastSync -> ConnectToSync
       timeSinceLastSync > mostFrequentSyncInterval -> SyncPending
       timeSinceLastSync.isNegative -> SyncPending
-      else -> Synced(timeSinceLastSync.toMinutes())
+      else -> Synced(timeSinceLastSync)
     }
   }
 }

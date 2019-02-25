@@ -24,6 +24,7 @@ import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncScheduler
+import org.simple.clinic.sync.indicator.SyncIndicatorStatusCalculator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
@@ -40,6 +41,9 @@ class DebugClinicApp : ClinicApp() {
   lateinit var syncScheduler: SyncScheduler
 
   private lateinit var signature: AppSignature
+
+  @Inject
+  lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
 
   companion object {
     fun appComponent(): DebugAppComponent {
@@ -59,6 +63,7 @@ class DebugClinicApp : ClinicApp() {
     Timber.plant(Timber.DebugTree())
     Stetho.initializeWithDefaults(this)
     syncScheduler.schedule().subscribe()
+    syncIndicatorStatusCalculator.updateSyncResults()
     showDebugNotification()
 
     ViewPump.init(ViewPump.builder()

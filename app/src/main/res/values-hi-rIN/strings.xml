@@ -46,7 +46,6 @@
     <string name="patientsummary_prescriptions_add">नई दवा</string>
     <string name="loginpin_go_back">फोन नंबर स्क्रीन पर वापस जाएं</string>
     <string name="loginpin_error_check_internet_connection">कृपया अपने इंटरनेट कनेक्शन की जाँच करें।</string>
-  <string name="tab_patient">नया बी. पी.</string>
     <string name="tab_overdue">कॉल सूची</string>
     <string name="tab_reports">रिपोर्ट</string>
 </resources>

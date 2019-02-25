@@ -64,11 +64,22 @@
         android:src="@drawable/illustrations_homescreen"
         tools:ignore="ContentDescription" />
 
-      <org.simple.clinic.patient.recent.RecentPatientsView
-        android:id="@+id/patients_record_recent_patients"
+      <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/patients_record_bp_illustration" />
+        android:layout_below="@+id/patients_record_bp_illustration"
+        android:orientation="vertical">
+
+        <org.simple.clinic.sync.indicator.SyncIndicatorView
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:padding="@dimen/spacing_8" />
+
+        <org.simple.clinic.patient.recent.RecentPatientsView
+          android:id="@+id/patients_record_recent_patients"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content" />
+      </LinearLayout>
     </RelativeLayout>
   </androidx.core.widget.NestedScrollView>
 

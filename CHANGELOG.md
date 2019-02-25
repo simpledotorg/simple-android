@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2856-25Feb
+- Updated illustration on the patients tab 
+- Improved app performance during first sync of patient data 
+- Improve design of medical history screen 
+
 ## 2605-04Feb
 - Blood pressures can be entered for dates in the past 
 - New prescription drugs screen design 

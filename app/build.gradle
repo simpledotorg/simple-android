@@ -78,7 +78,7 @@ android {
     staging {
       dimension 'track'
       applicationIdSuffix ".staging"
-      versionNameSuffix "-staging"
+      versionNameSuffix "-demo"
       buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + stagingHeapId + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"

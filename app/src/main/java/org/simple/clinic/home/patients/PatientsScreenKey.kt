@@ -23,8 +23,9 @@ class PatientsScreenKey : FullScreenKey {
   @IgnoredOnParcel
   override val analyticsName = "Patients"
 
-  override fun layoutRes(): Int = if (config.blockingFirst().showRecentPatients)
+  override fun layoutRes(): Int = if (config.blockingFirst().showRecentPatients) {
     R.layout.screen_patients_v2
-  else
+  } else {
     R.layout.screen_patients
+  }
 }

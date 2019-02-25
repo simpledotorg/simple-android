@@ -91,7 +91,7 @@
   <!-- Home: Tabs -->
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
-  <string name="tab_patient">Patient</string>
+  <string name="tab_patient">Patients</string>
   <!--suppress UnusedResources -->
   <string name="tab_overdue">Overdue</string>
   <!--suppress UnusedResources -->

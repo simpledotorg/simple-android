@@ -10,7 +10,7 @@
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/patients_search_patients"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/spacing_56"
+    android:layout_height="56dp"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:layout_marginTop="@dimen/spacing_16"
@@ -31,7 +31,7 @@
     android:id="@+id/patients_scan_simple_card"
     style="@style/Clinic.V2.Button.WithIcon.Blue1"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/spacing_56"
+    android:layout_height="56dp"
     android:layout_below="@id/patients_search_patients"
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"

@@ -336,8 +336,6 @@
   <string name="sync_indicator_status_pending">Sync pending</string>
   <string name="sync_indicator_status_failed">Sync failed</string>
   <string name="sync_indicator_status_syncing">Syncing…</string>
-  <plurals name="sync_indicator_status_synced">
-    <item quantity="zero">Synced just now</item>
-    <item quantity="other">Synced %d min ago</item>
-  </plurals>
+  <string name="sync_indicator_status_synced_just_now">Synced just now</string>
+  <string name="sync_indicator_status_synced">Synced %d min ago</string>
 </resources>

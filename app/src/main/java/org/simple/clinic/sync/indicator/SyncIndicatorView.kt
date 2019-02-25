@@ -53,7 +53,11 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
       }
       is Synced -> {
         val durationToMinsAgo = syncState.durationSince.toMinutes().toInt()
-        syncStatusTextView.text = context.resources.getQuantityString(R.plurals.sync_indicator_status_synced, durationToMinsAgo, durationToMinsAgo)
+        syncStatusTextView.text = if (durationToMinsAgo == 0) {
+          context.getString(R.string.sync_indicator_status_synced_just_now)
+        } else {
+          context.getString(R.string.sync_indicator_status_synced, durationToMinsAgo)
+        }
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_24dp)
       }
       SyncPending -> {

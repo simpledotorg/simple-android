@@ -16,16 +16,13 @@ import javax.inject.Inject
 
 @AppScope
 class SyncIndicatorStatusCalculator @Inject constructor(
-    dataSync: DataSync,
-    utcClock: UtcClock,
+    private val dataSync: DataSync,
+    private val utcClock: UtcClock,
     private val lastSyncProgress: Preference<LastSyncedState>
 ) {
-  init {
-    saveSyncResults(dataSync, utcClock)
-  }
 
   @SuppressLint("CheckResult")
-  private fun saveSyncResults(dataSync: DataSync, utcClock: UtcClock) {
+  fun updateSyncResults() {
     val syncResultsStream = dataSync
         .streamSyncResults()
         .distinctUntilChanged()

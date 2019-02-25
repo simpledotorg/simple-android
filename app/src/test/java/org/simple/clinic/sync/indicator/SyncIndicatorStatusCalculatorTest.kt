@@ -63,6 +63,7 @@ class SyncIndicatorStatusCalculatorTest {
     whenever(syncResultPreference.get()).thenReturn(initialState)
 
     syncCalculator = SyncIndicatorStatusCalculator(dataSync, clock, syncResultPreference)
+    syncCalculator.updateSyncResults()
 
     when (syncGroup) {
       SyncGroup.FREQUENT -> {

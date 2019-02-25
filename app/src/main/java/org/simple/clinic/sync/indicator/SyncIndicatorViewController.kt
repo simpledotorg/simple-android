@@ -21,6 +21,7 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 typealias Ui = SyncIndicatorView
@@ -55,11 +56,20 @@ class SyncIndicatorViewController @Inject constructor(
     val showSyncIndicatorState = Observables
         .combineLatest(screenCreated, syncProgress, configProvider)
         { _, stateStream, config ->
-          val indicatorState = when (stateStream.lastSyncProgress!!) {
+          when (stateStream.lastSyncProgress!!) {
             SUCCESS, FAILURE -> syncIndicatorState(stateStream.lastSyncSucceededAt, config.syncFailureThreshold)
             SYNCING -> Syncing
           }
-          { ui: Ui -> ui.updateState(indicatorState) }
+        }
+        .switchMap {
+          if (it is Synced) {
+            val durationSince = it.durationSince
+            Observable.interval(1, TimeUnit.MINUTES)
+                .map { min -> { ui: Ui -> ui.updateState(Synced(durationSince.plusMinutes(min))) } }
+                .startWith { ui: Ui -> ui.updateState(Synced(durationSince)) }
+          } else {
+            Observable.just { ui: Ui -> ui.updateState(it) }
+          }
         }
 
     return showSyncIndicatorState.mergeWith(showDefaultSyncIndicatorState)

@@ -4,14 +4,14 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="8dp"
-  android:layout_marginEnd="8dp"
-  android:layout_marginStart="8dp">
+  android:layout_marginBottom="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:layout_marginStart="@dimen/spacing_8">
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp">
+    android:layout_margin="@dimen/spacing_16">
 
     <ImageView
       android:id="@+id/recentpatient_item_gender"
@@ -27,8 +27,8 @@
       style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="16dp"
-      android:layout_marginStart="16dp"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginStart="@dimen/spacing_16"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/recentpatient_item_gender"
       app:layout_constraintTop_toTopOf="@+id/recentpatient_item_gender"
@@ -39,7 +39,7 @@
       style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="4dp"
+      android:layout_marginTop="@dimen/spacing_4"
       android:text="@string/patientsearchresults_item_last_bp"
       android:textAllCaps="true"
       app:layout_constraintStart_toStartOf="@+id/recentpatient_item_title"

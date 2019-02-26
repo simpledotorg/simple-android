@@ -75,10 +75,13 @@ class SyncIndicatorViewController @Inject constructor(
     val mostFrequentSyncInterval = enumValues<SyncInterval>()
         .map { it.frequency }
         .min()!!
+
+    val syncHappenedInTheFuture = timeSinceLastSync.isNegative
+
     return when {
       timeSinceLastSync > maxIntervalSinceLastSync -> ConnectToSync
       timeSinceLastSync > mostFrequentSyncInterval -> SyncPending
-      timeSinceLastSync.isNegative -> SyncPending
+      syncHappenedInTheFuture -> SyncPending
       else -> Synced(timeSinceLastSync)
     }
   }

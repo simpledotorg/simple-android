@@ -4,17 +4,25 @@ import android.content.Context
 import android.util.AttributeSet
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
-import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.PatientConfig
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import javax.inject.Inject
 
 class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(context, attrs) {
 
   @Inject
-  lateinit var config: Observable<PatientConfig>
+  lateinit var patientRepository: PatientRepository
+
+  @Inject
+  lateinit var userSession: UserSession
+
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
 
   private val groupAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
 
@@ -25,51 +33,21 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(c
     layoutManager = LinearLayoutManager(context)
     adapter = groupAdapter
 
-    addDummyData()
-  }
-
-  private fun addDummyData() {
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish Acharya",
-        age = 43,
-        lastBp = "140/90",
-        gender = Gender.TRANSGENDER
-    ))
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish24 Acharya",
-        age = 43,
-        lastBp = "141/90",
-        gender = Gender.MALE
-    ))
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish3 Acharya",
-        age = 43,
-        lastBp = "142/90",
-        gender = Gender.FEMALE
-    ))
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish4 Acharya",
-        age = 43,
-        lastBp = "145/90",
-        gender = Gender.TRANSGENDER
-    ))
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish55 Acharya",
-        age = 43,
-        lastBp = "149/90",
-        gender = Gender.MALE
-    ))
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish6 Acharya",
-        age = 43,
-        lastBp = "141/90",
-        gender = Gender.FEMALE
-    ))
-    groupAdapter.add(RecentPatientItem(
-        name = "Anish7 Acharya",
-        age = 43,
-        lastBp = "142/90",
-        gender = Gender.TRANSGENDER
-    ))
+    userSession.requireLoggedInUser()
+        .takeUntil(RxView.detaches(this))
+        .map(facilityRepository::currentFacilityUuid)
+        .flatMap(patientRepository::recentPatients)
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe {
+          groupAdapter.clear()
+          groupAdapter.addAll(it.map {
+            RecentPatientItem(
+                name = it.fullName,
+                age = it.age?.value ?: -1,
+                lastBp = "${it.lastBp?.systolic}/${it.lastBp?.diastolic}",
+                gender = it.gender
+            )
+          })
+        }
   }
 }

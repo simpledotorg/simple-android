@@ -90,7 +90,7 @@ class FacilityChangeScreenControllerTest {
         userSession = userSession,
         reportsSync = reportsSync,
         locationRepository = locationRepository,
-        configProvider = configProvider.firstOrError(),
+        configProvider = configProvider,
         elapsedRealtimeClock = elapsedRealtimeClock)
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

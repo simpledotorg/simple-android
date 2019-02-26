@@ -2,7 +2,7 @@ package org.simple.clinic.facility.change
 
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.simple.clinic.util.Distance
 import org.threeten.bp.Duration
 
@@ -10,8 +10,8 @@ import org.threeten.bp.Duration
 class FacilityChangeModule {
 
   @Provides
-  fun config(): Single<FacilityChangeConfig> {
-    return Single.just(FacilityChangeConfig(
+  fun config(): Observable<FacilityChangeConfig> {
+    return Observable.just(FacilityChangeConfig(
         locationListenerExpiry = Duration.ofSeconds(5),
         locationUpdateInterval = Duration.ofSeconds(1),
         proximityThresholdForNearbyFacilities = Distance.ofKilometers(2.0),

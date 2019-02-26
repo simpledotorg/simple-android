@@ -39,7 +39,7 @@ class FacilityChangeScreenController @Inject constructor(
     private val userSession: UserSession,
     private val reportsSync: ReportsSync,
     private val locationRepository: LocationRepository,
-    private val configProvider: Single<FacilityChangeConfig>,
+    private val configProvider: Observable<FacilityChangeConfig>,
     private val elapsedRealtimeClock: ElapsedRealtimeClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -63,13 +63,13 @@ class FacilityChangeScreenController @Inject constructor(
 
     val locationWaitExpiry = {
       configProvider
-          .flatMapObservable { Observables.timer(it.locationListenerExpiry) }
+          .flatMap { Observables.timer(it.locationListenerExpiry) }
           .map { Unavailable }
     }
 
     val fetchLocation = {
       configProvider
-          .flatMapObservable { config ->
+          .flatMap { config ->
             locationRepository
                 .streamUserLocation(config.locationUpdateInterval, io())
                 .filter { isRecentLocation(it, config) }
@@ -126,7 +126,7 @@ class FacilityChangeScreenController @Inject constructor(
         .map { it.location }
 
     val filteredFacilityListItems = Observables
-        .combineLatest(searchQueryChanges, locationUpdates, configProvider.toObservable())
+        .combineLatest(searchQueryChanges, locationUpdates, configProvider)
         .switchMap { (query, locationUpdate, config) ->
           val userLocation = when (locationUpdate) {
             is Available -> locationUpdate.location

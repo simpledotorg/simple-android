@@ -39,10 +39,17 @@ class DatabaseMigrationAndroidTest {
   @field:Named("last_facility_pull_token")
   lateinit var lastFacilityPullToken: Preference<Optional<String>>
 
+  @Inject
+  @field:Named("last_patient_pull_token")
+  lateinit var lastPatientPullToken: Preference<Optional<String>>
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
     helper.migrations = migrations
+
+    lastFacilityPullToken.set(None)
+    lastPatientPullToken.set(None)
   }
 
   @Test
@@ -1325,6 +1332,21 @@ class DatabaseMigrationAndroidTest {
 
       assertThat(it.string("syncStatus")).isEqualTo("DONE")
     }
+  }
+
+  @Test
+  fun migration_29_to_30() {
+    val tableName = "BusinessId"
+    val expectedColumnCount = 9
+
+    lastPatientPullToken.set(Just("old_token"))
+    val db_v29 = helper.createDatabase(29)
+    db_v29.assertTableDoesNotExist(tableName)
+
+    val db_v30 = helper.migrateTo(30)
+
+    db_v30.assertColumnCount(tableName, expectedColumnCount)
+    assertThat(lastPatientPullToken.get()).isEqualTo(None)
   }
 }
 

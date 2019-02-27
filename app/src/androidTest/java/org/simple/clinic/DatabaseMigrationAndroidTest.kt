@@ -352,15 +352,11 @@ class DatabaseMigrationAndroidTest {
     // We need to do this here because Room does not create virtual tables for us.
     db_v15.execSQL("""CREATE VIRTUAL TABLE "PatientFuzzySearch" USING spellfix1""")
 
-    db_v15.query("""SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='PatientFuzzySearch'""").use {
-      assertThat(it.count).isEqualTo(1)
-    }
+    db_v15.assertTableExists("PatientFuzzySearch")
 
     val db_v16 = helper.migrateTo(16)
 
-    db_v16.query("""SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='PatientFuzzySearch'""").use {
-      assertThat(it.count).isEqualTo(0)
-    }
+    db_v16.assertTableDoesNotExist("PatientFuzzySearch")
   }
 
   @Test
@@ -1342,5 +1338,21 @@ private fun SupportSQLiteDatabase.assertColumnCount(tableName: String, expectedC
       SELECT * FROM "$tableName"
     """).use {
     assertWithMessage("With table [$tableName]").that(it.columnCount).isEqualTo(expectedCount)
+  }
+}
+
+private fun SupportSQLiteDatabase.assertTableDoesNotExist(tableName: String) {
+  query("""
+    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
+    """).use {
+    assertWithMessage("Expected that [$tableName] does not exist, but found it exists").that(it.count).isEqualTo(0)
+  }
+}
+
+private fun SupportSQLiteDatabase.assertTableExists(tableName: String) {
+  query("""
+    SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
+    """).use {
+    assertWithMessage("Expected that [$tableName] exists, but found it does not exist").that(it.count).isEqualTo(1)
   }
 }

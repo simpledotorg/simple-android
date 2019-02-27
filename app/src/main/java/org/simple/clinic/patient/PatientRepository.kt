@@ -408,8 +408,8 @@ class PatientRepository @Inject constructor(
         .andThen(reportsRepository.deleteReportsFile().toCompletable())
   }
 
-  fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =
+  fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid)
+          .recentPatients(facilityUuid, limit)
           .toObservable()
 }

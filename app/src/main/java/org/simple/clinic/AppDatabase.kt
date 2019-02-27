@@ -11,6 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.communication.Communication
+import org.simple.clinic.patient.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -45,8 +46,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       MedicalHistory::class,
       OngoingLoginEntry::class,
       Protocol::class,
-      ProtocolDrug::class],
-    version = 29,
+      ProtocolDrug::class,
+      BusinessId::class
+    ],
+    version = 30,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -62,7 +65,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     MedicalHistory.Answer.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
-    UuidRoomTypeConverter::class)
+    UuidRoomTypeConverter::class,
+    BusinessId.IdentifierType.RoomTypeConverter::class,
+    BusinessId.MetaVersion.RoomTypeConverter::class
+)
 abstract class AppDatabase : RoomDatabase() {
 
   private val patientFuzzyPatientSearchDao by lazy {

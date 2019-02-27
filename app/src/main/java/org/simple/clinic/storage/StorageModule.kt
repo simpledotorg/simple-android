@@ -52,7 +52,8 @@ open class StorageModule(
         Migration_25_26(),
         Migration_26_27(),
         Migration_27_28(),
-        Migration_28_29())
+        Migration_28_29(),
+        Migration_29_30())
   }
 
   @Provides

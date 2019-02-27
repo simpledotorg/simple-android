@@ -3,6 +3,7 @@ package org.simple.clinic.patient.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -154,6 +155,51 @@ data class PatientPhoneNumberPayload(
         number = number,
         phoneType = type,
         active = active,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
+}
+
+@JsonClass(generateAdapter = true)
+data class BusinessIdPayload(
+    @Json(name = "id")
+    val uuid: UUID,
+
+    @Json(name = "patient_id")
+    val patientUuid: UUID,
+
+    @Json(name = "identifier")
+    val identifier: String,
+
+    @Json(name = "identifier_type")
+    val identifierType: BusinessId.IdentifierType,
+
+    @Json(name = "meta_version")
+    val metaVersion: BusinessId.MetaVersion,
+
+    @Json(name = "meta")
+    val meta: String,
+
+    @Json(name = "created_at")
+    val createdAt: Instant,
+
+    @Json(name = "updated_at")
+    val updatedAt: Instant,
+
+    @Json(name = "deleted_at")
+    val deletedAt: Instant?
+) {
+
+  fun toDatabaseModel(): BusinessId {
+    return BusinessId(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        identifier = identifier,
+        identifierType = identifierType,
+        metaVersion = metaVersion,
+        meta = meta,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt

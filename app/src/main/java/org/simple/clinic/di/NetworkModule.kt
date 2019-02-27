@@ -9,6 +9,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.BusinessId
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
@@ -35,6 +36,8 @@ open class NetworkModule {
         .add(MoshiOptionalAdapterFactory())
         .add(patientSummaryResultAdapterFactory())
         .add(AppointmentCancelReason.MoshiTypeConverter())
+        .add(BusinessId.IdentifierType.MoshiTypeAdapter())
+        .add(BusinessId.MetaVersion.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

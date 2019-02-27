@@ -36,7 +36,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(c
     userSession.requireLoggedInUser()
         .takeUntil(RxView.detaches(this))
         .map(facilityRepository::currentFacilityUuid)
-        .flatMap(patientRepository::recentPatients)
+        .flatMap { facilityUuid -> patientRepository.recentPatients(facilityUuid, 10) }
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe {
           groupAdapter.clear()

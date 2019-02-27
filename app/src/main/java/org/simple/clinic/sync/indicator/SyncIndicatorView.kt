@@ -23,6 +23,7 @@ import javax.inject.Inject
 class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(context, attrs) {
 
   private val syncStatusTextView by bindView<TextView>(R.id.sync_indicator_status_text)
+  private val syncIndicatorLayout by bindView<LinearLayout>(R.id.sync_indicator_root_layout)
 
   @Inject
   lateinit var controller: SyncIndicatorViewController
@@ -35,7 +36,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
     TheActivity.component.inject(this)
 
-    screenCreates()
+    Observable.merge(screenCreates(), viewClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -44,6 +45,8 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   }
 
   private fun screenCreates() = Observable.just(SyncIndicatorViewCreated)
+
+  private fun viewClicks() = RxView.clicks(syncIndicatorLayout).map { SyncIndicatorViewClicked }
 
   fun updateState(syncState: SyncIndicatorState) {
     when (syncState) {

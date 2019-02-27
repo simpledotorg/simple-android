@@ -58,9 +58,9 @@ data class RecentPatient(
           PD.facilityUuid = :facilityUuid
         )
         ORDER BY latestUpdatedAt DESC
-        LIMIT 10
+        LIMIT :limit
     """)
-    fun recentPatients(facilityUuid: UUID): Flowable<List<RecentPatient>>
+    fun recentPatients(facilityUuid: UUID, limit: Int): Flowable<List<RecentPatient>>
   }
 
   data class LastBp(val systolic: String, val diastolic: String)

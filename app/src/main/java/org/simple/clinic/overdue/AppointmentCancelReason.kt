@@ -1,9 +1,10 @@
 package org.simple.clinic.overdue
 
-import androidx.room.TypeConverter
 import androidx.annotation.VisibleForTesting
+import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import org.simple.clinic.util.SafeEnumTypeAdapter
 
 sealed class AppointmentCancelReason {
 
@@ -43,67 +44,41 @@ sealed class AppointmentCancelReason {
     override fun toString() = "Unknown ($actualValue)"
   }
 
-  /**
-   * It'll be nice to write a code generator instead of hand-typing
-   * and manually maintaining this adapter in the future.
-   */
-  object TypeAdapter {
+  object TypeAdapter : SafeEnumTypeAdapter<AppointmentCancelReason>(
+      knownMappings = mapOf(
+          PatientNotResponding to "not_responding",
+          InvalidPhoneNumber to "invalid_phone_number",
+          TransferredToAnotherPublicHospital to "public_hospital_transfer",
+          MovedToPrivatePractitioner to "moved_to_private",
+          Dead to "dead",
+          Other to "other"
+      ),
+      unknownStringToEnumConverter = { Unknown(it) },
+      unknownEnumToStringConverter = { (it as Unknown).actualValue }
+  )
 
-    val KNOWN_MAPPINGS = mapOf(
-        PatientNotResponding to "not_responding",
-        InvalidPhoneNumber to "invalid_phone_number",
-        TransferredToAnotherPublicHospital to "public_hospital_transfer",
-        MovedToPrivatePractitioner to "moved_to_private",
-        Dead to "dead",
-        Other to "other")
+  class RoomTypeConverter {
+    @TypeConverter
+    fun toEnum(value: String?): AppointmentCancelReason? = TypeAdapter.toEnum(value)
 
-    fun toEnum(reason: String?): AppointmentCancelReason? {
-      if (reason == null) {
-        return null
-      }
-
-      val foundEnum = KNOWN_MAPPINGS.entries
-          .find { (_, jsonKey) -> jsonKey == reason }
-          ?.key
-      return foundEnum ?: Unknown(actualValue = reason)
-    }
-
-    fun fromEnum(reason: AppointmentCancelReason?): String? {
-      if (reason == null) {
-        return null
-      }
-
-      return if (reason is Unknown) {
-        reason.actualValue
-      } else {
-        KNOWN_MAPPINGS[reason] ?: throw AssertionError("Unknown reason enum: $reason")
-      }
-    }
+    @TypeConverter
+    fun fromEnum(reason: AppointmentCancelReason?): String? = TypeAdapter.fromEnum(reason)
   }
 
   class MoshiTypeConverter {
     @FromJson
-    fun toEnum(reason: String?): AppointmentCancelReason? = TypeAdapter.toEnum(reason)
+    fun toEnum(value: String?): AppointmentCancelReason? = TypeAdapter.toEnum(value)
 
     @ToJson
     fun fromEnum(reason: AppointmentCancelReason?): String? = TypeAdapter.fromEnum(reason)
   }
 
-  class RoomTypeConverter {
-    @TypeConverter
-    fun toEnum(reason: String?): AppointmentCancelReason? = TypeAdapter.toEnum(reason)
-
-    @TypeConverter
-    fun fromEnum(reason: AppointmentCancelReason?): String? = TypeAdapter.fromEnum(reason)
-  }
-
   companion object {
-
     fun values(): Set<AppointmentCancelReason> {
-      return TypeAdapter.KNOWN_MAPPINGS.keys
+      return TypeAdapter.knownMappings.keys
     }
 
     @VisibleForTesting
-    fun random() = TypeAdapter.KNOWN_MAPPINGS.keys.shuffled().first()
+    fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
   }
 }

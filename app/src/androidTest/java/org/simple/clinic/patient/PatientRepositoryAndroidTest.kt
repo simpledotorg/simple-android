@@ -21,6 +21,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -874,4 +875,104 @@ class PatientRepositoryAndroidTest {
 
     assertThat(patient.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
+
+  @Test
+  fun verify_recent_patients_are_retrieved_as_expected() {
+
+    fun savePatientWithBp(): RecentPatient {
+      val patientProfile = testData.patientProfile()
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val bpMeasurement = testData.bloodPressureMeasurement(patientUuid = patientProfile.patient.uuid)
+      database.bloodPressureDao().save(listOf(bpMeasurement))
+      return patientProfile.patient.toRecentPatient(bpMeasurement)
+    }
+
+    val facilityUuid = testData.qaUserFacilityUuid()
+
+    fun verifyRecentPatientOrder(vararg expectedRecentPatients: RecentPatient) {
+      patientRepository
+          .recentPatients(facilityUuid, limit = 3)
+          .test()
+          .assertValue(expectedRecentPatients.toList())
+          .dispose()
+    }
+
+    val recentPatient1 = savePatientWithBp()
+
+    verifyRecentPatientOrder(
+        recentPatient1
+    )
+
+    val recentPatient2 = savePatientWithBp()
+
+    verifyRecentPatientOrder(
+        recentPatient2,
+        recentPatient1
+    )
+
+    prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug()).blockingAwait()
+
+    verifyRecentPatientOrder(
+        recentPatient1,
+        recentPatient2
+    )
+
+    val appointment2 = testData.appointment(patientUuid = recentPatient2.uuid)
+    appointmentRepository.save(listOf(appointment2)).blockingAwait()
+
+    verifyRecentPatientOrder(
+        recentPatient2,
+        recentPatient1
+    )
+
+    val appointment1 = testData.appointment(patientUuid = recentPatient1.uuid)
+    appointmentRepository.save(listOf(appointment1)).blockingAwait()
+    communicationRepository.save(listOf(testData.communication(appointmentUuid = appointment1.uuid))).blockingAwait()
+
+    verifyRecentPatientOrder(
+        recentPatient1,
+        recentPatient2
+    )
+
+    communicationRepository.save(listOf(testData.communication(appointmentUuid = appointment2.uuid))).blockingAwait()
+
+    verifyRecentPatientOrder(
+        recentPatient2,
+        recentPatient1
+    )
+
+    medicalHistoryRepository.save(testData.medicalHistory(patientUuid = recentPatient1.uuid)) { Instant.now() }.blockingAwait()
+
+    verifyRecentPatientOrder(
+        recentPatient1,
+        recentPatient2
+    )
+
+    val recentPatient3 = savePatientWithBp()
+
+    verifyRecentPatientOrder(
+        recentPatient3,
+        recentPatient1,
+        recentPatient2
+    )
+
+    val recentPatient4 = savePatientWithBp()
+
+    verifyRecentPatientOrder(
+        recentPatient4,
+        recentPatient3,
+        recentPatient1
+    )
+  }
+
+  private fun Patient.toRecentPatient(bpMeasurement: BloodPressureMeasurement) = RecentPatient(
+      uuid = uuid,
+      fullName = fullName,
+      gender = gender,
+      dateOfBirth = dateOfBirth,
+      age = age,
+      bpUpdatedAt = bpMeasurement.updatedAt,
+      lastBp = RecentPatient.LastBp(bpMeasurement.systolic.toString(), bpMeasurement.diastolic.toString())
+  )
 }

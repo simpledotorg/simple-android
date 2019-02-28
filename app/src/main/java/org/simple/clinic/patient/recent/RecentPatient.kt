@@ -33,7 +33,7 @@ data class RecentPatient(
   interface RoomDao {
 
     @Query("""
-        SELECT P.uuid, P.fullName, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth, P.gender,
+        SELECT P.*,
         BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.updatedAt bpUpdatedAt,
         MAX(
             IFNULL(P.updatedAt, '0'),

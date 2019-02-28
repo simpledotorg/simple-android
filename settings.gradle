@@ -1,1 +1,8 @@
 include ':app', ':router', ':spellfix'
+
+buildCache {
+    local(DirectoryBuildCache) {
+        directory = new File(rootDir, 'build-cache')
+        removeUnusedEntriesAfterDays = 30
+    }
+}

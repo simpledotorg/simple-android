@@ -186,9 +186,6 @@ dependencies {
   testImplementation "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin"
 
   implementation "androidx.appcompat:appcompat:$versions.supportLib"
-  implementation("androidx.legacy:legacy-support-v4:$versions.supportLib") {
-    because "Play Services Auth exposes an older version of this dependency"
-  }
   implementation "androidx.recyclerview:recyclerview:$versions.recyclerView"
   implementation "com.google.android.material:material:$versions.material"
   implementation "androidx.cardview:cardview:$versions.cardview"

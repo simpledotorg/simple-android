@@ -5,6 +5,7 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   android:foreground="?attr/selectableItemBackgroundBorderless"
+  tools:ignore="UnusedAttribute"
   tools:parentTag="android.widget.RelativeLayout">
 
   <LinearLayout
@@ -17,9 +18,9 @@
       android:id="@+id/newmedicalhistory_item_label"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/spacing_16"
       android:layout_marginBottom="@dimen/spacing_16"
       android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_16"
       android:layout_weight="1"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey1"
       tools:text="A really long medical history question that shouldn't fit" />
@@ -37,15 +38,15 @@
         android:layout_height="match_parent"
         android:background="@drawable/selector_medicalhistory_answer"
         android:button="@null"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:paddingStart="@dimen/medicalhistory_unselected_padding"
         android:drawablePadding="@dimen/spacing_4"
+        android:gravity="center"
+        android:paddingBottom="20dp"
         android:paddingEnd="@dimen/medicalhistory_unselected_padding"
+        android:paddingStart="@dimen/medicalhistory_unselected_padding"
+        android:paddingTop="20dp"
+        android:text="@string/newmedicalhistory_yes"
         android:textAllCaps="false"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center"
-        android:text="@string/newmedicalhistory_yes" />
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
 
       <org.simple.clinic.widgets.CheckboxWithSuppressibleListener
         android:id="@+id/newmedicalhistory_item_no"
@@ -54,15 +55,15 @@
         android:layout_marginStart="@dimen/spacing_12"
         android:background="@drawable/selector_medicalhistory_answer"
         android:button="@null"
-        android:paddingTop="@dimen/spacing_16"
-        android:paddingBottom="@dimen/spacing_16"
-        android:paddingStart="@dimen/medicalhistory_unselected_padding"
         android:drawablePadding="@dimen/spacing_4"
-        android:paddingEnd="@dimen/medicalhistory_unselected_padding"
         android:gravity="center"
+        android:paddingBottom="@dimen/spacing_16"
+        android:paddingEnd="@dimen/medicalhistory_unselected_padding"
+        android:paddingStart="@dimen/medicalhistory_unselected_padding"
+        android:paddingTop="@dimen/spacing_16"
+        android:text="@string/newmedicalhistory_no"
         android:textAllCaps="false"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center"
-        android:text="@string/newmedicalhistory_no" />
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Center" />
     </LinearLayout>
 
   </LinearLayout>

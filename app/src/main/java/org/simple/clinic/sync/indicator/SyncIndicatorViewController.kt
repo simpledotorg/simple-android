@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.sync.SyncProgress.FAILURE
@@ -30,7 +31,8 @@ typealias UiChange = (Ui) -> Unit
 class SyncIndicatorViewController @Inject constructor(
     private val lastSyncState: Preference<LastSyncedState>,
     private val utcClock: UtcClock,
-    private val configProvider: Observable<SyncIndicatorConfig>
+    private val configProvider: Observable<SyncIndicatorConfig>,
+    private val dataSync: DataSync
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -38,7 +40,9 @@ class SyncIndicatorViewController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return updateIndicatorView(replayedEvents)
+    return Observable.merge(
+        updateIndicatorView(replayedEvents),
+        startSync(replayedEvents))
   }
 
   private fun updateIndicatorView(events: Observable<UiEvent>): Observable<UiChange> {
@@ -94,5 +98,12 @@ class SyncIndicatorViewController @Inject constructor(
       syncHappenedInTheFuture -> SyncPending
       else -> Synced(timeSinceLastSync)
     }
+  }
+
+  private fun startSync(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<SyncIndicatorViewClicked>()
+        .flatMapCompletable { dataSync.sync(null) }
+        .andThen(Observable.empty<UiChange>())
   }
 }

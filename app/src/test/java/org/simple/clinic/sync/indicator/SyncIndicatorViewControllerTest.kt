@@ -1,9 +1,11 @@
 package org.simple.clinic.sync.indicator
 
 import com.f2prateek.rx.preferences2.Preference
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -11,6 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
@@ -43,11 +46,13 @@ class SyncIndicatorViewControllerTest {
 
   private val utcClock = TestUtcClock()
 
+  private val dataSync = mock<DataSync>()
+
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
   @Before
   fun setUp() {
-    controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock, configSubject)
+    controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock, configSubject, dataSync)
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
 
     uiEvents
@@ -92,5 +97,13 @@ class SyncIndicatorViewControllerTest {
         listOf(LastSyncedState(SUCCESS, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 12),
         listOf(LastSyncedState(FAILURE, Instant.now(utcClock).plus(12, ChronoUnit.MINUTES)), SyncPending, 13)
     )
+  }
+
+  @Test
+  fun `when sync indicator is clicked, sync should be triggered`() {
+    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    uiEvents.onNext(SyncIndicatorViewClicked)
+
+    verify(dataSync).sync(null)
   }
 }

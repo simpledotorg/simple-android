@@ -35,7 +35,7 @@ buildscript {
       maskedEditText      : '1.0.5',
       itemAnimators       : '1.0.2',
       jbcrypt             : '0.3m',
-      workRuntimeKtx      : '1.0.0-beta02',
+      workRuntimeKtx      : '1.0.0-rc02',
       faker               : '1.2.7',
       truth               : '0.40',
       junit               : '4.12',
@@ -52,7 +52,7 @@ buildscript {
       javaStringSimilarity: '1.1.0',
       espresso            : '3.1.1',
       leakCanary          : '1.6.2',
-      constraintLayout    : '1.1.2',
+      constraintLayout    : '1.1.3',
       playServicesLocation: '16.0.0',
       codeScanner         : '2.1.0'
   ]

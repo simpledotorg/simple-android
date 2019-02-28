@@ -104,5 +104,6 @@
     android:background="?colorAccent"
     android:foreground="?attr/selectableItemBackground"
     android:text="@string/customprescription_save_drug"
-    android:textColor="@color/white" />
+    android:textColor="@color/white"
+    tools:ignore="UnusedAttribute" />
 </org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener>

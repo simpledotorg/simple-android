@@ -3,7 +3,8 @@
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:background="@color/white100"
-  android:foreground="?attr/selectableItemBackground">
+  android:foreground="?attr/selectableItemBackground"
+  tools:ignore="UnusedAttribute">
 
   <TextView
     android:id="@+id/facility_item_name"

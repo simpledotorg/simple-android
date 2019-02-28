@@ -56,7 +56,8 @@
         android:paddingStart="@dimen/spacing_8"
         android:paddingTop="2dp"
         android:text="@string/applock_logout"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100" />
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.White100"
+        tools:ignore="UnusedAttribute" />
     </LinearLayout>
   </LinearLayout>
 

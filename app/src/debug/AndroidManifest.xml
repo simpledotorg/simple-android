@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  package="org.simple.clinic">
+<manifest package="org.simple.clinic"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools">
 
   <application
-    android:icon="@mipmap/ic_launcher"
     android:name=".DebugClinicApp"
+    android:icon="@mipmap/ic_launcher"
+    tools:ignore="GoogleAppIndexingWarning"
     tools:replace="android:name,android:icon">
 
     <receiver android:name=".DebugNotificationActionReceiver" />

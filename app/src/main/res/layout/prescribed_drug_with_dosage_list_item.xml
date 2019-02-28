@@ -6,7 +6,8 @@
   android:clickable="true"
   android:focusable="true"
   android:foreground="?selectableItemBackground"
-  android:orientation="vertical">
+  android:orientation="vertical"
+  tools:ignore="UnusedAttribute">
 
   <TextView
     android:id="@+id/prescribed_drug_list_item_dosage_name"

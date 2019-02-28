@@ -19,6 +19,8 @@ class DataSync @Inject constructor(
 
   private val syncProgress = PublishSubject.create<SyncGroupResult>()
 
+  private val syncErrors = PublishSubject.create<ResolvedError>()
+
   fun sync(syncGroup: SyncGroup?): Completable {
     return if (syncGroup == null) {
       val allSyncGroups = SyncGroup.values()
@@ -54,6 +56,8 @@ class DataSync @Inject constructor(
 
   private fun logError() = { e: Throwable ->
     val resolvedError = ErrorResolver.resolve(e)
+    syncErrors.onNext(resolvedError)
+
     when (resolvedError) {
       is ResolvedError.Unexpected -> {
         Timber.i("(breadcrumb) Reporting to sentry. Error: $e. Resolved error: $resolvedError")
@@ -68,6 +72,8 @@ class DataSync @Inject constructor(
   }
 
   fun streamSyncResults(): Observable<SyncGroupResult> = syncProgress
+
+  fun streamSyncErrors(): Observable<ResolvedError> = syncErrors
 
   data class SyncGroupResult(val syncGroup: SyncGroup, val syncProgress: SyncProgress)
 

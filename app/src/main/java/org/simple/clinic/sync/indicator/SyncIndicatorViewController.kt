@@ -62,7 +62,7 @@ class SyncIndicatorViewController @Inject constructor(
         .combineLatest(screenCreated, syncProgress, configProvider)
         { _, stateStream, config ->
           when (stateStream.lastSyncProgress!!) {
-            SUCCESS, FAILURE -> syncIndicatorState(stateStream.lastSyncSucceededAt, config.syncFailureThreshold)
+            SUCCESS, FAILURE -> syncIndicatorState(stateStream, config.syncFailureThreshold)
             SYNCING -> Syncing
           }
         }
@@ -80,10 +80,8 @@ class SyncIndicatorViewController @Inject constructor(
     return showSyncIndicatorState.mergeWith(showDefaultSyncIndicatorState)
   }
 
-  private fun syncIndicatorState(timestamp: Instant?, maxIntervalSinceLastSync: Duration): SyncIndicatorState {
-    if (timestamp == null) {
-      return SyncPending
-    }
+  private fun syncIndicatorState(syncState: LastSyncedState, maxIntervalSinceLastSync: Duration): SyncIndicatorState {
+    val timestamp = syncState.lastSyncSucceededAt ?: return SyncPending
 
     val now = Instant.now(utcClock)
     val timeSinceLastSync = Duration.between(timestamp, now)
@@ -97,7 +95,11 @@ class SyncIndicatorViewController @Inject constructor(
       timeSinceLastSync > maxIntervalSinceLastSync -> ConnectToSync
       timeSinceLastSync > mostFrequentSyncInterval -> SyncPending
       syncHappenedInTheFuture -> SyncPending
-      else -> Synced(timeSinceLastSync)
+      else -> when (syncState.lastSyncProgress!!) {
+        SUCCESS -> Synced(timeSinceLastSync)
+        FAILURE -> SyncPending
+        SYNCING -> Syncing
+      }
     }
   }
 

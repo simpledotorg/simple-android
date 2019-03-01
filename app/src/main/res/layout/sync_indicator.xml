@@ -9,7 +9,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:drawablePadding="@dimen/spacing_8"
-    android:drawableStart="@drawable/ic_cloud_upload_24dp"
+    android:drawableStart="@drawable/ic_cloud_upload_16dp"
     android:gravity="center_vertical"
     android:text="@string/sync_indicator_status_pending" />
 

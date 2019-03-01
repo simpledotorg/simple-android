@@ -5,7 +5,6 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
-import org.simple.clinic.facility.change.FacilityListItem
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
@@ -14,6 +13,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
@@ -404,5 +404,21 @@ object PatientMocker {
       createdAt = createdAt,
       updatedAt = updatedAt,
       deletedAt = deletedAt
+  )
+
+  fun recentPatient(
+      uuid: UUID = UUID.randomUUID(),
+      fullName: String = "fullName",
+      gender: Gender = randomOfEnum(Gender::class),
+      dateOfBirth: LocalDate? = null,
+      age: Age? = null,
+      lastBp: RecentPatient.LastBp? = null
+  ) = RecentPatient(
+      uuid = uuid,
+      fullName = fullName,
+      gender = gender,
+      dateOfBirth = dateOfBirth,
+      age = age,
+      lastBp = lastBp
   )
 }

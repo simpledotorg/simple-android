@@ -27,8 +27,10 @@ class SyncIndicatorFailureDialog : AppCompatDialogFragment() {
   }
 
   override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+    val message = arguments!!.getString(KEY_MESSAGE)
+
     return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle)
-        .setMessage(getString(R.string.sync_indicator_dialog_error_network))
+        .setMessage(message)
         .setPositiveButton(getString(R.string.sync_indocator_dialog_button_text), null)
         .create()
   }

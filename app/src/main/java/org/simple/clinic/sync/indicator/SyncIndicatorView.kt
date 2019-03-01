@@ -17,6 +17,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
+import org.simple.clinic.sync.indicator.dialog.SyncIndicatorFailureDialog
 import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
@@ -28,6 +29,9 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
   @Inject
   lateinit var controller: SyncIndicatorViewController
+
+  @Inject
+  lateinit var activity: TheActivity
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -76,6 +80,10 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   }
 
   fun showErrorDialog(errorType: ResolvedError) {
-    //This will be implemented in a later commit
+    val message = when (errorType) {
+      is ResolvedError.NetworkRelated -> context.getString(R.string.sync_indicator_dialog_error_network)
+      is ResolvedError.Unexpected -> context.getString(R.string.sync_indicator_dialog_error_server)
+    }
+    SyncIndicatorFailureDialog.show(fragmentManager = activity.supportFragmentManager, message = message)
   }
 }

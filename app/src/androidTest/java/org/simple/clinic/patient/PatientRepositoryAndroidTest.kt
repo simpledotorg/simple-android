@@ -878,26 +878,6 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_recent_patients_are_retrieved_as_expected() {
-
-    fun savePatientWithBp(): RecentPatient {
-      val patientProfile = testData.patientProfile()
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
-
-      val bpMeasurement = testData.bloodPressureMeasurement(patientUuid = patientProfile.patient.uuid)
-      database.bloodPressureDao().save(listOf(bpMeasurement))
-      return patientProfile.patient.toRecentPatient(bpMeasurement)
-    }
-
-    val facilityUuid = testData.qaUserFacilityUuid()
-
-    fun verifyRecentPatientOrder(vararg expectedRecentPatients: RecentPatient) {
-      patientRepository
-          .recentPatients(facilityUuid, limit = 3)
-          .test()
-          .assertValue(expectedRecentPatients.toList())
-          .dispose()
-    }
-
     val recentPatient1 = savePatientWithBp()
 
     verifyRecentPatientOrder(
@@ -966,6 +946,33 @@ class PatientRepositoryAndroidTest {
     )
   }
 
+  @Test
+  fun verify_recent_patients_from_other_facilities_are_not_retrieved() {
+    val facility1Uuid = UUID.randomUUID()
+    val patient1InFacility1 = savePatientWithBp(facilityUuid = facility1Uuid)
+
+    verifyRecentPatientOrder(patient1InFacility1, facilityUuid = facility1Uuid)
+
+    val facility2Uuid = UUID.randomUUID()
+    val patient1InFacility2 = savePatientWithBp(facilityUuid = facility2Uuid)
+
+    verifyRecentPatientOrder(patient1InFacility1, facilityUuid = facility1Uuid)
+    verifyRecentPatientOrder(patient1InFacility2, facilityUuid = facility2Uuid)
+
+    val patient2InFacility1 = savePatientWithBp(facilityUuid = facility1Uuid)
+
+    verifyRecentPatientOrder(patient2InFacility1, patient1InFacility1, facilityUuid = facility1Uuid)
+  }
+
+  private fun savePatientWithBp(facilityUuid: UUID = testData.qaUserFacilityUuid()): RecentPatient {
+    val patientProfile = testData.patientProfile()
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val bpMeasurement = testData.bloodPressureMeasurement(patientUuid = patientProfile.patient.uuid, facilityUuid = facilityUuid)
+    database.bloodPressureDao().save(listOf(bpMeasurement))
+    return patientProfile.patient.toRecentPatient(bpMeasurement)
+  }
+
   private fun Patient.toRecentPatient(bpMeasurement: BloodPressureMeasurement) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
@@ -978,4 +985,15 @@ class PatientRepositoryAndroidTest {
           updatedAt = bpMeasurement.updatedAt
       )
   )
+
+  private fun verifyRecentPatientOrder(
+      vararg expectedRecentPatients: RecentPatient,
+      facilityUuid: UUID = testData.qaUserFacilityUuid()
+  ) {
+    patientRepository
+        .recentPatients(facilityUuid, limit = 3)
+        .test()
+        .assertValue(expectedRecentPatients.toList())
+        .dispose()
+  }
 }

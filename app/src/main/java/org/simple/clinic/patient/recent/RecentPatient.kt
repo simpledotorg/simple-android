@@ -23,8 +23,6 @@ data class RecentPatient(
     @Embedded(prefix = "age_")
     val age: Age?,
 
-    val bpUpdatedAt: Instant,
-
     @Embedded(prefix = "bp_")
     val lastBp: LastBp?
 ) {
@@ -44,7 +42,7 @@ data class RecentPatient(
      */
     @Query("""
         SELECT P.*,
-        BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.updatedAt bpUpdatedAt,
+        BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.updatedAt bp_updatedAt,
         MAX(
             IFNULL(P.updatedAt, '0'),
             IFNULL(BP.latestUpdatedAt, '0'),
@@ -93,5 +91,9 @@ data class RecentPatient(
     fun recentPatients(facilityUuid: UUID, limit: Int): Flowable<List<RecentPatient>>
   }
 
-  data class LastBp(val systolic: String, val diastolic: String)
+  data class LastBp(
+      val systolic: Int,
+      val diastolic: Int,
+      val updatedAt: Instant
+  )
 }

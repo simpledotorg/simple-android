@@ -972,7 +972,10 @@ class PatientRepositoryAndroidTest {
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
-      bpUpdatedAt = bpMeasurement.updatedAt,
-      lastBp = RecentPatient.LastBp(bpMeasurement.systolic.toString(), bpMeasurement.diastolic.toString())
+      lastBp = RecentPatient.LastBp(
+          systolic = bpMeasurement.systolic,
+          diastolic = bpMeasurement.diastolic,
+          updatedAt = bpMeasurement.updatedAt
+      )
   )
 }

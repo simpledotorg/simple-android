@@ -6,23 +6,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.widgets.ScreenCreated
 import javax.inject.Inject
 
 class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(context, attrs) {
 
   @Inject
-  lateinit var patientRepository: PatientRepository
-
-  @Inject
-  lateinit var userSession: UserSession
-
-  @Inject
-  lateinit var facilityRepository: FacilityRepository
+  lateinit var controller: RecentPatientsViewController
 
   private val groupAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
 
@@ -33,21 +26,20 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : RecyclerView(c
     layoutManager = LinearLayoutManager(context)
     adapter = groupAdapter
 
-    userSession.requireLoggedInUser()
+    Observable.mergeArray(screenCreates())
+        .compose(controller)
         .takeUntil(RxView.detaches(this))
-        .map(facilityRepository::currentFacilityUuid)
-        .flatMap { facilityUuid -> patientRepository.recentPatients(facilityUuid, 10) }
         .observeOn(AndroidSchedulers.mainThread())
-        .subscribe {
-          groupAdapter.clear()
-          groupAdapter.addAll(it.map {
-            RecentPatientItem(
-                name = it.fullName,
-                age = it.age?.value ?: -1,
-                lastBp = "${it.lastBp?.systolic}/${it.lastBp?.diastolic}",
-                gender = it.gender
-            )
-          })
-        }
+        .subscribe { uiChange -> uiChange(this) }
+  }
+
+  private fun screenCreates() = Observable.just(ScreenCreated())
+
+  fun updateRecentPatients(recentPatients: List<RecentPatientItem>) {
+    groupAdapter.update(recentPatients)
+  }
+
+  fun showNoRecentPatients(isVisible: Boolean) {
+    recent_patient_no_recent_patients.visibleOrGone(isVisible)
   }
 }

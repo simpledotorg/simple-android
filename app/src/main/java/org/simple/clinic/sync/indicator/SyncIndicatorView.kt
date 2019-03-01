@@ -49,7 +49,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     when (syncState) {
       ConnectToSync -> {
         syncStatusTextView.text = context.getString(R.string.sync_indicator_status_failed)
-        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_warning_24dp)
+        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_round_warning_16px)
       }
       is Synced -> {
         val durationToMinsAgo = syncState.durationSince.toMinutes().toInt()
@@ -58,15 +58,15 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         } else {
           context.getString(R.string.sync_indicator_status_synced, durationToMinsAgo)
         }
-        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_24dp)
+        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_16dp)
       }
       SyncPending -> {
         syncStatusTextView.text = context.getString(R.string.sync_indicator_status_pending)
-        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_upload_24dp)
+        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_upload_16dp)
       }
       Syncing -> {
         syncStatusTextView.text = context.getString(R.string.sync_indicator_status_syncing)
-        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_sync_24dp)
+        syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_round_sync_16px)
       }
     }
   }

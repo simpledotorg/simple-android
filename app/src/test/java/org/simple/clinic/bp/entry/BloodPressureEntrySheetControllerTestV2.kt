@@ -76,7 +76,6 @@ class BloodPressureEntrySheetControllerTestV2 {
         bloodPressureRepository = bloodPressureRepository,
         dateValidator = dateValidator,
         bpValidator = bpValidator,
-        utcClock = testUtcClock,
         userClock = testUserClock,
         inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'))
 

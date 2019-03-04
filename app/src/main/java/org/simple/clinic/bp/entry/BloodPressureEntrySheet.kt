@@ -16,7 +16,6 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.toObservable
@@ -36,12 +35,11 @@ import org.simple.clinic.widgets.setTextAndCursor
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
-import javax.inject.Named
 
 class BloodPressureEntrySheet : BottomSheetActivity() {
 
   @Inject
-  lateinit var controller: BloodPressureEntrySheetControllerV2
+  lateinit var controller: BloodPressureEntrySheetController
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)

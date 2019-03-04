@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recent_patient_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+  <TextView
+    android:id="@+id/recent_patient_no_recent_patients"
+    style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_8"
+    android:background="@drawable/recent_patient_no_recent_patients_background"
+    android:padding="@dimen/spacing_16"
+    android:text="@string/recent_patient_no_recent_patients" />
+
+</FrameLayout>

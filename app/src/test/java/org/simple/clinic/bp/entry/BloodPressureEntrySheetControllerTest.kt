@@ -194,7 +194,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
   }
 
   @Test
@@ -340,10 +340,10 @@ class BloodPressureEntrySheetControllerTest {
     whenever(bloodPressureRepository.measurement(bloodPressure.uuid)).thenReturn(bloodPressureSubject)
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(bpUuid = bloodPressure.uuid)))
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
 
     bloodPressureSubject.onNext(bloodPressure.copy(deletedAt = Instant.now()))
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(sheet).finish()
   }
 
   @Test
@@ -369,7 +369,7 @@ class BloodPressureEntrySheetControllerTest {
       else -> throw AssertionError()
     }
 
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
     verify(dateValidator).validate2("01/04/1909")
   }
 
@@ -420,7 +420,7 @@ class BloodPressureEntrySheetControllerTest {
         diastolic = 110,
         createdAt = entryDateAsInstant)
 
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(sheet).finish()
   }
 
   @Test
@@ -453,7 +453,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet).setBpSavedResultAndFinish()
+    verify(sheet).finish()
   }
 
   @Test
@@ -478,7 +478,7 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
 
     uiChangeVerification(sheet)
   }
@@ -690,6 +690,6 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
-    verify(sheet, never()).setBpSavedResultAndFinish()
+    verify(sheet, never()).finish()
   }
 }

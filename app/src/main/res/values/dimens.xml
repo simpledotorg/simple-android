@@ -41,5 +41,5 @@
 
   <dimen name="bloodpressureentry_navigation_arrow_width">48dp</dimen>
 
-  <dimen name="registrationfacilities_header_top_spacing_with_previous_section">@dimen/spacing_16</dimen>
+  <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
 </resources>

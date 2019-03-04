@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  app:shimmer_auto_start="true"
-  app:shimmer_base_color="#c8cbcc"
-  app:shimmer_colored="true"
-  app:shimmer_dropoff="1"
-  app:shimmer_duration="1200"
-  app:shimmer_highlight_color="@color/white"
-  app:shimmer_repeat_delay="400"
-  app:shimmer_tilt="15"
-  app:shimmer_width_ratio=".5">
+<androidx.cardview.widget.CardView style="@style/Clinic.FacilitySelection.CardView"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <LinearLayout style="@style/Clinic.FacilitySelection.FacilityContainer">
+  <com.facebook.shimmer.ShimmerFrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:shimmer_auto_start="true"
+    app:shimmer_base_color="#c8cbcc"
+    app:shimmer_colored="true"
+    app:shimmer_dropoff="1"
+    app:shimmer_duration="1200"
+    app:shimmer_highlight_color="@color/white"
+    app:shimmer_repeat_delay="400"
+    app:shimmer_tilt="15"
+    app:shimmer_width_ratio=".5">
 
-    <TextView
-      style="@style/Clinic.FacilitySelection.FacilityName"
-      android:background="@drawable/background_facility_progress_shimmer"
-      android:textSize="@dimen/textsize_14" />
+    <LinearLayout style="@style/Clinic.FacilitySelection.FacilityContainer">
 
-    <TextView
-      style="@style/Clinic.FacilitySelection.FacilityAddress"
-      android:layout_marginEnd="40dp"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:background="@drawable/background_facility_progress_shimmer"
-      android:textSize="@dimen/textsize_12" />
+      <TextView
+        style="@style/Clinic.FacilitySelection.FacilityName"
+        android:background="@drawable/background_facility_progress_shimmer"
+        android:textSize="@dimen/textsize_14" />
 
-    <TextView
-      style="@style/Clinic.FacilitySelection.FacilityAddress"
-      android:layout_width="140dp"
-      android:layout_marginBottom="15dp"
-      android:layout_marginTop="@dimen/spacing_8"
-      android:background="@drawable/background_facility_progress_shimmer"
-      android:textSize="@dimen/textsize_12" />
+      <TextView
+        style="@style/Clinic.FacilitySelection.FacilityAddress"
+        android:layout_marginEnd="40dp"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:background="@drawable/background_facility_progress_shimmer"
+        android:textSize="@dimen/textsize_12" />
 
-    <View
-      style="@style/Clinic.Separator.VerticalContent"
-      android:background="@drawable/background_facility_progress_shimmer" />
-  </LinearLayout>
-</com.facebook.shimmer.ShimmerFrameLayout>
+      <TextView
+        style="@style/Clinic.FacilitySelection.FacilityAddress"
+        android:layout_width="140dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:background="@drawable/background_facility_progress_shimmer"
+        android:textSize="@dimen/textsize_12" />
+    </LinearLayout>
+  </com.facebook.shimmer.ShimmerFrameLayout>
+</androidx.cardview.widget.CardView>

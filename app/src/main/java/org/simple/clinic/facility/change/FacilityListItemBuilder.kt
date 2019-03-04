@@ -86,7 +86,6 @@ class FacilityListItemBuilder @Inject constructor(val distanceCalculator: Distan
     return FacilityOption(
         facility = facility,
         name = highlightedName,
-        address = fullAddress,
-        showBottomDivider = isLastItemInSection.not())
+        address = fullAddress)
   }
 }

@@ -41,8 +41,7 @@ import javax.inject.Named
 class BloodPressureEntrySheet : BottomSheetActivity() {
 
   @Inject
-  @field:Named("bp_entry_controller")
-  lateinit var controller: ObservableTransformer<UiEvent, UiChange>
+  lateinit var controller: BloodPressureEntrySheetControllerV2
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)

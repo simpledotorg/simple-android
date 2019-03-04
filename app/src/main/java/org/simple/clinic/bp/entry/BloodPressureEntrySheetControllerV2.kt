@@ -24,7 +24,6 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -47,7 +46,6 @@ class BloodPressureEntrySheetControllerV2 @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val dateValidator: UserInputDateValidator,
     private val bpValidator: BpValidator,
-    private val utcClock: UtcClock,
     private val userClock: UserClock,
     private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
 ) : ObservableTransformer<UiEvent, UiChange> {

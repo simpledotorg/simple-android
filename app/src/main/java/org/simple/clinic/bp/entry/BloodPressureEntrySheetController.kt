@@ -347,7 +347,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .flatMap(bloodPressureRepository::measurement)
         .filter { it.deletedAt != null }
         .take(1)
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+        .map { { ui: Ui -> ui.finish() } }
   }
 
   private fun combineDateInputs() = ObservableTransformer<UiEvent, UiEvent> { events ->
@@ -519,6 +519,6 @@ class BloodPressureEntrySheetController @Inject constructor(
   private fun dismissSheetWhenBpIsSaved(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<BloodPressureSaved>()
-        .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
+        .map { { ui: Ui -> ui.finish() } }
   }
 }

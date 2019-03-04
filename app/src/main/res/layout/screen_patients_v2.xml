@@ -64,24 +64,38 @@
         android:src="@drawable/illustrations_homescreen"
         tools:ignore="ContentDescription" />
 
-      <LinearLayout
+      <FrameLayout
+        android:id="@+id/patients_recent_patients_header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/patients_record_bp_illustration"
-        android:orientation="vertical">
+        android:background="@drawable/patients_recent_patients_header_container_background"
+        android:paddingEnd="@dimen/spacing_8"
+        android:paddingStart="@dimen/spacing_8">
+
+        <TextView
+          style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_vertical"
+          android:padding="@dimen/spacing_8"
+          android:text="@string/patients_recent_patients_title"
+          android:textAllCaps="true" />
 
         <org.simple.clinic.sync.indicator.SyncIndicatorView
-          android:layout_width="match_parent"
+          android:layout_width="wrap_content"
           android:layout_height="wrap_content"
+          android:layout_gravity="end|center_vertical"
           android:padding="@dimen/spacing_8" />
+      </FrameLayout>
 
-        <org.simple.clinic.patient.recent.RecentPatientsView
-          android:id="@+id/patients_record_recent_patients"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:background="@color/grey4"
-          android:paddingTop="@dimen/spacing_8" />
-      </LinearLayout>
+      <org.simple.clinic.patient.recent.RecentPatientsView
+        android:id="@+id/patients_recent_patients"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/patients_recent_patients_header_container"
+        android:background="@color/grey4"
+        android:paddingTop="@dimen/spacing_8" />
     </RelativeLayout>
   </androidx.core.widget.NestedScrollView>
 

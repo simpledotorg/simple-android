@@ -38,7 +38,10 @@ data class RecentPatient(
         MAX(
             IFNULL(P.updatedAt, '0'),
             IFNULL(BP.latestUpdatedAt, '0'),
-            IFNULL(PD.latestUpdatedAt, '0')
+            IFNULL(PD.latestUpdatedAt, '0'),
+            IFNULL(AP.latestUpdatedAt, '0'),
+            IFNULL(COMM.latestUpdatedAt, '0'),
+            IFNULL(MH.latestUpdatedAt, '0')
         ) latestUpdatedAt
         FROM Patient P
           LEFT JOIN (
@@ -53,9 +56,26 @@ data class RecentPatient(
               WHERE facilityUuid = :facilityUuid
               GROUP BY patientUuid
           ) PD ON P.uuid = PD.patientUuid
+          LEFT JOIN (
+            SELECT MAX(updatedAt) latestUpdatedAt, T.*
+              FROM Appointment T
+              WHERE facilityUuid = :facilityUuid
+              GROUP BY patientUuid
+          ) AP ON P.uuid = AP.patientUuid
+          LEFT JOIN (
+            SELECT MAX(updatedAt) latestUpdatedAt, T.*
+              FROM Communication T
+              GROUP BY appointmentUuid
+          ) COMM ON AP.uuid = COMM.appointmentUuid
+          LEFT JOIN (
+            SELECT MAX(updatedAt) latestUpdatedAt, T.*
+              FROM MedicalHistory T
+              GROUP BY patientUuid
+          ) MH ON P.uuid = MH.patientUuid
         WHERE (
           BP.facilityUuid = :facilityUuid OR
-          PD.facilityUuid = :facilityUuid
+          PD.facilityUuid = :facilityUuid OR
+          AP.facilityUuid = :facilityUuid
         )
         ORDER BY latestUpdatedAt DESC
         LIMIT :limit

@@ -49,7 +49,7 @@ import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class BloodPressureEntrySheetControllerTestV2 {
+class BloodPressureEntrySheetControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -60,7 +60,7 @@ class BloodPressureEntrySheetControllerTestV2 {
   private val bpValidator = mock<BpValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var controller: BloodPressureEntrySheetControllerV2
+  private lateinit var controller: BloodPressureEntrySheetController
 
   private val patientUuid = UUID.randomUUID()
   private val testUtcClock = TestUtcClock()
@@ -72,7 +72,7 @@ class BloodPressureEntrySheetControllerTestV2 {
 
     whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testUtcClock))
 
-    controller = BloodPressureEntrySheetControllerV2(
+    controller = BloodPressureEntrySheetController(
         bloodPressureRepository = bloodPressureRepository,
         dateValidator = dateValidator,
         bpValidator = bpValidator,

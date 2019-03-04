@@ -42,7 +42,7 @@ typealias UiChange = (Ui) -> Unit
 /**
  * V2: Includes date entry.
  */
-class BloodPressureEntrySheetControllerV2 @Inject constructor(
+class BloodPressureEntrySheetController @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
     private val dateValidator: UserInputDateValidator,
     private val bpValidator: BpValidator,

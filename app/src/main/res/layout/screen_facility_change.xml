@@ -45,6 +45,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_below="@+id/facilitychange_toolbar_container"
+    android:clipToPadding="false"
+    android:paddingBottom="@dimen/spacing_8"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical"
     tools:listitem="@layout/list_facility_selection_option" />

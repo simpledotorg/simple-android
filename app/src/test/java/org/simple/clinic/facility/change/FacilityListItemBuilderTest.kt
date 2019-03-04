@@ -33,8 +33,7 @@ class FacilityListItemBuilderTest {
     val template = FacilityOption(
         facility = facility,
         address = Address.WithoutStreet(district = "Gotham City", state = "Gotham City"),
-        name = Name.Plain(facility.name),
-        showBottomDivider = false)
+        name = Name.Plain(facility.name))
 
     val searchQuery1 = ""
     val listItems1 = listItemBuilder.build(listOf(facility), searchQuery1).first()
@@ -67,8 +66,7 @@ class FacilityListItemBuilderTest {
         address = Address.WithStreet(
             street = facilityWithStreet.streetAddress!!,
             district = facilityWithStreet.district,
-            state = facilityWithStreet.state),
-        showBottomDivider = false))
+            state = facilityWithStreet.state)))
 
     val facilityWithBlankStreet = facilityWithStreet.copy(streetAddress = " ")
     val listItem2 = listItemBuilder.build(listOf(facilityWithBlankStreet), searchQuery).first()
@@ -77,8 +75,7 @@ class FacilityListItemBuilderTest {
         name = nameUiModel,
         address = Address.WithoutStreet(
             district = facilityWithBlankStreet.district,
-            state = facilityWithBlankStreet.state),
-        showBottomDivider = false))
+            state = facilityWithBlankStreet.state)))
 
     val facilityWithNullStreet = facilityWithStreet.copy(streetAddress = null)
     val listItem3 = listItemBuilder.build(listOf(facilityWithNullStreet), searchQuery).first()
@@ -87,8 +84,7 @@ class FacilityListItemBuilderTest {
         name = nameUiModel,
         address = Address.WithoutStreet(
             district = facilityWithNullStreet.district,
-            state = facilityWithNullStreet.state),
-        showBottomDivider = false))
+            state = facilityWithNullStreet.state)))
   }
 
   @Test
@@ -198,52 +194,6 @@ class FacilityListItemBuilderTest {
     assertThat(facilityNames).isEqualTo(listOf(
         "With location",
         "Without location"
-    ))
-  }
-
-  @Test
-  @Suppress("IMPLICIT_CAST_TO_ANY")
-  fun `when multiple sections are present then last item in each section should not show bottom divider`() {
-    val userLocation = Coordinates(latitude = 1.0, longitude = 1.0)
-
-    val facility1 = PatientMocker.facility(
-        name = "Exactly at proximity threshold",
-        location = Coordinates(0.0, 0.0))
-
-    val facility2 = PatientMocker.facility(
-        name = "Within proximity threshold",
-        location = Coordinates(2.0, 2.0))
-
-    val facility3 = PatientMocker.facility(
-        name = "Without location",
-        location = null)
-
-    val proximityThreshold = Distance.ofKilometers(2.0)
-    whenever(distanceCalculator.between(userLocation, facility1.location!!)).thenReturn(Distance.ofKilometers(2.0))
-    whenever(distanceCalculator.between(userLocation, facility2.location!!)).thenReturn(Distance.ofKilometers(1.0))
-
-    val searchQuery = ""
-
-    val facilities = listOf(facility1, facility2, facility3)
-    val facilityListItems = listItemBuilder.build(facilities, searchQuery, userLocation, proximityThreshold)
-    val facilityNameAndHeaders = facilityListItems.map {
-      when (it) {
-        is FacilityListItem.Header -> it
-        is FacilityOption -> it.name.text to it.showBottomDivider
-      }
-    }
-
-    val showDivider = true
-    val hideDivider = false
-
-    assertThat(facilityNameAndHeaders).isEqualTo(listOf(
-        FacilityListItem.Header.SuggestedFacilities(hasSpacingWithPreviousSection = false),
-        "Within proximity threshold" to showDivider,
-        "Exactly at proximity threshold" to hideDivider,
-        FacilityListItem.Header.AllFacilities(hasSpacingWithPreviousSection = true),
-        "Exactly at proximity threshold" to showDivider,
-        "Within proximity threshold" to showDivider,
-        "Without location" to hideDivider
     ))
   }
 }

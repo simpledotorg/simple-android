@@ -14,8 +14,7 @@ sealed class FacilityListItem {
   data class FacilityOption(
       val facility: Facility,
       val name: Name,
-      val address: Address,
-      val showBottomDivider: Boolean
+      val address: Address
   ): FacilityListItem() {
 
     sealed class Name(open val text: String) {

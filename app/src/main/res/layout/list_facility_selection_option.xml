@@ -1,23 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout style="@style/Clinic.FacilitySelection.FacilityContainer"
+<androidx.cardview.widget.CardView style="@style/Clinic.FacilitySelection.CardView"
   xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:background="@color/white100"
-  android:foreground="?attr/selectableItemBackground"
-  tools:ignore="UnusedAttribute">
+  xmlns:tools="http://schemas.android.com/tools">
 
-  <TextView
-    android:id="@+id/facility_item_name"
-    style="@style/Clinic.FacilitySelection.FacilityName"
-    tools:text="Facility name" />
+  <LinearLayout style="@style/Clinic.FacilitySelection.FacilityContainer">
 
-  <TextView
-    android:id="@+id/facility_item_address"
-    style="@style/Clinic.FacilitySelection.FacilityAddress"
-    android:layout_marginBottom="@dimen/spacing_16"
-    tools:text="A really long address for this facility to test line wrapping" />
+    <TextView
+      android:id="@+id/facility_item_name"
+      style="@style/Clinic.FacilitySelection.FacilityName"
+      tools:text="Facility name" />
 
-  <View
-    android:id="@+id/facility_item_divider"
-    style="@style/Clinic.Separator.VerticalContent" />
-</LinearLayout>
+    <TextView
+      android:id="@+id/facility_item_address"
+      style="@style/Clinic.FacilitySelection.FacilityAddress"
+      android:layout_marginBottom="@dimen/spacing_16"
+      tools:text="A really long address for this facility to test line wrapping" />
+  </LinearLayout>
+</androidx.cardview.widget.CardView>

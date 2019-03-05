@@ -9,8 +9,7 @@ const val MAXIMUM_SQLITE_QUERY_LIMIT = 1000
 
 data class PatientConfig(
     val limitOfSearchResults: Int,
-    val scanSimpleCardFeatureEnabled: Boolean,
-    val showRecentPatients: Boolean = false
+    val scanSimpleCardFeatureEnabled: Boolean
 ) {
   init {
     if (limitOfSearchResults !in 1 until MAXIMUM_SQLITE_QUERY_LIMIT) {

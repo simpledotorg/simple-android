@@ -1,7 +1,9 @@
 package org.simple.clinic.sync.indicator
 
 import com.f2prateek.rx.preferences2.Preference
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -108,6 +110,7 @@ class SyncIndicatorViewControllerTest {
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.never())
 
+    lastSyncStateStream.onNext(LastSyncedState())
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     verify(dataSync).sync(null)
@@ -118,6 +121,8 @@ class SyncIndicatorViewControllerTest {
   fun `when sync indicator is clicked and sync starts, appropriate failure dialog should show if any sync error is thrown`(error: ResolvedError) {
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
 
+
+    lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SUCCESS))
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     verify(dataSync).sync(null)
@@ -132,5 +137,15 @@ class SyncIndicatorViewControllerTest {
         ResolvedError.NetworkRelated(SocketTimeoutException()),
         ResolvedError.Unexpected(RuntimeException())
     )
+  }
+
+  @Test
+  fun `when last sync state is syncing then we should not trigger a manual sync on click`() {
+    lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SYNCING))
+    uiEvents.onNext(SyncIndicatorViewClicked)
+
+    verify(dataSync, never()).sync(null)
+    verify(dataSync, never()).streamSyncErrors()
+    verify(indicator, never()).showErrorDialog(any())
   }
 }

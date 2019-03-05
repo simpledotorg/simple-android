@@ -1,5 +1,6 @@
 package org.simple.clinic.patient
 
+import androidx.annotation.VisibleForTesting
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -40,6 +41,11 @@ data class BusinessId(
 
   sealed class IdentifierType {
 
+    companion object {
+      @VisibleForTesting
+      fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
+    }
+
     object BpPassport : IdentifierType()
 
     data class Unknown(val actual: String) : IdentifierType()
@@ -72,6 +78,11 @@ data class BusinessId(
   }
 
   sealed class MetaVersion {
+
+    companion object {
+      @VisibleForTesting
+      fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
+    }
 
     object BpPassportMetaV1 : MetaVersion()
 

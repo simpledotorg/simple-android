@@ -68,7 +68,8 @@ class PatientSync @Inject constructor(
                 updatedAt = updatedAt,
                 address = address.toPayload(),
                 phoneNumbers = numberPayloads,
-                deletedAt = deletedAt)
+                deletedAt = deletedAt,
+                businessIds = null)
           }
         }
     )

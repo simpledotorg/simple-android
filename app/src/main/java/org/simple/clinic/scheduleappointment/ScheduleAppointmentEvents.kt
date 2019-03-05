@@ -3,7 +3,7 @@ package org.simple.clinic.scheduleappointment
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-data class ScheduleAppointmentSheetCreated(val initialIndex: Int, val patientUuid: UUID) : UiEvent
+data class ScheduleAppointmentSheetCreated(val defaultDateIndex: Int, val patientUuid: UUID, val numberOfDates: Int) : UiEvent
 
 data class AppointmentDateIncremented(val currentIndex: Int, val size: Int) : UiEvent {
   override val analyticsName = "Schedule Appointment:Increment appointment due date"

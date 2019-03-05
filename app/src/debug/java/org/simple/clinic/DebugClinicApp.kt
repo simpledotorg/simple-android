@@ -8,8 +8,6 @@ import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bp.BloodPressureConfig
-import org.simple.clinic.bp.BloodPressureModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.crash.NoOpCrashReporter
 import org.simple.clinic.di.AppComponent
@@ -108,12 +106,6 @@ class DebugClinicApp : ClinicApp() {
             return super.config().map {
               it.copy(blockDuration = Duration.ofSeconds(5))
             }
-          }
-        })
-        .bloodPressureModule(object : BloodPressureModule() {
-          override fun bloodPressureEntryConfig(): Single<BloodPressureConfig> {
-            return super.bloodPressureEntryConfig()
-                .map { it.copy(dateEntryEnabled = true) }
           }
         })
         .patientModule(object : PatientModule() {

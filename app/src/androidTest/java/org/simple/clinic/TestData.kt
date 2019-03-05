@@ -85,7 +85,8 @@ class TestData @Inject constructor(
     return PatientProfile(
         patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
         address = patientAddress(uuid = patientAddressUuid),
-        phoneNumbers = phoneNumbers)
+        phoneNumbers = phoneNumbers,
+        businessIds = emptyList())
   }
 
   fun patient(

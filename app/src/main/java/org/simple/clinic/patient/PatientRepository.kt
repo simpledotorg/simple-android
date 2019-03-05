@@ -198,7 +198,14 @@ class PatientRepository @Inject constructor(
     return PatientProfile(
         patient = patientPayload.toDatabaseModel(newStatus = DONE),
         address = patientPayload.address.toDatabaseModel(),
-        phoneNumbers = patientPayload.phoneNumbers?.map { it.toDatabaseModel(patientPayload.uuid) } ?: emptyList()
+        phoneNumbers = patientPayload
+            .phoneNumbers
+            ?.map { it.toDatabaseModel(patientPayload.uuid) }
+            ?: emptyList(),
+        businessIds = patientPayload
+            .businessIds
+            ?.map { it.toDatabaseModel() }
+            ?: emptyList()
     )
   }
 

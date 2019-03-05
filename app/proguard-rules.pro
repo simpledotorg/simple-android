@@ -32,10 +32,20 @@
     @com.squareup.moshi.FromJson <methods>;
     @com.squareup.moshi.ToJson <methods>;
 }
+
+# Enum field names are used by the integrated EnumJsonAdapter.
+# Annotate enums with @JsonClass(generateAdapter = false) to use them with Moshi.
+-keepclassmembers @com.squareup.moshi.JsonClass class * extends java.lang.Enum {
+    <fields>;
+}
+
+# The name of @JsonClass types is used to look up the generated adapter.
+-keepnames @com.squareup.moshi.JsonClass class *
+
+# Retain generated JsonAdapters if annotated type is retained.
 -keep class **JsonAdapter {
     <init>(...);
     <fields>;
 }
--keepnames @com.squareup.moshi.JsonClass class *
 
 -dontwarn com.jcabi.aspects.apt.**

@@ -19,6 +19,7 @@ import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.Patient
@@ -29,6 +30,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.nameToSearchableForm
+import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
@@ -167,7 +169,8 @@ class TestData @Inject constructor(
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
       address: PatientAddressPayload = addressPayload(),
-      phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload())
+      phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload()),
+      businessIds: List<BusinessIdPayload>? = listOf(businessIdPayload(patientUuid = uuid))
   ): PatientPayload {
     return PatientPayload(
         uuid = uuid,
@@ -181,7 +184,8 @@ class TestData @Inject constructor(
         updatedAt = updatedAt,
         address = address,
         phoneNumbers = phoneNumbers,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        businessIds = businessIds
     )
   }
 
@@ -224,6 +228,30 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)
+  }
+
+  fun businessIdPayload(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      identifier: String = UUID.randomUUID().toString(),
+      identifierType: BusinessId.IdentifierType = BusinessId.IdentifierType.random(),
+      metaVersion: BusinessId.MetaVersion = BusinessId.MetaVersion.random(),
+      meta: String = "",
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): BusinessIdPayload {
+    return BusinessIdPayload(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        identifier = identifier,
+        identifierType = identifierType,
+        metaVersion = metaVersion,
+        meta = meta,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
   }
 
   /**

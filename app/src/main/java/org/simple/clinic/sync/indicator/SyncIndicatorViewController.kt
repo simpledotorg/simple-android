@@ -6,6 +6,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.sync.DataSync
@@ -108,6 +109,10 @@ class SyncIndicatorViewController @Inject constructor(
           .map { { ui: Ui -> ui.showErrorDialog(it) } }
     }
 
+    val lastSyncedStateStream = lastSyncState
+        .asObservable()
+        .distinctUntilChanged()
+
     val syncStream = {
       dataSync
           .sync(null)
@@ -116,6 +121,10 @@ class SyncIndicatorViewController @Inject constructor(
 
     return events
         .ofType<SyncIndicatorViewClicked>()
+        .withLatestFrom(lastSyncedStateStream)
+        .filter { (_, lastSyncedState) ->
+          lastSyncedState.lastSyncProgress == null || lastSyncedState.lastSyncProgress != SYNCING
+        }
         .flatMap { syncStream().mergeWith(errorsStream()) }
   }
 }

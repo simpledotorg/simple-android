@@ -17,6 +17,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
+import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
@@ -72,5 +73,9 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_round_sync_16px)
       }
     }
+  }
+
+  fun showErrorDialog(errorType: ResolvedError) {
+    //This will be implemented in a later commit
   }
 }

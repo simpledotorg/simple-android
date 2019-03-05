@@ -101,9 +101,21 @@ class SyncIndicatorViewController @Inject constructor(
   }
 
   private fun startSync(events: Observable<UiEvent>): Observable<UiChange> {
+    val errorsStream = {
+      dataSync
+          .streamSyncErrors()
+          .take(1)
+          .map { { ui: Ui -> ui.showErrorDialog(it) } }
+    }
+
+    val syncStream = {
+      dataSync
+          .sync(null)
+          .toObservable<UiChange>()
+    }
+
     return events
         .ofType<SyncIndicatorViewClicked>()
-        .flatMapCompletable { dataSync.sync(null) }
-        .andThen(Observable.empty<UiChange>())
+        .flatMap { syncStream().mergeWith(errorsStream()) }
   }
 }

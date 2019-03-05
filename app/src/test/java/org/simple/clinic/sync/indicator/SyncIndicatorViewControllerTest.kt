@@ -1,11 +1,11 @@
 package org.simple.clinic.sync.indicator
 
 import com.f2prateek.rx.preferences2.Preference
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -22,12 +22,15 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
+import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 @RunWith(JUnitParamsRunner::class)
 class SyncIndicatorViewControllerTest {
@@ -54,6 +57,7 @@ class SyncIndicatorViewControllerTest {
   fun setUp() {
     controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock, configSubject, dataSync)
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
+    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
 
     uiEvents
         .compose(controller)
@@ -102,8 +106,31 @@ class SyncIndicatorViewControllerTest {
   @Test
   fun `when sync indicator is clicked, sync should be triggered`() {
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.streamSyncErrors()).thenReturn(Observable.never())
+
     uiEvents.onNext(SyncIndicatorViewClicked)
 
     verify(dataSync).sync(null)
+  }
+
+  @Test
+  @Parameters(method = "params for testing sync errors")
+  fun `when sync indicator is clicked and sync starts, appropriate failure dialog should show if any sync error is thrown`(error: ResolvedError) {
+    whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
+
+    uiEvents.onNext(SyncIndicatorViewClicked)
+
+    verify(dataSync).sync(null)
+    verify(dataSync).streamSyncErrors()
+    verify(indicator).showErrorDialog(errorType = error)
+  }
+
+  @Suppress("unused")
+  private fun `params for testing sync errors`(): List<Any> {
+    return listOf(
+        ResolvedError.NetworkRelated(UnknownHostException()),
+        ResolvedError.NetworkRelated(SocketTimeoutException()),
+        ResolvedError.Unexpected(RuntimeException())
+    )
   }
 }

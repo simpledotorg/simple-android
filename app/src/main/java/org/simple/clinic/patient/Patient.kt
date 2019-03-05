@@ -149,23 +149,26 @@ data class Patient (
             results.asSequence()
                 .groupBy { it.patient.uuid }
                 .map { (_, patientQueryModels) ->
-                  val phoneNumbers = when {
-                    // Patient has either no phone numbers or one phone number saved, which is
-                    // indicated by whether the Patient phone number in the query model instance is
-                    // null or not.
-                    patientQueryModels.size == 1 -> {
-                      patientQueryModels.first()
-                          .phoneNumber
-                          ?.let { listOf(it) } ?: emptyList()
-                    }
-                    patientQueryModels.size > 1 -> patientQueryModels.map { it.phoneNumber!! }
-                    else -> throw AssertionError("Patient query models is empty!")
-                  }
+                  val patient = patientQueryModels.first().patient
+                  val patientAddress = patientQueryModels.first().address
+
+                  val patientPhoneNumbers = patientQueryModels
+                      .filter { it.phoneNumber != null }
+                      .map { it.phoneNumber as PatientPhoneNumber }
+                      .distinctBy { it.uuid }
+                      .toList()
+
+                  val businessIds = patientQueryModels
+                      .filter { it.businessId != null }
+                      .map { it.businessId as BusinessId }
+                      .distinctBy { it.uuid }
+                      .toList()
 
                   PatientProfile(
-                      patient = patientQueryModels.first().patient,
-                      address = patientQueryModels.first().address,
-                      phoneNumbers = phoneNumbers
+                      patient = patient,
+                      address = patientAddress,
+                      phoneNumbers = patientPhoneNumbers,
+                      businessIds = businessIds
                   )
                 }.toList()
           }

@@ -667,7 +667,8 @@ class PatientRepositoryAndroidTest {
             syncStatus = SyncStatus.DONE
         ),
         address = addressToSave,
-        phoneNumbers = emptyList()
+        phoneNumbers = emptyList(),
+        businessIds = emptyList()
     )
 
     val patient = patientProfile.patient
@@ -731,7 +732,8 @@ class PatientRepositoryAndroidTest {
         phoneNumbers = listOf(
             testData.patientPhoneNumber(patientUuid = originalSavedPatient.uuid),
             testData.patientPhoneNumber(patientUuid = originalSavedPatient.uuid)
-        )
+        ),
+        businessIds = emptyList()
     )
 
     patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -788,7 +790,8 @@ class PatientRepositoryAndroidTest {
                 createdAt = Instant.now(clock),
                 updatedAt = Instant.now(clock)
             )
-        )
+        ),
+        businessIds = emptyList()
     )
 
     patientRepository.save(listOf(patientProfile))
@@ -839,7 +842,8 @@ class PatientRepositoryAndroidTest {
                 number = "111111111",
                 phoneType = PatientPhoneNumberType.LANDLINE,
                 createdAt = Instant.now(clock),
-                updatedAt = Instant.now(clock))))
+                updatedAt = Instant.now(clock))),
+        businessIds = emptyList())
 
     patientRepository.save(listOf(patientProfile))
         .blockingAwait()

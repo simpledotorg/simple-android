@@ -744,7 +744,8 @@ class PatientEditScreenControllerTest {
       return PatientProfile(
           patient = patient,
           address = PatientMocker.address(uuid = addressUuid),
-          phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList()
+          phoneNumbers = if (shouldAddNumber) listOf(PatientMocker.phoneNumber(patientUuid = patientUuid)) else emptyList(),
+          businessIds = emptyList()
       )
     }
 
@@ -1161,7 +1162,8 @@ class PatientEditScreenControllerTest {
       return PatientProfile(
           patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid),
           address = PatientMocker.address(uuid = addressUuid),
-          phoneNumbers = phoneNumber?.let { listOf(PatientMocker.phoneNumber(patientUuid = patientUuid, number = it)) } ?: emptyList()
+          phoneNumbers = phoneNumber?.let { listOf(PatientMocker.phoneNumber(patientUuid = patientUuid, number = it)) } ?: emptyList(),
+          businessIds = emptyList()
       ).let { profile ->
         if (gender != null) {
           return@let profile.copy(patient = profile.patient.copy(gender = gender))

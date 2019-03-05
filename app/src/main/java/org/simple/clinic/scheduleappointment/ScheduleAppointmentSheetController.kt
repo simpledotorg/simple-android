@@ -22,16 +22,25 @@ class ScheduleAppointmentSheetController @Inject constructor(
     val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
 
     return Observable.mergeArray(
-        sheetCreates(replayedEvents),
+        setupDefaultState(replayedEvents),
         dateIncrements(replayedEvents),
         dateDecrements(replayedEvents),
         schedulingSkips(replayedEvents),
         scheduleCreates(replayedEvents))
   }
 
-  private fun sheetCreates(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun setupDefaultState(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ScheduleAppointmentSheetCreated>()
-        .map { { ui: Ui -> ui.updateDisplayedDate(it.initialIndex) } }
+        .map {
+          { ui: Ui ->
+            val isShowingLastItem = it.defaultDateIndex == it.numberOfDates - 1
+            val isShowingFirstItem = it.defaultDateIndex == 0
+
+            ui.updateDisplayedDate(it.defaultDateIndex)
+            ui.enableIncrementButton(isShowingLastItem.not())
+            ui.enableDecrementButton(isShowingFirstItem.not())
+          }
+        }
   }
 
   private fun dateIncrements(events: Observable<UiEvent>): Observable<UiChange> {

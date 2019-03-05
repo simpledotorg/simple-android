@@ -46,7 +46,7 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when sheet is created, a date should immediately be displayed to the user`() {
     val current = 17
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(current, uuid))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(current, uuid, 20))
 
     verify(sheet).updateDisplayedDate(current)
   }
@@ -131,10 +131,54 @@ class ScheduleAppointmentSheetControllerTest {
 
     val current = ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS)
     val date = LocalDate.now(UTC).plus(1, ChronoUnit.MONTHS)
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(3, uuid))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(3, uuid, 4))
     uiEvents.onNext(AppointmentScheduled(current))
 
     verify(repository).schedule(uuid, date)
     verify(sheet).closeSheet(date)
+  }
+
+  @Test
+  fun `when last appointment date is chosen on sheet creation, then increment button should be disabled`() {
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+        defaultDateIndex = 3,
+        patientUuid = uuid,
+        numberOfDates = 4
+    ))
+
+    verify(sheet).enableIncrementButton(false)
+  }
+
+  @Test
+  fun `when not-last appointment date is chosen on sheet creation, then increment button should be enabled`() {
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+        defaultDateIndex = 2,
+        patientUuid = uuid,
+        numberOfDates = 4
+    ))
+
+    verify(sheet).enableIncrementButton(true)
+  }
+
+  @Test
+  fun `when first appointment date is chosen on sheet creation, then decrement button should be disabled`() {
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+        defaultDateIndex = 0,
+        patientUuid = uuid,
+        numberOfDates = 4
+    ))
+
+    verify(sheet).enableDecrementButton(false)
+  }
+
+  @Test
+  fun `when not-first appointment date is chosen on sheet creation, then decrement button should be enabled`() {
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+        defaultDateIndex = 1,
+        patientUuid = uuid,
+        numberOfDates = 4
+    ))
+
+    verify(sheet).enableDecrementButton(true)
   }
 }

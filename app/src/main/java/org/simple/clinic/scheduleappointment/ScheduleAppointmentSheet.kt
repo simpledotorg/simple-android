@@ -97,7 +97,11 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private val initialState = {
     val uuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
-    ScheduleAppointmentSheetCreated(initialIndex = possibleDates.lastIndex, patientUuid = uuid)
+    ScheduleAppointmentSheetCreated(
+        defaultDateIndex = possibleDates.lastIndex,
+        patientUuid = uuid,
+        numberOfDates = possibleDates.size
+    )
   }
 
   private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented(currentIndex, possibleDates.size) }

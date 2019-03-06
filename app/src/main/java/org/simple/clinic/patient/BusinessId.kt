@@ -8,6 +8,7 @@ import androidx.room.Index
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
+import androidx.room.Query
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
@@ -123,6 +124,9 @@ data class BusinessId(
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun save(businessIds: List<BusinessId>)
+
+    @Query("SELECT COUNT(uuid) FROM BusinessId")
+    fun count(): Int
   }
 }
 

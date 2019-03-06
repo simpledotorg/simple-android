@@ -188,24 +188,46 @@ class PatientRepository @Inject constructor(
 
   override fun save(records: List<PatientProfile>): Completable {
     return Completable.fromAction {
-      database.addressDao().save(records.map { it.address })
-      database.patientDao().save(records.map { it.patient })
-      database.phoneNumberDao().save(records.filter { it.phoneNumbers.isNotEmpty() }.flatMap { it.phoneNumbers })
+      database
+          .addressDao()
+          .save(records.map { it.address })
+
+      database
+          .patientDao()
+          .save(records.map { it.patient })
+
+      database
+          .phoneNumberDao()
+          .save(records
+              .filter { it.phoneNumbers.isNotEmpty() }
+              .flatMap { it.phoneNumbers })
+
+      database
+          .businessIdDao()
+          .save(records
+              .filter { it.businessIds.isNotEmpty() }
+              .flatMap { it.businessIds })
     }
   }
 
   private fun payloadToPatientProfile(patientPayload: PatientPayload): PatientProfile {
+    val patient = patientPayload.toDatabaseModel(newStatus = DONE)
+
+    val patientAddress = patientPayload.address.toDatabaseModel()
+
+    val phoneNumbers = patientPayload
+        .phoneNumbers
+        ?.map { it.toDatabaseModel(patientPayload.uuid) } ?: emptyList()
+
+    val businessIds = patientPayload
+        .businessIds
+        ?.map { it.toDatabaseModel() } ?: emptyList()
+
     return PatientProfile(
-        patient = patientPayload.toDatabaseModel(newStatus = DONE),
-        address = patientPayload.address.toDatabaseModel(),
-        phoneNumbers = patientPayload
-            .phoneNumbers
-            ?.map { it.toDatabaseModel(patientPayload.uuid) }
-            ?: emptyList(),
-        businessIds = patientPayload
-            .businessIds
-            ?.map { it.toDatabaseModel() }
-            ?: emptyList()
+        patient = patient,
+        address = patientAddress,
+        phoneNumbers = phoneNumbers,
+        businessIds = businessIds
     )
   }
 

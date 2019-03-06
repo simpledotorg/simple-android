@@ -56,24 +56,24 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   fun updateState(syncState: SyncIndicatorState) {
     when (syncState) {
       ConnectToSync -> {
-        syncStatusTextView.text = context.getString(R.string.sync_indicator_status_failed)
+        syncStatusTextView.text = context.getString(R.string.syncindicator_status_failed)
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_round_warning_16px)
       }
       is Synced -> {
         val durationToMinsAgo = syncState.durationSince.toMinutes().toInt()
         syncStatusTextView.text = if (durationToMinsAgo == 0) {
-          context.getString(R.string.sync_indicator_status_synced_just_now)
+          context.getString(R.string.syncindicator_status_synced_just_now)
         } else {
-          context.getString(R.string.sync_indicator_status_synced, durationToMinsAgo)
+          context.getString(R.string.syncindicator_status_synced, durationToMinsAgo)
         }
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_done_16dp)
       }
       SyncPending -> {
-        syncStatusTextView.text = context.getString(R.string.sync_indicator_status_pending)
+        syncStatusTextView.text = context.getString(R.string.syncindicator_status_pending)
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_cloud_upload_16dp)
       }
       Syncing -> {
-        syncStatusTextView.text = context.getString(R.string.sync_indicator_status_syncing)
+        syncStatusTextView.text = context.getString(R.string.syncindicator_status_syncing)
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_round_sync_16px)
       }
     }
@@ -81,8 +81,8 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
   fun showErrorDialog(errorType: ResolvedError) {
     val message = when (errorType) {
-      is ResolvedError.NetworkRelated -> context.getString(R.string.sync_indicator_dialog_error_network)
-      is ResolvedError.Unexpected -> context.getString(R.string.sync_indicator_dialog_error_server)
+      is ResolvedError.NetworkRelated -> context.getString(R.string.syncindicator_dialog_error_network)
+      is ResolvedError.Unexpected -> context.getString(R.string.syncindicator_dialog_error_server)
     }
     SyncIndicatorFailureDialog.show(fragmentManager = activity.supportFragmentManager, message = message)
   }

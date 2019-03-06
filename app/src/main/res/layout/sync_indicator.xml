@@ -15,6 +15,6 @@
     android:drawablePadding="@dimen/spacing_8"
     android:drawableStart="@drawable/ic_cloud_upload_16dp"
     android:gravity="center_vertical"
-    android:text="@string/sync_indicator_status_pending" />
+    android:text="@string/syncindicator_status_pending" />
 
 </LinearLayout>

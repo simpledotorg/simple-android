@@ -1,9 +1,12 @@
 package org.simple.clinic.patient
 
 import androidx.annotation.VisibleForTesting
+import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
@@ -113,6 +116,13 @@ data class BusinessId(
       @ToJson
       fun fromEnum(enum: MetaVersion?) = TypeAdapter.fromEnum(enum)
     }
+  }
+
+  @Dao
+  interface RoomDao {
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun save(businessIds: List<BusinessId>)
   }
 }
 

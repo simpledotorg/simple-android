@@ -111,4 +111,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun protocolDrugDao(): ProtocolDrug.RoomDao
 
   abstract fun recentPatientDao(): RecentPatient.RoomDao
+
+  abstract fun businessIdDao(): BusinessId.RoomDao
 }

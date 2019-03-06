@@ -18,6 +18,7 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.recent.RecentPatient.LastBp
@@ -49,6 +50,7 @@ class RecentPatientsViewControllerTest {
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facilityUuid = UUID.randomUUID()
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
+  private val recentPatientLimit = 10
 
   @Before
   fun setUp() {
@@ -61,7 +63,12 @@ class RecentPatientsViewControllerTest {
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         relativeTimestampGenerator = relativeTimestampGenerator,
-        utcClock = UtcClock()
+        utcClock = UtcClock(),
+        patientConfig = Observable.just(PatientConfig(
+            limitOfSearchResults = 1,
+            scanSimpleCardFeatureEnabled = false,
+            recentPatientLimit = recentPatientLimit
+        ))
     )
 
     uiEvents
@@ -74,7 +81,7 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens then fetch and set recent patients`() {
-    whenever(patientRepository.recentPatients(facilityUuid, 10)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients(facilityUuid, recentPatientLimit)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
@@ -130,7 +137,7 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens and there are no recent patients then show "no recent patients view"`() {
-    whenever(patientRepository.recentPatients(facilityUuid, 10)).thenReturn(Observable.just(emptyList()))
+    whenever(patientRepository.recentPatients(facilityUuid, recentPatientLimit)).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(ScreenCreated())
 

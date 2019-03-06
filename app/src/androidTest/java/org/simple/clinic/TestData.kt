@@ -78,15 +78,17 @@ class TestData @Inject constructor(
       patientUuid: UUID = UUID.randomUUID(),
       patientAddressUuid: UUID = UUID.randomUUID(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
-      generatePhoneNumber: Boolean = faker.bool.bool()
+      generatePhoneNumber: Boolean = faker.bool.bool(),
+      generateBusinessId: Boolean = faker.bool.bool()
   ): PatientProfile {
     val phoneNumbers = if (generatePhoneNumber) listOf(patientPhoneNumber(patientUuid = patientUuid)) else emptyList()
+    val businessIds = if (generateBusinessId) listOf(businessId(patientUuid = patientUuid)) else emptyList()
 
     return PatientProfile(
         patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
-        businessIds = emptyList())
+        businessIds = businessIds)
   }
 
   fun patient(
@@ -159,11 +161,34 @@ class TestData @Inject constructor(
       deletedAt = deletedAt
   )
 
+  fun businessId(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      identifier: String = UUID.randomUUID().toString(),
+      identifierType: BusinessId.IdentifierType = BusinessId.IdentifierType.random(),
+      meta: String = "",
+      metaVersion: BusinessId.MetaVersion = BusinessId.MetaVersion.random(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ) = BusinessId(
+      uuid = uuid,
+      patientUuid = patientUuid,
+      identifier = identifier,
+      identifierType = identifierType,
+      meta = meta,
+      metaVersion = metaVersion,
+      createdAt = createdAt,
+      updatedAt = updatedAt,
+      deletedAt = deletedAt
+  )
+
   fun patientPayload(
       uuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
       gender: Gender = randomOfEnum(Gender::class),
       age: Int? = Math.random().times(100).toInt(),
+      dateOfBirth: LocalDate? = null,
       ageUpdatedAt: Instant? = Instant.now(),
       status: PatientStatus = randomOfEnum(PatientStatus::class),
       createdAt: Instant = Instant.now(),
@@ -177,7 +202,7 @@ class TestData @Inject constructor(
         uuid = uuid,
         fullName = fullName,
         gender = gender,
-        dateOfBirth = null,
+        dateOfBirth = dateOfBirth,
         age = age,
         ageUpdatedAt = ageUpdatedAt,
         status = status,

@@ -31,7 +31,7 @@ class SyncIndicatorFailureDialog : AppCompatDialogFragment() {
 
     return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle)
         .setMessage(message)
-        .setPositiveButton(getString(R.string.sync_indocator_dialog_button_text), null)
+        .setPositiveButton(getString(R.string.syncindicator_dialog_button_text), null)
         .create()
   }
 }

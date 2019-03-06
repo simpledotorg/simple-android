@@ -86,7 +86,7 @@ class PatientsScreenControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = false))
+    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10))
   }
 
   @Test
@@ -436,7 +436,7 @@ class PatientsScreenControllerTest {
   @Test
   @Parameters(value = ["true", "false"])
   fun `the scan card button must be toggled based on the scan simple card feature flag`(scanCardFeatureEnabled: Boolean) {
-    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled))
+    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled, recentPatientLimit = 10))
     whenever(userSession.loggedInUser()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.never())
     whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)

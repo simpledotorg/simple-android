@@ -66,7 +66,7 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    config = PatientConfig(limitOfSearchResults = 100, scanSimpleCardFeatureEnabled = false)
+    config = PatientConfig(limitOfSearchResults = 100, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10)
     database = mock()
     patientSearchResultDao = mock()
     patientDao = mock()

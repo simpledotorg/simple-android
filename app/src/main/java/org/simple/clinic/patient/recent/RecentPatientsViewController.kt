@@ -4,9 +4,11 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
@@ -24,7 +26,8 @@ class RecentPatientsViewController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    private val patientConfig: Observable<PatientConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -39,7 +42,14 @@ class RecentPatientsViewController @Inject constructor(
       events.ofType<ScreenCreated>()
           .flatMap { userSession.requireLoggedInUser() }
           .map(facilityRepository::currentFacilityUuid)
-          .flatMap { facilityUuid -> patientRepository.recentPatients(facilityUuid, 10) }
+          .withLatestFrom(patientConfig)
+          .flatMap { (facilityUuid, config) ->
+            if (facilityUuid != null) {
+              patientRepository.recentPatients(facilityUuid, limit = config.recentPatientLimit)
+            } else {
+              Observable.just(emptyList())
+            }
+          }
           .map { recentPatients ->
             val recentPatientItems = recentPatients.map {
               RecentPatientItem(

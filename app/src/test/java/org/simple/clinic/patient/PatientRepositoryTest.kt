@@ -55,6 +55,7 @@ class PatientRepositoryTest {
   private lateinit var patientPhoneNumberDao: PatientPhoneNumber.RoomDao
   private lateinit var fuzzyPatientSearchDao: PatientFuzzySearch.PatientFuzzySearchDao
   private lateinit var bloodPressureMeasurementDao: BloodPressureMeasurement.RoomDao
+  private lateinit var businessIdDao: BusinessId.RoomDao
   private lateinit var dobValidator: UserInputDateValidator
   private lateinit var userSession: UserSession
   private lateinit var facilityRepository: FacilityRepository
@@ -74,6 +75,7 @@ class PatientRepositoryTest {
     patientPhoneNumberDao = mock()
     fuzzyPatientSearchDao = mock()
     bloodPressureMeasurementDao = mock()
+    businessIdDao = mock()
     dobValidator = mock()
     userSession = mock()
     facilityRepository = mock()
@@ -121,6 +123,7 @@ class PatientRepositoryTest {
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
+    whenever(database.businessIdDao()).thenReturn(businessIdDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
@@ -162,6 +165,7 @@ class PatientRepositoryTest {
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
+    whenever(database.businessIdDao()).thenReturn(businessIdDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()
@@ -190,7 +194,6 @@ class PatientRepositoryTest {
     if (serverRecordExpectedToBeSaved) {
       verify(patientDao).save(argThat<List<Patient>> { isNotEmpty() })
       verify(patientAddressDao).save(argThat<List<PatientAddress>> { isNotEmpty() })
-
     } else {
       verify(patientDao).save(argThat<List<Patient>> { isEmpty() })
       verify(patientAddressDao).save(argThat<List<PatientAddress>> { isEmpty() })
@@ -210,6 +213,7 @@ class PatientRepositoryTest {
     whenever(database.addressDao()).thenReturn(patientAddressDao)
     whenever(database.phoneNumberDao()).thenReturn(patientPhoneNumberDao)
     whenever(database.fuzzyPatientSearchDao()).thenReturn(fuzzyPatientSearchDao)
+    whenever(database.businessIdDao()).thenReturn(businessIdDao)
 
     val patientUuid = UUID.randomUUID()
     val addressUuid = UUID.randomUUID()

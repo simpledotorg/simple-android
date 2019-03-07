@@ -14,7 +14,7 @@ import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity(indices = [Index("patientUuid", unique = false)])
-data class BloodPressureMeasurement (
+data class BloodPressureMeasurement(
     @PrimaryKey
     val uuid: UUID,
 
@@ -76,6 +76,9 @@ data class BloodPressureMeasurement (
 
     @Query("SELECT COUNT(uuid) FROM bloodpressuremeasurement")
     fun count(): Flowable<Int>
+
+    @Query("SELECT COUNT(uuid) FROM BloodPressureMeasurement WHERE syncStatus = :syncStatus")
+    fun count(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("""
       SELECT COUNT(uuid)

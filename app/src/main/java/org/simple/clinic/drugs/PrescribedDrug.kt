@@ -87,6 +87,9 @@ data class PrescribedDrug(
     @Query("SELECT COUNT(*) FROM prescribeddrug")
     fun count(): Flowable<Int>
 
+    @Query("SELECT COUNT(uuid) FROM PrescribedDrug WHERE syncStatus = :syncStatus")
+    fun count(syncStatus: SyncStatus): Flowable<Int>
+
     @Query("SELECT * FROM prescribeddrug WHERE patientUuid = :patientUuid AND isDeleted = 0 ORDER BY updatedAt DESC")
     fun forPatient(patientUuid: UUID): Flowable<List<PrescribedDrug>>
 

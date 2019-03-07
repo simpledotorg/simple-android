@@ -70,6 +70,9 @@ data class Communication(
     @Query("SELECT COUNT(uuid) FROM Communication")
     fun count(): Flowable<Int>
 
+    @Query("SELECT COUNT(uuid) FROM Communication WHERE syncStatus = :syncStatus")
+    fun count(syncStatus: SyncStatus): Flowable<Int>
+
     @Query("DELETE FROM Communication")
     fun clear()
   }

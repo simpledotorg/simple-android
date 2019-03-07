@@ -197,4 +197,10 @@ class AppointmentRepository @Inject constructor(
           deletedAt = deletedAt)
     }
   }
+
+  fun pendingRecordsCount(): Observable<Int> {
+    return appointmentDao
+        .count(SyncStatus.PENDING)
+        .toObservable()
+  }
 }

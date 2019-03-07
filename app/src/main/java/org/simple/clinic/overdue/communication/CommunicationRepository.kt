@@ -91,4 +91,11 @@ class CommunicationRepository @Inject constructor(
           deletedAt = deletedAt)
     }
   }
+
+  fun pendingRecordsCount(): Observable<Int> {
+    return dao
+        .count(SyncStatus.PENDING)
+        .toObservable()
+  }
+
 }

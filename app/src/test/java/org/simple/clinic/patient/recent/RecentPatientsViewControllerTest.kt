@@ -132,7 +132,7 @@ class RecentPatientsViewControllerTest {
             gender = FEMALE
         )
     ))
-    verify(screen).showNoRecentPatients(isVisible = false)
+    verify(screen).hideNoRecentPatients()
   }
 
   @Test
@@ -141,7 +141,17 @@ class RecentPatientsViewControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).updateRecentPatients(emptyList())
-    verify(screen).showNoRecentPatients(isVisible = true)
+    verify(screen).clearRecentPatients()
+    verify(screen).showNoRecentPatients()
+  }
+
+  @Test
+  fun `when screen opens and facility is null then show "no recent patients view"`() {
+    whenever(facilityRepository.currentFacilityUuid(loggedInUser)).thenReturn(null)
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).clearRecentPatients()
+    verify(screen).showNoRecentPatients()
   }
 }

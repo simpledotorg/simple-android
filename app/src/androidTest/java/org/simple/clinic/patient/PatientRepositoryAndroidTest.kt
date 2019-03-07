@@ -21,6 +21,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.patient.SyncStatus.DONE
+import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
@@ -214,7 +216,7 @@ class PatientRepositoryAndroidTest {
     assertThat(combinedPatient.gender).isEqualTo(patientEntry.personalDetails!!.gender)
     assertThat(combinedPatient.dateOfBirth).isEqualTo(LocalDate.parse("1947-08-15"))
     assertThat(combinedPatient.createdAt).isAtLeast(combinedPatient.address.createdAt)
-    assertThat(combinedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(combinedPatient.syncStatus).isEqualTo(PENDING)
     assertThat(combinedPatient.address.colonyOrVillage).isEqualTo(patientEntry.address!!.colonyOrVillage)
     assertThat(combinedPatient.address.state).isEqualTo(patientEntry.address!!.state)
     assertThat(combinedPatient.phoneNumber).isNotEmpty()
@@ -535,7 +537,7 @@ class PatientRepositoryAndroidTest {
         .unwrapJust()
         .blockingFirst()
 
-    assertThat(deadPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(deadPatient.syncStatus).isEqualTo(PENDING)
     assertThat(deadPatient.updatedAt).isNotEqualTo(timeOfCreation)
     assertThat(deadPatient.updatedAt).isEqualTo(timeOfDeath)
   }
@@ -546,7 +548,7 @@ class PatientRepositoryAndroidTest {
    */
   @Test
   fun when_searching_with_fuzzy_search_the_results_must_be_limited_to_the_value_set_in_the_config() {
-    val template = testData.patientProfile(syncStatus = SyncStatus.DONE)
+    val template = testData.patientProfile(syncStatus = DONE)
 
     val patientsToSave = (1..MAXIMUM_SQLITE_QUERY_LIMIT).map {
       val addressUuid = UUID.randomUUID()
@@ -590,7 +592,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(database.phoneNumberDao().count()).isEqualTo(1)
 
-    database.patientDao().save(updatedPatient.toDatabaseModel(SyncStatus.DONE))
+    database.patientDao().save(updatedPatient.toDatabaseModel(DONE))
 
     val storedNumbers = database.phoneNumberDao().phoneNumber(patientUuid).blockingFirst()
     assertThat(storedNumbers.size).isEqualTo(1)
@@ -642,7 +644,7 @@ class PatientRepositoryAndroidTest {
     assertThat(database.addressDao().count()).isEqualTo(1)
 
     val updatedPatient = initialPatient.copy()
-    database.patientDao().save(updatedPatient.toDatabaseModel(SyncStatus.DONE))
+    database.patientDao().save(updatedPatient.toDatabaseModel(DONE))
 
     val storedNumbers = database.phoneNumberDao().phoneNumber(patientUuid).blockingFirst()
     assertThat(database.phoneNumberDao().count()).isEqualTo(1)
@@ -668,7 +670,7 @@ class PatientRepositoryAndroidTest {
     val patientProfile = PatientProfile(
         patient = testData.patient(
             addressUuid = addressToSave.uuid,
-            syncStatus = SyncStatus.DONE
+            syncStatus = DONE
         ),
         address = addressToSave,
         phoneNumbers = emptyList(),
@@ -698,7 +700,7 @@ class PatientRepositoryAndroidTest {
         .unwrapJust()
         .blockingFirst()
 
-    assertThat(updatedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
 
     val savedAddress = patientRepository.address(updatedPatient.addressUuid)
         .unwrapJust()
@@ -720,7 +722,7 @@ class PatientRepositoryAndroidTest {
     )
 
     val originalSavedPatient = testData.patient(
-        syncStatus = SyncStatus.DONE,
+        syncStatus = DONE,
         addressUuid = addressToSave.uuid,
         fullName = "Old Name",
         gender = Gender.MALE,
@@ -758,7 +760,7 @@ class PatientRepositoryAndroidTest {
         .unwrapJust()
         .blockingFirst()
 
-    assertThat(savedPatient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
     assertThat(savedPatient.updatedAt).isEqualTo(originalSavedPatient.updatedAt.plus(updatedAfter))
     assertThat(savedPatient.createdAt).isNotEqualTo(savedPatient.updatedAt)
 
@@ -772,7 +774,7 @@ class PatientRepositoryAndroidTest {
     val addressToSave = testData.patientAddress()
 
     val originalSavedPatient = testData.patient(
-        syncStatus = SyncStatus.DONE,
+        syncStatus = DONE,
         addressUuid = addressToSave.uuid
     )
 
@@ -825,7 +827,7 @@ class PatientRepositoryAndroidTest {
         .unwrapJust()
         .blockingFirst()
 
-    assertThat(patient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(patient.syncStatus).isEqualTo(PENDING)
   }
 
   @Test
@@ -833,7 +835,7 @@ class PatientRepositoryAndroidTest {
     val addressToSave = testData.patientAddress()
 
     val originalSavedPatient = testData.patient(
-        syncStatus = SyncStatus.DONE,
+        syncStatus = DONE,
         addressUuid = addressToSave.uuid
     )
 
@@ -881,7 +883,7 @@ class PatientRepositoryAndroidTest {
         .unwrapJust()
         .blockingFirst()
 
-    assertThat(patient.syncStatus).isEqualTo(SyncStatus.PENDING)
+    assertThat(patient.syncStatus).isEqualTo(PENDING)
   }
 
   @Test
@@ -1171,4 +1173,17 @@ class PatientRepositoryAndroidTest {
 
     assertThat(savedPatientProfiles).isEqualTo(expectedPatientProfiles)
   }
+
+  @Test
+  fun if_sync_is_pending_for_any_patient_record_then_it_should_be_counted_in_pendingRecordsCount() {
+    patientRepository.save(listOf(
+        testData.patientProfile(syncStatus = PENDING),
+        testData.patientProfile(syncStatus = PENDING),
+        testData.patientProfile(syncStatus = DONE)
+    )).blockingAwait()
+
+    val count = patientRepository.pendingRecordsCount().blockingFirst()
+    assertThat(count).isEqualTo(2)
+  }
+
 }

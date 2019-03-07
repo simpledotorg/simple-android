@@ -37,7 +37,7 @@ fun nameToSearchableForm(string: String) = string.replace(spacePunctuationRegex,
     indices = [
       Index("addressUuid")
     ])
-data class Patient (
+data class Patient(
     @PrimaryKey
     val uuid: UUID,
 
@@ -97,6 +97,9 @@ data class Patient (
 
     @Query("DELETE FROM patient")
     abstract fun clear()
+
+    @Query("SELECT COUNT(uuid) FROM Patient WHERE syncStatus = :syncStatus")
+    abstract fun patientCount(syncStatus: SyncStatus) : Flowable<Int>
 
     @Query("""
       UPDATE patient

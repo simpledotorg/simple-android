@@ -11,24 +11,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="end"
-    android:fontFamily="sans-serif-medium"
     android:gravity="center"
     android:maxLines="1"
     android:paddingBottom="@dimen/textsize_18"
     android:paddingTop="@dimen/textsize_18"
     android:text="@string/scheduleappointment_next_visit_in"
-    android:textColor="@color/black_opacity_80"
-    android:textSize="@dimen/textsize_16">
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0">
 
     <requestFocus />
   </TextView>
-
-  <View
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:layout_marginLeft="@dimen/spacing_8"
-    android:layout_marginRight="@dimen/spacing_8"
-    android:background="@color/black_opacity_10" />
 
   <LinearLayout
     android:layout_width="match_parent"

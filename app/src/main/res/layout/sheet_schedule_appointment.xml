@@ -47,7 +47,7 @@
       android:background="?attr/selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_remove_circle_outline_32dp"
-      android:tint="?colorAccent"
+      android:tint="@color/scheduleappointment_increment_decrement_date"
       tools:ignore="ContentDescription" />
 
     <TextView
@@ -69,7 +69,7 @@
       android:background="?attr/selectableItemBackgroundBorderless"
       android:padding="@dimen/spacing_12"
       android:src="@drawable/ic_add_circle_outline_32dp"
-      android:tint="?colorAccent"
+      android:tint="@color/scheduleappointment_increment_decrement_date"
       tools:ignore="ContentDescription" />
 
   </LinearLayout>

@@ -46,7 +46,15 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     groupAdapter.update(recentPatients)
   }
 
-  fun showNoRecentPatients(isVisible: Boolean) {
-    recent_patient_no_recent_patients.visibleOrGone(isVisible)
+  fun showNoRecentPatients() {
+    recent_patient_no_recent_patients.visibleOrGone(true)
+  }
+
+  fun hideNoRecentPatients() {
+    recent_patient_no_recent_patients.visibleOrGone(false)
+  }
+
+  fun clearRecentPatients() {
+    groupAdapter.clear()
   }
 }

@@ -12,10 +12,14 @@ import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = RecentPatientsView
@@ -38,38 +42,65 @@ class RecentPatientsViewController @Inject constructor(
     return Observable.mergeArray(showRecentPatients(replayedEvents))
   }
 
-  private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> =
-      events.ofType<ScreenCreated>()
-          .flatMap { userSession.requireLoggedInUser() }
-          .map(facilityRepository::currentFacilityUuid)
-          .withLatestFrom(patientConfig)
-          .flatMap { (facilityUuid, config) ->
-            if (facilityUuid != null) {
-              patientRepository.recentPatients(facilityUuid, limit = config.recentPatientLimit)
-            } else {
-              Observable.just(emptyList())
-            }
+  private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> {
+    val facilityUuidStream = events.ofType<ScreenCreated>()
+        .flatMap { userSession.requireLoggedInUser() }
+        .map { Optional.toOptional(facilityRepository.currentFacilityUuid(it)) }
+        .replay()
+        .refCount()
+
+    val facilityIdNotPresent = facilityUuidStream
+        .ofType<None>()
+        .map {
+          { ui: Ui ->
+            ui.clearRecentPatients()
+            ui.showNoRecentPatients()
           }
-          .map { recentPatients ->
-            val recentPatientItems = recentPatients.map {
-              RecentPatientItem(
-                  name = it.fullName,
-                  age = getAge(it),
-                  lastBp = it.lastBp?.run {
-                    RecentPatientItem.LastBp(
-                        systolic = systolic,
-                        diastolic = diastolic,
-                        updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(updatedAt)
-                    )
-                  },
-                  gender = it.gender
-              )
-            }
-            return@map { ui: Ui ->
-              ui.updateRecentPatients(recentPatientItems)
-              ui.showNoRecentPatients(isVisible = recentPatientItems.isEmpty())
-            }
+        }
+
+    val recentPatientsStream = facilityUuidStream
+        .ofType<Just<UUID>>()
+        .map { it.value }
+        .withLatestFrom(patientConfig)
+        .flatMap { (facilityUuid, config) ->
+          patientRepository.recentPatients(facilityUuid, limit = config.recentPatientLimit)
+        }
+        .replay()
+        .refCount()
+
+    val zeroRecentPatients = recentPatientsStream
+        .filter { it.isEmpty() }
+        .map {
+          { ui: Ui ->
+            ui.clearRecentPatients()
+            ui.showNoRecentPatients()
           }
+        }
+
+    val nonZeroRecentPatients = recentPatientsStream
+        .filter { it.isNotEmpty() }
+        .map { recentPatients ->
+          { ui: Ui ->
+            ui.updateRecentPatients(recentPatients.map(::recentPatientItem))
+            ui.hideNoRecentPatients()
+          }
+        }
+    return Observable.merge(facilityIdNotPresent, zeroRecentPatients, nonZeroRecentPatients)
+  }
+
+  private fun recentPatientItem(recentPatient: RecentPatient) =
+      RecentPatientItem(
+          name = recentPatient.fullName,
+          age = getAge(recentPatient),
+          lastBp = recentPatient.lastBp?.run {
+            RecentPatientItem.LastBp(
+                systolic = systolic,
+                diastolic = diastolic,
+                updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(updatedAt)
+            )
+          },
+          gender = recentPatient.gender
+      )
 
   private fun getAge(recentPatient: RecentPatient): Int =
       when (recentPatient.age) {

@@ -454,10 +454,8 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    return Observables
-        .zip(patientUuidStream, configProvider.toObservable())
-        .filter { (_, config) -> config.isUpdatePhoneDialogEnabled }
-        .switchMap { (patientUuid, _) -> Observables.zip(phoneNumber(patientUuid), lastCancelledAppointment(patientUuid)) }
+    return patientUuidStream
+        .switchMap { patientUuid -> Observables.zip(phoneNumber(patientUuid), lastCancelledAppointment(patientUuid)) }
         .filter { (number, appointment) -> appointment.updatedAt > number.updatedAt }
         .take(1)
         .map { (number) -> { ui: Ui -> ui.showUpdatePhoneDialog(number.patientUuid) } }

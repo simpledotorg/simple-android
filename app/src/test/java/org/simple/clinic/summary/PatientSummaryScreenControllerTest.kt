@@ -142,8 +142,7 @@ class PatientSummaryScreenControllerTest {
   fun `patient's prescription summary should be populated`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     val prescriptions = listOf(
@@ -163,8 +162,7 @@ class PatientSummaryScreenControllerTest {
   fun `patient's blood pressure history should be populated`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
@@ -196,8 +194,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 3,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -312,8 +309,7 @@ class PatientSummaryScreenControllerTest {
   fun `patient's medical history should be populated`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
@@ -504,8 +500,7 @@ class PatientSummaryScreenControllerTest {
   fun `when update medicines is clicked then BP medicines screen should be shown`() {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
@@ -678,8 +673,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = false)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
@@ -756,8 +750,7 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -784,8 +777,7 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true)
+        numberOfBpsToDisplay = 100)
 
     configSubject.onNext(config)
 
@@ -807,8 +799,7 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -828,8 +819,7 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -844,8 +834,7 @@ class PatientSummaryScreenControllerTest {
 
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
-        numberOfBpsToDisplay = 100,
-        isUpdatePhoneDialogEnabled = true)
+        numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))

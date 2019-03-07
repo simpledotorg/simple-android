@@ -126,4 +126,10 @@ class PrescriptionRepository @Inject constructor(
       dao.save(listOf(updatedPrescription))
     }
   }
+
+  fun pendingRecordsCount(): Observable<Int> {
+    return dao
+        .count(SyncStatus.PENDING)
+        .toObservable()
+  }
 }

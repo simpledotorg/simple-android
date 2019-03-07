@@ -138,4 +138,10 @@ class BloodPressureRepository @Inject constructor(
         .recordedBloodPressureCountForPatient(patientUuid)
         .toObservable()
   }
+
+  fun pendingRecordsCount(): Observable<Int> {
+    return dao
+        .count(SyncStatus.PENDING)
+        .toObservable()
+  }
 }

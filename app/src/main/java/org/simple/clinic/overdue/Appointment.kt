@@ -73,6 +73,9 @@ data class Appointment(
     @Query("SELECT COUNT(uuid) FROM Appointment")
     fun count(): Flowable<Int>
 
+    @Query("SELECT COUNT(uuid) FROM Appointment WHERE syncStatus = :syncStatus")
+    fun count(syncStatus: SyncStatus): Flowable<Int>
+
     @Query("""
       UPDATE Appointment
       SET status = :updatedStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt

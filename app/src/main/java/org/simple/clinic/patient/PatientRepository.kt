@@ -441,4 +441,10 @@ class PatientRepository @Inject constructor(
       database.recentPatientDao()
           .recentPatients(facilityUuid, limit)
           .toObservable()
+
+  fun pendingRecordsCount(): Observable<Int> {
+    return database.patientDao()
+        .patientCount(PENDING)
+        .toObservable()
+  }
 }

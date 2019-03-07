@@ -88,17 +88,17 @@ class PatientSummaryScreenControllerTest {
   fun setUp() {
     val timestampGenerator = RelativeTimestampGenerator()
     controller = PatientSummaryScreenController(
-        patientRepository,
-        bpRepository,
-        prescriptionRepository,
-        medicalHistoryRepository,
-        appointmentRepository,
-        timestampGenerator,
-        clock,
-        zoneId,
-        configSubject.firstOrError(),
-        patientSummaryResult,
-        timeFormatter)
+        patientRepository = patientRepository,
+        bpRepository = bpRepository,
+        prescriptionRepository = prescriptionRepository,
+        medicalHistoryRepository = medicalHistoryRepository,
+        appointmentRepository = appointmentRepository,
+        timestampGenerator = timestampGenerator,
+        utcClock = clock,
+        zoneId = zoneId,
+        configProvider = configSubject.firstOrError(),
+        patientSummaryResult = patientSummaryResult,
+        timeFormatterForBp = timeFormatter)
 
     uiEvents
         .compose(controller)

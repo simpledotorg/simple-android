@@ -4,8 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -54,6 +58,9 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
   private fun viewClicks() = RxView.clicks(syncIndicatorLayout).map { SyncIndicatorViewClicked }
 
   fun updateState(syncState: SyncIndicatorState) {
+    val transition = AutoTransition().setInterpolator(FastOutSlowInInterpolator())
+    TransitionManager.beginDelayedTransition(this, transition)
+
     when (syncState) {
       ConnectToSync -> {
         syncStatusTextView.text = context.getString(R.string.syncindicator_status_failed)

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  android:id="@+id/sync_indicator_root_layout"
+<LinearLayout android:id="@+id/sync_indicator_root_layout"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
+  android:background="?attr/selectableItemBackground"
   android:clickable="true"
   android:focusable="true"
-  android:background="?attr/selectableItemBackground">
+  android:padding="@dimen/spacing_8">
 
   <TextView
     android:id="@+id/sync_indicator_status_text"

@@ -23,6 +23,7 @@ import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
@@ -137,25 +138,25 @@ class SyncIndicatorViewControllerTest {
 
   @Test
   fun `when sync indicator is clicked, sync should be triggered`() {
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.sync(SyncGroup.FREQUENT)).thenReturn(Completable.complete())
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.never())
 
     lastSyncStateStream.onNext(LastSyncedState())
     uiEvents.onNext(SyncIndicatorViewClicked)
 
-    verify(dataSync).sync(null)
+    verify(dataSync).sync(SyncGroup.FREQUENT)
   }
 
   @Test
   @Parameters(method = "params for testing sync errors")
   fun `when sync indicator is clicked and sync starts, appropriate failure dialog should show if any sync error is thrown`(error: ResolvedError) {
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(dataSync.sync(SyncGroup.FREQUENT)).thenReturn(Completable.complete())
 
     lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SUCCESS))
     uiEvents.onNext(SyncIndicatorViewClicked)
 
-    verify(dataSync).sync(null)
+    verify(dataSync).sync(SyncGroup.FREQUENT)
     verify(dataSync).streamSyncErrors()
     verify(indicator).showErrorDialog(errorType = error)
   }
@@ -174,7 +175,7 @@ class SyncIndicatorViewControllerTest {
     lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SYNCING))
     uiEvents.onNext(SyncIndicatorViewClicked)
 
-    verify(dataSync, never()).sync(null)
+    verify(dataSync, never()).sync(any())
     verify(dataSync, never()).streamSyncErrors()
     verify(indicator, never()).showErrorDialog(any())
   }

@@ -17,6 +17,7 @@ import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
+import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
@@ -116,6 +117,7 @@ class SyncIndicatorViewController @Inject constructor(
     }
   }
 
+
   private fun startSync(events: Observable<UiEvent>): Observable<UiChange> {
     val errorsStream = {
       dataSync
@@ -130,7 +132,7 @@ class SyncIndicatorViewController @Inject constructor(
 
     val syncStream = {
       dataSync
-          .sync(null)
+          .sync(SyncGroup.FREQUENT)
           .toObservable<UiChange>()
     }
 

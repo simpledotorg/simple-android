@@ -9,6 +9,12 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncInterval
@@ -33,7 +39,13 @@ class SyncIndicatorViewController @Inject constructor(
     private val lastSyncState: Preference<LastSyncedState>,
     private val utcClock: UtcClock,
     private val configProvider: Observable<SyncIndicatorConfig>,
-    private val dataSync: DataSync
+    private val dataSync: DataSync,
+    private val patientRepository: PatientRepository,
+    private val bloodPressureRepository: BloodPressureRepository,
+    private val prescriptionRepository: PrescriptionRepository,
+    private val medicalHistoryRepository: MedicalHistoryRepository,
+    private val appointmentRepository: AppointmentRepository,
+    private val communicationRepository: CommunicationRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -43,7 +55,8 @@ class SyncIndicatorViewController @Inject constructor(
 
     return Observable.merge(
         updateIndicatorView(replayedEvents),
-        startSync(replayedEvents))
+        startSync(replayedEvents),
+        showPendingSyncStatus(replayedEvents))
   }
 
   private fun updateIndicatorView(events: Observable<UiEvent>): Observable<UiChange> {
@@ -127,6 +140,65 @@ class SyncIndicatorViewController @Inject constructor(
         .filter { (_, lastSyncedState) ->
           lastSyncedState.lastSyncProgress == null || lastSyncedState.lastSyncProgress != SYNCING
         }
-        .flatMap { syncStream().mergeWith(errorsStream()) }
+        .switchMap { syncStream().mergeWith(errorsStream()) }
+  }
+
+  private fun showPendingSyncStatus(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreates = events.ofType<SyncIndicatorViewCreated>()
+
+    val isPatientSyncPending = screenCreates
+        .flatMap {
+          patientRepository
+              .pendingRecordsCount()
+              .map { count -> count > 0 }
+        }
+
+    val isBpSyncPending = screenCreates
+        .flatMap {
+          bloodPressureRepository
+              .pendingRecordsCount()
+              .map { count -> count > 0 }
+        }
+
+    val isPrescriptionSyncPending = screenCreates
+        .flatMap {
+          prescriptionRepository
+              .pendingRecordsCount()
+              .map { count -> count > 0 }
+        }
+
+    val isMedicalHistorySyncPending = screenCreates
+        .flatMap {
+          medicalHistoryRepository
+              .pendingRecordsCount()
+              .map { count -> count > 0 }
+        }
+
+    val isAppointmentSyncPending = screenCreates
+        .flatMap {
+          appointmentRepository
+              .pendingRecordsCount()
+              .map { count -> count > 0 }
+        }
+
+    val isCommunicationSyncPending = screenCreates
+        .flatMap {
+          communicationRepository
+              .pendingRecordsCount()
+              .map { count -> count > 0 }
+        }
+
+    return Observable
+        .mergeArray(
+            isPatientSyncPending,
+            isBpSyncPending,
+            isPrescriptionSyncPending,
+            isAppointmentSyncPending,
+            isMedicalHistorySyncPending,
+            isCommunicationSyncPending
+        )
+        .filter { isSyncPending -> isSyncPending }
+        .distinctUntilChanged()
+        .map { { ui: Ui -> ui.updateState(SyncPending) } }
   }
 }

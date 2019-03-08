@@ -15,6 +15,12 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
 import org.simple.clinic.sync.SyncProgress.FAILURE
@@ -55,11 +61,34 @@ class SyncIndicatorViewControllerTest {
 
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
+  private val patientRepository = mock<PatientRepository>()
+  private val appointmentRepository = mock<AppointmentRepository>()
+  private val communicationRepository = mock<CommunicationRepository>()
+  private val prescriptionRepository = mock<PrescriptionRepository>()
+  private val medicalHistoryRepository = mock<MedicalHistoryRepository>()
+  private val bpRepository = mock<BloodPressureRepository>()
+
   @Before
   fun setUp() {
-    controller = SyncIndicatorViewController(lastSyncStatePreference, utcClock, configSubject, dataSync)
+    controller = SyncIndicatorViewController(
+        lastSyncState = lastSyncStatePreference,
+        utcClock = utcClock,
+        configProvider = configSubject,
+        dataSync = dataSync,
+        patientRepository = patientRepository,
+        bloodPressureRepository = bpRepository,
+        prescriptionRepository = prescriptionRepository,
+        appointmentRepository = appointmentRepository,
+        communicationRepository = communicationRepository,
+        medicalHistoryRepository = medicalHistoryRepository
+    )
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.never())
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.never())
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.never())
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.never())
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.never())
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.never())
 
     uiEvents
         .compose(controller)
@@ -121,7 +150,7 @@ class SyncIndicatorViewControllerTest {
   @Parameters(method = "params for testing sync errors")
   fun `when sync indicator is clicked and sync starts, appropriate failure dialog should show if any sync error is thrown`(error: ResolvedError) {
     whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
-
+    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
 
     lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SUCCESS))
     uiEvents.onNext(SyncIndicatorViewClicked)
@@ -148,5 +177,103 @@ class SyncIndicatorViewControllerTest {
     verify(dataSync, never()).sync(null)
     verify(dataSync, never()).streamSyncErrors()
     verify(indicator, never()).showErrorDialog(any())
+  }
+
+  @Test
+  fun `if records are pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(1))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(2))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(5))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(3))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(1))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
+  fun `if patient record is pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(1))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
+  fun `if bp record is pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(1))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
+  fun `if appointments are pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(3))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
+  fun `if communications are pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(2))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
+  fun `if prescriptions are pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(2))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
+  }
+
+  @Test
+  fun `if medical histories are pending sync, then sync indicator should show Sync Pending`() {
+    whenever(patientRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(bpRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(prescriptionRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(medicalHistoryRepository.pendingRecordsCount()).thenReturn(Observable.just(2))
+    whenever(appointmentRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+    whenever(communicationRepository.pendingRecordsCount()).thenReturn(Observable.just(0))
+
+    uiEvents.onNext(SyncIndicatorViewCreated)
+
+    verify(indicator).updateState(SyncPending)
   }
 }

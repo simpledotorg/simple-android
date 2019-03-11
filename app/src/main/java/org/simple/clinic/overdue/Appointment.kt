@@ -141,5 +141,18 @@ data class Appointment(
 
     @Query("DELETE FROM Appointment")
     fun clear()
+
+    @Query("""
+      UPDATE Appointment SET status = :updatedStatus, syncStatus = :newSyncStatus, updatedAt = :newUpdatedAt
+      WHERE patientUuid = :patientUuid AND status = :scheduledStatus AND createdAt < :createdBefore
+    """)
+    fun markAsVisited(
+        patientUuid: UUID,
+        updatedStatus: Status,
+        scheduledStatus: Status,
+        newSyncStatus: SyncStatus,
+        newUpdatedAt: Instant,
+        createdBefore: Instant
+    )
   }
 }

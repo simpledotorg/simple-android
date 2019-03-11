@@ -775,4 +775,55 @@ class AppointmentRepositoryAndroidTest {
     val (appointment) = appointmentRepository.lastCreatedAppointmentForPatient(patientId).blockingFirst()
     assertThat(appointment!!).isEqualTo(secondAppointment)
   }
+
+  @Test
+  fun marking_appointment_older_than_current_date_should_work_correctly() {
+    val patientId = UUID.randomUUID()
+    val appointmentUuid1 = UUID.randomUUID()
+    val appointmentUuid2 = UUID.randomUUID()
+    val scheduleDate = LocalDate.now(testClock).plusMonths(1)
+
+    testClock.advanceBy(Duration.ofHours(1))
+    database
+        .appointmentDao()
+        .save(listOf(testData.appointment(
+            uuid = appointmentUuid1,
+            patientUuid = patientId,
+            status = SCHEDULED,
+            syncStatus = SyncStatus.DONE,
+            scheduledDate = scheduleDate,
+            createdAt = Instant.now(testClock),
+            updatedAt = Instant.now(testClock)
+        )))
+    val firstAppointment = database.appointmentDao().getOne(appointmentUuid1)
+    testClock.advanceBy(Duration.ofHours(1))
+
+    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientId).blockingAwait()
+
+    assertThat(database.appointmentDao().getOne(appointmentUuid1)).isEqualTo(firstAppointment)
+
+    testClock.advanceBy(Duration.ofDays(1))
+
+    database
+        .appointmentDao()
+        .save(listOf(testData.appointment(
+            uuid = appointmentUuid2,
+            patientUuid = patientId,
+            scheduledDate = scheduleDate,
+            status = SCHEDULED,
+            syncStatus = SyncStatus.PENDING,
+            createdAt = Instant.now(testClock),
+            updatedAt = Instant.now(testClock)
+        )))
+
+    val secondAppointment = database.appointmentDao().getOne(appointmentUuid2)
+    appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientId).blockingAwait()
+
+    database.appointmentDao().getOne(firstAppointment!!.uuid)!!.run {
+      assertThat(status).isEqualTo(VISITED)
+      assertThat(syncStatus).isEqualTo(SyncStatus.PENDING)
+      assertThat(updatedAt).isEqualTo(Instant.now(testClock))
+    }
+    assertThat(database.appointmentDao().getOne(appointmentUuid2)).isEqualTo(secondAppointment)
+  }
 }

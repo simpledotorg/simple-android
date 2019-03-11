@@ -27,6 +27,7 @@ import org.simple.clinic.security.pin.BruteForceProtectionAndroidTest
 import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
 import org.simple.clinic.summary.RelativeTimestampGeneratorAndroidTest
+import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
 import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
@@ -65,4 +66,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: DatabaseMigrationAndroidTest)
   fun inject(target: AndroidFileStorageAndroidTest)
   fun inject(target: ReportsSyncAndroidTest)
+  fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
 }

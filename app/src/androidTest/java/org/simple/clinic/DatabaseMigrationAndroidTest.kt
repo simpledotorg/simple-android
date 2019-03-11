@@ -1348,6 +1348,18 @@ class DatabaseMigrationAndroidTest {
     db_v30.assertColumnCount(tableName, expectedColumnCount)
     assertThat(lastPatientPullToken.get()).isEqualTo(None)
   }
+
+  @Test
+  fun migration_30_to_31() {
+    val tableName = "MissingPhoneReminder"
+
+    val db_v29 = helper.createDatabase(30)
+    db_v29.assertTableDoesNotExist(tableName)
+
+    val db_v30 = helper.migrateTo(31)
+    db_v30.assertTableExists(tableName)
+    db_v30.assertColumnCount(tableName, 2)
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

@@ -8,6 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
@@ -26,14 +27,15 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
+import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -54,6 +56,7 @@ class PatientSummaryScreenController @Inject constructor(
     private val prescriptionRepository: PrescriptionRepository,
     private val medicalHistoryRepository: MedicalHistoryRepository,
     private val appointmentRepository: AppointmentRepository,
+    private val missingPhoneReminderRepository: MissingPhoneReminderRepository,
     private val timestampGenerator: RelativeTimestampGenerator,
     private val utcClock: UtcClock,
     private val zoneId: ZoneId,
@@ -450,27 +453,58 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuidStream = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
+    val screenCreations = events.ofType<PatientSummaryScreenCreated>()
 
-    return patientUuidStream
-        .switchMap { patientUuid -> Observables.zip(phoneNumber(patientUuid), lastCancelledAppointment(patientUuid)) }
-        .filter { (number, appointment) -> appointment.updatedAt > number.updatedAt }
-        .take(1)
-        .map { (number) -> { ui: Ui -> ui.showUpdatePhoneDialog(number.patientUuid) } }
+    val showForInvalidPhone = screenCreations
+        .map { it.patientUuid }
+        .switchMap { patientUuid ->
+          hasInvalidPhone(patientUuid)
+              .take(1)
+              .filter { invalid -> invalid }
+              .map { { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
+        }
+
+    val showForMissingPhone = screenCreations
+        .filter { it.caller == SEARCH }
+        .map { it.patientUuid }
+        .switchMap { patientUuid ->
+          isMissingPhoneAndShouldBeReminded(patientUuid)
+              .take(1)
+              .filter { missing -> missing }
+              .flatMap {
+                missingPhoneReminderRepository
+                    .markReminderAsShownFor(patientUuid)
+                    .andThen(Observable.just({ ui: Ui -> ui.showAddPhoneDialog(patientUuid) }))
+              }
+        }
+
+    return showForInvalidPhone.mergeWith(showForMissingPhone)
   }
 
-  private fun lastCancelledAppointment(patientUuid: UUID): Observable<Appointment> {
+  private fun hasInvalidPhone(patientUuid: UUID): Observable<Boolean> {
+    return patientRepository.phoneNumber(patientUuid)
+        .filterAndUnwrapJust()
+        .zipWith(lastCancelledAppointmentWithInvalidPhone(patientUuid))
+        .map { (number, appointment) -> appointment.updatedAt > number.updatedAt }
+  }
+
+  private fun isMissingPhoneAndShouldBeReminded(patientUuid: UUID): Observable<Boolean> {
+    return patientRepository
+        .phoneNumber(patientUuid)
+        .zipWith(hasShownReminderForMissingPhone(patientUuid))
+        .map { (number, reminderShown) -> number is None && reminderShown.not() }
+  }
+
+  private fun lastCancelledAppointmentWithInvalidPhone(patientUuid: UUID): Observable<Appointment> {
     return appointmentRepository
         .lastCreatedAppointmentForPatient(patientUuid)
         .filterAndUnwrapJust()
         .filter { it.status == CANCELLED && it.cancelReason == InvalidPhoneNumber }
   }
 
-  private fun phoneNumber(patientUuid: UUID): Observable<PatientPhoneNumber> {
-    return patientRepository
-        .phoneNumber(patientUuid)
-        .filterAndUnwrapJust()
+  private fun hasShownReminderForMissingPhone(patientUuid: UUID): Observable<Boolean> {
+    return missingPhoneReminderRepository
+        .hasShownReminderFor(patientUuid)
+        .toObservable()
   }
 }

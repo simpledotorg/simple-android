@@ -13,6 +13,7 @@ import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -47,6 +48,7 @@ import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
@@ -75,6 +77,7 @@ class PatientSummaryScreenControllerTest {
   private val patientUuid = UUID.randomUUID()
   private val clock = TestUtcClock()
   private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
+  private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = BehaviorSubject.create<PatientSummaryConfig>()
@@ -93,6 +96,7 @@ class PatientSummaryScreenControllerTest {
         prescriptionRepository = prescriptionRepository,
         medicalHistoryRepository = medicalHistoryRepository,
         appointmentRepository = appointmentRepository,
+        missingPhoneReminderRepository = missingPhoneReminderRepository,
         timestampGenerator = timestampGenerator,
         utcClock = clock,
         zoneId = zoneId,
@@ -111,6 +115,7 @@ class PatientSummaryScreenControllerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.never())
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(1))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
     Analytics.addReporter(reporter)
   }
@@ -778,7 +783,6 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
-
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -811,7 +815,7 @@ class PatientSummaryScreenControllerTest {
   fun `appointment cancelation reasons`() = AppointmentCancelReason.values()
 
   @Test
-  fun `when screen is opened and a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
+  fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
     val appointmentStream = Observable.just(
         None,
         Just(PatientMocker.appointment(status = SCHEDULED, cancelReason = null)))
@@ -840,5 +844,63 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened from search, patient does not have a phone number and the user has never been reminded, then add phone dialog should be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
+    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen).showAddPhoneDialog(patientUuid)
+    verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened from search, patient does not have a phone number and the user has been reminded before, then add phone dialog should not be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(true))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
+  }
+
+  @Test
+  fun `when screen is opened from search and patient has a phone number, then add phone dialog should not be shown`() {
+    val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
+  }
+
+  @Test
+  fun `when screen is opened for a new patient and phone number is present, then add phone dialog should not be shown`() {
+    val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
+  }
+
+  @Test
+  fun `when screen is opened for a new patient and phone number is missing, then add phone dialog should not be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 }

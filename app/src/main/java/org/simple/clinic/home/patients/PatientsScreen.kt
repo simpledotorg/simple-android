@@ -24,6 +24,7 @@ import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
+import org.simple.clinic.scanid.ScanSimpleIdScreenResult
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.ScreenCreated
@@ -89,7 +90,8 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
             dismissApprovedStatusClicks(),
             enterCodeManuallyClicks(),
             scanCardIdButtonClicks(),
-            cameraPermissionChanges())
+            cameraPermissionChanges(),
+            scanCardResults())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -117,7 +119,17 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun scanCardIdButtonClicks() = RxView.clicks(scanSimpleCardButton).map { ScanCardIdButtonClicked }
 
-  fun openNewPatientScreen() {
+  private fun scanCardResults(): Observable<PatientsScreenBpPassportCodeScanned>? {
+    return Observable.create { emitter ->
+      screenRouter
+          .retrieveResult<ScanSimpleIdScreenResult>(ScanSimpleIdScreenResult.KEY)
+          ?.let { result ->
+            emitter.onNext(PatientsScreenBpPassportCodeScanned(result.uuid))
+          }
+    }
+  }
+
+  fun openPatientSearchScreen() {
     screenRouter.push(PatientSearchScreenKey())
   }
 

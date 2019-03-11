@@ -74,7 +74,7 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
       camera = CodeScanner.CAMERA_BACK
       formats = listOf(BarcodeFormat.QR_CODE)
       autoFocusMode = AutoFocusMode.SAFE
-      scanMode = ScanMode.SINGLE
+      scanMode = ScanMode.CONTINUOUS
       isAutoFocusEnabled = true
       isFlashEnabled = false
       setAutoFocusInterval(1000L)

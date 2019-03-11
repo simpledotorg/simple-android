@@ -41,6 +41,7 @@ import org.simple.clinic.router.screen.RouterDirection.BACKWARD
 import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
+import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -288,6 +289,15 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .takeUntil(RxView.detaches(this))
         .subscribe {
           UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
+        }
+  }
+
+  @SuppressLint("CheckResult")
+  fun showAddPhoneDialog(patientUuid: UUID) {
+    Observable.timer(SCREEN_CHANGE_ANIMATION_DURATION, MILLISECONDS, mainThread())
+        .takeUntil(RxView.detaches(this))
+        .subscribe {
+          AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
         }
   }
 

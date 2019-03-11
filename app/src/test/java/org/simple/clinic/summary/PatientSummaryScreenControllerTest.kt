@@ -778,7 +778,6 @@ class PatientSummaryScreenControllerTest {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
-
     configSubject.onNext(config)
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
@@ -811,7 +810,7 @@ class PatientSummaryScreenControllerTest {
   fun `appointment cancelation reasons`() = AppointmentCancelReason.values()
 
   @Test
-  fun `when screen is opened and a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
+  fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
     val appointmentStream = Observable.just(
         None,
         Just(PatientMocker.appointment(status = SCHEDULED, cancelReason = null)))
@@ -840,5 +839,57 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened from search, patient does not have a phone number and BP is recorded for the first time, then update phone dialog should be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(0, 1))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen).showAddPhoneDialog(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened from search, patient does not have a phone number and the first BP has already been recorded earlier, then update phone dialog should not be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(1))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened from search and patient has a phone number, then update phone dialog should not be shown`() {
+    val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(2))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened for a new patient and phone number is present, then update phone dialog should not be shown`() {
+    val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(2))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+  }
+
+  @Test
+  fun `when screen is opened for a new patient and phone number is missing, then update phone dialog should not be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(2))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
   }
 }

@@ -8,6 +8,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.rxkotlin.zipWith
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
@@ -26,7 +27,6 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
@@ -34,6 +34,7 @@ import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
 import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -450,15 +451,42 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuidStream = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.patientUuid }
+    val screenCreations = events.ofType<PatientSummaryScreenCreated>()
 
-    return patientUuidStream
-        .switchMap { patientUuid -> Observables.zip(phoneNumber(patientUuid), lastCancelledAppointment(patientUuid)) }
-        .filter { (number, appointment) -> appointment.updatedAt > number.updatedAt }
-        .take(1)
-        .map { (number) -> { ui: Ui -> ui.showUpdatePhoneDialog(number.patientUuid) } }
+    val showForInvalidPhone = screenCreations
+        .map { it.patientUuid }
+        .switchMap { patientUuid ->
+          hasInvalidPhone(patientUuid)
+              .take(1)
+              .filter { invalid -> invalid }
+              .map { { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
+        }
+
+    val showForMissingPhone = screenCreations
+        .filter { it.caller == SEARCH }
+        .map { it.patientUuid }
+        .switchMap { patientUuid ->
+          isMissingPhoneAndShouldBeReminded(patientUuid)
+              .take(1)
+              .filter { missing -> missing }
+              .map { { ui: Ui -> ui.showAddPhoneDialog(patientUuid) } }
+        }
+
+    return showForInvalidPhone.mergeWith(showForMissingPhone)
+  }
+
+  private fun hasInvalidPhone(patientUuid: UUID): Observable<Boolean> {
+    return patientRepository.phoneNumber(patientUuid)
+        .filterAndUnwrapJust()
+        .zipWith(lastCancelledAppointment(patientUuid))
+        .map { (number, appointment) -> appointment.updatedAt > number.updatedAt }
+  }
+
+  private fun isMissingPhoneAndShouldBeReminded(patientUuid: UUID): Observable<Boolean> {
+    return patientRepository
+        .phoneNumber(patientUuid)
+        .zipWith(isFirstVisitByPatient(patientUuid))
+        .map { (number, firstVisit) -> number is None && firstVisit }
   }
 
   private fun lastCancelledAppointment(patientUuid: UUID): Observable<Appointment> {
@@ -468,9 +496,15 @@ class PatientSummaryScreenController @Inject constructor(
         .filter { it.status == CANCELLED && it.cancelReason == InvalidPhoneNumber }
   }
 
-  private fun phoneNumber(patientUuid: UUID): Observable<PatientPhoneNumber> {
-    return patientRepository
-        .phoneNumber(patientUuid)
-        .filterAndUnwrapJust()
+  /**
+   * FYI: A patient is considered as "visited" when a BP is recorded.
+   */
+  private fun isFirstVisitByPatient(patientUuid: UUID): Observable<Boolean> {
+    return bpRepository
+        .bloodPressureCount(patientUuid)
+        .buffer(2, 1)
+        .filter { it.size == 2 }
+        .take(1)
+        .map { (firstCount, secondCount) -> firstCount == 0 && secondCount == 1 }
   }
 }

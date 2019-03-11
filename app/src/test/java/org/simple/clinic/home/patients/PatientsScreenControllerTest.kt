@@ -93,7 +93,7 @@ class PatientsScreenControllerTest {
   fun `when new patient is clicked then patient search screen should open`() {
     uiEvents.onNext(NewPatientClicked)
 
-    verify(screen).openNewPatientScreen()
+    verify(screen).openPatientSearchScreen()
   }
 
   @Test

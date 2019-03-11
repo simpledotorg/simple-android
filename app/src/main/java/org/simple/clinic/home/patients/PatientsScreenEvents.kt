@@ -2,6 +2,7 @@ package org.simple.clinic.home.patients
 
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 object NewPatientClicked : UiEvent {
   override val analyticsName = "Patients:Search For Patient Clicked"
@@ -21,4 +22,8 @@ object ScanCardIdButtonClicked : UiEvent {
 
 data class PatientsScreenCameraPermissionChanged(val permissionResult: RuntimePermissionResult) : UiEvent {
   override val analyticsName = "Patients:Camera Permission:$permissionResult"
+}
+
+data class PatientsScreenBpPassportCodeScanned(val bpPassportCode: UUID) : UiEvent {
+  override val analyticsName = "Patients:BP Passport Code Scanned"
 }

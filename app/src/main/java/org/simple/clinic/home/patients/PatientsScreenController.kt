@@ -75,7 +75,7 @@ class PatientsScreenController @Inject constructor(
 
   private fun newPatientClicks(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events.ofType<NewPatientClicked>()
-        .map { { ui: PatientsScreen -> ui.openNewPatientScreen() } }
+        .map { { ui: PatientsScreen -> ui.openPatientSearchScreen() } }
   }
 
   private fun refreshApprovalStatusOnStart(events: Observable<UiEvent>): Observable<UiChange> {

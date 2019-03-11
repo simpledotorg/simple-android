@@ -6,6 +6,7 @@ import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Single
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.patient.PatientSummaryResult
 import javax.inject.Named
 
@@ -24,4 +25,7 @@ open class PatientSummaryModule {
     val typeConverter = PatientSummaryResult.RxPreferencesConverter(moshi)
     return rxSharedPreferences.getObject("patient_summary_result_v1", PatientSummaryResult.NotSaved, typeConverter)
   }
+
+  @Provides
+  fun missingPhoneReminderDao(appDatabase: AppDatabase) = appDatabase.missingPhoneReminderDao()
 }

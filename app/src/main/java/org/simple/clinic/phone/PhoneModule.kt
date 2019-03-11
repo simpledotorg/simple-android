@@ -7,5 +7,5 @@ import dagger.Provides
 class PhoneModule {
 
   @Provides
-  fun masker(twilioMasker: TwilioMaskedPhoneCaller): MaskedPhoneCaller = twilioMasker
+  fun masker(masker: OfflineMaskedPhoneCaller): MaskedPhoneCaller = masker
 }

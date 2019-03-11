@@ -3,7 +3,7 @@ package org.simple.clinic.phone
 import io.reactivex.Completable
 
 /**
- * See [TwilioMaskedPhoneCaller].
+ * See [OfflineMaskedPhoneCaller].
  */
 interface MaskedPhoneCaller {
   fun maskAndCall(numberToMask: String, caller: Caller): Completable

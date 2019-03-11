@@ -9,7 +9,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.util.RxErrorsRule
 
-class TwilioMaskedPhoneCallerTest {
+class OfflineMaskedPhoneCallerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
@@ -19,7 +19,7 @@ class TwilioMaskedPhoneCallerTest {
 
   @Before
   fun setUp() {
-    maskedPhoneCaller = TwilioMaskedPhoneCaller(Single.fromCallable { config }, mock())
+    maskedPhoneCaller = OfflineMaskedPhoneCaller(Single.fromCallable { config }, mock())
   }
 
   @Test

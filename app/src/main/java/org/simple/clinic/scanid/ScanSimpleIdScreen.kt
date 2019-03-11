@@ -3,7 +3,6 @@ package org.simple.clinic.scanid
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
@@ -14,11 +13,11 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
+import java.util.UUID
 import javax.inject.Inject
 
 class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayout(context, attrs) {
@@ -60,8 +59,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
         .map(::ScanSimpleIdScreenQrCodeScanned)
   }
 
-  fun showPatientSearchResults(qrCode: String) {
-    Toast.makeText(context, "Scanned: $qrCode", Toast.LENGTH_SHORT).show()
-    screenRouter.push(PatientSearchScreenKey())
+  fun sendScannedPassportCode(scannedBpPassportCode: UUID) {
+    screenRouter.popWithResult(
+        ScanSimpleIdScreenResult.KEY,
+        ScanSimpleIdScreenResult(scannedBpPassportCode))
   }
 }

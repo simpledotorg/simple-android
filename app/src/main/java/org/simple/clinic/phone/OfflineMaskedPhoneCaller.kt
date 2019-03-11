@@ -6,7 +6,7 @@ import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
 import javax.inject.Inject
 
-class TwilioMaskedPhoneCaller @Inject constructor(
+class OfflineMaskedPhoneCaller @Inject constructor(
     private val configProvider: Single<PhoneNumberMaskerConfig>,
     private val activity: TheActivity
 ) : MaskedPhoneCaller {
@@ -19,13 +19,11 @@ class TwilioMaskedPhoneCaller @Inject constructor(
 
   private fun maskNumber(config: PhoneNumberMaskerConfig, numberToMask: String): String {
     return if (config.maskingEnabled) {
-      // TODO: This number is temporary. Every nurse will
-      // be assigned a number during login/registration.
-      val twilioNumber = "+1 111 111 1111"
+      val number = "+1 111 111 1111"
 
       val stopCharacter = Uri.encode("#")
       val dtmfTones = "$numberToMask$stopCharacter"
-      "$twilioNumber,$dtmfTones"
+      "$number,$dtmfTones"
 
     } else {
       numberToMask

@@ -65,7 +65,8 @@ class PatientsScreenController @Inject constructor(
         showSummarySavedNotification(replayedEvents),
         toggleVisibilityOfScanCardButton(replayedEvents),
         requestCameraPermissions(replayedEvents),
-        openScanSimpleIdScreen(replayedEvents))
+        openScanSimpleIdScreen(replayedEvents),
+        openSearchResultsScreenOnScannedPassport(replayedEvents))
   }
 
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -225,5 +226,11 @@ class PatientsScreenController @Inject constructor(
         .ofType<PatientsScreenCameraPermissionChanged>()
         .filter { it.permissionResult == RuntimePermissionResult.GRANTED }
         .map { Ui::openScanSimpleIdCardScreen }
+  }
+
+  private fun openSearchResultsScreenOnScannedPassport(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientsScreenBpPassportCodeScanned>()
+        .map { Ui::openPatientSearchScreen }
   }
 }

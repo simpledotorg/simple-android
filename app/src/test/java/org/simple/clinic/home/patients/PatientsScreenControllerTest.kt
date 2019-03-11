@@ -473,4 +473,12 @@ class PatientsScreenControllerTest {
         listOf(RuntimePermissionResult.DENIED, false),
         listOf(RuntimePermissionResult.NEVER_ASK_AGAIN, false))
   }
+
+  @Test
+  fun `when the simple passport code is scanned, the search query screen must be opened`() {
+    // This is only a temporary test that will be removed when the rest of the scan simple
+    // passport flow is implemented.
+    uiEvents.onNext(PatientsScreenBpPassportCodeScanned(UUID.randomUUID()))
+    verify(screen).openPatientSearchScreen()
+  }
 }

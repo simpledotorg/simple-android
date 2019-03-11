@@ -3,11 +3,13 @@ package org.simple.clinic.patient
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
+import io.reactivex.Single
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.PercentageFuzzer
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.UtcClock
 
 @Module
@@ -34,4 +36,8 @@ open class PatientModule {
       scanSimpleCardFeatureEnabled = false,
       recentPatientLimit = 10
   ))
+
+  @Provides
+  open fun phoneNumberMaskerConfig(): Single<PhoneNumberMaskerConfig> =
+      Single.just(PhoneNumberMaskerConfig(maskingEnabled = false))
 }

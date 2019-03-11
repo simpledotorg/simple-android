@@ -19,6 +19,7 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientModule
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncScheduler
@@ -113,6 +114,10 @@ class DebugClinicApp : ClinicApp() {
             return super.providePatientConfig()
                 .map { it.copy(scanSimpleCardFeatureEnabled = true) }
           }
+
+          override fun phoneNumberMaskerConfig(): Single<PhoneNumberMaskerConfig> =
+              super.phoneNumberMaskerConfig()
+                  .map { it.copy(maskingEnabled = true) }
         })
         .build()
   }

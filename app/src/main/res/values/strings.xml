@@ -166,6 +166,14 @@
   <string name="patientsummary_updatephone_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
   <string name="patientsummary_updatephone_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
 
+  <string name="patientsummary_addphone_dialog_title">Update phone number</string>
+  <string name="patientsummary_addphone_dialog_message">Patient’s phone number was not entered during registration</string>
+  <string name="patientsummary_addphone_phone_hint">Phone number</string>
+  <string name="patientsummary_addphone_save">Save</string>
+  <string name="patientsummary_addphone_cancel">Cancel</string>
+  <string name="patientsummary_addphone_error_phonenumber_length_less">@string/patiententry_error_phonenumber_length_less</string>
+  <string name="patientsummary_addphone_error_phonenumber_length_more">@string/patiententry_error_phonenumber_length_more</string>
+
   <!-- Lint fails to find usages for these strings. -->
   <!--suppress UnusedResources -->
   <string name="bloodpressure_level_low">Low</string>

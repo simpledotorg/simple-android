@@ -24,6 +24,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.Protocol
 import org.simple.clinic.protocol.ProtocolDrug
+import org.simple.clinic.summary.addphone.MissingPhoneReminder
 import org.simple.clinic.user.LoggedInUserFacilityMapping
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.User
@@ -48,9 +49,10 @@ import org.simple.clinic.util.UuidRoomTypeConverter
       OngoingLoginEntry::class,
       Protocol::class,
       ProtocolDrug::class,
-      BusinessId::class
+      BusinessId::class,
+      MissingPhoneReminder::class
     ],
-    version = 30,
+    version = 31,
     exportSchema = true)
 @TypeConverters(
     Gender.RoomTypeConverter::class,
@@ -113,4 +115,6 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun recentPatientDao(): RecentPatient.RoomDao
 
   abstract fun businessIdDao(): BusinessId.RoomDao
+
+  abstract fun missingPhoneReminderDao(): MissingPhoneReminder.RoomDao
 }

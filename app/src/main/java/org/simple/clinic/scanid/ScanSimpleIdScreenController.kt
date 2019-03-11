@@ -19,6 +19,7 @@ class ScanSimpleIdScreenController @Inject constructor() : ObservableTransformer
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(mergeWithScannedBpPassportCodes())
         .compose(ReportAnalyticsEvents())
+        .compose(mergeWithScannedBpPassportCodes())
         .replay()
 
     return sendScannedBpPassportCodes(replayedEvents)

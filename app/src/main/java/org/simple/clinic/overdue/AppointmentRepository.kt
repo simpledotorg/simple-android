@@ -19,6 +19,7 @@ import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset
 import java.util.UUID
 import javax.inject.Inject
 
@@ -150,6 +151,24 @@ class AppointmentRepository @Inject constructor(
             else -> None
           }
         }
+  }
+
+  fun markAppointmentsCreatedBeforeTodayAsVisited(patientUuid: UUID): Completable {
+    val startOfToday = LocalDate
+        .now(utcClock)
+        .atStartOfDay()
+        .toInstant(ZoneOffset.of(utcClock.zone.id))
+
+    return Completable.fromAction {
+      appointmentDao.markAsVisited(
+          patientUuid = patientUuid,
+          updatedStatus = VISITED,
+          scheduledStatus = SCHEDULED,
+          newSyncStatus = SyncStatus.PENDING,
+          newUpdatedAt = Instant.now(utcClock),
+          createdBefore = startOfToday
+      )
+    }
   }
 
   override fun recordsWithSyncStatus(syncStatus: SyncStatus): Single<List<Appointment>> {

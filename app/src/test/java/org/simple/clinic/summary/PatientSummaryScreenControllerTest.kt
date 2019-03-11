@@ -772,7 +772,7 @@ class PatientSummaryScreenControllerTest {
   fun `when patient's phone was marked as invalid before the phone number was last updated then update phone dialog should not be shown`(
       cancelReason: AppointmentCancelReason
   ) {
-    val canceledAppointment = PatientMocker.appointment(cancelReason = cancelReason)
+    val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(

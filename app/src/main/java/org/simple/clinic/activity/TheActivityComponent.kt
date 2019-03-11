@@ -51,6 +51,7 @@ import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.summary.PatientSummaryScreen
+import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.InstantRxPreferencesConverter
@@ -105,6 +106,7 @@ interface TheActivityComponent {
   fun inject(target: RecentPatientsView)
   fun inject(patientsScreenKey: PatientsScreenKey)
   fun inject(target: SyncIndicatorView)
+  fun inject(target: AddPhoneNumberDialog)
 
   @Subcomponent.Builder
   interface Builder {

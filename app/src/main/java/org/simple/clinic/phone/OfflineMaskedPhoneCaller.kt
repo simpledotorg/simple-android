@@ -1,6 +1,5 @@
 package org.simple.clinic.phone
 
-import android.net.Uri
 import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
@@ -21,7 +20,7 @@ class OfflineMaskedPhoneCaller @Inject constructor(
     return if (config.maskingEnabled) {
       val number = "+1 111 111 1111"
 
-      val stopCharacter = Uri.encode("#")
+      val stopCharacter = "#"
       val dtmfTones = "$numberToMask$stopCharacter"
       "$number,$dtmfTones"
 

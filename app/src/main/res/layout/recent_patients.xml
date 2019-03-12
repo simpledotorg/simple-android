@@ -7,7 +7,8 @@
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recent_patient_recyclerview"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content" />
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_96" />
 
   <TextView
     android:id="@+id/recent_patient_no_recent_patients"

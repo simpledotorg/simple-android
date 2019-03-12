@@ -32,6 +32,7 @@ open class PatientModule {
   open fun providePatientConfig(): Observable<PatientConfig> = Observable.just(PatientConfig(
       limitOfSearchResults = 100,
       scanSimpleCardFeatureEnabled = false,
-      recentPatientLimit = 10
+      recentPatientLimit = 10,
+      showRecentPatients = false
   ))
 }

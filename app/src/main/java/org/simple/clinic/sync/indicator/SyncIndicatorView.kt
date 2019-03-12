@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -61,6 +60,8 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
     val transition = AutoTransition().setInterpolator(FastOutSlowInInterpolator())
     TransitionManager.beginDelayedTransition(this, transition)
 
+    syncIndicatorLayout.isEnabled = true
+
     when (syncState) {
       ConnectToSync -> {
         syncStatusTextView.text = context.getString(R.string.syncindicator_status_failed)
@@ -82,6 +83,7 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
       Syncing -> {
         syncStatusTextView.text = context.getString(R.string.syncindicator_status_syncing)
         syncStatusTextView.setCompoundDrawableStart(R.drawable.ic_round_sync_16px)
+        syncIndicatorLayout.isEnabled = false
       }
     }
   }

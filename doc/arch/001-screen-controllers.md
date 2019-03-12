@@ -71,7 +71,7 @@ class LoginScreenController : ObservableTransformer<UiEvent, UiChange>() {
 }
 ```
 
-![data flow from the Ui to the controller](https://raw.githubusercontent.com/simpledotorg/simple-android/sn/22feb/adr-screen-controllers/doc/arch/images/diagram_screen_controller.png)
+![data flow from the Ui to the controller](https://raw.githubusercontent.com/simpledotorg/simple-android/master/doc/arch/images/diagram_screen_controller.png)
 
 ([diagram source](https://docs.google.com/drawings/d/1I_VdUM8Pf9O3nOYViqVF6kiyqFaYFD2fHmKRyvwmEl4/edit?usp=sharing))
 

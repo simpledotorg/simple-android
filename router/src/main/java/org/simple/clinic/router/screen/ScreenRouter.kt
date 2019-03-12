@@ -4,8 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.os.Parcelable
-import androidx.annotation.CheckResult
 import android.view.View
+import androidx.annotation.CheckResult
 import flow.Flow
 import flow.History
 import flow.KeyChanger
@@ -28,6 +28,8 @@ class ScreenRouter(
   private val backPressInterceptors = ArrayList<BackPressInterceptor>()
 
   private var flowInstalled: Boolean = false
+
+  private val screenResults = ScreenResults()
 
   companion object {
     fun create(activity: Activity, nestedKeyChanger: NestedKeyChanger, resultBus: ScreenResultBus): ScreenRouter {
@@ -78,16 +80,15 @@ class ScreenRouter(
     return BackStackPopCallback(popped)
   }
 
-  fun sendResultAndPop(result: Any) {
-    // TODO: Now that BaseViewGroupKeyChanger inflates a new view before removing
-    // TODO: the older one, this is no longer be required. Remove this after testing.
-    // The name is actually incorrect. It's important to send the result only
-    // after the previous screen is inflated and has registered for results.
-    // But the name is kept in this way to maintain familiarity with how Activity
-    // results are sent -- the result is set before the Activity is finished.
+  fun popWithResult(key: String, result: Any?) {
+    screenResults.put(key, result)
     pop()
+  }
 
-    resultBus.send(result)
+  @Suppress("UNCHECKED_CAST")
+  @CheckResult
+  fun <T> retrieveResult(key: String): T? {
+    return screenResults.consume(key) as T?
   }
 
   @CheckResult

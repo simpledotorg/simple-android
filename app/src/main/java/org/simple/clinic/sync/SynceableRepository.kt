@@ -23,4 +23,6 @@ interface SynceableRepository<T, P> {
   fun mergeWithLocalData(payloads: List<P>): Completable
 
   fun recordCount(): Observable<Int>
+
+  fun pendingSyncRecordCount(): Observable<Int>
 }

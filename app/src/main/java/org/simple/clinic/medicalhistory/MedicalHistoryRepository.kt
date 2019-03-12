@@ -133,7 +133,7 @@ class MedicalHistoryRepository @Inject constructor(
     }
   }
 
-  fun pendingRecordsCount(): Observable<Int> {
+  override fun pendingSyncRecordCount(): Observable<Int> {
     return dao
         .count(SyncStatus.PENDING)
         .toObservable()

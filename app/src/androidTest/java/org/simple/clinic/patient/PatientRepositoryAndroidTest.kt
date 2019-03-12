@@ -1182,7 +1182,7 @@ class PatientRepositoryAndroidTest {
         testData.patientProfile(syncStatus = DONE)
     )).blockingAwait()
 
-    val count = patientRepository.pendingRecordsCount().blockingFirst()
+    val count = patientRepository.pendingSyncRecordCount().blockingFirst()
     assertThat(count).isEqualTo(2)
   }
 

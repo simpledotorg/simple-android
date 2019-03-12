@@ -5,23 +5,19 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.rxkotlin.combineLatest
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.bp.BloodPressureRepository
-import org.simple.clinic.drugs.PrescriptionRepository
-import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.overdue.communication.CommunicationRepository
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.sync.LastSyncedState
-import org.simple.clinic.sync.SyncGroup
+import org.simple.clinic.sync.SyncGroup.FREQUENT
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.sync.SyncProgress.FAILURE
 import org.simple.clinic.sync.SyncProgress.SUCCESS
 import org.simple.clinic.sync.SyncProgress.SYNCING
+import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
@@ -32,6 +28,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = SyncIndicatorView
 typealias UiChange = (Ui) -> Unit
@@ -41,12 +38,7 @@ class SyncIndicatorViewController @Inject constructor(
     private val utcClock: UtcClock,
     private val configProvider: Observable<SyncIndicatorConfig>,
     private val dataSync: DataSync,
-    private val patientRepository: PatientRepository,
-    private val bloodPressureRepository: BloodPressureRepository,
-    private val prescriptionRepository: PrescriptionRepository,
-    private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val appointmentRepository: AppointmentRepository,
-    private val communicationRepository: CommunicationRepository
+    @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: ArrayList<SynceableRepository<*, *>>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -117,7 +109,6 @@ class SyncIndicatorViewController @Inject constructor(
     }
   }
 
-
   private fun startSync(events: Observable<UiEvent>): Observable<UiChange> {
     val errorsStream = {
       dataSync
@@ -132,7 +123,7 @@ class SyncIndicatorViewController @Inject constructor(
 
     val syncStream = {
       dataSync
-          .sync(SyncGroup.FREQUENT)
+          .sync(FREQUENT)
           .toObservable<UiChange>()
     }
 
@@ -148,59 +139,16 @@ class SyncIndicatorViewController @Inject constructor(
   private fun showPendingSyncStatus(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreates = events.ofType<SyncIndicatorViewCreated>()
 
-    val isPatientSyncPending = screenCreates
+    return screenCreates
         .flatMap {
-          patientRepository
-              .pendingRecordsCount()
-              .map { count -> count > 0 }
-        }
+          val recordCounts = frequentlySyncingRepositories
+              .map { it.pendingSyncRecordCount() }
 
-    val isBpSyncPending = screenCreates
-        .flatMap {
-          bloodPressureRepository
-              .pendingRecordsCount()
-              .map { count -> count > 0 }
+          recordCounts
+              .combineLatest { counts -> counts.any { it > 0 } }
+              .filter { isSyncPending -> isSyncPending }
+              .distinctUntilChanged()
+              .map { { ui: Ui -> ui.updateState(SyncPending) } }
         }
-
-    val isPrescriptionSyncPending = screenCreates
-        .flatMap {
-          prescriptionRepository
-              .pendingRecordsCount()
-              .map { count -> count > 0 }
-        }
-
-    val isMedicalHistorySyncPending = screenCreates
-        .flatMap {
-          medicalHistoryRepository
-              .pendingRecordsCount()
-              .map { count -> count > 0 }
-        }
-
-    val isAppointmentSyncPending = screenCreates
-        .flatMap {
-          appointmentRepository
-              .pendingRecordsCount()
-              .map { count -> count > 0 }
-        }
-
-    val isCommunicationSyncPending = screenCreates
-        .flatMap {
-          communicationRepository
-              .pendingRecordsCount()
-              .map { count -> count > 0 }
-        }
-
-    return Observable
-        .mergeArray(
-            isPatientSyncPending,
-            isBpSyncPending,
-            isPrescriptionSyncPending,
-            isAppointmentSyncPending,
-            isMedicalHistorySyncPending,
-            isCommunicationSyncPending
-        )
-        .filter { isSyncPending -> isSyncPending }
-        .distinctUntilChanged()
-        .map { { ui: Ui -> ui.updateState(SyncPending) } }
   }
 }

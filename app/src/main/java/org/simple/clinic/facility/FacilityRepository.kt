@@ -132,4 +132,8 @@ class FacilityRepository @Inject constructor(
   override fun recordCount(): Observable<Int> {
     return facilityDao.count().toObservable()
   }
+
+  override fun pendingSyncRecordCount(): Observable<Int> {
+    return facilityDao.count(SyncStatus.PENDING).toObservable()
+  }
 }

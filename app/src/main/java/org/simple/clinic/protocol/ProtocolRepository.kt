@@ -11,7 +11,6 @@ import org.simple.clinic.protocol.sync.ProtocolPayload
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.sync.SynceableRepository
 import org.simple.clinic.util.UtcClock
-import org.threeten.bp.Clock
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -62,6 +61,10 @@ class ProtocolRepository @Inject constructor(
 
   override fun recordCount(): Observable<Int> {
     return protocolDao.count().toObservable()
+  }
+
+  override fun pendingSyncRecordCount(): Observable<Int> {
+    return protocolDao.count(SyncStatus.PENDING).toObservable()
   }
 
   private fun payloadToProtocolAndDrugs(payload: ProtocolPayload): ProtocolAndProtocolDrugs {

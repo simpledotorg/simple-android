@@ -72,6 +72,7 @@ android {
       versionNameSuffix "-qa"
       buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + qaHeapId + "\""
+      buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + qaMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
@@ -81,6 +82,7 @@ android {
       versionNameSuffix "-demo"
       buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + stagingHeapId + "\""
+      buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + stagingMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
@@ -90,6 +92,7 @@ android {
       versionNameSuffix "-sandbox"
       buildConfigField "String", "API_ENDPOINT", "\"" + sandboxApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + sandboxHeapId + "\""
+      buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + sandboxMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
 
@@ -97,6 +100,7 @@ android {
       dimension 'track'
       buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + productionHeapId + "\""
+      buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + productionMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
   }

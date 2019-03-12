@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
@@ -39,5 +40,8 @@ open class PatientModule {
 
   @Provides
   open fun phoneNumberMaskerConfig(): Single<PhoneNumberMaskerConfig> =
-      Single.just(PhoneNumberMaskerConfig(maskingEnabled = false))
+      Single.just(PhoneNumberMaskerConfig(
+          maskingEnabled = false,
+          phoneNumber = BuildConfig.MASKED_PHONE_NUMBER
+      ))
 }

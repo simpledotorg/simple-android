@@ -31,6 +31,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -56,6 +57,7 @@ class BloodPressureEntrySheetControllerTest {
 
   private val sheet = mock<BloodPressureEntrySheet>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
+  private val appointmentRepository = mock<AppointmentRepository>()
   private val dateValidator = mock<UserInputDateValidator>()
   private val bpValidator = mock<BpValidator>()
 
@@ -74,6 +76,7 @@ class BloodPressureEntrySheetControllerTest {
 
     controller = BloodPressureEntrySheetController(
         bloodPressureRepository = bloodPressureRepository,
+        appointmentRepository = appointmentRepository,
         dateValidator = dateValidator,
         bpValidator = bpValidator,
         userClock = testUserClock,
@@ -386,7 +389,7 @@ class BloodPressureEntrySheetControllerTest {
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
-
+    whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
     whenever(bpValidator.validate(any(), any()))
         .thenReturn(ErrorSystolicEmpty)
         .thenReturn(Success(130, 110))
@@ -419,7 +422,7 @@ class BloodPressureEntrySheetControllerTest {
         systolic = 130,
         diastolic = 110,
         createdAt = entryDateAsInstant)
-
+    verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(sheet).finish()
   }
 
@@ -453,6 +456,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(sheet).finish()
   }
 
@@ -690,6 +694,7 @@ class BloodPressureEntrySheetControllerTest {
 
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(sheet, never()).finish()
   }
 }

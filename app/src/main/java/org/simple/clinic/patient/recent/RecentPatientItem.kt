@@ -9,8 +9,10 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.summary.RelativeTimestamp
 import org.simple.clinic.widgets.visibleOrGone
+import java.util.UUID
 
 data class RecentPatientItem(
+    val uuid: UUID,
     val name: String,
     val age: Int,
     val lastBp: LastBp?,

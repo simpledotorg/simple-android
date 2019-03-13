@@ -2,12 +2,14 @@ package org.simple.clinic.patient.recent
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.recent_patient_item_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.summary.RelativeTimestamp
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 
@@ -17,9 +19,11 @@ data class RecentPatientItem(
     val age: Int,
     val lastBp: LastBp?,
     val gender: Gender
-) : Item<ViewHolder>() {
+) : GroupieItemWithUiEvents<ViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
+
+  override lateinit var uiEvents: Subject<UiEvent>
 
   @SuppressLint("SetTextI18n")
   override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -29,8 +33,11 @@ data class RecentPatientItem(
       val lastBpText = lastBpText(context)
       recentpatient_item_last_bp.text = lastBpText
       recentpatient_item_last_bp_label.visibleOrGone(lastBpText.isNotBlank())
-
       recentpatient_item_gender.setImageResource(gender.displayIconRes)
+
+      setOnClickListener {
+        uiEvents.onNext(RecentPatientItemClicked(patientUuid = uuid))
+      }
     }
   }
 

@@ -21,6 +21,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
@@ -44,6 +45,7 @@ typealias UiChange = (Ui) -> Unit
  */
 class BloodPressureEntrySheetController @Inject constructor(
     private val bloodPressureRepository: BloodPressureRepository,
+    private val appointmentRepository: AppointmentRepository,
     private val dateValidator: UserInputDateValidator,
     private val bpValidator: BpValidator,
     private val userClock: UserClock,
@@ -488,6 +490,11 @@ class BloodPressureEntrySheetController @Inject constructor(
           bloodPressureRepository
               .saveMeasurement(newBp.patientUuid, newBp.systolic, newBp.diastolic, toUtcInstant(newBp.date))
               .map { BloodPressureSaved(wasDateChanged = prefilledDate != newBp.date) }
+              .flatMap { bpSaved ->
+                appointmentRepository
+                    .markAppointmentsCreatedBeforeTodayAsVisited(newBp.patientUuid)
+                    .toSingleDefault(bpSaved)
+              }
         }
 
     val updateExistingBp = saveClicks

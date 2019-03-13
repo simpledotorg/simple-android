@@ -81,20 +81,26 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens then fetch and set recent patients`() {
+    val patientUuid1 = UUID.randomUUID()
+    val patientUuid2 = UUID.randomUUID()
+    val patientUuid3 = UUID.randomUUID()
     whenever(patientRepository.recentPatients(facilityUuid, recentPatientLimit)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
+            uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
             gender = TRANSGENDER,
             lastBp = LastBp(systolic = 127, diastolic = 83, updatedAt = Instant.now())
         ),
         PatientMocker.recentPatient(
+            uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
             gender = MALE,
             lastBp = null
         ),
         PatientMocker.recentPatient(
+            uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = FEMALE,
@@ -106,6 +112,7 @@ class RecentPatientsViewControllerTest {
 
     verify(screen).updateRecentPatients(listOf(
         RecentPatientItem(
+            uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
             lastBp = RecentPatientItem.LastBp(
@@ -116,12 +123,14 @@ class RecentPatientsViewControllerTest {
             gender = TRANSGENDER
         ),
         RecentPatientItem(
+            uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             lastBp = null,
             gender = MALE
         ),
         RecentPatientItem(
+            uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             lastBp = RecentPatientItem.LastBp(

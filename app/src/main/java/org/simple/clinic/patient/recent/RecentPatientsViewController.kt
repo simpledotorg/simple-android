@@ -90,6 +90,7 @@ class RecentPatientsViewController @Inject constructor(
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(
+          uuid = recentPatient.uuid,
           name = recentPatient.fullName,
           age = getAge(recentPatient),
           lastBp = recentPatient.lastBp?.run {

@@ -57,6 +57,7 @@ import javax.inject.Inject
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
 
   companion object {
+    const val REQCODE_BP_ENTRY = 1
     const val REQCODE_SCHEDULE_APPOINTMENT = 2
   }
 
@@ -125,6 +126,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             backClicks(),
             doneClicks(),
             adapterUiEvents,
+            bloodPressureSaves(),
             appointmentScheduledSuccess(),
             appointmentScheduleSheetClosed())
         .observeOn(io())
@@ -165,6 +167,12 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
         .mergeWith(hardwareBackKeyClicks)
         .map { PatientSummaryBackClicked() }
   }
+
+  private fun bloodPressureSaves() = screenRouter.streamScreenResults()
+      .ofType<ActivityResult>()
+      .filter { it.requestCode == REQCODE_BP_ENTRY && it.succeeded() }
+      .filter { BloodPressureEntrySheet.wasBloodPressureSaved(it.data!!) }
+      .map { PatientSummaryBloodPressureSaved }
 
   private fun appointmentScheduleSheetClosed() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
@@ -272,7 +280,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showBloodPressureEntrySheet(patientUuid: UUID) {
     val intent = BloodPressureEntrySheet.intentForNewBp(context, patientUuid)
-    activity.startActivity(intent)
+    activity.startActivityForResult(intent, REQCODE_BP_ENTRY)
   }
 
   fun showBloodPressureUpdateSheet(bloodPressureMeasurementUuid: UUID) {

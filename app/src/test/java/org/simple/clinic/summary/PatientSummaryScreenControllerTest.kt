@@ -832,7 +832,7 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen is opened for a patient without a phone number, then avoid showing update phone dialog`() {
+  fun `when a new patient is missing a phone number, then avoid showing update phone dialog`() {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(None))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
 
@@ -847,19 +847,32 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen is opened from search, patient does not have a phone number and the user has never been reminded, then add phone dialog should be shown`() {
+  fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`() {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(screen).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository).markReminderAsShownFor(patientUuid)
   }
 
   @Test
-  fun `when screen is opened from search, patient does not have a phone number and the user has been reminded before, then add phone dialog should not be shown`() {
+  fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`() {
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
+    whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
+    whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+
+    verify(screen, never()).showAddPhoneDialog(patientUuid)
+    verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
+  }
+
+  @Test
+  fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`() {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(true))
 
@@ -870,7 +883,7 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen is opened from search and patient has a phone number, then add phone dialog should not be shown`() {
+  fun `when an existing patient has a phone number, then add phone dialog should not be shown`() {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
@@ -882,7 +895,7 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen is opened for a new patient and phone number is present, then add phone dialog should not be shown`() {
+  fun `when a new patient has a phone number, then add phone dialog should not be shown`() {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
@@ -894,7 +907,7 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when screen is opened for a new patient and phone number is missing, then add phone dialog should not be shown`() {
+  fun `when a new patient is missing a phone number, then add phone dialog should not be shown`() {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
 

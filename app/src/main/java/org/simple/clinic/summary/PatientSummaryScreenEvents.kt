@@ -40,3 +40,5 @@ data class PatientSummaryBpClicked(val bloodPressureMeasurement: BloodPressureMe
 data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItems) : UiEvent
 
 data class PatientSummaryAllBloodPressuresDeleted(val allBloodPressuresDeleted: Boolean) : UiEvent
+
+object PatientSummaryBloodPressureSaved: UiEvent

@@ -464,7 +464,12 @@ class PatientSummaryScreenController @Inject constructor(
               .map { { ui: Ui -> ui.showUpdatePhoneDialog(patientUuid) } }
         }
 
-    val showForMissingPhone = screenCreations
+    val waitTillABpIsRecorded = events
+        .ofType<PatientSummaryBloodPressureSaved>()
+        .take(1)
+
+    val showForMissingPhone = Observables
+        .combineLatest(screenCreations, waitTillABpIsRecorded) { screenCreated, _ -> screenCreated }
         .filter { it.caller == SEARCH }
         .map { it.patientUuid }
         .switchMap { patientUuid ->

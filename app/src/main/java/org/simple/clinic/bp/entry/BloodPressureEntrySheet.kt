@@ -1,6 +1,7 @@
 package org.simple.clinic.bp.entry
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -65,6 +66,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_OPEN_AS = "openAs"
+    private const val EXTRA_WAS_BP_SAVED = "wasBpSaved"
 
     fun intentForNewBp(context: Context, patientUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
@@ -74,6 +76,10 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     fun intentForUpdateBp(context: Context, bloodPressureMeasurementUuid: UUID): Intent {
       return Intent(context, BloodPressureEntrySheet::class.java)
           .putExtra(KEY_OPEN_AS, OpenAs.Update(bloodPressureMeasurementUuid))
+    }
+
+    fun wasBloodPressureSaved(data: Intent): Boolean {
+      return data.getBooleanExtra(EXTRA_WAS_BP_SAVED, false)
     }
   }
 
@@ -208,6 +214,13 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
 
   fun changeFocusToSystolic() {
     systolicEditText.requestFocus()
+  }
+
+  fun setBpSavedResultAndFinish() {
+    val intent = Intent()
+    intent.putExtra(EXTRA_WAS_BP_SAVED, true)
+    setResult(Activity.RESULT_OK, intent)
+    finish()
   }
 
   fun hideBpErrorMessage() {

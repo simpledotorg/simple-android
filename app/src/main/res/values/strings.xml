@@ -95,7 +95,7 @@
   <!--suppress UnusedResources -->
   <string name="tab_overdue">Overdue</string>
   <!--suppress UnusedResources -->
-  <string name="tab_reports">Reports</string>
+  <string name="tab_progress">Progress</string>
 
   <string name="home_search_patient_name_phone">Enter patient\'s name</string>
   <string name="patients_user_awaiting_approval_title">Waiting for approval</string>

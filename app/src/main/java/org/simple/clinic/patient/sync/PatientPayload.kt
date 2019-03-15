@@ -3,7 +3,7 @@ package org.simple.clinic.patient.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.BusinessId
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress

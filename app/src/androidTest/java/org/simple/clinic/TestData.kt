@@ -19,7 +19,7 @@ import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.BusinessId
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.Patient

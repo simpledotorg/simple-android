@@ -1,4 +1,4 @@
-package org.simple.clinic.patient
+package org.simple.clinic.patient.businessid
 
 import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
@@ -12,6 +12,7 @@ import androidx.room.Query
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.util.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
 import java.util.UUID

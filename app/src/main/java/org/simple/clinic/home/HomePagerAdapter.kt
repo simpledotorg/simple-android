@@ -40,5 +40,5 @@ private enum class HomeTabs(@LayoutRes val key: Int, @StringRes val title: Int) 
 
   OVERDUE(OverdueScreenKey().layoutRes(), R.string.tab_overdue),
 
-  REPORTS(ReportsScreenKey().layoutRes(), R.string.tab_reports)
+  REPORTS(ReportsScreenKey().layoutRes(), R.string.tab_progress)
 }

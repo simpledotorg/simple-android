@@ -89,13 +89,13 @@ data class BusinessId(
       fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
     }
 
-    object BpPassportMetaV1 : MetaVersion()
+    object BpPassportV1 : MetaVersion()
 
     data class Unknown(val actual: String): MetaVersion()
 
     object TypeAdapter: SafeEnumTypeAdapter<MetaVersion>(
         knownMappings = mapOf(
-            BpPassportMetaV1 to "org.simple.bppassport.meta.v1"
+            BpPassportV1 to "org.simple.bppassport.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

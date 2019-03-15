@@ -8,6 +8,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate

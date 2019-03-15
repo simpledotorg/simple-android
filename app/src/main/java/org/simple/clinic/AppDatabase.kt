@@ -11,7 +11,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.communication.Communication
-import org.simple.clinic.patient.BusinessId
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress

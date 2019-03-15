@@ -1,0 +1,24 @@
+plugins {
+    id 'java'
+}
+
+group ' simple-android'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
+    compile group: 'org.testng', name: 'testng', version: '6.14.3'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    //compile group: 'com.aventstack', name: 'extentreports', version: '2.41.2'
+    compile group: 'com.relevantcodes', name: 'extentreports', version: '2.41.2'
+    compile group: 'io.appium', name: 'java-client', version: '7.0.0'
+    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.17.1'
+    compile 'com.google.googlejavaformat:google-java-format:1.6'
+
+}

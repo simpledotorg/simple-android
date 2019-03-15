@@ -47,7 +47,7 @@ data class BusinessId(
   sealed class IdentifierType {
 
     companion object {
-      @VisibleForTesting
+      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
       fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
     }
 
@@ -85,8 +85,11 @@ data class BusinessId(
   sealed class MetaVersion {
 
     companion object {
-      @VisibleForTesting
+      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
       fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
+
+      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+      fun values() = TypeAdapter.knownMappings.keys
     }
 
     object BpPassportV1 : MetaVersion()

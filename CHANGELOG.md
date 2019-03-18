@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3269-18Mar
+- While creating a new account, facilities located nearby are automatically suggested 
+- Scheduling an appointment shows new date options 
+
 ## 2856-25Feb
 - Updated illustration on the patients tab 
 - Improved app performance during first sync of patient data 

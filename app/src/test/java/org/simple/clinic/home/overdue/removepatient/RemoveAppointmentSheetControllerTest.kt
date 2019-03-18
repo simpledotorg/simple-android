@@ -114,4 +114,20 @@ class RemoveAppointmentSheetControllerTest {
         MovedToPrivatePractitioner,
         Other)
   }
+
+  @Test
+  fun `when done is clicked, and a "Patient has already visited" reason is selected, then appointment should be marked as visited`() {
+    whenever(repository.markAsAlreadyVisited(appointmentUuid)).thenReturn(Completable.complete())
+
+    uiEvents.onNext(RemoveAppointmentSheetCreated(appointmentUuid))
+    uiEvents.onNext(PatientAlreadyVisitedClicked)
+    uiEvents.onNext(RemoveReasonDoneClicked)
+
+    verify(repository, never()).cancelWithReason(any(), any())
+
+    val inOrder = inOrder(sheet, repository)
+    inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
+    inOrder.verify(repository).markAsAlreadyVisited(appointmentUuid)
+    inOrder.verify(sheet).closeSheet()
+  }
 }

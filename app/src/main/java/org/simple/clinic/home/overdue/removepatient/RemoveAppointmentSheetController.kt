@@ -31,7 +31,8 @@ class RemoveAppointmentSheetController @Inject constructor(
   private fun reasonClicks(events: Observable<UiEvent>): Observable<UiChange> {
     val mergedReasons = Observable.merge(
         events.ofType<CancelReasonClicked>(),
-        events.ofType<PatientDeadClicked>())
+        events.ofType<PatientDeadClicked>(),
+        events.ofType<PatientAlreadyVisitedClicked>())
 
     return mergedReasons
         .distinctUntilChanged()
@@ -44,8 +45,9 @@ class RemoveAppointmentSheetController @Inject constructor(
 
     val cancelReasonClicks = events.ofType<CancelReasonClicked>()
     val diedReasonClicks = events.ofType<PatientDeadClicked>()
+    val patientAlreadyVisitedClicks = events.ofType<PatientAlreadyVisitedClicked>()
 
-    val mergedReasons = Observable.merge(cancelReasonClicks, diedReasonClicks)
+    val mergedReasons = Observable.merge(cancelReasonClicks, diedReasonClicks, patientAlreadyVisitedClicks)
 
     val doneWithLatestFromReasons = events
         .ofType<RemoveReasonDoneClicked>()
@@ -60,6 +62,13 @@ class RemoveAppointmentSheetController @Inject constructor(
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
+    val markPatientAlreadyVisitedStream = doneWithLatestFromReasons
+        .filter { (_, _, reason) -> reason is PatientAlreadyVisitedClicked }
+        .flatMap { (_, appointmentUuid, _) ->
+          appointmentRepository.markAsAlreadyVisited(appointmentUuid)
+              .andThen(Observable.just(Ui::closeSheet))
+        }
+
     val cancelWithReasonStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is CancelReasonClicked }
         .flatMap { (_, uuid, reason) ->
@@ -68,6 +77,6 @@ class RemoveAppointmentSheetController @Inject constructor(
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
 
-    return Observable.merge(cancelWithReasonStream, markPatientStatusDeadStream)
+    return Observable.merge(cancelWithReasonStream, markPatientStatusDeadStream, markPatientAlreadyVisitedStream)
   }
 }

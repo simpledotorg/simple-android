@@ -28,6 +28,7 @@ import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
@@ -48,20 +49,22 @@ class PatientRepositoryTest {
   val rxErrorsRule = RxErrorsRule()
 
   private lateinit var repository: PatientRepository
-  private lateinit var searchPatientByName: SearchPatientByName
-  private lateinit var database: AppDatabase
-  private lateinit var patientSearchResultDao: PatientSearchResult.RoomDao
-  private lateinit var patientDao: Patient.RoomDao
-  private lateinit var patientAddressDao: PatientAddress.RoomDao
-  private lateinit var patientPhoneNumberDao: PatientPhoneNumber.RoomDao
-  private lateinit var fuzzyPatientSearchDao: PatientFuzzySearch.PatientFuzzySearchDao
-  private lateinit var bloodPressureMeasurementDao: BloodPressureMeasurement.RoomDao
-  private lateinit var businessIdDao: BusinessId.RoomDao
-  private lateinit var dobValidator: UserInputDateValidator
-  private lateinit var userSession: UserSession
-  private lateinit var facilityRepository: FacilityRepository
-  private lateinit var numberValidator: PhoneNumberValidator
   private lateinit var config: PatientConfig
+  private val database = mock<AppDatabase>()
+
+  private val patientSearchResultDao = mock<PatientSearchResult.RoomDao>()
+  private val patientDao = mock<Patient.RoomDao>()
+  private val patientAddressDao = mock<PatientAddress.RoomDao>()
+  private val patientPhoneNumberDao = mock<PatientPhoneNumber.RoomDao>()
+  private val fuzzyPatientSearchDao = mock<PatientFuzzySearch.PatientFuzzySearchDao>()
+  private val bloodPressureMeasurementDao = mock<BloodPressureMeasurement.RoomDao>()
+  private val businessIdDao = mock<BusinessId.RoomDao>()
+  private val dobValidator = mock<UserInputDateValidator>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val numberValidator = mock<PhoneNumberValidator>()
+  private val searchPatientByName = mock<SearchPatientByName>()
+  private val businessIdMetaAdapter = mock<BusinessIdMetaAdapter>()
 
   private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
@@ -69,19 +72,6 @@ class PatientRepositoryTest {
   @Before
   fun setUp() {
     config = PatientConfig(limitOfSearchResults = 100, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10)
-    database = mock()
-    patientSearchResultDao = mock()
-    patientDao = mock()
-    patientAddressDao = mock()
-    patientPhoneNumberDao = mock()
-    fuzzyPatientSearchDao = mock()
-    bloodPressureMeasurementDao = mock()
-    businessIdDao = mock()
-    dobValidator = mock()
-    userSession = mock()
-    facilityRepository = mock()
-    numberValidator = mock()
-    searchPatientByName = mock()
 
     repository = PatientRepository(
         database = database,
@@ -93,7 +83,8 @@ class PatientRepositoryTest {
         dateOfBirthFormat = dateOfBirthFormat,
         searchPatientByName = searchPatientByName,
         configProvider = Observable.fromCallable { config },
-        reportsRepository = mock())
+        reportsRepository = mock(),
+        businessIdMetaAdapter = businessIdMetaAdapter)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

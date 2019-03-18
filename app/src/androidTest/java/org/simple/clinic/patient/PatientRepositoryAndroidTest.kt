@@ -24,6 +24,8 @@ import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.BusinessIdMeta
+import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
@@ -78,6 +80,9 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var configProvider: Observable<PatientConfig>
+
+  @Inject
+  lateinit var businessIdMetaAdapter: BusinessIdMetaAdapter
 
   private val authenticationRule = AuthenticationRule()
 
@@ -1187,4 +1192,32 @@ class PatientRepositoryAndroidTest {
     assertThat(count).isEqualTo(2)
   }
 
+  @Test
+  fun saving_a_bp_passport_for_a_patient_must_work_as_expected() {
+    val currentUserUuid = testData.qaUserUuid()
+    val currentUserFacilityUuid = testData.qaUserFacilityUuid()
+
+    val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val bpPassportCode = UUID.randomUUID()
+    val now = Instant.now(clock)
+
+    val savedBusinessId = patientRepository
+        .addBpPassportIdToPatient(patientUuid = patientProfile.patient.uuid, bpPassportCode = bpPassportCode)
+        .blockingGet()
+
+    assertThat(savedBusinessId.uuid).isNotEqualTo(bpPassportCode)
+    assertThat(savedBusinessId.patientUuid).isEqualTo(patientProfile.patient.uuid)
+    assertThat(savedBusinessId.identifier).isEqualTo(bpPassportCode.toString())
+    assertThat(savedBusinessId.identifierType).isEqualTo(BusinessId.IdentifierType.BpPassport)
+    assertThat(savedBusinessId.metaVersion).isEqualTo(BusinessId.MetaVersion.BpPassportV1)
+    assertThat(savedBusinessId.createdAt).isEqualTo(now)
+    assertThat(savedBusinessId.updatedAt).isEqualTo(now)
+    assertThat(savedBusinessId.deletedAt).isNull()
+
+    val savedMeta = businessIdMetaAdapter.deserialize(savedBusinessId.meta, BusinessId.MetaVersion.BpPassportV1)
+    val expectedSavedMeta = BusinessIdMeta.BpPassportV1(assigningUserUuid = currentUserUuid, assigningFacilityUuid = currentUserFacilityUuid)
+    assertThat(savedMeta).isEqualTo(expectedSavedMeta)
+  }
 }

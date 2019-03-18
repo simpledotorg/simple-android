@@ -11,6 +11,7 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
@@ -45,6 +46,7 @@ class PatientRepository @Inject constructor(
     private val searchPatientByName: SearchPatientByName,
     private val configProvider: Observable<PatientConfig>,
     private val reportsRepository: ReportsRepository,
+    private val businessIdMetaAdapter: BusinessIdMetaAdapter,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 

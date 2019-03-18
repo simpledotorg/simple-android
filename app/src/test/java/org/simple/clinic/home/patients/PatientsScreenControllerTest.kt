@@ -3,6 +3,7 @@ package org.simple.clinic.home.patients
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.atLeastOnce
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -31,6 +32,9 @@ import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
+import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
@@ -65,6 +69,8 @@ class PatientsScreenControllerTest {
   private lateinit var controller: PatientsScreenController
   private val configEmitter = PublishSubject.create<PatientConfig>()
 
+  private val canSyncStream = PublishSubject.create<Boolean>()
+
   @Before
   fun setUp() {
     // This is needed because we manually subscribe to the refresh user status
@@ -82,6 +88,8 @@ class PatientsScreenControllerTest {
         configProvider = configEmitter
     )
 
+    whenever(userSession.canSyncData()).thenReturn(canSyncStream)
+
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
@@ -98,7 +106,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when screen is created and the user is awaiting approval then the approval status should be checked`() {
-    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
@@ -142,7 +150,7 @@ class PatientsScreenControllerTest {
       loggedInStatus: LoggedInStatus,
       shouldShowApprovalStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL, loggedInStatus = loggedInStatus)
+    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
@@ -161,7 +169,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user has been disapproved then the approval status shouldn't be shown`() {
-    val user = PatientMocker.loggedInUser(status = UserStatus.DISAPPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = DISAPPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
@@ -185,7 +193,7 @@ class PatientsScreenControllerTest {
       hasUserDismissedStatus: Boolean,
       shouldShowApprovedStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = loggedInStatus)
+    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
@@ -206,7 +214,7 @@ class PatientsScreenControllerTest {
   fun `when the user was approved earlier than 24h then the approval status should not be shown`(
       hasUserDismissedStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
@@ -221,7 +229,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when checking the user's status fails with any error then the error should be silently swallowed`() {
-    val user = PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
+    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL)
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
@@ -237,7 +245,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user dismisses the approved status then the status should be hidden`() {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
@@ -256,7 +264,7 @@ class PatientsScreenControllerTest {
       canUserSyncData: Boolean
   ) {
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL).toOptional()))
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL).toOptional()))
 
     whenever(userSession.canSyncData()).thenReturn(Observable.just(canUserSyncData))
 
@@ -361,7 +369,7 @@ class PatientsScreenControllerTest {
       nextLoggedInStatus: LoggedInStatus,
       shouldHideUserAccountStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Just(user),
@@ -386,7 +394,7 @@ class PatientsScreenControllerTest {
   @Test
   @Parameters(method = "params for testing summary result")
   fun `when patient summary sends result, appropriate notification should be shown`(result: PatientSummaryResult, patientUuid: UUID) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
@@ -472,5 +480,25 @@ class PatientsScreenControllerTest {
         listOf(RuntimePermissionResult.GRANTED, true),
         listOf(RuntimePermissionResult.DENIED, false),
         listOf(RuntimePermissionResult.NEVER_ASK_AGAIN, false))
+  }
+
+  @Test
+  fun `sync indicator should be visible only when user is approved for syncing`() {
+    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL).toOptional()
+    whenever(userSession.loggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
+    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
+
+    uiEvents.onNext(ScreenCreated())
+
+    canSyncStream.onNext(false)
+    canSyncStream.onNext(true)
+    canSyncStream.onNext(true)
+
+    val inOrder = inOrder(screen)
+    inOrder.verify(screen).hideSyncIndicator()
+    inOrder.verify(screen).showSyncIndicator()
   }
 }

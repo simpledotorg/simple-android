@@ -23,6 +23,13 @@
     android:paddingStart="@dimen/spacing_24">
 
     <RadioButton
+      android:id="@+id/removeappointment_reason_patient_already_visited"
+      style="@style/Clinic.V2.AppointmentRemovalReason"
+      android:text="@string/removeappointment_patient_already_visited" />
+
+    <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+    <RadioButton
       android:id="@+id/removeappointment_reason_patient_not_responding"
       style="@style/Clinic.V2.AppointmentRemovalReason"
       android:text="@string/removeappointment_patient_is_not_responding" />

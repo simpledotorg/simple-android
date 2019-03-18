@@ -41,6 +41,7 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: RemoveAppointmentSheetController
 
+  private val patientAlreadyVisitedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_already_visited)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
   private val invalidPhoneNumberRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_invalid_phone_number)
   private val publicHospitalTransferRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_public_hospital_transfer)
@@ -58,7 +59,13 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_remove_appointment)
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(sheetCreates(), cancelReasonClicks(), doneClicks(), patientDiedClicks())
+    Observable.mergeArray(
+        sheetCreates(),
+        cancelReasonClicks(),
+        doneClicks(),
+        patientDiedClicks(),
+        patientAlreadyVisitedClicks()
+    )
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -85,6 +92,11 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
       RxView
           .clicks(diedRadioButton)
           .map { PatientDeadClicked(patientUuid = intent.extras!!.getSerializable(KEY_PATIENT_UUID) as UUID) }
+
+  private fun patientAlreadyVisitedClicks() =
+      RxView
+          .clicks(patientAlreadyVisitedRadioButton)
+          .map { PatientAlreadyVisitedClicked }
 
   private fun cancelReasonClicks(): Observable<UiEvent> {
     val buttonToCancelReasons = mapOf(

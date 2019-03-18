@@ -284,6 +284,7 @@
 
   <!-- Remove Overdue Patients -->
   <string name="removeappointment_select_a_reason">Select a Reason</string>
+  <string name="removeappointment_patient_already_visited">Patient has already visited</string>
   <string name="removeappointment_patient_is_not_responding">Patient is not responding</string>
   <string name="removeappointment_invalid_phone_number">Phone number does not work</string>
   <string name="removeappointment_public_hospital_transfer">Transferred to another public health facility</string>

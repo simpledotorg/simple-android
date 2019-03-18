@@ -12,6 +12,7 @@ import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.PercentageFuzzer
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.UtcClock
+import org.threeten.bp.Period
 
 @Module
 open class PatientModule {
@@ -35,7 +36,8 @@ open class PatientModule {
   open fun providePatientConfig(): Observable<PatientConfig> = Observable.just(PatientConfig(
       limitOfSearchResults = 100,
       scanSimpleCardFeatureEnabled = false,
-      recentPatientLimit = 10
+      recentPatientLimit = 10,
+      dueDaysToDefaulterPatient = Period.ofDays(30)
   ))
 
   @Provides

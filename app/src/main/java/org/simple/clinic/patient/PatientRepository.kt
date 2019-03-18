@@ -447,4 +447,17 @@ class PatientRepository @Inject constructor(
         .patientCount(PENDING)
         .toObservable()
   }
+
+  fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
+    return configProvider
+        .map { it.dueDaysToDefaulterPatient }
+        .switchMap {
+          database
+              .patientDao()
+              .isPatientDefaulter(
+                  patientUuid = patientUuid,
+                  lastRecordedBpThreshold = LocalDate.now(utcClock).minusDays(it.days.toLong())
+              ).toObservable()
+        }
+  }
 }

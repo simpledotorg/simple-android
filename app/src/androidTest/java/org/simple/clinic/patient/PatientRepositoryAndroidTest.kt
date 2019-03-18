@@ -18,6 +18,9 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.CommunicationRepository
@@ -25,6 +28,7 @@ import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -34,6 +38,7 @@ import org.simple.clinic.util.unwrapJust
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
 
@@ -1186,4 +1191,176 @@ class PatientRepositoryAndroidTest {
     assertThat(count).isEqualTo(2)
   }
 
+  @Test
+  fun if_patient_is_defaulter_then_isPatientDefaulter_should_return_true() {
+
+    val defaulterPatients = arrayListOf<String>()
+
+    fun savePatientRecord(
+        fullName: String,
+        bpMeasurement: List<BloodPressureMeasurement>?,
+        hasHadHeartAttack: MedicalHistory.Answer = NO,
+        hasHadStroke: MedicalHistory.Answer = NO,
+        hasDiabetes: MedicalHistory.Answer = NO,
+        hasHadKidneyDisease: MedicalHistory.Answer = NO,
+        protocolDrug: ProtocolDrug?,
+        appointmentDate: LocalDate?
+    ) {
+      val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName))
+          .andThen(patientRepository.saveOngoingEntryAsPatient())
+          .blockingGet()
+          .uuid
+
+      bpMeasurement?.forEach {
+        bloodPressureRepository.saveMeasurement(patientUuid, it.systolic, it.diastolic, it.createdAt).blockingGet()
+      }
+      medicalHistoryRepository.save(listOf(testData.medicalHistory(
+          patientUuid = patientUuid,
+          hasDiabetes = hasDiabetes,
+          hasHadHeartAttack = hasHadHeartAttack,
+          hasHadKidneyDisease = hasHadKidneyDisease,
+          hasHadStroke = hasHadStroke))).blockingAwait()
+
+      protocolDrug?.let {
+        prescriptionRepository.savePrescription(patientUuid = patientUuid, drug = it).blockingAwait()
+      }
+
+      appointmentDate?.let {
+        appointmentRepository.schedule(patientUuid = patientUuid, appointmentDate = it).blockingGet()
+      }
+
+      val isDefaulter = patientRepository.isPatientDefaulter(patientUuid).blockingFirst()
+      if (isDefaulter) {
+        defaulterPatients.add(fullName)
+      }
+    }
+
+    savePatientRecord(
+        fullName = "Systolic > 140, BP recorded > 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 170,
+            diastolic = 80,
+            createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)
+        )),
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Systolic > 140, last BP recorded < 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 170,
+            diastolic = 80,
+            createdAt = Instant.now(testClock).minus(20, ChronoUnit.DAYS)
+        )),
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Has Diabetes, last BP recorded > 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 120,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+        )),
+        hasDiabetes = YES,
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Has had stroke, last BP recorded > 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 120,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+        )),
+        hasHadStroke = YES,
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Has kidney disease, last BP recorded > 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 120,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+        )),
+        hasHadKidneyDisease = YES,
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Had heart attack, last BP recorded > 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 120,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+        )),
+        hasHadHeartAttack = YES,
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Drugs prescribed, last BP recorded > 30 days ago",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 120,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+        )),
+        protocolDrug = testData.protocolDrug(),
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Appointment already scheduled",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 180,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)
+        )),
+        protocolDrug = null,
+        appointmentDate = LocalDate.now(testClock).plusDays(10))
+
+    savePatientRecord(
+        fullName = "No BP recorded, Has had heart attack",
+        bpMeasurement = null,
+        hasHadHeartAttack = YES,
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "BP deleted, Has had heart attack",
+        bpMeasurement = listOf(testData.bloodPressureMeasurement(
+            systolic = 180,
+            diastolic = 70,
+            createdAt = Instant.now(testClock).minus(11, ChronoUnit.DAYS),
+            deletedAt = Instant.now(testClock)
+        )),
+        hasHadHeartAttack = YES,
+        protocolDrug = null,
+        appointmentDate = null)
+
+    savePatientRecord(
+        fullName = "Multiple BPs, last recorded BP < 30 days ago",
+        bpMeasurement = listOf(
+            testData.bloodPressureMeasurement(
+                systolic = 180,
+                diastolic = 70,
+                createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
+            testData.bloodPressureMeasurement(
+                systolic = 180,
+                diastolic = 70,
+                createdAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
+            )),
+        protocolDrug = null,
+        appointmentDate = null)
+
+    assertThat(defaulterPatients).containsExactlyElementsIn(arrayListOf(
+        "Systolic > 140, BP recorded > 30 days ago",
+        "Has Diabetes, last BP recorded > 30 days ago",
+        "Has had stroke, last BP recorded > 30 days ago",
+        "Has kidney disease, last BP recorded > 30 days ago",
+        "Had heart attack, last BP recorded > 30 days ago",
+        "Drugs prescribed, last BP recorded > 30 days ago",
+        "No BP recorded, Has had heart attack")
+    )
+  }
 }

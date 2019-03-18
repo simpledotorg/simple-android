@@ -8,6 +8,8 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.storage.DaoWithUpsert
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -96,7 +98,7 @@ data class Patient(
     abstract fun patientCount(): Flowable<Int>
 
     @Query("SELECT COUNT(uuid) FROM Patient WHERE syncStatus = :syncStatus")
-    abstract fun patientCount(syncStatus: SyncStatus) : Flowable<Int>
+    abstract fun patientCount(syncStatus: SyncStatus): Flowable<Int>
 
     @Query("DELETE FROM patient")
     abstract fun clear()
@@ -191,5 +193,36 @@ data class Patient(
         @Embedded(prefix = "businessid_")
         val businessId: BusinessId?
     )
+
+    @Query("""
+    SELECT (
+            CASE
+              WHEN
+              (BP.systolic > 140 OR BP.diastolic > 90
+              OR MH.hasHadHeartAttack = :yesAnswer
+              OR MH.hasHadStroke = :yesAnswer
+              OR MH.hasDiabetes = :yesAnswer
+              OR MH.hasHadKidneyDisease = :yesAnswer
+              OR PD.uuid IS NOT NULL)
+              AND A.uuid IS NULL
+              AND (BP.createdAt < :lastRecordedBpThreshold OR BP.createdAt IS NULL)
+              THEN 1
+              ELSE 0
+            END
+          ) AS isPatientDefaulter
+          FROM Patient P
+          LEFT JOIN (SELECT * FROM BloodPressureMeasurement BP WHERE BP.deletedAt IS NULL AND BP.patientUuid = :patientUuid ORDER BY BP.createdAt DESC LIMIT 1) BP
+          LEFT JOIN (SELECT * FROM MedicalHistory MH WHERE MH.deletedAt IS NULL AND MH.patientUuid = :patientUuid ORDER BY MH.updatedAt DESC LIMIT 1) MH
+          LEFT JOIN (SELECT * FROM PrescribedDrug PD WHERE PD.deletedAt IS NULL AND PD.patientUuid = :patientUuid ORDER BY PD.updatedAt DESC LIMIT 1) PD
+          LEFT JOIN Appointment A ON(A.patientUuid = P.uuid AND A.deletedAt IS NULL AND A.status = :scheduled)
+          WHERE P.uuid = :patientUuid AND P.deletedAt IS NULL
+
+  """)
+    abstract fun isPatientDefaulter(
+        patientUuid: UUID,
+        yesAnswer: MedicalHistory.Answer = MedicalHistory.Answer.YES,
+        scheduled: Appointment.Status = Appointment.Status.SCHEDULED,
+        lastRecordedBpThreshold: LocalDate
+    ): Flowable<Boolean>
   }
 }

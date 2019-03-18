@@ -41,6 +41,7 @@ import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
@@ -86,7 +87,7 @@ class PatientsScreenControllerTest {
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
 
-    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10))
+    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10, dueDaysToDefaulterPatient = Period.ofDays(30)))
   }
 
   @Test
@@ -436,7 +437,7 @@ class PatientsScreenControllerTest {
   @Test
   @Parameters(value = ["true", "false"])
   fun `the scan card button must be toggled based on the scan simple card feature flag`(scanCardFeatureEnabled: Boolean) {
-    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled, recentPatientLimit = 10))
+    configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled, recentPatientLimit = 10, dueDaysToDefaulterPatient = Period.ofDays(30)))
     whenever(userSession.loggedInUser()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.never())
     whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)

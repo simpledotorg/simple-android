@@ -11,6 +11,9 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
+import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.BusinessId.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.BusinessIdMeta
 import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.recent.RecentPatient
@@ -448,5 +451,46 @@ class PatientRepository @Inject constructor(
     return database.patientDao()
         .patientCount(PENDING)
         .toObservable()
+  }
+
+  fun addBpPassportIdToPatient(patientUuid: UUID, bpPassportCode: UUID): Single<BusinessId> {
+    val currentUserStream = userSession
+        .requireLoggedInUser()
+        .take(1)
+        .replay()
+        .refCount()
+
+    val currentFacilityStream = currentUserStream
+        .flatMap(facilityRepository::currentFacility)
+        .take(1)
+
+    val businessIdMetaAndVersionStream: Observable<Pair<String, BusinessId.MetaVersion>> =
+        Observables
+            .combineLatest(currentUserStream, currentFacilityStream)
+            .map { (user, facility) -> BusinessIdMeta.BpPassportV1(assigningUserUuid = user.uuid, assigningFacilityUuid = facility.uuid) }
+            .map { businessIdMetaAdapter.serialize(it, BusinessId.MetaVersion.BpPassportV1) to BusinessId.MetaVersion.BpPassportV1 }
+
+    val businessIdStream = businessIdMetaAndVersionStream
+        .map { (meta, metaVersion) ->
+          val now = Instant.now(utcClock)
+          BusinessId(
+              uuid = UUID.randomUUID(),
+              patientUuid = patientUuid,
+              identifier = bpPassportCode.toString(),
+              identifierType = BpPassport,
+              metaVersion = metaVersion,
+              meta = meta,
+              createdAt = now,
+              updatedAt = now,
+              deletedAt = null
+          )
+        }
+        .firstOrError()
+
+    return businessIdStream
+        .flatMap { businessId ->
+          Completable.fromAction { database.businessIdDao().save(listOf(businessId)) }
+              .toSingleDefault(businessId)
+        }
   }
 }

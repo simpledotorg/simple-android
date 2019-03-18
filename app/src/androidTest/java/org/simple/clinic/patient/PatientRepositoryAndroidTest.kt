@@ -30,6 +30,8 @@ import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UtcClock
@@ -1219,5 +1221,135 @@ class PatientRepositoryAndroidTest {
     val savedMeta = businessIdMetaAdapter.deserialize(savedBusinessId.meta, BusinessId.MetaVersion.BpPassportV1)
     val expectedSavedMeta = BusinessIdMeta.BpPassportV1(assigningUserUuid = currentUserUuid, assigningFacilityUuid = currentUserFacilityUuid)
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
+  }
+
+  @Test
+  fun finding_a_patient_by_a_business_id_must_work_as_expected() {
+    val patientProfileTemplate = testData.patientProfile(syncStatus = DONE, generateBusinessId = false, generatePhoneNumber = false)
+
+    val uniqueBusinessIdentifier = "unique_business_id"
+    val sharedBusinessIdentifier = "shared_business_id"
+    val deletedBusinessIdentifier = "deleted_business_id"
+
+    val identifierType = BusinessId.IdentifierType.Unknown("test_identifier")
+    val metaVersion = BusinessId.MetaVersion.Unknown("test_version")
+    val now = Instant.now(clock)
+
+    val patientWithUniqueBusinessId = patientProfileTemplate.let { patientProfile ->
+      val addressUuid = UUID.randomUUID()
+      val patientUuid = UUID.randomUUID()
+
+      val patient = patientProfile.patient.copy(
+          uuid = patientUuid,
+          fullName = "Patient with unique business ID",
+          addressUuid = addressUuid
+      )
+      val address = patientProfile.address.copy(uuid = addressUuid)
+      val businessId = BusinessId(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientUuid,
+          identifierType = identifierType,
+          identifier = uniqueBusinessIdentifier,
+          metaVersion = metaVersion,
+          meta = "",
+          createdAt = now,
+          updatedAt = now,
+          deletedAt = null
+      )
+
+      patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))
+    }
+
+    val (patientOneWithSharedBusinessId, patientTwoWithSharedBusinessId) = patientProfileTemplate.let { patientProfile ->
+      val patientUuidOne = UUID.randomUUID()
+      val addressUuidOne = UUID.randomUUID()
+      val patientOne = patientProfile.patient.copy(
+          uuid = patientUuidOne,
+          fullName = "Patient one with shared business ID",
+          addressUuid = addressUuidOne,
+          createdAt = now.minusSeconds(1),
+          updatedAt = now.minusSeconds(1)
+      )
+      val addressOne = patientProfile.address.copy(uuid = addressUuidOne)
+      val businessIdOne = BusinessId(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientUuidOne,
+          identifierType = identifierType,
+          identifier = sharedBusinessIdentifier,
+          metaVersion = metaVersion,
+          meta = "",
+          createdAt = now,
+          updatedAt = now,
+          deletedAt = null
+      )
+      val patientProfileOne = patientProfile.copy(patient = patientOne, address = addressOne, businessIds = listOf(businessIdOne))
+
+      val patientUuidTwo = UUID.randomUUID()
+      val addressUuidTwo = UUID.randomUUID()
+      val patientTwo = patientProfile.patient.copy(
+          fullName = "Patient two with shared business ID",
+          uuid = patientUuidTwo,
+          addressUuid = addressUuidTwo,
+          createdAt = now.plusSeconds(1),
+          updatedAt = now.plusSeconds(1)
+      )
+      val addressTwo = patientProfile.address.copy(uuid = addressUuidTwo)
+      val businessIdTwo = BusinessId(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientUuidTwo,
+          identifierType = identifierType,
+          identifier = sharedBusinessIdentifier,
+          metaVersion = metaVersion,
+          meta = "",
+          createdAt = now.minusSeconds(1),
+          updatedAt = now.minusSeconds(1),
+          deletedAt = null
+      )
+      val patientProfileTwo = patientProfile.copy(patient = patientTwo, address = addressTwo, businessIds = listOf(businessIdTwo))
+
+      patientProfileOne to patientProfileTwo
+    }
+
+    val patientWithDeletedBusinessId = patientProfileTemplate.let { patientProfile ->
+      val patientUuid = UUID.randomUUID()
+      val addressUuid = UUID.randomUUID()
+
+      val patient = patientProfile.patient.copy(
+          uuid = patientUuid,
+          fullName = "Patient with deleted business ID",
+          addressUuid = addressUuid
+      )
+      val address = patientProfile.address.copy(uuid = addressUuid)
+      val businessId = BusinessId(
+          uuid = UUID.randomUUID(),
+          patientUuid = patientUuid,
+          identifierType = identifierType,
+          identifier = deletedBusinessIdentifier,
+          metaVersion = metaVersion,
+          meta = "",
+          createdAt = now,
+          updatedAt = now,
+          deletedAt = now
+      )
+
+      patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))
+    }
+
+
+    patientRepository.save(listOf(
+        patientWithUniqueBusinessId,
+        patientOneWithSharedBusinessId,
+        patientTwoWithSharedBusinessId,
+        patientWithDeletedBusinessId)
+    ).blockingAwait()
+
+    val (patientResultOne) = patientRepository.findPatientWithBusinessId(identifier = uniqueBusinessIdentifier).blockingFirst() as Just<Patient>
+    assertThat(patientResultOne).isEqualTo(patientWithUniqueBusinessId.patient)
+
+    val (patientResultTwo) = patientRepository.findPatientWithBusinessId(identifier = sharedBusinessIdentifier).blockingFirst() as Just<Patient>
+    assertThat(patientResultTwo).isEqualTo(patientTwoWithSharedBusinessId.patient)
+
+    assertThat(patientRepository.findPatientWithBusinessId(deletedBusinessIdentifier).blockingFirst()).isEqualTo(None)
+    assertThat(patientRepository.findPatientWithBusinessId("missing_identifier").blockingFirst()).isEqualTo(None)
   }
 }

@@ -26,6 +26,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -491,6 +492,20 @@ class PatientRepository @Inject constructor(
         .flatMap { businessId ->
           Completable.fromAction { database.businessIdDao().save(listOf(businessId)) }
               .toSingleDefault(businessId)
+        }
+  }
+
+  fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {
+    return database
+        .patientDao()
+        .findPatientsWithBusinessId(identifier)
+        .toObservable()
+        .map { patients ->
+          if (patients.isEmpty()) {
+            None
+          } else {
+            patients.first().toOptional()
+          }
         }
   }
 }

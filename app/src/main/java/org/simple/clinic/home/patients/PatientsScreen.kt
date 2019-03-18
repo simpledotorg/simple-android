@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.RelativeLayout
@@ -26,6 +27,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.ScanSimpleIdScreenResult
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -64,6 +66,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val nameInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_name)
   private val dateInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_date)
   private val scanSimpleCardButton by bindView<Button>(R.id.patients_scan_simple_card)
+  private val syncIndicatorView by bindView<SyncIndicatorView>(R.id.patients_sync_indicator)
 
   @IdRes
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
@@ -217,10 +220,10 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun hideSyncIndicator() {
-    //TODO handle visibility
+    syncIndicatorView.visibility = View.GONE
   }
 
   fun showSyncIndicator() {
-    //TODO handle visibility
+    syncIndicatorView.visibility = View.VISIBLE
   }
 }

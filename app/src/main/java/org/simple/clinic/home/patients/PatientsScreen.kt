@@ -215,4 +215,12 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   fun requestCameraPermissions() {
     RuntimePermissions.request(activity, CAMERA_PERMISSION, REQUESTCODE_CAMERA_PERMISSION)
   }
+
+  fun hideSyncIndicator() {
+    //TODO handle visibility
+  }
+
+  fun showSyncIndicator() {
+    //TODO handle visibility
+  }
 }

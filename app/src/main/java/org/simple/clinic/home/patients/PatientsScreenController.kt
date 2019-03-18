@@ -65,7 +65,9 @@ class PatientsScreenController @Inject constructor(
         showSummarySavedNotification(replayedEvents),
         toggleVisibilityOfScanCardButton(replayedEvents),
         requestCameraPermissions(replayedEvents),
-        openScanSimpleIdScreen(replayedEvents))
+        openScanSimpleIdScreen(replayedEvents),
+        toggleVisibilityOfSyncIndicator(replayedEvents)
+    )
   }
 
   private fun enterCodeManuallyClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -225,5 +227,25 @@ class PatientsScreenController @Inject constructor(
         .ofType<PatientsScreenCameraPermissionChanged>()
         .filter { it.permissionResult == RuntimePermissionResult.GRANTED }
         .map { Ui::openScanSimpleIdCardScreen }
+  }
+
+  private fun toggleVisibilityOfSyncIndicator(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreated = events.ofType<ScreenCreated>()
+
+    val canUserSync =
+        userSession
+            .canSyncData()
+            .distinctUntilChanged()
+
+    return Observables
+        .combineLatest(screenCreated, canUserSync)
+        .map { (_, canSync) ->
+          { ui: Ui ->
+            when {
+              canSync -> ui.showSyncIndicator()
+              else -> ui.hideSyncIndicator()
+            }
+          }
+        }
   }
 }

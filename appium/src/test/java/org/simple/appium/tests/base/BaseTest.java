@@ -1,6 +1,6 @@
 package org.simple.appium.tests.base;
 
-import static org.simple.appium.AppiumServerUtils.Startserver;
+import static org.simple.appium.AppiumServerUtils.startServer;
 import static org.simple.appium.AppiumServerUtils.stopServer;
 
 import org.simple.appium.tests.builder.AndroidDriverBuilder;
@@ -18,7 +18,8 @@ public class BaseTest {
 
   @BeforeTest(description = "Start appium server")
   public void start() {
-    Startserver();
+
+    startServer();
   }
 
   @AfterTest(description = "Stop Appium server")
@@ -27,9 +28,7 @@ public class BaseTest {
   }
 
   @BeforeMethod(description = "Build the Appium driver")
-  public void buildDriver() throws IOException, InterruptedException {
-//        AdbCommand adbCommand=new AdbCommand();
-//        adbCommand.turnOffWifi();
+  public void buildDriver() throws IOException {
     appiumDriver = AndroidDriverBuilder.buildDriver();
 
   }

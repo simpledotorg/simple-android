@@ -5,7 +5,7 @@ import io.appium.java_client.service.local.AppiumDriverLocalService;
 public class AppiumServerUtils {
   public static AppiumDriverLocalService server;
 
-  public static void Startserver() {
+  public static void startServer() {
     server = AppiumDriverLocalService.buildDefaultService();
     server.start();
   }

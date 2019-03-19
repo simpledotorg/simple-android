@@ -16,11 +16,10 @@ tasks.withType(Checkstyle) {
   reports {
     xml.enabled false
     html.enabled true
-    html.stylesheet resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
 
     configFile file("${project.rootDir}/quality/checkstyle/config.xml")
     configProperties = [
-        'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
+        'checkstyle.cache.file'     : rootProject.file('build/checkstyle.cache'),
         'checkstyleSuppressionsPath': file("${project.rootDir}/quality/checkstyle/suppressions.xml").absolutePath
     ]
     source 'src'

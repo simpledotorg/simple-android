@@ -41,7 +41,6 @@ public class OnboardingPage extends BasePage {
   @FindBy(xpath = "//android.widget.TextView[text='Your phone number']")
   private WebElement phoneCellText;
 
-
   public OnboardingPage(AppiumDriver appiumDriver) {
     super(appiumDriver);
   }

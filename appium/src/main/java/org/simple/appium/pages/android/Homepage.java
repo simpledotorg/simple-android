@@ -135,6 +135,30 @@ public class Homepage extends BasePage {
   @FindBy(id = "patientsummary_item_newbp")
   private WebElement patientAddNewBloodPressureButton;
 
+  @CacheLookup
+  @FindBy(id = "scheduleappointment_increment_date")
+  private WebElement scheduleappointmentIncrementDate;
+
+  @CacheLookup
+  @FindBy(id = "scheduleappointment_decrement_date")
+  private WebElement scheduleappointmentDecrementDate;
+
+  @CacheLookup
+  @FindBy(id = "patients_enter_code")
+  private WebElement otpVerificationAfterLogin;
+
+  @CacheLookup
+  @FindBy(id = "enterotp_otp")
+  private WebElement enterOtp;
+
+  @CacheLookup
+  @FindBy(id = "button1")
+  private WebElement otpGotUpPopUp;
+
+  public void setComplateRagistrationDetail(WebElement complateRagistrationDetail) {
+
+  }
+
   public Homepage(AppiumDriver appiumDriver) {
     super(appiumDriver);
   }
@@ -156,7 +180,6 @@ public class Homepage extends BasePage {
   }
 
   public void patientPersonalInformation(String patientName, String phone, String age, String address, String gendar) {
-
     clickOnsearchPatientBtn();
     addNewPatient(patientName);
     clickOnNextBtn();
@@ -176,11 +199,9 @@ public class Homepage extends BasePage {
     return waitForElement(patientNotPresent);
   }
 
-
   public void clickOnNextButtonOnpatientMedicalHistoryInfoPage() {
     clickOnElement(patientMedicalHistoryNextBtn);
   }
-
 
   public void patientHavediagnosedwithhypertension(boolean diagnosedwithhypertension) {
     if (diagnosedwithhypertension && patientMedicalHistory.get(0).getText().replaceAll(" ", "").equalsIgnoreCase("diagnosedwithhypertension")) {
@@ -192,14 +213,12 @@ public class Homepage extends BasePage {
     }
   }
 
-
   public void patientHaveAlreadyTakesHyperTensionDrugs(boolean alreadytakeshypertensiondrugs) {
     if (alreadytakeshypertensiondrugs && patientMedicalHistory.get(1).getText().replaceAll(" ", "").equalsIgnoreCase("alreadytakeshypertensiondrugs")) {
       clickOnElement(patientHaveDiseases.get(1));
 
     } else {
       clickOnElement(patientIsNotHaveDiseases.get(1));
-
     }
   }
 
@@ -243,9 +262,8 @@ public class Homepage extends BasePage {
     }
   }
 
-
-  public void setpatientBloodPressure(String systolic, String Diastolic) {
-    String bolloPresser = systolic.concat(Diastolic);
+  public void setpatientBloodPressure(String systolic, String diastolic) {
+    String bolloPresser = systolic.concat(diastolic);
     bloodPressureDiastolic.sendKeys(bolloPresser);
     clickOnElement(bloodPressureNextArrow);
 
@@ -302,7 +320,7 @@ public class Homepage extends BasePage {
     Thread.sleep(2000);
   }
 
-  public void schaduleVisitNow() {
+  public void schaduleVisitDoneBtn() {
     boolean isDisplay = waitForElement(schaduleVisitTab);
     if (isDisplay) {
       clickOnElement(sceduleAppointmentDoneBtn);
@@ -322,21 +340,20 @@ public class Homepage extends BasePage {
     clickOnElement(changePatientBloodPressure);
     clickOnElement(removePatientBloodPressure);
     clickOnElement(removePatientBloodPressureConfirmPopUp);
-
   }
 
-  public boolean updateThePatientBloodPressure(String systolic, String Diastolic) {
+  public boolean updateThePatientBloodPressure(String systolic, String diastolic) {
     boolean is = isExists(recentPatientLastBp);
     if (is) {
       clickOnElement(changePatientBloodPressure);
-      setpatientBloodPressure(systolic, Diastolic);
+      setpatientBloodPressure(systolic, diastolic);
       return true;
     } else {
       return false;
     }
   }
 
-  public boolean isrecentPatientLastBpDisplay() {
+  public boolean isRecentPatientLastBpDisplay() {
     return waitForElement(recentPatientLastBp);
   }
 
@@ -344,8 +361,7 @@ public class Homepage extends BasePage {
     clickOnElement(patientListOnHomePage.get(0));
   }
 
-
-  public void addNewBloodPressureOfPatient(String systolic, String Diastolic) throws InterruptedException {
+  public void addNewBloodPressureOfPatient(String systolic, String diastolic) throws InterruptedException {
     clickOnPatientOnHomePage();
     if (isExists(patientAddNewBloodPressureButton)) {
       patientAddNewBloodPressureButton.click();
@@ -353,10 +369,24 @@ public class Homepage extends BasePage {
       scrollDownTo(By.id("patientsummary_item_newbp"));
       patientAddNewBloodPressureButton.click();
     }
-    setpatientBloodPressure(systolic, Diastolic);
+    setpatientBloodPressure(systolic, diastolic);
     dateOfVisitIsCurrentDate();
     savePatientDetaial();
+  }
 
+  public void scheduleAppointmentAtDecrementDate() {
+    clickOnElement(scheduleappointmentDecrementDate);
+    schaduleVisitDoneBtn();
+  }
 
+  public void scheduleAppointmentAfterTwoMonth() {
+    clickOnElement(scheduleappointmentIncrementDate);
+    schaduleVisitDoneBtn();
+  }
+
+  public void otpVerification() {
+    clickOnElement(otpVerificationAfterLogin);
+    sendKeys(enterOtp,"000000");
+    clickOnElement(otpGotUpPopUp);
   }
 }

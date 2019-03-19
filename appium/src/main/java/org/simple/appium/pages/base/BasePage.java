@@ -43,7 +43,6 @@ public class BasePage {
     PageFactory.initElements(this.appiumDriver, this);
   }
 
-
   public boolean waitForElement(WebElement element) {
     Wait wait = new FluentWait(appiumDriver)
         .withTimeout(Duration.ofSeconds(timeout))
@@ -54,12 +53,12 @@ public class BasePage {
     return element.isDisplayed();
   }
 
-
   public boolean isExists(WebElement element) {
     try {
       waitForElement(element);
       return element.isDisplayed();
     } catch (Throwable throwable) {
+      throwable.printStackTrace();
     }
     return false;
   }
@@ -67,7 +66,6 @@ public class BasePage {
   public void waitVisibilityOf(WebElement element) {
     wait.until(ExpectedConditions.visibilityOf(element));
   }
-
 
   public void waitElementToBeClickable(WebElement element) {
     wait.until(ExpectedConditions.elementToBeClickable(element));
@@ -94,6 +92,7 @@ public class BasePage {
     try {
       appiumDriver.hideKeyboard();
     } catch (WebDriverException e) {
+      e.printStackTrace();
     }
   }
 
@@ -112,7 +111,6 @@ public class BasePage {
 
   }
 
-
   public void scrollDown() {
     int pressX = appiumDriver.manage().window().getSize().width / 2;
     int bottomY = appiumDriver.manage().window().getSize().height * 4 / 5;
@@ -122,8 +120,8 @@ public class BasePage {
 
   private void scroll(int fromX, int fromY, int toX, int toY) {
     TouchAction touchAction = new TouchAction(appiumDriver);
-    PointOption p = new PointOption();
-    touchAction.longPress(p.withCoordinates(fromX, fromY)).moveTo(p.withCoordinates(toX, toY)).release().perform();
+    PointOption pointOption = new PointOption();
+    touchAction.longPress(pointOption.withCoordinates(fromX, fromY)).moveTo(pointOption.withCoordinates(toX, toY)).release().perform();
   }
 
   public void scrollDownTo(String text) {
@@ -133,13 +131,13 @@ public class BasePage {
 
   public void scrollDownTo(By byOfElementToBeFound) {
     hideKeyboard();
-    int i = 0;
-    while (i < 12) {
+    int counter = 0;
+    while (counter < 12) {
       if (appiumDriver.findElements(byOfElementToBeFound).size() > 0) { return; }
 
       scrollDown1();
 
-      i++;
+      counter++;
     }
     Assert.fail("Did not find : " + byOfElementToBeFound.toString());
   }

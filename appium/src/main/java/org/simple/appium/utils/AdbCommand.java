@@ -14,14 +14,11 @@ public class AdbCommand {
     process.waitFor();
   }
 
-
   public String executeAdbCommandAndReadConsoleOutput(String command) throws IOException, InterruptedException {
     Process process = getRuntime().exec(command);
     process.waitFor();
-
     InputStream is = process.getInputStream();
     BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-
     return bufferedReader.readLine();
   }
 
@@ -35,21 +32,24 @@ public class AdbCommand {
   public void turnOffWifi() throws IOException, InterruptedException {
     Boolean status = checkWifiStatus();
     if (status.equals(true)) {
-      String[] command = new String[] { "adb shell am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings", "sleep 5", "adb shell input keyevent 19", "adb shell input keyevent 19", "adb shell input keyevent 23", "adb shell input keyevent 3" };
+      String[] command = new String[] {
+          "adb shell am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings",
+          "sleep 5", "adb shell input keyevent 19", "adb shell input keyevent 19", "adb shell input keyevent 23", "adb shell input keyevent 3"
+      };
       executeCommandUsingArray(command);
     }
   }
-
 
   public void turnOnWifi() throws IOException, InterruptedException {
-
     Boolean status = checkWifiStatus();
     if (status.equals(false)) {
-      String[] command = new String[] { "adb shell am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings", "sleep 15", "adb shell input keyevent 19", "adb shell input keyevent 23", "adb shell input keyevent 3" };
+      String[] command = new String[] {
+          "adb shell am start -a android.intent.action.MAIN -n com.android.settings/.wifi.WifiSettings",
+          "sleep 15", "adb shell input keyevent 19", "adb shell input keyevent 23", "adb shell input keyevent 3"
+      };
       executeCommandUsingArray(command);
     }
   }
-
 
   public void turnOnAirplaneMode() throws IOException, InterruptedException {
     Boolean status = checkAirplaneModeStatus();
@@ -71,14 +71,6 @@ public class AdbCommand {
     executeCommand("adb shell input keyevent 3");
   }
 
-//    public void switchAppToForeground() throws IOException, InterruptedException {
-//
-//        String appName = ScenarioContext.getData(ScenarioContextKeys.APP_NAME);
-//        String command = "adb shell am start -n com.embibe.institute." + appName + ".app/com.embibe.app.activities.HomeActivity";
-//
-//        executeCommand(command);
-//    }
-
   public Boolean checkWifiStatus() throws IOException, InterruptedException {
     Boolean flag = false;
     String wifiStatusCommand = "adb shell dumpsys wifi | grep \"mNetworkInfo\" ";
@@ -92,7 +84,6 @@ public class AdbCommand {
     }
     return flag;
   }
-
 
   public Boolean checkAirplaneModeStatus() throws IOException, InterruptedException {
     Boolean flag = false;

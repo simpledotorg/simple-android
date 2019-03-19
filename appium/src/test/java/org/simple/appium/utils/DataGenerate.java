@@ -8,7 +8,6 @@ import java.util.Locale;
 
 public class DataGenerate {
 
-
   public static String setAge() {
     double random = Math.random();
     random = random * 80 + 1;

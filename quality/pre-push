@@ -1,1 +1,1 @@
-GIT_WORK_TREE=".." ./gradlew lintQaDebug assembleQaDebugUnitTest assembleQaDebugAndroidTest
+GIT_WORK_TREE=".." ./gradlew appium:check lintQaDebug assembleQaDebugUnitTest assembleQaDebugAndroidTest

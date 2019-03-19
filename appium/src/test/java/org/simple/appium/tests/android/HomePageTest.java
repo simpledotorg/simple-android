@@ -29,7 +29,7 @@ public class HomePageTest extends BaseTest {
   }
 
   @Test
-  public void addPatientwithMedicalHistory() throws InterruptedException {
+  public void addPatientWithMedicalHistory() throws InterruptedException {
     OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
     DataGenerate data = new DataGenerate();
     Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
@@ -52,7 +52,7 @@ public class HomePageTest extends BaseTest {
   }
 
   @Test
-  public void addPatientwithMedicalHistoryAndchangeDateOfVisit() throws InterruptedException {
+  public void addPatientWithMedicalHistoryAndChangeDateOfVisit() throws InterruptedException {
     OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
     DataGenerate data = new DataGenerate();
     Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
@@ -75,7 +75,7 @@ public class HomePageTest extends BaseTest {
   }
 
   @Test
-  public void addPatientwithMedicalHistoryAndchangeDayOfVisit() throws InterruptedException {
+  public void addPatientWithMedicalHistoryAndChangeDayOfVisit() throws InterruptedException {
     OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
     DataGenerate data = new DataGenerate();
     Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
@@ -98,7 +98,7 @@ public class HomePageTest extends BaseTest {
   }
 
   @Test
-  public void addPatientwithMedicalHistoryAndchangeMonthOfVisit() throws InterruptedException {
+  public void addPatientWithMedicalHistoryAndChangeMonthOfVisit() throws InterruptedException {
     OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
     DataGenerate data = new DataGenerate();
     Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
@@ -121,7 +121,7 @@ public class HomePageTest extends BaseTest {
   }
 
   @Test
-  public void addPatientwithMedicalHistoryAndchangeYearOfVisit() throws InterruptedException {
+  public void addPatientWithMedicalHistoryAndChangeYearOfVisit() throws InterruptedException {
     OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
     DataGenerate data = new DataGenerate();
     Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
@@ -158,26 +158,96 @@ public class HomePageTest extends BaseTest {
     homePage.dateOfVisitIsCurrentDate();
     homePage.deletePatientBloodPresser();
     homePage.savePatientDetaial();
-    Assert.assertFalse(homePage.isrecentPatientLastBpDisplay(), "after deleting the patient Bp then also patient Last BP is display in Home Page");
+    Assert.assertFalse(homePage.isRecentPatientLastBpDisplay(), "after deleting the patient Bp then also patient Last BP is display in Home Page");
   }
-
 
   @Test
   public void updateThePatientBloodPressure() throws InterruptedException {
-    Homepage homePage = new Homepage(appiumDriver);
+    OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
+    Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
     homePage.clickOnPatientOnHomePage();
     boolean isDisplay = homePage.updateThePatientBloodPressure("160", "150");
     Assert.assertTrue(isDisplay, "No blood pressures added && blood pressure edit button is not display");
     homePage.savePatientDetaial();
-    Assert.assertTrue(homePage.isrecentPatientLastBpDisplay());
+    Assert.assertTrue(homePage.isRecentPatientLastBpDisplay());
 
   }
 
   @Test
   public void addNewBloodPressureOfPatient() throws InterruptedException {
-
-    Homepage homePage = new Homepage(appiumDriver);
+    OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
+    Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
+    homePage.otpVerification();
     homePage.addNewBloodPressureOfPatient("160", "150");
+  }
+
+  @Test
+  public void addPatientWithMedicalHistoryAndScheduleVisitAfterOneMonth() throws InterruptedException {
+    OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
+    DataGenerate data = new DataGenerate();
+    Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
+    String name = data.setName();
+    String phoneNumber = data.setPhoneNumber();
+    String address = data.setAddress();
+    String age = data.setAge();
+    homePage.patientPersonalInformation(name, phoneNumber, age, address, "male");
+    homePage.patientHaveAlreadyTakesHyperTensionDrugs(PatientMedicalHistory.ALREADYTAKESHYPERTENSIONDRUGS.no);
+    homePage.patientHavediagnosedwithhypertension(PatientMedicalHistory.DIAGNOSEDWITHHYPERTENSION.yes);
+    homePage.patientHaveHasdiabetes(PatientMedicalHistory.HASDIABETES.no);
+    homePage.patientHaveHeartAttackinLast3Years(PatientMedicalHistory.HEARTATTACKINLAST3YEARS.yes);
+    homePage.patientHavePastHistoryofStroke(PatientMedicalHistory.PASTHISTORYOFSTROKE.no);
+    homePage.patientHavePastHistoryofkidneydisease(PatientMedicalHistory.PASTHISTORYOFKIDNEYDISEASE.yes);
+    homePage.clickOnNextButtonOnpatientMedicalHistoryInfoPage();
+    homePage.setpatientBloodPressure("150", "140");
+    homePage.changeYearOfVisit("12");
+    homePage.savePatientDetaial();
+    homePage.schaduleVisitDoneBtn();
+  }
+
+  @Test
+  public void addPatientWithMedicalHistoryAndScheduleVisitAfterTwoMonth() throws InterruptedException {
+    OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
+    DataGenerate data = new DataGenerate();
+    Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
+    String name = data.setName();
+    String phoneNumber = data.setPhoneNumber();
+    String address = data.setAddress();
+    String age = data.setAge();
+    homePage.patientPersonalInformation(name, phoneNumber, age, address, "male");
+    homePage.patientHaveAlreadyTakesHyperTensionDrugs(PatientMedicalHistory.ALREADYTAKESHYPERTENSIONDRUGS.no);
+    homePage.patientHavediagnosedwithhypertension(PatientMedicalHistory.DIAGNOSEDWITHHYPERTENSION.yes);
+    homePage.patientHaveHasdiabetes(PatientMedicalHistory.HASDIABETES.no);
+    homePage.patientHaveHeartAttackinLast3Years(PatientMedicalHistory.HEARTATTACKINLAST3YEARS.yes);
+    homePage.patientHavePastHistoryofStroke(PatientMedicalHistory.PASTHISTORYOFSTROKE.no);
+    homePage.patientHavePastHistoryofkidneydisease(PatientMedicalHistory.PASTHISTORYOFKIDNEYDISEASE.yes);
+    homePage.clickOnNextButtonOnpatientMedicalHistoryInfoPage();
+    homePage.setpatientBloodPressure("150", "140");
+    homePage.changeYearOfVisit("12");
+    homePage.savePatientDetaial();
+    homePage.scheduleAppointmentAfterTwoMonth();
+  }
+
+  @Test
+  public void addPatientWithMedicalHistoryAndScheduleVisitAfter20Days() throws InterruptedException {
+    OnboardingPage onboardingPage = new OnboardingPage(appiumDriver);
+    DataGenerate data = new DataGenerate();
+    Homepage homePage = onboardingPage.loginToSimpleApplication("7879556515", "7879");
+    String name = data.setName();
+    String phoneNumber = data.setPhoneNumber();
+    String address = data.setAddress();
+    String age = data.setAge();
+    homePage.patientPersonalInformation(name, phoneNumber, age, address, "male");
+    homePage.patientHaveAlreadyTakesHyperTensionDrugs(PatientMedicalHistory.ALREADYTAKESHYPERTENSIONDRUGS.no);
+    homePage.patientHavediagnosedwithhypertension(PatientMedicalHistory.DIAGNOSEDWITHHYPERTENSION.yes);
+    homePage.patientHaveHasdiabetes(PatientMedicalHistory.HASDIABETES.no);
+    homePage.patientHaveHeartAttackinLast3Years(PatientMedicalHistory.HEARTATTACKINLAST3YEARS.yes);
+    homePage.patientHavePastHistoryofStroke(PatientMedicalHistory.PASTHISTORYOFSTROKE.no);
+    homePage.patientHavePastHistoryofkidneydisease(PatientMedicalHistory.PASTHISTORYOFKIDNEYDISEASE.yes);
+    homePage.clickOnNextButtonOnpatientMedicalHistoryInfoPage();
+    homePage.setpatientBloodPressure("150", "140");
+    homePage.changeYearOfVisit("12");
+    homePage.savePatientDetaial();
+    homePage.scheduleAppointmentAtDecrementDate();
   }
 
 }

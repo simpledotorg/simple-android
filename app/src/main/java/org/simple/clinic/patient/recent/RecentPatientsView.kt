@@ -18,6 +18,7 @@ import org.simple.clinic.summary.PatientSummaryCaller
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
@@ -51,9 +52,13 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
       adapter = groupAdapter
     }
 
-    Observable.mergeArray(screenCreates())
+    val screenDestroys = RxView
+        .detaches(this)
+        .map { ScreenDestroyed() }
+
+    Observable.mergeArray(screenCreates(), screenDestroys)
         .compose(controller)
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe { uiChange -> uiChange(this) }
 

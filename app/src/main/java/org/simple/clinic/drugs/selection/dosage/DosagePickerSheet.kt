@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.dosage
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -34,6 +35,7 @@ class DosagePickerSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
+  @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_dosage_picker)
@@ -43,7 +45,7 @@ class DosagePickerSheet : BottomSheetActivity() {
     recyclerView.layoutManager = LinearLayoutManager(this)
     displayDrugName()
 
-    Observable.mergeArray(sheetCreates(), adapter.itemClicks)
+    Observable.mergeArray(sheetCreates(), onDestroys, adapter.itemClicks)
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())

@@ -22,6 +22,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
 import org.simple.clinic.sync.indicator.dialog.SyncIndicatorFailureDialog
 import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
 
@@ -44,11 +45,15 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
     TheActivity.component.inject(this)
 
-    Observable.merge(screenCreates(), viewClicks())
+    val screenDestroys = RxView
+        .detaches(this)
+        .map { ScreenDestroyed() }
+
+    Observable.merge(screenCreates(), screenDestroys, viewClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
 

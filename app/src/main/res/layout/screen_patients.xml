@@ -69,8 +69,8 @@
         android:id="@+id/patients_recent_patients_header_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
         android:layout_below="@+id/patients_record_bp_illustration"
+        android:animateLayoutChanges="true"
         android:background="@drawable/patients_recent_patients_header_container_background"
         android:paddingEnd="@dimen/spacing_8"
         android:paddingStart="@dimen/spacing_8">
@@ -80,9 +80,9 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:layout_gravity="center_vertical"
-          android:padding="@dimen/spacing_8"
-          android:layout_marginTop="2dp"
           android:layout_marginBottom="2dp"
+          android:layout_marginTop="2dp"
+          android:padding="@dimen/spacing_8"
           android:text="@string/patients_recent_patients_title"
           android:textAllCaps="true" />
 
@@ -90,7 +90,8 @@
           android:id="@+id/patients_sync_indicator"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_gravity="end|center_vertical" />
+          android:layout_gravity="end|center_vertical"
+          android:visibility="gone" />
       </FrameLayout>
 
       <org.simple.clinic.patient.recent.RecentPatientsView

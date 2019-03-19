@@ -1,5 +1,6 @@
 plugins {
-    id 'java'
+  id 'java'
+  id 'checkstyle'
 }
 
 group ' simple-android'
@@ -8,17 +9,39 @@ version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
 repositories {
-    mavenCentral()
+  mavenCentral()
+}
+
+tasks.withType(Checkstyle) {
+  reports {
+    xml.enabled false
+    html.enabled true
+    html.stylesheet resources.text.fromFile('config/xsl/checkstyle-custom.xsl')
+
+    configFile file("${project.rootDir}/quality/checkstyle/config.xml")
+    configProperties = [
+        'checkstyle.cache.file': rootProject.file('build/checkstyle.cache'),
+        'checkstyleSuppressionsPath': file("${project.rootDir}/quality/checkstyle/suppressions.xml").absolutePath
+    ]
+    source 'src'
+    include '**/*.java'     // Only run on Java source files.
+    exclude '**/build/**'   // Exclude everything inside build folders.
+    ignoreFailures = false  // Don't allow the build to continue if there are warnings.
+    classpath = files()
+  }
+}
+
+checkstyle {
+  toolVersion '8.18'
 }
 
 dependencies {
-    compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
-    compile group: 'org.testng', name: 'testng', version: '6.14.3'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    //compile group: 'com.aventstack', name: 'extentreports', version: '2.41.2'
-    compile group: 'com.relevantcodes', name: 'extentreports', version: '2.41.2'
-    compile group: 'io.appium', name: 'java-client', version: '7.0.0'
-    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.17.1'
-    compile 'com.google.googlejavaformat:google-java-format:1.6'
-
+  compile group: 'org.seleniumhq.selenium', name: 'selenium-java', version: '3.14.0'
+  compile group: 'org.testng', name: 'testng', version: '6.14.3'
+  compile group: 'commons-io', name: 'commons-io', version: '2.6'
+  //compile group: 'com.aventstack', name: 'extentreports', version: '2.41.2'
+  compile group: 'com.relevantcodes', name: 'extentreports', version: '2.41.2'
+  compile group: 'io.appium', name: 'java-client', version: '7.0.0'
+  compile group: 'com.github.javafaker', name: 'javafaker', version: '0.17.1'
+  compile 'com.google.googlejavaformat:google-java-format:1.6'
 }

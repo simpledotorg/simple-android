@@ -8,13 +8,14 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.*
-import io.reactivex.schedulers.Schedulers.*
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.widgets.visibleOrGone
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.visibleOrGone
 import java.net.URI
 import javax.inject.Inject
 
@@ -38,13 +39,19 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
     TheActivity.component.inject(this)
 
-    Observable.just(ScreenCreated())
+    val screenDestroys = RxView
+        .detaches(this)
+        .map { ScreenDestroyed() }
+
+    Observable.merge(screenCreates(), screenDestroys)
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
+
+  private fun screenCreates() = Observable.just(ScreenCreated())
 
   fun showReport(uri: URI) {
     showWebview(true)

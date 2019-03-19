@@ -2,13 +2,13 @@ package org.simple.clinic.home.overdue
 
 import android.Manifest
 import android.content.Context
-import androidx.transition.TransitionManager
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.util.AttributeSet
 import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -78,8 +78,9 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         .map(::CallPhonePermissionChanged)
   }
 
-  fun updateList(list: List<OverdueListItem>) {
-    overdueListAdapter.submitList(list)
+  fun updateList(overdueListItems: List<OverdueListItem>) {
+    val listOfItems = listOf(OverdueListItem.Header) + overdueListItems
+    overdueListAdapter.submitList(listOfItems)
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

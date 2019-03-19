@@ -57,7 +57,7 @@ class OverdueScreenController @Inject constructor(
     val updateListStream = dbStream
         .map { appointments ->
           appointments.map {
-            OverdueListItem(
+            OverdueListItem.Patient(
                 appointmentUuid = it.appointment.uuid,
                 patientUuid = it.appointment.patientUuid,
                 name = it.fullName,

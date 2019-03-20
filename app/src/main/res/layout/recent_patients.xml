@@ -16,7 +16,7 @@
     style="@style/Clinic.V2.TextAppearance.Subtitle1Center.Grey1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/spacing_96"
+    android:layout_marginBottom="104dp"
     android:layout_marginEnd="@dimen/spacing_8"
     android:layout_marginStart="@dimen/spacing_8"
     android:background="@drawable/recentpatients_empty_state_background"

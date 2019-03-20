@@ -47,35 +47,33 @@ class RecentPatientsViewController @Inject constructor(
 
     val recentPatientsStream = Observables
         .combineLatest(currentFacilityStream, patientConfig)
-        .switchMap { (facility, config) -> patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit) }
+        .switchMap { (facility, config) ->
+          patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit)
+        }
         .replay()
         .refCount()
 
-    val zeroRecentPatients = recentPatientsStream
-        .filter { it.isEmpty() }
-        .map {
-          { ui: Ui ->
-            ui.clearRecentPatients()
-            ui.showNoRecentPatients()
+    val updateRecentPatients = recentPatientsStream
+        .map { it.map(::recentPatientItem) }
+        .map { { ui: Ui -> ui.updateRecentPatients(it) } }
+
+    val toggleEmptyState = recentPatientsStream
+        .map { it.isNotEmpty() }
+        .map { hasRecentPatients ->
+          when {
+            hasRecentPatients -> { ui: Ui -> ui.hideEmptyState() }
+            else -> { ui: Ui -> ui.showEmptyState() }
           }
         }
 
-    val nonZeroRecentPatients = recentPatientsStream
-        .filter { it.isNotEmpty() }
-        .map { recentPatients ->
-          { ui: Ui ->
-            ui.updateRecentPatients(recentPatients.map(::recentPatientItem))
-            ui.hideNoRecentPatients()
-          }
-        }
-    return Observable.merge(zeroRecentPatients, nonZeroRecentPatients)
+    return Observable.merge(updateRecentPatients, toggleEmptyState)
   }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(
           uuid = recentPatient.uuid,
           name = recentPatient.fullName,
-          age = getAge(recentPatient),
+          age = age(recentPatient),
           lastBp = recentPatient.lastBp?.run {
             RecentPatientItem.LastBp(
                 systolic = systolic,
@@ -86,7 +84,7 @@ class RecentPatientsViewController @Inject constructor(
           gender = recentPatient.gender
       )
 
-  private fun getAge(recentPatient: RecentPatient): Int =
+  private fun age(recentPatient: RecentPatient): Int =
       when (recentPatient.age) {
         null -> estimateCurrentAge(recentPatient.dateOfBirth!!, utcClock)
         else -> {

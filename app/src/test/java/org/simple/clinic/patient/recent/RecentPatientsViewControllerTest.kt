@@ -141,16 +141,15 @@ class RecentPatientsViewControllerTest {
             gender = FEMALE
         )
     ))
-    verify(screen).hideNoRecentPatients()
+    verify(screen).hideEmptyState()
   }
 
   @Test
-  fun `when screen opens and there are no recent patients then show "no recent patients view"`() {
+  fun `when screen opens and there are no recent patients then show empty state`() {
     whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimit)).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).clearRecentPatients()
-    verify(screen).showNoRecentPatients()
+    verify(screen).showEmptyState()
   }
 }

@@ -80,16 +80,12 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     groupAdapter.update(recentPatients)
   }
 
-  fun showNoRecentPatients() {
+  fun showEmptyState() {
     emptyStateView.visibleOrGone(true)
   }
 
-  fun hideNoRecentPatients() {
+  fun hideEmptyState() {
     emptyStateView.visibleOrGone(false)
-  }
-
-  fun clearRecentPatients() {
-    groupAdapter.clear()
   }
 
   private fun openPatientSummary(patientUuid: UUID) {

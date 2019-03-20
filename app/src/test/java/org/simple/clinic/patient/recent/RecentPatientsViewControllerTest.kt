@@ -48,7 +48,7 @@ class RecentPatientsViewControllerTest {
 
   private val uiEvents: Subject<UiEvent> = PublishSubject.create()
   private val loggedInUser = PatientMocker.loggedInUser()
-  private val facilityUuid = UUID.randomUUID()
+  private val facility = PatientMocker.facility()
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
   private val recentPatientLimit = 10
 
@@ -76,7 +76,7 @@ class RecentPatientsViewControllerTest {
         .subscribe { uiChange -> uiChange(screen) }
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-    whenever(facilityRepository.currentFacilityUuid(loggedInUser)).thenReturn(facilityUuid)
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility))
   }
 
   @Test
@@ -84,7 +84,7 @@ class RecentPatientsViewControllerTest {
     val patientUuid1 = UUID.randomUUID()
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
-    whenever(patientRepository.recentPatients(facilityUuid, recentPatientLimit)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimit)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -146,17 +146,7 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens and there are no recent patients then show "no recent patients view"`() {
-    whenever(patientRepository.recentPatients(facilityUuid, recentPatientLimit)).thenReturn(Observable.just(emptyList()))
-
-    uiEvents.onNext(ScreenCreated())
-
-    verify(screen).clearRecentPatients()
-    verify(screen).showNoRecentPatients()
-  }
-
-  @Test
-  fun `when screen opens and facility is null then show "no recent patients view"`() {
-    whenever(facilityRepository.currentFacilityUuid(loggedInUser)).thenReturn(null)
+    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimit)).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(ScreenCreated())
 

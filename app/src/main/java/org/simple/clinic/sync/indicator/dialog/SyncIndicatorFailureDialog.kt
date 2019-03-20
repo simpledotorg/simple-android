@@ -11,18 +11,28 @@ class SyncIndicatorFailureDialog : AppCompatDialogFragment() {
 
   companion object {
     private const val KEY_MESSAGE = "failure_message"
+    private const val FRAGMENT_TAG = "sync_indicator_failure_dialog"
 
     fun show(fragmentManager: FragmentManager, message: String) {
-      (fragmentManager.findFragmentByTag("sync_indicator_failure_dialog") as SyncIndicatorFailureDialog?)?.dismiss()
+      val existingFragment = fragmentManager.findFragmentByTag(FRAGMENT_TAG)
+
+      if (existingFragment != null) {
+        fragmentManager
+            .beginTransaction()
+            .remove(existingFragment)
+            .commitNowAllowingStateLoss()
+      }
 
       val fragment = SyncIndicatorFailureDialog().apply {
         arguments = Bundle(1).apply {
-          putSerializable(KEY_MESSAGE, message)
+          putString(KEY_MESSAGE, message)
         }
       }
-      // Cancellable on the dialog builder is ignored. We have to use this.
-      fragment.isCancelable = false
-      fragment.show(fragmentManager, "sync_indicator_failure_dialog")
+
+      fragmentManager
+          .beginTransaction()
+          .add(fragment, FRAGMENT_TAG)
+          .commitNowAllowingStateLoss()
     }
   }
 
@@ -31,7 +41,7 @@ class SyncIndicatorFailureDialog : AppCompatDialogFragment() {
 
     return AlertDialog.Builder(requireContext(), R.style.Clinic_V2_DialogStyle)
         .setMessage(message)
-        .setPositiveButton(getString(R.string.syncindicator_dialog_button_text), null)
+        .setPositiveButton(R.string.syncindicator_dialog_button_text, null)
         .create()
   }
 }

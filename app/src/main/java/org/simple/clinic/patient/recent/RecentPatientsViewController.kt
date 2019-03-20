@@ -3,8 +3,8 @@ package org.simple.clinic.patient.recent
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
@@ -12,14 +12,10 @@ import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = RecentPatientsView
@@ -43,28 +39,15 @@ class RecentPatientsViewController @Inject constructor(
   }
 
   private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> {
-    val facilityUuidStream = events.ofType<ScreenCreated>()
+    val currentFacilityStream = events.ofType<ScreenCreated>()
         .flatMap { userSession.requireLoggedInUser() }
-        .map { Optional.toOptional(facilityRepository.currentFacilityUuid(it)) }
+        .switchMap { facilityRepository.currentFacility(it) }
         .replay()
         .refCount()
 
-    val facilityIdNotPresent = facilityUuidStream
-        .ofType<None>()
-        .map {
-          { ui: Ui ->
-            ui.clearRecentPatients()
-            ui.showNoRecentPatients()
-          }
-        }
-
-    val recentPatientsStream = facilityUuidStream
-        .ofType<Just<UUID>>()
-        .map { it.value }
-        .withLatestFrom(patientConfig)
-        .flatMap { (facilityUuid, config) ->
-          patientRepository.recentPatients(facilityUuid, limit = config.recentPatientLimit)
-        }
+    val recentPatientsStream = Observables
+        .combineLatest(currentFacilityStream, patientConfig)
+        .switchMap { (facility, config) -> patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit) }
         .replay()
         .refCount()
 
@@ -85,7 +68,7 @@ class RecentPatientsViewController @Inject constructor(
             ui.hideNoRecentPatients()
           }
         }
-    return Observable.merge(facilityIdNotPresent, zeroRecentPatients, nonZeroRecentPatients)
+    return Observable.merge(zeroRecentPatients, nonZeroRecentPatients)
   }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =

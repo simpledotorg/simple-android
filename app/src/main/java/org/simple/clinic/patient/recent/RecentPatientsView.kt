@@ -39,8 +39,8 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val recyclerView by bindView<RecyclerView>(R.id.recent_patient_recyclerview)
-  private val emptyStateView by bindView<View>(R.id.recent_patient_no_recent_patients)
+  private val recyclerView by bindView<RecyclerView>(R.id.recentpatients_recyclerview)
+  private val emptyStateView by bindView<View>(R.id.recentpatients_no_recent_patients)
 
   private val groupAdapter = GroupAdapter<ViewHolder>()
   private val adapterEvents = PublishSubject.create<UiEvent>()

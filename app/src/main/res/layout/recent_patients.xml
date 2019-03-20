@@ -22,5 +22,4 @@
     android:background="@drawable/recent_patient_no_recent_patients_background"
     android:padding="@dimen/spacing_16"
     android:text="@string/recent_patient_no_recent_patients" />
-
 </FrameLayout>

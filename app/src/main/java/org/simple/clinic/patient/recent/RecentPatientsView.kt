@@ -3,15 +3,18 @@ package org.simple.clinic.patient.recent
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
-import kotlinx.android.synthetic.main.recent_patients.view.*
+import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.summary.PatientSummaryCaller
@@ -36,8 +39,10 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val groupAdapter = GroupAdapter<com.xwray.groupie.ViewHolder>()
+  private val recyclerView by bindView<RecyclerView>(R.id.recent_patient_recyclerview)
+  private val emptyStateView by bindView<View>(R.id.recent_patient_no_recent_patients)
 
+  private val groupAdapter = GroupAdapter<ViewHolder>()
   private val adapterEvents = PublishSubject.create<UiEvent>()
 
   @SuppressLint("CheckResult")
@@ -47,7 +52,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
 
     inflate(context, R.layout.recent_patients, this)
 
-    recent_patient_recyclerview.apply {
+    recyclerView.apply {
       layoutManager = LinearLayoutManager(context)
       adapter = groupAdapter
     }
@@ -59,7 +64,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     Observable.mergeArray(screenCreates(), screenDestroys)
         .compose(controller)
         .takeUntil(screenDestroys)
-        .observeOn(AndroidSchedulers.mainThread())
+        .observeOn(mainThread())
         .subscribe { uiChange -> uiChange(this) }
 
     adapterEvents
@@ -76,11 +81,11 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
   }
 
   fun showNoRecentPatients() {
-    recent_patient_no_recent_patients.visibleOrGone(true)
+    emptyStateView.visibleOrGone(true)
   }
 
   fun hideNoRecentPatients() {
-    recent_patient_no_recent_patients.visibleOrGone(false)
+    emptyStateView.visibleOrGone(false)
   }
 
   fun clearRecentPatients() {

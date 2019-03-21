@@ -36,7 +36,7 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
 
 enum class HomeTab(@LayoutRes val key: Int, @StringRes val title: Int) {
 
-  PATIENT(PatientsScreenKey().layoutRes(), R.string.tab_patient),
+  PATIENTS(PatientsScreenKey().layoutRes(), R.string.tab_patient),
 
   OVERDUE(OverdueScreenKey().layoutRes(), R.string.tab_overdue),
 

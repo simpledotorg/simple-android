@@ -138,7 +138,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populatePatientProfile(patient, address, phoneNumber)
   }
@@ -158,7 +158,7 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any(), any(), any())
   }
@@ -179,7 +179,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         any(),
@@ -206,7 +206,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         prescribedDrugsItem = any(),
@@ -323,14 +323,14 @@ class PatientSummaryScreenControllerTest {
     val medicalHistory = medicalHistory(updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today)))
   }
 
   @Test
   fun `when new-BP is clicked then BP entry sheet should be shown`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
     verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
@@ -339,8 +339,8 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen, times(1)).showBloodPressureEntrySheetIfNotShownAlready(any())
     verify(screen, never()).showBloodPressureEntrySheet(any())
@@ -386,7 +386,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+    if (patientSummaryCaller == PatientSummaryCaller.NewPatient) {
       verify(screen).goBackToHome()
     } else {
       verify(screen).goBackToPatientSearch()
@@ -411,7 +411,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+    if (patientSummaryCaller == PatientSummaryCaller.NewPatient) {
       verify(screen).goBackToHome()
     } else {
       verify(screen).goBackToPatientSearch()
@@ -436,7 +436,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NEW_PATIENT) {
+    if (patientSummaryCaller == PatientSummaryCaller.NewPatient) {
       verify(screen).goBackToHome()
     } else {
       verify(screen).goBackToPatientSearch()
@@ -444,7 +444,10 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `patient summary callers`() = PatientSummaryCaller.values()
+  private fun `patient summary callers`() = listOf(
+      PatientSummaryCaller.ExistingPatient,
+      PatientSummaryCaller.NewPatient
+  )
 
   @Test
   @Parameters(method = "patient summary callers and summary item changed")
@@ -495,10 +498,10 @@ class PatientSummaryScreenControllerTest {
   @Suppress("Unused")
   private fun `patient summary callers and summary item changed`(): List<List<Any>> {
     return listOf(
-        listOf(PatientSummaryCaller.SEARCH, true),
-        listOf(PatientSummaryCaller.SEARCH, false),
-        listOf(PatientSummaryCaller.NEW_PATIENT, true),
-        listOf(PatientSummaryCaller.NEW_PATIENT, false))
+        listOf(PatientSummaryCaller.ExistingPatient, true),
+        listOf(PatientSummaryCaller.ExistingPatient, false),
+        listOf(PatientSummaryCaller.NewPatient, true),
+        listOf(PatientSummaryCaller.NewPatient, false))
   }
 
   @Test
@@ -508,23 +511,20 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   @Test
-  @Parameters(
-      "SEARCH",
-      "NEW_PATIENT"
-  )
+  @Parameters(method = "patient summary callers")
   fun `when the screen is opened, the viewed patient analytics event must be sent`(fromCaller: PatientSummaryCaller) {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, fromCaller, Instant.now(clock)))
 
     val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
         "patientId" to patientUuid.toString(),
-        "from" to fromCaller.name
+        "from" to fromCaller.analyticsName()
     ))
     assertThat(reporter.receivedEvents).contains(expectedEvent)
   }
@@ -546,7 +546,7 @@ class PatientSummaryScreenControllerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.SEARCH, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
@@ -596,7 +596,7 @@ class PatientSummaryScreenControllerTest {
       screenCreated: Instant,
       hasChanged: Boolean
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, screenCreated))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, screenCreated))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(status)))
 
     if (hasChanged) {
@@ -620,7 +620,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when an appointment is scheduled, patient result should be set`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
     uiEvents.onNext(AppointmentScheduled)
 
     verify(patientSummaryResult).set(any())
@@ -629,7 +629,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(SyncStatus.PENDING)))
     uiEvents.onNext(AppointmentScheduled)
 
@@ -656,7 +656,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when a new patient is registered, always show the status as saved`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(patientSummaryResult, times(1)).set(PatientSummaryResult.Saved(patientUuid))
   }
@@ -685,7 +685,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NEW_PATIENT, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         prescribedDrugsItem = any(),
@@ -758,7 +758,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     if (cancelReason == InvalidPhoneNumber) {
       verify(screen).showUpdatePhoneDialog(patientUuid)
@@ -785,7 +785,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -806,7 +806,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -826,7 +826,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -841,7 +841,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -852,7 +852,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(screen).showAddPhoneDialog(patientUuid)
@@ -865,7 +865,7 @@ class PatientSummaryScreenControllerTest {
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -876,7 +876,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(true))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -888,7 +888,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.SEARCH, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -900,7 +900,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
@@ -911,7 +911,7 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NEW_PATIENT, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())

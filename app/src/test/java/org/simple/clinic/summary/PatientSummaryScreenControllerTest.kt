@@ -23,6 +23,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.addidtopatient.AddIdToPatient
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -446,7 +447,8 @@ class PatientSummaryScreenControllerTest {
   @Suppress("Unused")
   private fun `patient summary callers`() = listOf(
       PatientSummaryCaller.ExistingPatient,
-      PatientSummaryCaller.NewPatient
+      PatientSummaryCaller.NewPatient,
+      PatientSummaryCaller.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
   )
 
   @Test
@@ -497,11 +499,15 @@ class PatientSummaryScreenControllerTest {
 
   @Suppress("Unused")
   private fun `patient summary callers and summary item changed`(): List<List<Any>> {
+    val addIdToPatient = AddIdToPatient.BpPassport(bpPassportCode = UUID.randomUUID(), bpPassportShortCode = "1234567")
+
     return listOf(
         listOf(PatientSummaryCaller.ExistingPatient, true),
         listOf(PatientSummaryCaller.ExistingPatient, false),
         listOf(PatientSummaryCaller.NewPatient, true),
-        listOf(PatientSummaryCaller.NewPatient, false))
+        listOf(PatientSummaryCaller.NewPatient, false),
+        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), true),
+        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), false))
   }
 
   @Test

@@ -371,7 +371,7 @@ class PatientSummaryScreenController @Inject constructor(
     val goBackToSearchResults = backClicks
         .withLatestFrom(shouldGoBackStream, callers)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, caller) -> caller == ExistingPatient }
+        .filter { (_, _, caller) -> caller != NewPatient }
         .map { { ui: Ui -> ui.goBackToPatientSearch() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
@@ -409,6 +409,7 @@ class PatientSummaryScreenController @Inject constructor(
           { ui: Ui ->
             when (caller!!) {
               ExistingPatient -> ui.goBackToPatientSearch()
+              is PatientSummaryCaller.LinkIdWithPatient -> ui.goBackToPatientSearch()
               NewPatient -> ui.goBackToHome()
             }.exhaustive()
           }
@@ -470,7 +471,7 @@ class PatientSummaryScreenController @Inject constructor(
 
     val showForMissingPhone = Observables
         .combineLatest(screenCreations, waitTillABpIsRecorded) { screenCreated, _ -> screenCreated }
-        .filter { it.caller == ExistingPatient }
+        .filter { it.caller != NewPatient }
         .map { it.patientUuid }
         .switchMap { patientUuid ->
           isMissingPhoneAndShouldBeReminded(patientUuid)

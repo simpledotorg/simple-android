@@ -1,12 +1,12 @@
 package org.simple.clinic.home
 
 import android.content.Context
-import androidx.annotation.LayoutRes
-import androidx.annotation.StringRes
-import androidx.viewpager.widget.PagerAdapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.LayoutRes
+import androidx.annotation.StringRes
+import androidx.viewpager.widget.PagerAdapter
 import org.simple.clinic.R
 import org.simple.clinic.home.overdue.OverdueScreenKey
 import org.simple.clinic.home.patients.PatientsScreenKey
@@ -34,7 +34,7 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
   override fun isViewFromObject(view: View, viewKey: Any) = view === viewKey
 }
 
-private enum class HomeTabs(@LayoutRes val key: Int, @StringRes val title: Int) {
+enum class HomeTabs(@LayoutRes val key: Int, @StringRes val title: Int) {
 
   PATIENT(PatientsScreenKey().layoutRes(), R.string.tab_patient),
 

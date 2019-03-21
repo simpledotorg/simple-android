@@ -2,11 +2,11 @@ package org.simple.clinic.home
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.viewpager.widget.ViewPager
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.RelativeLayout
+import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -52,6 +52,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     rootLayout.hideKeyboard()
 
     viewPager.adapter = HomePagerAdapter(context)
+
+    // The WebView in "Progress" tab is expensive to load. Pre-instantiating
+    // it when the app starts reduces its time-to-display.
+    viewPager.offscreenPageLimit = HomeTabs.REPORTS.ordinal - HomeTabs.PATIENT.ordinal
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

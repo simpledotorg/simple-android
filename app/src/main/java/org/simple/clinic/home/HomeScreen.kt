@@ -55,7 +55,7 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
     // The WebView in "Progress" tab is expensive to load. Pre-instantiating
     // it when the app starts reduces its time-to-display.
-    viewPager.offscreenPageLimit = HomeTabs.REPORTS.ordinal - HomeTabs.PATIENT.ordinal
+    viewPager.offscreenPageLimit = HomeTab.REPORTS.ordinal - HomeTab.PATIENT.ordinal
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

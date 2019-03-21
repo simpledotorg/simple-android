@@ -31,8 +31,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
-import org.simple.clinic.summary.PatientSummaryCaller.NEW_PATIENT
-import org.simple.clinic.summary.PatientSummaryCaller.SEARCH
+import org.simple.clinic.summary.PatientSummaryCaller.NewPatient
+import org.simple.clinic.summary.PatientSummaryCaller.ExistingPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -91,7 +91,7 @@ class PatientSummaryScreenController @Inject constructor(
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSummaryScreenCreated>()
         .take(1L)
-        .doOnNext { (patientUuid, caller) -> Analytics.reportViewedPatient(patientUuid, caller.name) }
+        .doOnNext { (patientUuid, caller) -> Analytics.reportViewedPatient(patientUuid, caller.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
   }
 
@@ -264,7 +264,7 @@ class PatientSummaryScreenController @Inject constructor(
 
     val autoShows = events
         .ofType<PatientSummaryScreenCreated>()
-        .filter { it.caller == NEW_PATIENT }
+        .filter { it.caller == NewPatient }
         .withLatestFrom(patientUuid)
         .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheetIfNotShownAlready(patientUuid) } }
 
@@ -365,13 +365,13 @@ class PatientSummaryScreenController @Inject constructor(
     val goBackToHomeScreen = backClicks
         .withLatestFrom(shouldGoBackStream, callers)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, caller) -> caller == NEW_PATIENT }
+        .filter { (_, _, caller) -> caller == NewPatient }
         .map { { ui: Ui -> ui.goBackToHome() } }
 
     val goBackToSearchResults = backClicks
         .withLatestFrom(shouldGoBackStream, callers)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, caller) -> caller == SEARCH }
+        .filter { (_, _, caller) -> caller == ExistingPatient }
         .map { { ui: Ui -> ui.goBackToPatientSearch() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
@@ -408,8 +408,8 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (_, _, caller) ->
           { ui: Ui ->
             when (caller!!) {
-              SEARCH -> ui.goBackToPatientSearch()
-              NEW_PATIENT -> ui.goBackToHome()
+              ExistingPatient -> ui.goBackToPatientSearch()
+              NewPatient -> ui.goBackToHome()
             }.exhaustive()
           }
         }
@@ -432,7 +432,7 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
 
     val isPatientNew = screenCreates
-        .filter { it.caller == NEW_PATIENT }
+        .filter { it.caller == NewPatient }
         .map { Saved(it.patientUuid) as PatientSummaryResult }
 
     val appointmentScheduled = events.ofType<AppointmentScheduled>()
@@ -470,7 +470,7 @@ class PatientSummaryScreenController @Inject constructor(
 
     val showForMissingPhone = Observables
         .combineLatest(screenCreations, waitTillABpIsRecorded) { screenCreated, _ -> screenCreated }
-        .filter { it.caller == SEARCH }
+        .filter { it.caller == ExistingPatient }
         .map { it.patientUuid }
         .switchMap { patientUuid ->
           isMissingPhoneAndShouldBeReminded(patientUuid)

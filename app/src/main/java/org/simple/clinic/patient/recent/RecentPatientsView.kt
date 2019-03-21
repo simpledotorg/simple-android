@@ -92,7 +92,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     activity.screenRouter.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
-            caller = PatientSummaryCaller.SEARCH,
+            caller = PatientSummaryCaller.ExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
         ))
   }

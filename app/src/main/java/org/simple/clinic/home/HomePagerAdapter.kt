@@ -17,7 +17,7 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
   override fun instantiateItem(container: ViewGroup, position: Int): Any {
     val inflater = LayoutInflater.from(container.context)
 
-    val screenForTab = inflater.inflate(HomeTabs.values()[position].key, container, false)
+    val screenForTab = inflater.inflate(HomeTab.values()[position].key, container, false)
     container.addView(screenForTab)
 
     return screenForTab
@@ -27,14 +27,14 @@ class HomePagerAdapter(private val context: Context) : PagerAdapter() {
     container.removeView(viewKey as View)
   }
 
-  override fun getPageTitle(position: Int): CharSequence = context.resources.getString(HomeTabs.values()[position].title)
+  override fun getPageTitle(position: Int): CharSequence = context.resources.getString(HomeTab.values()[position].title)
 
-  override fun getCount() = HomeTabs.values().size
+  override fun getCount() = HomeTab.values().size
 
   override fun isViewFromObject(view: View, viewKey: Any) = view === viewKey
 }
 
-enum class HomeTabs(@LayoutRes val key: Int, @StringRes val title: Int) {
+enum class HomeTab(@LayoutRes val key: Int, @StringRes val title: Int) {
 
   PATIENT(PatientsScreenKey().layoutRes(), R.string.tab_patient),
 

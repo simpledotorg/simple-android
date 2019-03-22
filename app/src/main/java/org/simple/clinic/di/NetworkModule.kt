@@ -1,5 +1,7 @@
 package org.simple.clinic.di
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
@@ -9,9 +11,10 @@ import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.overdue.AppointmentCancelReason
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.PatientSummaryResult
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.sync.PatientPayload
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
@@ -99,5 +102,16 @@ open class NetworkModule {
     return commonRetrofitBuilder
         .baseUrl(baseUrl)
         .build()
+  }
+
+  @Provides
+  @AppScope
+  fun remoteConfig(): FirebaseRemoteConfig {
+    return FirebaseRemoteConfig.getInstance().apply {
+      setDefaults(PhoneNumberMaskerConfig.defaultValues())
+      setConfigSettings(FirebaseRemoteConfigSettings.Builder()
+          .setDeveloperModeEnabled(BuildConfig.DEBUG)
+          .build())
+    }
   }
 }

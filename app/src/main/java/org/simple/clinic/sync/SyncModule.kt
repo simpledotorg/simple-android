@@ -25,6 +25,7 @@ import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
 import org.simple.clinic.protocol.ProtocolModule
 import org.simple.clinic.protocol.sync.ProtocolSync
+import org.simple.clinic.remoteconfig.RemoteConfigSync
 import org.simple.clinic.reports.ReportsModule
 import org.simple.clinic.reports.ReportsSync
 import javax.inject.Named
@@ -69,12 +70,14 @@ class SyncModule {
       appointmentSync: AppointmentSync,
       communicationSync: CommunicationSync,
       prescriptionSync: PrescriptionSync,
-      reportsSync: ReportsSync
+      reportsSync: ReportsSync,
+      remoteConfigSync: RemoteConfigSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
-        communicationSync, prescriptionSync, reportsSync
+        communicationSync, prescriptionSync, reportsSync,
+        remoteConfigSync
     )
   }
 

@@ -3,6 +3,7 @@ package org.simple.clinic
 import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.leakcanary.LeakCanary
 import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Observable
@@ -114,10 +115,6 @@ class DebugClinicApp : ClinicApp() {
             return super.providePatientConfig()
                 .map { it.copy(scanSimpleCardFeatureEnabled = true) }
           }
-
-          override fun phoneNumberMaskerConfig(): Single<PhoneNumberMaskerConfig> =
-              super.phoneNumberMaskerConfig()
-                  .map { it.copy(maskingEnabled = true) }
         })
         .build()
   }

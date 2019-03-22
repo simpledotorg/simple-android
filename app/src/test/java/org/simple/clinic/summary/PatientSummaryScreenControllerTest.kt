@@ -4,6 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
@@ -128,7 +129,8 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `patient's profile should be populated`() {
+  @Parameters(method = "patient summary callers")
+  fun `patient's profile should be populated`(caller: PatientSummaryCaller) {
     val addressUuid = UUID.randomUUID()
     val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
     val address = PatientMocker.address(uuid = addressUuid)
@@ -139,13 +141,14 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populatePatientProfile(patient, address, phoneNumber)
   }
 
   @Test
-  fun `patient's prescription summary should be populated`() {
+  @Parameters(method = "patient summary callers")
+  fun `patient's prescription summary should be populated`(caller: PatientSummaryCaller) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
@@ -159,13 +162,14 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any(), any(), any())
   }
 
   @Test
-  fun `patient's blood pressure history should be populated`() {
+  @Parameters(method = "patient summary callers")
+  fun `patient's blood pressure history should be populated`(caller: PatientSummaryCaller) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
@@ -194,6 +198,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "params for placeholder bp items")
   fun `the placeholder blood pressure items must be shown`(
+      caller: PatientSummaryCaller,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
@@ -207,7 +212,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         prescribedDrugsItem = any(),
@@ -248,7 +253,8 @@ class PatientSummaryScreenControllerTest {
     // We won't be verifying the relative timestamps and showDivider in the test this is used in,
     // so we can just set it to a static value.
     return listOf(
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest1,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1, true),
@@ -257,7 +263,8 @@ class PatientSummaryScreenControllerTest {
             ),
             emptyList<SummaryBloodPressureListItem>()
         ),
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest2,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -267,7 +274,8 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest3,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -278,7 +286,8 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest3[1], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest4,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -290,7 +299,8 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest4[2], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest5,
             listOf(SummaryBloodPressurePlaceholderListItem(1)),
             listOf(
@@ -299,7 +309,8 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest5[2], daysAgo = Today, showDivider = true, formattedTime = displayTime, addTopPadding = false)
             )
         ),
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest6,
             emptyList<SummaryBloodPressurePlaceholderListItem>(),
             listOf(
@@ -312,7 +323,8 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `patient's medical history should be populated`() {
+  @Parameters(method = "patient summary callers")
+  fun `patient's medical history should be populated`(caller: PatientSummaryCaller) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
@@ -324,14 +336,15 @@ class PatientSummaryScreenControllerTest {
     val medicalHistory = medicalHistory(updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today)))
   }
 
   @Test
-  fun `when new-BP is clicked then BP entry sheet should be shown`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when new-BP is clicked then BP entry sheet should be shown`(caller: PatientSummaryCaller) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
     verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
@@ -340,10 +353,16 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen, times(1)).showBloodPressureEntrySheetIfNotShownAlready(any())
+  }
+
+  @Test
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when screen was opened from any caller except creating a new patient, the BP entry sheet should not be shown`(caller: PatientSummaryCaller) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+
     verify(screen, never()).showBloodPressureEntrySheet(any())
   }
 
@@ -444,13 +463,6 @@ class PatientSummaryScreenControllerTest {
     }
   }
 
-  @Suppress("Unused")
-  private fun `patient summary callers`() = listOf(
-      PatientSummaryCaller.ExistingPatient,
-      PatientSummaryCaller.NewPatient,
-      PatientSummaryCaller.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
-  )
-
   @Test
   @Parameters(method = "patient summary callers and summary item changed")
   fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet`(
@@ -497,27 +509,15 @@ class PatientSummaryScreenControllerTest {
     verify(screen).goBackToHome()
   }
 
-  @Suppress("Unused")
-  private fun `patient summary callers and summary item changed`(): List<List<Any>> {
-    val addIdToPatient = AddIdToPatient.BpPassport(bpPassportCode = UUID.randomUUID(), bpPassportShortCode = "1234567")
-
-    return listOf(
-        listOf(PatientSummaryCaller.ExistingPatient, true),
-        listOf(PatientSummaryCaller.ExistingPatient, false),
-        listOf(PatientSummaryCaller.NewPatient, true),
-        listOf(PatientSummaryCaller.NewPatient, false),
-        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), true),
-        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), false))
-  }
-
   @Test
-  fun `when update medicines is clicked then BP medicines screen should be shown`() {
+  @Parameters(method = "patient summary callers")
+  fun `when update medicines is clicked then BP medicines screen should be shown`(caller: PatientSummaryCaller) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
@@ -538,6 +538,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "medicalHistoryQuestionsAndAnswers")
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
+      caller: PatientSummaryCaller,
       question: MedicalHistoryQuestion,
       newAnswer: MedicalHistory.Answer
   ) {
@@ -552,7 +553,7 @@ class PatientSummaryScreenControllerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.ExistingPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
@@ -565,8 +566,17 @@ class PatientSummaryScreenControllerTest {
     verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
   }
 
-  private fun randomAnswer(): MedicalHistory.Answer {
-    return MedicalHistory.Answer::class.java.enumConstants.asList().shuffled().first()
+  @Suppress("unused")
+  fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
+    fun randomAnswer(): MedicalHistory.Answer {
+      return MedicalHistory.Answer.values().asList().shuffled().first()
+    }
+
+    val questions = MedicalHistoryQuestion.values().asList()
+    return questions
+        .asSequence()
+        .map { question -> listOf(randomPatientSummaryCaller(), question, randomAnswer()) }
+        .toList()
   }
 
   @Test
@@ -577,32 +587,21 @@ class PatientSummaryScreenControllerTest {
     verify(screen).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
   }
 
-  @Suppress("Unused")
-  private fun `params for editing blood pressures`(): List<List<Any>> {
-    fun generateBps(bpEditableFor: Duration): List<List<Any>> {
-      val durationAsMillis = bpEditableFor.toMillis()
-      val bpCreatedAt = Instant.now(clock)
-
-      return listOf(
-          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis(durationAsMillis + 1)), false),
-          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis(durationAsMillis * 2)), false),
-          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis((durationAsMillis * 0.5).toLong())), true),
-          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt.minusMillis(durationAsMillis)), true),
-          listOf(bpEditableFor, PatientMocker.bp(createdAt = bpCreatedAt), true)
-      )
-    }
-
-    return generateBps(Duration.ofMinutes(1L)) + generateBps(Duration.ofDays(2L))
-  }
-
-  @Parameters(method = "params for patient item changed")
   @Test
+  @Parameters(method = "params for patient item changed")
   fun `when anything is changed on the screen, assert that patient result preference is updated`(
+      caller: PatientSummaryCaller,
       status: SyncStatus,
       screenCreated: Instant,
       hasChanged: Boolean
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, screenCreated))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, screenCreated))
+
+    // Clearing invocations here because we have some special cases for a caller of NewPatient,
+    // which are irrelevant to this test.
+    clearInvocations(screen)
+    clearInvocations(patientSummaryResult)
+
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(status)))
 
     if (hasChanged) {
@@ -617,16 +616,23 @@ class PatientSummaryScreenControllerTest {
   @Suppress("unused")
   fun `params for patient item changed`(): Array<Array<Any>> {
     return arrayOf(
-        arrayOf("PENDING", Instant.now(clock), true),
-        arrayOf("PENDING", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false),
-        arrayOf("DONE", Instant.now(clock), false),
-        arrayOf("DONE", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false)
+        arrayOf(randomPatientSummaryCaller(), "PENDING", Instant.now(clock), true),
+        arrayOf(randomPatientSummaryCaller(), "PENDING", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false),
+        arrayOf(randomPatientSummaryCaller(), "DONE", Instant.now(clock), false),
+        arrayOf(randomPatientSummaryCaller(), "DONE", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false)
     )
   }
 
   @Test
-  fun `when an appointment is scheduled, patient result should be set`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
+  @Parameters(method = "patient summary callers")
+  fun `when an appointment is scheduled, patient result should be set`(caller: PatientSummaryCaller) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+
+    // Clearing invocations here because we have some special cases for a caller of NewPatient,
+    // which are irrelevant to this test.
+    clearInvocations(screen)
+    clearInvocations(patientSummaryResult)
+
     uiEvents.onNext(AppointmentScheduled)
 
     verify(patientSummaryResult).set(any())
@@ -634,8 +640,17 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
+  @Parameters(method = "patient summary callers")
+  fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`(
+      caller: PatientSummaryCaller
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+
+    // Clearing invocations here because we have some special cases for a caller of NewPatient,
+    // which are irrelevant to this test.
+    clearInvocations(screen)
+    clearInvocations(patientSummaryResult)
+
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(SyncStatus.PENDING)))
     uiEvents.onNext(AppointmentScheduled)
 
@@ -667,18 +682,10 @@ class PatientSummaryScreenControllerTest {
     verify(patientSummaryResult, times(1)).set(PatientSummaryResult.Saved(patientUuid))
   }
 
-  @Suppress("unused")
-  fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
-    val questions = MedicalHistoryQuestion.values().asList()
-    return questions
-        .asSequence()
-        .map { question -> listOf(question, randomAnswer()) }
-        .toList()
-  }
-
-  @Parameters(method = "params for BP grouped by date")
   @Test
+  @Parameters(method = "params for BP grouped by date")
   fun `when BPs are grouped by dates, then only the last BP item in every group should show divider`(
+      caller: PatientSummaryCaller,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
@@ -691,7 +698,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         prescribedDrugsItem = any(),
@@ -727,14 +734,16 @@ class PatientSummaryScreenControllerTest {
     }
 
     return listOf(
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest1,
             listOf(
                 SummaryBloodPressureListItem(measurement = bpsForTest1[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest1[0].createdAt), addTopPadding = false),
                 SummaryBloodPressureListItem(measurement = bpsForTest1[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest1[1].createdAt), addTopPadding = false),
                 SummaryBloodPressureListItem(measurement = bpsForTest1[2], daysAgo = Today, showDivider = true, formattedTime = null, addTopPadding = false)
             )),
-        listOf<Any>(
+        listOf(
+            randomPatientSummaryCaller(),
             bpsForTest2,
             listOf(
                 SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[0].createdAt), addTopPadding = false),
@@ -749,6 +758,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when patient's phone was marked as invalid after the phone number was last updated then update phone dialog should be shown`(
+      caller: PatientSummaryCaller,
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
@@ -764,7 +774,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     if (cancelReason == InvalidPhoneNumber) {
       verify(screen).showUpdatePhoneDialog(patientUuid)
@@ -776,6 +786,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when patient's phone was marked as invalid before the phone number was last updated then update phone dialog should not be shown`(
+      caller: PatientSummaryCaller,
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
@@ -791,7 +802,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -799,6 +810,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when update phone dialog feature is disabled then it should never be shown`(
+      caller: PatientSummaryCaller,
       cancelReason: AppointmentCancelReason
   ) {
     val appointmentStream = Observable.just(
@@ -812,16 +824,22 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Suppress("unused")
-  fun `appointment cancelation reasons`() = AppointmentCancelReason.values()
+  fun `appointment cancelation reasons`() =
+      AppointmentCancelReason
+          .values()
+          .map { listOf(randomPatientSummaryCaller(), it) }
 
   @Test
-  fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`() {
+  @Parameters(method = "patient summary callers")
+  fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`(
+      caller: PatientSummaryCaller
+  ) {
     val appointmentStream = Observable.just(
         None,
         Just(PatientMocker.appointment(status = SCHEDULED, cancelReason = null)))
@@ -832,7 +850,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -853,12 +871,15 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`() {
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`(
+      caller: PatientSummaryCaller
+  ) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(screen).showAddPhoneDialog(patientUuid)
@@ -866,60 +887,97 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`() {
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`(
+      caller: PatientSummaryCaller
+  ) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`() {
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`(
+      caller: PatientSummaryCaller
+  ) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(true))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  fun `when an existing patient has a phone number, then add phone dialog should not be shown`() {
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when an existing patient has a phone number, then add phone dialog should not be shown`(caller: PatientSummaryCaller) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  fun `when a new patient has a phone number, then add phone dialog should not be shown`() {
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when a new patient has a phone number, then add phone dialog should not be shown`(caller: PatientSummaryCaller) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  fun `when a new patient is missing a phone number, then add phone dialog should not be shown`() {
+  @Parameters(method = "patient summary callers except new patient")
+  fun `when a new patient is missing a phone number, then add phone dialog should not be shown`(caller: PatientSummaryCaller) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
+  }
+
+  private fun randomPatientSummaryCaller() = `patient summary callers`().shuffled().first()
+
+  @Suppress("Unused")
+  private fun `patient summary callers`() = listOf(
+      PatientSummaryCaller.ExistingPatient,
+      PatientSummaryCaller.NewPatient,
+      PatientSummaryCaller.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
+  )
+
+  @Suppress("Unused")
+  private fun `patient summary callers except new patient`() = listOf(
+      PatientSummaryCaller.ExistingPatient,
+      PatientSummaryCaller.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
+  )
+
+  @Suppress("Unused")
+  private fun `patient summary callers and summary item changed`(): List<List<Any>> {
+    val addIdToPatient = AddIdToPatient.BpPassport(bpPassportCode = UUID.randomUUID(), bpPassportShortCode = "1234567")
+
+    return listOf(
+        listOf(PatientSummaryCaller.ExistingPatient, true),
+        listOf(PatientSummaryCaller.ExistingPatient, false),
+        listOf(PatientSummaryCaller.NewPatient, true),
+        listOf(PatientSummaryCaller.NewPatient, false),
+        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), true),
+        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), false))
   }
 }

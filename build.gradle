@@ -54,7 +54,8 @@ buildscript {
       leakCanary          : '1.6.2',
       constraintLayout    : '1.1.3',
       playServicesLocation: '16.0.0',
-      codeScanner         : '2.1.0'
+      codeScanner         : '2.1.0',
+      firebaseConfig      : '16.4.0',
   ]
 
   repositories {

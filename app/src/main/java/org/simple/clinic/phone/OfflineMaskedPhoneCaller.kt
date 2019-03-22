@@ -18,11 +18,11 @@ class OfflineMaskedPhoneCaller @Inject constructor(
 
   private fun maskNumber(config: PhoneNumberMaskerConfig, numberToMask: String): String {
     return if (config.maskingEnabled) {
-      val number = config.phoneNumber
+      val proxyNumber = config.proxyPhoneNumber
 
       val stopCharacter = "#"
       val dtmfTones = "$numberToMask$stopCharacter"
-      "$number,$dtmfTones"
+      "$proxyNumber,$dtmfTones"
 
     } else {
       numberToMask

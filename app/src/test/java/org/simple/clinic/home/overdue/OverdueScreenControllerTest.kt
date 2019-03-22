@@ -49,7 +49,7 @@ class OverdueScreenControllerTest {
     controller = OverdueScreenController(
         repository,
         maskedPhoneCaller,
-        Single.just(PhoneNumberMaskerConfig(maskingEnabled = true, phoneNumber = "0123456789"))
+        Single.just(PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "0123456789"))
     )
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
@@ -177,7 +177,7 @@ class OverdueScreenControllerTest {
     val controller = OverdueScreenController(
         repository,
         maskedPhoneCaller,
-        Single.just(PhoneNumberMaskerConfig(maskingEnabled = false, phoneNumber = "0123456789"))
+        Single.just(PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "0123456789"))
     )
 
     val uiEvents = PublishSubject.create<UiEvent>()

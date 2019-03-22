@@ -20,3 +20,15 @@ When compiling the project using Android Studio's `Make Project` option, it may 
 ./gradlew assembleAndroidTest
 ```
 
+### Verifying a new user account with SMS code
+
+During development, the QA server environment defaults to using `000000` as the SMS verification code for logging in to the app. The app also tries to auto-read the OTP if an SMS is received in the format,
+
+```
+<#> 000000 is your Simple Verification Code
+{app signature}
+``` 
+
+The app signature can be found in the debug notification's title:
+
+![App signature in debug notification](doc/arch/images/app_signature_in_debug_notification.png)

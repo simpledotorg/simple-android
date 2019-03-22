@@ -42,10 +42,10 @@ data class RecentPatient(
      */
     @Query("""
         SELECT P.*,
-        BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.updatedAt bp_updatedAt,
+        BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.createdAt bp_createdAt,
         MAX(
             IFNULL(P.updatedAt, '0'),
-            IFNULL(BP.latestUpdatedAt, '0'),
+            IFNULL(BP.latestCreatedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),
             IFNULL(AP.latestUpdatedAt, '0'),
             IFNULL(COMM.latestUpdatedAt, '0'),
@@ -53,7 +53,7 @@ data class RecentPatient(
         ) latestUpdatedAt
         FROM Patient P
           LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, T.*
+            SELECT MAX(createdAt) latestCreatedAt, T.*
               FROM BloodPressureMeasurement T
               WHERE facilityUuid = :facilityUuid
               GROUP BY patientUuid
@@ -94,6 +94,6 @@ data class RecentPatient(
   data class LastBp(
       val systolic: Int,
       val diastolic: Int,
-      val updatedAt: Instant
+      val createdAt: Instant
   )
 }

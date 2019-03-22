@@ -1000,7 +1000,7 @@ class PatientRepositoryAndroidTest {
       lastBp = RecentPatient.LastBp(
           systolic = bpMeasurement.systolic,
           diastolic = bpMeasurement.diastolic,
-          updatedAt = bpMeasurement.updatedAt
+          createdAt = bpMeasurement.createdAt
       )
   )
 

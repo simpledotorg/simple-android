@@ -1,12 +1,12 @@
 package org.simple.clinic.patient
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.BuildConfig
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMeta
 import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
@@ -47,11 +47,9 @@ open class PatientModule {
   ))
 
   @Provides
-  open fun phoneNumberMaskerConfig(): Single<PhoneNumberMaskerConfig> =
-      Single.just(PhoneNumberMaskerConfig(
-          maskingEnabled = false,
-          proxyPhoneNumber = BuildConfig.MASKED_PHONE_NUMBER
-      ))
+  fun phoneNumberMaskerConfig(remoteConfig: FirebaseRemoteConfig): Single<PhoneNumberMaskerConfig> {
+    return PhoneNumberMaskerConfig.read(remoteConfig).firstOrError()
+  }
 
   @Provides
   fun provideBusinessIdMetaAdapter(moshi: Moshi): BusinessIdMetaAdapter {

@@ -23,7 +23,7 @@ data class RecentPatient(
     @Embedded(prefix = "age_")
     val age: Age?,
 
-    @Embedded(prefix = "bp_")
+    @Embedded(prefix = "last_bp_")
     val lastBp: LastBp?
 ) {
 
@@ -42,10 +42,10 @@ data class RecentPatient(
      */
     @Query("""
         SELECT P.*,
-        BP.systolic bp_systolic, BP.diastolic bp_diastolic, BP.createdAt bp_createdAt,
+        LAST_BP.systolic last_bp_systolic, LAST_BP.diastolic last_bp_diastolic, LAST_BP.createdAt last_bp_createdAt,
         MAX(
             IFNULL(P.updatedAt, '0'),
-            IFNULL(BP.latestCreatedAt, '0'),
+            IFNULL(BP_FOR_ORDERING.latestCreatedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),
             IFNULL(AP.latestUpdatedAt, '0'),
             IFNULL(COMM.latestUpdatedAt, '0'),
@@ -55,9 +55,14 @@ data class RecentPatient(
           LEFT JOIN (
             SELECT MAX(createdAt) latestCreatedAt, T.*
               FROM BloodPressureMeasurement T
+              GROUP BY patientUuid
+          ) LAST_BP ON P.uuid=LAST_BP.patientUuid
+          LEFT JOIN (
+            SELECT MAX(createdAt) latestCreatedAt, T.*
+              FROM BloodPressureMeasurement T
               WHERE facilityUuid = :facilityUuid
               GROUP BY patientUuid
-          ) BP ON P.uuid=BP.patientUuid
+          ) BP_FOR_ORDERING ON P.uuid=BP_FOR_ORDERING.patientUuid
           LEFT JOIN (
             SELECT MAX(updatedAt) latestUpdatedAt, T.*
               FROM PrescribedDrug T
@@ -81,7 +86,7 @@ data class RecentPatient(
               GROUP BY patientUuid
           ) MH ON P.uuid = MH.patientUuid
         WHERE (
-          BP.facilityUuid = :facilityUuid OR
+          BP_FOR_ORDERING.facilityUuid = :facilityUuid OR
           PD.facilityUuid = :facilityUuid OR
           AP.facilityUuid = :facilityUuid
         )

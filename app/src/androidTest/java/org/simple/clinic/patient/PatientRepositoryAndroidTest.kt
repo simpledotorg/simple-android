@@ -975,11 +975,31 @@ class PatientRepositoryAndroidTest {
     verifyRecentPatientOrder(patient2InFacility1, patient1InFacility1, facilityUuid = facility1Uuid)
   }
 
-  private fun savePatientWithBp(facilityUuid: UUID = testData.qaUserFacilityUuid()): RecentPatient {
-    val patientProfile = testData.patientProfile()
+  @Test
+  fun verify_BP_from_all_facilities_are_picked_up() {
+    val facility1Uuid = UUID.randomUUID()
+    val patientWithBp1 = savePatientWithBp(facilityUuid = facility1Uuid)
+
+    verifyRecentPatientOrder(patientWithBp1, facilityUuid = facility1Uuid)
+
+    val facility2Uuid = UUID.randomUUID()
+    val patientWithBp2 = savePatientWithBp(
+        facilityUuid = facility2Uuid,
+        patientUuid = patientWithBp1.uuid
+    )
+
+    verifyRecentPatientOrder(patientWithBp2, facilityUuid = facility1Uuid)
+    verifyRecentPatientOrder(patientWithBp2, facilityUuid = facility2Uuid)
+  }
+
+  private fun savePatientWithBp(
+      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      patientUuid: UUID = UUID.randomUUID()
+  ): RecentPatient {
+    val patientProfile = testData.patientProfile(patientUuid = patientUuid)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
-    val bpMeasurement = testData.bloodPressureMeasurement(patientUuid = patientProfile.patient.uuid, facilityUuid = facilityUuid)
+    val bpMeasurement = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facilityUuid)
     database.bloodPressureDao().save(listOf(bpMeasurement))
     return patientProfile.patient.toRecentPatient(bpMeasurement)
   }

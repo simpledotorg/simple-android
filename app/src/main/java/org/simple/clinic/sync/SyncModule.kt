@@ -80,7 +80,7 @@ class SyncModule {
 
   @Provides
   @Named("frequently_syncing_repositories")
-  fun syncRepositories(
+  fun frequentlySyncingRepositories(
       patientSyncRepository: PatientRepository,
       bloodPressureSyncRepository: BloodPressureRepository,
       medicalHistorySyncRepository: MedicalHistoryRepository,

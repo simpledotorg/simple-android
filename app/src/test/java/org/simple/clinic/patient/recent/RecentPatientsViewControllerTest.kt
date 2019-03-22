@@ -90,7 +90,7 @@ class RecentPatientsViewControllerTest {
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
             gender = TRANSGENDER,
-            lastBp = LastBp(systolic = 127, diastolic = 83, updatedAt = Instant.now())
+            lastBp = LastBp(systolic = 127, diastolic = 83, createdAt = Instant.now())
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
@@ -104,7 +104,7 @@ class RecentPatientsViewControllerTest {
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = FEMALE,
-            lastBp = LastBp(systolic = 142, diastolic = 72, updatedAt = Instant.now().minus(1, ChronoUnit.DAYS))
+            lastBp = LastBp(systolic = 142, diastolic = 72, createdAt = Instant.now().minus(1, ChronoUnit.DAYS))
         )
     )))
 

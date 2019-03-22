@@ -12,10 +12,10 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RemoveAppointmentSheet
+typealias Ui = RemoveAppointmentScreen
 typealias UiChange = (Ui) -> Unit
 
-class RemoveAppointmentSheetController @Inject constructor(
+class RemoveAppointmentScreenController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -59,14 +59,14 @@ class RemoveAppointmentSheetController @Inject constructor(
           patientRepository
               .updatePatientStatusToDead((reason as PatientDeadClicked).patientUuid)
               .andThen(appointmentRepository.cancelWithReason(uuid, Dead))
-              .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
+              .andThen(Observable.just(Ui::closeScreen))
         }
 
     val markPatientAlreadyVisitedStream = doneWithLatestFromReasons
         .filter { (_, _, reason) -> reason is PatientAlreadyVisitedClicked }
         .flatMap { (_, appointmentUuid, _) ->
           appointmentRepository.markAsAlreadyVisited(appointmentUuid)
-              .andThen(Observable.just(Ui::closeSheet))
+              .andThen(Observable.just(Ui::closeScreen))
         }
 
     val cancelWithReasonStream = doneWithLatestFromReasons
@@ -74,7 +74,7 @@ class RemoveAppointmentSheetController @Inject constructor(
         .flatMap { (_, uuid, reason) ->
           appointmentRepository
               .cancelWithReason(uuid, (reason as CancelReasonClicked).selectedReason)
-              .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
+              .andThen(Observable.just(Ui::closeScreen))
         }
 
     return Observable.merge(cancelWithReasonStream, markPatientStatusDeadStream, markPatientAlreadyVisitedStream)

@@ -29,23 +29,23 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
-class RemoveAppointmentSheetControllerTest {
+class RemoveAppointmentScreenControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val sheet = mock<RemoveAppointmentSheet>()
+  private val sheet = mock<RemoveAppointmentScreen>()
   private val repository = mock<AppointmentRepository>()
   private val patientRepository = mock<PatientRepository>()
 
   private val appointmentUuid = UUID.randomUUID()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  lateinit var controller: RemoveAppointmentSheetController
+  lateinit var controller: RemoveAppointmentScreenController
 
   @Before
   fun setUp() {
-    controller = RemoveAppointmentSheetController(repository, patientRepository)
+    controller = RemoveAppointmentScreenController(repository, patientRepository)
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
   }
 
@@ -57,7 +57,7 @@ class RemoveAppointmentSheetControllerTest {
     uiEvents.onNext(RemoveReasonDoneClicked)
 
     verify(sheet, never()).enableDoneButton()
-    verify(sheet, never()).closeSheet()
+    verify(sheet, never()).closeScreen()
   }
 
   @Test
@@ -78,7 +78,7 @@ class RemoveAppointmentSheetControllerTest {
     inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
     inOrder.verify(patientRepository).updatePatientStatusToDead(patientUuid)
     inOrder.verify(repository).cancelWithReason(appointmentUuid, Dead)
-    inOrder.verify(sheet).closeSheet()
+    inOrder.verify(sheet).closeScreen()
   }
 
   @Test
@@ -101,7 +101,7 @@ class RemoveAppointmentSheetControllerTest {
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
     inOrder.verify(repository).cancelWithReason(appointmentUuid, finallyClickedCancelReason)
-    inOrder.verify(sheet).closeSheet()
+    inOrder.verify(sheet).closeScreen()
   }
 
   @Suppress("Unused")
@@ -128,6 +128,6 @@ class RemoveAppointmentSheetControllerTest {
     val inOrder = inOrder(sheet, repository)
     inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
     inOrder.verify(repository).markAsAlreadyVisited(appointmentUuid)
-    inOrder.verify(sheet).closeSheet()
+    inOrder.verify(sheet).closeScreen()
   }
 }

@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -992,14 +993,57 @@ class PatientRepositoryAndroidTest {
     verifyRecentPatientOrder(patientWithBp2, facilityUuid = facility2Uuid)
   }
 
+  @Test
+  fun verify_createdAt_is_used_instead_of_updatedAt() {
+    val facilityUuid = UUID.randomUUID()
+    val patientUuid = UUID.randomUUID()
+
+    val creationTimeOf1stBp = Instant.now(clock)
+
+    savePatientWithBp(
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = creationTimeOf1stBp,
+        updatedAt = creationTimeOf1stBp
+    )
+
+    val recentPatient = patientRepository
+        .recentPatients(facilityUuid, limit = 10)
+        .blockingFirst()
+        .first()
+    assertEquals(creationTimeOf1stBp, recentPatient.lastBp!!.createdAt)
+
+    val creationTimeOf2ndBp = creationTimeOf1stBp.plusSeconds(5)
+    val updateTimeOf2ndBp = creationTimeOf1stBp.plusSeconds(10)
+    savePatientWithBp(
+        facilityUuid = facilityUuid,
+        patientUuid = patientUuid,
+        createdAt = creationTimeOf2ndBp,
+        updatedAt = updateTimeOf2ndBp
+    )
+
+    val recentPatientAfter2ndBp = patientRepository
+        .recentPatients(facilityUuid, limit = 10)
+        .blockingFirst()
+        .first()
+    assertEquals(creationTimeOf2ndBp, recentPatientAfter2ndBp.lastBp!!.createdAt)
+  }
+
   private fun savePatientWithBp(
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
-      patientUuid: UUID = UUID.randomUUID()
+      patientUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
-    val bpMeasurement = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facilityUuid)
+    val bpMeasurement = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt
+    )
     database.bloodPressureDao().save(listOf(bpMeasurement))
     return patientProfile.patient.toRecentPatient(bpMeasurement)
   }

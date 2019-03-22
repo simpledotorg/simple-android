@@ -50,7 +50,7 @@ open class PatientModule {
   open fun phoneNumberMaskerConfig(): Single<PhoneNumberMaskerConfig> =
       Single.just(PhoneNumberMaskerConfig(
           maskingEnabled = false,
-          phoneNumber = BuildConfig.MASKED_PHONE_NUMBER
+          proxyPhoneNumber = BuildConfig.MASKED_PHONE_NUMBER
       ))
 
   @Provides

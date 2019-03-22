@@ -6,6 +6,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.RadioButton
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -20,26 +22,24 @@ import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitio
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
-import org.simple.clinic.widgets.BottomSheetActivity
-import org.simple.clinic.widgets.PrimarySolidButton
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
 
-class RemoveAppointmentSheet : BottomSheetActivity() {
+class RemoveAppointmentScreen : AppCompatActivity() {
 
   companion object {
     private const val KEY_APPOINTMENT_UUID = "KEY_APPOINTMENT_UUID"
     private const val KEY_PATIENT_UUID = "KEY_PATIENT_UUID"
 
     fun intent(context: Context, appointmentUuid: UUID, patientUuid: UUID): Intent =
-        Intent(context, RemoveAppointmentSheet::class.java)
-            .putExtra(RemoveAppointmentSheet.KEY_APPOINTMENT_UUID, appointmentUuid)
+        Intent(context, RemoveAppointmentScreen::class.java)
+            .putExtra(RemoveAppointmentScreen.KEY_APPOINTMENT_UUID, appointmentUuid)
             .putExtra(KEY_PATIENT_UUID, patientUuid)
   }
 
   @Inject
-  lateinit var controller: RemoveAppointmentSheetController
+  lateinit var controller: RemoveAppointmentScreenController
 
   private val patientAlreadyVisitedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_already_visited)
   private val notRespondingRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_not_responding)
@@ -48,7 +48,8 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   private val movedToPrivateRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_moved_to_private)
   private val diedRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_patient_died)
   private val otherReasonRadioButton by bindView<RadioButton>(R.id.removeappointment_reason_other)
-  private val reasonSelectedDoneButton by bindView<PrimarySolidButton>(R.id.removeappointment_done_button)
+  private val reasonSelectedDoneButton by bindView<View>(R.id.removeappointment_done_button)
+  private val toolbar by bindView<Toolbar>(R.id.removeappointment_toolbar)
 
   private val onDestroys = PublishSubject.create<Any>()
 
@@ -56,7 +57,7 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
-    setContentView(R.layout.sheet_remove_appointment)
+    setContentView(R.layout.screen_remove_appointment)
     TheActivity.component.inject(this)
 
     Observable.mergeArray(
@@ -71,6 +72,8 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
         .observeOn(mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
+
+    toolbar.setNavigationOnClickListener { closeScreen() }
   }
 
   override fun onDestroy() {
@@ -115,7 +118,9 @@ class RemoveAppointmentSheet : BottomSheetActivity() {
     return Observable.merge(buttonToCancelReasons.map(reasonClicks))
   }
 
-  fun closeSheet() = finish()
+  fun closeScreen() {
+    finish()
+  }
 
   fun enableDoneButton() {
     reasonSelectedDoneButton.isEnabled = true

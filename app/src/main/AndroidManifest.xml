@@ -55,8 +55,7 @@
       android:windowSoftInputMode="adjustResize" />
 
     <activity
-      android:name=".home.overdue.removepatient.RemoveAppointmentSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:name=".home.overdue.removepatient.RemoveAppointmentScreen"
       android:windowSoftInputMode="adjustResize" />
 
     <activity

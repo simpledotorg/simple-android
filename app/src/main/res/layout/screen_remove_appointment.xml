@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:background="@color/white"
+  android:orientation="vertical">
+
+  <org.simple.clinic.widgets.ToolbarWithTintedNavIcon
+    android:id="@+id/removeappointment_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:elevation="@dimen/elevation_toolbar"
+    app:contentInsetStartWithNavigation="@dimen/spacing_56"
+    app:navigationIcon="@drawable/ic_close_24dp"
+    app:navigationIconTint="@color/grey0"
+    app:title="@string/removeappointment_select_a_reason"
+    app:titleTextAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1">
+
+    <RadioGroup
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingEnd="@dimen/spacing_16"
+      android:paddingStart="@dimen/spacing_12">
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_patient_already_visited"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_patient_already_visited" />
+
+      <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_patient_not_responding"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_patient_is_not_responding" />
+
+      <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_invalid_phone_number"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_invalid_phone_number" />
+
+      <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_public_hospital_transfer"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_public_hospital_transfer" />
+
+      <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_moved_to_private"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_moved_to_private" />
+
+      <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_patient_died"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_patient_died" />
+
+      <View style="@style/Clinic.V2.AppointmentRemovalReasonSeparator" />
+
+      <RadioButton
+        android:id="@+id/removeappointment_reason_other"
+        style="@style/Clinic.V2.AppointmentRemovalReason"
+        android:text="@string/removeappointment_other_reason" />
+    </RadioGroup>
+  </ScrollView>
+
+  <org.simple.clinic.widgets.OmegaCenterIconButton
+    android:id="@+id/removeappointment_done_button"
+    style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_16"
+    android:drawablePadding="@dimen/spacing_8"
+    android:drawableStart="@drawable/ic_done_24dp"
+    android:enabled="false"
+    android:text="@string/appointmentreminder_done"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+
+</LinearLayout>

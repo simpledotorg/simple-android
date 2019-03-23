@@ -71,7 +71,9 @@ buildscript {
     classpath 'com.android.tools.build:gradle:3.3.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentry"
-    classpath "com.heapanalytics.android:heap-android-gradle:$versions.heap"
+      if (project.hasProperty('extraDependencies')) {
+          classpath "com.heapanalytics.android:heap-android-gradle:0.8.3"
+      }
     classpath "com.google.gms:google-services:$versions.googleServices"
   }
 }

@@ -6,11 +6,10 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'io.sentry.android.gradle'
-
+if (hasProperty('heapEnabled'))
+  apply plugin: 'com.heapanalytics.android'
 
 apply from: "../quality/install-git-hook.gradle"
-if (hasProperty('heapEnabled'))
-    apply plugin: 'com.heapanalytics.android'
 
 repositories {
   maven { url 'https://jitpack.io' }

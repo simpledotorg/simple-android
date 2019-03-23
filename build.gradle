@@ -72,7 +72,7 @@ buildscript {
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$versions.kotlin"
     classpath "io.sentry:sentry-android-gradle-plugin:$versions.sentry"
       if (project.hasProperty('heapEnabled')) {
-          classpath "com.heapanalytics.android:heap-android-gradle:0.8.3"
+          classpath "com.heapanalytics.android:heap-android-gradle:$versions.heap"
       }
     classpath "com.google.gms:google-services:$versions.googleServices"
   }

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "205889824117",
+    "firebase_url": "https://simple-production-69031.firebaseio.com",
+    "project_id": "simple-production-69031",
+    "storage_bucket": "simple-production-69031.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:205889824117:android:8f8631aa57d4d20b",
+        "android_client_info": {
+          "package_name": "org.simple.clinic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "205889824117-n517gus0rgrv194nl0nlr8sjrim4l1r7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPCKvA1DrqPjlh7X6Qi3_UDUYCAVbqPhU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

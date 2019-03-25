@@ -20,7 +20,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.summary.PatientSummaryCaller
+import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.widgets.UiEvent
@@ -101,7 +101,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.ExistingPatient, Instant.now(utcClock)))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   fun openPatientEntryScreen() {

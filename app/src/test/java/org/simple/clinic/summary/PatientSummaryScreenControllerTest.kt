@@ -129,8 +129,8 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `patient's profile should be populated`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions")
+  fun `patient's profile should be populated`(intention: OpenIntention) {
     val addressUuid = UUID.randomUUID()
     val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
     val address = PatientMocker.address(uuid = addressUuid)
@@ -141,14 +141,14 @@ class PatientSummaryScreenControllerTest {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populatePatientProfile(patient, address, phoneNumber)
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `patient's prescription summary should be populated`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions")
+  fun `patient's prescription summary should be populated`(intention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
@@ -162,14 +162,14 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(eq(SummaryPrescribedDrugsItem(prescriptions)), any(), any(), any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `patient's blood pressure history should be populated`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions")
+  fun `patient's blood pressure history should be populated`(intention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
@@ -184,7 +184,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         any(),
@@ -198,7 +198,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "params for placeholder bp items")
   fun `the placeholder blood pressure items must be shown`(
-      caller: PatientSummaryCaller,
+      intention: OpenIntention,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       expectedPlaceholderItems: List<SummaryBloodPressurePlaceholderListItem>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
@@ -212,7 +212,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         prescribedDrugsItem = any(),
@@ -254,7 +254,7 @@ class PatientSummaryScreenControllerTest {
     // so we can just set it to a static value.
     return listOf(
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest1,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1, true),
@@ -264,7 +264,7 @@ class PatientSummaryScreenControllerTest {
             emptyList<SummaryBloodPressureListItem>()
         ),
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest2,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -275,7 +275,7 @@ class PatientSummaryScreenControllerTest {
             )
         ),
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest3,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -287,7 +287,7 @@ class PatientSummaryScreenControllerTest {
             )
         ),
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest4,
             listOf(
                 SummaryBloodPressurePlaceholderListItem(1),
@@ -300,7 +300,7 @@ class PatientSummaryScreenControllerTest {
             )
         ),
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest5,
             listOf(SummaryBloodPressurePlaceholderListItem(1)),
             listOf(
@@ -310,7 +310,7 @@ class PatientSummaryScreenControllerTest {
             )
         ),
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest6,
             emptyList<SummaryBloodPressurePlaceholderListItem>(),
             listOf(
@@ -323,8 +323,8 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `patient's medical history should be populated`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions")
+  fun `patient's medical history should be populated`(openIntention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
@@ -336,15 +336,15 @@ class PatientSummaryScreenControllerTest {
     val medicalHistory = medicalHistory(updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(any(), any(), any(), eq(SummaryMedicalHistoryItem(medicalHistory, Today)))
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
-  fun `when new-BP is clicked then BP entry sheet should be shown`(caller: PatientSummaryCaller) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+  @Parameters(method = "patient summary open intentions except new patient")
+  fun `when new-BP is clicked then BP entry sheet should be shown`(openIntention: OpenIntention) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryNewBpClicked())
 
     verify(screen, times(1)).showBloodPressureEntrySheet(patientUuid)
@@ -353,30 +353,32 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when screen was opened after saving a new patient then BP entry sheet should be shown`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = PatientSummaryCaller.NewPatient, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = OpenIntention.ViewNewPatient, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen, times(1)).showBloodPressureEntrySheetIfNotShownAlready(any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
-  fun `when screen was opened from any caller except creating a new patient, the BP entry sheet should not be shown`(caller: PatientSummaryCaller) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+  @Parameters(method = "patient summary open intentions except new patient")
+  fun `when screen was opened for any intention except creating a new patient, the BP entry sheet should not be shown`(
+      openIntention: OpenIntention
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen, never()).showBloodPressureEntrySheet(any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
+  @Parameters(method = "patient summary open intentions")
   fun `when there are patient summary changes and all bps are not deleted, clicking on back must show the schedule appointment sheet`(
-      patientSummaryCaller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
-        caller = patientSummaryCaller,
+        openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(clock)
     ))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
@@ -389,16 +391,16 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
+  @Parameters(method = "patient summary open intentions")
   fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
-      patientSummaryCaller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
-        caller = patientSummaryCaller,
+        openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(clock)
     ))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
@@ -406,7 +408,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NewPatient) {
+    if (openIntention == OpenIntention.ViewNewPatient) {
       verify(screen).goBackToHome()
     } else {
       verify(screen).goBackToPatientSearch()
@@ -414,16 +416,16 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
+  @Parameters(method = "patient summary open intentions")
   fun `when there are no patient summary changes and all bps are not deleted, clicking on back must go back`(
-      patientSummaryCaller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
-        caller = patientSummaryCaller,
+        openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(clock)
     ))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
@@ -431,7 +433,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NewPatient) {
+    if (openIntention == OpenIntention.ViewNewPatient) {
       verify(screen).goBackToHome()
     } else {
       verify(screen).goBackToPatientSearch()
@@ -439,16 +441,16 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
+  @Parameters(method = "patient summary open intentions")
   fun `when there are no patient summary changes and all bps are deleted, clicking on back must go back`(
-      patientSummaryCaller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
-        caller = patientSummaryCaller,
+        openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(clock)
     ))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
@@ -456,7 +458,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (patientSummaryCaller == PatientSummaryCaller.NewPatient) {
+    if (openIntention == OpenIntention.ViewNewPatient) {
       verify(screen).goBackToHome()
     } else {
       verify(screen).goBackToPatientSearch()
@@ -464,9 +466,9 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers and summary item changed")
+  @Parameters(method = "patient summary open intentions and summary item changed")
   fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet`(
-      patientSummaryCaller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       patientSummaryItemChanged: Boolean
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
@@ -474,7 +476,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
-        caller = patientSummaryCaller,
+        openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(clock)
     ))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
@@ -487,9 +489,9 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers and summary item changed")
+  @Parameters(method = "patient summary open intentions and summary item changed")
   fun `when all bps are deleted, clicking on save must go to the home screen`(
-      patientSummaryCaller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       patientSummaryItemChanged: Boolean
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
@@ -497,7 +499,7 @@ class PatientSummaryScreenControllerTest {
 
     uiEvents.onNext(PatientSummaryScreenCreated(
         patientUuid = patientUuid,
-        caller = patientSummaryCaller,
+        openIntention = openIntention,
         screenCreatedTimestamp = Instant.now(clock)
     ))
     uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
@@ -510,27 +512,27 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `when update medicines is clicked then BP medicines screen should be shown`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions")
+  fun `when update medicines is clicked then BP medicines screen should be shown`(openIntention: OpenIntention) {
     val config = PatientSummaryConfig(
         numberOfBpPlaceholders = 0,
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(PatientSummaryUpdateDrugsClicked())
 
     verify(screen).showUpdatePrescribedDrugsScreen(patientUuid)
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `when the screen is opened, the viewed patient analytics event must be sent`(fromCaller: PatientSummaryCaller) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, fromCaller, Instant.now(clock)))
+  @Parameters(method = "patient summary open intentions")
+  fun `when the screen is opened, the viewed patient analytics event must be sent`(openIntention: OpenIntention) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     val expectedEvent = MockAnalyticsReporter.Event("ViewedPatient", mapOf(
         "patientId" to patientUuid.toString(),
-        "from" to fromCaller.analyticsName()
+        "from" to openIntention.analyticsName()
     ))
     assertThat(reporter.receivedEvents).contains(expectedEvent)
   }
@@ -538,7 +540,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "medicalHistoryQuestionsAndAnswers")
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
-      caller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       question: MedicalHistoryQuestion,
       newAnswer: MedicalHistory.Answer
   ) {
@@ -553,7 +555,7 @@ class PatientSummaryScreenControllerTest {
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
@@ -575,7 +577,7 @@ class PatientSummaryScreenControllerTest {
     val questions = MedicalHistoryQuestion.values().asList()
     return questions
         .asSequence()
-        .map { question -> listOf(randomPatientSummaryCaller(), question, randomAnswer()) }
+        .map { question -> listOf(randomPatientSummaryOpenIntention(), question, randomAnswer()) }
         .toList()
   }
 
@@ -590,14 +592,14 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "params for patient item changed")
   fun `when anything is changed on the screen, assert that patient result preference is updated`(
-      caller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       status: SyncStatus,
       screenCreated: Instant,
       hasChanged: Boolean
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, screenCreated))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, screenCreated))
 
-    // Clearing invocations here because we have some special cases for a caller of NewPatient,
+    // Clearing invocations here because we have some special cases for a intention of ViewNewPatient,
     // which are irrelevant to this test.
     clearInvocations(screen)
     clearInvocations(patientSummaryResult)
@@ -616,19 +618,19 @@ class PatientSummaryScreenControllerTest {
   @Suppress("unused")
   fun `params for patient item changed`(): Array<Array<Any>> {
     return arrayOf(
-        arrayOf(randomPatientSummaryCaller(), "PENDING", Instant.now(clock), true),
-        arrayOf(randomPatientSummaryCaller(), "PENDING", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false),
-        arrayOf(randomPatientSummaryCaller(), "DONE", Instant.now(clock), false),
-        arrayOf(randomPatientSummaryCaller(), "DONE", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false)
+        arrayOf(randomPatientSummaryOpenIntention(), "PENDING", Instant.now(clock), true),
+        arrayOf(randomPatientSummaryOpenIntention(), "PENDING", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false),
+        arrayOf(randomPatientSummaryOpenIntention(), "DONE", Instant.now(clock), false),
+        arrayOf(randomPatientSummaryOpenIntention(), "DONE", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false)
     )
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
-  fun `when an appointment is scheduled, patient result should be set`(caller: PatientSummaryCaller) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+  @Parameters(method = "patient summary open intentions")
+  fun `when an appointment is scheduled, patient result should be set`(openIntention: OpenIntention) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
-    // Clearing invocations here because we have some special cases for a caller of NewPatient,
+    // Clearing invocations here because we have some special cases for a intention of ViewNewPatient,
     // which are irrelevant to this test.
     clearInvocations(screen)
     clearInvocations(patientSummaryResult)
@@ -640,13 +642,13 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers")
+  @Parameters(method = "patient summary open intentions")
   fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`(
-      caller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
-    // Clearing invocations here because we have some special cases for a caller of NewPatient,
+    // Clearing invocations here because we have some special cases for a intention of ViewNewPatient,
     // which are irrelevant to this test.
     clearInvocations(screen)
     clearInvocations(patientSummaryResult)
@@ -677,7 +679,7 @@ class PatientSummaryScreenControllerTest {
 
   @Test
   fun `when a new patient is registered, always show the status as saved`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, OpenIntention.ViewNewPatient, Instant.now(clock)))
 
     verify(patientSummaryResult, times(1)).set(PatientSummaryResult.Saved(patientUuid))
   }
@@ -685,7 +687,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "params for BP grouped by date")
   fun `when BPs are grouped by dates, then only the last BP item in every group should show divider`(
-      caller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       bloodPressureMeasurements: List<BloodPressureMeasurement>,
       expectedBloodPressureMeasurementItems: List<SummaryBloodPressureListItem>
   ) {
@@ -698,7 +700,7 @@ class PatientSummaryScreenControllerTest {
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory()))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller = caller, screenCreatedTimestamp = Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen).populateList(
         prescribedDrugsItem = any(),
@@ -735,7 +737,7 @@ class PatientSummaryScreenControllerTest {
 
     return listOf(
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest1,
             listOf(
                 SummaryBloodPressureListItem(measurement = bpsForTest1[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest1[0].createdAt), addTopPadding = false),
@@ -743,7 +745,7 @@ class PatientSummaryScreenControllerTest {
                 SummaryBloodPressureListItem(measurement = bpsForTest1[2], daysAgo = Today, showDivider = true, formattedTime = null, addTopPadding = false)
             )),
         listOf(
-            randomPatientSummaryCaller(),
+            randomPatientSummaryOpenIntention(),
             bpsForTest2,
             listOf(
                 SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[0].createdAt), addTopPadding = false),
@@ -758,7 +760,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when patient's phone was marked as invalid after the phone number was last updated then update phone dialog should be shown`(
-      caller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
@@ -774,7 +776,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     if (cancelReason == InvalidPhoneNumber) {
       verify(screen).showUpdatePhoneDialog(patientUuid)
@@ -786,7 +788,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when patient's phone was marked as invalid before the phone number was last updated then update phone dialog should not be shown`(
-      caller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
     val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
@@ -802,7 +804,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -810,7 +812,7 @@ class PatientSummaryScreenControllerTest {
   @Test
   @Parameters(method = "appointment cancelation reasons")
   fun `when update phone dialog feature is disabled then it should never be shown`(
-      caller: PatientSummaryCaller,
+      openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
     val appointmentStream = Observable.just(
@@ -824,7 +826,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -833,12 +835,12 @@ class PatientSummaryScreenControllerTest {
   fun `appointment cancelation reasons`() =
       AppointmentCancelReason
           .values()
-          .map { listOf(randomPatientSummaryCaller(), it) }
+          .map { listOf(randomPatientSummaryOpenIntention(), it) }
 
   @Test
-  @Parameters(method = "patient summary callers")
+  @Parameters(method = "patient summary open intentions")
   fun `when a canceled appointment with the patient does not exist then update phone dialog should not be shown`(
-      caller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     val appointmentStream = Observable.just(
         None,
@@ -850,7 +852,7 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
@@ -865,21 +867,21 @@ class PatientSummaryScreenControllerTest {
         numberOfBpsToDisplay = 100)
     configSubject.onNext(config)
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, OpenIntention.ViewNewPatient, Instant.now(clock)))
 
     verify(screen, never()).showUpdatePhoneDialog(patientUuid)
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
+  @Parameters(method = "patient summary open intentions except new patient")
   fun `when an existing patient is missing a phone number, a BP is recorded, and the user has never been reminded, then add phone dialog should be shown`(
-      caller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
     uiEvents.onNext(PatientSummaryBloodPressureSaved)
 
     verify(screen).showAddPhoneDialog(patientUuid)
@@ -887,97 +889,97 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
+  @Parameters(method = "patient summary open intentions except new patient")
   fun `when an existing patient is missing a phone number, a BP hasn't been recorded yet, and the user has never been reminded, then add phone dialog should not be shown`(
-      caller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
     whenever(missingPhoneReminderRepository.markReminderAsShownFor(patientUuid)).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
+  @Parameters(method = "patient summary open intentions except new patient")
   fun `when an existing patient is missing a phone number, and the user has been reminded before, then add phone dialog should not be shown`(
-      caller: PatientSummaryCaller
+      openIntention: OpenIntention
   ) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(true))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
-  fun `when an existing patient has a phone number, then add phone dialog should not be shown`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions except new patient")
+  fun `when an existing patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
-  fun `when a new patient has a phone number, then add phone dialog should not be shown`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions except new patient")
+  fun `when a new patient has a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     val phoneNumber = Just(PatientMocker.phoneNumber(number = "101"))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
   @Test
-  @Parameters(method = "patient summary callers except new patient")
-  fun `when a new patient is missing a phone number, then add phone dialog should not be shown`(caller: PatientSummaryCaller) {
+  @Parameters(method = "patient summary open intentions except new patient")
+  fun `when a new patient is missing a phone number, then add phone dialog should not be shown`(openIntention: OpenIntention) {
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(None))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.just(false))
 
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, caller, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     verify(screen, never()).showAddPhoneDialog(patientUuid)
     verify(missingPhoneReminderRepository, never()).markReminderAsShownFor(any())
   }
 
-  private fun randomPatientSummaryCaller() = `patient summary callers`().shuffled().first()
+  private fun randomPatientSummaryOpenIntention() = `patient summary open intentions`().shuffled().first()
 
   @Suppress("Unused")
-  private fun `patient summary callers`() = listOf(
-      PatientSummaryCaller.ExistingPatient,
-      PatientSummaryCaller.NewPatient,
-      PatientSummaryCaller.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
+  private fun `patient summary open intentions`() = listOf(
+      OpenIntention.ViewExistingPatient,
+      OpenIntention.ViewNewPatient,
+      OpenIntention.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
   )
 
   @Suppress("Unused")
-  private fun `patient summary callers except new patient`() = listOf(
-      PatientSummaryCaller.ExistingPatient,
-      PatientSummaryCaller.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
+  private fun `patient summary open intentions except new patient`() = listOf(
+      OpenIntention.ViewExistingPatient,
+      OpenIntention.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
   )
 
   @Suppress("Unused")
-  private fun `patient summary callers and summary item changed`(): List<List<Any>> {
+  private fun `patient summary open intentions and summary item changed`(): List<List<Any>> {
     val addIdToPatient = AddIdToPatient.BpPassport(bpPassportCode = UUID.randomUUID(), bpPassportShortCode = "1234567")
 
     return listOf(
-        listOf(PatientSummaryCaller.ExistingPatient, true),
-        listOf(PatientSummaryCaller.ExistingPatient, false),
-        listOf(PatientSummaryCaller.NewPatient, true),
-        listOf(PatientSummaryCaller.NewPatient, false),
-        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), true),
-        listOf(PatientSummaryCaller.LinkIdWithPatient(addIdToPatient), false))
+        listOf(OpenIntention.ViewExistingPatient, true),
+        listOf(OpenIntention.ViewExistingPatient, false),
+        listOf(OpenIntention.ViewNewPatient, true),
+        listOf(OpenIntention.ViewNewPatient, false),
+        listOf(OpenIntention.LinkIdWithPatient(addIdToPatient), true),
+        listOf(OpenIntention.LinkIdWithPatient(addIdToPatient), false))
   }
 }

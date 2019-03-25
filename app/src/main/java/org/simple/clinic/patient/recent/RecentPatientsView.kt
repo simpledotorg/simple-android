@@ -17,7 +17,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.summary.PatientSummaryCaller
+import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
@@ -92,7 +92,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     activity.screenRouter.push(
         PatientSummaryScreenKey(
             patientUuid = patientUuid,
-            caller = PatientSummaryCaller.ExistingPatient,
+            intention = OpenIntention.ViewExistingPatient,
             screenCreatedTimestamp = Instant.now(utcClock)
         ))
   }

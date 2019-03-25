@@ -20,7 +20,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestionView
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.summary.PatientSummaryCaller
+import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
@@ -105,7 +105,7 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
           .map { SaveMedicalHistoryClicked() }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
-    screenRouter.push(PatientSummaryScreenKey(patientUuid, PatientSummaryCaller.NewPatient, Instant.now(utcClock)))
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewNewPatient, Instant.now(utcClock)))
   }
 
   fun setPatientName(patientName: String) {

@@ -11,7 +11,7 @@ import java.util.UUID
 @Parcelize
 data class PatientSummaryScreenKey(
     val patientUuid: UUID,
-    val caller: PatientSummaryCaller,
+    val intention: OpenIntention,
     val screenCreatedTimestamp: Instant
 ) : FullScreenKey, Parcelable {
 

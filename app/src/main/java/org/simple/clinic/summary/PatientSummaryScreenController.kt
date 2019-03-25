@@ -31,8 +31,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
-import org.simple.clinic.summary.PatientSummaryCaller.NewPatient
-import org.simple.clinic.summary.PatientSummaryCaller.ExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -91,7 +91,7 @@ class PatientSummaryScreenController @Inject constructor(
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PatientSummaryScreenCreated>()
         .take(1L)
-        .doOnNext { (patientUuid, caller) -> Analytics.reportViewedPatient(patientUuid, caller.analyticsName()) }
+        .doOnNext { (patientUuid, openIntention) -> Analytics.reportViewedPatient(patientUuid, openIntention.analyticsName()) }
         .flatMap { Observable.empty<UiChange>() }
   }
 
@@ -264,7 +264,7 @@ class PatientSummaryScreenController @Inject constructor(
 
     val autoShows = events
         .ofType<PatientSummaryScreenCreated>()
-        .filter { it.caller == NewPatient }
+        .filter { it.openIntention == ViewNewPatient }
         .withLatestFrom(patientUuid)
         .map { (_, patientUuid) -> { ui: Ui -> ui.showBloodPressureEntrySheetIfNotShownAlready(patientUuid) } }
 
@@ -333,9 +333,9 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun goBackWhenBackClicked(events: Observable<UiEvent>): Observable<UiChange> {
-    val callers = events
+    val openIntentions = events
         .ofType<PatientSummaryScreenCreated>()
-        .map { it.caller }
+        .map { it.openIntention }
 
     val patientSummaryItemChanges = events
         .ofType<PatientSummaryItemChanged>()
@@ -363,15 +363,15 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryBackClicked>()
 
     val goBackToHomeScreen = backClicks
-        .withLatestFrom(shouldGoBackStream, callers)
+        .withLatestFrom(shouldGoBackStream, openIntentions)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, caller) -> caller == NewPatient }
+        .filter { (_, _, openIntention) -> openIntention == ViewNewPatient }
         .map { { ui: Ui -> ui.goBackToHome() } }
 
     val goBackToSearchResults = backClicks
-        .withLatestFrom(shouldGoBackStream, callers)
+        .withLatestFrom(shouldGoBackStream, openIntentions)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, caller) -> caller != NewPatient }
+        .filter { (_, _, openIntention) -> openIntention != ViewNewPatient }
         .map { { ui: Ui -> ui.goBackToPatientSearch() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
@@ -390,9 +390,9 @@ class PatientSummaryScreenController @Inject constructor(
   }
 
   private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
-    val callers = events
+    val openIntentions = events
         .ofType<PatientSummaryScreenCreated>()
-        .map { it.caller }
+        .map { it.openIntention }
 
     val scheduleAppointmentCloses = events
         .ofType<ScheduleAppointmentSheetClosed>()
@@ -404,13 +404,13 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
 
     val afterBackClicks = scheduleAppointmentCloses
-        .withLatestFrom(backClicks, callers)
-        .map { (_, _, caller) ->
+        .withLatestFrom(backClicks, openIntentions)
+        .map { (_, _, openIntention) ->
           { ui: Ui ->
-            when (caller!!) {
-              ExistingPatient -> ui.goBackToPatientSearch()
-              is PatientSummaryCaller.LinkIdWithPatient -> ui.goBackToPatientSearch()
-              NewPatient -> ui.goBackToHome()
+            when (openIntention!!) {
+              ViewExistingPatient -> ui.goBackToPatientSearch()
+              is OpenIntention.LinkIdWithPatient -> ui.goBackToPatientSearch()
+              ViewNewPatient -> ui.goBackToHome()
             }.exhaustive()
           }
         }
@@ -433,7 +433,7 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
 
     val isPatientNew = screenCreates
-        .filter { it.caller == NewPatient }
+        .filter { it.openIntention == ViewNewPatient }
         .map { Saved(it.patientUuid) as PatientSummaryResult }
 
     val appointmentScheduled = events.ofType<AppointmentScheduled>()
@@ -471,7 +471,7 @@ class PatientSummaryScreenController @Inject constructor(
 
     val showForMissingPhone = Observables
         .combineLatest(screenCreations, waitTillABpIsRecorded) { screenCreated, _ -> screenCreated }
-        .filter { it.caller != NewPatient }
+        .filter { it.openIntention != ViewNewPatient }
         .map { it.patientUuid }
         .switchMap { patientUuid ->
           isMissingPhoneAndShouldBeReminded(patientUuid)

@@ -279,3 +279,7 @@ dependencies {
 
   implementation "com.budiyev.android:code-scanner:$versions.codeScanner"
 }
+
+// This must always be present at the bottom of this file, as per:
+// https://console.firebase.google.com/u/2/project/simple-org/settings/general/
+apply plugin: 'com.google.gms.google-services'

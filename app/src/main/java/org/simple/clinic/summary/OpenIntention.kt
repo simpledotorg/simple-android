@@ -4,22 +4,22 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.addidtopatient.AddIdToPatient
 
-sealed class PatientSummaryCaller : Parcelable {
+sealed class OpenIntention : Parcelable {
 
   abstract fun analyticsName(): String
 
   @Parcelize
-  object ExistingPatient : PatientSummaryCaller() {
+  object ViewExistingPatient : OpenIntention() {
     override fun analyticsName() = "SEARCH"
   }
 
   @Parcelize
-  object NewPatient : PatientSummaryCaller() {
+  object ViewNewPatient : OpenIntention() {
     override fun analyticsName() = "NEW_PATIENT"
   }
 
   @Parcelize
-  data class LinkIdWithPatient(val addIdToPatient: AddIdToPatient) : PatientSummaryCaller() {
+  data class LinkIdWithPatient(val addIdToPatient: AddIdToPatient) : OpenIntention() {
     override fun analyticsName() = "LINK_ID_WITH_PATIENT"
   }
 }

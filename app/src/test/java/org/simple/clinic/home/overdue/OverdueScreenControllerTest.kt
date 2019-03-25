@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -21,6 +22,7 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.phone.Caller
 import org.simple.clinic.phone.MaskedPhoneCaller
+import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
@@ -38,13 +40,17 @@ class OverdueScreenControllerTest {
   private val maskedPhoneCaller = mock<MaskedPhoneCaller>()
   private val reporter = MockAnalyticsReporter()
 
-  lateinit var controller: OverdueScreenController
+  private lateinit var controller: OverdueScreenController
 
   @Before
   fun setUp() {
     whenever(maskedPhoneCaller.maskAndCall(any(), any())).thenReturn(Completable.complete())
 
-    controller = OverdueScreenController(repository, maskedPhoneCaller)
+    controller = OverdueScreenController(
+        repository,
+        maskedPhoneCaller,
+        Single.just(PhoneNumberMaskerConfig(maskingEnabled = true, phoneNumber = "0123456789"))
+    )
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
@@ -139,5 +145,63 @@ class OverdueScreenControllerTest {
         arrayOf(RuntimePermissionResult.DENIED, true),
         arrayOf(RuntimePermissionResult.NEVER_ASK_AGAIN, true)
     )
+  }
+
+  @Test
+  fun `when masking is enabled then the header should be added`() {
+    val overdueAppointment = PatientMocker.overdueAppointment(riskLevelIndex = 0)
+    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf(overdueAppointment)))
+
+    uiEvents.onNext(OverdueScreenCreated())
+
+    verify(screen).updateList(listOf(
+        OverdueListItem.Header,
+        OverdueListItem.Patient(
+            appointmentUuid = overdueAppointment.appointment.uuid,
+            patientUuid = overdueAppointment.appointment.patientUuid,
+            name = overdueAppointment.fullName,
+            gender = overdueAppointment.gender,
+            age = 30,
+            phoneNumber = null,
+            bpSystolic = overdueAppointment.bloodPressure.systolic,
+            bpDiastolic = overdueAppointment.bloodPressure.diastolic,
+            bpDaysAgo = 0,
+            overdueDays = 0,
+            isAtHighRisk = true
+        )
+    ))
+  }
+
+  @Test
+  fun `when masking is disabled then the header should be not shown`() {
+    val controller = OverdueScreenController(
+        repository,
+        maskedPhoneCaller,
+        Single.just(PhoneNumberMaskerConfig(maskingEnabled = false, phoneNumber = "0123456789"))
+    )
+
+    val uiEvents = PublishSubject.create<UiEvent>()
+    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+
+    val overdueAppointment = PatientMocker.overdueAppointment(riskLevelIndex = 0)
+    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf(overdueAppointment)))
+
+    uiEvents.onNext(OverdueScreenCreated())
+
+    verify(screen).updateList(listOf(
+        OverdueListItem.Patient(
+            appointmentUuid = overdueAppointment.appointment.uuid,
+            patientUuid = overdueAppointment.appointment.patientUuid,
+            name = overdueAppointment.fullName,
+            gender = overdueAppointment.gender,
+            age = 30,
+            phoneNumber = null,
+            bpSystolic = overdueAppointment.bloodPressure.systolic,
+            bpDiastolic = overdueAppointment.bloodPressure.diastolic,
+            bpDaysAgo = 0,
+            overdueDays = 0,
+            isAtHighRisk = true
+        )
+    ))
   }
 }

@@ -79,8 +79,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun updateList(overdueListItems: List<OverdueListItem>) {
-    val listOfItems = listOf(OverdueListItem.Header) + overdueListItems
-    overdueListAdapter.submitList(listOfItems)
+    overdueListAdapter.submitList(overdueListItems)
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## xxxxxxxxx
+- ?
+
+## 2019-03-25-3403
+- Suggest nearby facilities to nurse, if switching after logging in
+- Updated patient summary screen design
+- Show “recent patients” on the home screen
+- Sync status changes to “Pending” when patient data is updated
+- Hide the sync indicator if nurse hasn’t been approved
+
 ## 3269-18Mar
 - While creating a new account, facilities located nearby are automatically suggested 
 - Scheduling an appointment shows new date options 

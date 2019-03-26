@@ -989,7 +989,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun verify_BP_from_all_facilities_are_picked_up() {
+  fun verify_BP_from_all_facilities_are_included_when_fetching_recent_patients() {
     val facility1Uuid = UUID.randomUUID()
     val patientWithBp1 = savePatientWithBp(facilityUuid = facility1Uuid)
 
@@ -1041,11 +1041,25 @@ class PatientRepositoryAndroidTest {
     assertEquals(creationTimeOf2ndBp, recentPatientAfter2ndBp.lastBp!!.createdAt)
   }
 
+  @Test
+  fun verify_deleted_bps_are_not_included_when_fetching_recent_patients() {
+    val facilityUuid = testData.qaUserFacilityUuid()
+    val recentPatient1 = savePatientWithBp(facilityUuid = facilityUuid)
+    savePatientWithBp(facilityUuid = facilityUuid, deletedAt = Instant.now())
+    val recentPatient3 = savePatientWithBp(facilityUuid = facilityUuid)
+
+    patientRepository
+        .recentPatients(facilityUuid, limit = 10)
+        .test()
+        .assertValue(listOf(recentPatient3, recentPatient1))
+  }
+
   private fun savePatientWithBp(
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -1054,7 +1068,8 @@ class PatientRepositoryAndroidTest {
         patientUuid = patientUuid,
         facilityUuid = facilityUuid,
         createdAt = createdAt,
-        updatedAt = updatedAt
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
     return patientProfile.patient.toRecentPatient(bpMeasurement)

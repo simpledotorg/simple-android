@@ -69,22 +69,26 @@ data class RecentPatient(
             SELECT MAX(updatedAt) latestUpdatedAt, T.*
               FROM PrescribedDrug T
               WHERE facilityUuid = :facilityUuid
+              AND deletedAt IS NULL
               GROUP BY patientUuid
           ) PD ON P.uuid = PD.patientUuid
           LEFT JOIN (
             SELECT MAX(updatedAt) latestUpdatedAt, T.*
               FROM Appointment T
               WHERE facilityUuid = :facilityUuid
+              AND deletedAt IS NULL
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
           LEFT JOIN (
             SELECT MAX(updatedAt) latestUpdatedAt, T.*
               FROM Communication T
+              WHERE deletedAt IS NULL
               GROUP BY appointmentUuid
           ) COMM ON AP.uuid = COMM.appointmentUuid
           LEFT JOIN (
             SELECT MAX(updatedAt) latestUpdatedAt, T.*
               FROM MedicalHistory T
+              WHERE deletedAt IS NULL
               GROUP BY patientUuid
           ) MH ON P.uuid = MH.patientUuid
         WHERE (

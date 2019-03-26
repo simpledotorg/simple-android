@@ -55,14 +55,16 @@ data class RecentPatient(
           LEFT JOIN (
             SELECT MAX(createdAt) latestCreatedAt, T.*
               FROM BloodPressureMeasurement T
+              WHERE deletedAt IS NULL
               GROUP BY patientUuid
-          ) LAST_BP ON P.uuid=LAST_BP.patientUuid
+          ) LAST_BP ON P.uuid = LAST_BP.patientUuid
           LEFT JOIN (
             SELECT MAX(createdAt) latestCreatedAt, T.*
               FROM BloodPressureMeasurement T
               WHERE facilityUuid = :facilityUuid
+              AND deletedAt IS NULL
               GROUP BY patientUuid
-          ) BP_FOR_ORDERING ON P.uuid=BP_FOR_ORDERING.patientUuid
+          ) BP_FOR_ORDERING ON P.uuid = BP_FOR_ORDERING.patientUuid
           LEFT JOIN (
             SELECT MAX(updatedAt) latestUpdatedAt, T.*
               FROM PrescribedDrug T

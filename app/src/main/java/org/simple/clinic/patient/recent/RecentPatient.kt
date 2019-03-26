@@ -41,7 +41,7 @@ data class RecentPatient(
     4. Order by latestUpdatedAt from final list and cap it to 10 entries.
      */
     @Query("""
-        SELECT P.*,
+        SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
         LAST_BP.systolic last_bp_systolic, LAST_BP.diastolic last_bp_diastolic, LAST_BP.createdAt last_bp_createdAt,
         MAX(
             IFNULL(P.updatedAt, '0'),
@@ -53,41 +53,41 @@ data class RecentPatient(
         ) latestUpdatedAt
         FROM Patient P
           LEFT JOIN (
-            SELECT MAX(createdAt) latestCreatedAt, T.*
-              FROM BloodPressureMeasurement T
+            SELECT MAX(createdAt) latestCreatedAt, patientUuid, systolic, diastolic, createdAt
+              FROM BloodPressureMeasurement
               WHERE deletedAt IS NULL
               GROUP BY patientUuid
           ) LAST_BP ON P.uuid = LAST_BP.patientUuid
           LEFT JOIN (
-            SELECT MAX(createdAt) latestCreatedAt, T.*
-              FROM BloodPressureMeasurement T
+            SELECT MAX(createdAt) latestCreatedAt, patientUuid, facilityUuid
+              FROM BloodPressureMeasurement
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
               GROUP BY patientUuid
           ) BP_FOR_ORDERING ON P.uuid = BP_FOR_ORDERING.patientUuid
           LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, T.*
-              FROM PrescribedDrug T
+            SELECT MAX(updatedAt) latestUpdatedAt, patientUuid, facilityUuid
+              FROM PrescribedDrug
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
               GROUP BY patientUuid
           ) PD ON P.uuid = PD.patientUuid
           LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, T.*
-              FROM Appointment T
+            SELECT MAX(updatedAt) latestUpdatedAt, uuid, patientUuid, facilityUuid
+              FROM Appointment
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
           LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, T.*
-              FROM Communication T
+            SELECT MAX(updatedAt) latestUpdatedAt, appointmentUuid
+              FROM Communication
               WHERE deletedAt IS NULL
               GROUP BY appointmentUuid
           ) COMM ON AP.uuid = COMM.appointmentUuid
           LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, T.*
-              FROM MedicalHistory T
+            SELECT MAX(updatedAt) latestUpdatedAt, patientUuid
+              FROM MedicalHistory
               WHERE deletedAt IS NULL
               GROUP BY patientUuid
           ) MH ON P.uuid = MH.patientUuid

@@ -24,6 +24,7 @@ data class Appointment(
     val cancelReason: AppointmentCancelReason?,
     val remindOn: LocalDate?,
     val agreedToVisit: Boolean?,
+    val isDefaulter: Boolean?,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
     val updatedAt: Instant,

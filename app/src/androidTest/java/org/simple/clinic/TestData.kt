@@ -19,7 +19,6 @@ import org.simple.clinic.overdue.AppointmentPayload
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.Patient
@@ -29,6 +28,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
@@ -480,6 +480,7 @@ class TestData @Inject constructor(
       cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
+      isDefaulter: Boolean? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -493,6 +494,7 @@ class TestData @Inject constructor(
         cancelReason = cancelReason,
         remindOn = remindOn,
         agreedToVisit = agreedToVisit,
+        isDefaulter = isDefaulter,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,

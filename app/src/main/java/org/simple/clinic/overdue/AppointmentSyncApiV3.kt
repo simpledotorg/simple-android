@@ -7,14 +7,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface AppointmentSyncApiV2 {
+interface AppointmentSyncApiV3 {
 
-  @POST("v2/appointments/sync")
+  @POST("v3/appointments/sync")
   fun push(
       @Body body: AppointmentPushRequest
   ): Single<DataPushResponse>
 
-  @GET("v2/appointments/sync")
+  @GET("v3/appointments/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

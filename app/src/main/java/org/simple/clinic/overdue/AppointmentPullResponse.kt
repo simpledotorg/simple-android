@@ -5,12 +5,12 @@ import com.squareup.moshi.JsonClass
 import org.simple.clinic.sync.DataPullResponse
 
 @JsonClass(generateAdapter = true)
-data class AppointmentPullResponseV1(
+data class AppointmentPullResponse(
 
     @Json(name = "appointments")
     override val payloads: List<AppointmentPayload>,
 
-    @Json(name = "processed_since")
+    @Json(name = "process_token")
     override val processToken: String
 
 ) : DataPullResponse<AppointmentPayload>

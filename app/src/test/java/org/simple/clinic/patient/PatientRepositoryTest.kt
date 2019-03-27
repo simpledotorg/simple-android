@@ -299,7 +299,9 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    val actualResults = repository.search("name").blockingFirst()
+    val actualResults = repository.search("name").blockingFirst().run {
+      visitedCurrentFacility + notVisitedCurrentFacility
+    }
 
     assertThat(actualResults).isEqualTo(expectedResults)
   }

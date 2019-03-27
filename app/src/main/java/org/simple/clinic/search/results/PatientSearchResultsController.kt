@@ -8,15 +8,19 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchResults
+import org.simple.clinic.search.results.PatientSearchResultsItemType.InCurrentFacilityHeader
+import org.simple.clinic.search.results.PatientSearchResultsItemType.NoPatientsInCurrentFacility
+import org.simple.clinic.search.results.PatientSearchResultsItemType.NotInCurrentFacilityHeader
+import org.simple.clinic.search.results.PatientSearchResultsItemType.PatientSearchResultRow
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Clock
-import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
@@ -27,7 +31,10 @@ typealias UiChange = (Ui) -> Unit
 class PatientSearchResultsController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val phoneObfuscator: PhoneNumberObfuscator,
+    private val utcClock: UtcClock,
+    @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -58,10 +65,37 @@ class PatientSearchResultsController @Inject constructor(
         }
         .map { (results, currentFacility) ->
           { ui: Ui ->
-            ui.updateSearchResults(results, currentFacility)
-            ui.setEmptyStateVisible(results.isEmpty())
+            ui.updateSearchResults(generateListItems(results, currentFacility))
+            ui.setEmptyStateVisible(results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty())
           }
         }
+  }
+
+  private fun generateListItems(
+      results: PatientSearchResults,
+      currentFacility: Facility
+  ): List<PatientSearchResultsItemType> {
+    if (results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty()) return emptyList()
+
+    val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {
+      results.visitedCurrentFacility.map {
+        PatientSearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock)
+      }
+    } else {
+      listOf(NoPatientsInCurrentFacility)
+    }
+
+    val itemsInOtherFacility = if (results.notVisitedCurrentFacility.isNotEmpty()) {
+      listOf(NotInCurrentFacilityHeader) +
+          results.notVisitedCurrentFacility.map {
+            PatientSearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock)
+          }
+    } else {
+      emptyList()
+    }
+    return listOf(InCurrentFacilityHeader(facilityName = currentFacility.name)) +
+        itemsInCurrentFacility +
+        itemsInOtherFacility
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

@@ -19,7 +19,7 @@
     android:layout_marginBottom="104dp"
     android:layout_marginEnd="@dimen/spacing_8"
     android:layout_marginStart="@dimen/spacing_8"
-    android:background="@drawable/recentpatients_empty_state_background"
+    android:background="@drawable/results_row_empty_state_background"
     android:padding="@dimen/spacing_16"
     android:text="@string/patients_recentpatients_no_recent_patients" />
 </FrameLayout>

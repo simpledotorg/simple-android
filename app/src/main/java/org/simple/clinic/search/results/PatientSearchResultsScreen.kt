@@ -10,29 +10,29 @@ import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
+import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.newentry.PatientEntryScreenKey
-import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
-
-  @Inject
-  lateinit var adapter: PatientSearchResultsAdapter
 
   @Inject
   lateinit var screenRouter: ScreenRouter
@@ -42,6 +42,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  private val adapter = GroupAdapter<ViewHolder>()
+  private val adapterUiEvents: Subject<UiEvent> = PublishSubject.create()
 
   private val toolbar by bindView<Toolbar>(R.id.patientsearchresults_toolbar)
   private val recyclerView by bindView<RecyclerView>(R.id.patientsearchresults_results)
@@ -58,7 +61,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     setupScreen()
 
     Observable
-        .mergeArray(screenCreates(), newPatientClicks(), adapter.itemClicks)
+        .mergeArray(screenCreates(), newPatientClicks(), adapterUiEvents)
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -89,8 +92,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
           .clicks(newPatientButton)
           .map { CreateNewPatientClicked() }
 
-  fun updateSearchResults(results: List<PatientSearchResult>, currentFacility: Facility) {
-    adapter.updateAndNotifyChanges(results, currentFacility)
+  fun updateSearchResults(results: List<PatientSearchResultsItemType>) {
+    results.forEach { it.uiEvents = adapterUiEvents }
+    adapter.update(results)
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {
@@ -102,7 +106,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun setEmptyStateVisible(visible: Boolean) {
-    emptyStateView.visibility = if (visible) View.VISIBLE else View.GONE
+    emptyStateView.visibleOrGone(visible)
 
     newPatientRationaleTextView.setText(when {
       visible -> R.string.patientsearchresults_register_patient_rationale_for_empty_state
@@ -114,7 +118,4 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     })
   }
 
-  fun showComputedAge(age: String) {
-    queryAgeTextView.text = age
-  }
 }

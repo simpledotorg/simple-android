@@ -57,7 +57,7 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun search(name: String): Observable<List<PatientSearchResult>> {
+  fun search(name: String): Observable<PatientSearchResults> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)
 
     val fetchPatientNameAnalytics = "Fetch Name and Id"
@@ -87,7 +87,7 @@ class PatientRepository @Inject constructor(
                   .map { results ->
                     timingTracker.stop(fetchPatientDetailsAnalytics)
                     val resultsByUuid = results.associateBy { it.uuid }
-                    matchingUuidsSortedByScore.map { resultsByUuid[it]!! }
+                    matchingUuidsSortedByScore.map { resultsByUuid.getValue(it) }
                   }
             }
           }
@@ -99,7 +99,7 @@ class PatientRepository @Inject constructor(
   }
 
   // TODO: Get user from caller.
-  private fun sortByCurrentFacility(): ObservableTransformer<List<PatientSearchResult>, List<PatientSearchResult>> {
+  private fun sortByCurrentFacility(): ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
     return ObservableTransformer { upstream ->
       val searchResults = upstream.replay().refCount()
 
@@ -129,9 +129,16 @@ class PatientRepository @Inject constructor(
                   facilityUuids
                 } as Map<PatientUuid, Set<FacilityUuid>>
 
-            patients.sortedByDescending {
+            val hasVisitedCurrentFacility: (PatientSearchResult) -> Boolean = {
               patientToUniqueFacilities[it.uuid]?.contains(currentFacility) ?: false
             }
+
+            val (patientsInCurrentFacility, patientsInOtherFacility) = patients.partition(hasVisitedCurrentFacility)
+
+            PatientSearchResults(
+                visitedCurrentFacility = patientsInCurrentFacility,
+                notVisitedCurrentFacility = patientsInOtherFacility
+            )
           }
     }
   }

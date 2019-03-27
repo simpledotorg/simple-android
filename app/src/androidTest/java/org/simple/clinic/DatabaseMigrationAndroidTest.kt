@@ -1353,12 +1353,62 @@ class DatabaseMigrationAndroidTest {
   fun migration_30_to_31() {
     val tableName = "MissingPhoneReminder"
 
-    val db_v29 = helper.createDatabase(30)
-    db_v29.assertTableDoesNotExist(tableName)
+    val db_v30 = helper.createDatabase(30)
+    db_v30.assertTableDoesNotExist(tableName)
 
-    val db_v30 = helper.migrateTo(31)
-    db_v30.assertTableExists(tableName)
-    db_v30.assertColumnCount(tableName, 2)
+    val db_v31 = helper.migrateTo(31)
+    db_v31.assertTableExists(tableName)
+    db_v31.assertColumnCount(tableName, 2)
+  }
+
+  @Test
+  fun migration_31_to_32() {
+    val tableName = "Appointment"
+    val columnCount_v31 = 12
+
+    val db_31 = helper.createDatabase(version = 31)
+    db_31.assertColumnCount(tableName, columnCount_v31)
+    db_31.execSQL("""
+      INSERT INTO "Appointment" VALUES(
+        'uuid',
+        'patientUuid',
+        'facility-uuid',
+        'scheduled-date',
+        'status',
+        'cancel-reason',
+        'remind-on',
+        1,
+        'PENDING',
+        'created-at',
+        'updated-at',
+        'deleted-at'
+        )
+    """)
+
+    val db_32 = helper.migrateTo(version = 32)
+
+    val columnCount_v32 = columnCount_v31 + 1
+
+    db_32.query("""
+      SELECT * FROM "Appointment"
+    """).use {
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(columnCount_v32)
+
+      assertThat(it.string("uuid")).isEqualTo("uuid")
+      assertThat(it.string("patientUuid")).isEqualTo("patientUuid")
+      assertThat(it.string("facilityUuid")).isEqualTo("facility-uuid")
+      assertThat(it.string("scheduledDate")).isEqualTo("scheduled-date")
+      assertThat(it.string("status")).isEqualTo("status")
+      assertThat(it.string("cancelReason")).isEqualTo("cancel-reason")
+      assertThat(it.string("remindOn")).isEqualTo("remind-on")
+      assertThat(it.boolean("agreedToVisit")).isTrue()
+      assertThat(it.string("isDefaulter")).isEqualTo(null)
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+      assertThat(it.string("createdAt")).isEqualTo("created-at")
+      assertThat(it.string("updatedAt")).isEqualTo("updated-at")
+      assertThat(it.string("deletedAt")).isEqualTo("deleted-at")
+    }
   }
 }
 

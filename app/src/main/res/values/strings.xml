@@ -32,6 +32,9 @@
   <string name="patientsearchresults_item_name_with_gender_and_age">%1$s, %2$s, %3$d</string>
   <string name="patientsearchresults_item_address_with_colony_and_district">%1$s, %2$s</string>
   <string name="patientsearchresults_item_last_bp_date_with_facility">%1$s, %2$s</string>
+  <string name="patientsearchresults_current_facility_header">Has visited %s</string>
+  <string name="patientsearchresults_other_results_header">Other Results</string>
+  <string name="patientsearchresults_no_patients_match">No patients match</string>
 
   <!-- Manual patient entry -->
   <string name="patiententry_contentdescription_up_button">Go back to search</string>

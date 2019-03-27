@@ -22,7 +22,8 @@ class AppointmentModule {
   fun config(): Single<AppointmentConfig> {
     return Single.just(AppointmentConfig(
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
-        overduePeriodForLowestRiskLevel = Period.ofDays(365)))
+        overduePeriodForLowestRiskLevel = Period.ofDays(365),
+        isAppointmentV3Enabled = false))
   }
 
   @Provides

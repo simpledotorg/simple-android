@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import com.facebook.stetho.Stetho
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.leakcanary.LeakCanary
 import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Observable
@@ -119,6 +120,16 @@ class DebugClinicApp : ClinicApp() {
           }
         })
         .networkModule(object : NetworkModule() {
+          override fun remoteConfig(): FirebaseRemoteConfig {
+            return super.remoteConfig().apply {
+              // Enable developer mode so that calls are not throttled during dev.
+              // More details in FirebaseRemoteConfigCacheExpiration.
+              setConfigSettings(FirebaseRemoteConfigSettings.Builder()
+                  .setDeveloperModeEnabled(true)
+                  .build())
+            }
+          }
+
           override fun remoteConfigCacheExpiration() = FirebaseRemoteConfigCacheExpiration.DEBUG
         })
         .build()

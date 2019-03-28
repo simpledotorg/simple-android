@@ -33,6 +33,9 @@ data class AppointmentPayload(
     @Json(name = "agreed_to_visit")
     val agreedToVisit: Boolean?,
 
+    @Json(name = "is_defaulter")
+    val isDefaulter: Boolean?,
+
     @Json(name = "created_at")
     val createdAt: Instant,
 

@@ -1,8 +1,8 @@
 package org.simple.clinic.phone
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import io.reactivex.Observable
 import org.simple.clinic.BuildConfig
+import org.simple.clinic.remoteconfig.ConfigReader
 
 data class PhoneNumberMaskerConfig(
     val maskingEnabled: Boolean,
@@ -10,22 +10,13 @@ data class PhoneNumberMaskerConfig(
 ) {
 
   companion object {
-    private const val KEY_MASKING_ENABLED = "phonenumbermasker_masking_enabled"
-    private const val KEY_PROXY_PHONE_NUM = "phonenumbermasker_proxy_phone_number"
 
-    fun read(source: FirebaseRemoteConfig): Observable<PhoneNumberMaskerConfig> {
+    fun read(reader: ConfigReader): Observable<PhoneNumberMaskerConfig> {
       return Observable.fromCallable {
         PhoneNumberMaskerConfig(
-            maskingEnabled = source.getBoolean(KEY_MASKING_ENABLED),
-            proxyPhoneNumber = source.getString(KEY_PROXY_PHONE_NUM))
+            maskingEnabled = reader.boolean("phonenumbermasker_masking_enabled", default = false),
+            proxyPhoneNumber = reader.string("phonenumbermasker_proxy_phone_number", default = BuildConfig.MASKED_PHONE_NUMBER))
       }
-    }
-
-    fun defaultValues(): Map<String, Any> {
-      return mapOf(
-          KEY_MASKING_ENABLED to false,
-          KEY_PROXY_PHONE_NUM to BuildConfig.MASKED_PHONE_NUMBER
-      )
     }
   }
 }

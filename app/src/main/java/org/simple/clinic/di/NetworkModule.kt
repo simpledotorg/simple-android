@@ -1,7 +1,6 @@
 package org.simple.clinic.di
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
-import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
@@ -107,15 +106,9 @@ open class NetworkModule {
 
   @Provides
   @AppScope
-  fun remoteConfig(): FirebaseRemoteConfig {
+  open fun remoteConfig(): FirebaseRemoteConfig {
     return FirebaseRemoteConfig.getInstance().apply {
       setDefaults(PhoneNumberMaskerConfig.defaultValues())
-
-      // Enable developer mode so that calls are not throttled during dev.
-      // More details in FirebaseRemoteConfigCacheExpiration.
-      setConfigSettings(FirebaseRemoteConfigSettings.Builder()
-          .setDeveloperModeEnabled(BuildConfig.DEBUG)
-          .build())
     }
   }
 

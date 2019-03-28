@@ -1,4 +1,4 @@
-include ':app', ':router', ':spellfix', ':appium' 
+include ':app', ':router', ':spellfix'
 
 buildCache {
     local(DirectoryBuildCache) {

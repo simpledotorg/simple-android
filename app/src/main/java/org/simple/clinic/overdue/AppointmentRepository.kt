@@ -32,7 +32,7 @@ class AppointmentRepository @Inject constructor(
     private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Single<Appointment> {
+  fun schedule(patientUuid: UUID, appointmentDate: LocalDate, isDefaulter: Boolean?): Single<Appointment> {
     val newAppointmentStream = facilityRepository
         .currentFacility(userSession)
         .firstOrError()
@@ -46,7 +46,7 @@ class AppointmentRepository @Inject constructor(
               cancelReason = null,
               remindOn = null,
               agreedToVisit = null,
-              isDefaulter = null,
+              isDefaulter = isDefaulter,
               syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(utcClock),
               updatedAt = Instant.now(utcClock),
@@ -57,6 +57,10 @@ class AppointmentRepository @Inject constructor(
         }
 
     return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
+  }
+
+  fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Single<Appointment> {
+    return schedule(patientUuid, appointmentDate, null)
   }
 
   private fun markOlderAppointmentsAsVisited(patientUuid: UUID): Completable {

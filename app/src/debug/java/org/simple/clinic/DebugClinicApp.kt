@@ -15,12 +15,14 @@ import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
+import org.simple.clinic.di.NetworkModule
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.sync.SyncScheduler
@@ -115,6 +117,9 @@ class DebugClinicApp : ClinicApp() {
             return super.providePatientConfig()
                 .map { it.copy(scanSimpleCardFeatureEnabled = true) }
           }
+        })
+        .networkModule(object : NetworkModule() {
+          override fun remoteConfigCacheExpiration() = FirebaseRemoteConfigCacheExpiration.DEBUG
         })
         .build()
   }

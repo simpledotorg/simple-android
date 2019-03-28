@@ -15,6 +15,7 @@ import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
@@ -109,9 +110,17 @@ open class NetworkModule {
   fun remoteConfig(): FirebaseRemoteConfig {
     return FirebaseRemoteConfig.getInstance().apply {
       setDefaults(PhoneNumberMaskerConfig.defaultValues())
+
+      // Enable developer mode so that calls are not throttled during dev.
+      // More details in FirebaseRemoteConfigCacheExpiration.
       setConfigSettings(FirebaseRemoteConfigSettings.Builder()
           .setDeveloperModeEnabled(BuildConfig.DEBUG)
           .build())
     }
+  }
+
+  @Provides
+  open fun remoteConfigCacheExpiration(): FirebaseRemoteConfigCacheExpiration {
+    return FirebaseRemoteConfigCacheExpiration.PRODUCTION
   }
 }

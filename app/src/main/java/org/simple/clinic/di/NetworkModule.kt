@@ -13,7 +13,8 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.sync.PatientPayload
-import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.remoteconfig.ConfigReader
+import org.simple.clinic.remoteconfig.FirebaseConfigReader
 import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.util.InstantMoshiAdapter
@@ -107,9 +108,12 @@ open class NetworkModule {
   @Provides
   @AppScope
   open fun remoteConfig(): FirebaseRemoteConfig {
-    return FirebaseRemoteConfig.getInstance().apply {
-      setDefaults(PhoneNumberMaskerConfig.defaultValues())
-    }
+    return FirebaseRemoteConfig.getInstance()
+  }
+
+  @Provides
+  fun remoteConfigReader(firebase: FirebaseRemoteConfig): ConfigReader {
+    return FirebaseConfigReader(firebase)
   }
 
   @Provides

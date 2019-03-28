@@ -23,6 +23,7 @@ import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule

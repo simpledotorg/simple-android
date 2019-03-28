@@ -17,6 +17,7 @@ import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
 import org.simple.clinic.patient.fuzzy.PercentageFuzzer
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Period
 
@@ -46,9 +47,8 @@ open class PatientModule {
       periodSinceLastVisitToDefaultPatient = Period.ofDays(30)
   ))
 
-  @Provides
-  fun phoneNumberMaskerConfig(remoteConfig: FirebaseRemoteConfig): Single<PhoneNumberMaskerConfig> {
-    return PhoneNumberMaskerConfig.read(remoteConfig).firstOrError()
+  open fun phoneNumberMaskerConfig(reader: ConfigReader): Single<PhoneNumberMaskerConfig> {
+    return PhoneNumberMaskerConfig.read(reader).firstOrError()
   }
 
   @Provides

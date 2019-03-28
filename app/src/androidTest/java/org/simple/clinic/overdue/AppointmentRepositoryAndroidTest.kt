@@ -826,4 +826,24 @@ class AppointmentRepositoryAndroidTest {
     }
     assertThat(database.appointmentDao().getOne(appointmentUuid2)).isEqualTo(secondAppointment)
   }
+
+  @Test
+  fun when_scheduling_appointment_for_defaulter_patient_then_the_appointment_should_be_saved_as_defaulter() {
+    val patientId = UUID.randomUUID()
+    val appointmentDate = LocalDate.now(clock)
+    appointmentRepository.schedule(
+        patientUuid = patientId,
+        appointmentDate = appointmentDate,
+        isDefaulter = true
+    ).blockingGet()
+
+    val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
+    savedAppointment.let {
+      assertThat(it.patientUuid).isEqualTo(patientId)
+      assertThat(it.scheduledDate).isEqualTo(appointmentDate)
+      assertThat(it.status).isEqualTo(Appointment.Status.SCHEDULED)
+      assertThat(it.syncStatus).isEqualTo(SyncStatus.PENDING)
+      assertThat(it.isDefaulter).isTrue()
+    }
+  }
 }

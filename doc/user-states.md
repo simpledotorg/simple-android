@@ -1,5 +1,8 @@
 # User States
 
+(If this file is viewed on github.com, the markdown will be rendered as a table.)
+
+
 | Logged In Status (Local to App) | User Status (Server and App) | Can sync data | Can add data | How does the user get to this state                                                                                                                                                                                                                                                                     | Will access token be present? | Notification to show on Home Screen | Initial screen to show when opened | Should show lock screen |
 |---------------------------------|------------------------------|---------------|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------------------------------|-------------------------------------|------------------------------------|-------------------------|
 | Not Logged In                   | Waiting For Approval         | No            | Yes                   | 1. When they select a facility during registration and the user is stored locally before scheduling the background registration call<br> 2. When a user number match is found on the server during login, but the request OTP call has not yet been made | No                           | Waiting for approval                | Home                               | Yes                     |

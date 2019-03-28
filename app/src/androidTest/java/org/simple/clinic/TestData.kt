@@ -1,6 +1,7 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
+import io.bloco.faker.components.Bool
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
@@ -510,6 +511,7 @@ class TestData @Inject constructor(
       cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
+      isDefaulter: Boolean? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -523,6 +525,7 @@ class TestData @Inject constructor(
         cancelReason = cancelReason,
         remindOn = remindOn,
         agreedToVisit = agreedToVisit,
+        isDefaulter = isDefaulter,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

@@ -60,6 +60,7 @@ class AppointmentSync @Inject constructor(
                 cancelReason = cancelReason,
                 remindOn = remindOn,
                 agreedToVisit = agreedToVisit,
+                isDefaulter = isDefaulter,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
                 deletedAt = deletedAt)

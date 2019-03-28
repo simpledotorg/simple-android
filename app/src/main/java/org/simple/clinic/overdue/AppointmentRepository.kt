@@ -211,7 +211,7 @@ class AppointmentRepository @Inject constructor(
           cancelReason = cancelReason,
           remindOn = remindOn,
           agreedToVisit = agreedToVisit,
-          isDefaulter = null,
+          isDefaulter = isDefaulter,
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt,

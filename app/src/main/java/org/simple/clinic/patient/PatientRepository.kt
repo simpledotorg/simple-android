@@ -517,7 +517,7 @@ class PatientRepository @Inject constructor(
               .patientDao()
               .isPatientDefaulter(
                   patientUuid = patientUuid,
-                  lastRecordedBpThreshold = LocalDate.now(utcClock).minusDays(it.days.toLong())
+                  lastRecordedBpThreshold = LocalDate.now(utcClock).minus(it)
               ).toObservable()
         }
   }

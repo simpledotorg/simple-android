@@ -1,6 +1,5 @@
 package org.simple.clinic.patient
 
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
@@ -47,7 +46,8 @@ open class PatientModule {
       periodSinceLastVisitToDefaultPatient = Period.ofDays(30)
   ))
 
-  open fun phoneNumberMaskerConfig(reader: ConfigReader): Single<PhoneNumberMaskerConfig> {
+  @Provides
+  fun phoneNumberMaskerConfig(reader: ConfigReader): Single<PhoneNumberMaskerConfig> {
     return PhoneNumberMaskerConfig.read(reader).firstOrError()
   }
 

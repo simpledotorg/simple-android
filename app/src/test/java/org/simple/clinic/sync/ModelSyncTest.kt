@@ -93,7 +93,26 @@ class ModelSyncTest {
                   appointmentConfig = Single.just(AppointmentConfig(
                       minimumOverduePeriodForHighRisk = Period.ofDays(30),
                       overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = false)))
+                      isApiV3Enabled = true,
+                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
+            },
+            setOf(PUSH, PULL)),
+        listOf<Any>(
+            { syncCoordinator: SyncCoordinator, userSession: UserSession ->
+              AppointmentSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  apiV2 = mock(),
+                  apiV3 = mock(),
+                  userSession = userSession,
+                  lastPullTokenV2 = mock(),
+                  lastPullTokenV3 = mock(),
+                  configProvider = syncConfigProvider,
+                  appointmentConfig = Single.just(AppointmentConfig(
+                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
+                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
+                      isApiV3Enabled = false,
+                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -286,7 +305,26 @@ class ModelSyncTest {
                   appointmentConfig = Single.just(AppointmentConfig(
                       minimumOverduePeriodForHighRisk = Period.ofDays(30),
                       overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = false)))
+                      isApiV3Enabled = true,
+                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
+            },
+            shouldPushHappen = false),
+        testCase(
+            modelSyncProvider = { syncCoordinator, userSession ->
+              AppointmentSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  apiV2 = mock(),
+                  apiV3 = mock(),
+                  userSession = userSession,
+                  lastPullTokenV2 = mock(),
+                  lastPullTokenV3 = mock(),
+                  configProvider = syncConfigProvider,
+                  appointmentConfig = Single.just(AppointmentConfig(
+                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
+                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
+                      isApiV3Enabled = false,
+                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
             },
             shouldPushHappen = false),
         testCase(
@@ -421,7 +459,26 @@ class ModelSyncTest {
                   appointmentConfig = Single.just(AppointmentConfig(
                       minimumOverduePeriodForHighRisk = Period.ofDays(30),
                       overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = false)))
+                      isApiV3Enabled = true,
+                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
+            },
+            shouldPullHappen = false),
+        testCase(
+            modelSyncProvider = { syncCoordinator, userSession ->
+              AppointmentSync(
+                  syncCoordinator = syncCoordinator,
+                  repository = mock(),
+                  apiV2 = mock(),
+                  apiV3 = mock(),
+                  userSession = userSession,
+                  lastPullTokenV2 = mock(),
+                  lastPullTokenV3 = mock(),
+                  configProvider = syncConfigProvider,
+                  appointmentConfig = Single.just(AppointmentConfig(
+                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
+                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
+                      isApiV3Enabled = false,
+                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
             },
             shouldPullHappen = false),
         testCase(

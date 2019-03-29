@@ -1,19 +1,25 @@
 package org.simple.clinic.remoteconfig
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigFetchThrottledException
 import io.reactivex.Completable
 import io.reactivex.Single
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
+import org.simple.clinic.util.ErrorResolver
+import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.exhaustive
 import timber.log.Timber
 import javax.inject.Inject
 
 class RemoteConfigSync @Inject constructor(
     private val remoteConfig: FirebaseRemoteConfig,
-    private val cacheExpiration: FirebaseRemoteConfigCacheExpiration
+    private val cacheExpiration: FirebaseRemoteConfigCacheExpiration,
+    private val crashReporter: CrashReporter
 ) : ModelSync {
 
   override fun sync(): Completable = pull()
@@ -21,7 +27,7 @@ class RemoteConfigSync @Inject constructor(
   override fun push(): Completable = Completable.complete()
 
   override fun pull(): Completable {
-    return Completable.fromAction {
+    val fetch = Completable.fromAction {
       remoteConfig.fetch(cacheExpiration.value.seconds)
           .addOnCompleteListener { task ->
             if (task.isSuccessful) {
@@ -31,6 +37,29 @@ class RemoteConfigSync @Inject constructor(
               Timber.w("Failed to update Firebase remote config")
             }
           }
+    }
+
+    return fetch
+        .doOnError(logError())
+        .onErrorComplete()
+  }
+
+  private fun logError() = { e: Throwable ->
+    if (e is FirebaseRemoteConfigFetchThrottledException) {
+      // This is expected.
+
+    } else {
+      val resolvedError = ErrorResolver.resolve(e)
+      when (resolvedError) {
+        is ResolvedError.Unexpected -> {
+          crashReporter.report(resolvedError.actualCause)
+          Timber.e(resolvedError.actualCause)
+        }
+        is ResolvedError.NetworkRelated -> {
+          // Connectivity issues are expected.
+          Timber.e(e)
+        }
+      }.exhaustive()
     }
   }
 

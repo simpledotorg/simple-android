@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -13,12 +14,15 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
+import org.threeten.bp.Period
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
@@ -30,15 +34,23 @@ class ScheduleAppointmentSheetControllerTest {
 
   private val sheet = mock<ScheduleAppointmentSheet>()
   private val repository = mock<AppointmentRepository>()
+  private val patientRepository = mock<PatientRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val uuid = UUID.randomUUID()
+  private val utcClock = TestUtcClock()
+  private val configStream = PublishSubject.create<AppointmentConfig>()
 
   lateinit var controller: ScheduleAppointmentSheetController
 
   @Before
   fun setUp() {
-    controller = ScheduleAppointmentSheetController(repository)
+    controller = ScheduleAppointmentSheetController(
+        appointmentRepository = repository,
+        patientRepository = patientRepository,
+        configProvider = configStream.firstOrError(),
+        utcClock = utcClock
+    )
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
   }
@@ -118,10 +130,37 @@ class ScheduleAppointmentSheetControllerTest {
   )
 
   @Test
-  fun `when not-now is clicked, appointment should not be scheduled, and sheet should dismiss`() {
+  @Parameters(value = [
+    "true, false",
+    "true, true",
+    "false, false",
+    "false, true"])
+  fun `when not-now is clicked, appointment should not be scheduled, and sheet should dismiss`(isApiV3Enabled: Boolean, isPatientDefaulter: Boolean) {
+    whenever(patientRepository.isPatientDefaulter(uuid)).thenReturn(Observable.just(isPatientDefaulter))
+    whenever(repository.schedule(any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+
+    configStream.onNext(AppointmentConfig(
+        minimumOverduePeriodForHighRisk = Period.ofDays(30),
+        overduePeriodForLowestRiskLevel = Period.ofDays(365),
+        isApiV3Enabled = isApiV3Enabled,
+        appointmentDuePeriodForDefaulters = Period.ofDays(30)
+    ))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+        defaultDateIndex = 3,
+        patientUuid = uuid,
+        numberOfDates = 4
+    ))
     uiEvents.onNext(SchedulingSkipped())
 
-    verify(repository, never()).schedule(any(), any())
+    if (isApiV3Enabled && isPatientDefaulter) {
+      verify(repository).schedule(
+          patientUuid = uuid,
+          appointmentDate = LocalDate.now(utcClock).plus(Period.ofDays(30)),
+          isDefaulter = isPatientDefaulter
+      )
+    } else {
+      verify(repository, never()).schedule(any(), any(), any())
+    }
     verify(sheet).closeSheet()
   }
 
@@ -130,7 +169,7 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(repository.schedule(any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val current = ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS)
-    val date = LocalDate.now(UTC).plus(1, ChronoUnit.MONTHS)
+    val date = LocalDate.now(utcClock).plus(1, ChronoUnit.MONTHS)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(3, uuid, 4))
     uiEvents.onNext(AppointmentScheduled(current))
 

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.home.help.HelpScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/help_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/help_title" />
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <WebView
+      android:id="@+id/help_webview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent" />
+
+    <LinearLayout
+      android:id="@+id/help_no_content"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:gravity="center"
+      android:orientation="vertical">
+
+      <TextView
+        style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/help_no_connection" />
+    </LinearLayout>
+  </FrameLayout>
+</org.simple.clinic.home.help.HelpScreen>

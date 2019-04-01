@@ -21,6 +21,7 @@ import org.simple.clinic.facility.change.FacilityChangeScreen
 import org.simple.clinic.forgotpin.confirmpin.ForgotPinConfirmPinScreen
 import org.simple.clinic.forgotpin.createnewpin.ForgotPinCreateNewPinScreen
 import org.simple.clinic.home.HomeScreen
+import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
@@ -107,6 +108,7 @@ interface TheActivityComponent {
   fun inject(patientsScreenKey: PatientsScreenKey)
   fun inject(target: SyncIndicatorView)
   fun inject(target: AddPhoneNumberDialog)
+  fun inject(helpScreen: HelpScreen)
 
   @Subcomponent.Builder
   interface Builder {

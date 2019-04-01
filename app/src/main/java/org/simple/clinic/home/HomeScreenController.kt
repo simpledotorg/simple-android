@@ -29,7 +29,13 @@ class HomeScreenController @Inject constructor(
 
   private fun currentFacility(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ScreenCreated>()
-        .flatMap { facilityRepository.currentFacility(userSession) }
+        .flatMap {
+          userSession
+              .requireLoggedInUser()
+              .switchMap {
+                facilityRepository.currentFacility(it)
+              }
+        }
         .map { { ui: Ui -> ui.setFacility(it.name) } }
   }
 

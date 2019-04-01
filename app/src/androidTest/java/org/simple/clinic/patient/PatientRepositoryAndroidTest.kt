@@ -1143,6 +1143,49 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
+  fun verify_deleted_appointments_are_not_included_when_fetching_recent_patients() {
+    val facilityUuid = UUID.randomUUID()
+    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid)
+    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, deletedAt = Instant.now())
+    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid)
+
+    patientRepository
+        .recentPatients(facilityUuid, limit = 10)
+        .test()
+        .assertValue(listOf(recentPatient3, recentPatient1))
+  }
+
+  private fun savePatientWithAppointment(
+      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      patientUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ): RecentPatient {
+    val patientProfile = testData.patientProfile(patientUuid = patientUuid)
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val appointment = testData.appointment(
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+    database.appointmentDao().save(listOf(appointment))
+    return patientProfile.patient.run {
+      RecentPatient(
+          uuid = uuid,
+          fullName = fullName,
+          gender = gender,
+          dateOfBirth = dateOfBirth,
+          age = age,
+          lastBp = null
+      )
+    }
+  }
+
+  @Test
   fun verify_saving_business_ids_works_as_expected() {
     if (config.scanSimpleCardFeatureEnabled) {
       // This test is a temporary test added to verify saving business IDs with patients works as

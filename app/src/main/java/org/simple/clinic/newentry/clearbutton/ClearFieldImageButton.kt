@@ -44,6 +44,9 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
+    if(isInEditMode) {
+      return
+    }
     ClinicApp.appComponent.inject(this)
 
     try {

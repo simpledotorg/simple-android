@@ -3,6 +3,7 @@ package org.simple.clinic.home
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
@@ -16,7 +17,8 @@ typealias UiChange = (Ui) -> Unit
 
 class HomeScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository
+    private val facilityRepository: FacilityRepository,
+    private val homeScreenConfig: Observable<HomeScreenConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -24,7 +26,8 @@ class HomeScreenController @Inject constructor(
 
     return Observable.merge(
         currentFacility(replayedEvents),
-        changeFacility(replayedEvents))
+        changeFacility(replayedEvents),
+        toggleVisiblityOfShowHelpButton(replayedEvents))
   }
 
   private fun currentFacility(events: Observable<UiEvent>): Observable<UiChange> {
@@ -43,5 +46,15 @@ class HomeScreenController @Inject constructor(
     return events
         .ofType<HomeFacilitySelectionClicked>()
         .map { { ui: Ui -> ui.openFacilitySelection() } }
+  }
+
+  private fun toggleVisiblityOfShowHelpButton(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreates = events.ofType<ScreenCreated>()
+
+    return Observables
+        .combineLatest(screenCreates, homeScreenConfig) { _, config ->
+          config.vs01Apr19HelpScreenEnabled
+        }
+        .map { showHelpButtonEnabled -> { ui: Ui -> ui.showHelpButton(showHelpButtonEnabled) } }
   }
 }

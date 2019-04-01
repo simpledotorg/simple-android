@@ -20,6 +20,7 @@ import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -34,6 +35,10 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   @Inject
   lateinit var screenRouter: ScreenRouter
+
+  private val showHelpMenuItem by lazy(LazyThreadSafetyMode.NONE) {
+    toolBar.menu.findItem(R.id.home_actionhelp)
+  }
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -88,5 +93,9 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
   fun openFacilitySelection() {
     screenRouter.push(FacilityChangeScreenKey())
+  }
+
+  fun showHelpButton(isVisible: Boolean) {
+    showHelpMenuItem.visibleOrGone(isVisible)
   }
 }

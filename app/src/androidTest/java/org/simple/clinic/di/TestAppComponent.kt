@@ -12,6 +12,7 @@ import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
 import org.simple.clinic.editpatient.PatientEditScreenUiTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
+import org.simple.clinic.help.HelpSyncAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
@@ -69,4 +70,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: ReportsSyncAndroidTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaAdapterAndroidTest)
+  fun inject(target: HelpSyncAndroidTest)
 }

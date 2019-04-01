@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <color name="color_primary">@color/blue0</color>
-  <color name="color_primary_dark">@color/blue0</color>
+  <color name="color_primary_dark">@color/status_bar</color>
   <color name="color_accent">@color/blue1</color>
   <color name="color_accent_ripple">@color/blue1_opacity_26</color>
   <color name="color_error">@color/red1</color>

@@ -1,5 +1,6 @@
 package org.simple.clinic.home
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -10,6 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
@@ -37,10 +39,12 @@ class HomeScreenControllerTest {
   }
 
   @Test
-  fun when_home_screen_is_created_current_selected_facility_should_be_set() {
+  fun `when home screen is created current selected facility should be set`() {
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser()))
     val facility1 = PatientMocker.facility(name = "CHC Buchho")
     val facility2 = PatientMocker.facility(name = "CHC Nathana")
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility1, facility2))
+    whenever(facilityRepository.currentFacility(any<User>()))
+        .thenReturn(Observable.just(facility1, facility2))
 
     uiEvents.onNext(ScreenCreated())
 

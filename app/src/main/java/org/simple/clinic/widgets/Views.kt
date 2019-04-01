@@ -6,6 +6,7 @@ import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.util.DisplayMetrics
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
@@ -222,4 +223,9 @@ fun <T> EditText.textChanges(mapper: (String) -> T): Observable<T> {
 
 fun View.visibleOrGone(isVisible: Boolean) {
   visibility = if (isVisible) View.VISIBLE else View.GONE
+}
+
+fun MenuItem.visibleOrGone(isVisible: Boolean) {
+  this.isVisible = isVisible
+  this.isEnabled = isVisible
 }

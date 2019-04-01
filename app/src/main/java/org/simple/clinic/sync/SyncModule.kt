@@ -11,6 +11,8 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilityModule
 import org.simple.clinic.facility.FacilitySync
+import org.simple.clinic.help.HelpModule
+import org.simple.clinic.help.HelpSync
 import org.simple.clinic.medicalhistory.MedicalHistoryModule
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
@@ -39,7 +41,8 @@ import javax.inject.Named
   CommunicationModule::class,
   MedicalHistoryModule::class,
   ProtocolModule::class,
-  ReportsModule::class])
+  ReportsModule::class,
+  HelpModule::class])
 class SyncModule {
 
   @Provides
@@ -71,13 +74,14 @@ class SyncModule {
       communicationSync: CommunicationSync,
       prescriptionSync: PrescriptionSync,
       reportsSync: ReportsSync,
-      remoteConfigSync: RemoteConfigSync
+      remoteConfigSync: RemoteConfigSync,
+      helpSync: HelpSync
   ): ArrayList<ModelSync> {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
         communicationSync, prescriptionSync, reportsSync,
-        remoteConfigSync
+        remoteConfigSync, helpSync
     )
   }
 

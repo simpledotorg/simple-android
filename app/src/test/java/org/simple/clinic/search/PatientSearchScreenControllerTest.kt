@@ -9,7 +9,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
@@ -19,14 +18,13 @@ class PatientSearchScreenControllerTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val screen: PatientSearchScreen = mock()
-  private val repository: PatientRepository = mock()
 
   private lateinit var controller: PatientSearchScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
 
   @Before
   fun setUp() {
-    controller = PatientSearchScreenController(repository)
+    controller = PatientSearchScreenController()
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }

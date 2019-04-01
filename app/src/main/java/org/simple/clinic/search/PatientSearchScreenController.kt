@@ -8,19 +8,14 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
-import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.search.PatientSearchValidationError.FULL_NAME_EMPTY
-import org.simple.clinic.search.results.CreateNewPatientClicked
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 private typealias Ui = PatientSearchScreen
 private typealias UiChange = (Ui) -> Unit
 
-class PatientSearchScreenController @Inject constructor(
-    private val repository: PatientRepository
-) : ObservableTransformer<UiEvent, UiChange> {
+class PatientSearchScreenController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = events
@@ -33,8 +28,8 @@ class PatientSearchScreenController @Inject constructor(
         enableSearchButton(replayedEvents),
         showValidationErrors(replayedEvents),
         resetValidationErrors(replayedEvents),
-        openSearchResults(replayedEvents),
-        saveAndProceeds(replayedEvents))
+        openSearchResults(replayedEvents)
+    )
   }
 
   private fun enableSearchButton(events: Observable<UiEvent>): Observable<UiChange> {
@@ -110,19 +105,5 @@ class PatientSearchScreenController @Inject constructor(
         .withLatestFrom(nameChanges) { _, name ->
           { ui: Ui -> ui.openPatientSearchResultsScreen(name) }
         }
-  }
-
-  private fun saveAndProceeds(events: Observable<UiEvent>): Observable<UiChange> {
-    val nameChanges = events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.trim() }
-
-    return events
-        .ofType<CreateNewPatientClicked>()
-        .withLatestFrom(nameChanges) { _, name -> name }
-        .take(1)
-        .map { OngoingNewPatientEntry(personalDetails = OngoingNewPatientEntry.PersonalDetails(it, null, null, null)) }
-        .flatMapCompletable { newEntry -> repository.saveOngoingEntry(newEntry) }
-        .andThen(Observable.just { ui: Ui -> ui.openPatientEntryScreen() })
   }
 }

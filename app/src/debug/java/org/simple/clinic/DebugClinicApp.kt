@@ -18,6 +18,8 @@ import org.simple.clinic.di.DaggerDebugAppComponent
 import org.simple.clinic.di.DebugAppComponent
 import org.simple.clinic.di.NetworkModule
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.home.HomeModule
+import org.simple.clinic.home.HomeScreenConfig
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
 import org.simple.clinic.patient.PatientConfig
@@ -130,6 +132,12 @@ class DebugClinicApp : ClinicApp() {
           }
 
           override fun remoteConfigCacheExpiration() = FirebaseRemoteConfigCacheExpiration.DEBUG
+        })
+        .homeModule(object : HomeModule() {
+          override fun provideHomeScreenConfig(): Observable<HomeScreenConfig> {
+            return super.provideHomeScreenConfig()
+                .map { it.copy(vs01Apr19HelpScreenEnabled = true) }
+          }
         })
         .build()
   }

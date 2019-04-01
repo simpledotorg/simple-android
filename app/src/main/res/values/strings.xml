@@ -15,6 +15,7 @@
   <string name="api_network_error">No internet connection</string>
 
   <string name="country_dialing_code" translatable="false">+91</string>
+  <string name="home_help">Help</string>
 
   <!-- Patient search -->
   <string name="patientsearch_name">Patient’s name</string>
@@ -359,4 +360,8 @@
   <string name="syncindicator_dialog_button_text">okay</string>
   <string name="syncindicator_dialog_error_server">Sync servers are down at the moment. Please try again later or get in touch with your supervisor.</string>
   <string name="overdue_list_header">Your mobile number <font color="#2f363d"><b>will be hidden</b></font> from patients. Calls are <font color="#2f363d"><b>toll-free.</b></font></string>
+
+  <!-- Help Screen -->
+  <string name="help_title">Help</string>
+  <string name="help_no_connection">No internet connection</string>
 </resources>

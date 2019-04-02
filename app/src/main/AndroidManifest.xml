@@ -23,6 +23,9 @@
     tools:ignore="AllowBackup,GoogleAppIndexingWarning"
     tools:replace="android:allowBackup">
 
+    <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
+    <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+
     <activity
       android:name=".activity.TheActivity"
       android:launchMode="singleTask"

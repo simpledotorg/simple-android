@@ -1156,6 +1156,7 @@ class PatientRepositoryAndroidTest {
   }
 
   private fun savePatientWithAppointment(
+      appointmentUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
@@ -1166,6 +1167,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     val appointment = testData.appointment(
+        uuid = appointmentUuid,
         patientUuid = patientUuid,
         facilityUuid = facilityUuid,
         createdAt = createdAt,
@@ -1183,6 +1185,49 @@ class PatientRepositoryAndroidTest {
           lastBp = null
       )
     }
+  }
+
+  @Test
+  fun verify_deleted_communications_are_not_included_when_fetching_recent_patients() {
+    val facilityUuid = UUID.randomUUID()
+    val appointmentUuid1 = UUID.randomUUID()
+    val recentPatient1 = savePatientWithAppointment(
+        appointmentUuid = appointmentUuid1,
+        facilityUuid = facilityUuid
+    )
+    val appointmentUuid2 = UUID.randomUUID()
+    val recentPatient2 = savePatientWithAppointment(
+        appointmentUuid = appointmentUuid2,
+        facilityUuid = facilityUuid
+    )
+    val appointmentUuid3 = UUID.randomUUID()
+    val recentPatient3 = savePatientWithAppointment(
+        appointmentUuid = appointmentUuid3,
+        facilityUuid = facilityUuid
+    )
+
+    saveCommunication(appointmentUuid = appointmentUuid1)
+    saveCommunication(appointmentUuid = appointmentUuid2)
+    saveCommunication(
+        appointmentUuid = appointmentUuid3,
+        deletedAt = Instant.now()
+    )
+
+    patientRepository
+        .recentPatients(facilityUuid, limit = 10)
+        .test()
+        .assertValue(listOf(recentPatient2, recentPatient1, recentPatient3))
+  }
+
+  private fun saveCommunication(
+      appointmentUuid: UUID,
+      deletedAt: Instant? = null
+  ) {
+    val communication = testData.communication(
+        appointmentUuid = appointmentUuid,
+        deletedAt = deletedAt
+    )
+    database.communicationDao().save(listOf(communication))
   }
 
   @Test

@@ -230,6 +230,7 @@ dependencies {
   implementation "androidx.room:room-rxjava2:$versions.room"
   implementation "android.arch.work:work-runtime-ktx:$versions.workRuntimeKtx"
   implementation "com.google.android.gms:play-services-location:$versions.playServicesLocation"
+  implementation "com.google.firebase:firebase-core:$versions.firebaseCore"
   implementation "com.google.firebase:firebase-config:$versions.firebaseConfig"
 
   implementation "com.jakewharton.timber:timber:$versions.timber"

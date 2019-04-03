@@ -165,7 +165,7 @@ class TestData @Inject constructor(
   fun businessId(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = BusinessId.IdentifierType.random()),
+      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = Identifier.IdentifierType.random()),
       meta: String = "",
       metaVersion: BusinessId.MetaVersion = BusinessId.MetaVersion.random(),
       createdAt: Instant = Instant.now(),
@@ -259,7 +259,7 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       identifier: String = UUID.randomUUID().toString(),
-      identifierType: BusinessId.IdentifierType = BusinessId.IdentifierType.random(),
+      identifierType: Identifier.IdentifierType = Identifier.IdentifierType.random(),
       metaVersion: BusinessId.MetaVersion = BusinessId.MetaVersion.random(),
       meta: String = "",
       createdAt: Instant = Instant.now(),

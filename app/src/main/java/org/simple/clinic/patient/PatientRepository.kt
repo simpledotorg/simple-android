@@ -499,9 +499,9 @@ class PatientRepository @Inject constructor(
         ).toObservable()
   }
 
-  private fun createBusinessIdMetaForIdentifier(identifierType: BusinessId.IdentifierType): Single<BusinessIdMetaAndVersion> {
+  private fun createBusinessIdMetaForIdentifier(identifierType: Identifier.IdentifierType): Single<BusinessIdMetaAndVersion> {
     return when (identifierType) {
-      BusinessId.IdentifierType.BpPassport -> createBpPassportMeta()
+      Identifier.IdentifierType.BpPassport -> createBpPassportMeta()
       else -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
   }

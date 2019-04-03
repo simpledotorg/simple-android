@@ -178,7 +178,7 @@ data class BusinessIdPayload(
     val identifier: String,
 
     @Json(name = "identifier_type")
-    val identifierType: BusinessId.IdentifierType,
+    val identifierType: Identifier.IdentifierType,
 
     @Json(name = "meta_version")
     val metaVersion: BusinessId.MetaVersion,

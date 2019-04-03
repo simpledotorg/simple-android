@@ -56,6 +56,9 @@ data class Identifier(
     companion object {
       @VisibleForTesting(otherwise = VisibleForTesting.NONE)
       fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
+
+      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+      fun values() = TypeAdapter.knownMappings.keys.toList()
     }
   }
 }

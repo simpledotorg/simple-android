@@ -34,6 +34,7 @@ import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
+import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidTest
 
 @AppScope
 @Component(modules = [AppModule::class, FakerModule::class])
@@ -71,4 +72,5 @@ interface TestAppComponent : AppComponent {
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
   fun inject(target: HelpSyncAndroidTest)
+  fun inject(target: IdentifierDisplayAdapterAndroidTest)
 }

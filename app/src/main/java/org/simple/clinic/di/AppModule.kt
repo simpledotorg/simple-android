@@ -21,6 +21,7 @@ import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterModule
 import org.threeten.bp.ZoneId
 import java.util.Locale
 
@@ -37,7 +38,8 @@ import java.util.Locale
   DateFormatterModule::class,
   PatientModule::class,
   SyncIndicatorModule::class,
-  UuidShortCodeCreatorModule::class
+  UuidShortCodeCreatorModule::class,
+  IdentifierDisplayAdapterModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

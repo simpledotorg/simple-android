@@ -51,28 +51,6 @@ data class BusinessId(
     val deletedAt: Instant?
 ) {
 
-  // Temporarily added to not break tests while refactoring is being done
-  constructor(
-      uuid: UUID,
-      patientUuid: UUID,
-      identifier: String,
-      identifierType: IdentifierType,
-      metaVersion: MetaVersion,
-      meta: String,
-      createdAt: Instant,
-      updatedAt: Instant,
-      deletedAt: Instant?
-  ) : this(
-      uuid = uuid,
-      patientUuid = patientUuid,
-      identifier = Identifier(identifier, identifierType),
-      metaVersion = metaVersion,
-      meta = meta,
-      createdAt = createdAt,
-      updatedAt = updatedAt,
-      deletedAt = deletedAt
-  )
-
   sealed class IdentifierType {
 
     companion object {

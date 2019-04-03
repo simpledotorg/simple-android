@@ -12,9 +12,9 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.BusinessId.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.BusinessIdMeta
 import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
@@ -454,39 +454,21 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-  fun addBpPassportIdToPatient(patientUuid: UUID, bpPassportCode: UUID): Single<BusinessId> {
-    val currentUserStream = userSession
-        .requireLoggedInUser()
-        .take(1)
-        .replay()
-        .refCount()
-
-    val currentFacilityStream = currentUserStream
-        .flatMap(facilityRepository::currentFacility)
-        .take(1)
-
-    val businessIdMetaAndVersionStream: Observable<Pair<String, BusinessId.MetaVersion>> =
-        Observables
-            .combineLatest(currentUserStream, currentFacilityStream)
-            .map { (user, facility) -> BusinessIdMeta.BpPassportV1(assigningUserUuid = user.uuid, assigningFacilityUuid = facility.uuid) }
-            .map { businessIdMetaAdapter.serialize(it, BusinessId.MetaVersion.BpPassportV1) to BusinessId.MetaVersion.BpPassportV1 }
-
-    val businessIdStream = businessIdMetaAndVersionStream
-        .map { (meta, metaVersion) ->
+  fun addIdentifierToPatient(patientUuid: UUID, identifier: Identifier): Single<BusinessId> {
+    val businessIdStream = createBusinessIdMetaForIdentifier(identifier.type)
+        .map { metaAndVersion ->
           val now = Instant.now(utcClock)
           BusinessId(
               uuid = UUID.randomUUID(),
               patientUuid = patientUuid,
-              identifier = bpPassportCode.toString(),
-              identifierType = BpPassport,
-              metaVersion = metaVersion,
-              meta = meta,
+              identifier = identifier,
+              metaVersion = metaAndVersion.metaVersion,
+              meta = metaAndVersion.meta,
               createdAt = now,
               updatedAt = now,
               deletedAt = null
           )
         }
-        .firstOrError()
 
     return businessIdStream
         .flatMap { businessId ->
@@ -516,4 +498,32 @@ class PatientRepository @Inject constructor(
             patientUuid = patientUuid
         ).toObservable()
   }
+
+  private fun createBusinessIdMetaForIdentifier(identifierType: BusinessId.IdentifierType): Single<BusinessIdMetaAndVersion> {
+    return when (identifierType) {
+      BusinessId.IdentifierType.BpPassport -> createBpPassportMeta()
+      else -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
+    }
+  }
+
+  private fun createBpPassportMeta(): Single<BusinessIdMetaAndVersion> {
+    val currentUserStream = userSession
+        .requireLoggedInUser()
+        .take(1)
+        .replay()
+        .refCount()
+
+    val currentFacilityStream = currentUserStream
+        .flatMap(facilityRepository::currentFacility)
+        .take(1)
+
+    return Observables
+        .combineLatest(currentUserStream, currentFacilityStream)
+        .map { (user, facility) -> BusinessIdMeta.BpPassportV1(assigningUserUuid = user.uuid, assigningFacilityUuid = facility.uuid) }
+        .map { businessIdMetaAdapter.serialize(it, BusinessId.MetaVersion.BpPassportV1) to BusinessId.MetaVersion.BpPassportV1 }
+        .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
+        .firstOrError()
+  }
+
+  private data class BusinessIdMetaAndVersion(val meta: String, val metaVersion: BusinessId.MetaVersion)
 }

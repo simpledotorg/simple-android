@@ -2,6 +2,7 @@ package org.simple.clinic.patient.businessid
 
 import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
@@ -34,15 +35,43 @@ import java.util.UUID
 )
 data class BusinessId(
     @PrimaryKey val uuid: UUID,
+
     val patientUuid: UUID,
-    val identifier: String,
-    val identifierType: IdentifierType,
+
+    @Embedded val identifier: Identifier,
+
     val metaVersion: MetaVersion,
+
     val meta: String,
+
     val createdAt: Instant,
+
     val updatedAt: Instant,
+
     val deletedAt: Instant?
 ) {
+
+  // Temporarily added to not break tests while refactoring is being done
+  constructor(
+      uuid: UUID,
+      patientUuid: UUID,
+      identifier: String,
+      identifierType: IdentifierType,
+      metaVersion: MetaVersion,
+      meta: String,
+      createdAt: Instant,
+      updatedAt: Instant,
+      deletedAt: Instant?
+  ) : this(
+      uuid = uuid,
+      patientUuid = patientUuid,
+      identifier = Identifier(identifier, identifierType),
+      metaVersion = metaVersion,
+      meta = meta,
+      createdAt = createdAt,
+      updatedAt = updatedAt,
+      deletedAt = deletedAt
+  )
 
   sealed class IdentifierType {
 
@@ -55,7 +84,7 @@ data class BusinessId(
 
     data class Unknown(val actual: String) : IdentifierType()
 
-    object TypeAdapter: SafeEnumTypeAdapter<IdentifierType>(
+    object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
         knownMappings = mapOf(
             BpPassport to "simple_bp_passport"
         ),
@@ -94,9 +123,9 @@ data class BusinessId(
 
     object BpPassportV1 : MetaVersion()
 
-    data class Unknown(val actual: String): MetaVersion()
+    data class Unknown(val actual: String) : MetaVersion()
 
-    object TypeAdapter: SafeEnumTypeAdapter<MetaVersion>(
+    object TypeAdapter : SafeEnumTypeAdapter<MetaVersion>(
         knownMappings = mapOf(
             BpPassportV1 to "org.simple.bppassport.meta.v1"
         ),

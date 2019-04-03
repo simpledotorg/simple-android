@@ -30,6 +30,7 @@ import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMeta
 import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.protocol.ProtocolDrug
@@ -1295,8 +1296,7 @@ class PatientRepositoryAndroidTest {
             BusinessId(
                 uuid = businessIdPayload.uuid,
                 patientUuid = patientUuid,
-                identifierType = businessIdPayload.identifierType,
-                identifier = businessIdPayload.identifier,
+                identifier = Identifier(businessIdPayload.identifier, businessIdPayload.identifierType),
                 metaVersion = businessIdPayload.metaVersion,
                 meta = businessIdPayload.meta,
                 createdAt = businessIdPayload.createdAt,
@@ -1426,8 +1426,8 @@ class PatientRepositoryAndroidTest {
 
     assertThat(savedBusinessId.uuid).isNotEqualTo(bpPassportCode)
     assertThat(savedBusinessId.patientUuid).isEqualTo(patientProfile.patient.uuid)
-    assertThat(savedBusinessId.identifier).isEqualTo(bpPassportCode.toString())
-    assertThat(savedBusinessId.identifierType).isEqualTo(BusinessId.IdentifierType.BpPassport)
+    assertThat(savedBusinessId.identifier)
+        .isEqualTo(Identifier(value = bpPassportCode.toString(), type = BusinessId.IdentifierType.BpPassport))
     assertThat(savedBusinessId.metaVersion).isEqualTo(BusinessId.MetaVersion.BpPassportV1)
     assertThat(savedBusinessId.createdAt).isEqualTo(now)
     assertThat(savedBusinessId.updatedAt).isEqualTo(now)
@@ -1463,8 +1463,7 @@ class PatientRepositoryAndroidTest {
       val businessId = BusinessId(
           uuid = UUID.randomUUID(),
           patientUuid = patientUuid,
-          identifierType = identifierType,
-          identifier = uniqueBusinessIdentifier,
+          identifier = Identifier(uniqueBusinessIdentifier, identifierType),
           metaVersion = metaVersion,
           meta = "",
           createdAt = now,
@@ -1489,8 +1488,7 @@ class PatientRepositoryAndroidTest {
       val businessIdOne = BusinessId(
           uuid = UUID.randomUUID(),
           patientUuid = patientUuidOne,
-          identifierType = identifierType,
-          identifier = sharedBusinessIdentifier,
+          identifier = Identifier(sharedBusinessIdentifier, identifierType),
           metaVersion = metaVersion,
           meta = "",
           createdAt = now,
@@ -1512,8 +1510,7 @@ class PatientRepositoryAndroidTest {
       val businessIdTwo = BusinessId(
           uuid = UUID.randomUUID(),
           patientUuid = patientUuidTwo,
-          identifierType = identifierType,
-          identifier = sharedBusinessIdentifier,
+          identifier = Identifier(sharedBusinessIdentifier, identifierType),
           metaVersion = metaVersion,
           meta = "",
           createdAt = now.minusSeconds(1),
@@ -1538,8 +1535,7 @@ class PatientRepositoryAndroidTest {
       val businessId = BusinessId(
           uuid = UUID.randomUUID(),
           patientUuid = patientUuid,
-          identifierType = identifierType,
-          identifier = deletedBusinessIdentifier,
+          identifier = Identifier(deletedBusinessIdentifier, identifierType),
           metaVersion = metaVersion,
           meta = "",
           createdAt = now,

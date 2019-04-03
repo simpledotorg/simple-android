@@ -1,7 +1,6 @@
 package org.simple.clinic
 
 import io.bloco.faker.Faker
-import io.bloco.faker.components.Bool
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
@@ -30,6 +29,7 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.patient.sync.PatientAddressPayload
@@ -165,8 +165,7 @@ class TestData @Inject constructor(
   fun businessId(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      identifier: String = UUID.randomUUID().toString(),
-      identifierType: BusinessId.IdentifierType = BusinessId.IdentifierType.random(),
+      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = BusinessId.IdentifierType.random()),
       meta: String = "",
       metaVersion: BusinessId.MetaVersion = BusinessId.MetaVersion.random(),
       createdAt: Instant = Instant.now(),
@@ -176,7 +175,6 @@ class TestData @Inject constructor(
       uuid = uuid,
       patientUuid = patientUuid,
       identifier = identifier,
-      identifierType = identifierType,
       meta = meta,
       metaVersion = metaVersion,
       createdAt = createdAt,

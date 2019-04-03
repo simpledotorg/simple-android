@@ -2,7 +2,7 @@ package org.simple.clinic.summary
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
-import org.simple.clinic.addidtopatient.AddIdToPatient
+import org.simple.clinic.patient.businessid.Identifier
 
 sealed class OpenIntention : Parcelable {
 
@@ -19,7 +19,7 @@ sealed class OpenIntention : Parcelable {
   }
 
   @Parcelize
-  data class LinkIdWithPatient(val addIdToPatient: AddIdToPatient) : OpenIntention() {
+  data class LinkIdWithPatient(val identifier: Identifier) : OpenIntention() {
     override fun analyticsName() = "LINK_ID_WITH_PATIENT"
   }
 }

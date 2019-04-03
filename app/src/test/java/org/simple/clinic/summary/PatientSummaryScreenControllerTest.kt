@@ -24,7 +24,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.addidtopatient.AddIdToPatient
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -50,6 +49,7 @@ import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -961,25 +961,25 @@ class PatientSummaryScreenControllerTest {
   private fun `patient summary open intentions`() = listOf(
       OpenIntention.ViewExistingPatient,
       OpenIntention.ViewNewPatient,
-      OpenIntention.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
+      OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), Identifier.IdentifierType.BpPassport))
   )
 
   @Suppress("Unused")
   private fun `patient summary open intentions except new patient`() = listOf(
       OpenIntention.ViewExistingPatient,
-      OpenIntention.LinkIdWithPatient(AddIdToPatient.BpPassport(UUID.randomUUID(), "1234567"))
+      OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), Identifier.IdentifierType.BpPassport))
   )
 
   @Suppress("Unused")
   private fun `patient summary open intentions and summary item changed`(): List<List<Any>> {
-    val addIdToPatient = AddIdToPatient.BpPassport(bpPassportCode = UUID.randomUUID(), bpPassportShortCode = "1234567")
+    val identifier = Identifier(UUID.randomUUID().toString(), Identifier.IdentifierType.BpPassport)
 
     return listOf(
         listOf(OpenIntention.ViewExistingPatient, true),
         listOf(OpenIntention.ViewExistingPatient, false),
         listOf(OpenIntention.ViewNewPatient, true),
         listOf(OpenIntention.ViewNewPatient, false),
-        listOf(OpenIntention.LinkIdWithPatient(addIdToPatient), true),
-        listOf(OpenIntention.LinkIdWithPatient(addIdToPatient), false))
+        listOf(OpenIntention.LinkIdWithPatient(identifier), true),
+        listOf(OpenIntention.LinkIdWithPatient(identifier), false))
   }
 }

@@ -1,7 +1,5 @@
 package org.simple.clinic.patient
 
-import org.threeten.bp.Period
-
 /**
  * See the [SQLite Limits](https://www.sqlite.org/limits.html) doc for more information.
  *
@@ -12,8 +10,7 @@ const val MAXIMUM_SQLITE_QUERY_LIMIT = 1000
 data class PatientConfig(
     val limitOfSearchResults: Int,
     val scanSimpleCardFeatureEnabled: Boolean,
-    val recentPatientLimit: Int,
-    val periodSinceLastVisitToDefaultPatient: Period
+    val recentPatientLimit: Int
 ) {
   init {
     if (limitOfSearchResults !in 1 until MAXIMUM_SQLITE_QUERY_LIMIT) {

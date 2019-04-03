@@ -510,15 +510,10 @@ class PatientRepository @Inject constructor(
   }
 
   fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
-    return configProvider
-        .map { it.periodSinceLastVisitToDefaultPatient }
-        .switchMap {
-          database
-              .patientDao()
-              .isPatientDefaulter(
-                  patientUuid = patientUuid,
-                  lastRecordedBpThreshold = LocalDate.now(utcClock).minus(it)
-              ).toObservable()
-        }
+    return database
+        .patientDao()
+        .isPatientDefaulter(
+            patientUuid = patientUuid
+        ).toObservable()
   }
 }

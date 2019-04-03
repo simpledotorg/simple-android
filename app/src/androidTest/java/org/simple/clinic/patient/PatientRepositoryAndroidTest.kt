@@ -1610,75 +1610,68 @@ class PatientRepositoryAndroidTest {
     val patients = mutableListOf<Pair<UUID, String>>()
 
     patients += savePatientRecord(
-        fullName = "Systolic > 140, BP recorded > 30 days ago",
+        fullName = "Systolic > 140",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 170,
-            diastolic = 80,
-            createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)
+            diastolic = 80
         )),
         protocolDrug = null,
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Systolic > 140, last BP recorded < 30 days ago",
+        fullName = "Diastolic > 90",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
-            systolic = 170,
-            diastolic = 80,
-            createdAt = Instant.now(testClock).minus(20, ChronoUnit.DAYS)
+            systolic = 130,
+            diastolic = 100
         )),
         protocolDrug = null,
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Has Diabetes, last BP recorded > 30 days ago",
+        fullName = "Has Diabetes",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 120,
-            diastolic = 70,
-            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+            diastolic = 70
         )),
         hasDiabetes = YES,
         protocolDrug = null,
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Has had stroke, last BP recorded > 30 days ago",
+        fullName = "Has had stroke",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 120,
-            diastolic = 70,
-            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+            diastolic = 70
         )),
         hasHadStroke = YES,
         protocolDrug = null,
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Has kidney disease, last BP recorded > 30 days ago",
+        fullName = "Has kidney disease",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 120,
-            diastolic = 70,
-            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+            diastolic = 70
         )),
         hasHadKidneyDisease = YES,
         protocolDrug = null,
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Had heart attack, last BP recorded > 30 days ago",
+        fullName = "Had heart attack",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 120,
-            diastolic = 70,
-            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+            diastolic = 70
         )),
         hasHadHeartAttack = YES,
         protocolDrug = null,
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Drugs prescribed, last BP recorded > 30 days ago",
+        fullName = "Drugs prescribed",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 120,
-            diastolic = 70,
-            createdAt = Instant.now(testClock).minus(31, ChronoUnit.DAYS)
+            diastolic = 70
         )),
         protocolDrug = testData.protocolDrug(),
         appointmentDate = null)
@@ -1687,25 +1680,16 @@ class PatientRepositoryAndroidTest {
         fullName = "Appointment already scheduled",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 180,
-            diastolic = 70,
-            createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)
+            diastolic = 70
         )),
         protocolDrug = null,
         appointmentDate = LocalDate.now(testClock).plusDays(10))
-
-    patients += savePatientRecord(
-        fullName = "No BP recorded, Has had heart attack",
-        bpMeasurement = null,
-        hasHadHeartAttack = YES,
-        protocolDrug = null,
-        appointmentDate = null)
 
     patients += savePatientRecord(
         fullName = "BP deleted, Has had heart attack",
         bpMeasurement = listOf(testData.bloodPressureMeasurement(
             systolic = 180,
             diastolic = 70,
-            createdAt = Instant.now(testClock).minus(11, ChronoUnit.DAYS),
             deletedAt = Instant.now(testClock)
         )),
         hasHadHeartAttack = YES,
@@ -1713,7 +1697,7 @@ class PatientRepositoryAndroidTest {
         appointmentDate = null)
 
     patients += savePatientRecord(
-        fullName = "Multiple BPs, last recorded BP < 30 days ago",
+        fullName = "Multiple BPs",
         bpMeasurement = listOf(
             testData.bloodPressureMeasurement(
                 systolic = 180,
@@ -1721,6 +1705,21 @@ class PatientRepositoryAndroidTest {
                 createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
             testData.bloodPressureMeasurement(
                 systolic = 180,
+                diastolic = 70,
+                createdAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
+            )),
+        protocolDrug = null,
+        appointmentDate = null)
+
+    patients += savePatientRecord(
+        fullName = "Last recorded BP is normal",
+        bpMeasurement = listOf(
+            testData.bloodPressureMeasurement(
+                systolic = 180,
+                diastolic = 70,
+                createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
+            testData.bloodPressureMeasurement(
+                systolic = 120,
                 diastolic = 70,
                 createdAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
             )),
@@ -1737,12 +1736,14 @@ class PatientRepositoryAndroidTest {
     }
 
     assertThat(defaulterPatients).containsExactlyElementsIn(mutableListOf(
-        "Systolic > 140, BP recorded > 30 days ago",
-        "Has Diabetes, last BP recorded > 30 days ago",
-        "Has had stroke, last BP recorded > 30 days ago",
-        "Has kidney disease, last BP recorded > 30 days ago",
-        "Had heart attack, last BP recorded > 30 days ago",
-        "Drugs prescribed, last BP recorded > 30 days ago",
-        "No BP recorded, Has had heart attack"))
+        "Systolic > 140",
+        "Diastolic > 90",
+        "Has Diabetes",
+        "Has had stroke",
+        "Has kidney disease",
+        "Had heart attack",
+        "Drugs prescribed",
+        "BP deleted, Has had heart attack",
+        "Multiple BPs"))
   }
 }

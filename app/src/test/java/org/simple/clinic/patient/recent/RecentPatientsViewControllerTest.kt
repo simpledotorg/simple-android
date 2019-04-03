@@ -32,7 +32,6 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
@@ -68,8 +67,7 @@ class RecentPatientsViewControllerTest {
         patientConfig = Observable.just(PatientConfig(
             limitOfSearchResults = 1,
             scanSimpleCardFeatureEnabled = false,
-            recentPatientLimit = recentPatientLimit,
-            periodSinceLastVisitToDefaultPatient = Period.ofDays(30)
+            recentPatientLimit = recentPatientLimit
         ))
     )
 

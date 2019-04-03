@@ -51,44 +51,6 @@ data class BusinessId(
     val deletedAt: Instant?
 ) {
 
-  sealed class IdentifierType {
-
-    companion object {
-      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
-      fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
-    }
-
-    object BpPassport : IdentifierType()
-
-    data class Unknown(val actual: String) : IdentifierType()
-
-    object TypeAdapter : SafeEnumTypeAdapter<IdentifierType>(
-        knownMappings = mapOf(
-            BpPassport to "simple_bp_passport"
-        ),
-        unknownStringToEnumConverter = { Unknown(it) },
-        unknownEnumToStringConverter = { (it as Unknown).actual }
-    )
-
-    class RoomTypeConverter {
-
-      @TypeConverter
-      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
-
-      @TypeConverter
-      fun fromEnum(enum: IdentifierType?) = TypeAdapter.fromEnum(enum)
-    }
-
-    class MoshiTypeAdapter {
-
-      @FromJson
-      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
-
-      @ToJson
-      fun fromEnum(enum: IdentifierType?) = TypeAdapter.fromEnum(enum)
-    }
-  }
-
   sealed class MetaVersion {
 
     companion object {

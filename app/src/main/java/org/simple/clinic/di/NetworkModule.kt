@@ -12,6 +12,7 @@ import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.FirebaseConfigReader
@@ -40,7 +41,7 @@ open class NetworkModule {
         .add(MoshiOptionalAdapterFactory())
         .add(patientSummaryResultAdapterFactory())
         .add(AppointmentCancelReason.MoshiTypeConverter())
-        .add(BusinessId.IdentifierType.MoshiTypeAdapter())
+        .add(Identifier.IdentifierType.MoshiTypeAdapter())
         .add(BusinessId.MetaVersion.MoshiTypeAdapter())
         .build()
 

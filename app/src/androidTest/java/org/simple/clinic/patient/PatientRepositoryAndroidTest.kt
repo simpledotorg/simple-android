@@ -1423,14 +1423,14 @@ class PatientRepositoryAndroidTest {
     val savedBusinessId = patientRepository
         .addIdentifierToPatient(
             patientUuid = patientProfile.patient.uuid,
-            identifier = Identifier(bpPassportCode, BusinessId.IdentifierType.BpPassport)
+            identifier = Identifier(bpPassportCode, Identifier.IdentifierType.BpPassport)
         )
         .blockingGet()
 
     assertThat(savedBusinessId.uuid).isNotEqualTo(bpPassportCode)
     assertThat(savedBusinessId.patientUuid).isEqualTo(patientProfile.patient.uuid)
     assertThat(savedBusinessId.identifier)
-        .isEqualTo(Identifier(value = bpPassportCode, type = BusinessId.IdentifierType.BpPassport))
+        .isEqualTo(Identifier(value = bpPassportCode, type = Identifier.IdentifierType.BpPassport))
     assertThat(savedBusinessId.metaVersion).isEqualTo(BusinessId.MetaVersion.BpPassportV1)
     assertThat(savedBusinessId.createdAt).isEqualTo(now)
     assertThat(savedBusinessId.updatedAt).isEqualTo(now)
@@ -1449,7 +1449,7 @@ class PatientRepositoryAndroidTest {
     val sharedBusinessIdentifier = "shared_business_id"
     val deletedBusinessIdentifier = "deleted_business_id"
 
-    val identifierType = BusinessId.IdentifierType.Unknown("test_identifier")
+    val identifierType = Identifier.IdentifierType.Unknown("test_identifier")
     val metaVersion = BusinessId.MetaVersion.Unknown("test_version")
     val now = Instant.now(clock)
 

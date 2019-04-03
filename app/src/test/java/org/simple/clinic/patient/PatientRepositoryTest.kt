@@ -39,7 +39,6 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Duration
-import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 
@@ -72,7 +71,7 @@ class PatientRepositoryTest {
 
   @Before
   fun setUp() {
-    config = PatientConfig(limitOfSearchResults = 100, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10, periodSinceLastVisitToDefaultPatient = Period.ofDays(30))
+    config = PatientConfig(limitOfSearchResults = 100, scanSimpleCardFeatureEnabled = false, recentPatientLimit = 10)
 
     repository = PatientRepository(
         database = database,

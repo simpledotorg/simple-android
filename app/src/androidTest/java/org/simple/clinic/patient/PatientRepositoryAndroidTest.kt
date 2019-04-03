@@ -1410,24 +1410,27 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun saving_a_bp_passport_for_a_patient_must_work_as_expected() {
+  fun saving_an_identifier_for_a_patient_must_work_as_expected() {
     val currentUserUuid = testData.qaUserUuid()
     val currentUserFacilityUuid = testData.qaUserFacilityUuid()
 
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
-    val bpPassportCode = UUID.randomUUID()
+    val bpPassportCode = UUID.randomUUID().toString()
     val now = Instant.now(clock)
 
     val savedBusinessId = patientRepository
-        .addBpPassportIdToPatient(patientUuid = patientProfile.patient.uuid, bpPassportCode = bpPassportCode)
+        .addIdentifierToPatient(
+            patientUuid = patientProfile.patient.uuid,
+            identifier = Identifier(bpPassportCode, BusinessId.IdentifierType.BpPassport)
+        )
         .blockingGet()
 
     assertThat(savedBusinessId.uuid).isNotEqualTo(bpPassportCode)
     assertThat(savedBusinessId.patientUuid).isEqualTo(patientProfile.patient.uuid)
     assertThat(savedBusinessId.identifier)
-        .isEqualTo(Identifier(value = bpPassportCode.toString(), type = BusinessId.IdentifierType.BpPassport))
+        .isEqualTo(Identifier(value = bpPassportCode, type = BusinessId.IdentifierType.BpPassport))
     assertThat(savedBusinessId.metaVersion).isEqualTo(BusinessId.MetaVersion.BpPassportV1)
     assertThat(savedBusinessId.createdAt).isEqualTo(now)
     assertThat(savedBusinessId.updatedAt).isEqualTo(now)

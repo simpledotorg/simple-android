@@ -3,7 +3,6 @@ package org.simple.clinic.patient.sync
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -11,6 +10,8 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.nameToSearchableForm
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -199,8 +200,7 @@ data class BusinessIdPayload(
     return BusinessId(
         uuid = uuid,
         patientUuid = patientUuid,
-        identifier = identifier,
-        identifierType = identifierType,
+        identifier = Identifier(value = identifier, type = identifierType),
         metaVersion = metaVersion,
         meta = meta,
         createdAt = createdAt,

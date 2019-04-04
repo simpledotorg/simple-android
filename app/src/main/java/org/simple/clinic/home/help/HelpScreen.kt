@@ -83,4 +83,8 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
   fun showNetworkErrorMessage() {
     // TODO
   }
+
+  fun showUnexpectedErrorMessage() {
+    // TODO
+  }
 }

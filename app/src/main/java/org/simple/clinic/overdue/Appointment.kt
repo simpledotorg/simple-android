@@ -6,10 +6,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
 import com.squareup.moshi.Json
+import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RoomEnumTypeConverter
+import org.simple.clinic.util.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -43,6 +47,42 @@ data class Appointment(
     VISITED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<Status>(Status::class.java)
+  }
+
+  sealed class AppointmentType {
+
+    object Manual : AppointmentType()
+
+    object Automatic : AppointmentType()
+
+    data class Unknown(val actual: String) : AppointmentType()
+
+    object TypeAdapter : SafeEnumTypeAdapter<AppointmentType>(
+        knownMappings = mapOf(
+            Manual to "manual",
+            Automatic to "automatic"
+        ),
+        unknownStringToEnumConverter = { Unknown(it) },
+        unknownEnumToStringConverter = { (it as Unknown).actual }
+    )
+
+    class RoomTypeConverter {
+
+      @TypeConverter
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @TypeConverter
+      fun fromEnum(enum: AppointmentType?) = TypeAdapter.fromEnum(enum)
+    }
+
+    class MoshiTypeAdapter {
+
+      @FromJson
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @ToJson
+      fun fromEnum(enum: AppointmentType) = TypeAdapter.fromEnum(enum)
+    }
   }
 
   @Dao

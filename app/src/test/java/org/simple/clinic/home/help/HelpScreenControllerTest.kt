@@ -1,6 +1,5 @@
 package org.simple.clinic.home.help
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -100,5 +99,14 @@ class HelpScreenControllerTest {
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(helpSync).pullWithResult()
+  }
+
+  @Test
+  fun `when the help sync fails with a network error, the network error message must be shown`() {
+    whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.NetworkError))
+
+    uiEvents.onNext(HelpScreenTryAgainClicked)
+
+    verify(screen).showNetworkErrorMessage()
   }
 }

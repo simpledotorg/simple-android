@@ -72,6 +72,10 @@ class HelpScreenController @Inject constructor(
         .ofType<HelpPullResult.NetworkError>()
         .map { { ui: Ui -> ui.showNetworkErrorMessage() } }
 
-    return showNetworkError
+    val showUnexpectedError = helpSyncResultsStream
+        .ofType<HelpPullResult.OtherError>()
+        .map { { ui: Ui -> ui.showUnexpectedErrorMessage() } }
+
+    return Observable.merge(showNetworkError, showUnexpectedError)
   }
 }

@@ -109,4 +109,13 @@ class HelpScreenControllerTest {
 
     verify(screen).showNetworkErrorMessage()
   }
+
+  @Test
+  fun `when the help sync fails with any error except network error, the unexpected error message must be shown`() {
+    whenever(helpSync.pullWithResult()).thenReturn(Single.just(HelpPullResult.OtherError))
+
+    uiEvents.onNext(HelpScreenTryAgainClicked)
+
+    verify(screen).showUnexpectedErrorMessage()
+  }
 }

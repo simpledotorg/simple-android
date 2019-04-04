@@ -58,7 +58,7 @@ class HelpScreenController @Inject constructor(
   private fun showLoadingView(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<HelpScreenTryAgainClicked>()
-        .map { { ui: Ui -> ui.showLoadingView(true) } }
+        .map { { ui: Ui -> ui.showLoadingView() } }
   }
 
   private fun syncHelp(events: Observable<UiEvent>): Observable<UiChange> {
@@ -70,11 +70,21 @@ class HelpScreenController @Inject constructor(
 
     val showNetworkError = helpSyncResultsStream
         .ofType<HelpPullResult.NetworkError>()
-        .map { { ui: Ui -> ui.showNetworkErrorMessage() } }
+        .map {
+          { ui: Ui ->
+            ui.showNoHelpAvailable()
+            ui.showNetworkErrorMessage()
+          }
+        }
 
     val showUnexpectedError = helpSyncResultsStream
         .ofType<HelpPullResult.OtherError>()
-        .map { { ui: Ui -> ui.showUnexpectedErrorMessage() } }
+        .map {
+          { ui: Ui ->
+            ui.showNoHelpAvailable()
+            ui.showUnexpectedErrorMessage()
+          }
+        }
 
     return Observable.merge(showNetworkError, showUnexpectedError)
   }

@@ -8,6 +8,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpScreenTryAgainClicked
+import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
@@ -18,7 +19,8 @@ typealias Ui = HelpScreen
 typealias UiChange = (Ui) -> Unit
 
 class HelpScreenController @Inject constructor(
-    private val repository: HelpRepository
+    private val repository: HelpRepository,
+    private val sync: HelpSync
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -28,7 +30,8 @@ class HelpScreenController @Inject constructor(
 
     return Observable.mergeArray(
         toggleHelpView(replayedEvents),
-        showLoadingView(replayedEvents)
+        showLoadingView(replayedEvents),
+        syncHelp(replayedEvents)
     )
   }
 
@@ -55,5 +58,12 @@ class HelpScreenController @Inject constructor(
     return events
         .ofType<HelpScreenTryAgainClicked>()
         .map { { ui: Ui -> ui.showLoadingView(true) } }
+  }
+
+  private fun syncHelp(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<HelpScreenTryAgainClicked>()
+        .flatMapSingle { sync.pullWithResult() }
+        .flatMap { Observable.empty<UiChange>() }
   }
 }

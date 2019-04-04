@@ -242,7 +242,7 @@ object PatientMocker {
       syncStatus: SyncStatus = SyncStatus.PENDING,
       agreedToVisit: Boolean? = null,
       remindOn: LocalDate? = LocalDate.now(UTC).minusDays(2),
-      isDefaulter: Boolean? = null,
+      appointmentType: Appointment.AppointmentType? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -256,7 +256,7 @@ object PatientMocker {
         cancelReason = cancelReason,
         remindOn = remindOn,
         agreedToVisit = agreedToVisit,
-        isDefaulter = isDefaulter,
+        appointmentType = appointmentType,
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,

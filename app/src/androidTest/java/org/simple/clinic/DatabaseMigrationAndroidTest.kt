@@ -1410,6 +1410,55 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("deletedAt")).isEqualTo("deleted-at")
     }
   }
+
+  @Test
+  fun migration_32_to_33() {
+    val tableName = "Appointment"
+    val columnCount = 13
+
+    val db_v32 = helper.createDatabase(version = 32)
+    db_v32.assertColumnCount(tableName, columnCount)
+
+    db_v32.execSQL("""
+            INSERT INTO $tableName VALUES(
+            'uuid',
+            'patientUuid',
+            'facility-uuid',
+            'scheduled-date',
+            'status',
+            'cancel-reason',
+            'remind-on',
+            '1',
+            null,
+            'PENDING',
+            'created-at',
+            'updated-at',
+            null)
+        """)
+
+    val db_v33 = helper.migrateTo(version = 33)
+
+    db_v33.query("""
+           SELECT * FROM $tableName
+        """).use {
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(columnCount)
+
+      assertThat(it.string("uuid")).isEqualTo("uuid")
+      assertThat(it.string("patientUuid")).isEqualTo("patientUuid")
+      assertThat(it.string("facilityUuid")).isEqualTo("facility-uuid")
+      assertThat(it.string("scheduledDate")).isEqualTo("scheduled-date")
+      assertThat(it.string("status")).isEqualTo("status")
+      assertThat(it.string("cancelReason")).isEqualTo("cancel-reason")
+      assertThat(it.string("remindOn")).isEqualTo("remind-on")
+      assertThat(it.boolean("agreedToVisit")).isTrue()
+      assertThat(it.string("appointmentType")).isEqualTo(null)
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+      assertThat(it.string("createdAt")).isEqualTo("created-at")
+      assertThat(it.string("updatedAt")).isEqualTo("updated-at")
+      assertThat(it.string("deletedAt")).isEqualTo(null)
+    }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

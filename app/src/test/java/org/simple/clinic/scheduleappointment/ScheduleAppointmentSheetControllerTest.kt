@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.overdue.Appointment.AppointmentType.*
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
@@ -156,7 +157,7 @@ class ScheduleAppointmentSheetControllerTest {
       verify(repository).schedule(
           patientUuid = uuid,
           appointmentDate = LocalDate.now(utcClock).plus(Period.ofDays(30)),
-          isDefaulter = isPatientDefaulter
+          appointmentType = Automatic
       )
     } else {
       verify(repository, never()).schedule(any(), any(), any())

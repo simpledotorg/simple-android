@@ -26,6 +26,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.Appointment.Status.VISITED
@@ -834,7 +835,7 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.schedule(
         patientUuid = patientId,
         appointmentDate = appointmentDate,
-        isDefaulter = true
+        appointmentType = Automatic
     ).blockingGet()
 
     val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
@@ -843,7 +844,7 @@ class AppointmentRepositoryAndroidTest {
       assertThat(it.scheduledDate).isEqualTo(appointmentDate)
       assertThat(it.status).isEqualTo(Appointment.Status.SCHEDULED)
       assertThat(it.syncStatus).isEqualTo(SyncStatus.PENDING)
-      assertThat(it.isDefaulter).isTrue()
+      assertThat(it.appointmentType).isEqualTo(Automatic)
     }
   }
 }

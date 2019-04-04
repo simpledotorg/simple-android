@@ -7,6 +7,8 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.*
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -120,7 +122,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
               .schedule(
                   patientUuid = patientUuid,
                   appointmentDate = LocalDate.now(utcClock).plus(config.appointmentDuePeriodForDefaulters),
-                  isDefaulter = true)
+                  appointmentType = Automatic)
               .map { { ui: Ui -> ui.closeSheet() } }
         }
 

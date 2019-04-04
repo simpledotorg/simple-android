@@ -6,6 +6,8 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.overdue.Appointment.AppointmentType
+import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.Appointment.Status.VISITED
@@ -32,7 +34,7 @@ class AppointmentRepository @Inject constructor(
     private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun schedule(patientUuid: UUID, appointmentDate: LocalDate, isDefaulter: Boolean?): Single<Appointment> {
+  fun schedule(patientUuid: UUID, appointmentDate: LocalDate, appointmentType: AppointmentType): Single<Appointment> {
     val newAppointmentStream = facilityRepository
         .currentFacility(userSession)
         .firstOrError()
@@ -46,7 +48,7 @@ class AppointmentRepository @Inject constructor(
               cancelReason = null,
               remindOn = null,
               agreedToVisit = null,
-              isDefaulter = isDefaulter,
+              appointmentType = appointmentType,
               syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(utcClock),
               updatedAt = Instant.now(utcClock),
@@ -60,7 +62,7 @@ class AppointmentRepository @Inject constructor(
   }
 
   fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Single<Appointment> {
-    return schedule(patientUuid, appointmentDate, null)
+    return schedule(patientUuid, appointmentDate, Manual)
   }
 
   private fun markOlderAppointmentsAsVisited(patientUuid: UUID): Completable {
@@ -215,7 +217,7 @@ class AppointmentRepository @Inject constructor(
           cancelReason = cancelReason,
           remindOn = remindOn,
           agreedToVisit = agreedToVisit,
-          isDefaulter = isDefaulter,
+          appointmentType = appointmentType,
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt,

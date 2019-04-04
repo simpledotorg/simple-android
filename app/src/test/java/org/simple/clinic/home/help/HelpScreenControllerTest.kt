@@ -89,7 +89,7 @@ class HelpScreenControllerTest {
 
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
-    verify(screen).showLoadingView(isVisible = true)
+    verify(screen).showLoadingView()
   }
 
   @Test

@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.help.HelpRepository
+import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.ScreenCreated
@@ -25,7 +26,14 @@ class HelpScreenController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    val helpFileStream = replayedEvents
+    return Observable.mergeArray(
+        toggleHelpView(replayedEvents),
+        showLoadingView(replayedEvents)
+    )
+  }
+
+  private fun toggleHelpView(events: Observable<UiEvent>): Observable<UiChange> {
+    val helpFileStream = events
         .ofType<ScreenCreated>()
         .flatMap { repository.helpFile() }
         .replay()
@@ -41,5 +49,11 @@ class HelpScreenController @Inject constructor(
         .map { Ui::showNoHelpAvailable }
 
     return showHelp.mergeWith(showEmptyView)
+  }
+
+  private fun showLoadingView(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<HelpScreenTryAgainClicked>()
+        .map { { ui: Ui -> ui.showLoadingView(true) } }
   }
 }

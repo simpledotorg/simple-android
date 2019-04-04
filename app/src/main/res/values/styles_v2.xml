@@ -318,6 +318,10 @@
     <item name="android:textColor">@color/white100</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Button1.Blue1">
+    <item name="android:textColor">@color/blue1</item>
+  </style>
+
   <style name="Clinic.V2.TextInputEditText">
     <item name="android:paddingTop">6dp</item>
     <item name="android:paddingBottom">@dimen/spacing_16</item>

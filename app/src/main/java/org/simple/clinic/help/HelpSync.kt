@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Single
 import org.simple.clinic.sync.ModelSync
 import org.simple.clinic.sync.SyncConfig
+import java.io.IOException
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -23,4 +24,15 @@ class HelpSync @Inject constructor(
           .flatMapCompletable(syncRepository::updateHelp)
 
   override fun syncConfig() = configProvider
+
+  fun pullWithResult(): Single<HelpPullResult> {
+    return pull()
+        .toSingleDefault(HelpPullResult.Success as HelpPullResult)
+        .onErrorReturn { cause ->
+          when (cause) {
+            is IOException -> HelpPullResult.NetworkError
+            else -> HelpPullResult.OtherError
+          }
+        }
+  }
 }

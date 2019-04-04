@@ -79,4 +79,8 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
   fun showLoadingView(isVisible: Boolean) {
     // TODO
   }
+
+  fun showNetworkErrorMessage() {
+    // TODO
+  }
 }

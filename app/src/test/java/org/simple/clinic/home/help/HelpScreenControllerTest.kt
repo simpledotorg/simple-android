@@ -1,16 +1,20 @@
 package org.simple.clinic.home.help
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpScreenTryAgainClicked
+import org.simple.clinic.help.HelpSync
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
@@ -27,8 +31,9 @@ class HelpScreenControllerTest {
   val uiEvents = PublishSubject.create<UiEvent>()
   val screen = mock<HelpScreen>()
   val helpRepository = mock<HelpRepository>()
+  val helpSync = mock<HelpSync>()
 
-  val controller = HelpScreenController(repository = helpRepository)
+  val controller = HelpScreenController(repository = helpRepository, sync = helpSync)
 
   @Before
   fun setUp() {
@@ -81,8 +86,19 @@ class HelpScreenControllerTest {
 
   @Test
   fun `when try again is clicked, the loading view must be shown`() {
+    whenever(helpSync.pullWithResult()).thenReturn(Single.never())
+
     uiEvents.onNext(HelpScreenTryAgainClicked)
 
     verify(screen).showLoadingView(isVisible = true)
+  }
+
+  @Test
+  fun `when try again is clicked, help must be synced`() {
+    whenever(helpSync.pullWithResult()).thenReturn(Single.never())
+
+    uiEvents.onNext(HelpScreenTryAgainClicked)
+
+    verify(helpSync).pullWithResult()
   }
 }

@@ -8,7 +8,6 @@ import dagger.Module
 import dagger.Provides
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
-import org.simple.clinic.home.HomeModule
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.registration.RegistrationModule
@@ -36,8 +35,7 @@ import java.util.Locale
   PatientSummaryModule::class,
   DateFormatterModule::class,
   PatientModule::class,
-  SyncIndicatorModule::class,
-  HomeModule::class
+  SyncIndicatorModule::class
 ])
 open class AppModule(private val appContext: Application) {
 
@@ -58,7 +56,7 @@ open class AppModule(private val appContext: Application) {
 
   @Provides
   @AppScope
-  open fun userClock(userTimeZone: ZoneId): UserClock= RealUserClock(userTimeZone)
+  open fun userClock(userTimeZone: ZoneId): UserClock = RealUserClock(userTimeZone)
 
   @Provides
   @AppScope

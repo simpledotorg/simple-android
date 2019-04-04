@@ -364,4 +364,6 @@
   <!-- Help Screen -->
   <string name="help_title">Help</string>
   <string name="help_no_connection">No internet connection</string>
+  <string name="help_something_went_wrong">Something went wrong</string>
+  <string name="help_try_again">Try Again</string>
 </resources>

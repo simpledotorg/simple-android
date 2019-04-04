@@ -10,6 +10,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.help.HelpRepository
+import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.toOptional
@@ -76,5 +77,12 @@ class HelpScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).showNoHelpAvailable()
+  }
+
+  @Test
+  fun `when try again is clicked, the loading view must be shown`() {
+    uiEvents.onNext(HelpScreenTryAgainClicked)
+
+    verify(screen).showLoadingView(isVisible = true)
   }
 }

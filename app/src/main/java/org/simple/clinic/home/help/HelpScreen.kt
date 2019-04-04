@@ -75,4 +75,8 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
     webView.visibleOrGone(isVisible)
     noContentView.visibleOrGone(isVisible.not())
   }
+
+  fun showLoadingView(isVisible: Boolean) {
+    // TODO
+  }
 }

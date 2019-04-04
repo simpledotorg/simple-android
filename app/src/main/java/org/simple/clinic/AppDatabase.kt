@@ -11,7 +11,6 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.communication.Communication
-import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -21,6 +20,7 @@ import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.Protocol
@@ -71,7 +71,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class,
     Identifier.IdentifierType.RoomTypeConverter::class,
-    BusinessId.MetaDataVersion.RoomTypeConverter::class
+    BusinessId.MetaDataVersion.RoomTypeConverter::class,
+    Appointment.AppointmentType.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

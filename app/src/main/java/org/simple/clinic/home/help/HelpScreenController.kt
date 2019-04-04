@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.help.HelpPullResult
 import org.simple.clinic.help.HelpRepository
 import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.help.HelpSync
@@ -61,9 +62,16 @@ class HelpScreenController @Inject constructor(
   }
 
   private fun syncHelp(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
+    val helpSyncResultsStream = events
         .ofType<HelpScreenTryAgainClicked>()
         .flatMapSingle { sync.pullWithResult() }
-        .flatMap { Observable.empty<UiChange>() }
+        .replay()
+        .refCount()
+
+    val showNetworkError = helpSyncResultsStream
+        .ofType<HelpPullResult.NetworkError>()
+        .map { { ui: Ui -> ui.showNetworkErrorMessage() } }
+
+    return showNetworkError
   }
 }

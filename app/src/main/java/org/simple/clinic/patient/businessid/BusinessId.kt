@@ -1,6 +1,7 @@
 package org.simple.clinic.patient.businessid
 
 import androidx.annotation.VisibleForTesting
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -40,9 +41,11 @@ data class BusinessId(
 
     @Embedded val identifier: Identifier,
 
-    val metaVersion: MetaVersion,
+    @ColumnInfo(name = "metaVersion")
+    val metaDataVersion: MetaDataVersion,
 
-    val meta: String,
+    @ColumnInfo(name = "meta")
+    val metaData: String,
 
     val createdAt: Instant,
 
@@ -51,7 +54,7 @@ data class BusinessId(
     val deletedAt: Instant?
 ) {
 
-  sealed class MetaVersion {
+  sealed class MetaDataVersion {
 
     companion object {
       @VisibleForTesting(otherwise = VisibleForTesting.NONE)
@@ -61,11 +64,11 @@ data class BusinessId(
       fun values() = TypeAdapter.knownMappings.keys
     }
 
-    object BpPassportV1 : MetaVersion()
+    object BpPassportV1 : MetaDataVersion()
 
-    data class Unknown(val actual: String) : MetaVersion()
+    data class Unknown(val actual: String) : MetaDataVersion()
 
-    object TypeAdapter : SafeEnumTypeAdapter<MetaVersion>(
+    object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(
         knownMappings = mapOf(
             BpPassportV1 to "org.simple.bppassport.meta.v1"
         ),
@@ -79,7 +82,7 @@ data class BusinessId(
       fun toEnum(value: String?) = TypeAdapter.toEnum(value)
 
       @TypeConverter
-      fun fromEnum(enum: MetaVersion?) = TypeAdapter.fromEnum(enum)
+      fun fromEnum(enum: MetaDataVersion?) = TypeAdapter.fromEnum(enum)
     }
 
     class MoshiTypeAdapter {
@@ -88,7 +91,7 @@ data class BusinessId(
       fun toEnum(value: String?) = TypeAdapter.toEnum(value)
 
       @ToJson
-      fun fromEnum(enum: MetaVersion?) = TypeAdapter.fromEnum(enum)
+      fun fromEnum(enum: MetaDataVersion?) = TypeAdapter.fromEnum(enum)
     }
   }
 

@@ -181,10 +181,10 @@ data class BusinessIdPayload(
     val identifierType: Identifier.IdentifierType,
 
     @Json(name = "meta_version")
-    val metaVersion: BusinessId.MetaVersion,
+    val metaDataVersion: BusinessId.MetaDataVersion,
 
     @Json(name = "meta")
-    val meta: String,
+    val metaData: String,
 
     @Json(name = "created_at")
     val createdAt: Instant,
@@ -201,8 +201,8 @@ data class BusinessIdPayload(
         uuid = uuid,
         patientUuid = patientUuid,
         identifier = Identifier(value = identifier, type = identifierType),
-        metaVersion = metaVersion,
-        meta = meta,
+        metaDataVersion = metaDataVersion,
+        metaData = metaData,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt

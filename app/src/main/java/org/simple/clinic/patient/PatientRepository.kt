@@ -15,6 +15,7 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMeta
 import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
@@ -501,7 +502,7 @@ class PatientRepository @Inject constructor(
 
   private fun createBusinessIdMetaForIdentifier(identifierType: Identifier.IdentifierType): Single<BusinessIdMetaAndVersion> {
     return when (identifierType) {
-      Identifier.IdentifierType.BpPassport -> createBpPassportMeta()
+      BpPassport -> createBpPassportMeta()
       else -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
   }

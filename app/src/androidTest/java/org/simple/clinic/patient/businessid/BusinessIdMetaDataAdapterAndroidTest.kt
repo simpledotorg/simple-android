@@ -29,7 +29,7 @@ class BusinessIdMetaDataAdapterAndroidTest {
         .map { metaDataVersion ->
           metaDataVersion to when (metaDataVersion) {
             is BusinessId.MetaDataVersion.Unknown -> throw RuntimeException("$metaDataVersion should not be a part of known mappings!")
-            is BusinessId.MetaDataVersion.BpPassportV1 -> BusinessIdMetaData.BpPassportV1(
+            is BusinessId.MetaDataVersion.BpPassportMetaDataV1 -> BusinessIdMetaData.BpPassportMetaDataV1(
                 assigningUserUuid = UUID.randomUUID(),
                 assigningFacilityUuid = UUID.randomUUID()
             )

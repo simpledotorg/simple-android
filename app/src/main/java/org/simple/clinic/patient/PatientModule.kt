@@ -53,8 +53,8 @@ open class PatientModule {
   fun provideBusinessIdMetaAdapter(moshi: Moshi): BusinessIdMetaDataAdapter {
     @Suppress("UNCHECKED_CAST")
     val adapters: Map<BusinessId.MetaDataVersion, JsonAdapter<BusinessIdMetaData>> = mapOf(
-        BusinessId.MetaDataVersion.BpPassportV1 to
-            moshi.adapter(BusinessIdMetaData.BpPassportV1::class.java) as JsonAdapter<BusinessIdMetaData>
+        BusinessId.MetaDataVersion.BpPassportMetaDataV1 to
+            moshi.adapter(BusinessIdMetaData.BpPassportMetaDataV1::class.java) as JsonAdapter<BusinessIdMetaData>
     )
 
     return MoshiBusinessIdMetaDataAdapter(adapters)

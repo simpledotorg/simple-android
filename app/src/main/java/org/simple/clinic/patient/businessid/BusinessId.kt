@@ -64,13 +64,13 @@ data class BusinessId(
       fun values() = TypeAdapter.knownMappings.keys
     }
 
-    object BpPassportV1 : MetaDataVersion()
+    object BpPassportMetaDataV1 : MetaDataVersion()
 
     data class Unknown(val actual: String) : MetaDataVersion()
 
     object TypeAdapter : SafeEnumTypeAdapter<MetaDataVersion>(
         knownMappings = mapOf(
-            BpPassportV1 to "org.simple.bppassport.meta.v1"
+            BpPassportMetaDataV1 to "org.simple.bppassport.meta.v1"
         ),
         unknownStringToEnumConverter = { Unknown(it) },
         unknownEnumToStringConverter = { (it as Unknown).actual }

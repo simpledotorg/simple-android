@@ -42,7 +42,7 @@ open class NetworkModule {
         .add(patientSummaryResultAdapterFactory())
         .add(AppointmentCancelReason.MoshiTypeConverter())
         .add(Identifier.IdentifierType.MoshiTypeAdapter())
-        .add(BusinessId.MetaVersion.MoshiTypeAdapter())
+        .add(BusinessId.MetaDataVersion.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

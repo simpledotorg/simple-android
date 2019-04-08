@@ -7,9 +7,9 @@ import dagger.Provides
 import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.BusinessIdMeta
-import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
-import org.simple.clinic.patient.businessid.MoshiBusinessIdMetaAdapter
+import org.simple.clinic.patient.businessid.BusinessIdMetaData
+import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
+import org.simple.clinic.patient.businessid.MoshiBusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.filter.SortByWeightedNameParts
 import org.simple.clinic.patient.filter.WeightedLevenshteinSearch
@@ -50,13 +50,13 @@ open class PatientModule {
   }
 
   @Provides
-  fun provideBusinessIdMetaAdapter(moshi: Moshi): BusinessIdMetaAdapter {
+  fun provideBusinessIdMetaAdapter(moshi: Moshi): BusinessIdMetaDataAdapter {
     @Suppress("UNCHECKED_CAST")
-    val adapters: Map<BusinessId.MetaVersion, JsonAdapter<BusinessIdMeta>> = mapOf(
-        BusinessId.MetaVersion.BpPassportV1 to
-            moshi.adapter(BusinessIdMeta.BpPassportV1::class.java) as JsonAdapter<BusinessIdMeta>
+    val adapters: Map<BusinessId.MetaDataVersion, JsonAdapter<BusinessIdMetaData>> = mapOf(
+        BusinessId.MetaDataVersion.BpPassportV1 to
+            moshi.adapter(BusinessIdMetaData.BpPassportV1::class.java) as JsonAdapter<BusinessIdMetaData>
     )
 
-    return MoshiBusinessIdMetaAdapter(adapters)
+    return MoshiBusinessIdMetaDataAdapter(adapters)
   }
 }

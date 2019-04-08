@@ -71,7 +71,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class,
     Identifier.IdentifierType.RoomTypeConverter::class,
-    BusinessId.MetaVersion.RoomTypeConverter::class
+    BusinessId.MetaDataVersion.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -3,7 +3,7 @@ package org.simple.clinic.patient.businessid
 import com.squareup.moshi.Json
 import java.util.UUID
 
-sealed class BusinessIdMeta {
+sealed class BusinessIdMetaData {
 
   data class BpPassportV1(
 
@@ -12,5 +12,5 @@ sealed class BusinessIdMeta {
 
       @Json(name = "assigning_facility_id")
       val assigningFacilityUuid: UUID
-  ) : BusinessIdMeta()
+  ) : BusinessIdMetaData()
 }

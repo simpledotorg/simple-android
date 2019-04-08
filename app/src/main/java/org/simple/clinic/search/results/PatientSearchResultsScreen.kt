@@ -74,6 +74,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     toolbar.setNavigationOnClickListener {
       screenRouter.pop()
     }
+    toolbar.setOnClickListener {
+      screenRouter.pop()
+    }
 
     recyclerView.layoutManager = LinearLayoutManager(context)
     recyclerView.adapter = adapter

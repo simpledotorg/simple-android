@@ -478,28 +478,6 @@ class PatientRepository @Inject constructor(
         }
   }
 
-  fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {
-    return database
-        .patientDao()
-        .findPatientsWithBusinessId(identifier)
-        .toObservable()
-        .map { patients ->
-          if (patients.isEmpty()) {
-            None
-          } else {
-            patients.first().toOptional()
-          }
-        }
-  }
-
-  fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
-    return database
-        .patientDao()
-        .isPatientDefaulter(
-            patientUuid = patientUuid
-        ).toObservable()
-  }
-
   private fun createBusinessIdMetaDataForIdentifier(identifierType: Identifier.IdentifierType): Single<BusinessIdMetaAndVersion> {
     return when (identifierType) {
       BpPassport -> createBpPassportMetaData()
@@ -524,6 +502,28 @@ class PatientRepository @Inject constructor(
         .map { businessIdMetaDataAdapter.serialize(it, BusinessId.MetaDataVersion.BpPassportV1) to BusinessId.MetaDataVersion.BpPassportV1 }
         .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
         .firstOrError()
+  }
+
+  fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {
+    return database
+        .patientDao()
+        .findPatientsWithBusinessId(identifier)
+        .toObservable()
+        .map { patients ->
+          if (patients.isEmpty()) {
+            None
+          } else {
+            patients.first().toOptional()
+          }
+        }
+  }
+
+  fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
+    return database
+        .patientDao()
+        .isPatientDefaulter(
+            patientUuid = patientUuid
+        ).toObservable()
   }
 
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: BusinessId.MetaDataVersion)

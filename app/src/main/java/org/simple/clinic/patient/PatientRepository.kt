@@ -498,8 +498,8 @@ class PatientRepository @Inject constructor(
 
     return Observables
         .combineLatest(currentUserStream, currentFacilityStream)
-        .map { (user, facility) -> BusinessIdMetaData.BpPassportV1(assigningUserUuid = user.uuid, assigningFacilityUuid = facility.uuid) }
-        .map { businessIdMetaDataAdapter.serialize(it, BusinessId.MetaDataVersion.BpPassportV1) to BusinessId.MetaDataVersion.BpPassportV1 }
+        .map { (user, facility) -> BusinessIdMetaData.BpPassportMetaDataV1(assigningUserUuid = user.uuid, assigningFacilityUuid = facility.uuid) }
+        .map { businessIdMetaDataAdapter.serialize(it, BusinessId.MetaDataVersion.BpPassportMetaDataV1) to BusinessId.MetaDataVersion.BpPassportMetaDataV1 }
         .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
         .firstOrError()
   }

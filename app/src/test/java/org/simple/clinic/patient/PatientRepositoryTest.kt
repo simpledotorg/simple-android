@@ -28,7 +28,7 @@ import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.BusinessIdMetaAdapter
+import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
@@ -64,7 +64,7 @@ class PatientRepositoryTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val numberValidator = mock<PhoneNumberValidator>()
   private val searchPatientByName = mock<SearchPatientByName>()
-  private val businessIdMetaAdapter = mock<BusinessIdMetaAdapter>()
+  private val businessIdMetaAdapter = mock<BusinessIdMetaDataAdapter>()
 
   private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
@@ -84,7 +84,7 @@ class PatientRepositoryTest {
         searchPatientByName = searchPatientByName,
         configProvider = Observable.fromCallable { config },
         reportsRepository = mock(),
-        businessIdMetaAdapter = businessIdMetaAdapter)
+        businessIdMetaDataAdapter = businessIdMetaAdapter)
 
     val user = PatientMocker.loggedInUser()
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))

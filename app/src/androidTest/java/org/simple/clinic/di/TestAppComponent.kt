@@ -21,7 +21,7 @@ import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTes
 import org.simple.clinic.overdue.communication.CommunicationSyncAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
-import org.simple.clinic.patient.businessid.BusinessIdMetaAdapterAndroidTest
+import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
 import org.simple.clinic.protocolv2.ProtocolRepositoryAndroidTest
 import org.simple.clinic.protocolv2.sync.ProtocolSyncAndroidTest
 import org.simple.clinic.reports.ReportsSyncAndroidTest
@@ -69,6 +69,6 @@ interface TestAppComponent : AppComponent {
   fun inject(target: AndroidFileStorageAndroidTest)
   fun inject(target: ReportsSyncAndroidTest)
   fun inject(target: MissingPhoneReminderRepositoryAndroidTest)
-  fun inject(target: BusinessIdMetaAdapterAndroidTest)
+  fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
   fun inject(target: HelpSyncAndroidTest)
 }

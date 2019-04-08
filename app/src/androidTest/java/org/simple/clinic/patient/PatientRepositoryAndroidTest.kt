@@ -1432,13 +1432,13 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.patientUuid).isEqualTo(patientProfile.patient.uuid)
     assertThat(savedBusinessId.identifier)
         .isEqualTo(Identifier(value = bpPassportCode, type = BpPassport))
-    assertThat(savedBusinessId.metaDataVersion).isEqualTo(BusinessId.MetaDataVersion.BpPassportV1)
+    assertThat(savedBusinessId.metaDataVersion).isEqualTo(BusinessId.MetaDataVersion.BpPassportMetaDataV1)
     assertThat(savedBusinessId.createdAt).isEqualTo(now)
     assertThat(savedBusinessId.updatedAt).isEqualTo(now)
     assertThat(savedBusinessId.deletedAt).isNull()
 
-    val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportV1)
-    val expectedSavedMeta = BusinessIdMetaData.BpPassportV1(assigningUserUuid = currentUserUuid, assigningFacilityUuid = currentUserFacilityUuid)
+    val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportMetaDataV1)
+    val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(assigningUserUuid = currentUserUuid, assigningFacilityUuid = currentUserFacilityUuid)
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
   }
 

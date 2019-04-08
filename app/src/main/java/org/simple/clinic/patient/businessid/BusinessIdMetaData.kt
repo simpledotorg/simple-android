@@ -5,7 +5,7 @@ import java.util.UUID
 
 sealed class BusinessIdMetaData {
 
-  data class BpPassportV1(
+  data class BpPassportMetaDataV1(
 
       @Json(name = "assigning_user_id")
       val assigningUserUuid: UUID,

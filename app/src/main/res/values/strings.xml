@@ -23,7 +23,6 @@
   <string name="patientsearch_error_empty_fullname">Enter patient’s full name</string>
 
   <!-- Patient search results -->
-  <string name="patientsearchresults_query_age">Age</string>
   <string name="patientsearchresults_empty_state">No patients match</string>
   <string name="patientsearchresults_register_patient_rationale">Can’t find the patient in this list?</string>
   <string name="patientsearchresults_register_patient_rationale_for_empty_state">Patient is not registered</string>

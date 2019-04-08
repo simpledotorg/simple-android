@@ -1,7 +1,7 @@
 # CHANGELOG
 
-## xxxxxxxxx
-- ?
+## Upcoming release
+- Recent Patients list will not get affected by blood pressures and medical history entries that have been deleted
 
 ## 2019-03-25-3403
 - Suggest nearby facilities to nurse, if switching after logging in

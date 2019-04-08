@@ -49,13 +49,6 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
   private val newPatientRationaleTextView by bindView<TextView>(R.id.patientsearchresults_new_patient_rationale)
   private val newPatientButton by bindView<Button>(R.id.patientsearchresults_new_patient)
 
-  private val queryAgeTextView by lazy {
-    // The age View is inflated as a menu so that it forces the toolbar
-    // title to get ellipsized instead of overlapping age if it's really long.
-    toolbar.inflateMenu(R.menu.patient_search_results)
-    toolbar.findViewById<TextView>(R.id.patientsearchresults_query_age)
-  }
-
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {

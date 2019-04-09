@@ -10,6 +10,7 @@ import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.summary.GroupieItemWithUiEvents
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -57,7 +58,8 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
       private val currentFacility: Facility,
       private val phoneObfuscator: PhoneNumberObfuscator,
       private val dateOfBirthFormat: DateTimeFormatter,
-      private val clock: Clock
+      private val clock: Clock,
+      private val userClock: UserClock
   ) : PatientSearchResultsItemType(searchResult.hashCode().toLong()) {
 
     private lateinit var viewHolder: ViewHolder
@@ -101,7 +103,7 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
         val lastBpDate = lastBp
             .takenOn
             .atZone(ZoneOffset.UTC)
-            .withZoneSameInstant(clock.zone)
+            .withZoneSameInstant(userClock.zone)
             .toLocalDate()
         val formattedLastBpDate = dateOfBirthFormat.format(lastBpDate)
 

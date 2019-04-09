@@ -19,6 +19,7 @@ import org.simple.clinic.search.results.PatientSearchResultsItemType.NoPatientsI
 import org.simple.clinic.search.results.PatientSearchResultsItemType.NotInCurrentFacilityHeader
 import org.simple.clinic.search.results.PatientSearchResultsItemType.PatientSearchResultRow
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.format.DateTimeFormatter
@@ -34,6 +35,7 @@ class PatientSearchResultsController @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val phoneObfuscator: PhoneNumberObfuscator,
     private val utcClock: UtcClock,
+    val userClock: UserClock,
     @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -79,7 +81,7 @@ class PatientSearchResultsController @Inject constructor(
 
     val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {
       results.visitedCurrentFacility.map {
-        PatientSearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock)
+        PatientSearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock, userClock)
       }
     } else {
       listOf(NoPatientsInCurrentFacility)
@@ -88,7 +90,7 @@ class PatientSearchResultsController @Inject constructor(
     val itemsInOtherFacility = if (results.notVisitedCurrentFacility.isNotEmpty()) {
       listOf(NotInCurrentFacilityHeader) +
           results.notVisitedCurrentFacility.map {
-            PatientSearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock)
+            PatientSearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock, userClock)
           }
     } else {
       emptyList()

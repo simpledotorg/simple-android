@@ -26,6 +26,7 @@ import org.simple.clinic.search.results.PatientSearchResultsItemType.NotInCurren
 import org.simple.clinic.search.results.PatientSearchResultsItemType.PatientSearchResultRow
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.format.DateTimeFormatter
@@ -42,6 +43,7 @@ class PatientSearchResultsControllerTest {
   private val facilityRepository: FacilityRepository = mock()
   private val phoneObfuscator: PhoneNumberObfuscator = mock()
   private val utcClock: UtcClock = mock()
+  private val userClock: UserClock = mock()
   private val dateOfBirthFormatter: DateTimeFormatter = mock()
 
   private lateinit var controller: PatientSearchResultsController
@@ -62,7 +64,8 @@ class PatientSearchResultsControllerTest {
         facilityRepository = facilityRepository,
         phoneObfuscator = phoneObfuscator,
         utcClock = utcClock,
-        dateOfBirthFormatter = dateOfBirthFormatter
+        dateOfBirthFormatter = dateOfBirthFormatter,
+        userClock = userClock
     )
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
@@ -88,7 +91,8 @@ class PatientSearchResultsControllerTest {
             currentFacility = currentFacility,
             phoneObfuscator = phoneObfuscator,
             dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock
+            clock = utcClock,
+            userClock = userClock
         ),
         NotInCurrentFacilityHeader,
         PatientSearchResultRow(
@@ -96,7 +100,8 @@ class PatientSearchResultsControllerTest {
             currentFacility = currentFacility,
             phoneObfuscator = phoneObfuscator,
             dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock
+            clock = utcClock,
+            userClock = userClock
         )
     ))
     verify(screen).setEmptyStateVisible(false)
@@ -173,14 +178,16 @@ class PatientSearchResultsControllerTest {
             currentFacility = currentFacility,
             phoneObfuscator = phoneObfuscator,
             dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock
+            clock = utcClock,
+            userClock = userClock
         ),
         PatientSearchResultRow(
             searchResult = patientSearchResult2,
             currentFacility = currentFacility,
             phoneObfuscator = phoneObfuscator,
             dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock
+            clock = utcClock,
+            userClock = userClock
         )
     ))
     verify(screen).setEmptyStateVisible(false)
@@ -209,14 +216,16 @@ class PatientSearchResultsControllerTest {
             currentFacility = currentFacility,
             phoneObfuscator = phoneObfuscator,
             dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock
+            clock = utcClock,
+            userClock = userClock
         ),
         PatientSearchResultRow(
             searchResult = patientSearchResult2,
             currentFacility = currentFacility,
             phoneObfuscator = phoneObfuscator,
             dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock
+            clock = utcClock,
+            userClock = userClock
         )
     ))
     verify(screen).setEmptyStateVisible(false)

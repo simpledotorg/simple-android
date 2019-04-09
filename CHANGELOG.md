@@ -3,6 +3,7 @@
 ## Upcoming release
 - Recent Patients list will not get affected by blood pressures and medical history entries that have been deleted
 - Added a "Help" screen which is accessible from the home screen
+- Shows patient search results in two sections. Ones who have visited the current facility and the rest.
 
 ## 2019-03-25-3403
 - Suggest nearby facilities to nurse, if switching after logging in

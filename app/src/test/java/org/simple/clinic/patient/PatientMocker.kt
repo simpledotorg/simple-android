@@ -13,6 +13,8 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
@@ -423,4 +425,22 @@ object PatientMocker {
       age = age,
       lastBp = lastBp
   )
+
+  fun businessId(
+      uuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      identifier: Identifier = Identifier(UUID.randomUUID().toString(), Identifier.IdentifierType.random()),
+      metaDataVersion: BusinessId.MetaDataVersion = BusinessId.MetaDataVersion.random(),
+      metadata: String = "meta",
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now(),
+      deletedAt: Instant? = null
+  ) = BusinessId(uuid = uuid,
+      patientUuid = patientUuid,
+      identifier = identifier,
+      metaData = metadata,
+      metaDataVersion = metaDataVersion,
+      createdAt = createdAt,
+      updatedAt = updatedAt,
+      deletedAt = deletedAt)
 }

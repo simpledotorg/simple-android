@@ -27,6 +27,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.fuzzy.AbsoluteFuzzer
 import org.simple.clinic.patient.fuzzy.AgeFuzzer
+import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
@@ -123,9 +124,10 @@ class TestClinicApp : ClinicApp() {
           override fun okHttpClient(
               loggedInInterceptor: LoggedInUserHttpInterceptor,
               appInfoHttpInterceptor: AppInfoHttpInterceptor,
-              networkAnalyticsInterceptor: NetworkAnalyticsInterceptor
+              networkAnalyticsInterceptor: NetworkAnalyticsInterceptor,
+              configReader: ConfigReader
           ): OkHttpClient {
-            return super.okHttpClient(loggedInInterceptor, appInfoHttpInterceptor, networkAnalyticsInterceptor)
+            return super.okHttpClient(loggedInInterceptor, appInfoHttpInterceptor, networkAnalyticsInterceptor, configReader)
                 .newBuilder()
                 .addInterceptor(FailAllNetworkCallsInterceptor)
                 .build()

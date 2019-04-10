@@ -66,7 +66,8 @@ open class NetworkModule {
   open fun okHttpClient(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor,
-      networkAnalyticsInterceptor: NetworkAnalyticsInterceptor
+      networkAnalyticsInterceptor: NetworkAnalyticsInterceptor,
+      configReader: ConfigReader
   ): OkHttpClient {
     return OkHttpClient.Builder()
         .apply {
@@ -83,7 +84,7 @@ open class NetworkModule {
           // When syncing large amounts of data, the default read timeout(10s) has been seen to
           // timeout frequently for larger models. Through trial and error, 15s was found to be a
           // good number for syncing large batch sizes.
-          readTimeout(15L, TimeUnit.SECONDS)
+          readTimeout(configReader.long("networkmodule_read_timeout", default = 30L), TimeUnit.SECONDS)
         }
         .build()
   }

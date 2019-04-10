@@ -1,6 +1,8 @@
 package org.simple.clinic.summary.linkId
 
+import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
+import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Single
@@ -17,7 +19,6 @@ import java.util.UUID
 
 class LinkIdWithPatientSheetControllerTest {
 
-
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
@@ -27,22 +28,17 @@ class LinkIdWithPatientSheetControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private lateinit var controller: LinkIdWithPatientSheetController
+  private val controller = LinkIdWithPatientSheetController(patientRepository)
 
   private val patientUuid = UUID.randomUUID()
 
-  private lateinit var identifier: Identifier
+  private val identifier = Identifier(
+      value = patientUuid.toString(),
+      type = Identifier.IdentifierType.random()
+  )
 
   @Before
   fun setUp() {
-
-    controller = LinkIdWithPatientSheetController(patientRepository)
-
-    identifier = Identifier(
-        value = patientUuid.toString(),
-        type = Identifier.IdentifierType.random()
-    )
-
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
@@ -59,5 +55,14 @@ class LinkIdWithPatientSheetControllerTest {
 
     verify(patientRepository).addIdentifierToPatient(patientUuid, identifier)
     verify(sheet).closeSheet()
+  }
+
+  @Test
+  fun `when cancel is clicked, the sheet should close without saving id`() {
+    uiEvents.onNext(LinkIdWithPatientSheetCreated(patientUuid, identifier))
+    uiEvents.onNext(LinkIdWithPatientCancelClicked)
+
+    verify(sheet).closeSheet()
+    verify(patientRepository, never()).addIdentifierToPatient(any(), any())
   }
 }

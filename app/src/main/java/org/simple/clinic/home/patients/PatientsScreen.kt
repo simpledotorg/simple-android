@@ -21,23 +21,30 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.enterotp.EnterOtpScreenKey
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.ScanSimpleIdScreenResult
 import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
+import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -57,6 +64,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   @Inject
   lateinit var activity: TheActivity
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
@@ -225,5 +235,19 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun showSyncIndicator() {
     syncIndicatorView.visibility = View.VISIBLE
+  }
+
+  fun openPatientSummary(patientUuid: UUID) {
+    screenRouter.push(
+        PatientSummaryScreenKey(
+            patientUuid = patientUuid,
+            intention = OpenIntention.ViewExistingPatient,
+            screenCreatedTimestamp = Instant.now(utcClock)
+        )
+    )
+  }
+
+  fun openAddIdToPatientScreen(identifier: Identifier) {
+    screenRouter.push(AddIdToPatientSearchScreenKey(identifier))
   }
 }

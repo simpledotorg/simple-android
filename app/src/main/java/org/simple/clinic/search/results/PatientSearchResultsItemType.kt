@@ -2,29 +2,35 @@ package org.simple.clinic.search.results
 
 import android.content.res.Resources
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
+import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.estimateCurrentAge
-import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 
-sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEvents<ViewHolder>(adapterId) {
+sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
+
+  companion object {
+    private const val HEADER_NOT_IN_CURRENT_FACILITY = 0L
+    private const val HEADER_NO_PATIENTS_IN_CURRENT_FACILITY = 1L
+  }
 
   override lateinit var uiEvents: Subject<UiEvent>
 
   data class InCurrentFacilityHeader(
       private val facilityName: String
-  ) : PatientSearchResultsItemType(facilityName.hashCode().toLong()) {
+  ) : PatientSearchResultsItemType<ViewHolder>(facilityName.hashCode().toLong()) {
 
     override fun getLayout(): Int = R.layout.list_patient_search_header
 
@@ -35,7 +41,7 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
     }
   }
 
-  object NotInCurrentFacilityHeader : PatientSearchResultsItemType(0) {
+  object NotInCurrentFacilityHeader : PatientSearchResultsItemType<ViewHolder>(HEADER_NOT_IN_CURRENT_FACILITY) {
 
     override fun getLayout(): Int = R.layout.list_patient_search_header
 
@@ -46,7 +52,7 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
     }
   }
 
-  object NoPatientsInCurrentFacility : PatientSearchResultsItemType(1) {
+  object NoPatientsInCurrentFacility : PatientSearchResultsItemType<ViewHolder>(HEADER_NO_PATIENTS_IN_CURRENT_FACILITY) {
     override fun getLayout(): Int = R.layout.list_patient_search_no_patients
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -60,45 +66,34 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
       private val dateOfBirthFormat: DateTimeFormatter,
       private val clock: Clock,
       private val userClock: UserClock
-  ) : PatientSearchResultsItemType(searchResult.hashCode().toLong()) {
-
-    private lateinit var viewHolder: ViewHolder
-
-    private val genderImageView by unsafeLazy { viewHolder.itemView.findViewById<ImageView>(R.id.patientsearchresult_item_gender) }
-    private val titleTextView by unsafeLazy { viewHolder.itemView.findViewById<TextView>(R.id.patientsearchresult_item_title) }
-    private val addressTextView by unsafeLazy { viewHolder.itemView.findViewById<TextView>(R.id.patientsearchresult_item_address) }
-    private val dateOfBirthTextView by unsafeLazy { viewHolder.itemView.findViewById<TextView>(R.id.patientsearchresult_item_dateofbirth) }
-    private val phoneNumberTextView by unsafeLazy { viewHolder.itemView.findViewById<TextView>(R.id.patientsearchresult_item_phone) }
-    private val lastBpDateAndFacilityTextView by unsafeLazy { viewHolder.itemView.findViewById<TextView>(R.id.patientsearchresults_item_last_bp) }
-    private val lastBpDateFrame by unsafeLazy { viewHolder.itemView.findViewById<View>(R.id.patientsearchresults_item_last_bp_container) }
+  ) : PatientSearchResultsItemType<PatientSearchResultRow.PatientSearchResultRowViewHolder>(searchResult.hashCode().toLong()) {
 
     override fun getLayout(): Int = R.layout.list_patient_search
 
-    override fun bind(viewHolder: ViewHolder, position: Int) {
-      this.viewHolder = viewHolder
+    override fun createViewHolder(itemView: View) = PatientSearchResultRowViewHolder(itemView)
 
+    override fun bind(viewHolder: PatientSearchResultRowViewHolder, position: Int) {
       viewHolder.itemView.setOnClickListener {
         uiEvents.onNext(PatientSearchResultClicked(searchResult))
       }
 
       val resources = viewHolder.itemView.resources
-      renderPatientNameAgeAndGender(resources, clock)
-      renderPatientAddress(resources)
-      renderPatientDateOfBirth(dateOfBirthFormat)
-      renderPatientPhoneNumber(phoneObfuscator)
-      renderLastRecordedBloodPressure(dateOfBirthFormat, currentFacility, resources)
+      renderPatientNameAgeAndGender(viewHolder, resources)
+      renderPatientAddress(viewHolder, resources)
+      renderPatientDateOfBirth(viewHolder)
+      renderPatientPhoneNumber(viewHolder)
+      renderLastRecordedBloodPressure(viewHolder, resources)
     }
 
     private fun renderLastRecordedBloodPressure(
-        dateOfBirthFormat: DateTimeFormatter,
-        currentFacility: Facility,
+        holder: PatientSearchResultRowViewHolder,
         resources: Resources
     ) {
       val lastBp = searchResult.lastBp
       if (lastBp == null) {
-        lastBpDateFrame.visibility = View.GONE
+        holder.lastBpDateFrame.visibility = View.GONE
       } else {
-        lastBpDateFrame.visibility = View.VISIBLE
+        holder.lastBpDateFrame.visibility = View.VISIBLE
 
         val lastBpDate = lastBp
             .takenOn
@@ -109,9 +104,9 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
 
         val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacility.uuid
         if (isCurrentFacility) {
-          lastBpDateAndFacilityTextView.text = formattedLastBpDate
+          holder.lastBpDateAndFacilityTextView.text = formattedLastBpDate
         } else {
-          lastBpDateAndFacilityTextView.text = resources.getString(
+          holder.lastBpDateAndFacilityTextView.text = resources.getString(
               R.string.patientsearchresults_item_last_bp_date_with_facility,
               formattedLastBpDate,
               lastBp.takenAtFacilityName)
@@ -119,40 +114,40 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
       }
     }
 
-    private fun renderPatientPhoneNumber(phoneObfuscator: PhoneNumberObfuscator) {
+    private fun renderPatientPhoneNumber(holder: PatientSearchResultRowViewHolder) {
       val phoneNumber = searchResult.phoneNumber
       if (phoneNumber.isNullOrBlank()) {
-        phoneNumberTextView.visibility = View.GONE
+        holder.phoneNumberTextView.visibility = View.GONE
       } else {
-        phoneNumberTextView.visibility = View.VISIBLE
-        phoneNumberTextView.text = phoneObfuscator.obfuscate(phoneNumber)
+        holder.phoneNumberTextView.visibility = View.VISIBLE
+        holder.phoneNumberTextView.text = phoneObfuscator.obfuscate(phoneNumber)
       }
     }
 
-    private fun renderPatientDateOfBirth(dateOfBirthFormat: DateTimeFormatter) {
+    private fun renderPatientDateOfBirth(holder: PatientSearchResultRowViewHolder) {
       val dateOfBirth = searchResult.dateOfBirth
       if (dateOfBirth == null) {
-        dateOfBirthTextView.visibility = View.GONE
+        holder.dateOfBirthTextView.visibility = View.GONE
       } else {
-        dateOfBirthTextView.visibility = View.VISIBLE
-        dateOfBirthTextView.text = dateOfBirthFormat.format(dateOfBirth)
+        holder.dateOfBirthTextView.visibility = View.VISIBLE
+        holder.dateOfBirthTextView.text = dateOfBirthFormat.format(dateOfBirth)
       }
     }
 
-    private fun renderPatientAddress(resources: Resources) {
+    private fun renderPatientAddress(holder: PatientSearchResultRowViewHolder, resources: Resources) {
       val address = searchResult.address
       if (address.colonyOrVillage.isNullOrEmpty()) {
-        addressTextView.text = searchResult.address.district
+        holder.addressTextView.text = searchResult.address.district
       } else {
-        addressTextView.text = resources.getString(
+        holder.addressTextView.text = resources.getString(
             R.string.patientsearchresults_item_address_with_colony_and_district,
             searchResult.address.colonyOrVillage,
             searchResult.address.district)
       }
     }
 
-    private fun renderPatientNameAgeAndGender(resources: Resources, clock: Clock) {
-      genderImageView.setImageResource(searchResult.gender.displayIconRes)
+    private fun renderPatientNameAgeAndGender(holder: PatientSearchResultRowViewHolder, resources: Resources) {
+      holder.genderImageView.setImageResource(searchResult.gender.displayIconRes)
 
       val age = when (searchResult.age) {
         null -> {
@@ -164,11 +159,21 @@ sealed class PatientSearchResultsItemType(adapterId: Long) : GroupieItemWithUiEv
         }
       }
 
-      titleTextView.text = resources.getString(
+      holder.titleTextView.text = resources.getString(
           R.string.patientsearchresults_item_name_with_gender_and_age,
           searchResult.fullName,
           resources.getString(searchResult.gender.displayLetterRes),
           age)
+    }
+
+    class PatientSearchResultRowViewHolder(rootView: View) : ViewHolder(rootView) {
+      val genderImageView by bindView<ImageView>(R.id.patientsearchresult_item_gender)
+      val titleTextView by bindView<TextView>(R.id.patientsearchresult_item_title)
+      val addressTextView by bindView<TextView>(R.id.patientsearchresult_item_address)
+      val dateOfBirthTextView by bindView<TextView>(R.id.patientsearchresult_item_dateofbirth)
+      val phoneNumberTextView by bindView<TextView>(R.id.patientsearchresult_item_phone)
+      val lastBpDateAndFacilityTextView by bindView<TextView>(R.id.patientsearchresults_item_last_bp)
+      val lastBpDateFrame by bindView<ViewGroup>(R.id.patientsearchresults_item_last_bp_container)
     }
   }
 }

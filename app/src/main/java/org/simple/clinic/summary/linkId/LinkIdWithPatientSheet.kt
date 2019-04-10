@@ -59,5 +59,9 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
 
     return Observable.just(LinkIdWithPatientSheetCreated(patientUuid, identifier))
   }
+
+  fun closeSheet() {
+    TODO("not implemented") //To be implemented in the upcoming commits
+  }
 }
 

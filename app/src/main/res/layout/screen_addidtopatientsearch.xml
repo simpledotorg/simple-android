@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen android:id="@+id/patientsearch_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/addidtopatientsearch_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    tools:ignore="ContentDescription">
+
+    <TextView
+      android:id="@+id/addidtopatientsearch_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:ellipsize="end"
+      android:maxLines="2"
+      android:text="@string/addidtopatientsearch_title"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White72" />
+
+  </androidx.appcompat.widget.Toolbar>
+
+  <ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_above="@+id/addidtopatientsearch_search"
+    android:layout_below="@id/addidtopatientsearch_toolbar"
+    android:scrollbarStyle="insideOverlay"
+    android:scrollbars="vertical">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      android:paddingBottom="64dp"
+      android:paddingEnd="@dimen/spacing_24"
+      android:paddingStart="@dimen/spacing_24"
+      android:paddingTop="@dimen/spacing_24"
+      tools:ignore="RtlSymmetry">
+
+      <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:ignore="UselessParent">
+
+        <com.google.android.material.textfield.TextInputLayout
+          android:id="@+id/addidtopatientsearch_fullname_inputlayout"
+          style="@style/Clinic.V2.TextInputLayout"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          app:errorEnabled="false">
+
+          <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/addidtopatientsearch_fullname"
+            style="@style/Clinic.V2.TextInputEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/addidtopatientsearch_name"
+            android:imeOptions="flagNoFullscreen|actionSearch"
+            android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+            android:privateImeOptions="nm"
+            android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+          style="@style/Clinic.V2.ClearEditTextButton"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          app:cleareableField="@id/addidtopatientsearch_fullname" />
+      </FrameLayout>
+    </LinearLayout>
+  </ScrollView>
+
+  <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+    android:id="@+id/addidtopatientsearch_search_frame"
+    style="@style/Clinic.V2.BottomAlignedButtonFrame"
+    app:buttonBackgroundDisabled="@color/grey2"
+    app:buttonBackgroundEnabled="@color/blue1"
+    app:frameBackgroundDisabled="@color/grey3"
+    app:frameBackgroundEnabled="@color/blue2">
+
+    <org.simple.clinic.widgets.PrimarySolidButton
+      android:id="@+id/addidtopatientsearch_search"
+      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:text="@string/addidtopatientsearch_search"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
+  </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+</org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen>

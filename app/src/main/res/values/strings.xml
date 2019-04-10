@@ -377,4 +377,10 @@
   <string name="linkidwithpatient_button_add">Add</string>
   <string name="linkidwithpatient_button_cancel">Cancel</string>
   <string name="linkidwithpatient_add_patient_text">Add %1$s %2$s to patient</string>
+  <!-- Add ID to Patient: Search -->
+
+  <string name="addidtopatientsearch_name">Patient’s name</string>
+  <string name="addidtopatientsearch_search">Next</string>
+  <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name</string>
+  <string name="addidtopatientsearch_title">Add BP Passport\nto patient</string>
 </resources>

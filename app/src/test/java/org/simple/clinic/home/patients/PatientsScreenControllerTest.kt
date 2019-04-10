@@ -24,10 +24,13 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.NotSaved
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
@@ -36,6 +39,7 @@ import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.exhaustive
@@ -500,5 +504,139 @@ class PatientsScreenControllerTest {
     val inOrder = inOrder(screen)
     inOrder.verify(screen).hideSyncIndicator()
     inOrder.verify(screen).showSyncIndicator()
+  }
+
+  @Test
+  @Parameters(method = "params for scanning bp passport and finding patient")
+  fun `when a scanned bp passport code is associated with a patient, the patient summary must be opened`(
+      bpPassportCode: UUID,
+      isPatientPresent: Boolean,
+      patientUuid: UUID?,
+      shouldOpenPatientSummary: Boolean
+  ) {
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL).toOptional()))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
+    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
+    whenever(patientRepository.findPatientWithBusinessId(bpPassportCode.toString()))
+        .thenReturn(Observable.fromCallable {
+          if (isPatientPresent) {
+            Just(PatientMocker.patient(uuid = patientUuid!!, status = PatientStatus.ACTIVE))
+          } else {
+            None
+          }
+        })
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(PatientsScreenBpPassportCodeScanned(bpPassportCode = bpPassportCode))
+
+    if (shouldOpenPatientSummary) {
+      verify(screen).openPatientSummary(patientUuid!!)
+    } else {
+      verify(screen, never()).openPatientSummary(any())
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for scanning bp passport and finding patient`(): List<List<Any?>> {
+    fun testCase(
+        bpPassportCode: String,
+        isPatientPresent: Boolean,
+        patientUuid: String?,
+        shouldOpenPatientSummary: Boolean
+    ): List<Any?> {
+      return listOf(
+          UUID.fromString(bpPassportCode),
+          isPatientPresent,
+          patientUuid?.let { UUID.fromString(it) },
+          shouldOpenPatientSummary)
+    }
+
+    return listOf(
+        testCase(
+            bpPassportCode = "df8f55b8-b277-4773-a4e3-21c5a8ea565a",
+            isPatientPresent = true,
+            patientUuid = "28ed7b3b-e81e-4892-a9b1-1c699e6258b9",
+            shouldOpenPatientSummary = true
+        ),
+        testCase(
+            bpPassportCode = "3a0053f2-2a08-48a3-9f1c-1f4f83ad99d1",
+            isPatientPresent = false,
+            patientUuid = null,
+            shouldOpenPatientSummary = false
+        ),
+        testCase(
+            bpPassportCode = "d0941c47-a70f-4969-b36e-ee323ff6faaf",
+            isPatientPresent = true,
+            patientUuid = "a2bf1dde-3de9-4131-a2ea-d8e06581db46",
+            shouldOpenPatientSummary = true
+        )
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for scanning bp passport and not finding patient")
+  fun `when a scanned bp passport code is not associated with a patient, the add id to patient search screen must be opened`(
+      bpPassportCode: UUID,
+      isPatientPresent: Boolean,
+      shouldOpenAddIdToPatientSearchScreen: Boolean
+  ) {
+    whenever(userSession.loggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL).toOptional()))
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
+    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
+    whenever(patientRepository.findPatientWithBusinessId(bpPassportCode.toString()))
+        .thenReturn(Observable.fromCallable {
+          if (isPatientPresent) {
+            Just(PatientMocker.patient(status = PatientStatus.ACTIVE))
+          } else {
+            None
+          }
+        })
+
+    uiEvents.onNext(ScreenCreated())
+    uiEvents.onNext(PatientsScreenBpPassportCodeScanned(bpPassportCode = bpPassportCode))
+
+    if (shouldOpenAddIdToPatientSearchScreen) {
+      verify(screen).openAddIdToPatientScreen(Identifier(value = bpPassportCode.toString(), type = BpPassport))
+    } else {
+      verify(screen, never()).openAddIdToPatientScreen(any())
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for scanning bp passport and not finding patient`(): List<List<Any>> {
+    fun testCase(
+        bpPassportCode: String,
+        isPatientPresent: Boolean,
+        shouldOpenAddIdToPatientSearchScreen: Boolean
+    ): List<Any> {
+      return listOf(
+          UUID.fromString(bpPassportCode),
+          isPatientPresent,
+          shouldOpenAddIdToPatientSearchScreen)
+    }
+
+    return listOf(
+        testCase(
+            bpPassportCode = "df8f55b8-b277-4773-a4e3-21c5a8ea565a",
+            isPatientPresent = true,
+            shouldOpenAddIdToPatientSearchScreen = false
+        ),
+        testCase(
+            bpPassportCode = "3a0053f2-2a08-48a3-9f1c-1f4f83ad99d1",
+            isPatientPresent = false,
+            shouldOpenAddIdToPatientSearchScreen = true
+        ),
+        testCase(
+            bpPassportCode = "d0941c47-a70f-4969-b36e-ee323ff6faaf",
+            isPatientPresent = false,
+            shouldOpenAddIdToPatientSearchScreen = true
+        )
+    ).subList(1, 2)
   }
 }

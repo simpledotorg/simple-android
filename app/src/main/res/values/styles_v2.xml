@@ -131,6 +131,10 @@
     <item name="android:textColor">@color/white100</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body0Left.White72">
+    <item name="android:textColor">@color/white72</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body1Left">
     <item name="android:textSize">@dimen/textsize_16</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>

@@ -12,5 +12,5 @@ data class AddIdToPatientSearchScreenKey(val identifier: Identifier) : FullScree
   @IgnoredOnParcel
   override val analyticsName = "Add ID To Patient:Search"
 
-  override fun layoutRes() = R.layout.screen_patient_search
+  override fun layoutRes() = R.layout.screen_addidtopatientsearch
 }

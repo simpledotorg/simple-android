@@ -7,6 +7,7 @@ import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.RelativeLayout
+import androidx.appcompat.widget.Toolbar
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -34,10 +35,10 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   @Inject
   lateinit var controller: AddIdToPatientSearchScreenController
 
-  private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
-  private val fullNameEditText by bindView<EditText>(R.id.patientsearch_fullname)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientsearch_fullname_inputlayout)
-  private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsearch_search_frame)
+  private val toolBar by bindView<Toolbar>(R.id.addidtopatientsearch_toolbar)
+  private val fullNameEditText by bindView<EditText>(R.id.addidtopatientsearch_fullname)
+  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.addidtopatientsearch_fullname_inputlayout)
+  private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.addidtopatientsearch_search_frame)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -48,7 +49,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     TheActivity.component.inject(this)
 
     fullNameEditText.showKeyboard()
-    backButton.setOnClickListener {
+    toolBar.setOnClickListener {
       screenRouter.pop()
     }
 
@@ -98,7 +99,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun setEmptyFullNameErrorVisible(visible: Boolean) {
     fullNameInputLayout.error = if (visible) {
-      resources.getString(R.string.patientsearch_error_empty_fullname)
+      resources.getString(R.string.addidtopatientsearch_error_empty_fullname)
     } else {
       null
     }

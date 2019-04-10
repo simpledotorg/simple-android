@@ -22,7 +22,10 @@ class LinkIdWithPatientSheetController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return addIdToPatient(replayedEvents)
+    return Observable
+        .merge(
+            addIdToPatient(replayedEvents),
+            cancelAddingIdToPatient(replayedEvents))
   }
 
   private fun addIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {
@@ -35,7 +38,13 @@ class LinkIdWithPatientSheetController @Inject constructor(
         .switchMapSingle { (_, screen) ->
           patientRepository
               .addIdentifierToPatient(screen.patientUuid, screen.identifier)
-              .map { { ui: Ui -> ui.closeSheet() } }
+              .map { Ui::closeSheet }
         }
+  }
+
+  private fun cancelAddingIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<LinkIdWithPatientCancelClicked>()
+        .map { Ui::closeSheet }
   }
 }

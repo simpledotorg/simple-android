@@ -61,7 +61,7 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
   }
 
   fun closeSheet() {
-    TODO("not implemented") //To be implemented in the upcoming commits
+    finish()
   }
 }
 

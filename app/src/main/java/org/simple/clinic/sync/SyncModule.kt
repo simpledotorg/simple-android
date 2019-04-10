@@ -127,7 +127,7 @@ data class SyncModuleConfig(
 
     fun read(reader: ConfigReader): Observable<SyncModuleConfig> {
       return Observable.fromCallable {
-        val frequentConfigString = reader.string("syncmodule_frequentsync_batchsize", default = "medium")
+        val frequentConfigString = reader.string("syncmodule_frequentsync_batchsize", default = "large")
 
         val frequentBatchSize = when (frequentConfigString.toLowerCase()) {
           "verysmall" -> BatchSize.VERY_SMALL
@@ -137,7 +137,7 @@ data class SyncModuleConfig(
           else -> BatchSize.MEDIUM
         }
 
-        val dailyConfigString = reader.string("syncmodule_dailysync_batchsize", default = "medium")
+        val dailyConfigString = reader.string("syncmodule_dailysync_batchsize", default = "large")
 
         val dailyBatchSize = when (dailyConfigString.toLowerCase()) {
           "verysmall" -> BatchSize.VERY_SMALL

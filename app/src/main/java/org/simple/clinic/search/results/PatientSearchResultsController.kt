@@ -1,5 +1,6 @@
 package org.simple.clinic.search.results
 
+import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -76,7 +77,7 @@ class PatientSearchResultsController @Inject constructor(
   private fun generateListItems(
       results: PatientSearchResults,
       currentFacility: Facility
-  ): List<PatientSearchResultsItemType> {
+  ): List<PatientSearchResultsItemType<out ViewHolder>> {
     if (results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty()) return emptyList()
 
     val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {

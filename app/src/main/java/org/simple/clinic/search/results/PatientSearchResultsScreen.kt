@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.kotlinandroidextensions.ViewHolder
+import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.schedulers.Schedulers.io
@@ -95,7 +95,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
           .clicks(newPatientButton)
           .map { CreateNewPatientClicked() }
 
-  fun updateSearchResults(results: List<PatientSearchResultsItemType>) {
+  fun updateSearchResults(results: List<PatientSearchResultsItemType<out ViewHolder>>) {
     results.forEach { it.uiEvents = adapterUiEvents }
     adapter.update(results)
   }

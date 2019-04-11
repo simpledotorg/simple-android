@@ -15,7 +15,8 @@ class IdentifierDisplayAdapterModule {
     return IdentifierDisplayAdapter(
         converters = mapOf(
             BpPassport to bpPassportTextConverter
-        )
+        ),
+        unknownValueFallback = { it.value }
     )
   }
 }

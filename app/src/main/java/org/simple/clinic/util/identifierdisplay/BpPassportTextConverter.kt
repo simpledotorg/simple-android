@@ -10,7 +10,7 @@ class BpPassportTextConverter @Inject constructor(
     private val uuidShortCodeCreator: UuidShortCodeCreator
 ) : IdentifierDisplayAdapter.IdentifierToTextConverter {
 
-  override fun convert(identifier: Identifier): CharSequence {
+  override fun convertValue(identifier: Identifier): String {
     val uuidShortCode = uuidShortCodeCreator.createFromUuid(UUID.fromString(identifier.value))
 
     return when (uuidShortCode) {

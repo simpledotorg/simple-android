@@ -11,13 +11,13 @@ class IdentifierDisplayAdapterModule {
 
   @Provides
   fun provideIdentifierDisplayAdapter(
-      bpPassportTextConverter: BpPassportTextConverter,
+      bpPassportDisplayFormatter: BpPassportDisplayFormatter,
       resources: Resources
   ): IdentifierDisplayAdapter {
 
     return IdentifierDisplayAdapter(
         converters = mapOf(
-            BpPassport to bpPassportTextConverter
+            BpPassport to bpPassportDisplayFormatter
         ),
         unknownValueFallback = { it.value },
         unknownTypeFallback = { resources.getString(R.string.id) }

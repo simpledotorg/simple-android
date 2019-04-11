@@ -8,7 +8,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
-import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter.IdentifierToTextConverter
+import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter.IdentifierDisplayFormatter
 
 @RunWith(JUnitParamsRunner::class)
 class IdentifierDisplayAdapterTest {
@@ -17,7 +17,7 @@ class IdentifierDisplayAdapterTest {
   fun `the adapter should use the provided converter for converting the identifier value`() {
     val identifierDisplayAdapter = IdentifierDisplayAdapter(
         converters = mapOf(
-            BpPassport to StubIdentifierToTextConverter(convertValueAction = { "bp_passport_${it.value}" })
+            BpPassport to StubIdentifierDisplayFormatter(convertValueAction = { "bp_passport_${it.value}" })
         ),
         unknownValueFallback = { throw RuntimeException() },
         unknownTypeFallback = { throw RuntimeException() }
@@ -40,7 +40,7 @@ class IdentifierDisplayAdapterTest {
   ) {
     val identifierDisplayAdapter = IdentifierDisplayAdapter(
         converters = mapOf(
-            BpPassport to StubIdentifierToTextConverter(convertValueAction = { "bp_passport_${it.value}" })
+            BpPassport to StubIdentifierDisplayFormatter(convertValueAction = { "bp_passport_${it.value}" })
         ),
         unknownValueFallback = fallback,
         unknownTypeFallback = { throw RuntimeException() }
@@ -97,7 +97,7 @@ class IdentifierDisplayAdapterTest {
   fun `the adapter should use the provided converter for converting the identifier type`() {
     val identifierDisplayAdapter = IdentifierDisplayAdapter(
         converters = mapOf(
-            BpPassport to StubIdentifierToTextConverter(convertTypeAction = { "bp_passport" })
+            BpPassport to StubIdentifierDisplayFormatter(convertTypeAction = { "bp_passport" })
         ),
         unknownValueFallback = { throw RuntimeException() },
         unknownTypeFallback = { throw RuntimeException() }
@@ -117,7 +117,7 @@ class IdentifierDisplayAdapterTest {
   ) {
     val identifierDisplayAdapter = IdentifierDisplayAdapter(
         converters = mapOf(
-            BpPassport to StubIdentifierToTextConverter(convertTypeAction = { "bp_passport" })
+            BpPassport to StubIdentifierDisplayFormatter(convertTypeAction = { "bp_passport" })
         ),
         unknownValueFallback = { throw RuntimeException() },
         unknownTypeFallback = fallback
@@ -161,13 +161,13 @@ class IdentifierDisplayAdapterTest {
   }
 
 
-  private class StubIdentifierToTextConverter(
+  private class StubIdentifierDisplayFormatter(
       private val convertValueAction: (Identifier) -> String = { throw UnsupportedOperationException() },
       private val convertTypeAction: (Identifier) -> String = { throw UnsupportedOperationException() }
-  ) : IdentifierToTextConverter {
+  ) : IdentifierDisplayFormatter {
 
-    override fun convertValue(identifier: Identifier) = convertValueAction(identifier)
+    override fun formatValue(identifier: Identifier) = convertValueAction(identifier)
 
-    override fun convertType(identifier: Identifier) = convertTypeAction(identifier)
+    override fun formatType(identifier: Identifier) = convertTypeAction(identifier)
   }
 }

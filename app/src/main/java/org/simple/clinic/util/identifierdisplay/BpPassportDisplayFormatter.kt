@@ -9,12 +9,12 @@ import org.simple.clinic.util.Unicode
 import java.util.UUID
 import javax.inject.Inject
 
-class BpPassportTextConverter @Inject constructor(
+class BpPassportDisplayFormatter @Inject constructor(
     private val uuidShortCodeCreator: UuidShortCodeCreator,
     private val resources: Resources
-) : IdentifierDisplayAdapter.IdentifierToTextConverter {
+) : IdentifierDisplayAdapter.IdentifierDisplayFormatter {
 
-  override fun convertValue(identifier: Identifier): String {
+  override fun formatValue(identifier: Identifier): String {
     val uuidShortCode = uuidShortCodeCreator.createFromUuid(UUID.fromString(identifier.value))
 
     return when (uuidShortCode) {
@@ -29,7 +29,7 @@ class BpPassportTextConverter @Inject constructor(
     }
   }
 
-  override fun convertType(identifier: Identifier): String {
+  override fun formatType(identifier: Identifier): String {
     return resources.getString(R.string.bp_passport)
   }
 }

@@ -5,6 +5,7 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.shortcode.UuidShortCode
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
+import org.simple.clinic.util.Unicode
 import java.util.UUID
 import javax.inject.Inject
 
@@ -22,7 +23,7 @@ class BpPassportTextConverter @Inject constructor(
         val prefix = uuidShortCode.shortCode.substring(0, 3)
         val suffix = uuidShortCode.shortCode.substring(3)
 
-        return "$prefix $suffix"
+        return "$prefix${Unicode.nonBreakingSpace}$suffix"
       }
       is UuidShortCode.IncompleteShortCode -> uuidShortCode.shortCode
     }

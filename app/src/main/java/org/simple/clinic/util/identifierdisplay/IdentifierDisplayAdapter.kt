@@ -1,5 +1,6 @@
 package org.simple.clinic.util.identifierdisplay
 
+import androidx.annotation.VisibleForTesting
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 
@@ -16,7 +17,8 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
  * formats.
  **/
 class IdentifierDisplayAdapter(
-    private val converters: Map<Identifier.IdentifierType, IdentifierToTextConverter>
+    @get:VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    val converters: Map<Identifier.IdentifierType, IdentifierToTextConverter>
 ) {
 
   fun toCharSequence(identifier: Identifier): CharSequence {

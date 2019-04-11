@@ -2,6 +2,7 @@ package org.simple.clinic.di
 
 import android.app.Application
 import android.content.Context
+import android.content.res.Resources
 import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
@@ -73,4 +74,8 @@ open class AppModule(private val appContext: Application) {
   @Provides
   @AppScope
   fun systemDefaultZone(): ZoneId = ZoneId.systemDefault()
+
+  @Provides
+  @AppScope
+  fun resources(): Resources = appContext.resources
 }

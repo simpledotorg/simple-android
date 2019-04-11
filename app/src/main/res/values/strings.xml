@@ -16,6 +16,8 @@
 
   <string name="country_dialing_code" translatable="false">+91</string>
   <string name="home_help">Help</string>
+  <string name="bp_passport">BP Passport</string>
+  <string name="id">ID</string>
 
   <!-- Patient search -->
   <string name="patientsearch_name">Patient’s name</string>

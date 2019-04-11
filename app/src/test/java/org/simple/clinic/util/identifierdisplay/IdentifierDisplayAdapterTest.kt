@@ -19,7 +19,8 @@ class IdentifierDisplayAdapterTest {
         converters = mapOf(
             BpPassport to StubIdentifierToTextConverter(convertValueAction = { "bp_passport_${it.value}" })
         ),
-        unknownValueFallback = { throw RuntimeException() }
+        unknownValueFallback = { throw RuntimeException() },
+        unknownTypeFallback = { throw RuntimeException() }
     )
     val identifiers = listOf("id_1", "id_2", "id_3").map { Identifier(value = it, type = BpPassport) }
 
@@ -41,7 +42,8 @@ class IdentifierDisplayAdapterTest {
         converters = mapOf(
             BpPassport to StubIdentifierToTextConverter(convertValueAction = { "bp_passport_${it.value}" })
         ),
-        unknownValueFallback = fallback
+        unknownValueFallback = fallback,
+        unknownTypeFallback = { throw RuntimeException() }
     )
     val knownIdentifier = Identifier(value = "id_1", type = BpPassport)
 
@@ -91,11 +93,81 @@ class IdentifierDisplayAdapterTest {
     )
   }
 
+  @Test
+  fun `the adapter should use the provided converter for converting the identifier type`() {
+    val identifierDisplayAdapter = IdentifierDisplayAdapter(
+        converters = mapOf(
+            BpPassport to StubIdentifierToTextConverter(convertTypeAction = { "bp_passport" })
+        ),
+        unknownValueFallback = { throw RuntimeException() },
+        unknownTypeFallback = { throw RuntimeException() }
+    )
+
+    val convertedForDisplay = identifierDisplayAdapter.typeAsText(Identifier(value = "123", type = BpPassport))
+
+    assertThat(convertedForDisplay).isEqualTo("bp_passport")
+  }
+
+  @Test
+  @Parameters(method = "params for unknown identifier type fallback")
+  fun `types of unknown identifiers should be converted to using the fallback`(
+      fallback: (Identifier) -> String,
+      unknownIdentifier: Identifier,
+      expectedConvertedUnknownType: String
+  ) {
+    val identifierDisplayAdapter = IdentifierDisplayAdapter(
+        converters = mapOf(
+            BpPassport to StubIdentifierToTextConverter(convertTypeAction = { "bp_passport" })
+        ),
+        unknownValueFallback = { throw RuntimeException() },
+        unknownTypeFallback = fallback
+    )
+    val knownIdentifier = Identifier(value = "id_1", type = BpPassport)
+
+    val convertedForDisplay = listOf(knownIdentifier, unknownIdentifier)
+        .map(identifierDisplayAdapter::typeAsText)
+
+    val expected = listOf("bp_passport", expectedConvertedUnknownType)
+    assertThat(convertedForDisplay).isEqualTo(expected)
+  }
+
+  @Suppress("Unused")
+  private fun `params for unknown identifier type fallback`(): List<List<Any>> {
+    fun testCase(
+        fallback: (Identifier) -> String,
+        unknownIdentifier: Identifier,
+        expectedConvertedUnknownType: String
+    ): List<Any> {
+      return listOf(fallback, unknownIdentifier, expectedConvertedUnknownType)
+    }
+
+    return listOf(
+        testCase(
+            fallback = { (it.type as Unknown).actual },
+            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
+            expectedConvertedUnknownType = "bp_passport_short_code"
+        ),
+        testCase(
+            fallback = { "" },
+            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
+            expectedConvertedUnknownType = ""
+        ),
+        testCase(
+            fallback = { "ID" },
+            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
+            expectedConvertedUnknownType = "ID"
+        )
+    )
+  }
+
 
   private class StubIdentifierToTextConverter(
-      private val convertValueAction: (Identifier) -> String = { throw UnsupportedOperationException() }
+      private val convertValueAction: (Identifier) -> String = { throw UnsupportedOperationException() },
+      private val convertTypeAction: (Identifier) -> String = { throw UnsupportedOperationException() }
   ) : IdentifierToTextConverter {
 
     override fun convertValue(identifier: Identifier) = convertValueAction(identifier)
+
+    override fun convertType(identifier: Identifier) = convertTypeAction(identifier)
   }
 }

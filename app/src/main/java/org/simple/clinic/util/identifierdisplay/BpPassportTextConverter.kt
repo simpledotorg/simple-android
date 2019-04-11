@@ -1,5 +1,7 @@
 package org.simple.clinic.util.identifierdisplay
 
+import android.content.res.Resources
+import org.simple.clinic.R
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.shortcode.UuidShortCode
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
@@ -7,7 +9,8 @@ import java.util.UUID
 import javax.inject.Inject
 
 class BpPassportTextConverter @Inject constructor(
-    private val uuidShortCodeCreator: UuidShortCodeCreator
+    private val uuidShortCodeCreator: UuidShortCodeCreator,
+    private val resources: Resources
 ) : IdentifierDisplayAdapter.IdentifierToTextConverter {
 
   override fun convertValue(identifier: Identifier): String {
@@ -23,5 +26,9 @@ class BpPassportTextConverter @Inject constructor(
       }
       is UuidShortCode.IncompleteShortCode -> uuidShortCode.shortCode
     }
+  }
+
+  override fun convertType(identifier: Identifier): String {
+    return resources.getString(R.string.bp_passport)
   }
 }

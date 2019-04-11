@@ -19,7 +19,8 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 class IdentifierDisplayAdapter(
     @get:VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     val converters: Map<Identifier.IdentifierType, IdentifierToTextConverter>,
-    private val unknownValueFallback: (Identifier) -> String
+    private val unknownValueFallback: (Identifier) -> String,
+    private val unknownTypeFallback: (Identifier) -> String
 ) {
 
   fun valueAsText(identifier: Identifier): String {
@@ -29,8 +30,17 @@ class IdentifierDisplayAdapter(
     }
   }
 
+  fun typeAsText(identifier: Identifier): String {
+    return when (identifier.type) {
+      is Unknown -> unknownTypeFallback(identifier)
+      else -> converters.getValue(identifier.type).convertType(identifier)
+    }
+  }
+
   interface IdentifierToTextConverter {
 
     fun convertValue(identifier: Identifier): String
+
+    fun convertType(identifier: Identifier): String
   }
 }

@@ -48,9 +48,10 @@ import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
-import org.simple.clinic.search.PatientSearchModule
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
+import org.simple.clinic.searchresultsview.PatientSearchView
+import org.simple.clinic.searchresultsview.SearchResultsModule
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.summary.PatientSummaryScreen
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
@@ -107,12 +108,13 @@ interface TheActivityComponent {
   fun inject(target: ScanSimpleIdScreen)
   fun inject(target: QrCodeScannerView)
   fun inject(target: RecentPatientsView)
-  fun inject(patientsScreenKey: PatientsScreenKey)
+  fun inject(target: PatientsScreenKey)
   fun inject(target: SyncIndicatorView)
   fun inject(target: AddPhoneNumberDialog)
   fun inject(target: HelpScreen)
   fun inject(target: AddIdToPatientSearchScreen)
   fun inject(target: LinkIdWithPatientSheet)
+  fun inject(target: PatientSearchView)
 
   @Subcomponent.Builder
   interface Builder {
@@ -130,7 +132,7 @@ interface TheActivityComponent {
 @Module(includes = [
   OnboardingModule::class,
   PatientsModule::class,
-  PatientSearchModule::class,
+  SearchResultsModule::class,
   PhoneModule::class])
 class TheActivityModule {
 

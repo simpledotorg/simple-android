@@ -1,4 +1,4 @@
-package org.simple.clinic.search.results
+package org.simple.clinic.searchresultsview
 
 import org.simple.clinic.util.Unicode.bullet
 import org.simple.clinic.util.Unicode.hairSpace

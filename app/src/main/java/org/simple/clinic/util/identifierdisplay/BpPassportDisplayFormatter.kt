@@ -30,6 +30,6 @@ class BpPassportDisplayFormatter @Inject constructor(
   }
 
   override fun formatType(identifier: Identifier): String {
-    return resources.getString(R.string.bp_passport)
+    return resources.getString(R.string.identifiertype_bp_passport)
   }
 }

@@ -2,7 +2,7 @@ package org.simple.clinic.util.identifierdisplay
 
 import androidx.annotation.VisibleForTesting
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 
 /**
  * We need to render items of [Identifier] type in the UI, sometimes differently from how
@@ -18,23 +18,19 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
  **/
 class IdentifierDisplayAdapter(
     @get:VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    val converters: Map<Identifier.IdentifierType, IdentifierDisplayFormatter>,
-    private val unknownValueFallback: (Identifier) -> String,
-    private val unknownTypeFallback: (Identifier) -> String
+    val formatters: Map<Class<out IdentifierType>, IdentifierDisplayFormatter>
 ) {
 
   fun valueAsText(identifier: Identifier): String {
-    return when (identifier.type) {
-      is Unknown -> unknownValueFallback(identifier)
-      else -> converters.getValue(identifier.type).formatValue(identifier)
-    }
+    return formatters
+        .getValue(identifier.type::class.java)
+        .formatValue(identifier)
   }
 
   fun typeAsText(identifier: Identifier): String {
-    return when (identifier.type) {
-      is Unknown -> unknownTypeFallback(identifier)
-      else -> converters.getValue(identifier.type).formatType(identifier)
-    }
+    return formatters
+        .getValue(identifier.type::class.java)
+        .formatType(identifier)
   }
 
   interface IdentifierDisplayFormatter {

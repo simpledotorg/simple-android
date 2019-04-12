@@ -14,160 +14,138 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter.Identif
 class IdentifierDisplayAdapterTest {
 
   @Test
-  fun `the adapter should use the provided converter for converting the identifier value`() {
-    val identifierDisplayAdapter = IdentifierDisplayAdapter(
-        converters = mapOf(
-            BpPassport to StubIdentifierDisplayFormatter(convertValueAction = { "bp_passport_${it.value}" })
-        ),
-        unknownValueFallback = { throw RuntimeException() },
-        unknownTypeFallback = { throw RuntimeException() }
-    )
-    val identifiers = listOf("id_1", "id_2", "id_3").map { Identifier(value = it, type = BpPassport) }
-
-    val convertedForDisplay = identifiers.map(identifierDisplayAdapter::valueAsText)
-
-    val expected = listOf("bp_passport_id_1", "bp_passport_id_2", "bp_passport_id_3")
-
-    assertThat(convertedForDisplay).isEqualTo(expected)
-  }
-
-  @Test
-  @Parameters(method = "params for unknown identifier value fallback")
-  fun `values of unknown identifiers should be converted to using the fallback`(
-      fallback: (Identifier) -> String,
-      unknownIdentifier: Identifier,
-      expectedConvertedUnknownValue: String
+  @Parameters(method = "params for formatting values of the identifier")
+  fun `the adapter should use the provided formatter for formatting the identifier value`(
+      formatters: Map<Class<out Identifier.IdentifierType>, IdentifierDisplayFormatter>,
+      identifiersToFormat: List<Identifier>,
+      expected: List<String>
   ) {
-    val identifierDisplayAdapter = IdentifierDisplayAdapter(
-        converters = mapOf(
-            BpPassport to StubIdentifierDisplayFormatter(convertValueAction = { "bp_passport_${it.value}" })
-        ),
-        unknownValueFallback = fallback,
-        unknownTypeFallback = { throw RuntimeException() }
-    )
-    val knownIdentifier = Identifier(value = "id_1", type = BpPassport)
+    val identifierDisplayAdapter = IdentifierDisplayAdapter(formatters = formatters)
 
-    val convertedForDisplay = listOf(knownIdentifier, unknownIdentifier)
-        .map(identifierDisplayAdapter::valueAsText)
+    val formatted = identifiersToFormat.map(identifierDisplayAdapter::valueAsText)
 
-    val expected = listOf("bp_passport_id_1", expectedConvertedUnknownValue)
-    assertThat(convertedForDisplay).isEqualTo(expected)
+    assertThat(formatted).isEqualTo(expected)
   }
 
   @Suppress("Unused")
-  private fun `params for unknown identifier value fallback`(): List<List<Any>> {
+  private fun `params for formatting values of the identifier`(): List<List<Any>> {
     fun testCase(
-        fallback: (Identifier) -> String,
-        unknownIdentifier: Identifier,
-        expectedConvertedUnknownValue: String
+        formatters: Map<Class<out Identifier.IdentifierType>, IdentifierDisplayFormatter>,
+        identifiersToFormat: List<Identifier>,
+        expected: List<String>
     ): List<Any> {
-      return listOf(fallback, unknownIdentifier, expectedConvertedUnknownValue)
+      return listOf(formatters, identifiersToFormat, expected)
     }
 
     return listOf(
         testCase(
-            fallback = { it.value },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownValue = "1234567"
+            formatters = mapOf(
+                BpPassport::class.java to StubIdentifierDisplayFormatter(formatValueAction = { "bp_passport_${it.value}" })
+            ),
+            identifiersToFormat = listOf(
+                Identifier(value = "id_1", type = BpPassport),
+                Identifier(value = "id_3", type = BpPassport),
+                Identifier(value = "id_2", type = BpPassport)
+            ),
+            expected = listOf("bp_passport_id_1", "bp_passport_id_3", "bp_passport_id_2")
         ),
         testCase(
-            fallback = { "" },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownValue = ""
+            formatters = mapOf(
+                Unknown::class.java to StubIdentifierDisplayFormatter(formatValueAction = { "unknown_${it.value}" })
+            ),
+            identifiersToFormat = listOf(
+                Identifier(value = "id_1", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_2", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_3", type = Unknown(actual = "bp_passport_shortcode"))
+            ),
+            expected = listOf("unknown_id_1", "unknown_id_2", "unknown_id_3")
         ),
         testCase(
-            fallback = { "unknown" },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownValue = "unknown"
-        ),
-        testCase(
-            fallback = {
-              it.value
-                  .split("")
-                  .filter { part -> part.isNotBlank() }
-                  .joinToString("-")
-            },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownValue = "1-2-3-4-5-6-7"
+            formatters = mapOf(
+                Unknown::class.java to StubIdentifierDisplayFormatter(formatValueAction = { "unknown ${it.value}" }),
+                BpPassport::class.java to StubIdentifierDisplayFormatter(formatValueAction = { "bppassport ${it.value}" })
+            ),
+            identifiersToFormat = listOf(
+                Identifier(value = "id_1", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_2", type = BpPassport),
+                Identifier(value = "id_3", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_4", type = BpPassport)
+            ),
+            expected = listOf("unknown id_1", "bppassport id_2", "unknown id_3", "bppassport id_4")
         )
     )
   }
 
   @Test
-  fun `the adapter should use the provided converter for converting the identifier type`() {
-    val identifierDisplayAdapter = IdentifierDisplayAdapter(
-        converters = mapOf(
-            BpPassport to StubIdentifierDisplayFormatter(convertTypeAction = { "bp_passport" })
-        ),
-        unknownValueFallback = { throw RuntimeException() },
-        unknownTypeFallback = { throw RuntimeException() }
-    )
-
-    val convertedForDisplay = identifierDisplayAdapter.typeAsText(Identifier(value = "123", type = BpPassport))
-
-    assertThat(convertedForDisplay).isEqualTo("bp_passport")
-  }
-
-  @Test
-  @Parameters(method = "params for unknown identifier type fallback")
-  fun `types of unknown identifiers should be converted to using the fallback`(
-      fallback: (Identifier) -> String,
-      unknownIdentifier: Identifier,
-      expectedConvertedUnknownType: String
+  @Parameters(method = "params for formatting types of the identifier")
+  fun `the adapter should use the provided formatter for formatting the identifier type`(
+      formatters: Map<Class<out Identifier.IdentifierType>, IdentifierDisplayFormatter>,
+      identifiersToFormat: List<Identifier>,
+      expected: List<String>
   ) {
-    val identifierDisplayAdapter = IdentifierDisplayAdapter(
-        converters = mapOf(
-            BpPassport to StubIdentifierDisplayFormatter(convertTypeAction = { "bp_passport" })
-        ),
-        unknownValueFallback = { throw RuntimeException() },
-        unknownTypeFallback = fallback
-    )
-    val knownIdentifier = Identifier(value = "id_1", type = BpPassport)
+    val identifierDisplayAdapter = IdentifierDisplayAdapter(formatters = formatters)
 
-    val convertedForDisplay = listOf(knownIdentifier, unknownIdentifier)
-        .map(identifierDisplayAdapter::typeAsText)
+    val formatted = identifiersToFormat.map(identifierDisplayAdapter::typeAsText)
 
-    val expected = listOf("bp_passport", expectedConvertedUnknownType)
-    assertThat(convertedForDisplay).isEqualTo(expected)
+    assertThat(formatted).isEqualTo(expected)
   }
 
   @Suppress("Unused")
-  private fun `params for unknown identifier type fallback`(): List<List<Any>> {
+  private fun `params for formatting types of the identifier`(): List<List<Any>> {
     fun testCase(
-        fallback: (Identifier) -> String,
-        unknownIdentifier: Identifier,
-        expectedConvertedUnknownType: String
+        formatters: Map<Class<out Identifier.IdentifierType>, IdentifierDisplayFormatter>,
+        identifiersToFormat: List<Identifier>,
+        expected: List<String>
     ): List<Any> {
-      return listOf(fallback, unknownIdentifier, expectedConvertedUnknownType)
+      return listOf(formatters, identifiersToFormat, expected)
     }
 
     return listOf(
         testCase(
-            fallback = { (it.type as Unknown).actual },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownType = "bp_passport_short_code"
+            formatters = mapOf(
+                BpPassport::class.java to StubIdentifierDisplayFormatter(formatTypeAction = { "bp_passport" })
+            ),
+            identifiersToFormat = listOf(
+                Identifier(value = "id_1", type = BpPassport),
+                Identifier(value = "id_3", type = BpPassport),
+                Identifier(value = "id_2", type = BpPassport)
+            ),
+            expected = listOf("bp_passport", "bp_passport", "bp_passport")
         ),
         testCase(
-            fallback = { "" },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownType = ""
+            formatters = mapOf(
+                Unknown::class.java to StubIdentifierDisplayFormatter(formatTypeAction = { "unknown" })
+            ),
+            identifiersToFormat = listOf(
+                Identifier(value = "id_1", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_2", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_3", type = Unknown(actual = "bp_passport_shortcode"))
+            ),
+            expected = listOf("unknown", "unknown", "unknown")
         ),
         testCase(
-            fallback = { "ID" },
-            unknownIdentifier = Identifier(value = "1234567", type = Unknown(actual = "bp_passport_short_code")),
-            expectedConvertedUnknownType = "ID"
+            formatters = mapOf(
+                Unknown::class.java to StubIdentifierDisplayFormatter(formatTypeAction = { "unknown type" }),
+                BpPassport::class.java to StubIdentifierDisplayFormatter(formatTypeAction = { "bppassport" })
+            ),
+            identifiersToFormat = listOf(
+                Identifier(value = "id_1", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_2", type = BpPassport),
+                Identifier(value = "id_3", type = Unknown(actual = "bp_passport_shortcode")),
+                Identifier(value = "id_4", type = BpPassport)
+            ),
+            expected = listOf("unknown type", "bppassport", "unknown type", "bppassport")
         )
     )
   }
-
 
   private class StubIdentifierDisplayFormatter(
-      private val convertValueAction: (Identifier) -> String = { throw UnsupportedOperationException() },
-      private val convertTypeAction: (Identifier) -> String = { throw UnsupportedOperationException() }
+      private val formatValueAction: (Identifier) -> String = { throw UnsupportedOperationException() },
+      private val formatTypeAction: (Identifier) -> String = { throw UnsupportedOperationException() }
   ) : IdentifierDisplayFormatter {
 
-    override fun formatValue(identifier: Identifier) = convertValueAction(identifier)
+    override fun formatValue(identifier: Identifier) = formatValueAction(identifier)
 
-    override fun formatType(identifier: Identifier) = convertTypeAction(identifier)
+    override fun formatType(identifier: Identifier) = formatTypeAction(identifier)
   }
 }

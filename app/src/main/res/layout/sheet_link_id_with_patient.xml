@@ -13,16 +13,16 @@
     android:layout_alignParentStart="true"
     android:layout_margin="@dimen/spacing_8"
     android:src="@drawable/patient_id_card"
-    android:tint="@color/grey1" />
+    android:tint="@color/grey1"
+    tools:ignore="ContentDescription" />
 
   <TextView
     android:id="@+id/linkidwithpatient_text"
-    style="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_8"
     android:layout_toEndOf="@+id/linkidwithpatient_icon"
-    android:text="@string/linkidwithpatient_add_patient_text"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.Grey0"
     tools:text="Add BP Passport id 512 6789121 to patient" />
 
   <LinearLayout
@@ -32,9 +32,8 @@
     android:layout_marginTop="@dimen/spacing_16"
     android:orientation="horizontal">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <Button
       android:id="@+id/linkidwithpatient_button_cancel"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_8"
@@ -42,18 +41,19 @@
       android:background="@drawable/button_outline_ripple"
       android:backgroundTint="@color/grey1"
       android:text="@string/linkidwithpatient_button_cancel"
-      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Grey1" />
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Grey1"
+      tools:ignore="ButtonStyle" />
 
-    <org.simple.clinic.widgets.PrimarySolidButton
+    <Button
       android:id="@+id/linkidwithpatient_button_add"
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginStart="@dimen/spacing_8"
       android:layout_weight="1"
+      android:paddingTop="19dp"
+      android:paddingBottom="19dp"
+      android:backgroundTint="@color/blue1"
       android:gravity="center"
-      android:paddingBottom="21dp"
-      android:paddingTop="21dp"
       android:text="@string/linkidwithpatient_button_add"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100"
       tools:ignore="ButtonStyle" />

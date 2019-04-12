@@ -132,6 +132,10 @@
     <item name="android:textColor">@color/white100</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Body0Left.NumericBold.Grey0">
+    <item name="android:textColor">@color/grey0</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Body0Left.Grey0">
     <item name="android:textColor">@color/grey0</item>
   </style>

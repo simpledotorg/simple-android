@@ -1,4 +1,4 @@
-package org.simple.clinic.search.results
+package org.simple.clinic.searchresultsview
 
 import android.content.res.Resources
 import android.view.View
@@ -11,6 +11,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow.SearchResultRowViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.estimateCurrentAge
@@ -19,7 +20,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 
-sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
+sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
 
   companion object {
     private const val HEADER_NOT_IN_CURRENT_FACILITY = 0L
@@ -30,7 +31,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
 
   data class InCurrentFacilityHeader(
       private val facilityName: String
-  ) : PatientSearchResultsItemType<ViewHolder>(facilityName.hashCode().toLong()) {
+  ) : SearchResultsItemType<ViewHolder>(facilityName.hashCode().toLong()) {
 
     override fun getLayout(): Int = R.layout.list_patient_search_header
 
@@ -41,7 +42,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
     }
   }
 
-  object NotInCurrentFacilityHeader : PatientSearchResultsItemType<ViewHolder>(HEADER_NOT_IN_CURRENT_FACILITY) {
+  object NotInCurrentFacilityHeader : SearchResultsItemType<ViewHolder>(HEADER_NOT_IN_CURRENT_FACILITY) {
 
     override fun getLayout(): Int = R.layout.list_patient_search_header
 
@@ -52,29 +53,29 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
     }
   }
 
-  object NoPatientsInCurrentFacility : PatientSearchResultsItemType<ViewHolder>(HEADER_NO_PATIENTS_IN_CURRENT_FACILITY) {
+  object NoPatientsInCurrentFacility : SearchResultsItemType<ViewHolder>(HEADER_NO_PATIENTS_IN_CURRENT_FACILITY) {
     override fun getLayout(): Int = R.layout.list_patient_search_no_patients
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
     }
   }
 
-  data class PatientSearchResultRow(
+  data class SearchResultRow(
       private val searchResult: PatientSearchResult,
       private val currentFacility: Facility,
       private val phoneObfuscator: PhoneNumberObfuscator,
       private val dateOfBirthFormat: DateTimeFormatter,
       private val clock: Clock,
       private val userClock: UserClock
-  ) : PatientSearchResultsItemType<PatientSearchResultRow.PatientSearchResultRowViewHolder>(searchResult.hashCode().toLong()) {
+  ) : SearchResultsItemType<SearchResultRowViewHolder>(searchResult.hashCode().toLong()) {
 
     override fun getLayout(): Int = R.layout.list_patient_search
 
-    override fun createViewHolder(itemView: View) = PatientSearchResultRowViewHolder(itemView)
+    override fun createViewHolder(itemView: View) = SearchResultRowViewHolder(itemView)
 
-    override fun bind(viewHolder: PatientSearchResultRowViewHolder, position: Int) {
+    override fun bind(viewHolder: SearchResultRowViewHolder, position: Int) {
       viewHolder.itemView.setOnClickListener {
-        uiEvents.onNext(PatientSearchResultClicked(searchResult))
+        uiEvents.onNext(SearchResultClicked(searchResult))
       }
 
       val resources = viewHolder.itemView.resources
@@ -86,7 +87,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
     }
 
     private fun renderLastRecordedBloodPressure(
-        holder: PatientSearchResultRowViewHolder,
+        holder: SearchResultRowViewHolder,
         resources: Resources
     ) {
       val lastBp = searchResult.lastBp
@@ -114,7 +115,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
       }
     }
 
-    private fun renderPatientPhoneNumber(holder: PatientSearchResultRowViewHolder) {
+    private fun renderPatientPhoneNumber(holder: SearchResultRowViewHolder) {
       val phoneNumber = searchResult.phoneNumber
       if (phoneNumber.isNullOrBlank()) {
         holder.phoneNumberTextView.visibility = View.GONE
@@ -124,7 +125,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
       }
     }
 
-    private fun renderPatientDateOfBirth(holder: PatientSearchResultRowViewHolder) {
+    private fun renderPatientDateOfBirth(holder: SearchResultRowViewHolder) {
       val dateOfBirth = searchResult.dateOfBirth
       if (dateOfBirth == null) {
         holder.dateOfBirthTextView.visibility = View.GONE
@@ -134,7 +135,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
       }
     }
 
-    private fun renderPatientAddress(holder: PatientSearchResultRowViewHolder, resources: Resources) {
+    private fun renderPatientAddress(holder: SearchResultRowViewHolder, resources: Resources) {
       val address = searchResult.address
       if (address.colonyOrVillage.isNullOrEmpty()) {
         holder.addressTextView.text = searchResult.address.district
@@ -146,7 +147,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
       }
     }
 
-    private fun renderPatientNameAgeAndGender(holder: PatientSearchResultRowViewHolder, resources: Resources) {
+    private fun renderPatientNameAgeAndGender(holder: SearchResultRowViewHolder, resources: Resources) {
       holder.genderImageView.setImageResource(searchResult.gender.displayIconRes)
 
       val age = when (searchResult.age) {
@@ -166,7 +167,7 @@ sealed class PatientSearchResultsItemType<T : ViewHolder>(adapterId: Long) : Gro
           age)
     }
 
-    class PatientSearchResultRowViewHolder(rootView: View) : ViewHolder(rootView) {
+    class SearchResultRowViewHolder(rootView: View) : ViewHolder(rootView) {
       val genderImageView by bindView<ImageView>(R.id.patientsearchresult_item_gender)
       val titleTextView by bindView<TextView>(R.id.patientsearchresult_item_title)
       val addressTextView by bindView<TextView>(R.id.patientsearchresult_item_address)

@@ -1,12 +1,12 @@
-package org.simple.clinic.search.results
+package org.simple.clinic.searchresultsview
 
 import com.google.common.truth.Truth.assertThat
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.util.Unicode.hairSpace
 import org.simple.clinic.util.Unicode.bullet
+import org.simple.clinic.util.Unicode.hairSpace
 
 private const val mask = "$bullet$hairSpace"
 

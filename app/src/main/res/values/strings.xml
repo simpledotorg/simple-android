@@ -376,7 +376,8 @@
   <!-- Link Id Sheet-->
   <string name="linkidwithpatient_button_add">Add</string>
   <string name="linkidwithpatient_button_cancel">Cancel</string>
-  <string name="linkidwithpatient_add_patient_text">Add %1$s %2$s to patient</string>
+  <string name="linkidwithpatient_add_id_text">Add %1$s\u0020</string>
+  <string name="linkidwithpatient_to_patient_text">\u0020to patient?</string>
   <!-- Add ID to Patient: Search -->
 
   <string name="addidtopatientsearch_name">Patient’s name</string>

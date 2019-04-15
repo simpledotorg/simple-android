@@ -4,7 +4,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:installLocation="preferExternal">
 
-  <uses-feature android:name="android.hardware.camera" android:required="false" />
+  <uses-feature
+    android:name="android.hardware.camera"
+    android:required="false" />
 
   <uses-permission android:name="android.permission.CALL_PHONE" />
   <uses-permission android:name="android.permission.CAMERA" />
@@ -23,8 +25,12 @@
     tools:ignore="AllowBackup,GoogleAppIndexingWarning"
     tools:replace="android:allowBackup">
 
-    <meta-data android:name="firebase_analytics_collection_deactivated" android:value="true" />
-    <meta-data android:name="google_analytics_adid_collection_enabled" android:value="false" />
+    <meta-data
+      android:name="firebase_analytics_collection_deactivated"
+      android:value="true" />
+    <meta-data
+      android:name="google_analytics_adid_collection_enabled"
+      android:value="false" />
 
     <activity
       android:name=".activity.TheActivity"
@@ -63,6 +69,11 @@
 
     <activity
       android:name=".drugs.selection.dosage.DosagePickerSheet"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:windowSoftInputMode="adjustResize" />
+
+    <activity
+      android:name=".summary.linkId.LinkIdWithPatientSheet"
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 

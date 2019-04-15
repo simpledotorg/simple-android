@@ -382,5 +382,6 @@
   <string name="addidtopatientsearch_name">Patient’s name</string>
   <string name="addidtopatientsearch_search">Next</string>
   <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name</string>
-  <string name="addidtopatientsearch_title">Add BP Passport\nto patient</string>
+  <string name="addidtopatientsearch_add">Add %1$s\u0020</string>
+  <string name="addidtopatientsearch_to_patient">\u0020to patient</string>
 </resources>

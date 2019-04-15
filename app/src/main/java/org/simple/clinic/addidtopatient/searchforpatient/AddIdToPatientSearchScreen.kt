@@ -2,11 +2,12 @@ package org.simple.clinic.addidtopatient.searchforpatient
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
@@ -19,6 +20,9 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
+import org.simple.clinic.util.Truss
+import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
@@ -35,10 +39,17 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   @Inject
   lateinit var controller: AddIdToPatientSearchScreenController
 
+  @Inject
+  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
+
   private val toolBar by bindView<Toolbar>(R.id.addidtopatientsearch_toolbar)
+  private val titleTextView by bindView<TextView>(R.id.addidtopatientsearch_title)
   private val fullNameEditText by bindView<EditText>(R.id.addidtopatientsearch_fullname)
   private val fullNameInputLayout by bindView<TextInputLayout>(R.id.addidtopatientsearch_fullname_inputlayout)
   private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.addidtopatientsearch_search_frame)
+  private val screenKey by unsafeLazy {
+    screenRouter.key<AddIdToPatientSearchScreenKey>(this)
+  }
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -49,9 +60,10 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     TheActivity.component.inject(this)
 
     fullNameEditText.showKeyboard()
-    toolBar.setOnClickListener {
+    toolBar.setNavigationOnClickListener {
       screenRouter.pop()
     }
+    displayScreenTitle()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
@@ -66,6 +78,21 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
         .observeOn(mainThread())
         .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
+  }
+
+  private fun displayScreenTitle() {
+    val identifierType = identifierDisplayAdapter.typeAsText(screenKey.identifier)
+    val identifierValue = identifierDisplayAdapter.valueAsText(screenKey.identifier)
+
+    val identifierTextAppearanceSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100)
+
+    titleTextView.text = Truss()
+        .append(resources.getString(R.string.addidtopatientsearch_add, identifierType))
+        .pushSpan(identifierTextAppearanceSpan)
+        .append(identifierValue)
+        .popSpan()
+        .append(resources.getString(R.string.addidtopatientsearch_to_patient))
+        .build()
   }
 
   private fun nameChanges() =

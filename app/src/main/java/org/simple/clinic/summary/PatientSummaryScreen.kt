@@ -34,6 +34,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -42,6 +43,7 @@ import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
+import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
@@ -321,6 +323,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
+  }
+
+  fun openLinkIdWithPatientSheet(patientUuid: UUID, identifier: Identifier) {
+    activity.startActivity(LinkIdWithPatientSheet.intent(context, patientUuid, identifier))
   }
 }
 

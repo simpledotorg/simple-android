@@ -983,4 +983,32 @@ class PatientSummaryScreenControllerTest {
         listOf(OpenIntention.LinkIdWithPatient(identifier), true),
         listOf(OpenIntention.LinkIdWithPatient(identifier), false))
   }
+
+
+  @Test
+  @Parameters(method = "params for testing link id with patient bottom sheet")
+  fun `link id with patient bottom sheet should only open when patient summary is created with link id intent`(
+      openIntention: OpenIntention,
+      shouldShowLinkIdSheet: Boolean,
+      identifier: Identifier?
+  ) {
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
+
+    if (shouldShowLinkIdSheet) {
+      verify(screen).openLinkIdWithPatientSheet(patientUuid, identifier!!)
+    } else {
+      verify(screen, never()).openLinkIdWithPatientSheet(any(), any())
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for testing link id with patient bottom sheet`(): List<Any> {
+    val identifier = Identifier(UUID.randomUUID().toString(), BpPassport)
+
+    return listOf(
+        listOf(OpenIntention.LinkIdWithPatient(identifier), true, identifier),
+        listOf(OpenIntention.ViewExistingPatient, false, null),
+        listOf(OpenIntention.ViewNewPatient, false, null)
+    )
+  }
 }

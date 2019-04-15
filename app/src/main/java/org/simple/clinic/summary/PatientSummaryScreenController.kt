@@ -31,8 +31,8 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
-import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -81,6 +81,7 @@ class PatientSummaryScreenController @Inject constructor(
         openPrescribedDrugsScreen(replayedEvents),
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openBloodPressureUpdateSheet(replayedEvents),
+        openLinkIdWithPatientSheet(replayedEvents),
         patientSummaryResultChanged(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
         showScheduleAppointmentSheet(replayedEvents),
@@ -330,6 +331,16 @@ class PatientSummaryScreenController @Inject constructor(
 
     return showScheduleAppointmentSheetOnBackClicks
         .mergeWith(showScheduleAppointmentSheetOnDoneClicks)
+  }
+
+  private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientSummaryScreenCreated>()
+        .filter { it.openIntention is OpenIntention.LinkIdWithPatient }
+        .map {
+          val linkIdWithPatient = it.openIntention as OpenIntention.LinkIdWithPatient
+          { ui: Ui -> ui.openLinkIdWithPatientSheet(it.patientUuid, linkIdWithPatient.identifier) }
+        }
   }
 
   private fun goBackWhenBackClicked(events: Observable<UiEvent>): Observable<UiChange> {

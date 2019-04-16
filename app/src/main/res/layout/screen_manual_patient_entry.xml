@@ -13,7 +13,10 @@
     android:layout_height="wrap_content"
     android:background="?attr/selectableItemBackgroundBorderless"
     android:contentDescription="@string/patiententry_contentdescription_up_button"
-    android:padding="@dimen/spacing_16"
+    android:paddingBottom="@dimen/spacing_16"
+    android:paddingEnd="@dimen/spacing_8"
+    android:paddingStart="@dimen/spacing_16"
+    android:paddingTop="@dimen/spacing_16"
     android:src="@drawable/ic_arrow_back_24dp"
     android:tint="@color/gray_600" />
 
@@ -37,7 +40,8 @@
 
       <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/spacing_4">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patiententry_full_name_inputlayout"
@@ -65,7 +69,8 @@
       <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_4">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patiententry_phone_number_inputlayout"
@@ -91,9 +96,39 @@
       </FrameLayout>
 
       <LinearLayout
+        android:id="@+id/patiententry_identifier_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:orientation="vertical">
+
+        <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:paddingStart="@dimen/spacing_4"
+          android:text="@string/patiententry_identifier"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1" />
+
+        <TextView
+          android:id="@+id/patiententry_identifier"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_4"
+          android:background="@drawable/background_patiententry_identifier"
+          android:padding="@dimen/spacing_4"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
+          android:drawablePadding="@dimen/spacing_12"
+          tools:drawableStart="@drawable/patient_id_card"
+          tools:drawableTint="@color/grey1"
+          tools:text="123 4567" />
+
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_4">
 
         <!-- A background is intentionally set on these Views
              to avoid overlapping when they animate -->
@@ -175,7 +210,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_4">
 
         <androidx.appcompat.widget.AppCompatRadioButton
           android:id="@+id/patiententry_gender_female"
@@ -211,7 +247,7 @@
         android:id="@+id/patiententry_gender_validation_error"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/spacing_4"
+        android:layout_marginStart="@dimen/spacing_8"
         android:layout_marginTop="@dimen/spacing_4"
         android:text="@string/patiententry_error_empty_gender"
         android:textColor="@color/textinputlayout_error"
@@ -221,7 +257,8 @@
       <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_16">
+        android:layout_marginTop="@dimen/spacing_16"
+        android:paddingStart="@dimen/spacing_4">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patiententry_colony_or_village_inputlayout"
@@ -251,7 +288,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_16"
         android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/spacing_4">
 
         <com.google.android.material.textfield.TextInputLayout
           android:id="@+id/patiententry_district_inputlayout"

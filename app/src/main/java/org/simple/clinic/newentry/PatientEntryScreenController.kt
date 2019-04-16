@@ -167,9 +167,20 @@ class PatientEntryScreenController @Inject constructor(
     val addressChanges = Observables
         .combineLatest(colonyOrVillageChanges, districtChanges, stateChanges, ::Address)
 
-    return Observables.combineLatest(personDetailChanges, phoneNumberChanges, addressChanges) { personal, phone, address ->
-      OngoingPatientEntryChanged(OngoingNewPatientEntry(personal, address, phone.toNullable()))
-    }
+    return Observables
+        .combineLatest(
+            personDetailChanges,
+            phoneNumberChanges,
+            addressChanges
+        ) { personal, phone, address ->
+          OngoingPatientEntryChanged(OngoingNewPatientEntry(personal, address, phone.toNullable()))
+        }
+        .flatMapSingle { changedPatientEntry ->
+          patientRepository.ongoingEntry()
+              .map { alreadyPresentEntry ->
+                changedPatientEntry.copy(entry = changedPatientEntry.entry.copy(identifier = alreadyPresentEntry.identifier))
+              }
+        }
   }
 
   private fun saveOngoingEntry(events: Observable<UiEvent>): Observable<UiChange> {

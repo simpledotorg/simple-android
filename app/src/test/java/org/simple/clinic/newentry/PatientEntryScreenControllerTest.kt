@@ -25,8 +25,12 @@ import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.OngoingNewPatientEntry.Address
+import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
@@ -91,7 +95,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).preFillFields(OngoingNewPatientEntry(
-        address = OngoingNewPatientEntry.Address(
+        address = Address(
             colonyOrVillage = "",
             district = "district",
             state = "state")))
@@ -99,7 +103,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when screen is created with an already present address, the already present address must be used for prefilling`() {
-    val address = OngoingNewPatientEntry.Address(
+    val address = Address(
         colonyOrVillage = "colony 1",
         district = "district 2",
         state = "state 3"
@@ -113,6 +117,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when save button is clicked then a patient record should be created from the form input`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
@@ -128,14 +133,15 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientEntrySaveClicked())
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
-        personalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingNewPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
   }
 
   @Test
   fun `date-of-birth and age fields should only be visible while one of them is empty`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientAgeTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.BOTH_VISIBLE)
@@ -148,8 +154,9 @@ class PatientEntryScreenControllerTest {
     verify(screen).setDateOfBirthAndAgeVisibility(DateOfBirthAndAgeVisibility.AGE_VISIBLE)
   }
 
-  @Test()
+  @Test
   fun `when both date-of-birth and age fields have text then an assertion error should be thrown`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     errorConsumer = { assertThat(it).isInstanceOf(AssertionError::class.java) }
 
     uiEvents.onNext(PatientDateOfBirthTextChanged("1"))
@@ -158,6 +165,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `while date-of-birth has focus or has some input then date format should be shown in the label`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = false))
     uiEvents.onNext(PatientDateOfBirthFocusChanged(hasFocus = true))
@@ -170,6 +178,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when screen is paused then ongoing patient entry should be saved`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
@@ -186,14 +195,15 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(TheActivityLifecycle.Paused())
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
-        personalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
-        address = OngoingNewPatientEntry.Address(colonyOrVillage = "colony", district = "district", state = "state"),
+        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
   }
 
   @Test
   fun `when save is clicked then user input should be validated`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientFullNameTextChanged(""))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
@@ -238,6 +248,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when input validation fails, the errors must be sent to analytics`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientFullNameTextChanged(""))
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
@@ -269,6 +280,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `validation errors should be cleared on every input change`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
@@ -296,6 +308,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 1`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
@@ -315,6 +328,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 2`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
@@ -334,6 +348,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 3`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
@@ -353,6 +368,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `regression test for validations 4`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
@@ -373,6 +389,7 @@ class PatientEntryScreenControllerTest {
   @Test
   @Parameters(value = ["FEMALE", "MALE", "TRANSGENDER"])
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientGenderChanged(None))
     uiEvents.onNext(PatientGenderChanged(Just(gender)))
     uiEvents.onNext(PatientGenderChanged(Just(gender)))
@@ -382,6 +399,7 @@ class PatientEntryScreenControllerTest {
 
   @Test
   fun `when validation errors are shown then the form should be scrolled to the first field with error`() {
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
@@ -400,5 +418,39 @@ class PatientEntryScreenControllerTest {
     val inOrder = inOrder(screen)
     inOrder.verify(screen).showEmptyDistrictError(true)
     inOrder.verify(screen).scrollToFirstFieldWithError()
+  }
+
+  @Test
+  fun `when the ongoing entry has an identifier it must be retained when accepting input`() {
+    val identifier = Identifier(value = "id", type = BpPassport)
+    whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry(identifier = identifier)))
+    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
+
+    uiEvents.onNext(PatientFullNameTextChanged("Ashok Kumar"))
+    uiEvents.onNext(PatientPhoneNumberTextChanged(""))
+    uiEvents.onNext(PatientDateOfBirthTextChanged(""))
+    uiEvents.onNext(PatientAgeTextChanged("20"))
+    uiEvents.onNext(PatientGenderChanged(Just(Gender.FEMALE)))
+    uiEvents.onNext(PatientColonyOrVillageTextChanged("Colony"))
+    uiEvents.onNext(PatientDistrictTextChanged("District"))
+    uiEvents.onNext(PatientStateTextChanged("State"))
+    uiEvents.onNext(PatientEntrySaveClicked())
+
+    val expectedSavedEntry = OngoingNewPatientEntry(
+        personalDetails = PersonalDetails(
+            fullName = "Ashok Kumar",
+            dateOfBirth = null,
+            age = "20",
+            gender = Gender.FEMALE
+        ),
+        address = Address(
+            colonyOrVillage = "Colony",
+            district = "District",
+            state = "State"
+        ),
+        phoneNumber = null,
+        identifier = identifier
+    )
+    verify(patientRepository).saveOngoingEntry(expectedSavedEntry)
   }
 }

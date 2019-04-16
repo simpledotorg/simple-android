@@ -15,11 +15,14 @@ import android.widget.EditText
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StyleRes
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import timber.log.Timber
@@ -94,6 +97,18 @@ fun TextView.setCompoundDrawableStart(drawable: Drawable?) {
       compoundDrawablesRelative[1],
       compoundDrawablesRelative[2],
       compoundDrawablesRelative[3])
+}
+
+fun TextView.setCompoundDrawableStartWithTint(@DrawableRes drawableRes: Int, @ColorRes tintColorRes: Int) {
+  val drawable = ResourcesCompat.getDrawable(resources, drawableRes, context.theme)!!
+      .let { source ->
+        val drawable = source.mutate()
+        val tintColor = ResourcesCompat.getColor(resources, tintColorRes, context.theme)
+        DrawableCompat.setTint(drawable, tintColor)
+        drawable
+      }
+
+  setCompoundDrawableStart(drawable)
 }
 
 /**

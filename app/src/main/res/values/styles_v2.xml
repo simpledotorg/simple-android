@@ -145,6 +145,7 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body1Left">
+    <item name="android:fontFamily">sans-serif</item>
     <item name="android:textSize">@dimen/textsize_16</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>
     <item name="android:lineSpacingExtra">8sp</item>
@@ -160,6 +161,14 @@
 
   <style name="Clinic.V2.TextAppearance.Body1Left.Blue1">
     <item name="android:textColor">@color/blue1</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric">
+    <item name="android:letterSpacing">0.09</item>
+  </style>
+
+  <style name="Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0">
+    <item name="android:textColor">@color/grey0</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body1Center">

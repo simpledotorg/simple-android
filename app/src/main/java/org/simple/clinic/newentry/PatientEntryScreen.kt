@@ -36,13 +36,16 @@ import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.scrollToChild
+import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
@@ -58,6 +61,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var activityLifecycle: Observable<TheActivityLifecycle>
+
+  @Inject
+  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
   private val backButton by bindView<View>(R.id.patiententry_back)
   private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollview)
@@ -84,6 +90,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
   private val stateInputLayout by bindView<TextInputLayout>(R.id.patiententry_state_inputlayout)
   private val saveButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patiententry_save)
+  private val identifierTextView by bindView<TextView>(R.id.patiententry_identifier)
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -107,6 +114,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         false
       }
     }
+
+    // Compound drawable tinting is only supported in API23+. AppCompatTextView does not have
+    // support for compound drawable tinting either, so we need to do this in code.
+    identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
 
     Observable
         .mergeArray(
@@ -175,6 +186,10 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         TRANSGENDER -> transgenderRadioButton
       }
       genderButton.isChecked = true
+    }
+
+    identifierTextView.text = entry.identifier?.let { identifier ->
+      identifierDisplayAdapter.valueAsText(identifier)
     }
   }
 

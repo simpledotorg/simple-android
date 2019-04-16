@@ -31,7 +31,8 @@ import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.*
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.protocol.ProtocolDrug
@@ -214,6 +215,32 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient())
         .test()
         .assertError(AssertionError::class.java)
+  }
+
+  @Test
+  fun when_a_patient_with_an_identifier_is_saved_then_it_should_be_correctly_saved_in_the_database() {
+    val identifier = testData.identifier(value = "id", type = BpPassport)
+    val patientEntry = testData.ongoingPatientEntry(identifier = identifier)
+
+    val now = Instant.now(testClock)
+    val advanceClockBy = Duration.ofDays(7L)
+    testClock.advanceBy(advanceClockBy)
+
+    val savedPatientUuid = patientRepository.saveOngoingEntry(patientEntry)
+        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .blockingGet()
+        .uuid
+
+    val patientProfile = database
+        .patientDao()
+        .patientProfile(savedPatientUuid)
+        .blockingFirst()
+
+    val savedBusinessId = patientProfile.businessIds.first()
+
+    assertThat(savedBusinessId.identifier).isEqualTo(identifier)
+    assertThat(savedBusinessId.createdAt).isEqualTo(now + advanceClockBy)
+    assertThat(savedBusinessId.updatedAt).isEqualTo(now + advanceClockBy)
   }
 
   @Test

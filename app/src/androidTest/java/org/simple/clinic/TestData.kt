@@ -637,7 +637,8 @@ class TestData @Inject constructor(
       colony: String = faker.address.streetName(),
       district: String = faker.address.city(),
       state: String = faker.address.state(),
-      phone: String? = faker.number.number(10)
+      phone: String? = faker.number.number(10),
+      identifier: Identifier? = null
   ): OngoingNewPatientEntry {
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
     val ongoingAddress = OngoingNewPatientEntry.Address(colony, district, state)
@@ -645,7 +646,12 @@ class TestData @Inject constructor(
       OngoingNewPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.MOBILE, active = true)
     }
 
-    return OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
+    return OngoingNewPatientEntry(
+        personalDetails = ongoingPersonalDetails,
+        address = ongoingAddress,
+        phoneNumber = ongoingPhoneNumber,
+        identifier = identifier
+    )
   }
 
   fun bloodPressureMeasurement(
@@ -753,4 +759,14 @@ class TestData @Inject constructor(
       dosage = dosage,
       name = name,
       deletedAt = deletedAt)
+
+  fun identifier(
+      value: String = "identifier",
+      type: Identifier.IdentifierType = Identifier.IdentifierType.random()
+  ): Identifier {
+    return Identifier(
+        value = value,
+        type = type
+    )
+  }
 }

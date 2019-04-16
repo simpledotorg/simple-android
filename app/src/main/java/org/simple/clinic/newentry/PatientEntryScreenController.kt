@@ -11,10 +11,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
@@ -42,6 +38,10 @@ import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.AGE_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import javax.inject.Inject
 
 typealias Ui = PatientEntryScreen
@@ -69,7 +69,8 @@ class PatientEntryScreenController @Inject constructor(
         savePatient(transformedEvents),
         showValidationErrorsOnSaveClick(transformedEvents),
         resetValidationErrors(transformedEvents),
-        scrollToBottomOnGenderSelection(transformedEvents))
+        scrollToBottomOnGenderSelection(transformedEvents),
+        toggleVisibilityOfIdentifierSection(transformedEvents))
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -310,5 +311,28 @@ class PatientEntryScreenController @Inject constructor(
         .filter { it.gender.isNotEmpty() }
         .take(1)
         .map { { ui: Ui -> ui.scrollFormToBottom() } }
+  }
+
+  private fun toggleVisibilityOfIdentifierSection(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreates = events
+        .ofType<ScreenCreated>()
+
+    val savedOngoingEntry = patientRepository
+        .ongoingEntry()
+        .toObservable()
+        .replay()
+        .refCount()
+
+    val showIdentifiersSection = screenCreates
+        .withLatestFrom(savedOngoingEntry) { _, entry -> entry }
+        .filter { it.identifier != null }
+        .map { { ui: Ui -> ui.showIdentifierSection() } }
+
+    val hideIdentifiersSection = screenCreates
+        .withLatestFrom(savedOngoingEntry) { _, entry -> entry }
+        .filter { it.identifier == null }
+        .map { { ui: Ui -> ui.hideIdentifierSection() } }
+
+    return showIdentifiersSection.mergeWith(hideIdentifiersSection)
   }
 }

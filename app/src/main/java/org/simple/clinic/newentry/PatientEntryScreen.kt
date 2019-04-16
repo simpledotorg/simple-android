@@ -49,6 +49,7 @@ import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import org.simple.clinic.widgets.textChanges
+import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
 
 class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -90,6 +91,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val stateEditText by bindView<EditText>(R.id.patiententry_state)
   private val stateInputLayout by bindView<TextInputLayout>(R.id.patiententry_state_inputlayout)
   private val saveButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patiententry_save)
+  private val identifierContainer by bindView<View>(R.id.patiententry_identifier_container)
   private val identifierTextView by bindView<TextView>(R.id.patiententry_identifier)
 
   override fun onFinishInflate() {
@@ -342,5 +344,13 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     formScrollView.post {
       formScrollView.smoothScrollTo(0, formScrollView.height)
     }
+  }
+
+  fun showIdentifierSection() {
+    identifierContainer.visibleOrGone(isVisible = true)
+  }
+
+  fun hideIdentifierSection() {
+    identifierContainer.visibleOrGone(isVisible = false)
   }
 }

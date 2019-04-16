@@ -535,6 +535,15 @@ class PatientRepository @Inject constructor(
         }
   }
 
+  fun bpPassportForPatient(patientUuid: UUID): Single<Optional<BusinessId>> {
+    return Single.fromCallable {
+      database
+          .businessIdDao()
+          .latestIdForType(patientUuid, BpPassport)
+          .toOptional()
+    }
+  }
+
   fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {
     return database
         .patientDao()

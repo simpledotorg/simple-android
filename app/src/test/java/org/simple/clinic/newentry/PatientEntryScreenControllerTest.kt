@@ -65,6 +65,7 @@ class PatientEntryScreenControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val controller = PatientEntryScreenController(patientRepository, facilityRepository, userSession, dobValidator, numberValidator)
   private val reporter = MockAnalyticsReporter()
+  private val initialOngoingPatientEntrySubject = PublishSubject.create<OngoingNewPatientEntry>()
 
   private lateinit var errorConsumer: (Throwable) -> Unit
 
@@ -72,6 +73,7 @@ class PatientEntryScreenControllerTest {
   fun setUp() {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(PatientMocker.facility()))
     whenever(dobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(UTC))
+    whenever(patientRepository.ongoingEntry()).thenReturn(initialOngoingPatientEntrySubject.firstOrError())
 
     errorConsumer = { throw it }
 
@@ -452,5 +454,23 @@ class PatientEntryScreenControllerTest {
         identifier = identifier
     )
     verify(patientRepository).saveOngoingEntry(expectedSavedEntry)
+  }
+
+  @Test
+  fun `when the ongoing patient entry has an identifier, the identifier section must be shown`() {
+    initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = Identifier("id", BpPassport)))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).showIdentifierSection()
+  }
+
+  @Test
+  fun `when the ongoing patient entry does not have an identifier, the identifier section must be hidden`() {
+    initialOngoingPatientEntrySubject.onNext(OngoingNewPatientEntry(identifier = null))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).hideIdentifierSection()
   }
 }

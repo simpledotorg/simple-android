@@ -316,6 +316,15 @@ class PatientRepository @Inject constructor(
     val patientSave = sharedPatient
         .flatMapCompletable { patient -> savePatient(patient) }
 
+    val businessIdSave = cachedOngoingEntry
+        .flatMapCompletable { entry ->
+          if(entry.identifier == null) {
+            Completable.complete()
+          } else {
+            addIdentifierToPatient(patientUuid, entry.identifier).toCompletable()
+          }
+        }
+
     val phoneNumberSave = cachedOngoingEntry
         .flatMapCompletable { entry ->
           if (entry.phoneNumber == null) {
@@ -339,6 +348,7 @@ class PatientRepository @Inject constructor(
     return validation
         .andThen(addressSave)
         .andThen(patientSave)
+        .andThen(businessIdSave)
         .andThen(phoneNumberSave)
         .andThen(sharedPatient)
   }

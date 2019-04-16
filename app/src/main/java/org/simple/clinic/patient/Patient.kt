@@ -8,6 +8,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.intellij.lang.annotations.Language
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
@@ -123,67 +124,53 @@ data class Patient(
         newUpdatedAt: Instant
     )
 
+
     // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
     // support loading into constructor parameters and needs a settable property. Room does fix
     // this limitation in 2.1.0, but it requires migration to AndroidX. For now, we create a
     // transient query model whose only job is to represent this and process it in memory.
     // TODO: Remove this when we migrate to Room 2.1.0.
-    @Query("""
-      SELECT
-        P.uuid patient_uuid, P.addressUuid patient_addressUuid, P.fullName patient_fullName,
-        P.searchableName patient_searchableName, P.gender patient_gender, P.dateOfBirth patient_dateOfBirth,
-        P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt,
-        P.age_computedDateOfBirth patient_age_computedDateOfBirth, P.status patient_status,
-        P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
-        P.syncStatus patient_syncStatus,
-
-        PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
-        PA.state addr_state, PA.country addr_country,
-        PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
-
-        PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number,
-        PPN.phoneType phone_phoneType, PPN.active phone_active,
-        PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt,
-
-        BI.uuid businessid_uuid, BI.patientUuid businessid_patientUuid, BI.identifier businessid_identifier,
-        BI.identifierType businessid_identifierType, BI.meta businessid_meta, BI.metaVersion businessid_metaVersion,
-        BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt
-      FROM Patient P
-      INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
-      LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid
-      LEFT JOIN BusinessId BI ON BI.patientUuid == P.uuid
-      WHERE P.syncStatus == :syncStatus
-    """)
+    @Query("$patientProfileQuery WHERE P.syncStatus == :syncStatus")
     protected abstract fun loadPatientQueryModelsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientQueryModel>>
+
+    @Query("$patientProfileQuery WHERE P.uuid == :patientUuid")
+    protected abstract fun loadPatientQueryModelsForPatientUuid(patientUuid: UUID): Flowable<List<PatientQueryModel>>
 
     fun recordsWithSyncStatus(syncStatus: SyncStatus): Flowable<List<PatientProfile>> {
       return loadPatientQueryModelsWithSyncStatus(syncStatus)
-          .map { results ->
-            results.asSequence()
-                .groupBy { it.patient.uuid }
-                .map { (_, patientQueryModels) ->
-                  val patient = patientQueryModels.first().patient
-                  val patientAddress = patientQueryModels.first().address
+          .map(::queryModelsToPatientProfiles)
+    }
 
-                  val patientPhoneNumbers = patientQueryModels
-                      .filter { it.phoneNumber != null }
-                      .map { it.phoneNumber as PatientPhoneNumber }
-                      .distinctBy { it.uuid }
-                      .toList()
+    fun patientProfile(patientUuid: UUID): Flowable<PatientProfile> {
+      return loadPatientQueryModelsForPatientUuid(patientUuid)
+          .map { queryModelsToPatientProfiles(it).first() }
+    }
 
-                  val businessIds = patientQueryModels
-                      .filter { it.businessId != null }
-                      .map { it.businessId as BusinessId }
-                      .distinctBy { it.uuid }
-                      .toList()
+    private fun queryModelsToPatientProfiles(patientQueryModels: List<PatientQueryModel>): List<PatientProfile> {
+      return patientQueryModels
+          .groupBy { it.patient.uuid }
+          .map { (_, patientQueryModels) ->
+            val patient = patientQueryModels.first().patient
+            val patientAddress = patientQueryModels.first().address
 
-                  PatientProfile(
-                      patient = patient,
-                      address = patientAddress,
-                      phoneNumbers = patientPhoneNumbers,
-                      businessIds = businessIds
-                  )
-                }.toList()
+            val patientPhoneNumbers = patientQueryModels
+                .filter { it.phoneNumber != null }
+                .map { it.phoneNumber as PatientPhoneNumber }
+                .distinctBy { it.uuid }
+                .toList()
+
+            val businessIds = patientQueryModels
+                .filter { it.businessId != null }
+                .map { it.businessId as BusinessId }
+                .distinctBy { it.uuid }
+                .toList()
+
+            PatientProfile(
+                patient = patient,
+                address = patientAddress,
+                phoneNumbers = patientPhoneNumbers,
+                businessIds = businessIds
+            )
           }
     }
 
@@ -229,5 +216,34 @@ data class Patient(
         yesAnswer: MedicalHistory.Answer = MedicalHistory.Answer.YES,
         scheduled: Appointment.Status = Appointment.Status.SCHEDULED
     ): Flowable<Boolean>
+
+    companion object {
+      @Language("RoomSql")
+      const val patientProfileQuery = """
+        SELECT
+          P.uuid patient_uuid, P.addressUuid patient_addressUuid, P.fullName patient_fullName,
+          P.searchableName patient_searchableName, P.gender patient_gender, P.dateOfBirth patient_dateOfBirth,
+          P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt,
+          P.age_computedDateOfBirth patient_age_computedDateOfBirth, P.status patient_status,
+          P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
+          P.syncStatus patient_syncStatus,
+
+          PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
+          PA.state addr_state, PA.country addr_country,
+          PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
+
+          PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number,
+          PPN.phoneType phone_phoneType, PPN.active phone_active,
+          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt,
+
+          BI.uuid businessid_uuid, BI.patientUuid businessid_patientUuid, BI.identifier businessid_identifier,
+          BI.identifierType businessid_identifierType, BI.meta businessid_meta, BI.metaVersion businessid_metaVersion,
+          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt
+        FROM Patient P
+        INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
+        LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid
+        LEFT JOIN BusinessId BI ON BI.patientUuid == P.uuid
+      """
+    }
   }
 }

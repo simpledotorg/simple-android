@@ -14,7 +14,9 @@ import androidx.room.Query
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import io.reactivex.Flowable
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.util.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -103,6 +105,14 @@ data class BusinessId(
 
     @Query("SELECT COUNT(uuid) FROM BusinessId")
     fun count(): Int
+
+    @Query("""
+      SELECT * FROM BusinessId
+      WHERE patientUuid = :patientUuid AND identifierType = :identifierType AND deletedAt IS NULL
+      ORDER BY createdAt DESC LIMIT 1
+      """)
+    fun latestIdForType(patientUuid: UUID, identifierType: IdentifierType): BusinessId?
+
   }
 }
 

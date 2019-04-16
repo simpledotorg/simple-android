@@ -1776,4 +1776,43 @@ class PatientRepositoryAndroidTest {
         "BP deleted, Has had heart attack",
         "Multiple BPs"))
   }
+
+  @Test
+  fun when_fetching_bp_passport_for_patient_then_the_latest_one_should_be_returned() {
+    val patientUuid = UUID.randomUUID()
+    val identifier = Identifier(patientUuid.toString(), BpPassport)
+
+
+    val oldBpPassport = testData.businessId(
+        patientUuid = patientUuid,
+        identifier = identifier,
+        createdAt = Instant.now(testClock),
+        deletedAt = null
+    )
+
+    testClock.advanceBy(Duration.ofMinutes(10))
+
+    val currentBpPassport = testData.businessId(
+        patientUuid = patientUuid,
+        identifier = identifier,
+        createdAt = Instant.now(testClock),
+        deletedAt = null
+    )
+    val deletedBpPassport = testData.businessId(
+        patientUuid = patientUuid,
+        identifier = identifier,
+        createdAt = Instant.now(testClock),
+        deletedAt = Instant.now(testClock)
+    )
+
+    val dummyProfile = testData.patientProfile(patientUuid = patientUuid, generateBusinessId = false)
+    val profileWithBusinessIds = dummyProfile.copy(businessIds = listOf(oldBpPassport, currentBpPassport, deletedBpPassport))
+
+    patientRepository.save(listOf(profileWithBusinessIds)).blockingAwait()
+
+    val (latestBpPassport) = patientRepository.bpPassportForPatient(patientUuid).blockingGet()
+
+    assertThat(latestBpPassport).isEqualTo(currentBpPassport)
+  }
+
 }

@@ -18,6 +18,7 @@ import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.patient.PatientEntryValidationError.PHONE_NUMBER_NON_NULL_BUT_BLANK
 import org.simple.clinic.patient.PatientEntryValidationError.STATE_EMPTY
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
@@ -32,7 +33,8 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_O
 data class OngoingNewPatientEntry(
     val personalDetails: PersonalDetails? = null,
     val address: Address? = null,
-    val phoneNumber: PhoneNumber? = null
+    val phoneNumber: PhoneNumber? = null,
+    val identifier: Identifier? = null
 ) {
 
   fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): ArrayList<PatientEntryValidationError> {

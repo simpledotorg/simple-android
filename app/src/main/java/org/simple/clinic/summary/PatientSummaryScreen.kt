@@ -3,6 +3,7 @@ package org.simple.clinic.summary
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Parcelable
+import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.widget.Button
@@ -34,6 +35,7 @@ import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientPhoneNumber
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
@@ -45,13 +47,19 @@ import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.Truss
+import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
+import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
@@ -75,6 +83,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   @Inject
   lateinit var clock: UtcClock
 
+  @Inject
+  lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
+
   private val rootLayout by bindView<ViewGroup>(R.id.patientsummary_root)
   private val backButton by bindView<ImageButton>(R.id.patientsummary_back)
   private val fullNameTextView by bindView<TextView>(R.id.patientsummary_fullname)
@@ -83,6 +94,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val recyclerView by bindView<RecyclerView>(R.id.patientsummary_recyclerview)
   private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsummary_done)
   private val editButton by bindView<Button>(R.id.patientsummary_edit)
+  private val bpPassportTextView by bindView<TextView>(R.id.patientsummary_bp_passport)
 
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val prescriptionSection = Section()
@@ -188,7 +200,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       .map { AppointmentScheduled }
 
   @SuppressLint("SetTextI18n")
-  fun populatePatientProfile(patient: Patient, address: PatientAddress, phoneNumber: Optional<PatientPhoneNumber>) {
+  fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
+    val patient = patientSummaryProfile.patient
     val ageValue = when {
       patient.dateOfBirth == null -> {
         patient.age!!.let { age ->
@@ -201,8 +214,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
 
     displayNameGenderAge(patient.fullName, patient.gender, ageValue)
-    displayPhoneNumber(phoneNumber.toNullable())
-    displayPatientAddress(address)
+    displayPhoneNumber(patientSummaryProfile.phoneNumber.toNullable())
+    displayPatientAddress(patientSummaryProfile.address)
+    displayBpPassport(patientSummaryProfile.bpPassport, patientSummaryProfile.phoneNumber.isNotEmpty())
   }
 
   private fun displayPatientAddress(address: PatientAddress) {
@@ -225,6 +239,27 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun displayNameGenderAge(name: String, gender: Gender, age: Int) {
     val genderLetter = resources.getString(gender.displayLetterRes)
     fullNameTextView.text = resources.getString(R.string.patientsummary_name, name, genderLetter, age)
+  }
+
+  private fun displayBpPassport(bpPassport: Optional<BusinessId>, isPhoneNumberVisible: Boolean) {
+    bpPassportTextView.visibleOrGone(bpPassport.isNotEmpty())
+
+    bpPassportTextView.text = when (bpPassport) {
+      None -> ""
+      is Just -> {
+        val identifier = bpPassport.value.identifier
+        val numericSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body2Left_Numeric_White72)
+        val formattedIdentifier = Truss()
+            .append(identifierDisplayAdapter.typeAsText(identifier))
+            .append(": ")
+            .pushSpan(numericSpan)
+            .append(identifierDisplayAdapter.valueAsText(identifier))
+            .popSpan()
+            .build()
+
+        if (isPhoneNumberVisible) "${Unicode.bullet}  $formattedIdentifier" else formattedIdentifier
+      }
+    }
   }
 
   private fun setupSummaryList() {
@@ -335,3 +370,10 @@ data class PatientSummaryScreenSavedState(
     val superSavedState: Parcelable?,
     val bpEntryShownOnStart: Boolean
 ) : Parcelable
+
+data class PatientSummaryProfile(
+    val patient: Patient,
+    val address: PatientAddress,
+    val phoneNumber: Optional<PatientPhoneNumber>,
+    val bpPassport: Optional<BusinessId>
+)

@@ -49,6 +49,7 @@ import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.SyncStatus
+import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
@@ -56,6 +57,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -119,6 +121,7 @@ class PatientSummaryScreenControllerTest {
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.never())
     whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(1))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
+    whenever(patientRepository.bpPassportForPatient(patientUuid)).thenReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -130,22 +133,34 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `patient's profile should be populated`(intention: OpenIntention) {
+  @Parameters(method = "params for patient summary populating profile")
+  fun `patient's profile should be populated`(intention: OpenIntention, bpPassport: BusinessId?) {
     val addressUuid = UUID.randomUUID()
     val patient = PatientMocker.patient(uuid = patientUuid, addressUuid = addressUuid)
     val address = PatientMocker.address(uuid = addressUuid)
     val phoneNumber = None
+    val optionalBpPassport = bpPassport.toOptional()
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Just(patient)))
     whenever(patientRepository.address(addressUuid)).thenReturn(Observable.just(Just(address)))
     whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(phoneNumber))
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, 100)).thenReturn(Observable.never())
+    whenever(patientRepository.bpPassportForPatient(patientUuid)).thenReturn(Observable.just(optionalBpPassport))
 
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = intention, screenCreatedTimestamp = Instant.now(clock)))
 
-    verify(screen).populatePatientProfile(patient, address, phoneNumber)
+    verify(screen).populatePatientProfile(PatientSummaryProfile(patient, address, phoneNumber, optionalBpPassport))
   }
+
+  @Suppress("Unused")
+  private fun `params for patient summary populating profile`() = listOf(
+      listOf(OpenIntention.ViewExistingPatient, PatientMocker.businessId(patientUuid = patientUuid, identifier = Identifier("bp-pass", BpPassport))),
+      listOf(OpenIntention.ViewExistingPatient, null),
+      listOf(OpenIntention.ViewNewPatient, PatientMocker.businessId(patientUuid = patientUuid)),
+      listOf(OpenIntention.ViewNewPatient, null),
+      listOf(OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)), PatientMocker.businessId(patientUuid = patientUuid)),
+      listOf(OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)), null)
+  )
 
   @Test
   @Parameters(method = "patient summary open intentions")

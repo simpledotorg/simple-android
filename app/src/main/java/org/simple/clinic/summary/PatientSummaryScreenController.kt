@@ -117,8 +117,12 @@ class PatientSummaryScreenController @Inject constructor(
     val phoneNumbers = patientUuid
         .flatMap { patientRepository.phoneNumber(it) }
 
-    return Observables.combineLatest(sharedPatients, addresses, phoneNumbers)
-        .map { (patient, address, phoneNumber) -> { ui: Ui -> ui.populatePatientProfile(patient, address, phoneNumber) } }
+    val bpPassport = patientUuid
+        .flatMap { patientRepository.bpPassportForPatient(it) }
+
+    return Observables
+        .combineLatest(sharedPatients, addresses, phoneNumbers, bpPassport, ::PatientSummaryProfile)
+        .map { { ui: Ui -> ui.populatePatientProfile(it) } }
   }
 
   private fun mergeWithPatientSummaryChanges(): ObservableTransformer<UiEvent, UiEvent> {

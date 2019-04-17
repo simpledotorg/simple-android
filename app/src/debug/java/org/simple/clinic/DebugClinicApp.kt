@@ -7,7 +7,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.leakcanary.LeakCanary
 import io.github.inflationx.viewpump.ViewPump
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.crash.CrashReporterModule
@@ -20,8 +19,6 @@ import org.simple.clinic.di.NetworkModule
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.applock.AppLockConfig
-import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
@@ -110,12 +107,6 @@ class DebugClinicApp : ClinicApp() {
             return super.config().map {
               it.copy(blockDuration = Duration.ofSeconds(5))
             }
-          }
-        })
-        .patientModule(object : PatientModule() {
-          override fun providePatientConfig(): Observable<PatientConfig> {
-            return super.providePatientConfig()
-                .map { it.copy(scanSimpleCardFeatureEnabled = true) }
           }
         })
         .networkModule(object : NetworkModule() {

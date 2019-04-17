@@ -11,7 +11,6 @@ object LinkIdWithPatientAddClicked : UiEvent {
   override val analyticsName = "LinkIdWithPatient : Add Clicked"
 }
 
-
 object LinkIdWithPatientCancelClicked : UiEvent {
   override val analyticsName = "LinkIdWithPatient : Cancel Clicked"
 }

@@ -38,8 +38,7 @@
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
-      android:background="@drawable/button_outline_ripple"
-      android:backgroundTint="@color/grey1"
+      android:background="@drawable/button_outline_ripple_grey1"
       android:text="@string/linkidwithpatient_button_cancel"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Grey1"
       tools:ignore="ButtonStyle" />

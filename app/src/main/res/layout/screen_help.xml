@@ -43,7 +43,7 @@
         android:layout_marginEnd="@dimen/spacing_40"
         android:layout_marginStart="@dimen/spacing_40"
         android:layout_marginTop="@dimen/spacing_24"
-        android:background="@drawable/button_outline_ripple"
+        android:background="@drawable/button_outline_ripple_blue1"
         android:text="@string/help_try_again"
         android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1" />
     </LinearLayout>

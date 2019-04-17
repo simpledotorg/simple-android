@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
@@ -56,21 +57,21 @@ class PatientEntryScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
-
-    val transformedEvents = replayedEvents
-        .mergeWith(ongoingPatientEntryUpdates(replayedEvents))
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(mergeWithOngoingPatientEntryUpdates())
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.mergeArray(
-        preFillOnStart(transformedEvents),
-        switchBetweenDateOfBirthAndAge(transformedEvents),
-        toggleDatePatternInDateOfBirthLabel(transformedEvents),
-        saveOngoingEntry(transformedEvents),
-        savePatient(transformedEvents),
-        showValidationErrorsOnSaveClick(transformedEvents),
-        resetValidationErrors(transformedEvents),
-        scrollToBottomOnGenderSelection(transformedEvents),
-        toggleVisibilityOfIdentifierSection(transformedEvents))
+        preFillOnStart(replayedEvents),
+        switchBetweenDateOfBirthAndAge(replayedEvents),
+        toggleDatePatternInDateOfBirthLabel(replayedEvents),
+        saveOngoingEntry(replayedEvents),
+        savePatient(replayedEvents),
+        showValidationErrorsOnSaveClick(replayedEvents),
+        resetValidationErrors(replayedEvents),
+        scrollToBottomOnGenderSelection(replayedEvents),
+        toggleVisibilityOfIdentifierSection(replayedEvents))
   }
 
   private fun preFillOnStart(events: Observable<UiEvent>): Observable<UiChange> {
@@ -127,7 +128,53 @@ class PatientEntryScreenController @Inject constructor(
         .map { showPattern -> { ui: Ui -> ui.setShowDatePatternInDateOfBirthLabel(showPattern) } }
   }
 
-  private fun ongoingPatientEntryUpdates(events: Observable<UiEvent>): Observable<OngoingPatientEntryChanged> {
+  private fun mergeWithOngoingPatientEntryUpdates(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { events ->
+
+      val personDetailChanges = personalDetailChanges(events)
+
+      val phoneNumberChanges = events
+          .ofType<PatientPhoneNumberTextChanged>()
+          .map { (phoneNumber) -> if (phoneNumber.isBlank()) None else Just(PhoneNumber(phoneNumber)) }
+
+      val addressChanges = addressChanges(events)
+
+      val ongoingPatientEntryChanges = Observables
+          .combineLatest(
+              personDetailChanges,
+              phoneNumberChanges,
+              addressChanges
+          ) { personal, phone, address ->
+            OngoingPatientEntryChanged(OngoingNewPatientEntry(personal, address, phone.toNullable()))
+          }
+          .flatMapSingle { changedPatientEntry ->
+            patientRepository.ongoingEntry()
+                .map { alreadyPresentEntry ->
+                  changedPatientEntry.copy(entry = changedPatientEntry.entry.copy(identifier = alreadyPresentEntry.identifier))
+                }
+          }
+
+      events.mergeWith(ongoingPatientEntryChanges)
+    }
+  }
+
+  private fun addressChanges(events: Observable<UiEvent>): Observable<Address> {
+    val colonyOrVillageChanges = events
+        .ofType<PatientColonyOrVillageTextChanged>()
+        .map { it.colonyOrVillage }
+
+    val districtChanges = events
+        .ofType<PatientDistrictTextChanged>()
+        .map { it.district }
+
+    val stateChanges = events
+        .ofType<PatientStateTextChanged>()
+        .map { it.state }
+
+    return Observables.combineLatest(colonyOrVillageChanges, districtChanges, stateChanges, ::Address)
+  }
+
+  private fun personalDetailChanges(events: Observable<UiEvent>): Observable<PersonalDetails> {
     val nameChanges = events
         .ofType<PatientFullNameTextChanged>()
         .map { it.fullName }
@@ -144,44 +191,10 @@ class PatientEntryScreenController @Inject constructor(
         .ofType<PatientGenderChanged>()
         .map { it.gender }
 
-    val personDetailChanges = Observables.combineLatest(nameChanges, dateOfBirthChanges, ageChanges, genderChanges)
+    return Observables.combineLatest(nameChanges, dateOfBirthChanges, ageChanges, genderChanges)
     { name, dateOfBirth, age, gender ->
       PersonalDetails(name, dateOfBirth.nullIfBlank(), age.nullIfBlank(), gender.toNullable())
     }
-
-    val phoneNumberChanges = events
-        .ofType<PatientPhoneNumberTextChanged>()
-        .map { (phoneNumber) -> if (phoneNumber.isBlank()) None else Just(PhoneNumber(phoneNumber)) }
-
-    val colonyOrVillageChanges = events
-        .ofType<PatientColonyOrVillageTextChanged>()
-        .map { it.colonyOrVillage }
-
-    val districtChanges = events
-        .ofType<PatientDistrictTextChanged>()
-        .map { it.district }
-
-    val stateChanges = events
-        .ofType<PatientStateTextChanged>()
-        .map { it.state }
-
-    val addressChanges = Observables
-        .combineLatest(colonyOrVillageChanges, districtChanges, stateChanges, ::Address)
-
-    return Observables
-        .combineLatest(
-            personDetailChanges,
-            phoneNumberChanges,
-            addressChanges
-        ) { personal, phone, address ->
-          OngoingPatientEntryChanged(OngoingNewPatientEntry(personal, address, phone.toNullable()))
-        }
-        .flatMapSingle { changedPatientEntry ->
-          patientRepository.ongoingEntry()
-              .map { alreadyPresentEntry ->
-                changedPatientEntry.copy(entry = changedPatientEntry.entry.copy(identifier = alreadyPresentEntry.identifier))
-              }
-        }
   }
 
   private fun saveOngoingEntry(events: Observable<UiEvent>): Observable<UiChange> {

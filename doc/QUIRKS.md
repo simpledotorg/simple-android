@@ -31,4 +31,4 @@ During development, the QA server environment defaults to using `000000` as the 
 
 The app signature can be found in the debug notification's title:
 
-![App signature in debug notification](doc/arch/images/app_signature_in_debug_notification.png)
+![App signature in debug notification](arch/images/app_signature_in_debug_notification.png)

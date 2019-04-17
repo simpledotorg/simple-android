@@ -86,7 +86,9 @@ class PatientSummaryScreenController @Inject constructor(
         showUpdatePhoneDialogIfRequired(replayedEvents),
         showScheduleAppointmentSheet(replayedEvents),
         goBackWhenBackClicked(replayedEvents),
-        goToHomeOnDoneClick(replayedEvents))
+        goToHomeOnDoneClick(replayedEvents),
+        goBackIfLinkIdWithPatientWasCancelled(replayedEvents)
+    )
   }
 
   private fun reportViewedPatientEvent(events: Observable<UiEvent>): Observable<UiChange> {
@@ -381,13 +383,13 @@ class PatientSummaryScreenController @Inject constructor(
         .withLatestFrom(shouldGoBackStream, openIntentions)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
         .filter { (_, _, openIntention) -> openIntention == ViewNewPatient }
-        .map { { ui: Ui -> ui.goBackToHome() } }
+        .map { { ui: Ui -> ui.goToHomeScreen() } }
 
     val goBackToSearchResults = backClicks
         .withLatestFrom(shouldGoBackStream, openIntentions)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
         .filter { (_, _, openIntention) -> openIntention != ViewNewPatient }
-        .map { { ui: Ui -> ui.goBackToPatientSearch() } }
+        .map { { ui: Ui -> ui.goToPreviousScreen() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
   }
@@ -401,7 +403,7 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryDoneClicked>()
         .withLatestFrom(allBpsForPatientDeletedStream)
         .filter { (_, allBpsForPatientDeleted) -> allBpsForPatientDeleted }
-        .map { { ui: Ui -> ui.goBackToHome() } }
+        .map { { ui: Ui -> ui.goToHomeScreen() } }
   }
 
   private fun exitScreenAfterSchedulingAppointment(events: Observable<UiEvent>): Observable<UiChange> {
@@ -423,16 +425,16 @@ class PatientSummaryScreenController @Inject constructor(
         .map { (_, _, openIntention) ->
           { ui: Ui ->
             when (openIntention!!) {
-              ViewExistingPatient -> ui.goBackToPatientSearch()
-              is OpenIntention.LinkIdWithPatient -> ui.goBackToPatientSearch()
-              ViewNewPatient -> ui.goBackToHome()
+              ViewExistingPatient -> ui.goToPreviousScreen()
+              is OpenIntention.LinkIdWithPatient -> ui.goToPreviousScreen()
+              ViewNewPatient -> ui.goToHomeScreen()
             }.exhaustive()
           }
         }
 
     val afterDoneClicks = scheduleAppointmentCloses
         .withLatestFrom(doneClicks)
-        .map { { ui: Ui -> ui.goBackToHome() } }
+        .map { { ui: Ui -> ui.goToHomeScreen() } }
 
     return afterBackClicks.mergeWith(afterDoneClicks)
   }
@@ -527,5 +529,14 @@ class PatientSummaryScreenController @Inject constructor(
     return missingPhoneReminderRepository
         .hasShownReminderFor(patientUuid)
         .toObservable()
+  }
+
+  private fun goBackIfLinkIdWithPatientWasCancelled(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreates = events.ofType<PatientSummaryScreenCreated>()
+
+    val linkIdCancelled = events.ofType<PatientSummaryLinkIdCancelled>()
+
+    return Observables.combineLatest(screenCreates, linkIdCancelled)
+        .map { { ui: Ui -> ui.goToPreviousScreen() } }
   }
 }

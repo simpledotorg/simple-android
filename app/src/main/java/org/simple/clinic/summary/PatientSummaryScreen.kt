@@ -143,7 +143,9 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             adapterUiEvents,
             bloodPressureSaves(),
             appointmentScheduledSuccess(),
-            appointmentScheduleSheetClosed())
+            appointmentScheduleSheetClosed(),
+            linkIdWithPatientCancels()
+        )
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
@@ -199,6 +201,12 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null }
       .map { ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
       .map { AppointmentScheduled }
+
+  private fun linkIdWithPatientCancels() = screenRouter.streamScreenResults()
+      .ofType<ActivityResult>()
+      .filter { it.requestCode == REQCODE_LINK_ID && it.succeeded() && it.data != null }
+      .filter { LinkIdWithPatientSheet.wasIdLinked(it.data!!).not() }
+      .map { PatientSummaryLinkIdCancelled }
 
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
@@ -331,11 +339,11 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     activity.startActivityForResult(intent, REQCODE_SCHEDULE_APPOINTMENT)
   }
 
-  fun goBackToPatientSearch() {
+  fun goToPreviousScreen() {
     screenRouter.pop()
   }
 
-  fun goBackToHome() {
+  fun goToHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), direction = BACKWARD)
   }
 

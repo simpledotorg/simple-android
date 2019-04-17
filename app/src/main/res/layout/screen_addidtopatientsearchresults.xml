@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/addidtopatientsearchresults_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    tools:ignore="ContentDescription">
+
+    <TextView
+      android:id="@+id/addidtopatientsearchresults_title"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:ellipsize="end"
+      android:maxLines="2"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
+      tools:text="Add BP Passport 512 8097 to patient" />
+
+  </androidx.appcompat.widget.Toolbar>
+
+  <org.simple.clinic.searchresultsview.PatientSearchView
+    android:id="@+id/addidtopatientsearchresults_searchresultsview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" />
+</org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen>

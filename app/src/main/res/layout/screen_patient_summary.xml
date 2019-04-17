@@ -34,12 +34,12 @@
       android:layout_height="wrap_content"
       android:layout_alignParentEnd="true"
       android:layout_alignTop="@id/patientsummary_back"
+      android:layout_marginTop="4dp"
       android:background="@drawable/background_rounded_clearbutton"
       android:foreground="?attr/selectableItemBackgroundBorderless"
       android:minHeight="0dp"
       android:minWidth="0dp"
       android:paddingBottom="2dp"
-      android:layout_marginTop="4dp"
       android:paddingEnd="@dimen/spacing_8"
       android:paddingStart="@dimen/spacing_8"
       android:paddingTop="2dp"
@@ -69,10 +69,11 @@
 
     <TextView
       android:id="@+id/patientsummary_contact"
-      android:layout_width="match_parent"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_alignStart="@id/patientsummary_address"
       android:layout_below="@id/patientsummary_address"
+      android:layout_marginEnd="@dimen/spacing_8"
       android:layout_marginTop="@dimen/spacing_4"
       android:drawablePadding="@dimen/spacing_4"
       android:drawableStart="@drawable/ic_call_16dp"
@@ -81,6 +82,16 @@
       android:visibility="gone"
       tools:text="1111111111"
       tools:visibility="visible" />
+
+    <TextView
+      android:id="@+id/patientsummary_bp_passport"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/patientsummary_address"
+      android:layout_marginTop="@dimen/spacing_4"
+      android:layout_toEndOf="@id/patientsummary_contact"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.White72"
+      tools:text="\u2022 BP Passport: 512 9856" />
   </RelativeLayout>
 
   <androidx.recyclerview.widget.RecyclerView

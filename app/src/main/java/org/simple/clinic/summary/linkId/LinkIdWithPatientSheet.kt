@@ -136,4 +136,8 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
     setResult(Activity.RESULT_OK, result)
     finish()
   }
+
+  override fun onBackgroundClick() {
+    // Swallowed to prevent the sheet from being dismissed when clicking outside.
+  }
 }

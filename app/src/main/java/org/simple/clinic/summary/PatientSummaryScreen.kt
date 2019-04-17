@@ -69,6 +69,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   companion object {
     const val REQCODE_BP_ENTRY = 1
     const val REQCODE_SCHEDULE_APPOINTMENT = 2
+    const val REQCODE_LINK_ID = 3
   }
 
   @Inject
@@ -361,7 +362,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun openLinkIdWithPatientSheet(patientUuid: UUID, identifier: Identifier) {
-    activity.startActivity(LinkIdWithPatientSheet.intent(context, patientUuid, identifier))
+    val intent = LinkIdWithPatientSheet.intent(context, patientUuid, identifier)
+    activity.startActivityForResult(intent, REQCODE_LINK_ID)
   }
 }
 

@@ -401,8 +401,8 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
     uiEvents.onNext(PatientSummaryBackClicked())
 
-    verify(screen, never()).goBackToPatientSearch()
-    verify(screen, never()).goBackToHome()
+    verify(screen, never()).goToPreviousScreen()
+    verify(screen, never()).goToHomeScreen()
     verify(screen).showScheduleAppointmentSheet(patientUuid)
   }
 
@@ -425,9 +425,9 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
     if (openIntention == OpenIntention.ViewNewPatient) {
-      verify(screen).goBackToHome()
+      verify(screen).goToHomeScreen()
     } else {
-      verify(screen).goBackToPatientSearch()
+      verify(screen).goToPreviousScreen()
     }
   }
 
@@ -450,9 +450,9 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
     if (openIntention == OpenIntention.ViewNewPatient) {
-      verify(screen).goBackToHome()
+      verify(screen).goToHomeScreen()
     } else {
-      verify(screen).goBackToPatientSearch()
+      verify(screen).goToPreviousScreen()
     }
   }
 
@@ -475,9 +475,9 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
     if (openIntention == OpenIntention.ViewNewPatient) {
-      verify(screen).goBackToHome()
+      verify(screen).goToHomeScreen()
     } else {
-      verify(screen).goBackToPatientSearch()
+      verify(screen).goToPreviousScreen()
     }
   }
 
@@ -500,8 +500,8 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(screen).showScheduleAppointmentSheet(patientUuid)
-    verify(screen, never()).goBackToHome()
-    verify(screen, never()).goBackToPatientSearch()
+    verify(screen, never()).goToHomeScreen()
+    verify(screen, never()).goToPreviousScreen()
   }
 
   @Test
@@ -523,8 +523,8 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryDoneClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    verify(screen, never()).goBackToPatientSearch()
-    verify(screen).goBackToHome()
+    verify(screen, never()).goToPreviousScreen()
+    verify(screen).goToHomeScreen()
   }
 
   @Test
@@ -1025,5 +1025,14 @@ class PatientSummaryScreenControllerTest {
         listOf(OpenIntention.ViewExistingPatient, false, null),
         listOf(OpenIntention.ViewNewPatient, false, null)
     )
+  }
+
+  @Test
+  fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
+    val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
+    uiEvents.onNext(PatientSummaryLinkIdCancelled)
+
+    verify(screen).goToPreviousScreen()
   }
 }

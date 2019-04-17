@@ -42,3 +42,5 @@ data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItem
 data class PatientSummaryAllBloodPressuresDeleted(val allBloodPressuresDeleted: Boolean) : UiEvent
 
 object PatientSummaryBloodPressureSaved: UiEvent
+
+object PatientSummaryLinkIdCancelled: UiEvent

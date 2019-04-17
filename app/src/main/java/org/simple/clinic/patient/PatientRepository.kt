@@ -318,7 +318,7 @@ class PatientRepository @Inject constructor(
 
     val businessIdSave = cachedOngoingEntry
         .flatMapCompletable { entry ->
-          if(entry.identifier == null) {
+          if (entry.identifier == null) {
             Completable.complete()
           } else {
             addIdentifierToPatient(patientUuid, entry.identifier).toCompletable()
@@ -525,7 +525,6 @@ class PatientRepository @Inject constructor(
     return database
         .patientDao()
         .findPatientsWithBusinessId(identifier)
-        .toObservable()
         .map { patients ->
           if (patients.isEmpty()) {
             None
@@ -533,15 +532,22 @@ class PatientRepository @Inject constructor(
             patients.first().toOptional()
           }
         }
+        .toObservable()
+
   }
 
-  fun bpPassportForPatient(patientUuid: UUID): Single<Optional<BusinessId>> {
-    return Single.fromCallable {
-      database
-          .businessIdDao()
-          .latestIdForType(patientUuid, BpPassport)
-          .toOptional()
-    }
+  fun bpPassportForPatient(patientUuid: UUID): Observable<Optional<BusinessId>> {
+    return database
+        .businessIdDao()
+        .latestForPatientByType(patientUuid, BpPassport)
+        .map { bpPassports ->
+          if (bpPassports.isEmpty()) {
+            None
+          } else {
+            bpPassports.first().toOptional()
+          }
+        }
+        .toObservable()
   }
 
   fun isPatientDefaulter(patientUuid: UUID): Observable<Boolean> {

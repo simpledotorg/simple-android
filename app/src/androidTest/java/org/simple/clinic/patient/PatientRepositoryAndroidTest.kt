@@ -596,7 +596,7 @@ class PatientRepositoryAndroidTest {
   fun when_searching_with_fuzzy_search_the_results_must_be_limited_to_the_value_set_in_the_config() {
     val template = testData.patientProfile(syncStatus = DONE)
 
-    val patientsToSave = (1..MAXIMUM_SQLITE_QUERY_LIMIT).map {
+    val patientsToSave = (1..PatientConfig.MAXIMUM_SQLITE_QUERY_LIMIT).map {
       val addressUuid = UUID.randomUUID()
       val patientUuid = UUID.randomUUID()
 

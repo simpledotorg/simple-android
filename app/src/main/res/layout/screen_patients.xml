@@ -24,7 +24,7 @@
         android:layout_marginEnd="@dimen/spacing_16"
         android:layout_marginStart="@dimen/spacing_16"
         android:layout_marginTop="@dimen/spacing_16"
-        android:background="@drawable/button_outline_ripple"
+        android:background="@drawable/button_outline_ripple_blue1"
         android:drawablePadding="@dimen/spacing_8"
         android:drawableStart="@drawable/ic_search_24dp"
         android:fontFamily="sans-serif"

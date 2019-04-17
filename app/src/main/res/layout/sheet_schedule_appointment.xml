@@ -81,7 +81,7 @@
       android:layout_marginBottom="@dimen/spacing_4"
       android:layout_marginEnd="@dimen/spacing_8"
       android:layout_weight="1"
-      android:background="@drawable/button_outline_ripple"
+      android:background="@drawable/button_outline_ripple_blue1"
       android:gravity="center"
       android:text="@string/scheduleappointment_not_now"
       android:textColor="?colorAccent"

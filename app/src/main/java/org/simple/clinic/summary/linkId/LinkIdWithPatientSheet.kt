@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import android.widget.TextView
+import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
@@ -47,7 +50,9 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
   }
 
   private val idTextView by bindView<TextView>(R.id.linkidwithpatient_text)
-  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
+  private val addButton by bindView<Button>(R.id.linkidwithpatient_button_add)
+  private val cancelButton by bindView<Button>(R.id.linkidwithpatient_button_cancel)
+  private val uiEvents = PublishSubject.create<UiEvent>()
 
   @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,7 +61,15 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_link_id_with_patient)
     TheActivity.component.inject(this)
 
-    Observable.merge(sheetCreates(), onDestroys)
+    val onDestroys = uiEvents.ofType<ScreenDestroyed>()
+
+    Observable
+        .merge(
+            sheetCreates(),
+            onDestroys,
+            addClicks(),
+            cancelClicks()
+        )
         .observeOn(io())
         .compose(controller)
         .subscribeOn(mainThread())
@@ -67,8 +80,12 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
   }
 
   override fun onDestroy() {
-    onDestroys.onNext(ScreenDestroyed())
+    uiEvents.onNext(ScreenDestroyed())
     super.onDestroy()
+  }
+
+  override fun onBackPressed() {
+    uiEvents.onNext(LinkIdWithPatientCancelClicked)
   }
 
   private fun sheetCreates(): Observable<UiEvent> {
@@ -92,6 +109,21 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
         .popSpan()
         .append(resources.getString(R.string.linkidwithpatient_to_patient_text))
         .build()
+  }
+
+  private fun addClicks(): Observable<UiEvent> = RxView
+      .clicks(addButton)
+      .map { LinkIdWithPatientAddClicked }
+
+  private fun cancelClicks(): Observable<UiEvent> {
+    val cancelClicks: Observable<UiEvent> = RxView
+        .clicks(cancelButton)
+        .map { LinkIdWithPatientCancelClicked }
+
+    return cancelClicks
+        // This comes from onBackPressed since we need to map the behaviour
+        // of the back button to be same as cancel button.
+        .mergeWith(uiEvents.ofType<LinkIdWithPatientCancelClicked>())
   }
 
   fun closeSheet() {

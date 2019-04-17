@@ -1,6 +1,7 @@
 package org.simple.clinic.summary.linkId
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -31,12 +32,15 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
   companion object {
     private const val KEY_PATIENT_UUID = "patientUuid"
     private const val KEY_IDENTIFIER = "identifier"
+    private const val EXTRA_WAS_ID_LINKED = "wasIdLinked"
 
     fun intent(context: Context, patientUuid: UUID, identifier: Identifier): Intent {
       return Intent(context, LinkIdWithPatientSheet::class.java)
           .putExtra(KEY_PATIENT_UUID, patientUuid)
           .putExtra(KEY_IDENTIFIER, identifier)
     }
+
+    fun wasIdLinked(intent: Intent) = intent.getBooleanExtra(EXTRA_WAS_ID_LINKED, false)
   }
 
   @Inject
@@ -72,7 +76,7 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
         )
         .observeOn(io())
         .compose(controller)
-        .subscribeOn(mainThread())
+        .observeOn(mainThread())
         .takeUntil(onDestroys)
         .subscribe { uiChange -> uiChange(this) }
 
@@ -126,7 +130,10 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
         .mergeWith(uiEvents.ofType<LinkIdWithPatientCancelClicked>())
   }
 
-  fun closeSheet() {
+  fun closeSheet(wasIdLinked: Boolean) {
+    val result = Intent()
+    result.putExtra(EXTRA_WAS_ID_LINKED, wasIdLinked)
+    setResult(Activity.RESULT_OK, result)
     finish()
   }
 }

@@ -1,12 +1,7 @@
 package org.simple.clinic.newentry
 
+import android.annotation.SuppressLint
 import android.content.Context
-import com.google.android.material.textfield.TextInputLayout
-import androidx.transition.ChangeBounds
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -17,6 +12,12 @@ import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
+import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -27,11 +28,7 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.patient.Gender.FEMALE
 import org.simple.clinic.patient.Gender.MALE
 import org.simple.clinic.patient.Gender.TRANSGENDER
@@ -42,8 +39,13 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
+import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
@@ -94,6 +96,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   private val identifierContainer by bindView<View>(R.id.patiententry_identifier_container)
   private val identifierTextView by bindView<TextView>(R.id.patiententry_identifier)
 
+  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -121,16 +124,21 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     // support for compound drawable tinting either, so we need to do this in code.
     identifierTextView.setCompoundDrawableStartWithTint(R.drawable.patient_id_card, R.color.grey1)
 
+    val screenDestroys = RxView
+        .detaches(this)
+        .map { ScreenDestroyed() }
+
     Observable
         .mergeArray(
             screenCreates(),
+            screenDestroys,
             screenPauses(),
             formChanges(),
             saveClicks())
         .observeOn(io())
         .compose(controller)
         .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
+        .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
   }
 

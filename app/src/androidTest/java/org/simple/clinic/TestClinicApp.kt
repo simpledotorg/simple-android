@@ -3,7 +3,6 @@ package org.simple.clinic
 import android.app.Application
 import com.tspoon.traceur.Traceur
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.Single
 import okhttp3.OkHttpClient
 import org.simple.clinic.TestClinicApp.Companion.appComponent
@@ -21,7 +20,6 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.login.LoginModule
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.network.FailAllNetworkCallsInterceptor
-import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.filter.SearchPatientByName
@@ -100,11 +98,6 @@ class TestClinicApp : ClinicApp() {
                 return Single.just(results)
               }
             }
-          }
-
-          override fun providePatientConfig(): Observable<PatientConfig> {
-            return super.providePatientConfig()
-                .map { it.copy(limitOfSearchResults = 50) }
           }
         })
         .crashReporterModule(object : CrashReporterModule() {

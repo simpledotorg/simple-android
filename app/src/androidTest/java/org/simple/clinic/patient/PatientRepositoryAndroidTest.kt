@@ -1810,7 +1810,7 @@ class PatientRepositoryAndroidTest {
 
     patientRepository.save(listOf(profileWithBusinessIds)).blockingAwait()
 
-    val (latestBpPassport) = patientRepository.bpPassportForPatient(patientUuid).blockingGet()
+    val (latestBpPassport) = patientRepository.bpPassportForPatient(patientUuid).blockingFirst()
 
     assertThat(latestBpPassport).isEqualTo(currentBpPassport)
   }

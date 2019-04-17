@@ -4,7 +4,6 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Observable
 import io.reactivex.Single
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
@@ -38,11 +37,7 @@ open class PatientModule {
       resultsComparator = SortByWeightedNameParts())
 
   @Provides
-  open fun providePatientConfig(): Observable<PatientConfig> = Observable.just(PatientConfig(
-      limitOfSearchResults = 100,
-      scanSimpleCardFeatureEnabled = false,
-      recentPatientLimit = 10
-  ))
+  fun providePatientConfig(configReader: ConfigReader) = PatientConfig.read(configReader)
 
   @Provides
   fun phoneNumberMaskerConfig(reader: ConfigReader): Single<PhoneNumberMaskerConfig> {

@@ -18,8 +18,8 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
@@ -121,7 +121,10 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun openAddIdToPatientSearchResultsScreen(name: String) {
-    screenRouter.push(PatientSearchResultsScreenKey(name))
+    screenRouter.push(AddIdToPatientSearchResultsScreenKey(
+        fullName = name,
+        identifier = screenKey.identifier
+    ))
   }
 
   fun setEmptyFullNameErrorVisible(visible: Boolean) {

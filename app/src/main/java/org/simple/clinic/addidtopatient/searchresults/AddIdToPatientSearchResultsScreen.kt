@@ -2,7 +2,6 @@ package org.simple.clinic.addidtopatient.searchresults
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -23,6 +22,7 @@ import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.searchresultsview.SearchResultPatientName
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
@@ -103,7 +103,11 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
     val identifierType = identifierDisplayAdapter.typeAsText(screenKey.identifier)
     val identifierValue = identifierDisplayAdapter.valueAsText(screenKey.identifier)
 
-    val identifierTextAppearanceSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100)
+    val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(
+        context,
+        R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100
+    )
+    
     titleTextView.text = Truss()
         .append(resources.getString(R.string.addidtopatientsearch_add, identifierType))
         .pushSpan(identifierTextAppearanceSpan)

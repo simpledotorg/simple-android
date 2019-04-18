@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.text.style.TextAppearanceSpan
 import android.widget.TextView
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
@@ -14,6 +13,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
@@ -80,7 +80,10 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
     val identifierType = identifierDisplayAdapter.typeAsText(identifier)
     val identifierValue = identifierDisplayAdapter.valueAsText(identifier)
 
-    val identifierTextAppearanceSpan = TextAppearanceSpan(applicationContext, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_Grey0)
+    val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(
+        applicationContext,
+        R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_Grey0
+    )
 
     idTextView.text = Truss()
         .append(resources.getString(R.string.linkidwithpatient_add_id_text, identifierType))

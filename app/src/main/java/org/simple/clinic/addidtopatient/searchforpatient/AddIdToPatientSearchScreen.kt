@@ -2,7 +2,6 @@ package org.simple.clinic.addidtopatient.searchforpatient
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
@@ -20,6 +19,7 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
@@ -84,7 +84,10 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     val identifierType = identifierDisplayAdapter.typeAsText(screenKey.identifier)
     val identifierValue = identifierDisplayAdapter.valueAsText(screenKey.identifier)
 
-    val identifierTextAppearanceSpan = TextAppearanceSpan(context, R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100)
+    val identifierTextAppearanceSpan = TextAppearanceWithLetterSpacingSpan(
+        context,
+        R.style.Clinic_V2_TextAppearance_Body0Left_NumericBold_White100
+    )
 
     titleTextView.text = Truss()
         .append(resources.getString(R.string.addidtopatientsearch_add, identifierType))

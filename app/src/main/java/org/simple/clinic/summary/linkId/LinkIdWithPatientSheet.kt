@@ -32,7 +32,7 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
   companion object {
     private const val KEY_PATIENT_UUID = "patientUuid"
     private const val KEY_IDENTIFIER = "identifier"
-    private const val EXTRA_WAS_ID_LINKED = "wasIdLinked"
+    private const val EXTRA_ACTION_TAKEN = "actionTaken"
 
     fun intent(context: Context, patientUuid: UUID, identifier: Identifier): Intent {
       return Intent(context, LinkIdWithPatientSheet::class.java)
@@ -40,7 +40,7 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
           .putExtra(KEY_IDENTIFIER, identifier)
     }
 
-    fun wasIdLinked(intent: Intent) = intent.getBooleanExtra(EXTRA_WAS_ID_LINKED, false)
+    fun actionTaken(intent: Intent) = intent.getSerializableExtra(EXTRA_ACTION_TAKEN) as ActionTaken
   }
 
   @Inject
@@ -130,14 +130,27 @@ class LinkIdWithPatientSheet : BottomSheetActivity() {
         .mergeWith(uiEvents.ofType<LinkIdWithPatientCancelClicked>())
   }
 
-  fun closeSheet(wasIdLinked: Boolean) {
+  override fun onBackgroundClick() {
+    // Swallowed to prevent the sheet from being dismissed when clicking outside.
+  }
+
+  fun closeSheetWithIdLinked() {
+    closeSheetWithAction(ActionTaken.LINKED)
+  }
+
+  fun closeSheetWithoutIdLinked() {
+    closeSheetWithAction(ActionTaken.CANCELLED)
+  }
+
+  private fun closeSheetWithAction(actionTaken: ActionTaken) {
     val result = Intent()
-    result.putExtra(EXTRA_WAS_ID_LINKED, wasIdLinked)
+    result.putExtra(EXTRA_ACTION_TAKEN, actionTaken)
     setResult(Activity.RESULT_OK, result)
     finish()
   }
 
-  override fun onBackgroundClick() {
-    // Swallowed to prevent the sheet from being dismissed when clicking outside.
+  enum class ActionTaken {
+    LINKED,
+    CANCELLED
   }
 }

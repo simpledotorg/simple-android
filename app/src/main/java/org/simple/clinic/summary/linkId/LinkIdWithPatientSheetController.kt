@@ -38,13 +38,13 @@ class LinkIdWithPatientSheetController @Inject constructor(
         .switchMapSingle { (_, screen) ->
           patientRepository
               .addIdentifierToPatient(screen.patientUuid, screen.identifier)
-              .map { { ui: Ui -> ui.closeSheet(wasIdLinked = true) } }
+              .map { { ui: Ui -> ui.closeSheetWithIdLinked() } }
         }
   }
 
   private fun cancelAddingIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<LinkIdWithPatientCancelClicked>()
-        .map { { ui: Ui -> ui.closeSheet(wasIdLinked = false) } }
+        .map { { ui: Ui -> ui.closeSheetWithoutIdLinked() } }
   }
 }

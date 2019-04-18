@@ -46,6 +46,7 @@ import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
+import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.ActionTaken.*
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -205,7 +206,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private fun linkIdWithPatientCancels() = screenRouter.streamScreenResults()
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_LINK_ID && it.succeeded() && it.data != null }
-      .filter { LinkIdWithPatientSheet.wasIdLinked(it.data!!).not() }
+      .filter { LinkIdWithPatientSheet.actionTaken(it.data!!) == CANCELLED }
       .map { PatientSummaryLinkIdCancelled }
 
   @SuppressLint("SetTextI18n")

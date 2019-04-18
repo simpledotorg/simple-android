@@ -54,7 +54,8 @@ class LinkIdWithPatientSheetControllerTest {
     uiEvents.onNext(LinkIdWithPatientAddClicked)
 
     verify(patientRepository).addIdentifierToPatient(patientUuid, identifier)
-    verify(sheet).closeSheet(wasIdLinked = true)
+    verify(sheet).closeSheetWithIdLinked()
+
   }
 
   @Test
@@ -62,7 +63,7 @@ class LinkIdWithPatientSheetControllerTest {
     uiEvents.onNext(LinkIdWithPatientSheetCreated(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
-    verify(sheet).closeSheet(wasIdLinked = false)
+    verify(sheet).closeSheetWithoutIdLinked()
     verify(patientRepository, never()).addIdentifierToPatient(any(), any())
   }
 }

@@ -13,17 +13,19 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 
+sealed class RecentPatientItemType(adapterId: Long) : GroupieItemWithUiEvents<ViewHolder>(adapterId) {
+  override lateinit var uiEvents: Subject<UiEvent>
+}
+
 data class RecentPatientItem(
     val uuid: UUID,
     val name: String,
     val age: Int,
     val lastBp: LastBp?,
     val gender: Gender
-) : GroupieItemWithUiEvents<ViewHolder>(uuid.hashCode().toLong()) {
+) : RecentPatientItemType(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
-
-  override lateinit var uiEvents: Subject<UiEvent>
 
   @SuppressLint("SetTextI18n")
   override fun bind(viewHolder: ViewHolder, position: Int) {
@@ -49,4 +51,11 @@ data class RecentPatientItem(
       val diastolic: Int,
       val updatedAtRelativeTimestamp: RelativeTimestamp
   )
+}
+
+object SeeAllItem : RecentPatientItemType(0) {
+  override fun getLayout() = R.layout.see_all_item_view
+
+  override fun bind(viewHolder: ViewHolder, position: Int) {
+  }
 }

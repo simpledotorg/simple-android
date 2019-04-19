@@ -58,7 +58,7 @@ data class PatientPayload(
     @Json(name = "phone_numbers")
     val phoneNumbers: List<PatientPhoneNumberPayload>?,
 
-    @Json(name = "business_ids")
+    @Json(name = "business_identifiers")
     val businessIds: List<BusinessIdPayload>?
 ) {
 
@@ -180,10 +180,10 @@ data class BusinessIdPayload(
     @Json(name = "identifier_type")
     val identifierType: Identifier.IdentifierType,
 
-    @Json(name = "meta_version")
+    @Json(name = "metadata_version")
     val metaDataVersion: BusinessId.MetaDataVersion,
 
-    @Json(name = "meta")
+    @Json(name = "metadata")
     val metaData: String,
 
     @Json(name = "created_at")

@@ -17,6 +17,7 @@ import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
+import org.simple.clinic.patient.sync.BusinessIdPayload
 import org.simple.clinic.util.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -55,6 +56,20 @@ data class BusinessId(
 
     val deletedAt: Instant?
 ) {
+
+  fun toPayload(): BusinessIdPayload {
+    return BusinessIdPayload(
+        uuid = uuid,
+        patientUuid = patientUuid,
+        identifier = identifier.value,
+        identifierType = identifier.type,
+        metaDataVersion = metaDataVersion,
+        metaData = metaData,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+  }
 
   sealed class MetaDataVersion {
 

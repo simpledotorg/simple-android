@@ -72,11 +72,6 @@
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
-    <activity
-      android:name=".summary.linkId.LinkIdWithPatientSheet"
-      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
-      android:windowSoftInputMode="adjustResize" />
-
     <receiver
       android:name=".login.OtpSmsReceiver"
       android:exported="true"

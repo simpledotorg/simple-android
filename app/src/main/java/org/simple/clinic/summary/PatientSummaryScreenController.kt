@@ -87,7 +87,8 @@ class PatientSummaryScreenController @Inject constructor(
         showScheduleAppointmentSheet(replayedEvents),
         goBackWhenBackClicked(replayedEvents),
         goToHomeOnDoneClick(replayedEvents),
-        goBackIfLinkIdWithPatientWasCancelled(replayedEvents)
+        exitScreenIfLinkIdWithPatientIsCancelled(replayedEvents),
+        hideLinkIdWithPatientSheet(replayedEvents)
     )
   }
 
@@ -345,7 +346,7 @@ class PatientSummaryScreenController @Inject constructor(
         .filter { it.openIntention is OpenIntention.LinkIdWithPatient }
         .map {
           val linkIdWithPatient = it.openIntention as OpenIntention.LinkIdWithPatient
-          { ui: Ui -> ui.openLinkIdWithPatientSheet(it.patientUuid, linkIdWithPatient.identifier) }
+          { ui: Ui -> ui.showLinkIdWithPatientView(it.patientUuid, linkIdWithPatient.identifier) }
         }
   }
 
@@ -531,12 +532,18 @@ class PatientSummaryScreenController @Inject constructor(
         .toObservable()
   }
 
-  private fun goBackIfLinkIdWithPatientWasCancelled(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun exitScreenIfLinkIdWithPatientIsCancelled(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreates = events.ofType<PatientSummaryScreenCreated>()
-
     val linkIdCancelled = events.ofType<PatientSummaryLinkIdCancelled>()
 
     return Observables.combineLatest(screenCreates, linkIdCancelled)
+        .take(1)
         .map { { ui: Ui -> ui.goToPreviousScreen() } }
+  }
+
+  private fun hideLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientSummaryLinkIdCompleted>()
+        .map { Ui::hideLinkIdWithPatientView }
   }
 }

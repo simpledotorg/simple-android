@@ -17,18 +17,18 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-class LinkIdWithPatientSheetControllerTest {
+class LinkIdWithPatientViewControllerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
   private val patientRepository = mock<PatientRepository>()
 
-  private val sheet = mock<LinkIdWithPatientSheet>()
+  private val view = mock<LinkIdWithPatientView>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private val controller = LinkIdWithPatientSheetController(patientRepository)
+  private val controller = LinkIdWithPatientViewController(patientRepository)
 
   private val patientUuid = UUID.randomUUID()
 
@@ -41,7 +41,14 @@ class LinkIdWithPatientSheetControllerTest {
   fun setUp() {
     uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(sheet) }
+        .subscribe { uiChange -> uiChange(view) }
+  }
+
+  @Test
+  fun `when the view is created, the identifier must be displayed`() {
+    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
+
+    verify(view).renderIdentifierText(identifier)
   }
 
   @Test
@@ -50,20 +57,20 @@ class LinkIdWithPatientSheetControllerTest {
 
     whenever(patientRepository.addIdentifierToPatient(patientUuid, identifier)).thenReturn(Single.just(businessId))
 
-    uiEvents.onNext(LinkIdWithPatientSheetCreated(patientUuid, identifier))
+    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientAddClicked)
 
     verify(patientRepository).addIdentifierToPatient(patientUuid, identifier)
-    verify(sheet).closeSheetWithIdLinked()
+    verify(view).closeSheetWithIdLinked()
 
   }
 
   @Test
   fun `when cancel is clicked, the sheet should close without saving id`() {
-    uiEvents.onNext(LinkIdWithPatientSheetCreated(patientUuid, identifier))
+    uiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
     uiEvents.onNext(LinkIdWithPatientCancelClicked)
 
-    verify(sheet).closeSheetWithoutIdLinked()
+    verify(view).closeSheetWithoutIdLinked()
     verify(patientRepository, never()).addIdentifierToPatient(any(), any())
   }
 }

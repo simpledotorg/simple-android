@@ -10,10 +10,10 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = LinkIdWithPatientSheet
+typealias Ui = LinkIdWithPatientView
 typealias UiChange = (Ui) -> Unit
 
-class LinkIdWithPatientSheetController @Inject constructor(
+class LinkIdWithPatientViewController @Inject constructor(
     val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -25,12 +25,21 @@ class LinkIdWithPatientSheetController @Inject constructor(
     return Observable
         .merge(
             addIdToPatient(replayedEvents),
-            cancelAddingIdToPatient(replayedEvents))
+            cancelAddingIdToPatient(replayedEvents),
+            displayIdentifier(replayedEvents)
+        )
+  }
+
+  private fun displayIdentifier(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<LinkIdWithPatientViewShown>()
+        .map { it.identifier }
+        .map { identifier -> { ui: Ui -> ui.renderIdentifierText(identifier) } }
   }
 
   private fun addIdToPatient(events: Observable<UiEvent>): Observable<UiChange> {
     val screenCreates = events
-        .ofType<LinkIdWithPatientSheetCreated>()
+        .ofType<LinkIdWithPatientViewShown>()
 
     return events
         .ofType<LinkIdWithPatientAddClicked>()

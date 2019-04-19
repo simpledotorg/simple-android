@@ -30,17 +30,9 @@ data class RecentPatient(
   @Dao
   interface RoomDao {
 
-    /**
-    Goal: Fetch a list of patients with 10 most recent changes.
-    There are tables like BloodPressureMeasurement (BP), PrescribedDrug (PD), Appointment (AP), etc. Let’s call each table T1, T2, T3, etc.
+    companion object {
 
-    Algo:
-    1. Get a list of all patients
-    2. For each patient, from each table T, get the latest change for them. Columns: T1.latestUpdatedAt, T2.latestUpdatedAt, etc.
-    3. Pick latestUpdatedAt for each patient
-    4. Order by latestUpdatedAt from final list and cap it to 10 entries.
-     */
-    @Query("""
+      const val RECENT_PATIENT_QUERY = """
         SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
         LAST_BP.systolic last_bp_systolic, LAST_BP.diastolic last_bp_diastolic, LAST_BP.createdAt last_bp_createdAt,
         MAX(
@@ -97,9 +89,24 @@ data class RecentPatient(
           AP.facilityUuid = :facilityUuid
         )
         ORDER BY latestUpdatedAt DESC
-        LIMIT :limit
-    """)
+      """
+    }
+
+    /**
+    Goal: Fetch a list of patients with 10 most recent changes.
+    There are tables like BloodPressureMeasurement (BP), PrescribedDrug (PD), Appointment (AP), etc. Let’s call each table T1, T2, T3, etc.
+
+    Algo:
+    1. Get a list of all patients
+    2. For each patient, from each table T, get the latest change for them. Columns: T1.latestUpdatedAt, T2.latestUpdatedAt, etc.
+    3. Pick latestUpdatedAt for each patient
+    4. Order by latestUpdatedAt from final list and cap it to 10 entries.
+     */
+    @Query("$RECENT_PATIENT_QUERY LIMIT :limit")
     fun recentPatients(facilityUuid: UUID, limit: Int): Flowable<List<RecentPatient>>
+
+    @Query(RECENT_PATIENT_QUERY)
+    fun recentPatients(facilityUuid: UUID): Flowable<List<RecentPatient>>
   }
 
   data class LastBp(

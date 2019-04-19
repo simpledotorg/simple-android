@@ -20,6 +20,11 @@ open class PatientSyncModule {
   }
 
   @Provides
+  fun apiV3(retrofit: Retrofit): PatientSyncApiV3 {
+    return retrofit.create(PatientSyncApiV3::class.java)
+  }
+
+  @Provides
   @Named("last_patient_pull_token")
   fun lastPullToken(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
     return rxSharedPrefs.getObject("last_patient_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))

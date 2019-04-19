@@ -118,4 +118,11 @@
       android:text="@string/patientsummary_finish_saving_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>
+
+  <org.simple.clinic.summary.linkId.LinkIdWithPatientView
+    android:id="@+id/patientsummary_linkidwithpatient"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:elevation="@dimen/patientsummary_elevation_linkidwithpatient"
+    android:visibility="gone" />
 </org.simple.clinic.summary.PatientSummaryScreen>

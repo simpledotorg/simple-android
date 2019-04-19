@@ -44,3 +44,5 @@ data class PatientSummaryAllBloodPressuresDeleted(val allBloodPressuresDeleted: 
 object PatientSummaryBloodPressureSaved: UiEvent
 
 object PatientSummaryLinkIdCancelled: UiEvent
+
+object PatientSummaryLinkIdCompleted: UiEvent

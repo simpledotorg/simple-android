@@ -123,6 +123,7 @@
   <string name="patients_scan_simple_card">Scan Simple Card</string>
   <string name="patients_recentpatients_title">Recent Patients</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
+  <string name="patients_recentpatients_see_all">See All</string>
 
   <!-- Blood pressure entry -->
   <string name="bloodpressureentry_sheet_title_enter_blood_pressure">Blood pressure</string>

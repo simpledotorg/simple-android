@@ -45,8 +45,10 @@ import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet
-import org.simple.clinic.summary.linkId.LinkIdWithPatientSheet.ActionTaken.*
+import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
+import org.simple.clinic.summary.linkId.LinkIdWithPatientView
+import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
+import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -70,7 +72,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   companion object {
     const val REQCODE_BP_ENTRY = 1
     const val REQCODE_SCHEDULE_APPOINTMENT = 2
-    const val REQCODE_LINK_ID = 3
   }
 
   @Inject
@@ -97,7 +98,7 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val doneButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsummary_done)
   private val editButton by bindView<Button>(R.id.patientsummary_edit)
   private val bpPassportTextView by bindView<TextView>(R.id.patientsummary_bp_passport)
-
+  private val linkIdWithPatientView by bindView<LinkIdWithPatientView>(R.id.patientsummary_linkidwithpatient)
   private val recyclerViewAdapter = GroupAdapter<ViewHolder>()
   private val prescriptionSection = Section()
   private val bloodPressureSection = Section()
@@ -145,7 +146,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             bloodPressureSaves(),
             appointmentScheduledSuccess(),
             appointmentScheduleSheetClosed(),
-            linkIdWithPatientCancels()
+            identifierLinkedEvents(),
+            identifierLinkCancelledEvents()
         )
         .observeOn(io())
         .compose(controller)
@@ -203,11 +205,19 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       .map { ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
       .map { AppointmentScheduled }
 
-  private fun linkIdWithPatientCancels() = screenRouter.streamScreenResults()
-      .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_LINK_ID && it.succeeded() && it.data != null }
-      .filter { LinkIdWithPatientSheet.actionTaken(it.data!!) == CANCELLED }
-      .map { PatientSummaryLinkIdCancelled }
+  private fun identifierLinkedEvents(): Observable<UiEvent> {
+    return linkIdWithPatientView
+        .uiEvents()
+        .ofType<LinkIdWithPatientLinked>()
+        .map { PatientSummaryLinkIdCompleted }
+  }
+
+  private fun identifierLinkCancelledEvents(): Observable<UiEvent> {
+    return linkIdWithPatientView
+        .uiEvents()
+        .ofType<LinkIdWithPatientCancelled>()
+        .map { PatientSummaryLinkIdCancelled }
+  }
 
   @SuppressLint("SetTextI18n")
   fun populatePatientProfile(patientSummaryProfile: PatientSummaryProfile) {
@@ -370,9 +380,13 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     screenRouter.push(PrescribedDrugsScreenKey(patientUuid))
   }
 
-  fun openLinkIdWithPatientSheet(patientUuid: UUID, identifier: Identifier) {
-    val intent = LinkIdWithPatientSheet.intent(context, patientUuid, identifier)
-    activity.startActivityForResult(intent, REQCODE_LINK_ID)
+  fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
+    linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
+    linkIdWithPatientView.visibility = VISIBLE
+  }
+
+  fun hideLinkIdWithPatientView() {
+    linkIdWithPatientView.visibility = GONE
   }
 }
 

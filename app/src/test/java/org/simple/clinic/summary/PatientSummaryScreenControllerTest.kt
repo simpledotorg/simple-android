@@ -1010,9 +1010,9 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
 
     if (shouldShowLinkIdSheet) {
-      verify(screen).openLinkIdWithPatientSheet(patientUuid, identifier!!)
+      verify(screen).showLinkIdWithPatientView(patientUuid, identifier!!)
     } else {
-      verify(screen, never()).openLinkIdWithPatientSheet(any(), any())
+      verify(screen, never()).showLinkIdWithPatientView(any(), any())
     }
   }
 
@@ -1031,8 +1031,20 @@ class PatientSummaryScreenControllerTest {
   fun `when the link id with patient is cancelled, the patient summary screen must be closed`() {
     val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
+
     uiEvents.onNext(PatientSummaryLinkIdCancelled)
 
     verify(screen).goToPreviousScreen()
+  }
+
+  @Test
+  fun `when the link id with patient is completed, the link id screen must be closed`() {
+    val openIntention = OpenIntention.LinkIdWithPatient(identifier = Identifier("id", BpPassport))
+    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
+
+    uiEvents.onNext(PatientSummaryLinkIdCompleted)
+
+    verify(screen).hideLinkIdWithPatientView()
+    verify(screen, never()).goToPreviousScreen()
   }
 }

@@ -50,10 +50,13 @@ class PatientSync @Inject constructor(
 
   private fun toRequest(patients: List<PatientProfile>): PatientPushRequest {
     return PatientPushRequest(
-        patients.map { (patient, address, phoneNumbers) ->
+        patients.map { (patient, address, phoneNumbers, businessIds) ->
           val numberPayloads = phoneNumbers
               .map(::phoneNumberPayload)
               .let { payloads -> if (payloads.isEmpty()) null else payloads }
+
+          val businessIdPayloads = businessIds
+              .map { it.toPayload() }
 
           patient.run {
             PatientPayload(
@@ -69,7 +72,7 @@ class PatientSync @Inject constructor(
                 address = address.toPayload(),
                 phoneNumbers = numberPayloads,
                 deletedAt = deletedAt,
-                businessIds = null)
+                businessIds = businessIdPayloads)
           }
         }
     )

@@ -25,12 +25,14 @@ import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScr
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ActivityPermissionResult
+import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.scanid.ScanSimpleIdScreenResult
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.util.UtcClock
@@ -43,6 +45,7 @@ import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import timber.log.Timber
 import java.util.Locale
 import java.util.UUID
 import java.util.concurrent.TimeUnit
@@ -237,17 +240,27 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     syncIndicatorView.visibility = View.VISIBLE
   }
 
+  @SuppressLint("CheckResult")
   fun openPatientSummary(patientUuid: UUID) {
-    screenRouter.push(
-        PatientSummaryScreenKey(
-            patientUuid = patientUuid,
-            intention = OpenIntention.ViewExistingPatient,
-            screenCreatedTimestamp = Instant.now(utcClock)
-        )
-    )
+    Observable.timer(SCREEN_CHANGE_ANIMATION_DURATION, TimeUnit.MILLISECONDS, mainThread())
+        .takeUntil(RxView.detaches(this))
+        .subscribe {
+          screenRouter.push(
+              PatientSummaryScreenKey(
+                  patientUuid = patientUuid,
+                  intention = OpenIntention.ViewExistingPatient,
+                  screenCreatedTimestamp = Instant.now(utcClock)
+              )
+          )
+        }
   }
 
+  @SuppressLint("CheckResult")
   fun openAddIdToPatientScreen(identifier: Identifier) {
-    screenRouter.push(AddIdToPatientSearchScreenKey(identifier))
+    Observable.timer(SCREEN_CHANGE_ANIMATION_DURATION, TimeUnit.MILLISECONDS, mainThread())
+        .takeUntil(RxView.detaches(this))
+        .subscribe {
+          screenRouter.push(AddIdToPatientSearchScreenKey(identifier))
+        }
   }
 }

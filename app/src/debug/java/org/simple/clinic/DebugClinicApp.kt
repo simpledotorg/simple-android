@@ -51,10 +51,10 @@ class DebugClinicApp : ClinicApp() {
   }
 
   override fun onCreate() {
-    super.onCreate()
     if (LeakCanary.isInAnalyzerProcess(this)) {
       return
     }
+    super.onCreate()
     LeakCanary.install(this)
 
     appComponent().inject(this)

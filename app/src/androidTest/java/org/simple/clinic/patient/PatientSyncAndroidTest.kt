@@ -13,7 +13,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSync
-import org.simple.clinic.patient.sync.PatientSyncApiV2
+import org.simple.clinic.patient.sync.PatientSyncApiV3
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
 import org.simple.clinic.sync.SyncConfig
@@ -38,7 +38,7 @@ class PatientSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PatientProfile, Pa
   lateinit var sync: PatientSync
 
   @Inject
-  lateinit var syncApi: PatientSyncApiV2
+  lateinit var syncApi: PatientSyncApiV3
 
   @Inject
   lateinit var testData: TestData

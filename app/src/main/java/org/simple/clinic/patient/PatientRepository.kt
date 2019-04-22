@@ -235,7 +235,7 @@ class PatientRepository @Inject constructor(
 
     val businessIds = patientPayload
         .businessIds
-        ?.map { it.toDatabaseModel() } ?: emptyList()
+        .map { it.toDatabaseModel() }
 
     return PatientProfile(
         patient = patient,

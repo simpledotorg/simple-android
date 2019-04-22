@@ -1334,7 +1334,7 @@ class PatientRepositoryAndroidTest {
                 updatedAt = businessIdPayload.updatedAt,
                 deletedAt = businessIdPayload.deletedAt
             )
-          } ?: emptyList()
+          }
 
       PatientProfile(
           patient = patient,
@@ -1384,7 +1384,7 @@ class PatientRepositoryAndroidTest {
         dateOfBirth = LocalDate.parse("1973-03-05"),
         address = patient3AddressPayload,
         phoneNumbers = listOf(patient3PhoneNumber1Payload, patient3PhoneNumber2Payload),
-        businessIds = null
+        businessIds = emptyList()
     )
 
     val patient4Uuid = UUID.randomUUID()
@@ -1409,7 +1409,7 @@ class PatientRepositoryAndroidTest {
         dateOfBirth = LocalDate.parse("1978-11-25"),
         address = patient5AddressPayload,
         phoneNumbers = null,
-        businessIds = null
+        businessIds = emptyList()
     )
 
     val payloads = listOf(patient1Payload, patient2Payload, patient3Payload, patient4Payload, patient5Payload)

@@ -9,12 +9,12 @@ import org.simple.clinic.bp.sync.BloodPressurePushRequest
 import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.sync.PatientPushRequest
-import org.simple.clinic.patient.sync.PatientSyncApiV2
+import org.simple.clinic.patient.sync.PatientSyncApiV3
 import org.simple.clinic.user.UserSession
 import java.util.UUID
 import javax.inject.Inject
 
-class RegisterPatientRule(val patientUuid: UUID): TestRule {
+class RegisterPatientRule(val patientUuid: UUID) : TestRule {
 
   @Inject
   lateinit var testData: TestData
@@ -26,7 +26,7 @@ class RegisterPatientRule(val patientUuid: UUID): TestRule {
   lateinit var facilityRepository: FacilityRepository
 
   @Inject
-  lateinit var patientSyncApi: PatientSyncApiV2
+  lateinit var patientSyncApi: PatientSyncApiV3
 
   @Inject
   lateinit var bloodPressureSyncApi: BloodPressureSyncApiV2

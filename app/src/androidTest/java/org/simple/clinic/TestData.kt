@@ -195,7 +195,7 @@ class TestData @Inject constructor(
       deletedAt: Instant? = null,
       address: PatientAddressPayload = addressPayload(),
       phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload()),
-      businessIds: List<BusinessIdPayload>? = listOf(businessIdPayload(patientUuid = uuid))
+      businessIds: List<BusinessIdPayload> = listOf(businessIdPayload(patientUuid = uuid))
   ): PatientPayload {
     return PatientPayload(
         uuid = uuid,

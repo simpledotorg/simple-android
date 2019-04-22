@@ -137,7 +137,7 @@ class PatientRepositoryTest {
         address = serverAddress,
         phoneNumbers = null,
         deletedAt = null,
-        businessIds = null)
+        businessIds = emptyList())
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
@@ -179,7 +179,7 @@ class PatientRepositoryTest {
         address = serverAddress,
         phoneNumbers = null,
         deletedAt = null,
-        businessIds = null)
+        businessIds = emptyList())
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
@@ -234,7 +234,7 @@ class PatientRepositoryTest {
             updatedAt = mock(),
             deletedAt = mock())),
         deletedAt = null,
-        businessIds = null)
+        businessIds = emptyList())
 
     repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
 

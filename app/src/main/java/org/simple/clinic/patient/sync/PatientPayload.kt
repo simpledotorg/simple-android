@@ -59,7 +59,7 @@ data class PatientPayload(
     val phoneNumbers: List<PatientPhoneNumberPayload>?,
 
     @Json(name = "business_identifiers")
-    val businessIds: List<BusinessIdPayload>?
+    val businessIds: List<BusinessIdPayload>
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {

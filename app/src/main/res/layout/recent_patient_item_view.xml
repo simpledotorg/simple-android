@@ -24,7 +24,7 @@
       tools:src="@drawable/ic_patient_transgender" />
 
     <TextView
-      android:id="@+id/recentpatient_item_title"
+      android:id="@+id/recentpatient_item_nameage"
       style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -43,8 +43,8 @@
       android:layout_marginTop="@dimen/spacing_4"
       android:text="@string/patientsearchresults_item_last_bp"
       android:textAllCaps="true"
-      app:layout_constraintStart_toStartOf="@+id/recentpatient_item_title"
-      app:layout_constraintTop_toBottomOf="@+id/recentpatient_item_title" />
+      app:layout_constraintStart_toStartOf="@+id/recentpatient_item_nameage"
+      app:layout_constraintTop_toBottomOf="@+id/recentpatient_item_nameage" />
 
     <TextView
       android:id="@+id/recentpatient_item_last_bp"

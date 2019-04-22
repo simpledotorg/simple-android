@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import io.github.inflationx.viewpump.ViewPumpContextWrapper
 import kotterknife.bindView
 import org.simple.clinic.BuildConfig
@@ -43,22 +42,10 @@ abstract class BottomSheetActivity : AppCompatActivity() {
       onBackgroundClick()
     }
 
-    backgroundView.alpha = 0f
-    backgroundView.animate()
-        .alpha(1f)
-        .setDuration(200)
-        .setInterpolator(FastOutSlowInInterpolator())
-        .start()
-
-    contentContainer.executeOnNextMeasure {
-      contentContainer.translationY = contentContainer.height.toFloat()
-
-      contentContainer.animate()
-          .translationY(0f)
-          .setDuration(250)
-          .setInterpolator(FastOutSlowInInterpolator())
-          .start()
-    }
+    animateBottomSheetIn(
+        backgroundView = backgroundView,
+        contentContainer = contentContainer
+    )
   }
 
   override fun attachBaseContext(baseContext: Context) {
@@ -66,21 +53,14 @@ abstract class BottomSheetActivity : AppCompatActivity() {
   }
 
   override fun finish() {
-    contentContainer.animate()
-        .translationY(contentContainer.height.toFloat())
-        .setDuration(250)
-        .setInterpolator(FastOutSlowInInterpolator())
-        .start()
-
-    backgroundView.animate()
-        .alpha(0f)
-        .setDuration(100)
-        .setInterpolator(FastOutSlowInInterpolator())
-        .withEndAction {
+    animateBottomSheetOut(
+        backgroundView = backgroundView,
+        contentContainer = contentContainer,
+        endAction = {
           super.finish()
           overridePendingTransition(0, 0)
         }
-        .start()
+    )
   }
 
   override fun setContentView(layoutResId: Int) {

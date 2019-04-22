@@ -5,6 +5,7 @@ import android.content.Context
 import android.os.Parcelable
 import android.text.style.TextAppearanceSpan
 import android.util.AttributeSet
+import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
@@ -382,11 +383,11 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
     linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
-    linkIdWithPatientView.visibility = VISIBLE
+    linkIdWithPatientView.show { linkIdWithPatientView.visibility = View.VISIBLE }
   }
 
   fun hideLinkIdWithPatientView() {
-    linkIdWithPatientView.visibility = GONE
+    linkIdWithPatientView.hide { linkIdWithPatientView.visibility = View.GONE }
   }
 }
 

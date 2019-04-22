@@ -23,6 +23,8 @@ import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.animateBottomSheetOut
+import org.simple.clinic.widgets.animateBottomSheetIn
 import javax.inject.Inject
 
 /**
@@ -78,7 +80,8 @@ class LinkIdWithPatientView(
   private val idTextView by bindView<TextView>(R.id.linkidwithpatient_text)
   private val addButton by bindView<Button>(R.id.linkidwithpatient_button_add)
   private val cancelButton by bindView<Button>(R.id.linkidwithpatient_button_cancel)
-  private val background by bindView<View>(R.id.linkidwithpatient_background)
+  private val backgroundView by bindView<View>(R.id.linkidwithpatient_background)
+  private val contentContainer by bindView<View>(R.id.linkidwithpatient_content)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -90,7 +93,7 @@ class LinkIdWithPatientView(
 
     TheActivity.component.inject(this)
 
-    background.setOnClickListener {
+    backgroundView.setOnClickListener {
       // Intentionally done to swallow click events.
     }
 
@@ -148,5 +151,21 @@ class LinkIdWithPatientView(
 
   fun closeSheetWithoutIdLinked() {
     upstreamUiEvents.onNext(LinkIdWithPatientCancelled)
+  }
+
+  fun show(runBefore: () -> Unit) {
+    animateBottomSheetIn(
+        backgroundView = backgroundView,
+        contentContainer = contentContainer,
+        startAction = runBefore
+    )
+  }
+
+  fun hide(runAfter: () -> Unit) {
+    animateBottomSheetOut(
+        backgroundView = backgroundView,
+        contentContainer = contentContainer,
+        endAction = runAfter
+    )
   }
 }

@@ -8,8 +8,9 @@ import flow.Direction.REPLACE
 import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.KeyChangeAnimator
 import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
+import javax.inject.Inject
 
-class FullScreenKeyChangeAnimator : KeyChangeAnimator<FullScreenKey> {
+class FullScreenKeyChangeAnimator @Inject constructor() : KeyChangeAnimator<FullScreenKey> {
 
   override fun animate(
       outgoingKey: FullScreenKey?,

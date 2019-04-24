@@ -120,7 +120,7 @@
   <!-- Lint complains on the <font> tag for some reason -->
   <!--suppress UnusedResources -->
   <string name="patients_record_every_patient">Record <font color="#2f363d"><i>every patient</i></font> who has hypertension or who is taking medicines for high BP</string>
-  <string name="patients_scan_simple_card">Scan Simple Card</string>
+  <string name="patients_scan_simple_card">Scan BP Passport</string>
   <string name="patients_recentpatients_title">Recent Patients</string>
   <string name="patients_recentpatients_no_recent_patients">No recent patients</string>
   <string name="patients_recentpatients_see_all">See All</string>

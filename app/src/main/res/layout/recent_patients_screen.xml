@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<org.simple.clinic.recentpatient.RecentPatientsScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical">
+
+  <androidx.appcompat.widget.Toolbar
+    android:id="@+id/recentpatients_toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:navigationIcon="@drawable/ic_arrow_back_24dp"
+    app:title="@string/recent_patients_toolbar_title" />
+
+  <androidx.recyclerview.widget.RecyclerView
+    android:id="@+id/recentpatients_recyclerview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_8"
+    tools:listitem="@layout/recent_patient_item_view" />
+
+</org.simple.clinic.recentpatient.RecentPatientsScreen>

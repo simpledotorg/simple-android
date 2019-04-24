@@ -386,4 +386,7 @@
   <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name</string>
   <string name="addidtopatientsearch_add">Add %1$s\u0020</string>
   <string name="addidtopatientsearch_to_patient">\u0020to patient</string>
+
+  <!-- Recent Patients -->
+  <string name="recent_patients_toolbar_title">Recent patients</string>
 </resources>

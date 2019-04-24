@@ -1,15 +1,14 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.recentpatient
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
@@ -18,16 +17,15 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
-typealias Ui = RecentPatientsView
+typealias Ui = RecentPatientsScreen
 typealias UiChange = (Ui) -> Unit
 
-class RecentPatientsViewController @Inject constructor(
+class RecentPatientsScreenController @Inject constructor(
     private val userSession: UserSession,
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
-    private val utcClock: UtcClock,
-    private val patientConfig: Observable<PatientConfig>
+    private val utcClock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -37,41 +35,19 @@ class RecentPatientsViewController @Inject constructor(
 
     return Observable.mergeArray(
         showRecentPatients(replayedEvents),
-        openPatientSummary(replayedEvents),
-        openRecentPatientsScreen(replayedEvents)
+        openPatientSummary(replayedEvents)
     )
   }
 
-  private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> {
-    val currentFacilityStream = events.ofType<ScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .switchMap { facilityRepository.currentFacility(it) }
-        .replay()
-        .refCount()
-
-    val recentPatientsStream = Observables
-        .combineLatest(currentFacilityStream, patientConfig)
-        .switchMap { (facility, config) ->
-          patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit)
-        }
-        .replay()
-        .refCount()
-
-    val updateRecentPatients = recentPatientsStream
-        .map { it.map(::recentPatientItem) }
-        .map { { ui: Ui -> ui.updateRecentPatients(it) } }
-
-    val toggleEmptyState = recentPatientsStream
-        .map { it.isNotEmpty() }
-        .map { hasRecentPatients ->
-          when {
-            hasRecentPatients -> { ui: Ui -> ui.hideEmptyState() }
-            else -> { ui: Ui -> ui.showEmptyState() }
+  private fun showRecentPatients(events: Observable<UiEvent>): Observable<UiChange> =
+      events.ofType<ScreenCreated>()
+          .flatMap { userSession.requireLoggedInUser() }
+          .switchMap { facilityRepository.currentFacility(it) }
+          .switchMap { facility ->
+            patientRepository.recentPatients(facility.uuid)
           }
-        }
-
-    return Observable.merge(updateRecentPatients, toggleEmptyState)
-  }
+          .map { it.map(::recentPatientItem) }
+          .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(
@@ -97,13 +73,8 @@ class RecentPatientsViewController @Inject constructor(
         }
       }
 
-  private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> =
+  private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> =
       events
           .ofType<RecentPatientItemClicked>()
           .map { { ui: Ui -> ui.openPatientSummary(it.patientUuid) } }
-
-  private fun openRecentPatientsScreen(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<SeeAllItemClicked>()
-          .map { { ui: Ui -> ui.openRecentPatientsScreen() } }
 }

@@ -34,7 +34,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.patient.recent.RecentPatient
-import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession
@@ -467,6 +466,7 @@ class PatientRepositoryAndroidTest {
     val otherFacility = facilities.first { it != currentFacility }
 
     facilityRepository.associateUserWithFacilities(user, facilities.map { it.uuid }).blockingAwait()
+    facilityRepository.setCurrentFacility(user, currentFacility).blockingAwait()
 
     data class FacilityAndBloodPressureDeleted(val facility: Facility, val isBloodPressureDeleted: Boolean)
 
@@ -510,8 +510,6 @@ class PatientRepositoryAndroidTest {
         bloodPressureRepository.save(listOf(bloodPressureMeasurement)).blockingAwait()
       }
     }
-
-    facilityRepository.setCurrentFacility(user, currentFacility).blockingAwait()
 
     val searchResults = patientRepository.search("patient").blockingFirst()
     assertThat(searchResults.allPatientSearchResults()).hasSize(data.size)
@@ -1260,172 +1258,6 @@ class PatientRepositoryAndroidTest {
         deletedAt = deletedAt
     )
     database.communicationDao().save(listOf(communication))
-  }
-
-  @Test
-  fun verify_saving_business_ids_works_as_expected() {
-    if (config.scanSimpleCardFeatureEnabled) {
-      // This test is a temporary test added to verify saving business IDs with patients works as
-      // expected. The API is not yet ready, so we use this test instead of using
-      // BaseSyncCoordinatorAndroidTest to verify this. When removing this test, ensure that
-      // business IDs are getting pushed to the server and verify that they are getting pulled and
-      // stored in PatientSyncAndroidTest.
-      throw RuntimeException("This test should be removed once the scan simple card feature is enabled!")
-    }
-
-    val payloadToPatientProfile = { patientPayload: PatientPayload ->
-      val patientUuid = patientPayload.uuid
-      val addressUuid = patientPayload.address.uuid
-      val patient = Patient(
-          uuid = patientUuid,
-          addressUuid = addressUuid,
-          fullName = patientPayload.fullName,
-          searchableName = nameToSearchableForm(patientPayload.fullName),
-          gender = patientPayload.gender,
-          dateOfBirth = patientPayload.dateOfBirth,
-          age = null,
-          status = patientPayload.status,
-          createdAt = patientPayload.createdAt,
-          updatedAt = patientPayload.updatedAt,
-          deletedAt = patientPayload.deletedAt,
-          syncStatus = SyncStatus.DONE
-      )
-
-      val patientAddress = patientPayload
-          .address
-          .let { addressPayload ->
-            PatientAddress(
-                uuid = addressUuid,
-                colonyOrVillage = addressPayload.colonyOrVillage,
-                district = addressPayload.district,
-                state = addressPayload.state,
-                country = addressPayload.country,
-                createdAt = addressPayload.createdAt,
-                updatedAt = addressPayload.updatedAt,
-                deletedAt = addressPayload.deletedAt
-            )
-          }
-
-      val patientPhoneNumbers = patientPayload
-          .phoneNumbers
-          ?.map { phoneNumberPayload ->
-            PatientPhoneNumber(
-                uuid = phoneNumberPayload.uuid,
-                patientUuid = patientUuid,
-                number = phoneNumberPayload.number,
-                phoneType = phoneNumberPayload.type,
-                active = phoneNumberPayload.active,
-                createdAt = phoneNumberPayload.createdAt,
-                updatedAt = phoneNumberPayload.updatedAt,
-                deletedAt = phoneNumberPayload.deletedAt
-            )
-          } ?: emptyList()
-
-      val businessIds = patientPayload
-          .businessIds
-          ?.map { businessIdPayload ->
-            BusinessId(
-                uuid = businessIdPayload.uuid,
-                patientUuid = patientUuid,
-                identifier = Identifier(businessIdPayload.identifier, businessIdPayload.identifierType),
-                metaDataVersion = businessIdPayload.metaDataVersion,
-                metaData = businessIdPayload.metaData,
-                createdAt = businessIdPayload.createdAt,
-                updatedAt = businessIdPayload.updatedAt,
-                deletedAt = businessIdPayload.deletedAt
-            )
-          }
-
-      PatientProfile(
-          patient = patient,
-          address = patientAddress,
-          phoneNumbers = patientPhoneNumbers,
-          businessIds = businessIds)
-    }
-
-    val patient1Uuid = UUID.randomUUID()
-    val patient1AddressPayload = testData.addressPayload()
-    val patient1PhoneNumber1Payload = testData.phoneNumberPayload()
-    val patient1PhoneNumber2Payload = testData.phoneNumberPayload()
-    val patient1BusinessId1Payload = testData.businessIdPayload(patientUuid = patient1Uuid, meta = "meta 1")
-    val patient1BusinessId2Payload = testData.businessIdPayload(patientUuid = patient1Uuid, meta = "meta 2")
-    val patient1BusinessId3Payload = testData.businessIdPayload(patientUuid = patient1Uuid, meta = "meta 3")
-    val patient1Payload = testData.patientPayload(
-        uuid = patient1Uuid,
-        age = null,
-        ageUpdatedAt = null,
-        dateOfBirth = LocalDate.parse("1990-02-20"),
-        address = patient1AddressPayload,
-        phoneNumbers = listOf(patient1PhoneNumber1Payload, patient1PhoneNumber2Payload),
-        businessIds = listOf(patient1BusinessId1Payload, patient1BusinessId2Payload, patient1BusinessId3Payload)
-    )
-
-    val patient2Uuid = UUID.randomUUID()
-    val patient2AddressPayload = testData.addressPayload()
-    val patient2PhoneNumber1Payload = testData.phoneNumberPayload()
-    val patient2BusinessId1Payload = testData.businessIdPayload(patientUuid = patient2Uuid, meta = "meta 4")
-    val patient2BusinessId2Payload = testData.businessIdPayload(patientUuid = patient2Uuid, meta = "meta 5")
-    val patient2Payload = testData.patientPayload(
-        uuid = patient2Uuid,
-        age = null,
-        ageUpdatedAt = null,
-        dateOfBirth = LocalDate.parse("1985-07-15"),
-        address = patient2AddressPayload,
-        phoneNumbers = listOf(patient2PhoneNumber1Payload),
-        businessIds = listOf(patient2BusinessId1Payload, patient2BusinessId2Payload)
-    )
-
-    val patient3AddressPayload = testData.addressPayload()
-    val patient3PhoneNumber1Payload = testData.phoneNumberPayload()
-    val patient3PhoneNumber2Payload = testData.phoneNumberPayload()
-    val patient3Payload = testData.patientPayload(
-        age = null,
-        ageUpdatedAt = null,
-        dateOfBirth = LocalDate.parse("1973-03-05"),
-        address = patient3AddressPayload,
-        phoneNumbers = listOf(patient3PhoneNumber1Payload, patient3PhoneNumber2Payload),
-        businessIds = emptyList()
-    )
-
-    val patient4Uuid = UUID.randomUUID()
-    val patient4AddressPayload = testData.addressPayload()
-    val patient4BusinessId1Payload = testData.businessIdPayload(patientUuid = patient4Uuid, meta = "meta 6")
-    val patient4BusinessId2Payload = testData.businessIdPayload(patientUuid = patient4Uuid, meta = "meta 7")
-    val patient4BusinessId3Payload = testData.businessIdPayload(patientUuid = patient4Uuid, meta = "meta 8")
-    val patient4Payload = testData.patientPayload(
-        uuid = patient4Uuid,
-        age = null,
-        ageUpdatedAt = null,
-        dateOfBirth = LocalDate.parse("1950-01-30"),
-        address = patient4AddressPayload,
-        phoneNumbers = null,
-        businessIds = listOf(patient4BusinessId1Payload, patient4BusinessId2Payload, patient4BusinessId3Payload)
-    )
-
-    val patient5AddressPayload = testData.addressPayload()
-    val patient5Payload = testData.patientPayload(
-        age = null,
-        ageUpdatedAt = null,
-        dateOfBirth = LocalDate.parse("1978-11-25"),
-        address = patient5AddressPayload,
-        phoneNumbers = null,
-        businessIds = emptyList()
-    )
-
-    val payloads = listOf(patient1Payload, patient2Payload, patient3Payload, patient4Payload, patient5Payload)
-
-    patientRepository
-        .mergeWithLocalData(payloads)
-        .blockingAwait()
-
-    val savedPatientProfiles = patientRepository
-        .recordsWithSyncStatus(SyncStatus.DONE)
-        .blockingGet()
-        .toSet()
-
-    val expectedPatientProfiles = payloads.map(payloadToPatientProfile).toSet()
-
-    assertThat(savedPatientProfiles).isEqualTo(expectedPatientProfiles)
   }
 
   @Test

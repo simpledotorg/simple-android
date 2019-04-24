@@ -13,8 +13,6 @@ import flow.KeyChanger
 import flow.State
 import flow.TraversalCallback
 
-const val SCREEN_CHANGE_ANIMATION_DURATION = 200L
-
 /**
  * Coordinates changes between [FullScreenKey]s.
  *

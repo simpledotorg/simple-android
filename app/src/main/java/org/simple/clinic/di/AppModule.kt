@@ -13,6 +13,7 @@ import org.simple.clinic.login.LoginModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
+import org.simple.clinic.screen.KeyChangeAnimatorModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
@@ -40,7 +41,8 @@ import java.util.Locale
   PatientModule::class,
   SyncIndicatorModule::class,
   UuidShortCodeCreatorModule::class,
-  IdentifierDisplayAdapterModule::class
+  IdentifierDisplayAdapterModule::class,
+  KeyChangeAnimatorModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

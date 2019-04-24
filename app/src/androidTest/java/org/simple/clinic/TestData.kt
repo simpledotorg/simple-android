@@ -29,6 +29,10 @@ import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
+import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
+import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion.BpPassportMetaDataV1
+import org.simple.clinic.patient.businessid.BusinessIdMetaData
+import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.nameToSearchableForm
 import org.simple.clinic.patient.sync.BusinessIdPayload
@@ -58,7 +62,8 @@ private fun <T : Enum<T>> randomOfEnum(enumClass: KClass<T>): T {
 class TestData @Inject constructor(
     private val faker: Faker,
     private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
 ) {
 
   fun qaUserUuid(): UUID =
@@ -162,12 +167,23 @@ class TestData @Inject constructor(
       deletedAt = deletedAt
   )
 
+  fun businessIdMetadata(
+      metaData: BusinessIdMetaData = BusinessIdMetaData.BpPassportMetaDataV1(qaUserUuid(), qaUserFacilityUuid()),
+      metaDataVersion: MetaDataVersion = BpPassportMetaDataV1
+  ): String = businessIdMetaDataAdapter.serialize(metaData, metaDataVersion)
+
   fun businessId(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = Identifier.IdentifierType.random()),
-      meta: String = "",
-      metaDataVersion: BusinessId.MetaDataVersion = BusinessId.MetaDataVersion.random(),
+      identifier: Identifier = Identifier(value = UUID.randomUUID().toString(), type = Identifier.IdentifierType.BpPassport),
+      meta: String = businessIdMetadata(
+          metaData = BusinessIdMetaData.BpPassportMetaDataV1(
+              assigningUserUuid = qaUserUuid(),
+              assigningFacilityUuid = qaUserFacilityUuid()
+          ),
+          metaDataVersion = BpPassportMetaDataV1
+      ),
+      metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
@@ -259,9 +275,14 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       identifier: String = UUID.randomUUID().toString(),
-      identifierType: Identifier.IdentifierType = Identifier.IdentifierType.random(),
-      metaDataVersion: BusinessId.MetaDataVersion = BusinessId.MetaDataVersion.random(),
-      meta: String = "",
+      identifierType: Identifier.IdentifierType = Identifier.IdentifierType.BpPassport,
+      metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
+      meta: String = businessIdMetadata(
+          metaData = BusinessIdMetaData.BpPassportMetaDataV1(
+              assigningUserUuid = qaUserUuid(),
+              assigningFacilityUuid = qaUserFacilityUuid()
+          )
+      ),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null

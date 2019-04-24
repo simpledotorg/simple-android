@@ -52,6 +52,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.*
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -407,9 +408,10 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary open intentions")
+  @Parameters(method = "patient summary open intentions and screen to go back")
   fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
-      openIntention: OpenIntention
+      openIntention: OpenIntention,
+      goBackToScreen: GoBackToScreen
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
@@ -424,7 +426,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (openIntention == OpenIntention.ViewNewPatient) {
+    if (goBackToScreen == HOME) {
       verify(screen).goToHomeScreen()
     } else {
       verify(screen).goToPreviousScreen()
@@ -432,9 +434,10 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary open intentions")
+  @Parameters(method = "patient summary open intentions and screen to go back")
   fun `when there are no patient summary changes and all bps are not deleted, clicking on back must go back`(
-      openIntention: OpenIntention
+      openIntention: OpenIntention,
+      goBackToScreen: GoBackToScreen
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
@@ -449,7 +452,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (openIntention == OpenIntention.ViewNewPatient) {
+    if (goBackToScreen == HOME) {
       verify(screen).goToHomeScreen()
     } else {
       verify(screen).goToPreviousScreen()
@@ -457,9 +460,10 @@ class PatientSummaryScreenControllerTest {
   }
 
   @Test
-  @Parameters(method = "patient summary open intentions")
+  @Parameters(method = "patient summary open intentions and screen to go back")
   fun `when there are no patient summary changes and all bps are deleted, clicking on back must go back`(
-      openIntention: OpenIntention
+      openIntention: OpenIntention,
+      goBackToScreen: GoBackToScreen
   ) {
     val patientSummaryItems = mock<PatientSummaryItems>()
     whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
@@ -474,7 +478,7 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBackClicked())
 
     verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (openIntention == OpenIntention.ViewNewPatient) {
+    if (goBackToScreen == HOME) {
       verify(screen).goToHomeScreen()
     } else {
       verify(screen).goToPreviousScreen()
@@ -981,6 +985,19 @@ class PatientSummaryScreenControllerTest {
   )
 
   @Suppress("Unused")
+  private fun `patient summary open intentions and screen to go back`(): List<List<Any>> {
+    fun testCase(openIntention: OpenIntention, goBackToScreen: GoBackToScreen): List<Any> {
+      return listOf(openIntention, goBackToScreen)
+    }
+
+    return listOf(
+        testCase(openIntention = OpenIntention.ViewExistingPatient, goBackToScreen = PREVIOUS),
+        testCase(openIntention = OpenIntention.ViewNewPatient, goBackToScreen = HOME),
+        testCase(openIntention = OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)), goBackToScreen = HOME)
+    )
+  }
+
+  @Suppress("Unused")
   private fun `patient summary open intentions except new patient`() = listOf(
       OpenIntention.ViewExistingPatient,
       OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport))
@@ -1046,5 +1063,10 @@ class PatientSummaryScreenControllerTest {
 
     verify(screen).hideLinkIdWithPatientView()
     verify(screen, never()).goToPreviousScreen()
+  }
+
+  enum class GoBackToScreen {
+    HOME,
+    PREVIOUS
   }
 }

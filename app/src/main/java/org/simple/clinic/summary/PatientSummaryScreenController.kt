@@ -31,8 +31,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
-import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
-import org.simple.clinic.summary.OpenIntention.ViewNewPatient
+import org.simple.clinic.summary.OpenIntention.*
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -343,9 +342,9 @@ class PatientSummaryScreenController @Inject constructor(
   private fun openLinkIdWithPatientSheet(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<PatientSummaryScreenCreated>()
-        .filter { it.openIntention is OpenIntention.LinkIdWithPatient }
+        .filter { it.openIntention is LinkIdWithPatient }
         .map {
-          val linkIdWithPatient = it.openIntention as OpenIntention.LinkIdWithPatient
+          val linkIdWithPatient = it.openIntention as LinkIdWithPatient
           { ui: Ui -> ui.showLinkIdWithPatientView(it.patientUuid, linkIdWithPatient.identifier) }
         }
   }
@@ -383,13 +382,13 @@ class PatientSummaryScreenController @Inject constructor(
     val goBackToHomeScreen = backClicks
         .withLatestFrom(shouldGoBackStream, openIntentions)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, openIntention) -> openIntention == ViewNewPatient }
+        .filter { (_, _, openIntention) -> openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
         .map { { ui: Ui -> ui.goToHomeScreen() } }
 
     val goBackToSearchResults = backClicks
         .withLatestFrom(shouldGoBackStream, openIntentions)
         .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, openIntention) -> openIntention != ViewNewPatient }
+        .filter { (_, _, openIntention) -> openIntention == ViewExistingPatient }
         .map { { ui: Ui -> ui.goToPreviousScreen() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
@@ -427,8 +426,7 @@ class PatientSummaryScreenController @Inject constructor(
           { ui: Ui ->
             when (openIntention!!) {
               ViewExistingPatient -> ui.goToPreviousScreen()
-              is OpenIntention.LinkIdWithPatient -> ui.goToPreviousScreen()
-              ViewNewPatient -> ui.goToHomeScreen()
+              ViewNewPatient, is LinkIdWithPatient -> ui.goToHomeScreen()
             }.exhaustive()
           }
         }

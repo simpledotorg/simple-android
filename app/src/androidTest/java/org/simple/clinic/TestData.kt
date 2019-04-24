@@ -211,7 +211,7 @@ class TestData @Inject constructor(
       deletedAt: Instant? = null,
       address: PatientAddressPayload = addressPayload(),
       phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload()),
-      businessIds: List<BusinessIdPayload> = listOf(businessIdPayload(patientUuid = uuid))
+      businessIds: List<BusinessIdPayload> = listOf(businessIdPayload())
   ): PatientPayload {
     return PatientPayload(
         uuid = uuid,
@@ -273,7 +273,6 @@ class TestData @Inject constructor(
 
   fun businessIdPayload(
       uuid: UUID = UUID.randomUUID(),
-      patientUuid: UUID = UUID.randomUUID(),
       identifier: String = UUID.randomUUID().toString(),
       identifierType: Identifier.IdentifierType = Identifier.IdentifierType.BpPassport,
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
@@ -289,7 +288,6 @@ class TestData @Inject constructor(
   ): BusinessIdPayload {
     return BusinessIdPayload(
         uuid = uuid,
-        patientUuid = patientUuid,
         identifier = identifier,
         identifierType = identifierType,
         metaDataVersion = metaDataVersion,

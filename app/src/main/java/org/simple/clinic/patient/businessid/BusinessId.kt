@@ -60,7 +60,6 @@ data class BusinessId(
   fun toPayload(): BusinessIdPayload {
     return BusinessIdPayload(
         uuid = uuid,
-        patientUuid = patientUuid,
         identifier = identifier.value,
         identifierType = identifier.type,
         metaDataVersion = metaDataVersion,

@@ -40,6 +40,7 @@ import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.patient.recent.RecentPatientsView
 import org.simple.clinic.phone.PhoneModule
+import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
@@ -116,7 +117,8 @@ interface TheActivityComponent {
   fun inject(target: AddIdToPatientSearchScreen)
   fun inject(target: PatientSearchView)
   fun inject(target: AddIdToPatientSearchResultsScreen)
-  fun inject(linkIdWithPatientView: LinkIdWithPatientView)
+  fun inject(target: LinkIdWithPatientView)
+  fun inject(target: RecentPatientsScreen)
 
   @Subcomponent.Builder
   interface Builder {

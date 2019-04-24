@@ -22,6 +22,7 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.screen.FullScreenKeyChangeAnimator
 import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
 
@@ -70,7 +71,13 @@ class TheActivity : AppCompatActivity() {
         .build()
     component.inject(this)
 
-    screenRouter.registerKeyChanger(FullScreenKeyChanger(this, android.R.id.content, R.color.window_background, this::onScreenChanged))
+    screenRouter.registerKeyChanger(FullScreenKeyChanger(
+        activity = this,
+        screenLayoutContainerRes = android.R.id.content,
+        screenBackgroundRes = R.color.window_background,
+        onKeyChange = this::onScreenChanged,
+        keyChangeAnimator = FullScreenKeyChangeAnimator()
+    ))
     return screenRouter.installInContext(baseContext, controller.initialScreenKey())
   }
 

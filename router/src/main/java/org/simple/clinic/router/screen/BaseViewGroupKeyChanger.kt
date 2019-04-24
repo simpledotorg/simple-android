@@ -2,11 +2,11 @@ package org.simple.clinic.router.screen
 
 import android.annotation.SuppressLint
 import android.content.Context
-import androidx.annotation.LayoutRes
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import androidx.annotation.LayoutRes
 import flow.Flow
 import flow.KeyChanger
 import flow.State
@@ -18,7 +18,7 @@ import timber.log.Timber
  *
  * @param [T] Type of key that this key-changer can handle. E.g., [FullScreenKey].
  */
-abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
+abstract class BaseViewGroupKeyChanger<T : Any>(private val keyChangeAnimator: KeyChangeAnimator<T>) : KeyChanger {
 
   override fun changeKey(
       outgoingState: State?,
@@ -61,7 +61,7 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
     callback.onTraversalCompleted()
 
     incomingView.executeOnMeasure {
-      animate(
+      keyChangeAnimator.animate(
           outgoingState?.getKey(),
           outgoingView,
           incomingKey,
@@ -138,12 +138,4 @@ abstract class BaseViewGroupKeyChanger<T : Any> : KeyChanger {
   @LayoutRes
   abstract fun layoutResForKey(screenKey: T): Int
 
-  abstract fun animate(
-      outgoingKey: T?,
-      outgoingView: View?,
-      incomingKey: T,
-      incomingView: View,
-      direction: flow.Direction,
-      onCompleteListener: () -> Unit
-  )
 }

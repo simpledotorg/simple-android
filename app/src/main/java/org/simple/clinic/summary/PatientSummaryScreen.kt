@@ -42,14 +42,13 @@ import org.simple.clinic.router.screen.ActivityResult
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection.BACKWARD
-import org.simple.clinic.router.screen.SCREEN_CHANGE_ANIMATION_DURATION
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.summary.addphone.AddPhoneNumberDialog
-import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
-import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.linkId.LinkIdWithPatientCancelled
 import org.simple.clinic.summary.linkId.LinkIdWithPatientLinked
+import org.simple.clinic.summary.linkId.LinkIdWithPatientView
+import org.simple.clinic.summary.linkId.LinkIdWithPatientViewShown
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -65,7 +64,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
-import java.util.concurrent.TimeUnit.MILLISECONDS
 import javax.inject.Inject
 
 class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -359,22 +357,12 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     screenRouter.clearHistoryAndPush(HomeScreenKey(), direction = BACKWARD)
   }
 
-  @SuppressLint("CheckResult")
   fun showUpdatePhoneDialog(patientUuid: UUID) {
-    Observable.timer(SCREEN_CHANGE_ANIMATION_DURATION, MILLISECONDS, mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe {
-          UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
-        }
+    UpdatePhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
   }
 
-  @SuppressLint("CheckResult")
   fun showAddPhoneDialog(patientUuid: UUID) {
-    Observable.timer(SCREEN_CHANGE_ANIMATION_DURATION, MILLISECONDS, mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe {
-          AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
-        }
+    AddPhoneNumberDialog.show(patientUuid, activity.supportFragmentManager)
   }
 
   fun showUpdatePrescribedDrugsScreen(patientUuid: UUID) {

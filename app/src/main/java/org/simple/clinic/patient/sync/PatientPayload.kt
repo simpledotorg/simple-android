@@ -171,9 +171,6 @@ data class BusinessIdPayload(
     @Json(name = "id")
     val uuid: UUID,
 
-    @Json(name = "patient_id")
-    val patientUuid: UUID,
-
     @Json(name = "identifier")
     val identifier: String,
 
@@ -196,7 +193,7 @@ data class BusinessIdPayload(
     val deletedAt: Instant?
 ) {
 
-  fun toDatabaseModel(): BusinessId {
+  fun toDatabaseModel(patientUuid: UUID): BusinessId {
     return BusinessId(
         uuid = uuid,
         patientUuid = patientUuid,

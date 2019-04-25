@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.recentpatientsview
 
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID

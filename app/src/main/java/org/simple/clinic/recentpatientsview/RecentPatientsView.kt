@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.recentpatientsview
 
 import android.annotation.SuppressLint
 import android.content.Context

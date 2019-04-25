@@ -70,8 +70,7 @@ class PatientsScreenController @Inject constructor(
         toggleVisibilityOfScanCardButton(replayedEvents),
         requestCameraPermissions(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
-        toggleVisibilityOfSyncIndicator(replayedEvents),
-        handleScannedBpPassportCodes(replayedEvents)
+        toggleVisibilityOfSyncIndicator(replayedEvents)
     )
   }
 
@@ -252,29 +251,5 @@ class PatientsScreenController @Inject constructor(
             }
           }
         }
-  }
-
-  private fun handleScannedBpPassportCodes(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreated = events.ofType<ScreenCreated>()
-    val scannedBpPassportCodeStream = events.ofType<PatientsScreenBpPassportCodeScanned>()
-
-    val foundPatientStream = Observables.combineLatest(screenCreated, scannedBpPassportCodeStream)
-        .map { (_, scannedCode) -> scannedCode.bpPassportCode }
-        .flatMap { patientRepository.findPatientWithBusinessId(it.toString()) }
-        .replay()
-        .refCount()
-
-    val openPatientSummary = foundPatientStream
-        .filterAndUnwrapJust()
-        .map { patient -> { ui: Ui -> ui.openPatientSummary(patient.uuid) } }
-
-    val openAddIdToPatientSearchScreen = Observables
-        .combineLatest(foundPatientStream, scannedBpPassportCodeStream)
-        .filter { (foundPatient, _) -> foundPatient is None }
-        .map { (_, scannedBpPassportCode) -> scannedBpPassportCode.bpPassportCode }
-        .map { bpPassportCode -> Identifier(value = bpPassportCode.toString(), type = BpPassport) }
-        .map { identifier -> { ui: Ui -> ui.openAddIdToPatientScreen(identifier) } }
-
-    return Observable.merge(openPatientSummary, openAddIdToPatientSearchScreen)
   }
 }

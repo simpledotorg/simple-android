@@ -52,8 +52,8 @@ class PrescriptionRepository @Inject constructor(
               patientUuid = patientUuid,
               facilityUuid = facility.uuid,
               syncStatus = SyncStatus.PENDING,
-              createdAt = Instant.now(),
-              updatedAt = Instant.now(),
+              createdAt = Instant.now(utcClock),
+              updatedAt = Instant.now(utcClock),
               deletedAt = null)
         }
         .flatMapCompletable { save(listOf(it)) }

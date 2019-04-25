@@ -10,11 +10,14 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.recentpatient.DateHeader.DateHeaderViewHolder
 import org.simple.clinic.recentpatient.RecentPatientItem.RecentPatientItemViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.summary.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 sealed class RecentPatientScreenItemTypes<VH : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<VH>(adapterId) {
@@ -26,7 +29,8 @@ data class RecentPatientItem(
     val name: String,
     val age: Int,
     val lastBp: LastBp?,
-    val gender: Gender
+    val gender: Gender,
+    val latestUpdatedAt: Instant
 ) : RecentPatientScreenItemTypes<RecentPatientItemViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
@@ -66,4 +70,23 @@ data class RecentPatientItem(
     val lastBpLabel by bindView<View>(R.id.recentpatient_item_last_bp_label)
     val genderImageView by bindView<ImageView>(R.id.recentpatient_item_gender)
   }
+}
+
+data class DateHeader(val date: LocalDate) : RecentPatientScreenItemTypes<DateHeaderViewHolder>(date.hashCode().toLong()) {
+
+  override fun getLayout(): Int = R.layout.recentpatient_date_header_item_view
+
+  override fun createViewHolder(itemView: View): DateHeaderViewHolder {
+    return DateHeaderViewHolder(itemView)
+  }
+
+  @SuppressLint("SetTextI18n")
+  override fun bind(viewHolder: DateHeaderViewHolder, position: Int) {
+    viewHolder.title.text = date.toString()
+  }
+
+  class DateHeaderViewHolder(rootView: View) : ViewHolder(rootView) {
+    val title by bindView<TextView>(R.id.dateheader_title)
+  }
+
 }

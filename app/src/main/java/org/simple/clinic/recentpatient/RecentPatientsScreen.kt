@@ -82,7 +82,7 @@ class RecentPatientsScreen(context: Context, attrs: AttributeSet) : LinearLayout
         ))
   }
 
-  fun updateRecentPatients(allItemTypes: List<RecentPatientItem>) {
+  fun updateRecentPatients(allItemTypes: List<RecentPatientScreenItemTypes<out ViewHolder>>) {
     allItemTypes.forEach { it.uiEvents = adapterEvents }
     groupAdapter.update(allItemTypes)
   }

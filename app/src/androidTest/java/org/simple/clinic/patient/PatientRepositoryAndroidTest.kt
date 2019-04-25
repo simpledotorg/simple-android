@@ -24,6 +24,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -931,58 +932,85 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun verify_recent_patients_are_retrieved_as_expected() {
-    val recentPatient1 = savePatientWithBp()
+    var recentPatient1 = savePatientWithBpWithTestClock()
 
     verifyRecentPatientOrder(
         recentPatient1
     )
 
-    val recentPatient2 = savePatientWithBp()
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    var recentPatient2 = savePatientWithBpWithTestClock()
 
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
     )
+
+    testClock.advanceBy(Duration.ofSeconds(1))
 
     prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug()).blockingAwait()
 
+    recentPatient1 = recentPatient1.copy(latestUpdatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
     )
 
-    val appointment2 = testData.appointment(patientUuid = recentPatient2.uuid)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    val appointment2 = testData.appointment(patientUuid = recentPatient2.uuid, updatedAt = testClock.instant())
     appointmentRepository.save(listOf(appointment2)).blockingAwait()
 
+    recentPatient2 = recentPatient2.copy(latestUpdatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
     )
 
-    val appointment1 = testData.appointment(patientUuid = recentPatient1.uuid)
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    val appointment1 = testData.appointment(patientUuid = recentPatient1.uuid, updatedAt = testClock.instant())
     appointmentRepository.save(listOf(appointment1)).blockingAwait()
-    communicationRepository.save(listOf(testData.communication(appointmentUuid = appointment1.uuid))).blockingAwait()
+    communicationRepository.save(listOf(
+        testData.communication(appointmentUuid = appointment1.uuid, updatedAt = testClock.instant())
+    )).blockingAwait()
 
+    recentPatient1 = recentPatient1.copy(latestUpdatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
     )
 
-    communicationRepository.save(listOf(testData.communication(appointmentUuid = appointment2.uuid))).blockingAwait()
+    testClock.advanceBy(Duration.ofSeconds(1))
 
+    communicationRepository.save(listOf(testData.communication(
+        appointmentUuid = appointment2.uuid,
+        updatedAt = testClock.instant()
+    ))).blockingAwait()
+
+    recentPatient2 = recentPatient2.copy(latestUpdatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
     )
 
-    medicalHistoryRepository.save(testData.medicalHistory(patientUuid = recentPatient1.uuid)) { Instant.now() }.blockingAwait()
+    testClock.advanceBy(Duration.ofSeconds(1))
 
+    medicalHistoryRepository.save(testData.medicalHistory(
+        patientUuid = recentPatient1.uuid,
+        updatedAt = testClock.instant()
+    )) { Instant.now(testClock) }.blockingAwait()
+
+    recentPatient1 = recentPatient1.copy(latestUpdatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
     )
 
-    val recentPatient3 = savePatientWithBp()
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    val recentPatient3 = savePatientWithBpWithTestClock()
 
     verifyRecentPatientOrder(
         recentPatient3,
@@ -990,7 +1018,9 @@ class PatientRepositoryAndroidTest {
         recentPatient2
     )
 
-    val recentPatient4 = savePatientWithBp()
+    testClock.advanceBy(Duration.ofSeconds(1))
+
+    val recentPatient4 = savePatientWithBpWithTestClock()
 
     verifyRecentPatientOrder(
         recentPatient4,
@@ -1104,6 +1134,29 @@ class PatientRepositoryAndroidTest {
     return patientProfile.patient.toRecentPatient(bpMeasurement)
   }
 
+  private fun savePatientWithBpWithTestClock(
+      facilityUuid: UUID = testData.qaUserFacilityUuid(),
+      patientUuid: UUID = UUID.randomUUID(),
+      createdAt: Instant = Instant.now(testClock),
+      updatedAt: Instant = Instant.now(testClock),
+      deletedAt: Instant? = null
+  ): RecentPatient {
+    val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
+      copy(patient = patient.copy(createdAt = createdAt, updatedAt = updatedAt))
+    }
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val bpMeasurement = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        facilityUuid = facilityUuid,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        deletedAt = deletedAt
+    )
+    database.bloodPressureDao().save(listOf(bpMeasurement))
+    return patientProfile.patient.toRecentPatient(bpMeasurement)
+  }
+
   private fun Patient.toRecentPatient(bpMeasurement: BloodPressureMeasurement) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
@@ -1114,7 +1167,8 @@ class PatientRepositoryAndroidTest {
           systolic = bpMeasurement.systolic,
           diastolic = bpMeasurement.diastolic,
           createdAt = bpMeasurement.createdAt
-      )
+      ),
+      latestUpdatedAt = updatedAt
   )
 
   private fun verifyRecentPatientOrder(
@@ -1166,7 +1220,8 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           dateOfBirth = dateOfBirth,
           age = age,
-          lastBp = null
+          lastBp = null,
+          latestUpdatedAt = this.updatedAt
       )
     }
   }
@@ -1211,7 +1266,8 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           dateOfBirth = dateOfBirth,
           age = age,
-          lastBp = null
+          lastBp = null,
+          latestUpdatedAt = this.updatedAt
       )
     }
   }
@@ -1235,8 +1291,8 @@ class PatientRepositoryAndroidTest {
         facilityUuid = facilityUuid
     )
 
-    saveCommunication(appointmentUuid = appointmentUuid1)
-    saveCommunication(appointmentUuid = appointmentUuid2)
+    val comm1 = saveCommunication(appointmentUuid = appointmentUuid1)
+    val comm2 = saveCommunication(appointmentUuid = appointmentUuid2)
     saveCommunication(
         appointmentUuid = appointmentUuid3,
         deletedAt = Instant.now()
@@ -1245,18 +1301,23 @@ class PatientRepositoryAndroidTest {
     patientRepository
         .recentPatients(facilityUuid, limit = 10)
         .test()
-        .assertValue(listOf(recentPatient2, recentPatient1, recentPatient3))
+        .assertValue(listOf(
+            recentPatient2.copy(latestUpdatedAt = comm2.updatedAt),
+            recentPatient1.copy(latestUpdatedAt = comm1.updatedAt),
+            recentPatient3
+        ))
   }
 
   private fun saveCommunication(
       appointmentUuid: UUID,
       deletedAt: Instant? = null
-  ) {
+  ): Communication {
     val communication = testData.communication(
         appointmentUuid = appointmentUuid,
         deletedAt = deletedAt
     )
     database.communicationDao().save(listOf(communication))
+    return communication
   }
 
   @Test

@@ -15,9 +15,9 @@ import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.estimateCurrentAge
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Clock
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.format.DateTimeFormatter
 
 sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
@@ -96,11 +96,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
       } else {
         holder.lastBpDateFrame.visibility = View.VISIBLE
 
-        val lastBpDate = lastBp
-            .takenOn
-            .atZone(ZoneOffset.UTC)
-            .withZoneSameInstant(userClock.zone)
-            .toLocalDate()
+        val lastBpDate = lastBp.takenOn.toLocalDateAtZone(userClock.zone)
         val formattedLastBpDate = dateOfBirthFormat.format(lastBpDate)
 
         val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacility.uuid

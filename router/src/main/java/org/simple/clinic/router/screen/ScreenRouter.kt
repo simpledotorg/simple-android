@@ -75,6 +75,10 @@ class ScreenRouter(
     flow().setHistory(History.single(screenKey), direction.flowDirection)
   }
 
+  fun popAndPush(screenKey: FullScreenKey, direction: RouterDirection){
+    flow().replaceTop(screenKey, direction.flowDirection)
+  }
+
   fun pop(): BackStackPopCallback {
     val popped = flow().goBack()
     return BackStackPopCallback(popped)

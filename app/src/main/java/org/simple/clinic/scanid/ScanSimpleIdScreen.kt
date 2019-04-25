@@ -12,11 +12,18 @@ import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
@@ -27,6 +34,9 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   @Inject
   lateinit var controller: ScanSimpleIdScreenController
+
+  @Inject
+  lateinit var utcClock: UtcClock
 
   private val qrCodeScannerView by bindView<QrCodeScannerView>(R.id.scansimpleid_code_scanner_view)
   private val toolBar by bindView<Toolbar>(R.id.scansimpleid_toolbar)
@@ -59,9 +69,18 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
         .map(::ScanSimpleIdScreenQrCodeScanned)
   }
 
-  fun sendScannedPassportCode(scannedBpPassportCode: UUID) {
-    screenRouter.popWithResult(
-        ScanSimpleIdScreenResult.KEY,
-        ScanSimpleIdScreenResult(scannedBpPassportCode))
+  fun openPatientSummary(patientUuid: UUID) {
+    screenRouter.popAndPush(
+        PatientSummaryScreenKey(
+            patientUuid = patientUuid,
+            intention = OpenIntention.ViewExistingPatient,
+            screenCreatedTimestamp = Instant.now(utcClock)
+        ),
+        RouterDirection.FORWARD
+    )
+  }
+
+  fun openAddIdToPatientScreen(identifier: Identifier) {
+    screenRouter.popAndPush(AddIdToPatientSearchScreenKey(identifier), RouterDirection.FORWARD)
   }
 }

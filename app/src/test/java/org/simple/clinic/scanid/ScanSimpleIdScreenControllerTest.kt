@@ -4,12 +4,23 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
+import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.util.Just
+import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -18,7 +29,8 @@ class ScanSimpleIdScreenControllerTest {
 
   val uiEvents = PublishSubject.create<UiEvent>()
   val screen = mock<ScanSimpleIdScreen>()
-  val controller = ScanSimpleIdScreenController()
+  val patientRepository = mock<PatientRepository>()
+  val controller = ScanSimpleIdScreenController(patientRepository)
 
   @Before
   fun setUp() {
@@ -29,25 +41,32 @@ class ScanSimpleIdScreenControllerTest {
 
   @Test
   @Parameters(method = "params for scanning simple passport qr code")
-  fun `when simple passport qr code is scanned, the parsed id must be sent`(
-      scannedText: String,
-      expectedScannedCode: UUID
+  fun `when bp passport qr code is scanned and it is valid then appropriate screen should open`(
+      validScannedCode: UUID,
+      foundPatient: Optional<Patient>
   ) {
-    uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedText))
+    whenever(patientRepository.findPatientWithBusinessId(validScannedCode.toString())).thenReturn(Observable.just(foundPatient))
+    uiEvents.onNext(ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode(validScannedCode))
 
-    verify(screen).sendScannedPassportCode(expectedScannedCode)
+    when (foundPatient) {
+      is Just -> verify(screen).openPatientSummary(foundPatient.value.uuid)
+      is None -> {
+        val identifier = Identifier(value = validScannedCode.toString(), type = Identifier.IdentifierType.BpPassport)
+        verify(screen).openAddIdToPatientScreen(identifier)
+      }
+    }
   }
 
   @Suppress("Unused")
   private fun `params for scanning simple passport qr code`(): List<List<Any>> {
-    fun testCase(uuidString: String): List<Any> {
-      return listOf(uuidString, UUID.fromString(uuidString))
+    fun testCase(patient: Optional<Patient>): List<Any> {
+      return listOf(UUID.randomUUID(), patient)
     }
 
     return listOf(
-        testCase("ecf08c6a-2f7e-4163-a6c7-c72a5703422a"),
-        testCase("83ffb9a1-3b11-4062-80d5-a6deb5f8b927"),
-        testCase("d7b0cf0b-8467-4969-8f17-f98f48badb5a")
+        testCase(None),
+        testCase(PatientMocker.patient().toOptional()),
+        testCase(PatientMocker.patient().toOptional())
     )
   }
 
@@ -57,14 +76,18 @@ class ScanSimpleIdScreenControllerTest {
       scannedTexts: List<String>,
       expectedScannedCode: UUID?
   ) {
+    whenever(patientRepository.findPatientWithBusinessId(any())).thenReturn(Observable.just(None))
+
     scannedTexts.forEach { scannedText ->
       uiEvents.onNext(ScanSimpleIdScreenQrCodeScanned(scannedText))
     }
 
     if (expectedScannedCode == null) {
-      verify(screen, never()).sendScannedPassportCode(any())
+      verify(screen, never()).openPatientSummary(any())
+      verify(screen, never()).openAddIdToPatientScreen(any())
     } else {
-      verify(screen).sendScannedPassportCode(expectedScannedCode)
+      val identifier = Identifier(expectedScannedCode.toString(), Identifier.IdentifierType.BpPassport)
+      verify(screen).openAddIdToPatientScreen(identifier)
     }
   }
 

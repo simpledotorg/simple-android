@@ -379,15 +379,19 @@
   <string name="linkidwithpatient_button_add">Add</string>
   <string name="linkidwithpatient_button_cancel">Cancel</string>
   <string name="linkidwithpatient_add_id_text">Add %1$s\u0020</string>
-  <string name="linkidwithpatient_to_patient_text">\u0020to patient?</string>
+  <string name="linkidwithpatient_to_patient_text">\u0020to\u00A0patient?</string>
 
   <!-- Add ID to Patient: Search -->
   <string name="addidtopatientsearch_name">Patient’s name</string>
   <string name="addidtopatientsearch_search">Next</string>
   <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name</string>
   <string name="addidtopatientsearch_add">Add %1$s\u0020</string>
-  <string name="addidtopatientsearch_to_patient">\u0020to patient</string>
+  <string name="addidtopatientsearch_to_patient">\u0020to\u00A0patient</string>
 
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">Recent patients</string>
+
+  <!-- Add ID to Patient: Search Results-->
+  <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
+  <string name="addidtopatientsearchresults_to_patient">\u0020to\u00A0patient</string>
 </resources>

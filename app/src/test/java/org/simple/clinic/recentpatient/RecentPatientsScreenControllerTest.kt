@@ -22,7 +22,9 @@ import org.simple.clinic.summary.Today
 import org.simple.clinic.summary.Yesterday
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -44,6 +46,7 @@ class RecentPatientsScreenControllerTest {
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
+  private val utcClock = UtcClock()
 
   @Before
   fun setUp() {
@@ -56,7 +59,8 @@ class RecentPatientsScreenControllerTest {
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         relativeTimestampGenerator = relativeTimestampGenerator,
-        utcClock = UtcClock()
+        utcClock = utcClock,
+        userClock = TestUserClock()
     )
 
     uiEvents
@@ -72,33 +76,41 @@ class RecentPatientsScreenControllerTest {
     val patientUuid1 = UUID.randomUUID()
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
+
+    val latestUpdatedAt1 = Instant.now()
+    val latestUpdatedAt2 = latestUpdatedAt1.plusSeconds(1)
+    val latestUpdatedAt3 = latestUpdatedAt2.plusSeconds(1)
     whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
             gender = Gender.TRANSGENDER,
-            lastBp = RecentPatient.LastBp(systolic = 127, diastolic = 83, createdAt = Instant.now())
+            lastBp = RecentPatient.LastBp(systolic = 127, diastolic = 83, createdAt = Instant.now()),
+            latestUpdatedAt = latestUpdatedAt1
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
             gender = Gender.MALE,
-            lastBp = null
+            lastBp = null,
+            latestUpdatedAt = latestUpdatedAt2
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = Gender.FEMALE,
-            lastBp = RecentPatient.LastBp(systolic = 142, diastolic = 72, createdAt = Instant.now().minus(1, ChronoUnit.DAYS))
+            lastBp = RecentPatient.LastBp(systolic = 142, diastolic = 72, createdAt = Instant.now().minus(1, ChronoUnit.DAYS)),
+            latestUpdatedAt = latestUpdatedAt3
         )
     )))
 
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
+        DateHeader(latestUpdatedAt1.toLocalDateAtZone(utcClock.zone)),
         RecentPatientItem(
             uuid = patientUuid1,
             name = "Ajay Kumar",
@@ -108,14 +120,16 @@ class RecentPatientsScreenControllerTest {
                 diastolic = 83,
                 updatedAtRelativeTimestamp = Today
             ),
-            gender = Gender.TRANSGENDER
+            gender = Gender.TRANSGENDER,
+            latestUpdatedAt = latestUpdatedAt1
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             lastBp = null,
-            gender = Gender.MALE
+            gender = Gender.MALE,
+            latestUpdatedAt = latestUpdatedAt2
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -126,7 +140,8 @@ class RecentPatientsScreenControllerTest {
                 diastolic = 72,
                 updatedAtRelativeTimestamp = Yesterday
             ),
-            gender = Gender.FEMALE
+            gender = Gender.FEMALE,
+            latestUpdatedAt = latestUpdatedAt3
         )
     ))
   }

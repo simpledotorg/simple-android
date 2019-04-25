@@ -22,7 +22,9 @@ data class RecentPatient(
     val age: Age?,
 
     @Embedded(prefix = "last_bp_")
-    val lastBp: LastBp?
+    val lastBp: LastBp?,
+
+    val latestUpdatedAt: Instant
 ) {
 
   @Dao

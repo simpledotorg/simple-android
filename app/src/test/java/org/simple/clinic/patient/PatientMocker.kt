@@ -415,14 +415,16 @@ object PatientMocker {
       gender: Gender = randomOfEnum(Gender::class),
       dateOfBirth: LocalDate? = null,
       age: Age? = null,
-      lastBp: RecentPatient.LastBp? = null
+      lastBp: RecentPatient.LastBp? = null,
+      latestUpdatedAt: Instant = Instant.now()
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
-      lastBp = lastBp
+      lastBp = lastBp,
+      latestUpdatedAt = latestUpdatedAt
   )
 
   fun businessId(

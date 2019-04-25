@@ -11,8 +11,10 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -25,7 +27,8 @@ class RecentPatientsScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    private val userClock: UserClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -47,7 +50,12 @@ class RecentPatientsScreenController @Inject constructor(
             patientRepository.recentPatients(facility.uuid)
           }
           .map { it.map(::recentPatientItem) }
+          .map { segregateByDay(it) }
           .map { { ui: Ui -> ui.updateRecentPatients(it) } }
+
+  private fun segregateByDay(recentPatientItems: List<RecentPatientItem>) =
+      recentPatientItems.groupBy { it.latestUpdatedAt.toLocalDateAtZone(userClock.zone) }
+          .flatMap { (key, value) -> listOf(DateHeader(key)) + value }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(
@@ -61,7 +69,8 @@ class RecentPatientsScreenController @Inject constructor(
                 updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(createdAt)
             )
           },
-          gender = recentPatient.gender
+          gender = recentPatient.gender,
+          latestUpdatedAt = recentPatient.latestUpdatedAt
       )
 
   private fun age(recentPatient: RecentPatient): Int =

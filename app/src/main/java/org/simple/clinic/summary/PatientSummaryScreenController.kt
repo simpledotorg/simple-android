@@ -31,7 +31,9 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.PatientSummaryResult.Saved
 import org.simple.clinic.patient.PatientSummaryResult.Scheduled
-import org.simple.clinic.summary.OpenIntention.*
+import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
+import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
+import org.simple.clinic.summary.OpenIntention.ViewNewPatient
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -354,6 +356,37 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.openIntention }
 
+    val allBpsForPatientDeletedStream = events
+        .ofType<PatientSummaryAllBloodPressuresDeleted>()
+        .map { it.allBloodPressuresDeleted }
+
+    val hasSummaryItemChangedStream = summaryItemChangedSinceScreenOpenedStream(events)
+
+    val shouldGoBackStream = Observables
+        .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
+        .map { (hasSummaryItemChanged, allBpsForPatientDeleted) ->
+          if (allBpsForPatientDeleted) true else hasSummaryItemChanged.not()
+        }
+
+    val shouldGoBackWithIntentionStream = events
+        .ofType<PatientSummaryBackClicked>()
+        .withLatestFrom(shouldGoBackStream, openIntentions) { _, shouldGoBack, openIntention ->
+          shouldGoBack to openIntention
+        }
+        .filter { (shouldGoBack, _) -> shouldGoBack }
+
+    val goBackToHomeScreen = shouldGoBackWithIntentionStream
+        .filter { (_, openIntention) -> openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
+        .map { { ui: Ui -> ui.goToHomeScreen() } }
+
+    val goBackToSearchResults = shouldGoBackWithIntentionStream
+        .filter { (_, openIntention) -> openIntention == ViewExistingPatient }
+        .map { { ui: Ui -> ui.goToPreviousScreen() } }
+
+    return goBackToHomeScreen.mergeWith(goBackToSearchResults)
+  }
+
+  private fun summaryItemChangedSinceScreenOpenedStream(events: Observable<UiEvent>): Observable<Boolean> {
     val patientSummaryItemChanges = events
         .ofType<PatientSummaryItemChanged>()
         .map { it.patientSummaryItems }
@@ -362,36 +395,9 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.screenCreatedTimestamp }
 
-    val hasSummaryItemChangedStream = Observables
+    return Observables
         .combineLatest(screenOpenedAt, patientSummaryItemChanges)
         .map { (screenOpenedAt, patientSummaryItem) -> patientSummaryItem.hasItemChangedSince(screenOpenedAt) }
-
-    val allBpsForPatientDeletedStream = events
-        .ofType<PatientSummaryAllBloodPressuresDeleted>()
-        .map { it.allBloodPressuresDeleted }
-
-    val shouldGoBackStream = Observables
-        .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
-        .map { (hasSummaryItemChanged, allBpsForPatientDeleted) ->
-          if (allBpsForPatientDeleted) true else hasSummaryItemChanged.not()
-        }
-
-    val backClicks = events
-        .ofType<PatientSummaryBackClicked>()
-
-    val goBackToHomeScreen = backClicks
-        .withLatestFrom(shouldGoBackStream, openIntentions)
-        .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, openIntention) -> openIntention == ViewNewPatient || openIntention is LinkIdWithPatient }
-        .map { { ui: Ui -> ui.goToHomeScreen() } }
-
-    val goBackToSearchResults = backClicks
-        .withLatestFrom(shouldGoBackStream, openIntentions)
-        .filter { (_, shouldGoBack, _) -> shouldGoBack }
-        .filter { (_, _, openIntention) -> openIntention == ViewExistingPatient }
-        .map { { ui: Ui -> ui.goToPreviousScreen() } }
-
-    return goBackToHomeScreen.mergeWith(goBackToSearchResults)
   }
 
   private fun goToHomeOnDoneClick(events: Observable<UiEvent>): Observable<UiChange> {

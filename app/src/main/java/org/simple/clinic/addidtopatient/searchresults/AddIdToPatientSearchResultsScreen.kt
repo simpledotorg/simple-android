@@ -109,11 +109,11 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
     )
     
     titleTextView.text = Truss()
-        .append(resources.getString(R.string.addidtopatientsearch_add, identifierType))
+        .append(resources.getString(R.string.addidtopatientsearchresults_add, identifierType))
         .pushSpan(identifierTextAppearanceSpan)
         .append(identifierValue)
         .popSpan()
-        .append(resources.getString(R.string.addidtopatientsearch_to_patient))
+        .append(resources.getString(R.string.addidtopatientsearchresults_to_patient))
         .build()
   }
 

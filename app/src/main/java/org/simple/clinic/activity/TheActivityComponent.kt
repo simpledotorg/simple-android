@@ -38,9 +38,9 @@ import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
-import org.simple.clinic.patient.recent.RecentPatientsView
 import org.simple.clinic.phone.PhoneModule
 import org.simple.clinic.recentpatient.RecentPatientsScreen
+import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreen
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen

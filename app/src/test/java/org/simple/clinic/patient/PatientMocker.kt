@@ -15,7 +15,6 @@ import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User

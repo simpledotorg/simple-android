@@ -17,7 +17,6 @@ import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.reports.ReportsRepository

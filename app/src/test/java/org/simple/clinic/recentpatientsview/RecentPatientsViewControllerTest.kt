@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.recentpatientsview
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
@@ -21,7 +21,7 @@ import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.recent.RecentPatient.LastBp
+import org.simple.clinic.patient.RecentPatient.LastBp
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.summary.Today
 import org.simple.clinic.summary.Yesterday

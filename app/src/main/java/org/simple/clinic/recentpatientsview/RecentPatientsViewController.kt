@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.recentpatientsview
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -10,6 +10,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock

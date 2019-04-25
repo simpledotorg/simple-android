@@ -1,11 +1,9 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.patient
 
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
-import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.Gender
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID

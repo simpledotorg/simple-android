@@ -33,7 +33,6 @@ import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
-import org.simple.clinic.patient.recent.RecentPatient
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.user.UserSession

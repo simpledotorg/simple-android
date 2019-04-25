@@ -1,4 +1,4 @@
-package org.simple.clinic.patient.recent
+package org.simple.clinic.recentpatientsview
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,7 +9,7 @@ import kotlinx.android.synthetic.main.recent_patient_item_view.view.*
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.recent.SeeAllItem.SeeAllItemViewHolder
+import org.simple.clinic.recentpatientsview.SeeAllItem.SeeAllItemViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.summary.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent

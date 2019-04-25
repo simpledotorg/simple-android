@@ -94,7 +94,7 @@
           android:visibility="gone" />
       </FrameLayout>
 
-      <org.simple.clinic.patient.recent.RecentPatientsView
+      <org.simple.clinic.recentpatientsview.RecentPatientsView
         android:id="@+id/patients_recent_patients"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

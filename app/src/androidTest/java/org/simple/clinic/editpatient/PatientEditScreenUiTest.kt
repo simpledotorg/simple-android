@@ -40,7 +40,7 @@ class PatientEditScreenUiTest {
 
   @Test
   fun when_opening_the_screen_the_patient_date_of_birth_should_be_prefilled_in_a_specific_format() {
-    val patientProfile = testData.patientProfile()
+    val patientProfile = testData.patientProfile(generateBusinessId = false)
         .let { profile ->
           profile.copy(patient = profile.patient.copy(age = null, dateOfBirth = LocalDate.parse("1990-05-25")))
         }

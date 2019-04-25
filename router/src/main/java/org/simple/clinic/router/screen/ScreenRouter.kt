@@ -29,8 +29,6 @@ class ScreenRouter(
 
   private var flowInstalled: Boolean = false
 
-  private val screenResults = ScreenResults()
-
   companion object {
     fun create(activity: Activity, nestedKeyChanger: NestedKeyChanger, resultBus: ScreenResultBus): ScreenRouter {
       val flowSupplier = object : Supplier<Flow> {
@@ -75,24 +73,13 @@ class ScreenRouter(
     flow().setHistory(History.single(screenKey), direction.flowDirection)
   }
 
-  fun popAndPush(screenKey: FullScreenKey, direction: RouterDirection){
+  fun popAndPush(screenKey: FullScreenKey, direction: RouterDirection) {
     flow().replaceTop(screenKey, direction.flowDirection)
   }
 
   fun pop(): BackStackPopCallback {
     val popped = flow().goBack()
     return BackStackPopCallback(popped)
-  }
-
-  fun popWithResult(key: String, result: Any?) {
-    screenResults.put(key, result)
-    pop()
-  }
-
-  @Suppress("UNCHECKED_CAST")
-  @CheckResult
-  fun <T> retrieveResult(key: String): T? {
-    return screenResults.consume(key) as T?
   }
 
   @CheckResult
@@ -102,10 +89,6 @@ class ScreenRouter(
 
   fun registerKeyChanger(keyChanger: KeyChanger) {
     nestedKeyChanger.add(keyChanger)
-  }
-
-  fun unregisterKeyChanger(keyChanger: KeyChanger) {
-    nestedKeyChanger.remove(keyChanger)
   }
 
   fun registerBackPressInterceptor(interceptor: BackPressInterceptor) {

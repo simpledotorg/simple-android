@@ -105,16 +105,19 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
   private var bpEntrySheetAlreadyShownOnStart: Boolean = false
+  private var linkIdWithPatientShown: Boolean = false
 
   override fun onSaveInstanceState(): Parcelable {
     return PatientSummaryScreenSavedState(
         super.onSaveInstanceState(),
-        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart)
+        bpEntryShownOnStart = bpEntrySheetAlreadyShownOnStart,
+        linkIdWithPatientShown = linkIdWithPatientShown)
   }
 
   override fun onRestoreInstanceState(state: Parcelable) {
-    val (superSavedState, bpEntryShownOnStart) = state as PatientSummaryScreenSavedState
+    val (superSavedState, bpEntryShownOnStart, waslinkIdWithPatientShown) = state as PatientSummaryScreenSavedState
     bpEntrySheetAlreadyShownOnStart = bpEntryShownOnStart
+    linkIdWithPatientShown = waslinkIdWithPatientShown
 
     super.onRestoreInstanceState(superSavedState)
   }
@@ -370,8 +373,11 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
   }
 
   fun showLinkIdWithPatientView(patientUuid: UUID, identifier: Identifier) {
-    linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
-    linkIdWithPatientView.show { linkIdWithPatientView.visibility = View.VISIBLE }
+    if (!linkIdWithPatientShown) {
+      linkIdWithPatientShown = true
+      linkIdWithPatientView.downstreamUiEvents.onNext(LinkIdWithPatientViewShown(patientUuid, identifier))
+      linkIdWithPatientView.show { linkIdWithPatientView.visibility = View.VISIBLE }
+    }
   }
 
   fun hideLinkIdWithPatientView() {
@@ -382,7 +388,8 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 @Parcelize
 data class PatientSummaryScreenSavedState(
     val superSavedState: Parcelable?,
-    val bpEntryShownOnStart: Boolean
+    val bpEntryShownOnStart: Boolean,
+    val linkIdWithPatientShown: Boolean
 ) : Parcelable
 
 data class PatientSummaryProfile(

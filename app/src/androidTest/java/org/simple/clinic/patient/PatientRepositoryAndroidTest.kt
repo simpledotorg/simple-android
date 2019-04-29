@@ -1282,6 +1282,9 @@ class PatientRepositoryAndroidTest {
     val bpPassportCode = UUID.randomUUID().toString()
     val now = Instant.now(clock)
 
+    val duration = Duration.ofDays(1L)
+    testClock.advanceBy(duration)
+
     val savedBusinessId = patientRepository
         .addIdentifierToPatient(
             patientUuid = patientProfile.patient.uuid,
@@ -1294,13 +1297,16 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.identifier)
         .isEqualTo(Identifier(value = bpPassportCode, type = BpPassport))
     assertThat(savedBusinessId.metaDataVersion).isEqualTo(BusinessId.MetaDataVersion.BpPassportMetaDataV1)
-    assertThat(savedBusinessId.createdAt).isEqualTo(now)
-    assertThat(savedBusinessId.updatedAt).isEqualTo(now)
+    assertThat(savedBusinessId.createdAt).isEqualTo(now.plus(duration))
+    assertThat(savedBusinessId.updatedAt).isEqualTo(now.plus(duration))
     assertThat(savedBusinessId.deletedAt).isNull()
 
     val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportMetaDataV1)
     val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(assigningUserUuid = currentUserUuid, assigningFacilityUuid = currentUserFacilityUuid)
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
+
+    val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
+    assertThat(updatedPatient.syncStatus).isEqualTo(PENDING)
   }
 
   @Test

@@ -369,16 +369,12 @@ class PatientRepository @Inject constructor(
           val updatedPatientAddress = patientAddress.copy(updatedAt = Instant.now(utcClock))
           database.addressDao().save(updatedPatientAddress)
         }
-        .andThen(Completable.fromAction {
-          database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
-        })
+        .andThen(setSyncStatus(listOf(patientUuid), PENDING))
   }
 
   fun updatePhoneNumberForPatient(patientUuid: UUID, phoneNumber: PatientPhoneNumber): Completable {
     return savePhoneNumber(phoneNumber.copy(updatedAt = Instant.now(utcClock)))
-        .andThen(Completable.fromAction {
-          database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
-        })
+        .andThen(setSyncStatus(listOf(patientUuid), PENDING))
   }
 
   fun createPhoneNumberForPatient(patientUuid: UUID, number: String, phoneNumberType: PatientPhoneNumberType, active: Boolean): Completable {
@@ -398,9 +394,7 @@ class PatientRepository @Inject constructor(
           )
         }
         .flatMapCompletable(this::savePhoneNumber)
-        .andThen(Completable.fromAction {
-          database.patientDao().updateSyncStatus(listOf(patientUuid), PENDING)
-        })
+        .andThen(setSyncStatus(listOf(patientUuid), PENDING))
   }
 
   private fun convertToDate(dateOfBirth: String?): LocalDate? {
@@ -493,9 +487,13 @@ class PatientRepository @Inject constructor(
         }
 
     return businessIdStream
-        .flatMap { businessId ->
-          Completable.fromAction { database.businessIdDao().save(listOf(businessId)) }
-              .toSingleDefault(businessId)
+        .flatMap { businessId -> saveBusinessId(businessId).toSingleDefault(businessId) }
+        .flatMap { businessId -> setSyncStatus(listOf(patientUuid), PENDING).toSingleDefault(businessId) }
+  }
+
+  private fun saveBusinessId(businessId: BusinessId): Completable {
+    return Completable.fromAction {
+          database.businessIdDao().save(listOf(businessId))
         }
   }
 

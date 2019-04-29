@@ -29,7 +29,7 @@ data class PatientConfig(
             .toInt()
 
         val bpPassportFeatureEnabled = configReader
-            .boolean("patients_bppassportfeature_enabled", false)
+            .boolean("patients_bppassportfeature_enabled", true)
 
         val numberOfRecentPatients = configReader
             .long("patients_recentpatients_limit", 10L)

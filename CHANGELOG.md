@@ -1,7 +1,10 @@
 # CHANGELOG
 
 ## Next release
-- ?
+- Added the BP Passport feature to the app
+  - Scan a BP Passport and lookup a patient
+  - Scan a BP Passport and link it with an existing patient
+  - Scan a BP Passport and register a new patient
 
 ## 2019-04-22-3795
 - Recent Patients list will not get affected by blood pressures and medical history entries that have been deleted

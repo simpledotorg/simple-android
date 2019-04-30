@@ -1,5 +1,6 @@
 package org.simple.clinic.overdue
 
+import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
@@ -28,7 +29,7 @@ data class Appointment(
     val cancelReason: AppointmentCancelReason?,
     val remindOn: LocalDate?,
     val agreedToVisit: Boolean?,
-    val appointmentType: AppointmentType?,
+    val appointmentType: AppointmentType,
     val syncStatus: SyncStatus,
     val createdAt: Instant,
     val updatedAt: Instant,
@@ -82,6 +83,11 @@ data class Appointment(
 
       @ToJson
       fun fromEnum(enum: AppointmentType) = TypeAdapter.fromEnum(enum)
+    }
+
+    companion object {
+      @VisibleForTesting
+      fun random() = AppointmentType.TypeAdapter.knownMappings.keys.shuffled().first()
     }
   }
 

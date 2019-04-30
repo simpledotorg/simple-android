@@ -10,7 +10,6 @@ import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
-import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.unwrapJust
 import javax.inject.Inject
@@ -42,7 +41,13 @@ class HelpSyncAndroidTest {
 
   @Test
   fun when_pulling_help_from_the_server_it_should_save_the_content_as_a_file() {
-    val helpFileBeforeSync = helpRepository.helpFile().blockingFirst()
+    // Sometimes this file is present on the device when running the test which causes the test
+    // to fail. This is to ensure the file is not present.
+    helpRepository
+        .helpFile()
+        .blockingFirst()
+        .toNullable()
+        ?.delete()
 
     helpSync
         .pull()
@@ -54,7 +59,6 @@ class HelpSyncAndroidTest {
         .unwrapJust()
         .blockingFirst()
 
-    assertThat(helpFileBeforeSync).isSameAs(None)
     assertThat(helpFile.length()).isGreaterThan(0L)
   }
 }

@@ -62,8 +62,8 @@
         android:layout_centerHorizontal="true"
         android:adjustViewBounds="true"
         android:scaleType="fitXY"
-        android:src="@drawable/illustrations_homescreen"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/illustrations_homescreen" />
 
       <FrameLayout
         android:id="@+id/patients_recent_patients_header_container"

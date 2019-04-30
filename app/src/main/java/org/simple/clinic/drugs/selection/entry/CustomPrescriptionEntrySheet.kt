@@ -13,15 +13,15 @@ import com.google.android.material.textfield.TextInputEditText
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener
 import org.simple.clinic.drugs.selection.entry.confirmremovedialog.ConfirmRemovePrescriptionDialog
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.textChanges
@@ -41,7 +41,7 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: CustomPrescriptionEntryController
 
-  private val onDestroys = PublishSubject.create<Any>()
+  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,26 +49,26 @@ class CustomPrescriptionEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_custom_prescription_entry)
     TheActivity.component.inject(this)
 
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
             sheetCreates(),
             drugNameChanges(),
             drugDosageChanges(),
             drugDosageFocusChanges(),
             saveClicks(),
-            removeClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(onDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+            removeClicks()
+        ),
+        controller = controller,
+        screenDestroys = onDestroys
+    )
 
     // Dismiss this sheet when the keyboard is dismissed.
     rootLayout.backKeyPressInterceptor = { super.onBackgroundClick() }
   }
 
   override fun onDestroy() {
-    onDestroys.onNext(Any())
+    onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
   }
 

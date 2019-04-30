@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.user.UserSession
@@ -22,8 +23,10 @@ class ForgotPinCreateNewPinScreenController @Inject constructor(
 
   private val pinLength = 4
 
-  override fun apply(upstream: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
+  override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.mergeArray(
         showUserNameOnScreenCreate(replayedEvents),

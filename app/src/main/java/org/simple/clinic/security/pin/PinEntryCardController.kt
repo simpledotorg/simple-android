@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.security.ComparisonResult.DIFFERENT
 import org.simple.clinic.security.ComparisonResult.SAME
@@ -29,26 +30,27 @@ class PinEntryCardController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(autoSubmitPin())
         .compose(ReportAnalyticsEvents())
         .replay()
-        .refCount()
-
-    val transformedEvents = events
-        .mergeWith(autoSubmitPin(replayedEvents))
 
     return Observable.merge(
-        validatePin(transformedEvents),
-        removeErrorOnSubmit(transformedEvents),
-        blockWhenAuthenticationLimitIsReached(transformedEvents),
-        updateIncorrectPinError(transformedEvents))
+        validatePin(replayedEvents),
+        removeErrorOnSubmit(replayedEvents),
+        blockWhenAuthenticationLimitIsReached(replayedEvents),
+        updateIncorrectPinError(replayedEvents))
   }
 
-  private fun autoSubmitPin(events: Observable<UiEvent>): Observable<UiEvent> {
-    return events
-        .ofType<PinTextChanged>()
-        .filter { it.pin.length == 4 }
-        .map { PinSubmitClicked(it.pin) }
+  private fun autoSubmitPin(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { events ->
+      val pinSubmitClicks = events
+          .ofType<PinTextChanged>()
+          .filter { it.pin.length == 4 }
+          .map { PinSubmitClicked(it.pin) }
+
+      events.mergeWith(pinSubmitClicks)
+    }
   }
 
   private fun validatePin(events: Observable<UiEvent>): Observable<UiChange> {

@@ -1,8 +1,6 @@
 package org.simple.clinic.enterotp
 
-import android.annotation.SuppressLint
 import android.content.Context
-import androidx.transition.TransitionManager
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -12,16 +10,17 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -43,7 +42,6 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
   private val otpEntryContainer by bindView<ViewGroup>(R.id.enterotp_otp_container)
   private val resendSmsButton by bindView<Button>(R.id.enterotp_resendsms)
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -51,19 +49,18 @@ class EnterOtpScreen(context: Context, attributeSet: AttributeSet) : RelativeLay
     }
     TheActivity.component.inject(this)
 
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
             screenCreates(),
             otpSubmits(),
             otpTextChanges(),
             backClicks(),
             resendSmsClicks()
-        )
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     otpEntryEditText.showKeyboard()
   }

@@ -1,6 +1,5 @@
 package org.simple.clinic.addidtopatient.searchforpatient
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
@@ -12,12 +11,11 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
@@ -51,7 +49,6 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.key<AddIdToPatientSearchScreenKey>(this)
   }
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -65,19 +62,12 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     }
     displayScreenTitle()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable
-        .mergeArray(
-            screenDestroys,
-            nameChanges(),
-            searchClicks()
-        )
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(nameChanges(), searchClicks()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun displayScreenTitle() {

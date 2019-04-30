@@ -7,12 +7,11 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
@@ -52,22 +51,16 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     TheActivity.component.inject(this)
     setupScreen()
 
-    val screenDestroys = RxView
-        .detaches(this)
-        .map { ScreenDestroyed() }
-
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
             screenCreates(),
-            screenDestroys,
             searchResultClicks(),
             registerNewPatientClicks()
-        )
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { it(this) }
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun searchResultClicks(): Observable<UiEvent> {

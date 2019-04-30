@@ -1,6 +1,5 @@
 package org.simple.clinic.registration.pin
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -12,13 +11,13 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
 
 class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -34,7 +33,6 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
   private val pinHintTextView by bindView<TextView>(R.id.registrationpin_pin_hint)
   private val errorTextView by bindView<TextView>(R.id.registrationpin_error)
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -50,12 +48,16 @@ class RegistrationPinScreen(context: Context, attrs: AttributeSet) : RelativeLay
     // existing PIN will immediately take the user to the next screen.
     pinEditText.isSaveEnabled = false
 
-    Observable.merge(screenCreates(), pinTextChanges(), doneClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            screenCreates(),
+            pinTextChanges(),
+            doneClicks()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates() = Observable.just(RegistrationPinScreenCreated())

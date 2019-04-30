@@ -12,11 +12,10 @@ import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.help.HelpScreenTryAgainClicked
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
@@ -40,7 +39,7 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
   private val tryAgainButton by bindView<Button>(R.id.help_try_again)
   private val progresBar by bindView<ProgressBar>(R.id.help_progress)
 
-  @SuppressLint("SetJavaScriptEnabled", "CheckResult")
+  @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -54,21 +53,12 @@ class HelpScreen(context: Context, attrs: AttributeSet) : LinearLayout(context, 
 
     TheActivity.component.inject(this)
 
-    val screenDestroys = RxView
-        .detaches(this)
-        .map { ScreenDestroyed() }
-
-    Observable
-        .merge(
-            screenCreates(),
-            screenDestroys,
-            tryAgainClicks()
-        )
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(screenCreates(), tryAgainClicks()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

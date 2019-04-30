@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
@@ -32,8 +33,10 @@ class OverdueScreenController @Inject constructor(
     private val phoneNumberMaskerConfig: Single<PhoneNumberMaskerConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
-    val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
+  override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.mergeArray(
         screenSetup(replayedEvents),

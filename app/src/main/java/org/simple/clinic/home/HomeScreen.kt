@@ -1,6 +1,5 @@
 package org.simple.clinic.home
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.ViewGroup
@@ -10,15 +9,15 @@ import androidx.appcompat.widget.Toolbar
 import androidx.viewpager.widget.ViewPager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilityChangeScreenKey
 import org.simple.clinic.home.help.HelpScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.visibleOrGone
 import javax.inject.Inject
@@ -40,7 +39,6 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
     toolBar.menu.findItem(R.id.home_actionhelp)
   }
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -51,12 +49,12 @@ class HomeScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context
 
     setupToolBar()
 
-    Observable.merge(screenCreates(), facilitySelectionClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(screenCreates(), facilitySelectionClicks()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     // Keyboard stays open after login finishes, not sure why.
     rootLayout.hideKeyboard()

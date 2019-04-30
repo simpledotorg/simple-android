@@ -4,20 +4,18 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.FragmentManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogController
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogCreated
 import org.simple.clinic.bp.entry.confirmremovebloodpressure.ConfirmRemoveBloodPressureDialogRemoveClicked
-import org.simple.clinic.bp.entry.confirmremovebloodpressure.UiChange
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -75,18 +73,18 @@ class ConfirmRemoveBloodPressureDialog : AppCompatDialogFragment() {
 
     onStarts
         .take(1)
-        .flatMap { setupDialog() }
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+        .subscribe { setupDialog() }
 
     return dialog
   }
 
-  private fun setupDialog(): Observable<UiChange> {
-    return Observable.merge(dialogCreates(), screenDestroys, removeClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
+  private fun setupDialog() {
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(dialogCreates(), removeClicks()),
+        controller = controller,
+        screenDestroys = screenDestroys
+    )
   }
 
   private fun removeClicks(): Observable<UiEvent> {

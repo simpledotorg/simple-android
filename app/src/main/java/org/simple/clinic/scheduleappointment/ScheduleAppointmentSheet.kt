@@ -9,13 +9,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import org.threeten.bp.temporal.ChronoUnit.MONTHS
@@ -76,7 +77,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private val notNowButton by bindView<Button>(R.id.scheduleappointment_not_now)
   private val doneButton by bindView<Button>(R.id.scheduleappointment_done)
 
-  private val onDestroys = PublishSubject.create<Any>()
+  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -84,27 +85,32 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_schedule_appointment)
     TheActivity.component.inject(this)
 
-    Observable.merge(decrementClicks(), incrementClicks(), notNowClicks(), doneClicks())
-        .startWith(initialState())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(onDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
+            screenCreates(),
+            decrementClicks(),
+            incrementClicks(),
+            notNowClicks(),
+            doneClicks()
+        ),
+        controller = controller,
+        screenDestroys = onDestroys
+    )
   }
 
   override fun onDestroy() {
-    onDestroys.onNext(Any())
+    onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
   }
 
-  private val initialState = {
+  private fun screenCreates(): Observable<UiEvent> {
     val uuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
-    ScheduleAppointmentSheetCreated(
+    return Observable.just(ScheduleAppointmentSheetCreated(
         defaultDateIndex = possibleDates.indexOf(oneMonth),
         patientUuid = uuid,
         numberOfDates = possibleDates.size
-    )
+    ))
   }
 
   private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented(currentIndex, possibleDates.size) }

@@ -8,13 +8,14 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.widgets.BottomSheetActivity
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
@@ -55,7 +56,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
 
   private var currentIndex = 0
 
-  private val onDestroys = PublishSubject.create<Any>()
+  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
   private val decrementDateButton by bindView<ImageButton>(R.id.appointmentreminder_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.appointmentreminder_increment_date)
@@ -68,18 +69,22 @@ class AppointmentReminderSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_appointment_reminder)
     TheActivity.component.inject(this)
 
-    Observable.merge(incrementClicks(), decrementClicks(), doneClicks())
-        .startWith(initialState())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(onDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            sheetCreates(),
+            incrementClicks(),
+            decrementClicks(),
+            doneClicks()
+        ),
+        controller = controller,
+        screenDestroys = onDestroys
+    )
   }
 
-  private val initialState = {
+  private fun sheetCreates(): Observable<UiEvent> {
     val uuid = intent.extras.getSerializable(AppointmentReminderSheet.KEY_APPOINTMENT_UUID) as UUID
-    AppointmentReminderSheetCreated(initialIndex = 6, appointmentUuid = uuid)
+    return Observable.just(AppointmentReminderSheetCreated(initialIndex = 6, appointmentUuid = uuid))
   }
 
   private fun incrementClicks() = RxView.clicks(incrementDateButton).map { ReminderDateIncremented(currentIndex, possibleDates.size) }
@@ -106,7 +111,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
   }
 
   override fun onDestroy() {
-    onDestroys.onNext(Any())
+    onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
   }
 }

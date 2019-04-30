@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import android.widget.ViewFlipper
@@ -28,6 +29,7 @@ import org.simple.clinic.scanid.ScanSimpleIdScreenKey
 import org.simple.clinic.search.PatientSearchScreenKey
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -36,6 +38,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import java.util.concurrent.TimeUnit
@@ -61,6 +64,9 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var userClock: UserClock
+
   private val searchButton by bindView<Button>(R.id.patients_search_patients)
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
   private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
@@ -70,6 +76,7 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val dateInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_date)
   private val scanSimpleCardButton by bindView<Button>(R.id.patients_scan_simple_card)
   private val syncIndicatorView by bindView<SyncIndicatorView>(R.id.patients_sync_indicator)
+  private val illustrationImageView by bindView<ImageView>(R.id.patients_record_bp_illustration)
 
   @IdRes
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
@@ -102,6 +109,19 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .observeOn(mainThread())
         .takeUntil(screenDestroys)
         .subscribe { uiChange -> uiChange(this) }
+
+    illustrationImageView.setImageResource(illustrationResourceId())
+  }
+
+  private fun illustrationResourceId(): Int {
+    val today = LocalDate.now(userClock)
+    val worldHypertensionDay = today.withMonth(Month.MAY.value).withDayOfMonth(17)
+    val dateToShowBannerFrom = worldHypertensionDay.minusDays(6L)
+
+    return when (today) {
+      in dateToShowBannerFrom..worldHypertensionDay -> R.drawable.ic_homescreen_world_hypertension_day
+      else -> R.drawable.illustrations_homescreen
+    }
   }
 
   private fun setupApprovalStatusAnimations() {

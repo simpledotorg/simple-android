@@ -498,7 +498,7 @@ class TestData @Inject constructor(
       cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
-      appointmentType: Appointment.AppointmentType? = null,
+      appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null

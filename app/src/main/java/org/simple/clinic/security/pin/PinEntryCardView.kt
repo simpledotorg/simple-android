@@ -1,11 +1,6 @@
 package org.simple.clinic.security.pin
 
-import android.annotation.SuppressLint
 import android.content.Context
-import androidx.transition.AutoTransition
-import androidx.transition.TransitionManager
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
-import androidx.cardview.widget.CardView
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -13,15 +8,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.ViewFlipper
+import androidx.cardview.widget.CardView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.transition.AutoTransition
+import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.StaggeredEditText
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
@@ -58,7 +57,6 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     setForgotButtonVisible(true)
   }
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -66,12 +64,12 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
     }
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(viewCreated(), pinTextChanges())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(viewCreated(), pinTextChanges()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun viewCreated() = Observable.just(PinEntryViewCreated)

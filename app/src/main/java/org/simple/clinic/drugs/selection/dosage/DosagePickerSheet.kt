@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection.dosage
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -8,12 +7,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -35,7 +33,6 @@ class DosagePickerSheet : BottomSheetActivity() {
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
-  @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_dosage_picker)
@@ -45,12 +42,12 @@ class DosagePickerSheet : BottomSheetActivity() {
     recyclerView.layoutManager = LinearLayoutManager(this)
     displayDrugName()
 
-    Observable.mergeArray(sheetCreates(), onDestroys, adapter.itemClicks)
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(onDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(sheetCreates(), adapter.itemClicks),
+        controller = controller,
+        screenDestroys = onDestroys
+    )
   }
 
   override fun onDestroy() {

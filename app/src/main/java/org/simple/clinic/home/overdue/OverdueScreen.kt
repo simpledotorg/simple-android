@@ -11,17 +11,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.widgets.ScreenDestroyed
 import java.util.UUID
 import javax.inject.Inject
 
@@ -56,16 +56,16 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
             screenCreates(),
             callPermissionChanges(),
-            overdueListAdapter.itemClicks)
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+            overdueListAdapter.itemClicks
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates() = Observable.just(OverdueScreenCreated())

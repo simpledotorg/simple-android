@@ -16,14 +16,13 @@ import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.cast
 import io.reactivex.rxkotlin.toObservable
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -90,10 +89,10 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
             sheetCreates(),
-            screenDestroys,
             systolicTextChanges(),
             diastolicTextChanges(),
             diastolicImeOptionClicks(),
@@ -105,12 +104,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             screenTypeChanges(),
             dayTextChanges(),
             monthTextChanges(),
-            yearTextChanges())
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+            yearTextChanges()
+        ),
+        controller = controller,
+        screenDestroys = screenDestroys
+    )
   }
 
   override fun onDestroy() {

@@ -1,19 +1,17 @@
 package org.simple.clinic.login.pin
 
-import android.annotation.SuppressLint
 import android.content.Context
-import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.widget.ImageButton
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.StringRes
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
@@ -21,6 +19,7 @@ import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.security.pin.PinEntryCardView.State
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -36,7 +35,6 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
   private val backButton by bindView<ImageButton>(R.id.loginpin_back)
   private val pinEntryCardView by bindView<PinEntryCardView>(R.id.loginpin_pin_entry_card)
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -47,12 +45,17 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
     pinEntryCardView.setForgotButtonVisible(false)
 
-    Observable.mergeArray(screenCreates(), pinAuthentications(), backClicks(), otpReceived())
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            screenCreates(),
+            pinAuthentications(),
+            backClicks(),
+            otpReceived()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates(): Observable<UiEvent> {

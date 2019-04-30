@@ -7,17 +7,18 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.location.LOCATION_PERMISSION
 import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import javax.inject.Inject
 
@@ -45,12 +46,12 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     }
     TheActivity.component.inject(this)
 
-    locationPermissionChanges()
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = locationPermissionChanges(),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     toolbar.setOnClickListener {
       screenRouter.pop()
@@ -69,7 +70,7 @@ class RegistrationLocationPermissionScreen(context: Context, attrs: AttributeSet
     hideKeyboard()
   }
 
-  private fun locationPermissionChanges(): Observable<RegistrationLocationPermissionChanged> {
+  private fun locationPermissionChanges(): Observable<UiEvent> {
     return screenRouter.streamScreenResults()
         .ofType<ActivityPermissionResult>()
         .filter { result -> result.requestCode == REQUESTCODE_LOCATION_PERMISSION }

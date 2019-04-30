@@ -9,22 +9,21 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.animateBottomSheetOut
 import org.simple.clinic.widgets.animateBottomSheetIn
+import org.simple.clinic.widgets.animateBottomSheetOut
 import javax.inject.Inject
 
 /**
@@ -97,21 +96,17 @@ class LinkIdWithPatientView(
       // Intentionally done to swallow click events.
     }
 
-    val viewDetaches = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
             viewShows(),
-            viewDetaches,
             addClicks(),
             cancelClicks(),
             downstreamUiEvents
-        )
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(viewDetaches)
-        .subscribe { uiChange -> uiChange(this) }
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun viewShows(): Observable<UiEvent> {

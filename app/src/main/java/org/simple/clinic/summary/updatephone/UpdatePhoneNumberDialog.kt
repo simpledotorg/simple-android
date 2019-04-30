@@ -4,21 +4,20 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import com.google.android.material.textfield.TextInputLayout
-import androidx.fragment.app.FragmentManager
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatDialogFragment
 import android.view.LayoutInflater
 import android.widget.Button
 import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatDialogFragment
+import androidx.fragment.app.FragmentManager
+import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -81,13 +80,9 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
         .setNegativeButton(R.string.patientsummary_updatephone_cancel, null)
         .create()
 
-    val dialogDestroys = RxView.detaches(layout).map { ScreenDestroyed() }
-
     onStarts
         .take(1)
-        .flatMap { setupDialog(dialogDestroys) }
-        .takeUntil(RxView.detaches(layout))
-        .subscribe { uiChange -> uiChange(this) }
+        .subscribe { setupDialog(RxView.detaches(layout).map { ScreenDestroyed() }) }
 
     return dialog
   }
@@ -98,14 +93,20 @@ class UpdatePhoneNumberDialog : AppCompatDialogFragment() {
     numberEditText.showKeyboard()
   }
 
-  private fun setupDialog(dialogDestroys: Observable<ScreenDestroyed>): Observable<UiChange> {
+  private fun setupDialog(screenDestroys: Observable<ScreenDestroyed>) {
     val cancelButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_NEGATIVE)
     val saveButton = (dialog as AlertDialog).getButton(DialogInterface.BUTTON_POSITIVE)
 
-    return Observable.merge(dialogCreates(), dialogDestroys, cancelClicks(cancelButton), saveClicks(saveButton))
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(mainThread())
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            dialogCreates(),
+            cancelClicks(cancelButton),
+            saveClicks(saveButton)
+        ),
+        controller = controller,
+        screenDestroys = screenDestroys
+    )
   }
 
   private fun dialogCreates(): Observable<UiEvent> {

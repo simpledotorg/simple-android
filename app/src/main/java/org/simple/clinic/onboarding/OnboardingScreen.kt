@@ -1,21 +1,23 @@
 package org.simple.clinic.onboarding
 
 import android.content.Context
-import androidx.core.widget.NestedScrollView
 import android.util.AttributeSet
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
+import androidx.core.widget.NestedScrollView
 import com.jakewharton.rxbinding2.view.RxView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.clamp
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeLayout(context, attributeSet) {
@@ -41,12 +43,12 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
 
     fadeLogoWithContentScroll()
 
-    getStartedClicks()
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = getStartedClicks(),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun fadeLogoWithContentScroll() {
@@ -57,8 +59,9 @@ class OnboardingScreen(context: Context, attributeSet: AttributeSet) : RelativeL
     }
   }
 
-  private fun getStartedClicks() =
-      RxView.clicks(getStartedButton).map { OnboardingGetStartedClicked() }
+  private fun getStartedClicks(): Observable<UiEvent> {
+    return RxView.clicks(getStartedButton).map { OnboardingGetStartedClicked() }
+  }
 
   fun moveToRegistrationScreen() {
     router.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.FORWARD)

@@ -1,6 +1,5 @@
 package org.simple.clinic.widgets.qrcodescanner
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -14,8 +13,8 @@ import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -46,7 +45,6 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
   private val codeScanner by lazy(LazyThreadSafetyMode.NONE) { CodeScanner(context, scannerView) }
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -56,17 +54,12 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
     addView(scannerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     initializeCodeScanner()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable
-        .merge(
-            screenCreates(),
-            screenDestroys,
-            lifecycle)
-        .compose(controller)
-        .takeUntil(screenDestroys)
-        .observeOn(mainThread())
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(screenCreates(), lifecycle),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun initializeCodeScanner() {

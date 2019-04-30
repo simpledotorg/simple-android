@@ -1,6 +1,5 @@
 package org.simple.clinic.registration.confirmpin
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -14,14 +13,14 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreenKey
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -39,7 +38,6 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
   private val errorStateViewGroup by bindView<LinearLayout>(R.id.registrationconfirmpin_error)
   private val resetPinButton by bindView<Button>(R.id.registrationconfirmpin_reset_pin)
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -55,12 +53,17 @@ class RegistrationConfirmPinScreen(context: Context, attrs: AttributeSet) : Rela
     // existing PIN will immediately take the user to the next screen.
     confirmPinEditText.isSaveEnabled = false
 
-    Observable.merge(screenCreates(), confirmPinTextChanges(), resetPinClicks(), doneClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            screenCreates(),
+            confirmPinTextChanges(),
+            resetPinClicks(),
+            doneClicks()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     // Showing the keyboard again in case the user returns from location permission screen.
     confirmPinEditText.showKeyboard()

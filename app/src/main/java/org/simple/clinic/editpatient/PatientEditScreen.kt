@@ -1,12 +1,6 @@
 package org.simple.clinic.editpatient
 
 import android.content.Context
-import com.google.android.material.textfield.TextInputLayout
-import androidx.transition.ChangeBounds
-import androidx.transition.Fade
-import androidx.transition.TransitionManager
-import androidx.transition.TransitionSet
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -16,15 +10,20 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.RelativeLayout
 import android.widget.ScrollView
+import androidx.interpolator.view.animation.FastOutSlowInInterpolator
+import androidx.transition.ChangeBounds
+import androidx.transition.Fade
+import androidx.transition.TransitionManager
+import androidx.transition.TransitionSet
+import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -98,7 +97,6 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   private val saveButton by bindView<PrimarySolidButtonWithFrame>(R.id.patientedit_save)
   private val ageInputLayout by bindView<TextInputLayout>(R.id.patientedit_age_inputlayout)
 
-  @Suppress("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -109,10 +107,10 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
 
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
             screenCreates(),
-            screenDestroys,
             saveClicks(),
             nameTextChanges(),
             phoneNumberTextChanges(),
@@ -123,12 +121,11 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
             dateOfBirthTextChanges(),
             dateOfBirthFocusChanges(),
             ageTextChanges(),
-            backClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+            backClicks()
+        ),
+        controller = controller,
+        screenDestroys = screenDestroys
+    )
   }
 
   private fun screenCreates(): Observable<UiEvent> {

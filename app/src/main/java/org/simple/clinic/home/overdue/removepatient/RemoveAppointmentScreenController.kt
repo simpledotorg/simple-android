@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentCancelReason.Dead
 import org.simple.clinic.overdue.AppointmentRepository
@@ -20,8 +21,10 @@ class RemoveAppointmentScreenController @Inject constructor(
     private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  override fun apply(event: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = event.compose(ReportAnalyticsEvents()).replay().refCount()
+  override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.merge(
         reasonClicks(replayedEvents),

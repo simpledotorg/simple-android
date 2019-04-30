@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue.removepatient
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,18 +9,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentCancelReason.MovedToPrivatePractitioner
 import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -51,33 +50,32 @@ class RemoveAppointmentScreen : AppCompatActivity() {
   private val reasonSelectedDoneButton by bindView<View>(R.id.removeappointment_done_button)
   private val toolbar by bindView<Toolbar>(R.id.removeappointment_toolbar)
 
-  private val onDestroys = PublishSubject.create<Any>()
+  private val onDestroys = PublishSubject.create<ScreenDestroyed>()
 
-  @SuppressLint("CheckResult")
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
 
     setContentView(R.layout.screen_remove_appointment)
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(
-        sheetCreates(),
-        cancelReasonClicks(),
-        doneClicks(),
-        patientDiedClicks(),
-        patientAlreadyVisitedClicks()
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
+            sheetCreates(),
+            cancelReasonClicks(),
+            doneClicks(),
+            patientDiedClicks(),
+            patientAlreadyVisitedClicks()
+        ),
+        controller = controller,
+        screenDestroys = onDestroys
     )
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(onDestroys)
-        .subscribe { uiChange -> uiChange(this) }
 
     toolbar.setNavigationOnClickListener { closeScreen() }
   }
 
   override fun onDestroy() {
-    onDestroys.onNext(Any())
+    onDestroys.onNext(ScreenDestroyed())
     super.onDestroy()
   }
 

@@ -1,8 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
-import android.annotation.SuppressLint
 import android.content.Context
-import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -11,17 +9,18 @@ import android.widget.ImageButton
 import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.StringRes
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.showKeyboard
@@ -44,18 +43,21 @@ class ForgotPinConfirmPinScreen(context: Context, attributeSet: AttributeSet?) :
   private val pinEntryContainer by bindView<ViewGroup>(R.id.forgotpin_confirmpin_pin_container)
   private val pinEntryHintTextView by bindView<TextView>(R.id.forgotpin_confirmpin_confirm_message)
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
 
     TheActivity.component.inject(this)
 
-    Observable.mergeArray(screenCreates(), pinSubmits(), pinTextChanges())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { it.invoke(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            screenCreates(),
+            pinSubmits(),
+            pinTextChanges()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     pinEntryEditText.showKeyboard()
 

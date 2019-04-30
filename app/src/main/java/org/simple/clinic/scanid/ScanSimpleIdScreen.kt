@@ -1,18 +1,16 @@
 package org.simple.clinic.scanid
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
@@ -41,7 +39,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   private val qrCodeScannerView by bindView<QrCodeScannerView>(R.id.scansimpleid_code_scanner_view)
   private val toolBar by bindView<Toolbar>(R.id.scansimpleid_toolbar)
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -53,14 +50,12 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     hideKeyboard()
     toolBar.setNavigationOnClickListener { screenRouter.pop() }
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable.merge(screenDestroys, qrScans())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = qrScans(),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun qrScans(): Observable<UiEvent> {

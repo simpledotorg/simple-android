@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
@@ -21,16 +22,16 @@ class RegistrationConfirmPinScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
-
-    val transformedEvents = replayedEvents
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(autoSubmitPin())
         .compose(validatePin())
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.merge(
-        showValidationError(transformedEvents),
-        resetPins(transformedEvents),
-        saveConfirmPinAndProceed(transformedEvents))
+        showValidationError(replayedEvents),
+        resetPins(replayedEvents),
+        saveConfirmPinAndProceed(replayedEvents))
   }
 
   private fun autoSubmitPin(): ObservableTransformer<UiEvent, UiEvent> {

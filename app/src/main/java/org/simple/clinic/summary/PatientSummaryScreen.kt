@@ -20,14 +20,13 @@ import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.parcel.Parcelize
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.drugs.selection.PrescribedDrugsScreenKey
 import org.simple.clinic.editpatient.PatientEditScreenKey
@@ -136,12 +135,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     setupSummaryList()
     setupEditButtonClicks()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
             screenCreates(),
-            screenDestroys,
             backClicks(),
             doneClicks(),
             adapterUiEvents,
@@ -150,12 +147,10 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents()
-        )
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun setupEditButtonClicks() {

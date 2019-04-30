@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.search.PatientSearchValidationError.FULL_NAME_EMPTY
@@ -18,11 +19,10 @@ private typealias UiChange = (Ui) -> Unit
 class PatientSearchScreenController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(validateQuery())
         .compose(ReportAnalyticsEvents())
         .replay()
-        .refCount()
-        .compose(validateQuery())
 
     return Observable.mergeArray(
         enableSearchButton(replayedEvents),

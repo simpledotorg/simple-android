@@ -16,12 +16,11 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.rxkotlin.Observables
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.location.LOCATION_PERMISSION
@@ -56,7 +55,6 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
 
   private val recyclerViewAdapter = FacilitiesAdapter()
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -64,20 +62,17 @@ class FacilityChangeScreen(context: Context, attrs: AttributeSet) : RelativeLayo
     }
     TheActivity.component.inject(this)
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
             screenCreates(),
-            screenDestroys,
             searchQueryChanges(),
             facilityClicks(),
-            locationPermissionChanges())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+            locationPermissionChanges()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     toolbarViewWithSearch.setNavigationOnClickListener {
       screenRouter.pop()

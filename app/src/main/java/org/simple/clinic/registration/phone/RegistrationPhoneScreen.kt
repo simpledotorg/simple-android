@@ -1,25 +1,25 @@
 package org.simple.clinic.registration.phone
 
 import android.content.Context
-import androidx.annotation.StringRes
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.EditText
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.annotation.StringRes
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.login.pin.LoginPinScreenKey
 import org.simple.clinic.registration.name.RegistrationNameScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setTextAndCursor
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -45,12 +45,16 @@ class RegistrationPhoneScreen(context: Context, attrs: AttributeSet) : RelativeL
 
     phoneNumberEditText.showKeyboard()
 
-    Observable.merge(screenCreates(), phoneNumberTextChanges(), doneClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            screenCreates(),
+            phoneNumberTextChanges(),
+            doneClicks()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates() = Observable.just(RegistrationPhoneScreenCreated())

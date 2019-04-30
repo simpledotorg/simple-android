@@ -1,7 +1,6 @@
 package org.simple.clinic.home.patients
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -18,10 +17,10 @@ import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.enterotp.EnterOtpScreenKey
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
@@ -82,7 +81,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private var currentStatusViewId: Int = R.id.patients_user_status_hidden
   private var disposable = Disposables.empty()
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -92,23 +90,19 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
     setupApprovalStatusAnimations()
 
-    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-
-    Observable
-        .mergeArray(
+    bindUiToController(
+        ui = this,
+        events = Observable.mergeArray(
             screenCreates(),
-            screenDestroys,
             activityStarts(),
             searchButtonClicks(),
             dismissApprovedStatusClicks(),
             enterCodeManuallyClicks(),
             scanCardIdButtonClicks(),
-            cameraPermissionChanges())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+            cameraPermissionChanges()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     illustrationImageView.setImageResource(illustrationResourceId())
   }

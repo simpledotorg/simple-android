@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.user.NewlyVerifiedUser
@@ -20,7 +21,9 @@ private const val OTP_LENGTH = 6
 class EnterOtpScreenController @Inject constructor(private val userSession: UserSession) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay().refCount()
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.mergeArray(
         showPhoneNumberOnStart(replayedEvents),

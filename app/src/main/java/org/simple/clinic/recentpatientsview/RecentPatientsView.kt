@@ -11,11 +11,11 @@ import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.recentpatient.RecentPatientsScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
@@ -61,15 +61,12 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
       adapter = groupAdapter
     }
 
-    val screenDestroys = RxView
-        .detaches(this)
-        .map { ScreenDestroyed() }
-
-    Observable.mergeArray(screenCreates(), screenDestroys, adapterEvents)
-        .compose(controller)
-        .takeUntil(screenDestroys)
-        .observeOn(mainThread())
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(screenCreates(), adapterEvents),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates() = Observable.just(ScreenCreated())

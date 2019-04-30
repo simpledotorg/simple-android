@@ -6,6 +6,7 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.entry.CustomPrescribedDrugListItem
@@ -27,7 +28,9 @@ class PrescribedDrugsScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    val replayedEvents = events.compose(ReportAnalyticsEvents()).replay(1).refCount()
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.mergeArray(
         handleDoneClicks(replayedEvents),

@@ -10,15 +10,15 @@ import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
 
@@ -50,13 +50,12 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       screenRouter.pop()
     }
 
-    Observable
-        .mergeArray(nameChanges(), searchClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(nameChanges(), searchClicks()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun nameChanges() =

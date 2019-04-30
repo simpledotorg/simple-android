@@ -4,6 +4,7 @@ import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.widgets.UiEvent
@@ -19,8 +20,10 @@ class AppointmentReminderSheetController @Inject constructor(
     private val repository: AppointmentRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  override fun apply(upstream: Observable<UiEvent>): Observable<UiChange> {
-    val replayedEvents = upstream.compose(ReportAnalyticsEvents()).replay().refCount()
+  override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
+    val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(ReportAnalyticsEvents())
+        .replay()
 
     return Observable.mergeArray(
         sheetCreates(replayedEvents),

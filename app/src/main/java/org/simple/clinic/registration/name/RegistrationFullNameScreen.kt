@@ -13,14 +13,14 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.registration.pin.RegistrationPinScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.user.OngoingRegistrationEntry
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setTextAndCursor
 import javax.inject.Inject
 
@@ -48,12 +48,16 @@ class RegistrationFullNameScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
 
-    Observable.merge(screenCreates(), nameTextChanges(), doneClicks())
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(
+            screenCreates(),
+            nameTextChanges(),
+            doneClicks()
+        ),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
 
     cardViewContentLayout.layoutTransition.setDuration(200)
     cardViewContentLayout.layoutTransition.setStagger(LayoutTransition.CHANGE_APPEARING, 0)

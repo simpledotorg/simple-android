@@ -8,13 +8,13 @@ import android.webkit.WebView
 import android.widget.FrameLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
-import io.reactivex.schedulers.Schedulers.io
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
 import java.net.URI
 import javax.inject.Inject
@@ -27,7 +27,7 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
   private val webView by bindView<WebView>(R.id.reportsscreen_webview)
   private val noReportView by bindView<View>(R.id.reportsscreen_no_report)
 
-  @SuppressLint("SetJavaScriptEnabled", "CheckResult")
+  @SuppressLint("SetJavaScriptEnabled")
   override fun onFinishInflate() {
     super.onFinishInflate()
 
@@ -39,19 +39,15 @@ class ReportsScreen(context: Context, attrs: AttributeSet) : FrameLayout(context
 
     TheActivity.component.inject(this)
 
-    val screenDestroys = RxView
-        .detaches(this)
-        .map { ScreenDestroyed() }
-
-    Observable.merge(screenCreates(), screenDestroys)
-        .observeOn(io())
-        .compose(controller)
-        .observeOn(mainThread())
-        .takeUntil(screenDestroys)
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = screenCreates(),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
-  private fun screenCreates() = Observable.just(ScreenCreated())
+  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
 
   fun showReport(uri: URI) {
     showWebview(true)

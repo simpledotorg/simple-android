@@ -1,6 +1,5 @@
 package org.simple.clinic.drugs.selection
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
@@ -14,18 +13,18 @@ import com.mikepenz.itemanimators.SlideUpAlphaAnimator
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 import javax.inject.Inject
@@ -48,7 +47,6 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
 
   private val adapterUiEvents = PublishSubject.create<UiEvent>()
 
-  @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -64,12 +62,12 @@ class PrescribedDrugScreen(context: Context, attrs: AttributeSet) : LinearLayout
     fadeAnimator.supportsChangeAnimations = false
     recyclerView.itemAnimator = fadeAnimator
 
-    Observable.mergeArray(screenCreates(), adapterUiEvents, doneClicks())
-        .observeOn(Schedulers.io())
-        .compose(controller)
-        .observeOn(AndroidSchedulers.mainThread())
-        .takeUntil(RxView.detaches(this))
-        .subscribe { uiChange -> uiChange(this) }
+    bindUiToController(
+        ui = this,
+        events = Observable.merge(screenCreates(), adapterUiEvents, doneClicks()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun screenCreates(): Observable<UiEvent> {

@@ -34,7 +34,7 @@ data class AppointmentPayload(
     val agreedToVisit: Boolean?,
 
     @Json(name = "appointment_type")
-    val appointmentType: Appointment.AppointmentType?,
+    val appointmentType: Appointment.AppointmentType,
 
     @Json(name = "created_at")
     val createdAt: Instant,

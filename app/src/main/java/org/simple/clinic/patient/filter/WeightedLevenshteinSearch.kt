@@ -72,5 +72,7 @@ class WeightedLevenshteinSearch(
 
   private fun stringToSearchableParts(string: String) = string.split(whiteSpaceRegex)
       .filter { it.length >= minimumSearchTermLength }
+      .map { namePart -> namePart.filter { it.isLetter() } }
+      .filter { it.isNotBlank() }
       .map { it.toLowerCase() }
 }

@@ -324,6 +324,77 @@ class WeightedLevenshteinSearchTest {
             comparator = SortByTotalSumOfDistances().reversed()))
   }
 
+  @Test
+  @Parameters(method = "params for ignoring non-letter characters")
+  fun `it should ignore all non-letter characters when searching`(
+      input: List<PatientNameAndId>,
+      searchTerm: String,
+      expectedResults: List<UUID>
+  ) {
+    val search = WeightedLevenshteinSearch(
+        minimumSearchTermLength = 1,
+        maximumAllowedEditDistance = 3F,
+        characterInsertionCost = 1F,
+        characterDeletionCost = 1F,
+        characterSubstitutionCost = 1F,
+        resultsComparator = DoNothingComparator()
+    )
+
+    assertThat(search.search(searchTerm, input).blockingGet()).isEqualTo(expectedResults)
+  }
+
+  @Suppress("Unused")
+  private fun `params for ignoring non-letter characters`(): List<List<Any>> {
+    fun testCase(
+        names: List<String>,
+        searchTerm: String,
+        expectedResultIndices: List<Int>
+    ): List<Any> {
+      val input = names.map { PatientNameAndId(UUID.randomUUID(), it) }
+      val expectedResults = expectedResultIndices.map { input[it].uuid }
+
+      return listOf(input, searchTerm, expectedResults)
+    }
+
+    return listOf(
+        testCase(
+            names = listOf("Ashok Sharma", "Ashok Sharma123", "Ashok 123 Sharma","Ashok Sharma(2345)", "Ashok(134) Sharma"),
+            searchTerm = "Ashok Sharma",
+            expectedResultIndices = listOf(0, 1, 2, 3, 4)
+        ),
+        testCase(
+            names = listOf("Ashok Sharma", "Ashok Sharma123", "Ashok Sharma(2345)", "Ashokan(134) Sharman"),
+            searchTerm = "Asok Sarma",
+            expectedResultIndices = listOf(0, 1, 2)
+        ),
+        testCase(
+            names = listOf("ವಿನಯ್ ಶೆನೊಯ್(0045)", "ವಿನಯ್ ಶೆನೊಯ್", "ವಿನಯ್ ಶೆನೊಯ್(೦೦೪೫)"),
+            searchTerm = "ವಿನಯ್ ಶೆನೊಯ್",
+            expectedResultIndices = listOf(0, 1, 2)
+        ),
+        testCase(
+            names = listOf("சஞ்சித அகர்வால்(123)", "சஞ்சித அகர்வால்", "சஞ்சித அகர்வால்(௧௨௩)"),
+            searchTerm = "சஞ்சித அகர்வால்",
+            expectedResultIndices = listOf(0, 1, 2)
+        ),
+        testCase(
+            names = listOf("रक्षक हेगड़े(123)","रक्षक हेगड़े", "रक्षक हेगड़े(१२३)"),
+            searchTerm = "रक्षक हेगड़े",
+            expectedResultIndices = listOf(0, 1, 2)
+        ),
+        testCase(
+            names = listOf("ਸਾਕੇਤ ਨਾਰਾਇਣ(123)","ਸਾਕੇਤ ਨਾਰਾਇਣ", "ਸਾਕੇਤ ਨਾਰਾਇਣ(੧੨੩)"),
+            searchTerm = "ਸਾਕੇਤ ਨਾਰਾਇਣ",
+            expectedResultIndices = listOf(0, 1, 2)
+        ),
+        testCase(
+            names = listOf("പ്രതുൽ കാലിലെ(123)","പ്രതുൽ കാലിലെ", "പ്രതുൽ കാലിലെ(൧൨൩)"),
+            searchTerm = "പ്രതുൽ കാലിലെ",
+            expectedResultIndices = listOf(0, 1, 2)
+        )
+    )
+  }
+
   private class DoNothingComparator : Comparator<PatientSearchContext> {
     override fun compare(o1: PatientSearchContext, o2: PatientSearchContext) = 0
   }

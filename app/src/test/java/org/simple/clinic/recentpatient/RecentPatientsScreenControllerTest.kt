@@ -77,9 +77,9 @@ class RecentPatientsScreenControllerTest {
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
 
-    val latestUpdatedAt1 = Instant.now()
-    val latestUpdatedAt2 = latestUpdatedAt1.plusSeconds(1)
-    val latestUpdatedAt3 = latestUpdatedAt2.plusSeconds(1)
+    val updatedAt1 = Instant.now()
+    val updatedAt2 = updatedAt1.plusSeconds(1)
+    val updatedAt3 = updatedAt2.plusSeconds(1)
     whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
@@ -87,7 +87,7 @@ class RecentPatientsScreenControllerTest {
             age = Age(42, Instant.now(), LocalDate.MIN),
             gender = Gender.TRANSGENDER,
             lastBp = RecentPatient.LastBp(systolic = 127, diastolic = 83, createdAt = Instant.now()),
-            latestUpdatedAt = latestUpdatedAt1
+            updatedAt = updatedAt1
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
@@ -95,7 +95,7 @@ class RecentPatientsScreenControllerTest {
             age = Age(24, Instant.now(), LocalDate.MIN),
             gender = Gender.MALE,
             lastBp = null,
-            latestUpdatedAt = latestUpdatedAt2
+            updatedAt = updatedAt2
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
@@ -103,14 +103,14 @@ class RecentPatientsScreenControllerTest {
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = Gender.FEMALE,
             lastBp = RecentPatient.LastBp(systolic = 142, diastolic = 72, createdAt = Instant.now().minus(1, ChronoUnit.DAYS)),
-            latestUpdatedAt = latestUpdatedAt3
+            updatedAt = updatedAt3
         )
     )))
 
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
-        DateHeader(latestUpdatedAt1.toLocalDateAtZone(utcClock.zone)),
+        DateHeader(updatedAt1.toLocalDateAtZone(utcClock.zone)),
         RecentPatientItem(
             uuid = patientUuid1,
             name = "Ajay Kumar",
@@ -121,7 +121,7 @@ class RecentPatientsScreenControllerTest {
                 updatedAtRelativeTimestamp = Today
             ),
             gender = Gender.TRANSGENDER,
-            latestUpdatedAt = latestUpdatedAt1
+            updatedAt = updatedAt1
         ),
         RecentPatientItem(
             uuid = patientUuid2,
@@ -129,7 +129,7 @@ class RecentPatientsScreenControllerTest {
             age = 24,
             lastBp = null,
             gender = Gender.MALE,
-            latestUpdatedAt = latestUpdatedAt2
+            updatedAt = updatedAt2
         ),
         RecentPatientItem(
             uuid = patientUuid3,
@@ -141,7 +141,7 @@ class RecentPatientsScreenControllerTest {
                 updatedAtRelativeTimestamp = Yesterday
             ),
             gender = Gender.FEMALE,
-            latestUpdatedAt = latestUpdatedAt3
+            updatedAt = updatedAt3
         )
     ))
   }

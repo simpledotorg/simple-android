@@ -24,7 +24,7 @@ data class RecentPatient(
     @Embedded(prefix = "last_bp_")
     val lastBp: LastBp?,
 
-    val latestUpdatedAt: Instant
+    val updatedAt: Instant
 ) {
 
   @Dao
@@ -42,7 +42,7 @@ data class RecentPatient(
             IFNULL(AP.latestUpdatedAt, '0'),
             IFNULL(COMM.latestUpdatedAt, '0'),
             IFNULL(MH.latestUpdatedAt, '0')
-        ) latestUpdatedAt
+        ) updatedAt
         FROM Patient P
           LEFT JOIN (
             SELECT MAX(createdAt) latestCreatedAt, patientUuid, systolic, diastolic, createdAt
@@ -88,7 +88,7 @@ data class RecentPatient(
           PD.facilityUuid = :facilityUuid OR
           AP.facilityUuid = :facilityUuid
         )
-        ORDER BY latestUpdatedAt DESC
+        ORDER BY updatedAt DESC
       """
     }
 
@@ -100,7 +100,7 @@ data class RecentPatient(
     1. Get a list of all patients
     2. For each patient, from each table T, get the latest change for them. Columns: T1.latestUpdatedAt, T2.latestUpdatedAt, etc.
     3. Pick latestUpdatedAt for each patient
-    4. Order by latestUpdatedAt from final list and cap it to 10 entries.
+    4. Order by updatedAt from final list and cap it to 10 entries.
      */
     @Query("$RECENT_PATIENT_QUERY LIMIT :limit")
     fun recentPatients(facilityUuid: UUID, limit: Int): Flowable<List<RecentPatient>>

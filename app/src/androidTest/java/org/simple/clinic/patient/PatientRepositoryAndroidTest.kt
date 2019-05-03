@@ -951,7 +951,7 @@ class PatientRepositoryAndroidTest {
 
     prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug()).blockingAwait()
 
-    recentPatient1 = recentPatient1.copy(latestUpdatedAt = testClock.instant())
+    recentPatient1 = recentPatient1.copy(updatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
@@ -962,7 +962,7 @@ class PatientRepositoryAndroidTest {
     val appointment2 = testData.appointment(patientUuid = recentPatient2.uuid, updatedAt = testClock.instant())
     appointmentRepository.save(listOf(appointment2)).blockingAwait()
 
-    recentPatient2 = recentPatient2.copy(latestUpdatedAt = testClock.instant())
+    recentPatient2 = recentPatient2.copy(updatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
@@ -976,7 +976,7 @@ class PatientRepositoryAndroidTest {
         testData.communication(appointmentUuid = appointment1.uuid, updatedAt = testClock.instant())
     )).blockingAwait()
 
-    recentPatient1 = recentPatient1.copy(latestUpdatedAt = testClock.instant())
+    recentPatient1 = recentPatient1.copy(updatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
@@ -989,7 +989,7 @@ class PatientRepositoryAndroidTest {
         updatedAt = testClock.instant()
     ))).blockingAwait()
 
-    recentPatient2 = recentPatient2.copy(latestUpdatedAt = testClock.instant())
+    recentPatient2 = recentPatient2.copy(updatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient2,
         recentPatient1
@@ -1002,7 +1002,7 @@ class PatientRepositoryAndroidTest {
         updatedAt = testClock.instant()
     )) { Instant.now(testClock) }.blockingAwait()
 
-    recentPatient1 = recentPatient1.copy(latestUpdatedAt = testClock.instant())
+    recentPatient1 = recentPatient1.copy(updatedAt = testClock.instant())
     verifyRecentPatientOrder(
         recentPatient1,
         recentPatient2
@@ -1168,7 +1168,7 @@ class PatientRepositoryAndroidTest {
           diastolic = bpMeasurement.diastolic,
           createdAt = bpMeasurement.createdAt
       ),
-      latestUpdatedAt = updatedAt
+      updatedAt = updatedAt
   )
 
   private fun verifyRecentPatientOrder(
@@ -1221,7 +1221,7 @@ class PatientRepositoryAndroidTest {
           dateOfBirth = dateOfBirth,
           age = age,
           lastBp = null,
-          latestUpdatedAt = this.updatedAt
+          updatedAt = this.updatedAt
       )
     }
   }
@@ -1267,7 +1267,7 @@ class PatientRepositoryAndroidTest {
           dateOfBirth = dateOfBirth,
           age = age,
           lastBp = null,
-          latestUpdatedAt = this.updatedAt
+          updatedAt = this.updatedAt
       )
     }
   }
@@ -1302,8 +1302,8 @@ class PatientRepositoryAndroidTest {
         .recentPatients(facilityUuid, limit = 10)
         .test()
         .assertValue(listOf(
-            recentPatient2.copy(latestUpdatedAt = comm2.updatedAt),
-            recentPatient1.copy(latestUpdatedAt = comm1.updatedAt),
+            recentPatient2.copy(updatedAt = comm2.updatedAt),
+            recentPatient1.copy(updatedAt = comm1.updatedAt),
             recentPatient3
         ))
   }

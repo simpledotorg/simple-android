@@ -54,7 +54,7 @@ class RecentPatientsScreenController @Inject constructor(
           .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 
   private fun segregateByDay(recentPatientItems: List<RecentPatientItem>) =
-      recentPatientItems.groupBy { it.latestUpdatedAt.toLocalDateAtZone(userClock.zone) }
+      recentPatientItems.groupBy { it.updatedAt.toLocalDateAtZone(userClock.zone) }
           .flatMap { (key, value) -> listOf(DateHeader(key)) + value }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
@@ -70,7 +70,7 @@ class RecentPatientsScreenController @Inject constructor(
             )
           },
           gender = recentPatient.gender,
-          latestUpdatedAt = recentPatient.latestUpdatedAt
+          updatedAt = recentPatient.updatedAt
       )
 
   private fun age(recentPatient: RecentPatient): Int =

@@ -416,7 +416,7 @@ object PatientMocker {
       dateOfBirth: LocalDate? = null,
       age: Age? = null,
       lastBp: RecentPatient.LastBp? = null,
-      latestUpdatedAt: Instant = Instant.now()
+      updatedAt: Instant = Instant.now()
   ) = RecentPatient(
       uuid = uuid,
       fullName = fullName,
@@ -424,7 +424,7 @@ object PatientMocker {
       dateOfBirth = dateOfBirth,
       age = age,
       lastBp = lastBp,
-      latestUpdatedAt = latestUpdatedAt
+      updatedAt = updatedAt
   )
 
   fun businessId(

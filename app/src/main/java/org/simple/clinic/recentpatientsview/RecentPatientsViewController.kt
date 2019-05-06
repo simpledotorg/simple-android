@@ -60,6 +60,7 @@ class RecentPatientsViewController @Inject constructor(
 
     val updateRecentPatients = recentPatientsStream
         .map { it.map(::recentPatientItem) }
+        .map { it + SeeAllItem }
         .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 
     val toggleEmptyState = recentPatientsStream

@@ -32,7 +32,8 @@ class MedicalHistoryRepository @Inject constructor(
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
-        deletedAt = null)
+        deletedAt = null,
+        recordedAt = Instant.now(utcClock))
 
     return dao.historyForPatient(patientUuid)
         .toObservable()
@@ -65,7 +66,8 @@ class MedicalHistoryRepository @Inject constructor(
         syncStatus = SyncStatus.PENDING,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),
-        deletedAt = null)
+        deletedAt = null,
+        recordedAt = Instant.now(utcClock))
     return save(listOf(medicalHistory))
   }
 
@@ -129,7 +131,10 @@ class MedicalHistoryRepository @Inject constructor(
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          deletedAt = deletedAt)
+          deletedAt = deletedAt,
+
+          // recordedAt should be changed here when BloodPressureMeasurement payload is updated
+          recordedAt = createdAt)
     }
   }
 

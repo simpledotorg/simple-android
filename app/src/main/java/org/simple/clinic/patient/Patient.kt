@@ -65,6 +65,8 @@ data class Patient(
 
     val deletedAt: Instant?,
 
+    val recordedAt: Instant,
+
     val syncStatus: SyncStatus
 ) {
 
@@ -226,19 +228,19 @@ data class Patient(
           P.age_value patient_age_value, P.age_updatedAt patient_age_updatedAt,
           P.age_computedDateOfBirth patient_age_computedDateOfBirth, P.status patient_status,
           P.createdAt patient_createdAt, P.updatedAt patient_updatedAt, P.deletedAt patient_deletedAt,
-          P.syncStatus patient_syncStatus,
+          P.syncStatus patient_syncStatus, P.recordedAt patient_recordedAt,
 
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
           PA.state addr_state, PA.country addr_country,
-          PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
+          PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt, PA.recordedAt addr_recordedAt,
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number,
           PPN.phoneType phone_phoneType, PPN.active phone_active,
-          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt,
+          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt, PPN.recordedAt phone_recordedAt,
 
           BI.uuid businessid_uuid, BI.patientUuid businessid_patientUuid, BI.identifier businessid_identifier,
           BI.identifierType businessid_identifierType, BI.meta businessid_meta, BI.metaVersion businessid_metaVersion,
-          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt
+          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt, BI.recordedAt businessid_recordedAt
         FROM Patient P
         INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
         LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid

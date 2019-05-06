@@ -42,7 +42,9 @@ data class PrescribedDrug(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val recordedAt: Instant
 ) {
 
   fun toPayload(): PrescribedDrugPayload {

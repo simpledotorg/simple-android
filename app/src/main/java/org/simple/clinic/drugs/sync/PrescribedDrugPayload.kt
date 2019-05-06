@@ -57,7 +57,10 @@ data class PrescribedDrugPayload(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+
+        // recordedAt should be changed here when PrescribedDrug payload is updated
+        recordedAt = createdAt
     )
   }
 }

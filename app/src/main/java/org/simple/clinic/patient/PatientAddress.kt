@@ -28,7 +28,9 @@ data class PatientAddress(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val recordedAt: Instant
 ) {
 
   fun toPayload(): PatientAddressPayload {

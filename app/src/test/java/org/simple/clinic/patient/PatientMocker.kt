@@ -46,6 +46,7 @@ object PatientMocker {
       age: Age? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
+      recordedAt: Instant = Instant.now(),
       deletedAt: Instant? = null
   ): Patient {
     return Patient(
@@ -60,6 +61,7 @@ object PatientMocker {
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
+        recordedAt = recordedAt,
         syncStatus = syncStatus)
   }
 
@@ -71,7 +73,8 @@ object PatientMocker {
       country: String = "India",
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): PatientAddress {
     return PatientAddress(
         uuid = uuid,
@@ -81,7 +84,8 @@ object PatientMocker {
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun bp(
@@ -94,7 +98,8 @@ object PatientMocker {
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       userUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = UUID.randomUUID(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
@@ -106,7 +111,8 @@ object PatientMocker {
         patientUuid = patientUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun facility(
@@ -194,7 +200,8 @@ object PatientMocker {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      isDeleted: Boolean = false
+      isDeleted: Boolean = false,
+      recordedAt: Instant = Instant.now()
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -208,7 +215,8 @@ object PatientMocker {
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun protocolDrug(
@@ -246,7 +254,8 @@ object PatientMocker {
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -261,7 +270,8 @@ object PatientMocker {
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
     )
   }
 
@@ -372,7 +382,8 @@ object PatientMocker {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = SyncStatus.PENDING,
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): MedicalHistory {
     return MedicalHistory(
         uuid = UUID.randomUUID(),
@@ -386,7 +397,8 @@ object PatientMocker {
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun phoneNumber(
@@ -397,7 +409,8 @@ object PatientMocker {
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ) = PatientPhoneNumber(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -406,7 +419,8 @@ object PatientMocker {
       active = active,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt
+      deletedAt = deletedAt,
+      recordedAt = recordedAt
   )
 
   fun recentPatient(
@@ -435,7 +449,8 @@ object PatientMocker {
       metadata: String = "meta",
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ) = BusinessId(uuid = uuid,
       patientUuid = patientUuid,
       identifier = identifier,
@@ -443,5 +458,6 @@ object PatientMocker {
       metaDataVersion = metaDataVersion,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt)
+      deletedAt = deletedAt,
+      recordedAt = recordedAt)
 }

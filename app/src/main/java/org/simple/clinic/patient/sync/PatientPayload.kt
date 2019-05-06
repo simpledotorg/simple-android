@@ -77,6 +77,8 @@ data class PatientPayload(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
+        // recordedAt should be changed here when Patient payload is updated
+        recordedAt = createdAt,
         syncStatus = newStatus)
   }
 
@@ -124,7 +126,10 @@ data class PatientAddressPayload(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+
+        // recordedAt should be changed here when Patient payload is updated
+        recordedAt = createdAt)
   }
 }
 
@@ -161,7 +166,10 @@ data class PatientPhoneNumberPayload(
         active = active,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+
+        // recordedAt should be changed here when Patient payload is updated
+        recordedAt = createdAt
     )
   }
 }
@@ -202,7 +210,10 @@ data class BusinessIdPayload(
         metaData = metaData,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+
+        // recordedAt should be changed here when Patient payload is updated
+        recordedAt = createdAt
     )
   }
 }

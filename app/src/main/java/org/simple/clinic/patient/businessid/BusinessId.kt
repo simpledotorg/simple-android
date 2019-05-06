@@ -54,7 +54,9 @@ data class BusinessId(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val recordedAt: Instant
 ) {
 
   fun toPayload(): BusinessIdPayload {

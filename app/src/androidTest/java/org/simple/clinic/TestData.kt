@@ -109,6 +109,7 @@ class TestData @Inject constructor(
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class)
   ): Patient {
     return Patient(
@@ -123,6 +124,7 @@ class TestData @Inject constructor(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
+        recordedAt = recordedAt,
         syncStatus = syncStatus
     )
   }
@@ -135,7 +137,8 @@ class TestData @Inject constructor(
       active: Boolean = faker.bool.bool(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ) = PatientPhoneNumber(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -144,7 +147,8 @@ class TestData @Inject constructor(
       active = active,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt
+      deletedAt = deletedAt,
+      recordedAt = recordedAt
   )
 
   fun patientAddress(
@@ -155,7 +159,8 @@ class TestData @Inject constructor(
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ) = PatientAddress(
       uuid = uuid,
       colonyOrVillage = colonyOrVilage,
@@ -164,7 +169,8 @@ class TestData @Inject constructor(
       country = country,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt
+      deletedAt = deletedAt,
+      recordedAt = recordedAt
   )
 
   fun businessIdMetadata(
@@ -186,7 +192,8 @@ class TestData @Inject constructor(
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ) = BusinessId(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -195,7 +202,8 @@ class TestData @Inject constructor(
       metaDataVersion = metaDataVersion,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt
+      deletedAt = deletedAt,
+      recordedAt = recordedAt
   )
 
   fun patientPayload(
@@ -444,7 +452,8 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -458,7 +467,8 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun prescriptionPayload(
@@ -501,7 +511,8 @@ class TestData @Inject constructor(
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -516,7 +527,8 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun appointmentPayload(
@@ -604,7 +616,8 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): MedicalHistory {
     return MedicalHistory(
         uuid = uuid,
@@ -618,7 +631,8 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun medicalHistoryPayload(
@@ -683,7 +697,8 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): BloodPressureMeasurement {
     return BloodPressureMeasurement(
         uuid = uuid,
@@ -695,7 +710,8 @@ class TestData @Inject constructor(
         patientUuid = patientUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
     )
   }
 

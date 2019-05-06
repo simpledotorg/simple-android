@@ -48,6 +48,9 @@ data class BloodPressureMeasurementPayload(
         patientUuid = patientUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+
+        // recordedAt should be changed here when BloodPressureMeasurement payload is updated
+        recordedAt = createdAt)
   }
 }

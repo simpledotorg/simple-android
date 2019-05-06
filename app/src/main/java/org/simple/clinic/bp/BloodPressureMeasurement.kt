@@ -34,7 +34,9 @@ data class BloodPressureMeasurement(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    val recordedAt: Instant
 ) {
 
   @Transient

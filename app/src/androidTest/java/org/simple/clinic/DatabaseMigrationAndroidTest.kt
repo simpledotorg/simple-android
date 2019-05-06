@@ -1505,6 +1505,412 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("deletedAt")).isEqualTo(null)
     }
   }
+
+  @Test
+  fun migrate_34_to_35_verify_column_count() {
+    val db_v34 = helper.createDatabase(version = 34)
+
+    db_v34.apply {
+      assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 10)
+      assertColumnCount(tableName = "PrescribedDrug", expectedCount = 12)
+      assertColumnCount(tableName = "MedicalHistory", expectedCount = 12)
+      assertColumnCount(tableName = "Appointment", expectedCount = 13)
+      assertColumnCount(tableName = "Patient", expectedCount = 14)
+      assertColumnCount(tableName = "PatientAddress", expectedCount = 8)
+      assertColumnCount(tableName = "PatientPhoneNumber", expectedCount = 8)
+      assertColumnCount(tableName = "BusinessId", expectedCount = 9)
+    }
+
+    val db_v35 = helper.migrateTo(version = 35)
+
+    db_v35.apply {
+      assertColumnCount(tableName = "BloodPressureMeasurement", expectedCount = 11)
+      assertColumnCount(tableName = "PrescribedDrug", expectedCount = 13)
+      assertColumnCount(tableName = "MedicalHistory", expectedCount = 13)
+      assertColumnCount(tableName = "Appointment", expectedCount = 14)
+      assertColumnCount(tableName = "Patient", expectedCount = 15)
+      assertColumnCount(tableName = "PatientAddress", expectedCount = 9)
+      assertColumnCount(tableName = "PatientPhoneNumber", expectedCount = 9)
+      assertColumnCount(tableName = "BusinessId", expectedCount = 10)
+    }
+  }
+
+  @Test
+  fun migrate_34_to_35_verify_default_values() {
+    val db_v34 = helper.createDatabase(version = 34)
+
+    val bpTable = "BloodPressureMeasurement"
+    val drugTable = "PrescribedDrug"
+    val medicalHistoryTable = "MedicalHistory"
+    val appointmentTable = "Appointment"
+    val patientTable = "Patient"
+    val patientAddressTable = "PatientAddress"
+    val patientPhoneTable = "PatientPhoneNumber"
+    val businessIdTable = "BusinessId"
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'patient-Uuid',
+      'created-at',
+      'update-at',
+      'null')
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $drugTable VALUES(
+      'uuid',
+      'drug',
+      'dosage',
+      'rxNormCode',
+      0,
+      1,
+      'patientUuid',
+      'facilityUuid',
+      'PENDING',
+      'created-at',
+      'updatedAt',
+      'null')
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $medicalHistoryTable VALUES(
+      'uuid',
+      'patientUuid',
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      'PENDING',
+      'created-at',
+      'updated-at',
+      'null')
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $appointmentTable VALUES(
+      'uuid',
+      'patientUuid',
+      'facility-uuid',
+      'scheduled-date',
+      'status',
+      'cancel-reason',
+      'remind-on',
+      '1',
+      'manual',
+      'PENDING',
+      'created-at',
+      'updated-at',
+      'null')
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientAddressTable VALUES(
+        'addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        'created-at',
+        'updated-at',
+        NULL)
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'patientUuid',
+        'addressUuid',
+        'AshokKumar',
+        'AshokKumar',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        'created-at',
+        'updated-at',
+        'null',
+        'IN_FLIGHT',
+        25,
+        '2018-09-25T11:20:42.008Z',
+        '1995-09-25');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientPhoneTable VALUES(
+      'uuid',
+      'patientUuid',
+      '981615191',
+      'mobile',
+      0,
+      'created-at',
+      'updated-at',
+      'null')
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $businessIdTable VALUES(
+      'uuid',
+      'patientUuid',
+      'meta-version',
+      'data',
+      'created-at',
+      'updated-at',
+      'null',
+      'simple-uuid',
+      'bp-passport'
+      )
+    """)
+
+    val db_v35 = helper.migrateTo(version = 35)
+
+    val tablesToVerifyRecordedAt = listOf(
+        bpTable,
+        drugTable,
+        medicalHistoryTable,
+        appointmentTable,
+        patientAddressTable,
+        patientPhoneTable,
+        patientTable,
+        businessIdTable
+    )
+
+    val newColumnName = "recordedAt"
+
+    tablesToVerifyRecordedAt.forEach { tableName ->
+      db_v35.query("""
+      SELECT $newColumnName FROM $tableName
+    """).use {
+        it.moveToNext()
+        assertThat(it.string(newColumnName)).isEqualTo("created-at")
+      }
+    }
+  }
+
+  @Test
+  fun migrate_34_to_35_verify_default_recorded_at_for_patient(){
+    val db_v34 = helper.createDatabase(version = 34)
+
+    val bpTable = "BloodPressureMeasurement"
+    val patientTable = "Patient"
+    val patientAddressTable = "PatientAddress"
+
+    db_v34.execSQL("""
+      INSERT INTO $patientAddressTable VALUES(
+        'addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        'created-at',
+        'updated-at',
+        NULL)
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'Patient created before first BP',
+        'addressUuid',
+        'AshokKumar',
+        'AshokKumar',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-09-23T11:20:42.008Z',
+        'updated-at',
+        'null',
+        'IN_FLIGHT',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid1',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'Patient created before first BP',
+      '2018-09-25T11:20:42.008Z',
+      'update-at',
+      NULL)
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'Patient registered after first BP was recorded',
+        'addressUuid',
+        'AlokKumar',
+        'AKumar',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-11-23T11:20:42.008Z',
+        'updated-at',
+        NULL,
+        'IN_FLIGHT',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid2',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'Patient registered after first BP was recorded',
+      '2018-09-25T11:20:42.008Z',
+      'update-at',
+      NULL)
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'No BP for patient',
+        'addressUuid',
+        'VijayaKumari',
+        'VKumari',
+        'FEMALE',
+        NULL,
+        'ACTIVE',
+        '2018-11-23T11:20:42.008Z',
+        'updated-at',
+        NULL,
+        'IN_FLIGHT',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'Patient has deleted BPs only',
+        'addressUuid',
+        'RamaDevi',
+        'RDevi',
+        'FEMALE',
+        NULL,
+        'ACTIVE',
+        '2018-11-23T11:20:42.008Z',
+        'updated-at',
+        NULL,
+        'IN_FLIGHT',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid3',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'Patient has deleted BPs only',
+      '2018-09-25T11:20:42.008Z',
+      'update-at',
+      'deleted-at')
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'Patient with multiple BPs',
+        'addressUuid',
+        'RamDev',
+        'RDev',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-11-23T11:20:42.008Z',
+        'updated-at',
+        NULL,
+        'IN_FLIGHT',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid4',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'Patient with multiple BPs',
+      '2017-09-25T11:20:42.008Z',
+      'update-at',
+      NULL)
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid5',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'Patient with multiple BPs',
+      '2018-09-11T11:20:42.008Z',
+      'update-at',
+      NULL)
+    """)
+
+    val db_v35 = helper.migrateTo(version = 35)
+
+    val newColumnName = "recordedAt"
+
+    db_v35.query("""
+      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient created before first BP'
+    """).use {
+      it.moveToNext()
+      assertThat(it.string(newColumnName)).isEqualTo("2018-09-23T11:20:42.008Z")
+    }
+
+    db_v35.query("""
+      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient registered after first BP was recorded'
+    """).use {
+      it.moveToNext()
+      assertThat(it.string(newColumnName)).isEqualTo("2018-09-25T11:20:42.008Z")
+    }
+
+    db_v35.query("""
+      SELECT $newColumnName FROM $patientTable WHERE uuid = 'No BP for patient'
+    """).use {
+      it.moveToNext()
+      assertThat(it.string(newColumnName)).isEqualTo("2018-11-23T11:20:42.008Z")
+    }
+
+    db_v35.query("""
+      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient has deleted BPs only'
+    """).use {
+      it.moveToNext()
+      assertThat(it.string(newColumnName)).isEqualTo("2018-11-23T11:20:42.008Z")
+    }
+
+    db_v35.query("""
+      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient with multiple BPs'
+    """).use {
+      it.moveToNext()
+      assertThat(it.string(newColumnName)).isEqualTo("2017-09-25T11:20:42.008Z")
+    }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

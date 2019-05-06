@@ -54,7 +54,8 @@ class BloodPressureRepository @Inject constructor(
               patientUuid = patientUuid,
               createdAt = createdAt,
               updatedAt = Instant.now(utcClock),
-              deletedAt = null)
+              deletedAt = null,
+              recordedAt = createdAt)
         }
         .flatMap {
           save(listOf(it)).toSingleDefault(it)

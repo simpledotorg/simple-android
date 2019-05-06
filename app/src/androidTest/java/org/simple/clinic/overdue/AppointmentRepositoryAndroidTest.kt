@@ -171,7 +171,8 @@ class AppointmentRepositoryAndroidTest {
             "India",
             Instant.now(clock),
             Instant.now(clock),
-            null
+            null,
+            Instant.now(clock)
         )
     )
     val patient1 = UUID.randomUUID()
@@ -190,6 +191,7 @@ class AppointmentRepositoryAndroidTest {
             Instant.now(clock),
             Instant.now(clock),
             null,
+            Instant.now(clock),
             SyncStatus.DONE)
     )
     database.bloodPressureDao().save(listOf(
@@ -203,7 +205,8 @@ class AppointmentRepositoryAndroidTest {
             patientUuid = patient1,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
-            deletedAt = null
+            deletedAt = null,
+            recordedAt = Instant.now(clock)
         )
     ))
 
@@ -219,7 +222,8 @@ class AppointmentRepositoryAndroidTest {
             "India",
             Instant.now(clock),
             Instant.now(clock),
-            null
+            null,
+            Instant.now(clock)
         )
     )
     database.patientDao().save(
@@ -235,6 +239,7 @@ class AppointmentRepositoryAndroidTest {
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
             deletedAt = null,
+            recordedAt = Instant.now(clock),
             syncStatus = SyncStatus.DONE
         )
     )
@@ -247,7 +252,8 @@ class AppointmentRepositoryAndroidTest {
             active = false,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
-            deletedAt = null
+            deletedAt = null,
+            recordedAt = Instant.now(clock)
         ))
     )
 
@@ -266,7 +272,8 @@ class AppointmentRepositoryAndroidTest {
             "India",
             Instant.now(clock),
             Instant.now(clock),
-            null
+            null,
+            Instant.now(clock)
         )
     )
     database.patientDao().save(
@@ -282,6 +289,7 @@ class AppointmentRepositoryAndroidTest {
             Instant.now(clock),
             Instant.now(clock),
             null,
+            Instant.now(clock),
             SyncStatus.DONE)
     )
     database.phoneNumberDao().save(listOf(
@@ -293,7 +301,8 @@ class AppointmentRepositoryAndroidTest {
             active = true,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
-            deletedAt = null
+            deletedAt = null,
+            recordedAt = Instant.now(clock)
         ))
     )
     database.bloodPressureDao().save(listOf(
@@ -307,7 +316,8 @@ class AppointmentRepositoryAndroidTest {
             patientUuid = patient3,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
-            deletedAt = null
+            deletedAt = null,
+            recordedAt = Instant.now(clock)
         ),
         BloodPressureMeasurement(
             uuid = bp31,
@@ -319,7 +329,8 @@ class AppointmentRepositoryAndroidTest {
             patientUuid = patient3,
             createdAt = Instant.now(clock).minusSeconds(1000),
             updatedAt = Instant.now(clock).minusSeconds(1000),
-            deletedAt = null
+            deletedAt = null,
+            recordedAt = Instant.now(clock)
         )
     ))
 

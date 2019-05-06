@@ -2,7 +2,6 @@ package org.simple.clinic.di
 
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.di.AppScope
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 import javax.inject.Named
@@ -24,4 +23,9 @@ class DateFormatterModule {
   @AppScope
   @Named("time_for_bps_recorded")
   fun providesTimeFormatterForBPRecorded(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a", locale)
+
+  @Provides
+  @AppScope
+  @Named("recent_patients_header")
+  fun providesTimeFormatterForRecentPatientsHeader(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
 }

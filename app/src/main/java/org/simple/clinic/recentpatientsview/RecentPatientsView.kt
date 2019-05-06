@@ -76,14 +76,9 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     groupAdapter.update(recentPatients)
   }
 
-  fun showEmptyState() {
-    emptyStateView.visibleOrGone(true)
-    recyclerView.visibleOrGone(false)
-  }
-
-  fun hideEmptyState() {
-    emptyStateView.visibleOrGone(false)
-    recyclerView.visibleOrGone(true)
+  fun showOrHideRecentPatients(isVisible: Boolean) {
+    recyclerView.visibleOrGone(isVisible)
+    emptyStateView.visibleOrGone(isVisible.not())
   }
 
   fun openRecentPatientsScreen() {

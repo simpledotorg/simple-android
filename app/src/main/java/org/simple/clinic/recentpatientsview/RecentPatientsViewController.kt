@@ -66,10 +66,7 @@ class RecentPatientsViewController @Inject constructor(
     val toggleEmptyState = recentPatientsStream
         .map { it.isNotEmpty() }
         .map { hasRecentPatients ->
-          when {
-            hasRecentPatients -> { ui: Ui -> ui.hideEmptyState() }
-            else -> { ui: Ui -> ui.showEmptyState() }
-          }
+          { ui: Ui -> ui.showOrHideRecentPatients(isVisible = hasRecentPatients) }
         }
 
     return Observable.merge(updateRecentPatients, toggleEmptyState)

@@ -21,8 +21,6 @@ import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationModule
-import org.simple.clinic.overdue.communication.CommunicationRepository
-import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
@@ -78,7 +76,6 @@ class SyncModule {
       bloodPressureSync: BloodPressureSync,
       medicalHistorySync: MedicalHistorySync,
       appointmentSync: AppointmentSync,
-      communicationSync: CommunicationSync,
       prescriptionSync: PrescriptionSync,
       reportsSync: ReportsSync,
       remoteConfigSync: RemoteConfigSync,
@@ -87,8 +84,7 @@ class SyncModule {
     return arrayListOf(
         facilitySync, protocolSync, patientSync,
         bloodPressureSync, medicalHistorySync, appointmentSync,
-        communicationSync, prescriptionSync, reportsSync,
-        remoteConfigSync, helpSync
+        prescriptionSync, reportsSync, remoteConfigSync, helpSync
     )
   }
 
@@ -99,7 +95,6 @@ class SyncModule {
       bloodPressureSyncRepository: BloodPressureRepository,
       medicalHistorySyncRepository: MedicalHistoryRepository,
       appointmentSyncRepository: AppointmentRepository,
-      communicationSyncRepository: CommunicationRepository,
       prescriptionSyncRepository: PrescriptionRepository
   ): ArrayList<SynceableRepository<*, *>> {
     return arrayListOf(
@@ -107,7 +102,6 @@ class SyncModule {
         bloodPressureSyncRepository,
         medicalHistorySyncRepository,
         appointmentSyncRepository,
-        communicationSyncRepository,
         prescriptionSyncRepository
     )
   }

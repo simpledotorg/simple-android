@@ -23,7 +23,7 @@ class AppointmentModule {
     return Single.just(AppointmentConfig(
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
         overduePeriodForLowestRiskLevel = Period.ofDays(365),
-        isApiV3Enabled = false,
+        isApiV3Enabled = true,
         appointmentDuePeriodForDefaulters = Period.ofDays(30)
     ))
   }

@@ -9,6 +9,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.temporal.ChronoUnit
 
 @RunWith(JUnitParamsRunner::class)
@@ -103,6 +104,7 @@ class TimeFunctionsTest {
 
     assertThat(estimatedAge).isEqualTo(estimatedAge)
   }
+
   @Suppress("Unused")
   private fun `params for estimating current age from recorded date of birth`(): List<List<Any>> {
     val oneYear = Period.ofYears(1)
@@ -159,5 +161,21 @@ class TimeFunctionsTest {
             expectedEstimatedAge = 27)
     )
   }
+
+  @Test
+  @Parameters(method = "params for testing conversion of Instant to LocalDate at zone")
+  fun `different zones should provide the correct local date`(
+      zone: ZoneOffset,
+      localDate: LocalDate
+  ) {
+    val clock = TestUtcClock()
+    assertThat(Instant.now(clock).toLocalDateAtZone(zone)).isEqualTo(localDate)
+  }
+
+  fun `params for testing conversion of Instant to LocalDate at zone`() =
+      listOf(
+          listOf(ZoneOffset.ofHoursMinutes(5, 30), LocalDate.of(1970, 1, 1)),
+          listOf(ZoneOffset.ofHoursMinutes(-5, -30), LocalDate.of(1969, 12, 31))
+      )
 
 }

@@ -71,7 +71,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
 
   private fun screenCreates() = Observable.just(ScreenCreated())
 
-  fun updateRecentPatients(recentPatients: List<RecentPatientItem>) {
+  fun updateRecentPatients(recentPatients: List<RecentPatientItemType<out ViewHolder>>) {
     recentPatients.forEach { it.uiEvents = adapterEvents }
     groupAdapter.update(recentPatients)
   }

@@ -139,7 +139,8 @@ class RecentPatientsViewControllerTest {
                 updatedAtRelativeTimestamp = Yesterday
             ),
             gender = FEMALE
-        )
+        ),
+        SeeAllItem
     ))
     verify(screen).hideEmptyState()
   }

@@ -17,7 +17,9 @@ import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
+import javax.inject.Named
 
 typealias Ui = RecentPatientsScreen
 typealias UiChange = (Ui) -> Unit
@@ -27,8 +29,10 @@ class RecentPatientsScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
+    private val recentPatientRelativeTimestampGenerator: RecentPatientRelativeTimeStampGenerator,
     private val utcClock: UtcClock,
-    private val userClock: UserClock
+    private val userClock: UserClock,
+    @Named("recent_patients_header") private val dateFormatter: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -55,7 +59,10 @@ class RecentPatientsScreenController @Inject constructor(
 
   private fun segregateByDay(recentPatientItems: List<RecentPatientItem>) =
       recentPatientItems.groupBy { it.updatedAt.toLocalDateAtZone(userClock.zone) }
-          .flatMap { (key, value) -> listOf(DateHeader(key)) + value }
+          .flatMap { (date, recentPatientItems) ->
+            val relativeTimestamp = recentPatientRelativeTimestampGenerator.generate(date)
+            listOf(DateHeader(relativeTimestamp, dateFormatter)) + recentPatientItems
+          }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(

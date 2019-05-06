@@ -142,7 +142,7 @@ class RecentPatientsViewControllerTest {
         ),
         SeeAllItem
     ))
-    verify(screen).hideEmptyState()
+    verify(screen).showOrHideRecentPatients(isVisible = true)
   }
 
   @Test
@@ -151,7 +151,7 @@ class RecentPatientsViewControllerTest {
 
     uiEvents.onNext(ScreenCreated())
 
-    verify(screen).showEmptyState()
+    verify(screen).showOrHideRecentPatients(isVisible = false)
   }
 
   @Test

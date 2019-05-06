@@ -40,6 +40,7 @@ class PrescriptionRepository @Inject constructor(
         .currentFacility(userSession)
         .take(1)
 
+    val now = Instant.now(utcClock)
     return currentFacility
         .map { facility ->
           PrescribedDrug(
@@ -52,9 +53,10 @@ class PrescriptionRepository @Inject constructor(
               patientUuid = patientUuid,
               facilityUuid = facility.uuid,
               syncStatus = SyncStatus.PENDING,
-              createdAt = Instant.now(utcClock),
-              updatedAt = Instant.now(utcClock),
-              deletedAt = null)
+              createdAt = now,
+              updatedAt = now,
+              deletedAt = null,
+              recordedAt = now)
         }
         .flatMapCompletable { save(listOf(it)) }
   }

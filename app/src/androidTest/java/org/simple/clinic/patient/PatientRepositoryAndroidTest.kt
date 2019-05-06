@@ -1400,7 +1400,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = null
+          deletedAt = null,
+          recordedAt = now
       )
 
       patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))
@@ -1425,7 +1426,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = null
+          deletedAt = null,
+          recordedAt = now
       )
       val patientProfileOne = patientProfile.copy(patient = patientOne, address = addressOne, businessIds = listOf(businessIdOne))
 
@@ -1447,7 +1449,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now.minusSeconds(1),
           updatedAt = now.minusSeconds(1),
-          deletedAt = null
+          deletedAt = null,
+          recordedAt = now.minusSeconds(1)
       )
       val patientProfileTwo = patientProfile.copy(patient = patientTwo, address = addressTwo, businessIds = listOf(businessIdTwo))
 
@@ -1472,7 +1475,8 @@ class PatientRepositoryAndroidTest {
           metaData = "",
           createdAt = now,
           updatedAt = now,
-          deletedAt = now
+          deletedAt = now,
+          recordedAt = now
       )
 
       patientProfile.copy(patient = patient, address = address, businessIds = listOf(businessId))

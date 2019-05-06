@@ -47,13 +47,13 @@ class CommunicationRepositoryAndroidTest {
     val appointmentId = UUID.randomUUID()
 
     repository
-        .create(appointmentId, Communication.Type.MANUAL_CALL, result = Communication.Result.UNAVAILABLE)
+        .create(appointmentId, Communication.Type.ManualCall, result = Communication.Result.UNAVAILABLE)
         .blockingAwait()
 
     val savedCommunication = repository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()[0]
     savedCommunication.apply {
       assertThat(this.appointmentUuid).isEqualTo(appointmentId)
-      assertThat(this.type).isEqualTo(Communication.Type.MANUAL_CALL)
+      assertThat(this.type).isEqualTo(Communication.Type.ManualCall)
       assertThat(this.result).isEqualTo(Communication.Result.UNAVAILABLE)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }

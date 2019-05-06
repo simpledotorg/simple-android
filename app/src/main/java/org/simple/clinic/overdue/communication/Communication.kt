@@ -1,15 +1,20 @@
 package org.simple.clinic.overdue.communication
 
+import androidx.annotation.VisibleForTesting
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
+import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
 import com.squareup.moshi.Json
+import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RoomEnumTypeConverter
+import org.simple.clinic.util.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
 import java.util.UUID
 
@@ -26,14 +31,48 @@ data class Communication(
     val deletedAt: Instant?
 ) {
 
-  enum class Type {
-    @Json(name = "manual_call")
-    MANUAL_CALL,
+  sealed class Type {
 
-    @Json(name = "voip_call")
-    VOIP_CALL;
+    object ManualCall : Type()
 
-    class RoomTypeConverter : RoomEnumTypeConverter<Type>(Type::class.java)
+    object VoipCall : Type()
+
+    object MissedVisitSmsReminder : Type()
+
+    data class Unknown(val actual: String) : Type()
+
+    object TypeAdapter : SafeEnumTypeAdapter<Type>(
+        knownMappings = mapOf(
+            ManualCall to "manual_call",
+            VoipCall to "voip_call",
+            MissedVisitSmsReminder to "missed_visit_sms_reminder"
+        ),
+        unknownStringToEnumConverter = { Unknown(it) },
+        unknownEnumToStringConverter = { (it as Unknown).actual }
+    )
+
+    class RoomTypeConverter {
+
+      @TypeConverter
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @TypeConverter
+      fun fromEnum(enum: Type?) = TypeAdapter.fromEnum(enum)
+    }
+
+    class MoshiTypeAdapter {
+
+      @FromJson
+      fun toEnum(value: String?) = TypeAdapter.toEnum(value)
+
+      @ToJson
+      fun fromEnum(enum: Type?) = TypeAdapter.fromEnum(enum)
+    }
+
+    companion object {
+      @VisibleForTesting(otherwise = VisibleForTesting.NONE)
+      fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
+    }
   }
 
   enum class Result {

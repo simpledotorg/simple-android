@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next release
+- ?
+
+## On Demo
 - Added the BP Passport feature to the app
   - Scan a BP Passport and lookup a patient
   - Scan a BP Passport and link it with an existing patient

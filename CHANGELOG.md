@@ -1,7 +1,7 @@
 # CHANGELOG
 
 ## Next release
-- ?
+- Show full recent patient log
 
 ## On Demo
 - Added the BP Passport feature to the app

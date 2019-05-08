@@ -52,9 +52,49 @@ class ErrorResolverTest {
   )
 
   @Test
-  fun `composite exceptions should be unwrapped`() {
-    val composite = CompositeException(IllegalStateException(), NullPointerException())
-    val resolvedError = ErrorResolver.resolve(composite)
-    assertThat(resolvedError.actualCause).isInstanceOf(IllegalStateException::class.java)
+  @Parameters(method = "params for unwrapping composite exceptions")
+  fun `composite exceptions should be unwrapped`(
+      compositeException: CompositeException,
+      expectedActualCause: Throwable
+  ) {
+    val resolvedError = ErrorResolver.resolve(compositeException)
+    assertThat(resolvedError.actualCause).isSameAs(expectedActualCause)
+  }
+
+  @Suppress("Unused")
+  private fun `params for unwrapping composite exceptions`(): List<List<Any>> {
+    fun testCase(
+        throwables: List<Throwable>,
+        expectedActualCause: Throwable
+    ): List<Any> {
+      return listOf(CompositeException(throwables), expectedActualCause)
+    }
+
+    return listOf(
+        IllegalStateException().let { actual ->
+          testCase(
+              throwables = listOf(actual, NullPointerException()),
+              expectedActualCause = actual
+          )
+        },
+        IllegalStateException().let { actual ->
+          testCase(
+              throwables = listOf(
+                  CompositeException(actual, RuntimeException()),
+                  NullPointerException()
+              ),
+              expectedActualCause = actual
+          )
+        },
+        IllegalStateException().let { actual ->
+          testCase(
+              throwables = listOf(
+                  actual,
+                  CompositeException(NullPointerException(), RuntimeException())
+              ),
+              expectedActualCause = actual
+          )
+        }
+    )
   }
 }

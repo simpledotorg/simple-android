@@ -67,7 +67,18 @@ data class User(
      * User has raised a PIN reset request with the
      * server, but it has not yet been approved
      **/
-    RESET_PIN_REQUESTED;
+    RESET_PIN_REQUESTED,
+
+    /**
+     * A network call starts returning 401 UNAUTHORIZED.
+     *
+     * This can happen in the following cases:
+     *
+     * - User's permission to sync has been revoked by the admin
+     * - User has logged into a new device
+     * - User has been moved to a different facility group by the admin
+     **/
+    UNAUTHORIZED;
 
     class RoomTypeConverter : RoomEnumTypeConverter<LoggedInStatus>(LoggedInStatus::class.java)
   }

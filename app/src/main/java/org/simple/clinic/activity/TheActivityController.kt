@@ -18,7 +18,9 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -102,8 +104,8 @@ class TheActivityController @Inject constructor(
     val localUser = userSession.loggedInUser().blockingFirst().toNullable()
 
     val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
-      NOT_LOGGED_IN, User.LoggedInStatus.RESETTING_PIN -> false
-      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED -> true
+      NOT_LOGGED_IN, RESETTING_PIN -> false
+      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
       null -> false
     }
 
@@ -111,7 +113,7 @@ class TheActivityController @Inject constructor(
       canMoveToHomeScreen -> HomeScreenKey()
       hasUserCompletedOnboarding.get().not() -> OnboardingScreenKey()
       else -> {
-        return if (localUser?.loggedInStatus == User.LoggedInStatus.RESETTING_PIN) {
+        return if (localUser?.loggedInStatus == RESETTING_PIN) {
           ForgotPinCreateNewPinScreenKey()
         } else {
           RegistrationPhoneScreenKey()

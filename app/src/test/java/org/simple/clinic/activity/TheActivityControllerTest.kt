@@ -30,6 +30,7 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
@@ -203,17 +204,75 @@ class TheActivityControllerTest {
 
   @Suppress("Unused")
   private fun `params for local user initial screen key`(): Array<Array<Any>> {
+    fun testCase(
+        hasCompletedOnboarding: Boolean,
+        loggedInStatus: User.LoggedInStatus,
+        expectedKeyType: Class<*>
+    ): Array<Any> {
+      return arrayOf(hasCompletedOnboarding, loggedInStatus, expectedKeyType)
+    }
+
     return arrayOf(
-        arrayOf<Any>(true, NOT_LOGGED_IN, RegistrationPhoneScreenKey::class.java),
-        arrayOf<Any>(true, OTP_REQUESTED, HomeScreenKey::class.java),
-        arrayOf<Any>(true, RESET_PIN_REQUESTED, HomeScreenKey::class.java),
-        arrayOf<Any>(true, RESETTING_PIN, ForgotPinCreateNewPinScreenKey::class.java),
-        arrayOf<Any>(true, LOGGED_IN, HomeScreenKey::class.java),
-        arrayOf<Any>(false, NOT_LOGGED_IN, OnboardingScreenKey::class.java),
-        arrayOf<Any>(false, OTP_REQUESTED, HomeScreenKey::class.java),
-        arrayOf<Any>(false, RESET_PIN_REQUESTED, HomeScreenKey::class.java),
-        arrayOf<Any>(false, RESETTING_PIN, OnboardingScreenKey::class.java),
-        arrayOf<Any>(false, LOGGED_IN, HomeScreenKey::class.java)
+        testCase(
+            hasCompletedOnboarding = true,
+            loggedInStatus = NOT_LOGGED_IN,
+            expectedKeyType = RegistrationPhoneScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = true,
+            loggedInStatus = OTP_REQUESTED,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = true,
+            loggedInStatus = RESET_PIN_REQUESTED,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = true,
+            loggedInStatus = RESETTING_PIN,
+            expectedKeyType = ForgotPinCreateNewPinScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = true,
+            loggedInStatus = LOGGED_IN,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = true,
+            loggedInStatus = UNAUTHORIZED,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = false,
+            loggedInStatus = NOT_LOGGED_IN,
+            expectedKeyType = OnboardingScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = false,
+            loggedInStatus = OTP_REQUESTED,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = false,
+            loggedInStatus = RESET_PIN_REQUESTED,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = false,
+            loggedInStatus = RESETTING_PIN,
+            expectedKeyType = OnboardingScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = false,
+            loggedInStatus = LOGGED_IN,
+            expectedKeyType = HomeScreenKey::class.java
+        ),
+        testCase(
+            hasCompletedOnboarding = false,
+            loggedInStatus = UNAUTHORIZED,
+            expectedKeyType = HomeScreenKey::class.java
+        )
     )
   }
 

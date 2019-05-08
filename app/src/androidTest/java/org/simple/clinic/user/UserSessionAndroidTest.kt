@@ -18,9 +18,7 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
-import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
@@ -233,5 +231,14 @@ class UserSessionAndroidTest {
 
     assertThat(requestOtpResult).isInstanceOf(LoginResult.Success::class.java)
     assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(OTP_REQUESTED)
+  }
+
+  @Test
+  fun unauthorizing_the_user_must_work_as_expected() {
+   assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(LOGGED_IN)
+
+    userSession.unauthorize().blockingAwait()
+
+    assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(UNAUTHORIZED)
   }
 }

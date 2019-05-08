@@ -41,11 +41,13 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.filterAndUnwrapJust
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -472,6 +474,22 @@ class UserSession @Inject constructor(
           when {
             user?.loggedInStatus == LOGGED_IN && user.status == APPROVED_FOR_SYNCING -> true
             else -> false
+          }
+        }
+  }
+
+  fun unauthorize(): Completable {
+    return loggedInUser()
+        .filterAndUnwrapJust()
+        .firstOrError()
+        .flatMapCompletable { user ->
+          Completable.fromAction {
+            appDatabase
+                .userDao()
+                .updateLoggedInStatusForUser(
+                    userUuId = user.uuid,
+                    loggedInStatus = UNAUTHORIZED
+                )
           }
         }
   }

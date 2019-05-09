@@ -21,6 +21,9 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
 import org.simple.clinic.sync.indicator.dialog.SyncIndicatorFailureDialog
 import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import javax.inject.Inject
@@ -90,8 +93,8 @@ class SyncIndicatorView(context: Context, attrs: AttributeSet) : LinearLayout(co
 
   fun showErrorDialog(errorType: ResolvedError) {
     val message = when (errorType) {
-      is ResolvedError.NetworkRelated -> context.getString(R.string.syncindicator_dialog_error_network)
-      is ResolvedError.Unexpected -> context.getString(R.string.syncindicator_dialog_error_server)
+      is NetworkRelated -> context.getString(R.string.syncindicator_dialog_error_network)
+      is Unexpected, is Unauthorized -> context.getString(R.string.syncindicator_dialog_error_server)
     }
     SyncIndicatorFailureDialog.show(fragmentManager = activity.supportFragmentManager, message = message)
   }

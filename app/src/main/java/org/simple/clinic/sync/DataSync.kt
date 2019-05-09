@@ -7,6 +7,9 @@ import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.util.ErrorResolver
 import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.exhaustive
 import timber.log.Timber
 import javax.inject.Inject
@@ -59,13 +62,12 @@ class DataSync @Inject constructor(
     syncErrors.onNext(resolvedError)
 
     when (resolvedError) {
-      is ResolvedError.Unexpected -> {
+      is Unexpected -> {
         Timber.i("(breadcrumb) Reporting to sentry. Error: $e. Resolved error: $resolvedError")
         crashReporter.report(resolvedError.actualCause)
         Timber.e(resolvedError.actualCause)
       }
-      is ResolvedError.NetworkRelated -> {
-        // Connectivity issues are expected.
+      is NetworkRelated, is Unauthorized -> {
         Timber.e(e)
       }
     }.exhaustive()

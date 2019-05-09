@@ -3,6 +3,8 @@ package org.simple.clinic.util
 import io.reactivex.exceptions.CompositeException
 import okhttp3.internal.http2.ConnectionShutdownException
 import okhttp3.internal.http2.StreamResetException
+import org.simple.clinic.util.ResolvedError.*
+import retrofit2.HttpException
 import java.io.IOException
 import java.net.ConnectException
 import java.net.SocketException
@@ -25,10 +27,10 @@ object ErrorResolver {
   fun resolve(error: Throwable): ResolvedError {
     val actualCause = findActualCause(error)
 
-    return if (actualCause::class in KNOWN_NETWORK_ERRORS) {
-      ResolvedError.NetworkRelated(actualCause)
-    } else {
-      ResolvedError.Unexpected(actualCause)
+    return when {
+      actualCause::class in KNOWN_NETWORK_ERRORS -> NetworkRelated(actualCause)
+      actualCause is HttpException && actualCause.code() == 401 -> Unauthorized(actualCause)
+      else -> Unexpected(actualCause)
     }
   }
 
@@ -50,4 +52,6 @@ sealed class ResolvedError(val actualCause: Throwable) {
   class NetworkRelated(actualCause: Throwable) : ResolvedError(actualCause)
 
   class Unexpected(actualCause: Throwable) : ResolvedError(actualCause)
+
+  class Unauthorized(actualCause: Throwable) : ResolvedError(actualCause)
 }

@@ -41,7 +41,10 @@ data class PrescribedDrugPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): PrescribedDrug {
@@ -59,8 +62,8 @@ data class PrescribedDrugPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
 
-        // recordedAt should be changed here when PrescribedDrug payload is updated
-        recordedAt = createdAt
+        // recordedAt should be changed here when PrescribedDrug payload starts receiving this field from server
+        recordedAt = recordedAt ?: createdAt
     )
   }
 }

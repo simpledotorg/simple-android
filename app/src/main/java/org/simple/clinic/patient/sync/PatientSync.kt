@@ -69,10 +69,11 @@ class PatientSync @Inject constructor(
                 status = status,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
+                deletedAt = deletedAt,
                 address = address.toPayload(),
                 phoneNumbers = numberPayloads,
-                deletedAt = deletedAt,
-                businessIds = businessIdPayloads)
+                businessIds = businessIdPayloads,
+                recordedAt = recordedAt)
           }
         }
     )
@@ -87,7 +88,8 @@ class PatientSync @Inject constructor(
           active = active,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          deletedAt = deletedAt)
+          deletedAt = deletedAt,
+          recordedAt = recordedAt)
     }
   }
 }

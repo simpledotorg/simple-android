@@ -59,7 +59,10 @@ data class PatientPayload(
     val phoneNumbers: List<PatientPhoneNumberPayload>?,
 
     @Json(name = "business_identifiers")
-    val businessIds: List<BusinessIdPayload>
+    val businessIds: List<BusinessIdPayload>,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 ) {
 
   fun toDatabaseModel(newStatus: SyncStatus): Patient {
@@ -77,8 +80,8 @@ data class PatientPayload(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        // recordedAt should be changed here when Patient payload is updated
-        recordedAt = createdAt,
+        // recordedAt should be changed here when PatientPayload starts receiving this field from server
+        recordedAt = recordedAt ?: createdAt,
         syncStatus = newStatus)
   }
 
@@ -114,7 +117,10 @@ data class PatientAddressPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 ) {
 
   fun toDatabaseModel(): PatientAddress {
@@ -128,8 +134,8 @@ data class PatientAddressPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
 
-        // recordedAt should be changed here when Patient payload is updated
-        recordedAt = createdAt)
+        // recordedAt should be changed here when PatientAddressPayload starts receiving this field from server
+        recordedAt = recordedAt ?: createdAt)
   }
 }
 
@@ -154,7 +160,10 @@ data class PatientPhoneNumberPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 ) {
 
   fun toDatabaseModel(uuidOfPatient: UUID): PatientPhoneNumber {
@@ -168,8 +177,8 @@ data class PatientPhoneNumberPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
 
-        // recordedAt should be changed here when Patient payload is updated
-        recordedAt = createdAt
+        // recordedAt should be changed here when PatientPhoneNumberPayload starts receiving this field from server
+        recordedAt = recordedAt ?: createdAt
     )
   }
 }
@@ -198,7 +207,10 @@ data class BusinessIdPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 ) {
 
   fun toDatabaseModel(patientUuid: UUID): BusinessId {
@@ -212,8 +224,8 @@ data class BusinessIdPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
 
-        // recordedAt should be changed here when Patient payload is updated
-        recordedAt = createdAt
+        // recordedAt should be changed here when BusinessIdPayload starts receiving this field from server
+        recordedAt = recordedAt ?: createdAt
     )
   }
 }

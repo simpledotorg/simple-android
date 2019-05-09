@@ -134,10 +134,11 @@ class PatientRepositoryTest {
         status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
+        deletedAt = null,
         address = serverAddress,
         phoneNumbers = null,
-        deletedAt = null,
-        businessIds = emptyList())
+        businessIds = emptyList(),
+        recordedAt = mock())
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
@@ -176,10 +177,11 @@ class PatientRepositoryTest {
         status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
+        deletedAt = null,
         address = serverAddress,
         phoneNumbers = null,
-        deletedAt = null,
-        businessIds = emptyList())
+        businessIds = emptyList(),
+        recordedAt = mock())
 
     repository.mergeWithLocalData(listOf(serverPatientWithoutPhone)).blockingAwait()
 
@@ -224,6 +226,7 @@ class PatientRepositoryTest {
         status = PatientStatus.ACTIVE,
         createdAt = mock(),
         updatedAt = mock(),
+        deletedAt = null,
         address = serverAddress,
         phoneNumbers = listOf(PatientPhoneNumberPayload(
             uuid = UUID.randomUUID(),
@@ -232,9 +235,10 @@ class PatientRepositoryTest {
             active = false,
             createdAt = mock(),
             updatedAt = mock(),
-            deletedAt = mock())),
-        deletedAt = null,
-        businessIds = emptyList())
+            deletedAt = mock(),
+            recordedAt = mock())),
+        businessIds = emptyList(),
+        recordedAt = mock())
 
     repository.mergeWithLocalData(listOf(serverPatientWithPhone)).blockingAwait()
 

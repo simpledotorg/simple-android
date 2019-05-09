@@ -492,7 +492,8 @@ class TestData @Inject constructor(
       facilityUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): PrescribedDrugPayload {
     return PrescribedDrugPayload(
         uuid = uuid,
@@ -505,7 +506,8 @@ class TestData @Inject constructor(
         facilityId = facilityUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun appointment(

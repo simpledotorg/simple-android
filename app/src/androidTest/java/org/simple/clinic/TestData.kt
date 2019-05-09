@@ -1,5 +1,6 @@
 package org.simple.clinic
 
+import android.speech.RecognizerResultsIntent
 import io.bloco.faker.Faker
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
@@ -555,7 +556,8 @@ class TestData @Inject constructor(
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): AppointmentPayload {
     return AppointmentPayload(
         uuid = uuid,
@@ -569,7 +571,8 @@ class TestData @Inject constructor(
         appointmentType = appointmentType,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun communication(

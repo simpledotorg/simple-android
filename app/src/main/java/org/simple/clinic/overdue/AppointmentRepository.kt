@@ -224,8 +224,8 @@ class AppointmentRepository @Inject constructor(
           updatedAt = updatedAt,
           deletedAt = deletedAt,
 
-          // recordedAt should be changed here when Appointment payload is updated
-          recordedAt = createdAt)
+          // recordedAt should be changed here when Appointment payload starts receiving recorded_at
+          recordedAt = recordedAt ?: createdAt)
     }
   }
 

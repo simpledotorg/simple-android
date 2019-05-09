@@ -13,6 +13,7 @@ import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.protocol.SyncProtocolsOnLogin
+import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.AppArchTaskExecutorDelegate
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,6 +32,9 @@ abstract class ClinicApp : Application() {
 
   @Inject
   lateinit var crashReporter: CrashReporter
+
+  @Inject
+  lateinit var unauthorizeUser: UnauthorizeUser
 
   @SuppressLint("RestrictedApi")
   override fun onCreate() {
@@ -59,6 +63,9 @@ abstract class ClinicApp : Application() {
 
     updateAnalyticsUserId.listen(Schedulers.io())
     syncProtocolsOnLogin.listen()
+
+//    TODO: Enable this once the feature is complete
+//    unauthorizeUser.listen(Schedulers.io())
   }
 
   abstract fun buildDaggerGraph(): AppComponent

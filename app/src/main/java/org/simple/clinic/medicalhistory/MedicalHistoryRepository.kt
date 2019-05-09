@@ -133,8 +133,8 @@ class MedicalHistoryRepository @Inject constructor(
           updatedAt = updatedAt,
           deletedAt = deletedAt,
 
-          // recordedAt should be changed here when BloodPressureMeasurement payload is updated
-          recordedAt = createdAt)
+          // recordedAt should be changed here when MedicalHistoryPayload starts receiving recorded_at from server
+          recordedAt = recordedAt ?: createdAt)
     }
   }
 

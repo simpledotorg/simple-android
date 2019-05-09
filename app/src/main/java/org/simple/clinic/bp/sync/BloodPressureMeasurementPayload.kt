@@ -34,7 +34,10 @@ data class BloodPressureMeasurementPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 ) {
 
   fun toDatabaseModel(syncStatus: SyncStatus): BloodPressureMeasurement {
@@ -50,7 +53,7 @@ data class BloodPressureMeasurementPayload(
         updatedAt = updatedAt,
         deletedAt = deletedAt,
 
-        // recordedAt should be changed here when BloodPressureMeasurement payload is updated
-        recordedAt = createdAt)
+        // recordedAt should be changed here when BloodPressureMeasurementPayload starts receiving this field from server
+        recordedAt = recordedAt ?: createdAt)
   }
 }

@@ -43,5 +43,8 @@ data class AppointmentPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?
+    val deletedAt: Instant?,
+
+    @Json(name = "recorded_at")
+    val recordedAt: Instant?
 )

@@ -11,7 +11,9 @@ import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
 import org.simple.clinic.util.ErrorResolver
-import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.exhaustive
 import timber.log.Timber
 import javax.inject.Inject
@@ -51,12 +53,11 @@ class RemoteConfigSync @Inject constructor(
     } else {
       val resolvedError = ErrorResolver.resolve(e)
       when (resolvedError) {
-        is ResolvedError.Unexpected -> {
+        is Unexpected -> {
           crashReporter.report(resolvedError.actualCause)
           Timber.e(resolvedError.actualCause)
         }
-        is ResolvedError.NetworkRelated -> {
-          // Connectivity issues are expected.
+        is NetworkRelated, is Unauthorized -> {
           Timber.e(e)
         }
       }.exhaustive()

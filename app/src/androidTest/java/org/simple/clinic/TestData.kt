@@ -217,6 +217,7 @@ class TestData @Inject constructor(
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now(),
       address: PatientAddressPayload = addressPayload(),
       phoneNumbers: List<PatientPhoneNumberPayload>? = listOf(phoneNumberPayload()),
       businessIds: List<BusinessIdPayload> = listOf(businessIdPayload())
@@ -231,10 +232,11 @@ class TestData @Inject constructor(
         status = status,
         createdAt = createdAt,
         updatedAt = updatedAt,
+        deletedAt = deletedAt,
         address = address,
         phoneNumbers = phoneNumbers,
-        deletedAt = deletedAt,
-        businessIds = businessIds
+        businessIds = businessIds,
+        recordedAt = recordedAt
     )
   }
 
@@ -246,7 +248,8 @@ class TestData @Inject constructor(
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): PatientAddressPayload {
     return PatientAddressPayload(
         uuid = uuid,
@@ -256,7 +259,8 @@ class TestData @Inject constructor(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
     )
   }
 
@@ -267,7 +271,8 @@ class TestData @Inject constructor(
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): PatientPhoneNumberPayload {
     return PatientPhoneNumberPayload(
         uuid = uuid,
@@ -276,7 +281,8 @@ class TestData @Inject constructor(
         active = active,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun businessIdPayload(
@@ -292,7 +298,8 @@ class TestData @Inject constructor(
       ),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): BusinessIdPayload {
     return BusinessIdPayload(
         uuid = uuid,
@@ -302,7 +309,8 @@ class TestData @Inject constructor(
         metaData = meta,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
     )
   }
 

@@ -436,7 +436,8 @@ class TestData @Inject constructor(
       diastolic: Int = faker.number.between(50, 60),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): BloodPressureMeasurementPayload {
     return BloodPressureMeasurementPayload(
         uuid = uuid,
@@ -447,7 +448,8 @@ class TestData @Inject constructor(
         userUuid = qaUserUuid(),
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun prescription(

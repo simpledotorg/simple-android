@@ -52,7 +52,8 @@ data class BloodPressureMeasurement(
         userUuid = userUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   @Dao

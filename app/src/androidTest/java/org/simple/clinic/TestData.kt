@@ -658,7 +658,8 @@ class TestData @Inject constructor(
       hasDiabetes: Answer = randomOfEnum(Answer::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): MedicalHistoryPayload {
     return MedicalHistoryPayload(
         uuid = uuid,
@@ -671,7 +672,8 @@ class TestData @Inject constructor(
         hasDiabetes = hasDiabetes,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt)
+        deletedAt = deletedAt,
+        recordedAt = recordedAt)
   }
 
   fun ongoingPatientEntry(

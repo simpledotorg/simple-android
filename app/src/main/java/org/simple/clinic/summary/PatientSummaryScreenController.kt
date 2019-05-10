@@ -151,15 +151,15 @@ class PatientSummaryScreenController @Inject constructor(
 
       val bloodPressureItems = bloodPressures
           .map { bps ->
-            val measurementsByDate = bps.groupBy { item -> item.createdAt.atZone(utcClock.zone).toLocalDate() }
+            val measurementsByDate = bps.groupBy { item -> item.recordedAt.atZone(utcClock.zone).toLocalDate() }
             measurementsByDate.mapValues { (_, measurementList) ->
               measurementList.map { measurement ->
-                val timestamp = timestampGenerator.generate(measurement.createdAt)
+                val timestamp = timestampGenerator.generate(measurement.recordedAt)
                 SummaryBloodPressureListItem(
                     measurement = measurement,
                     daysAgo = timestamp,
                     showDivider = measurement == measurementList.last(),
-                    formattedTime = if (measurementList.size > 1) displayTime(measurement.createdAt) else null,
+                    formattedTime = if (measurementList.size > 1) displayTime(measurement.recordedAt) else null,
                     addTopPadding = measurement == measurementList.first()
                 )
               }

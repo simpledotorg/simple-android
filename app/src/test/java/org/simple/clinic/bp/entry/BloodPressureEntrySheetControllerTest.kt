@@ -615,7 +615,7 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
-  fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's existing date`() {
+  fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's recorded date`() {
     val recordedAtDate = LocalDate.of(2018, 4, 23)
     val recordedAtDateAsInstant = recordedAtDate.atStartOfDay().toInstant(UTC)
     val existingBp = PatientMocker.bp(recordedAt = recordedAtDateAsInstant)

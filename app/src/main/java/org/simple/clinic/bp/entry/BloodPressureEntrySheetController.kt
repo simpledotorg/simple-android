@@ -162,7 +162,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<OpenAs.Update>()
         .flatMap { bloodPressureRepository.measurement(it.bpUuid) }
         .take(1)
-        .map { it.createdAt.atZone(userClock.zone).toLocalDate() }
+        .map { it.recordedAt.atZone(userClock.zone).toLocalDate() }
 
     val prefillDateEvent = dateForNewBp
         .mergeWith(dateForExistingBp)
@@ -508,7 +508,7 @@ class BloodPressureEntrySheetController @Inject constructor(
                 existingBp.copy(
                     systolic = updateBp.systolic,
                     diastolic = updateBp.diastolic,
-                    createdAt = toUtcInstant(updateBp.date))
+                    recordedAt = toUtcInstant(updateBp.date))
               }
               .flatMapCompletable { bloodPressureRepository.updateMeasurement(it) }
               .andThen(Single.just(BloodPressureSaved(wasDateChanged = prefilledDate != updateBp.date)))

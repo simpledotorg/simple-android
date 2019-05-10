@@ -51,7 +51,7 @@ class BloodPressureRepositoryTest {
     whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
-    repository.saveMeasurement(patientUuid, systolic = 120, diastolic = 65, createdAt = Instant.now(testClock)).subscribe()
+    repository.saveMeasurement(patientUuid, systolic = 120, diastolic = 65, recordedAt = Instant.now(testClock)).subscribe()
 
     verify(dao).save(check {
       val measurement = it.first()

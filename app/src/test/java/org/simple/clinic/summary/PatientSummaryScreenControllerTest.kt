@@ -193,9 +193,9 @@ class PatientSummaryScreenControllerTest {
     configSubject.onNext(config)
 
     val bloodPressureMeasurements = listOf(
-        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85, createdAt = Instant.now(clock).minusSeconds(15L)),
-        PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, createdAt = Instant.now(clock).minusSeconds(30L)),
-        PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, createdAt = Instant.now(clock).minusSeconds(45L)))
+        PatientMocker.bp(patientUuid, systolic = 120, diastolic = 85, recordedAt = Instant.now(clock).minusSeconds(15L)),
+        PatientMocker.bp(patientUuid, systolic = 164, diastolic = 95, recordedAt = Instant.now(clock).minusSeconds(30L)),
+        PatientMocker.bp(patientUuid, systolic = 144, diastolic = 90, recordedAt = Instant.now(clock).minusSeconds(45L)))
 
     whenever(bpRepository.newestMeasurementsForPatient(patientUuid, config.numberOfBpsToDisplay)).thenReturn(Observable.just(bloodPressureMeasurements))
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.just(emptyList()))
@@ -739,16 +739,16 @@ class PatientSummaryScreenControllerTest {
   @Suppress("unused")
   private fun `params for BP grouped by date`(): List<List<Any>> {
     val bpsForTest1 = listOf(
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).plusMillis(1000)),
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).plusMillis(500)),
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS))
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock).plusMillis(1000)),
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock).plusMillis(500)),
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock).minus(1, ChronoUnit.DAYS))
     )
     val bpsForTest2 = listOf(
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock)),
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock)),
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS)),
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(1, ChronoUnit.DAYS).plusMillis(1000)),
-        PatientMocker.bp(patientUuid = patientUuid, createdAt = Instant.now(clock).minus(2, ChronoUnit.DAYS))
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock)),
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock)),
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock).minus(1, ChronoUnit.DAYS)),
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock).minus(1, ChronoUnit.DAYS).plusMillis(1000)),
+        PatientMocker.bp(patientUuid = patientUuid, recordedAt = Instant.now(clock).minus(2, ChronoUnit.DAYS))
     )
 
     val displayTime = { instant: Instant ->
@@ -760,18 +760,18 @@ class PatientSummaryScreenControllerTest {
             randomPatientSummaryOpenIntention(),
             bpsForTest1,
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest1[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest1[0].createdAt), addTopPadding = false),
-                SummaryBloodPressureListItem(measurement = bpsForTest1[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest1[1].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest1[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest1[0].recordedAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest1[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest1[1].recordedAt), addTopPadding = false),
                 SummaryBloodPressureListItem(measurement = bpsForTest1[2], daysAgo = Today, showDivider = true, formattedTime = null, addTopPadding = false)
             )),
         listOf(
             randomPatientSummaryOpenIntention(),
             bpsForTest2,
             listOf(
-                SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[0].createdAt), addTopPadding = false),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest2[1].createdAt), addTopPadding = false),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[2], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[2].createdAt), addTopPadding = false),
-                SummaryBloodPressureListItem(measurement = bpsForTest2[3], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest2[3].createdAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[0], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[0].recordedAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[1], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest2[1].recordedAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[2], daysAgo = Today, showDivider = false, formattedTime = displayTime(bpsForTest2[2].recordedAt), addTopPadding = false),
+                SummaryBloodPressureListItem(measurement = bpsForTest2[3], daysAgo = Today, showDivider = true, formattedTime = displayTime(bpsForTest2[3].recordedAt), addTopPadding = false),
                 SummaryBloodPressureListItem(measurement = bpsForTest2[4], daysAgo = Today, showDivider = true, formattedTime = null, addTopPadding = false)
             ))
     )

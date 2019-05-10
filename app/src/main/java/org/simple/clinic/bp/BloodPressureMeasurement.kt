@@ -93,7 +93,7 @@ data class BloodPressureMeasurement(
     @Query("""
       SELECT * FROM bloodpressuremeasurement
         WHERE patientUuid = :patientUuid AND deletedAt IS NULL
-        ORDER BY createdAt DESC LIMIT :limit
+        ORDER BY recordedAt DESC LIMIT :limit
     """)
     fun newestMeasurementsForPatient(patientUuid: UUID, limit: Int): Flowable<List<BloodPressureMeasurement>>
 

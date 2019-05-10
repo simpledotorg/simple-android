@@ -1515,7 +1515,12 @@ class PatientRepositoryAndroidTest {
           .uuid
 
       bpMeasurement?.forEach {
-        bloodPressureRepository.saveMeasurement(patientUuid, it.systolic, it.diastolic, it.createdAt).blockingGet()
+        bloodPressureRepository.save(listOf(testData.bloodPressureMeasurement(
+            patientUuid = patientUuid,
+            systolic = it.systolic,
+            diastolic = it.diastolic,
+            createdAt = it.createdAt
+        ))).blockingAwait()
       }
       medicalHistoryRepository.save(listOf(testData.medicalHistory(
           patientUuid = patientUuid,

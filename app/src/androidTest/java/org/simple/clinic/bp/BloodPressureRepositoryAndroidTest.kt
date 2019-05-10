@@ -70,10 +70,10 @@ class BloodPressureRepositoryAndroidTest {
             patientUuid = UUID.randomUUID(),
             systolic = 120,
             diastolic = 80,
-            createdAt = now)
+            recordedAt = now)
         .blockingGet()
 
-    assertThat(savedBloodPressure.createdAt).isEqualTo(now)
+    assertThat(savedBloodPressure.recordedAt).isEqualTo(now)
     assertThat(savedBloodPressure.updatedAt).isEqualTo(now.plus(oneWeek))
   }
 

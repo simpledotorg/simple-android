@@ -421,7 +421,7 @@ class BloodPressureEntrySheetControllerTest {
         patientUuid,
         systolic = 130,
         diastolic = 110,
-        createdAt = entryDateAsInstant)
+        recordedAt = entryDateAsInstant)
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(sheet).setBpSavedResultAndFinish()
   }
@@ -429,7 +429,7 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when save is clicked while updating a BP, date entry is active and input is valid then the updated BP measurement should be saved`() {
     val oldCreatedAt = LocalDate.of(1990, 1, 13).atTime(OffsetTime.now(testUtcClock)).toInstant()
-    val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt)
+    val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt, recordedAt = oldCreatedAt)
 
     val newInputDate = LocalDate.of(1991, 2, 14)
     whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
@@ -452,7 +452,7 @@ class BloodPressureEntrySheetControllerTest {
     }
 
     val newInputDateAsInstant = newInputDate.atTime(OffsetTime.now(testUtcClock)).toInstant()
-    val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, createdAt = newInputDateAsInstant, updatedAt = oldCreatedAt)
+    val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, updatedAt = oldCreatedAt, recordedAt = newInputDateAsInstant)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
@@ -616,9 +616,9 @@ class BloodPressureEntrySheetControllerTest {
 
   @Test
   fun `when screen is opened for updating an existing BP, then the date should be prefilled with the BP's existing date`() {
-    val createdAtDate = LocalDate.of(2018, 4, 23)
-    val createdAtDateAsInstant = createdAtDate.atStartOfDay().toInstant(UTC)
-    val existingBp = PatientMocker.bp(createdAt = createdAtDateAsInstant)
+    val recordedAtDate = LocalDate.of(2018, 4, 23)
+    val recordedAtDateAsInstant = recordedAtDate.atStartOfDay().toInstant(UTC)
+    val existingBp = PatientMocker.bp(recordedAt = recordedAtDateAsInstant)
 
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp, existingBp))
 
@@ -638,10 +638,10 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `while BP readings are invalid, next arrow should remain disabled`() {
     whenever(bpValidator.validate(any(), any()))
-        .thenReturn(BpValidator.Validation.ErrorDiastolicEmpty)
-        .thenReturn(BpValidator.Validation.ErrorDiastolicTooHigh)
-        .thenReturn(BpValidator.Validation.Success(systolic = 0, diastolic = 0))
-        .thenReturn(BpValidator.Validation.ErrorSystolicLessThanDiastolic)
+        .thenReturn(ErrorDiastolicEmpty)
+        .thenReturn(ErrorDiastolicTooHigh)
+        .thenReturn(Success(systolic = 0, diastolic = 0))
+        .thenReturn(ErrorSystolicLessThanDiastolic)
 
     uiEvents.run {
       onNext(BloodPressureScreenChanged(BP_ENTRY))

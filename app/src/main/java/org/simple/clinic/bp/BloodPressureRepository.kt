@@ -29,7 +29,7 @@ class BloodPressureRepository @Inject constructor(
       patientUuid: UUID,
       systolic: Int,
       diastolic: Int,
-      createdAt: Instant = Instant.now(utcClock)
+      recordedAt: Instant = Instant.now(utcClock)
   ): Single<BloodPressureMeasurement> {
     if (systolic < 0 || diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
@@ -42,6 +42,7 @@ class BloodPressureRepository @Inject constructor(
         .currentFacility(userSession)
         .firstOrError()
 
+    val now = Instant.now(utcClock)
     return Singles.zip(loggedInUser, currentFacility)
         .map { (user, facility) ->
           BloodPressureMeasurement(
@@ -52,10 +53,10 @@ class BloodPressureRepository @Inject constructor(
               userUuid = user!!.uuid,
               facilityUuid = facility.uuid,
               patientUuid = patientUuid,
-              createdAt = createdAt,
-              updatedAt = Instant.now(utcClock),
+              createdAt = now,
+              updatedAt = now,
               deletedAt = null,
-              recordedAt = createdAt)
+              recordedAt = recordedAt)
         }
         .flatMap {
           save(listOf(it)).toSingleDefault(it)

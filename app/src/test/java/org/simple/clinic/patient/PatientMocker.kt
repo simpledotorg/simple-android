@@ -6,6 +6,7 @@ import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.home.overdue.OverdueListItem
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer
@@ -448,4 +449,30 @@ object PatientMocker {
       createdAt = createdAt,
       updatedAt = updatedAt,
       deletedAt = deletedAt)
+
+  fun overduePatient(
+      appointmentUuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      name: String = "Ajay Dough",
+      gender: Gender = Gender.TRANSGENDER,
+      age: Int = 42,
+      phoneNumber: String? = null,
+      bpSystolic: Int = 132,
+      bpDiastolic: Int = 77,
+      bpDaysAgo: Int = 16,
+      overdueDays: Int = 12,
+      isAtHighRisk: Boolean = false
+  ) = OverdueListItem.Patient(
+      appointmentUuid,
+      patientUuid,
+      name,
+      gender,
+      age,
+      phoneNumber,
+      bpSystolic,
+      bpDiastolic,
+      bpDaysAgo,
+      overdueDays,
+      isAtHighRisk
+  )
 }

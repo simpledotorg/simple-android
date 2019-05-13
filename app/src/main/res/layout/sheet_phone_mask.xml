@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/phonemask_root"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/spacing_32"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/spacing_8"
+    android:paddingEnd="@dimen/spacing_16"
+    tools:ignore="RtlSymmetry">
+
+    <org.simple.clinic.widgets.OmegaCenterIconButton
+      android:id="@+id/phonemask_normal_call_button"
+      style="@style/Clinic.V2.Button.WithIcon.Green3"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_weight="1"
+      android:drawableStart="@drawable/ic_phone_black_24dp"
+      android:text="@string/phonemasking_call_normal"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Green1"
+      app:drawableTint="@color/green1" />
+
+    <org.simple.clinic.widgets.OmegaCenterIconButton
+      android:id="@+id/phonemask_secure_call_button"
+      style="@style/Clinic.V2.Button.WithIcon.Green1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="@dimen/spacing_16"
+      android:layout_weight="1"
+      android:drawableStart="@drawable/ic_phone_locked_24dp"
+      android:text="@string/phonemasking_call_secure"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100"
+      app:drawableTint="@color/white" />
+  </LinearLayout>
+
+  <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:gravity="center"
+    android:text="@string/phonemasking_help_text"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Caption.Grey1" />
+
+</LinearLayout>

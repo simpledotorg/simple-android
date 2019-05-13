@@ -30,7 +30,7 @@ class OfflineMaskedPhoneCallerTest {
 
     val plainNumber = "123"
 
-    maskedPhoneCaller.maskAndCall(plainNumber, caller = caller).blockingAwait()
+    maskedPhoneCaller.maskedCall(plainNumber, caller = caller).blockingAwait()
 
     verify(caller).call(activity, "123")
   }
@@ -40,7 +40,7 @@ class OfflineMaskedPhoneCallerTest {
     config = PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "987")
     val plainNumber = "123"
 
-    maskedPhoneCaller.maskAndCall(plainNumber, caller = caller).blockingAwait()
+    maskedPhoneCaller.maskedCall(plainNumber, caller = caller).blockingAwait()
 
     verify(caller).call(activity, "987,123#")
   }

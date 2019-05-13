@@ -44,7 +44,7 @@ class OverdueScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(maskedPhoneCaller.maskAndCall(any(), any())).thenReturn(Completable.complete())
+    whenever(maskedPhoneCaller.maskedCall(any(), any())).thenReturn(Completable.complete())
 
     controller = OverdueScreenController(
         repository,
@@ -82,7 +82,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when call button is clicked, call permission should be requested`() {
-    uiEvents.onNext(CallPatientClicked("99999"))
+    uiEvents.onNext(CallPatientClicked(PatientMocker.overduePatient(phoneNumber = "1234567890")))
 
     verify(screen).requestCallPermission()
   }
@@ -96,13 +96,13 @@ class OverdueScreenControllerTest {
     whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf()))
     val number = "99999"
 
-    uiEvents.onNext(CallPatientClicked(number))
+    uiEvents.onNext(CallPatientClicked(PatientMocker.overduePatient(phoneNumber = number)))
     uiEvents.onNext(CallPhonePermissionChanged(result))
 
     verify(screen).requestCallPermission()
     when (shouldUseDialer) {
-      true -> verify(maskedPhoneCaller).maskAndCall(number, Caller.UsingDialer)
-      false -> verify(maskedPhoneCaller).maskAndCall(number, Caller.WithoutDialer)
+      true -> verify(maskedPhoneCaller).maskedCall(number, Caller.UsingDialer)
+      false -> verify(maskedPhoneCaller).maskedCall(number, Caller.WithoutDialer)
     }
     verifyNoMoreInteractions(screen)
   }

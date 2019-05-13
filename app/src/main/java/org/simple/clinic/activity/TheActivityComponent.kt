@@ -26,6 +26,7 @@ import org.simple.clinic.home.HomeScreen
 import org.simple.clinic.home.help.HelpScreen
 import org.simple.clinic.home.overdue.OverdueScreen
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
+import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.home.patients.PatientsModule
 import org.simple.clinic.home.patients.PatientsScreen
@@ -119,6 +120,7 @@ interface TheActivityComponent {
   fun inject(target: AddIdToPatientSearchResultsScreen)
   fun inject(target: LinkIdWithPatientView)
   fun inject(target: RecentPatientsScreen)
+  fun inject(target: PhoneMaskBottomSheet)
 
   @Subcomponent.Builder
   interface Builder {

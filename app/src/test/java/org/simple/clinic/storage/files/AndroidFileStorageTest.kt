@@ -18,8 +18,8 @@ import java.io.IOException
 class AndroidFileStorageTest {
 
   private val application = mock<Application>()
-  private val fileCreator = mock<FileCreator>()
-  private val fileStorage = AndroidFileStorage(application, fileCreator)
+  private val fileOperations = mock<FileOperations>()
+  private val fileStorage = AndroidFileStorage(application, fileOperations)
   private val applicationFilesDirectory = File("")
   private val file = spy(applicationFilesDirectory.resolve("test.txt"))
 
@@ -31,7 +31,7 @@ class AndroidFileStorageTest {
   @Test
   @Parameters(method = "params for exceptions thrown when getting file")
   fun `exceptions thrown when creating a file must be wrapped in the failure result`(cause: Throwable) {
-    whenever(fileCreator.createFileIfItDoesNotExist(any())).thenThrow(cause)
+    whenever(fileOperations.createFileIfItDoesNotExist(any())).thenThrow(cause)
 
     val result = fileStorage.getFile(filePath = file.path)
 
@@ -53,5 +53,42 @@ class AndroidFileStorageTest {
     val result = fileStorage.delete(file) as DeleteFileResult.Failure
 
     assertThat(result.cause.message).isEqualTo(cause)
+  }
+
+  @Test
+  @Parameters(method = "params for failing to clear file storage")
+  fun `exceptions thrown when clearing the file storage must be wrapped in the failure result`(exception: Throwable) {
+    whenever(fileOperations.deleteContents(applicationFilesDirectory)).thenThrow(exception)
+
+    val result = fileStorage.clearAllFiles() as ClearAllFilesResult.Failure
+
+    assertThat(result.cause).isSameAs(exception)
+  }
+
+  @Suppress("Unused")
+  private fun `params for failing to clear file storage`(): List<Any> {
+    return listOf(
+        IOException(),
+        NullPointerException(),
+        RuntimeException()
+    )
+  }
+
+  @Test
+  fun `completely clearing the storage must return the success result`() {
+    whenever(fileOperations.deleteContents(applicationFilesDirectory)).thenReturn(true)
+
+    val result = fileStorage.clearAllFiles()
+
+    assertThat(result).isSameAs(ClearAllFilesResult.Success)
+  }
+
+  @Test
+  fun `partially clearing the storage must return the partial result`() {
+    whenever(fileOperations.deleteContents(applicationFilesDirectory)).thenReturn(false)
+
+    val result = fileStorage.clearAllFiles()
+
+    assertThat(result).isSameAs(ClearAllFilesResult.PartiallyDeleted)
   }
 }

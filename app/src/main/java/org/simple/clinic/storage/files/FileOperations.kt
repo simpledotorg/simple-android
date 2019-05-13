@@ -4,7 +4,7 @@ import java.io.File
 import java.io.IOException
 import javax.inject.Inject
 
-class FileCreator @Inject constructor() {
+class FileOperations @Inject constructor() {
 
   // Adding a @Throws annotation is necessary for Mockito
   @Throws(IOException::class)
@@ -21,5 +21,14 @@ class FileCreator @Inject constructor() {
         throw RuntimeException("Could not create directory: ${file.parentFile.path}")
       }
     }
+  }
+
+  // Adding a @Throws annotation is necessary for Mockito
+  @Throws(IOException::class)
+  fun deleteContents(file: File): Boolean {
+    return file
+        .listFiles()
+        .map { it.deleteRecursively() }
+        .fold(true) { allDeleted, currentFileDeleted -> allDeleted && currentFileDeleted }
   }
 }

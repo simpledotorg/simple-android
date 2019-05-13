@@ -3,7 +3,7 @@
 ## Next release
 - Show full recent patient log
 
-## On Demo
+## 2019-05-13-4013
 - Added the BP Passport feature to the app
   - Scan a BP Passport and lookup a patient
   - Scan a BP Passport and link it with an existing patient

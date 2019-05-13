@@ -1,17 +1,20 @@
 package org.simple.clinic.storage.files
 
 import android.app.Application
+import org.simple.clinic.storage.files.ClearAllFilesResult.Failure
+import org.simple.clinic.storage.files.ClearAllFilesResult.PartiallyDeleted
+import org.simple.clinic.storage.files.ClearAllFilesResult.Success
 import java.io.File
 import javax.inject.Inject
 
 class AndroidFileStorage @Inject constructor(
     private val application: Application,
-    private val fileCreator: FileCreator
+    private val fileOperations: FileOperations
 ) : FileStorage {
 
   override fun getFile(filePath: String) = try {
     val file = application.filesDir.resolve(filePath)
-    fileCreator.createFileIfItDoesNotExist(file)
+    fileOperations.createFileIfItDoesNotExist(file)
 
     if (file.isFile) GetFileResult.Success(file) else GetFileResult.NotAFile(filePath)
   } catch (e: Throwable) {
@@ -45,5 +48,11 @@ class AndroidFileStorage @Inject constructor(
     DeleteFileResult.Success
   } catch (e: Throwable) {
     DeleteFileResult.Failure(e)
+  }
+
+  override fun clearAllFiles() = try {
+    if (fileOperations.deleteContents(application.filesDir)) Success else PartiallyDeleted
+  } catch (e: Throwable) {
+    Failure(e)
   }
 }

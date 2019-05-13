@@ -3,6 +3,7 @@ package org.simple.clinic.storage.files
 import android.app.Application
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -21,12 +22,23 @@ class AndroidFileStorageAndroidTest {
 
   lateinit var testDirectory: File
 
+  val filesDirectory by lazy { application.filesDir }
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
+    clearApplicationFilesDirectory()
     testDirectory = application.filesDir.resolve("test_dir")
-    testDirectory.deleteRecursively()
     assertThat(testDirectory.mkdirs()).isTrue()
+  }
+
+  @After
+  fun tearDown() {
+    clearApplicationFilesDirectory()
+  }
+
+  private fun clearApplicationFilesDirectory() {
+    application.filesDir.listFiles().forEach { it.deleteRecursively() }
   }
 
   @Test
@@ -111,5 +123,39 @@ class AndroidFileStorageAndroidTest {
 
     assertThat(file.exists()).isFalse()
     assertThat(result).isEqualTo(DeleteFileResult.Success)
+  }
+
+  @Test
+  fun clearing_the_file_storage_must_work_as_expected() {
+    fun createFileWithContent(filePath: String, content: String): File {
+      val file = filesDirectory.resolve(filePath)
+          .apply {
+            parentFile.mkdirs()
+            createNewFile()
+            writeText(content)
+          }
+
+      assertThat(file.exists()).isTrue()
+      assertThat(file.length()).isGreaterThan(0)
+
+      return file
+    }
+
+    val fileInRootDirectory = createFileWithContent("file.txt", "one")
+    val fileOneNestedAtLevelOne = createFileWithContent("1/file1.txt", "two")
+    val fileTwoNestedAtLevelOne = createFileWithContent("1/file2.txt", "three")
+    val fileNestedAtLevelTwo = createFileWithContent("1/2/file.txt", "four")
+    val fileNestedAtLevelSeven = createFileWithContent("1/2/3/4/5/6/7/file.txt", "five")
+
+    val result = fileStorage.clearAllFiles()
+
+    assertThat(result).isEqualTo(ClearAllFilesResult.Success)
+    assertThat(fileInRootDirectory.exists()).isFalse()
+    assertThat(fileOneNestedAtLevelOne.exists()).isFalse()
+    assertThat(fileTwoNestedAtLevelOne.exists()).isFalse()
+    assertThat(fileNestedAtLevelTwo.exists()).isFalse()
+    assertThat(fileNestedAtLevelSeven.exists()).isFalse()
+    assertThat(filesDirectory.exists()).isTrue()
+    assertThat(filesDirectory.listFiles()).isEmpty()
   }
 }

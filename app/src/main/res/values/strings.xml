@@ -287,6 +287,11 @@
   <string name="overduelist_result_of_call">Result of call</string>
   <string name="overduelist_high_risk">High risk</string>
 
+  <!-- Phone number masking -->
+  <string name="phonemasking_call_normal">Normal</string>
+  <string name="phonemasking_call_secure">Secure</string>
+  <string name="phonemasking_help_text">Secure calls hide your number and are toll free</string>
+
   <!-- Appointment reminder -->
   <string name="appointmentreminder_call_later_in">Call later in</string>
   <string name="appointmentreminder_done">Done</string>

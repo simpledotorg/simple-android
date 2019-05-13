@@ -10,7 +10,7 @@ class OfflineMaskedPhoneCaller @Inject constructor(
     private val activity: TheActivity
 ) : MaskedPhoneCaller {
 
-  override fun maskAndCall(numberToMask: String, caller: Caller): Completable {
+  override fun maskedCall(numberToMask: String, caller: Caller): Completable {
     return configProvider
         .map { config -> maskNumber(config, numberToMask) }
         .flatMapCompletable { maskedNumber -> callNumber(maskedNumber, caller) }

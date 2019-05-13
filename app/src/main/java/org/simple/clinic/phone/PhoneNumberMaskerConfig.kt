@@ -6,7 +6,8 @@ import org.simple.clinic.remoteconfig.ConfigReader
 
 data class PhoneNumberMaskerConfig(
     val maskingEnabled: Boolean,
-    val proxyPhoneNumber: String
+    val proxyPhoneNumber: String,
+    val showPhoneMaskBottomSheet: Boolean = false
 ) {
 
   companion object {

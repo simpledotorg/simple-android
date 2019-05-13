@@ -72,6 +72,11 @@
       android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
       android:windowSoftInputMode="adjustResize" />
 
+    <activity
+      android:name=".home.overdue.phonemask.PhoneMaskBottomSheet"
+      android:theme="@style/Clinic.V2.Theme.BottomSheetActivity"
+      android:windowSoftInputMode="adjustResize" />
+
     <receiver
       android:name=".login.OtpSmsReceiver"
       android:exported="true"

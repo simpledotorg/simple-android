@@ -1,5 +1,6 @@
 package org.simple.clinic.facility.change
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 import org.simple.clinic.facility.Facility
 
@@ -37,6 +38,7 @@ sealed class FacilityListItem {
       }
     }
 
+    @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(oldItem: FacilityListItem, newItem: FacilityListItem): Boolean {
       return oldItem == newItem
     }

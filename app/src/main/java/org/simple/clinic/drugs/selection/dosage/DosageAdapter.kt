@@ -1,5 +1,6 @@
 package org.simple.clinic.drugs.selection.dosage
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -69,6 +70,7 @@ class DosageDiffer : DiffUtil.ItemCallback<DosageListItem>() {
     }
   }
 
+  @SuppressLint("DiffUtilEquals")
   override fun areContentsTheSame(oldItem: DosageListItem, newItem: DosageListItem): Boolean {
     return oldItem.dosageOption == newItem.dosageOption
   }

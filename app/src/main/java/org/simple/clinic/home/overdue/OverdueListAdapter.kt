@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -192,5 +193,6 @@ class OverdueListDiffer : DiffUtil.ItemCallback<OverdueListItem>() {
         oldItem == newItem
       }
 
+  @SuppressLint("DiffUtilEquals")
   override fun areContentsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem == newItem
 }

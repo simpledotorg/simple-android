@@ -13,7 +13,7 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.di.AppSqliteOpenHelperFactory
 import org.simple.clinic.storage.files.AndroidFileStorage
-import org.simple.clinic.storage.files.FileCreator
+import org.simple.clinic.storage.files.FileOperations
 import org.simple.clinic.storage.files.FileStorage
 
 @Module
@@ -96,7 +96,7 @@ open class StorageModule(
   open fun sqliteOpenHelperFactory(): SupportSQLiteOpenHelper.Factory = AppSqliteOpenHelperFactory()
 
   @Provides
-  fun fileStorage(application: Application, fileCreator: FileCreator): FileStorage {
-    return AndroidFileStorage(application, fileCreator)
+  fun fileStorage(application: Application, fileOperations: FileOperations): FileStorage {
+    return AndroidFileStorage(application, fileOperations)
   }
 }

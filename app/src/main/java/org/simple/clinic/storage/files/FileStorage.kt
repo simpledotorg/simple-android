@@ -23,6 +23,12 @@ sealed class DeleteFileResult {
   data class Failure(val cause: Throwable) : DeleteFileResult()
 }
 
+sealed class ClearAllFilesResult {
+  object Success : ClearAllFilesResult()
+  object PartiallyDeleted : ClearAllFilesResult()
+  data class Failure(val cause: Throwable) : ClearAllFilesResult()
+}
+
 interface FileStorage {
 
   fun getFile(filePath: String): GetFileResult
@@ -32,4 +38,6 @@ interface FileStorage {
   fun readFromFile(file: File): ReadFileResult
 
   fun delete(file: File): DeleteFileResult
+
+  fun clearAllFiles(): ClearAllFilesResult
 }

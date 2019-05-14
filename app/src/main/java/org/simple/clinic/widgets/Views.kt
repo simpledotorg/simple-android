@@ -9,6 +9,7 @@ import android.util.DisplayMetrics
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewPropertyAnimator
 import android.view.ViewTreeObserver
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -25,6 +26,7 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import org.threeten.bp.Duration
 import timber.log.Timber
 
 fun EditText.showKeyboard() {
@@ -243,4 +245,8 @@ fun View.visibleOrGone(isVisible: Boolean) {
 fun MenuItem.visibleOrGone(isVisible: Boolean) {
   this.isVisible = isVisible
   this.isEnabled = isVisible
+}
+
+fun ViewPropertyAnimator.setDuration(duration: Duration): ViewPropertyAnimator {
+  return setDuration(duration.toMillis())
 }

@@ -93,6 +93,6 @@ class AuthenticationRule : TestRule {
   }
 
   private fun logout() {
-    userSession.logout().blockingAwait()
+    userSession.logout().toCompletable().blockingAwait()
   }
 }

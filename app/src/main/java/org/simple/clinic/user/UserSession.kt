@@ -35,6 +35,8 @@ import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
+import org.simple.clinic.storage.files.ClearAllFilesResult
+import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -73,6 +75,7 @@ class UserSession @Inject constructor(
     private val loginOtpSmsListener: LoginOtpSmsListener,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
+    private val fileStorage: FileStorage,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
     @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
@@ -371,15 +374,34 @@ class UserSession @Inject constructor(
         }
   }
 
-  fun logout(): Completable {
-    // FYI: RegistrationWorker doesn't get canceled when a user logs out.
-    // It's possible that the wrong user will get sent to the server for
-    // registration if another user logs in. This works for now because
-    // there is no way to log out, but this is something to keep in mind.
-    return Completable.fromAction {
-      sharedPreferences.edit().clear().apply()
-      appDatabase.clearAllTables()
-    }
+  // FYI: RegistrationWorker doesn't get canceled when a user logs out.
+  // It's possible that the wrong user will get sent to the server for
+  // registration if another user logs in. This works for now because
+  // there is no way to log out, but this is something to keep in mind.
+  fun logout(): Single<LogoutResult> {
+    return Completable
+        .concatArray(clearLocalDatabase(), clearSharedPreferences(), clearPrivateFiles())
+        .toSingleDefault(LogoutResult.Success as LogoutResult)
+        .onErrorReturn { cause -> LogoutResult.Failure(cause) }
+  }
+
+  private fun clearLocalDatabase(): Completable {
+    return Completable.fromAction { appDatabase.clearAllTables() }
+  }
+
+  private fun clearSharedPreferences(): Completable {
+    return Completable.fromAction { sharedPreferences.edit().clear().apply() }
+  }
+
+  private fun clearPrivateFiles(): Completable {
+    return Single
+        .fromCallable { fileStorage.clearAllFiles() }
+        .flatMapCompletable { result ->
+          when (result) {
+            is ClearAllFilesResult.Failure -> Completable.error(result.cause)
+            else -> Completable.complete()
+          }
+        }
   }
 
   fun loggedInUser(): Observable<Optional<User>> {
@@ -492,5 +514,10 @@ class UserSession @Inject constructor(
                 )
           }
         }
+  }
+
+  sealed class LogoutResult {
+    object Success : LogoutResult()
+    data class Failure(val cause: Throwable) : LogoutResult()
   }
 }

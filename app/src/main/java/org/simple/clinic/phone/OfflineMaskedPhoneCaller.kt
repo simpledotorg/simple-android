@@ -10,28 +10,21 @@ class OfflineMaskedPhoneCaller @Inject constructor(
     private val activity: TheActivity
 ) : MaskedPhoneCaller {
 
-  override fun maskedCall(numberToMask: String, caller: Caller): Completable {
-    return configProvider
-        .map { config -> maskNumber(config, numberToMask) }
-        .flatMapCompletable { maskedNumber -> callNumber(maskedNumber, caller) }
-  }
+  override fun normalCall(number: String, caller: Caller) =
+      Completable.fromAction {
+        caller.call(context = activity, phoneNumber = number)
+      }
+
+  override fun maskedCall(numberToMask: String, caller: Caller) =
+      configProvider
+          .map { config -> maskNumber(config, numberToMask) }
+          .flatMapCompletable { maskedNumber -> normalCall(maskedNumber, caller) }
 
   private fun maskNumber(config: PhoneNumberMaskerConfig, numberToMask: String): String {
-    return if (config.maskingEnabled) {
-      val proxyNumber = config.proxyPhoneNumber
+    val proxyNumber = config.proxyPhoneNumber
 
-      val stopCharacter = "#"
-      val dtmfTones = "$numberToMask$stopCharacter"
-      "$proxyNumber,$dtmfTones"
-
-    } else {
-      numberToMask
-    }
-  }
-
-  private fun callNumber(maskedNumber: String, caller: Caller): Completable {
-    return Completable.fromAction {
-      caller.call(context = activity, phoneNumber = maskedNumber)
-    }
+    val stopCharacter = "#"
+    val dtmfTones = "$numberToMask$stopCharacter"
+    return "$proxyNumber,$dtmfTones"
   }
 }

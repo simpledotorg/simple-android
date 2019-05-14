@@ -26,13 +26,13 @@ class OfflineMaskedPhoneCallerTest {
 
   @Test
   fun `when masking is disabled then plain phone numbers should be called`() {
-    config = PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "")
+    config = PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "987")
 
     val plainNumber = "123"
 
     maskedPhoneCaller.maskedCall(plainNumber, caller = caller).blockingAwait()
 
-    verify(caller).call(activity, "123")
+    verify(caller).call(activity, "987,123#")
   }
 
   @Test

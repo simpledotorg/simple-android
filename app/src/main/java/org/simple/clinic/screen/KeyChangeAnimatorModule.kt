@@ -9,5 +9,5 @@ import org.simple.clinic.router.screen.KeyChangeAnimator
 abstract class KeyChangeAnimatorModule {
 
   @Binds
-  abstract fun bindKeyChangeAnimator(fullScreenKeyChangeAnimator: FullScreenKeyChangeNoOpAnimator): KeyChangeAnimator<FullScreenKey>
+  abstract fun bindKeyChangeAnimator(fullScreenKeyChangeAnimator: FullScreenKeyChangeAnimator): KeyChangeAnimator<FullScreenKey>
 }

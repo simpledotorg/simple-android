@@ -22,7 +22,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToController
+import org.simple.clinic.bindUiToControllerWithoutDelay
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.BP_ENTRY
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet.ScreenType.DATE_ENTRY
 import org.simple.clinic.widgets.BottomSheetActivity
@@ -89,7 +89,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_blood_pressure_entry)
     TheActivity.component.inject(this)
 
-    bindUiToController(
+    bindUiToControllerWithoutDelay(
         ui = this,
         events = Observable.mergeArray(
             sheetCreates(),

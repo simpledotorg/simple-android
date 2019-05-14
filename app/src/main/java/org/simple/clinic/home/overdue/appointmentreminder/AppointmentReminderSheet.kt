@@ -12,7 +12,7 @@ import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToController
+import org.simple.clinic.bindUiToControllerWithoutDelay
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -69,7 +69,7 @@ class AppointmentReminderSheet : BottomSheetActivity() {
     setContentView(R.layout.sheet_appointment_reminder)
     TheActivity.component.inject(this)
 
-    bindUiToController(
+    bindUiToControllerWithoutDelay(
         ui = this,
         events = Observable.merge(
             sheetCreates(),

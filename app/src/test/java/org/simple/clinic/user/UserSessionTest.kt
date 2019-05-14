@@ -87,7 +87,6 @@ class UserSessionTest {
   private val reporter = MockAnalyticsReporter()
   private val ongoingLoginEntryRepository = mock<OngoingLoginEntryRepository>()
   private var bruteForceProtection = mock<BruteForceProtection>()
-
   private val moshi = Moshi.Builder().build()
   private val loggedInUserPayload = PatientMocker.loggedInUserPayload()
   private val unauthorizedErrorResponseJson = """{
@@ -98,51 +97,40 @@ class UserSessionTest {
         }
       }"""
 
-  private lateinit var userSession: UserSession
-  private lateinit var dataSync: DataSync
+  private val dataSync = mock<DataSync>()
+  private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
+  private val communicationPullToken = mock<Preference<Optional<String>>>()
+  private val appointmentPullToken = mock<Preference<Optional<String>>>()
+  private val prescriptionPullToken = mock<Preference<Optional<String>>>()
+  private val bpPullToken = mock<Preference<Optional<String>>>()
+  private val patientPullToken = mock<Preference<Optional<String>>>()
+  private val loginOtpSmsListener = mock<LoginOtpSmsListener>()
 
-  private lateinit var medicalHistoryPullToken: Preference<Optional<String>>
-  private lateinit var communicationPullToken: Preference<Optional<String>>
-  private lateinit var appointmentPullToken: Preference<Optional<String>>
-  private lateinit var prescriptionPullToken: Preference<Optional<String>>
-  private lateinit var bpPullToken: Preference<Optional<String>>
-  private lateinit var patientPullToken: Preference<Optional<String>>
-  private lateinit var loginOtpSmsListener: LoginOtpSmsListener
+  private val userSession = UserSession(
+      loginApi = loginApi,
+      registrationApi = registrationApi,
+      moshi = moshi,
+      facilitySync = facilitySync,
+      facilityRepository = facilityRepository,
+      sharedPreferences = sharedPrefs,
+      appDatabase = appDatabase,
+      passwordHasher = passwordHasher,
+      dataSync = dagger.Lazy { dataSync },
+      loginOtpSmsListener = loginOtpSmsListener,
+      accessTokenPreference = accessTokenPref,
+      bruteForceProtection = bruteForceProtection,
+      patientSyncPullToken = patientPullToken,
+      bpSyncPullToken = bpPullToken,
+      prescriptionSyncPullToken = prescriptionPullToken,
+      appointmentSyncPullToken = appointmentPullToken,
+      communicationSyncPullToken = communicationPullToken,
+      medicalHistorySyncPullToken = medicalHistoryPullToken,
+      ongoingLoginEntryRepository = ongoingLoginEntryRepository)
 
   @Before
   fun setUp() {
     // Used for overriding IO scheduler for sync call on login.
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
-    loginOtpSmsListener = mock()
-    dataSync = mock()
-    medicalHistoryPullToken = mock()
-    communicationPullToken = mock()
-    appointmentPullToken = mock()
-    prescriptionPullToken = mock()
-    bpPullToken = mock()
-    patientPullToken = mock()
-
-    userSession = UserSession(
-        loginApi = loginApi,
-        registrationApi = registrationApi,
-        moshi = moshi,
-        facilitySync = facilitySync,
-        facilityRepository = facilityRepository,
-        sharedPreferences = sharedPrefs,
-        appDatabase = appDatabase,
-        passwordHasher = passwordHasher,
-        dataSync = dagger.Lazy { dataSync },
-        loginOtpSmsListener = loginOtpSmsListener,
-        accessTokenPreference = accessTokenPref,
-        bruteForceProtection = bruteForceProtection,
-        patientSyncPullToken = patientPullToken,
-        bpSyncPullToken = bpPullToken,
-        prescriptionSyncPullToken = prescriptionPullToken,
-        appointmentSyncPullToken = appointmentPullToken,
-        communicationSyncPullToken = communicationPullToken,
-        medicalHistorySyncPullToken = medicalHistoryPullToken,
-        ongoingLoginEntryRepository = ongoingLoginEntryRepository)
 
     whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())
     whenever(facilitySync.sync()).thenReturn(Completable.complete())

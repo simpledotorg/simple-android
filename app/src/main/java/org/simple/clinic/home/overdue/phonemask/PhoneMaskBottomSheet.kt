@@ -1,22 +1,36 @@
 package org.simple.clinic.home.overdue.phonemask
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.overdue.OverdueListItem.Patient
+import org.simple.clinic.router.screen.ActivityPermissionResult
+import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import javax.inject.Inject
 
+private const val REQUESTCODE_CALL_PHONE_PERMISSION = 21
+private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
+
 class PhoneMaskBottomSheet : BottomSheetActivity() {
+
+  @Inject
+  lateinit var activity: TheActivity
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var controller: PhoneMaskBottomSheetController
@@ -36,7 +50,8 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
         events = Observable.mergeArray(
             sheetCreates(),
             normalCallClicks(),
-            secureCallClicks()
+            secureCallClicks(),
+            callPermissionChanges()
         ),
         controller = controller,
         screenDestroys = onDestroys
@@ -65,8 +80,16 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
   }
 
   fun requestCallPermission() {
-    TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    RuntimePermissions.request(activity, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
   }
+
+  private fun callPermissionChanges() =
+      screenRouter
+          .streamScreenResults()
+          .ofType<ActivityPermissionResult>()
+          .filter { it.requestCode == REQUESTCODE_CALL_PHONE_PERMISSION }
+          .map { RuntimePermissions.check(activity, CALL_PHONE_PERMISSION) }
+          .map(::CallPhonePermissionChanged)
 
   companion object {
 

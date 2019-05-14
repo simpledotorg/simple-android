@@ -6,6 +6,7 @@ import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.doThrow
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -50,6 +51,8 @@ import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
+import org.simple.clinic.storage.files.ClearAllFilesResult
+import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -105,6 +108,7 @@ class UserSessionTest {
   private val bpPullToken = mock<Preference<Optional<String>>>()
   private val patientPullToken = mock<Preference<Optional<String>>>()
   private val loginOtpSmsListener = mock<LoginOtpSmsListener>()
+  private val fileStorage = mock<FileStorage>()
 
   private val userSession = UserSession(
       loginApi = loginApi,
@@ -119,6 +123,7 @@ class UserSessionTest {
       loginOtpSmsListener = loginOtpSmsListener,
       accessTokenPreference = accessTokenPref,
       bruteForceProtection = bruteForceProtection,
+      fileStorage = fileStorage,
       patientSyncPullToken = patientPullToken,
       bpSyncPullToken = bpPullToken,
       prescriptionSyncPullToken = prescriptionPullToken,
@@ -790,5 +795,93 @@ class UserSessionTest {
       onNext(emptyList())
       observer.assertLatestValue(false)
     }
+  }
+
+  @Test
+  fun `logout should work as expected`() {
+    whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Success)
+    val preferencesEditor = mock<SharedPreferences.Editor>()
+    whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
+    whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+
+    val result = userSession.logout().blockingGet()
+
+    assertThat(result).isSameAs(UserSession.LogoutResult.Success)
+
+    verify(fileStorage).clearAllFiles()
+
+    val inorder = inOrder(preferencesEditor)
+    inorder.verify(preferencesEditor).clear()
+    inorder.verify(preferencesEditor).apply()
+
+    verify(appDatabase).clearAllTables()
+  }
+
+  @Test
+  fun `when clearing private files works partially the logout must succeed`() {
+    whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.PartiallyDeleted)
+    val preferencesEditor = mock<SharedPreferences.Editor>()
+    whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
+    whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+
+    val result = userSession.logout().blockingGet()
+
+    assertThat(result).isSameAs(UserSession.LogoutResult.Success)
+  }
+
+  @Test
+  @Parameters(method = "params for logout clear files failures")
+  fun `when clearing private files fails the logout must fail`(cause: Throwable) {
+    whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Failure(cause))
+    val preferencesEditor = mock<SharedPreferences.Editor>()
+    whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
+    whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+
+    val result = userSession.logout().blockingGet()
+
+    assertThat(result).isEqualTo(UserSession.LogoutResult.Failure(cause))
+  }
+
+  @Suppress("Unused")
+  private fun `params for logout clear files failures`(): List<Any> {
+    return listOf(IOException(), RuntimeException())
+  }
+
+  @Test
+  @Parameters(method = "params for logout clear preferences failures")
+  fun `when clearing shared preferences fails, the logout must fail`(cause: Throwable) {
+    whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Success)
+    val preferencesEditor = mock<SharedPreferences.Editor>()
+    whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
+    whenever(preferencesEditor.apply()).thenThrow(cause)
+    whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+
+    val result = userSession.logout().blockingGet()
+
+    assertThat(result).isEqualTo(UserSession.LogoutResult.Failure(cause))
+  }
+
+  @Suppress("Unused")
+  private fun `params for logout clear preferences failures`(): List<Any> {
+    return listOf(NullPointerException(), RuntimeException())
+  }
+
+  @Test
+  @Parameters(method = "params for logout clear database failures")
+  fun `when clearing app database fails, the logout must fail`(cause: Throwable) {
+    whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Success)
+    val preferencesEditor = mock<SharedPreferences.Editor>()
+    whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
+    whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    whenever(appDatabase.clearAllTables()).thenThrow(cause)
+
+    val result = userSession.logout().blockingGet()
+
+    assertThat(result).isEqualTo(UserSession.LogoutResult.Failure(cause))
+  }
+
+  @Suppress("Unused")
+  private fun `params for logout clear database failures`(): List<Any> {
+    return listOf(NullPointerException(), RuntimeException())
   }
 }

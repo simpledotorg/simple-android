@@ -18,7 +18,10 @@ import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
-import org.simple.clinic.user.User.LoggedInStatus.*
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
 import javax.inject.Inject
@@ -78,7 +81,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_incorrect_login_params_are_given_then_login_should_fail() {
-    userSession.logout().blockingAwait()
+    userSession.logout().blockingGet()
 
     val lawgon = userSession
         .saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "9919299", "0102"))
@@ -94,7 +97,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_logging_in_from_registration_entry_user_should_be_logged_in_locally() {
-    userSession.logout().blockingAwait()
+    userSession.logout().blockingGet()
 
     val facilities = facilityApi.pull(10)
         .map { it.payloads }
@@ -130,9 +133,8 @@ class UserSessionAndroidTest {
     userSession
         .saveOngoingLoginEntry(ongoingLoginEntry)
         .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
-        .toCompletable()
-        .andThen(userSession.logout())
-        .blockingAwait()
+        .flatMap { userSession.logout() }
+        .blockingGet()
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(loggedInUser).isNull()
@@ -141,7 +143,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun when_registering_a_user_is_registered_then_the_logged_in_user_should_be_sent_to_the_server() {
-    userSession.logout().blockingAwait()
+    userSession.logout().blockingGet()
 
     val facilities = facilityApi.pull(10)
         .map { it.payloads }
@@ -235,7 +237,7 @@ class UserSessionAndroidTest {
 
   @Test
   fun unauthorizing_the_user_must_work_as_expected() {
-   assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(LOGGED_IN)
+    assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(LOGGED_IN)
 
     userSession.unauthorize().blockingAwait()
 

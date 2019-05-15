@@ -5,17 +5,17 @@ import io.reactivex.Observable
 import org.simple.clinic.activity.TheActivity
 import javax.inject.Inject
 
-class OfflineMaskedPhoneCaller @Inject constructor(
+class PhoneCaller @Inject constructor(
     private val configProvider: Observable<PhoneNumberMaskerConfig>,
     private val activity: TheActivity
-) : MaskedPhoneCaller {
+) {
 
-  override fun normalCall(number: String, caller: Caller) =
+  fun normalCall(number: String, caller: Caller): Completable =
       Completable.fromAction {
         caller.call(context = activity, phoneNumber = number)
       }
 
-  override fun maskedCall(numberToMask: String, caller: Caller) =
+  fun secureCall(numberToMask: String, caller: Caller): Completable =
       configProvider
           .map { config -> maskNumber(config, numberToMask) }
           .flatMapCompletable { maskedNumber -> normalCall(maskedNumber, caller) }

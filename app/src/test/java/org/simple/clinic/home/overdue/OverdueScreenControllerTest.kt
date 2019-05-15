@@ -21,7 +21,7 @@ import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.phone.Caller
-import org.simple.clinic.phone.MaskedPhoneCaller
+import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
@@ -37,7 +37,7 @@ class OverdueScreenControllerTest {
   private val screen = mock<OverdueScreen>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val repository = mock<AppointmentRepository>()
-  private val maskedPhoneCaller = mock<MaskedPhoneCaller>()
+  private val maskedPhoneCaller = mock<PhoneCaller>()
   private val reporter = MockAnalyticsReporter()
   private val configStream: Subject<PhoneNumberMaskerConfig> = PublishSubject.create()
 
@@ -45,7 +45,7 @@ class OverdueScreenControllerTest {
 
   @Before
   fun setUp() {
-    whenever(maskedPhoneCaller.maskedCall(any(), any())).thenReturn(Completable.complete())
+    whenever(maskedPhoneCaller.secureCall(any(), any())).thenReturn(Completable.complete())
 
     controller = OverdueScreenController(
         repository,
@@ -104,8 +104,8 @@ class OverdueScreenControllerTest {
 
     verify(screen).requestCallPermission()
     when (shouldUseDialer) {
-      true -> verify(maskedPhoneCaller).maskedCall(number, Caller.UsingDialer)
-      false -> verify(maskedPhoneCaller).maskedCall(number, Caller.WithoutDialer)
+      true -> verify(maskedPhoneCaller).secureCall(number, Caller.UsingDialer)
+      false -> verify(maskedPhoneCaller).secureCall(number, Caller.WithoutDialer)
     }
     verifyNoMoreInteractions(screen)
   }

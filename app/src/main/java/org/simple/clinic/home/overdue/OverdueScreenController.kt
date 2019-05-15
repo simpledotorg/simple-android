@@ -11,7 +11,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
 import org.simple.clinic.phone.Caller
-import org.simple.clinic.phone.MaskedPhoneCaller
+import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
@@ -28,7 +28,7 @@ typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(
     private val repository: AppointmentRepository,
-    private val maskedPhoneCaller: MaskedPhoneCaller,
+    private val phoneCaller: PhoneCaller,
     private val phoneNumberMaskerConfig: Observable<PhoneNumberMaskerConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -153,8 +153,8 @@ class OverdueScreenController @Inject constructor(
         .zipWith(callClicks)
         .filter { (result, _) -> result == RuntimePermissionResult.GRANTED }
         .flatMap { (_, phoneNumber) ->
-          maskedPhoneCaller
-              .maskedCall(phoneNumber, caller = Caller.WithoutDialer)
+          phoneCaller
+              .secureCall(phoneNumber, caller = Caller.WithoutDialer)
               .andThen(Observable.empty<UiChange>())
         }
 
@@ -162,8 +162,8 @@ class OverdueScreenController @Inject constructor(
         .zipWith(callClicks)
         .filter { (result, _) -> result != RuntimePermissionResult.GRANTED }
         .flatMap { (_, phoneNumber) ->
-          maskedPhoneCaller
-              .maskedCall(phoneNumber, caller = Caller.UsingDialer)
+          phoneCaller
+              .secureCall(phoneNumber, caller = Caller.UsingDialer)
               .andThen(Observable.empty<UiChange>())
         }
 

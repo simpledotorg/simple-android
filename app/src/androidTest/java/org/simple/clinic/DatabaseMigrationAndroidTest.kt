@@ -1693,7 +1693,7 @@ class DatabaseMigrationAndroidTest {
   }
 
   @Test
-  fun migrate_34_to_35_verify_default_recorded_at_for_patient(){
+  fun migrate_34_to_35_verify_default_recorded_at_for_patient() {
     val db_v34 = helper.createDatabase(version = 34)
 
     val bpTable = "BloodPressureMeasurement"
@@ -1909,6 +1909,303 @@ class DatabaseMigrationAndroidTest {
     """).use {
       it.moveToNext()
       assertThat(it.string(newColumnName)).isEqualTo("2017-09-25T11:20:42.008Z")
+    }
+  }
+
+  @Test
+  fun migrate_prescription_from_35_to_36() {
+    val db_v35 = helper.createDatabase(version = 35)
+
+    val tableName = "PrescribedDrug"
+    val uuid = "drug-uuid"
+    db_v35.execSQL("""
+      INSERT INTO $tableName VALUES(
+      '$uuid',
+      'drug',
+      'dosage',
+      'rxNormCode',
+      0,
+      1,
+      'patientUuid',
+      'facilityUuid',
+      'PENDING',
+      'created-at',
+      'updatedAt',
+      'null',
+      'recorded-at')
+    """)
+
+    val db_v36 = helper.migrateTo(version = 36)
+
+    db_v36.query("SELECT * FROM $tableName").use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.getColumnIndex("recordedAt")).isEqualTo(-1)
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(12)
+      assertThat(it.string("uuid")).isEqualTo(uuid)
+    }
+  }
+
+  @Test
+  fun migrate_appointment_from_35_to_36() {
+    val db_v35 = helper.createDatabase(version = 35)
+
+    val tableName = "Appointment"
+    val appointmentUuid = "uuid"
+
+    db_v35.execSQL("""
+      INSERT INTO $tableName VALUES(
+      '$appointmentUuid',
+      'patientUuid',
+      'facility-uuid',
+      'scheduled-date',
+      'status',
+      'cancel-reason',
+      'remind-on',
+      '1',
+      'manual',
+      'PENDING',
+      'created-at',
+      'updated-at',
+      'null',
+      'recordedAt')
+    """)
+
+    val db_v36 = helper.migrateTo(version = 36)
+
+    db_v36.query("SELECT * FROM $tableName").use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.getColumnIndex("recordedAt")).isEqualTo(-1)
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(13)
+      assertThat(it.string("uuid")).isEqualTo(appointmentUuid)
+    }
+  }
+
+  @Test
+  fun migrate_medical_histories_from_35_to_36() {
+    val db_v35 = helper.createDatabase(version = 35)
+
+    val tableName = "MedicalHistory"
+    val mhUuid = "uuid"
+
+    db_v35.execSQL("""
+      INSERT INTO $tableName VALUES(
+      '$mhUuid',
+      'patientUuid',
+      0,
+      1,
+      0,
+      1,
+      0,
+      1,
+      'PENDING',
+      'created-at',
+      'updated-at',
+      'null',
+      'recorded-at')
+    """)
+
+    val db_v36 = helper.migrateTo(version = 36)
+
+    db_v36.query("SELECT * FROM $tableName").use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.getColumnIndex("recordedAt")).isEqualTo(-1)
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(12)
+      assertThat(it.string("uuid")).isEqualTo(mhUuid)
+    }
+  }
+
+  @Test
+  fun migrate_patient_address_from_35_to_36() {
+    val db_v35 = helper.createDatabase(version = 35)
+
+    val addressTableName = "PatientAddress"
+    val patientTable = "Patient"
+    val addressUuid = "uuid"
+
+    db_v35.execSQL("""
+      INSERT INTO $addressTableName VALUES(
+        '$addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        'created-at',
+        'updated-at',
+        NULL,
+        'recorded-at')
+    """)
+
+    db_v35.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'patientUuid',
+        '$addressUuid',
+        'patient-name',
+        'name',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        'created-at',
+        'updated-at',
+        'null',
+        'IN_FLIGHT',
+        'recorded-at',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    val db_v36 = helper.migrateTo(version = 36)
+
+    db_v36.query("SELECT * FROM $addressTableName").use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.getColumnIndex("recordedAt")).isEqualTo(-1)
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(8)
+      assertThat(it.string("uuid")).isEqualTo(addressUuid)
+    }
+
+    db_v36.query("SELECT * FROM $patientTable").use {
+      assertThat(it.count).isEqualTo(1)
+      it.moveToNext()
+      assertThat(it.string("addressUuid")).isEqualTo(addressUuid)
+      assertThat(it.string("uuid")).isEqualTo("patientUuid")
+    }
+  }
+
+  @Test
+  fun migrate_phone_number_from_35_to_36() {
+    val db_v35 = helper.createDatabase(version = 35)
+
+    val phoneNumberTableName = "PatientPhoneNumber"
+    val patientTable = "Patient"
+    val patientUuid = "patientUuid"
+    val phoneUuid = "phoneUuid"
+
+    db_v35.execSQL("""
+      INSERT INTO "PatientAddress" VALUES(
+        'addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        'created-at',
+        'updated-at',
+        NULL,
+        'recorded-at')
+    """)
+
+    db_v35.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        '$patientUuid',
+        'addressUuid',
+        'patient-name',
+        'name',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        'created-at',
+        'updated-at',
+        'null',
+        'IN_FLIGHT',
+        'recorded-at',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v35.execSQL("""
+      INSERT INTO $phoneNumberTableName VALUES(
+      '$phoneUuid',
+      '$patientUuid',
+      '981615191',
+      'mobile',
+      0,
+      'created-at',
+      'updated-at',
+      'null',
+      'recorded-at')
+    """)
+
+    val db_v36 = helper.migrateTo(version = 36)
+
+    db_v36.query("SELECT * FROM $phoneNumberTableName").use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.getColumnIndex("recordedAt")).isEqualTo(-1)
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(8)
+      assertThat(it.string("patientUuid")).isEqualTo(patientUuid)
+      assertThat(it.string("uuid")).isEqualTo(phoneUuid)
+    }
+  }
+
+  @Test
+  fun migrate_business_ids_from_35_to_36() {
+    val db_v35 = helper.createDatabase(version = 35)
+
+    val patientTable = "Patient"
+    val businessIdTable = "BusinessId"
+    val patientUuid = "patientUuid"
+    val businessUuid = "businessUuid"
+
+    db_v35.execSQL("""
+      INSERT INTO "PatientAddress" VALUES(
+        'addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        'created-at',
+        'updated-at',
+        NULL,
+        'recorded-at')
+    """)
+
+    db_v35.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        '$patientUuid',
+        'addressUuid',
+        'patient-name',
+        'name',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        'created-at',
+        'updated-at',
+        'null',
+        'IN_FLIGHT',
+        'recorded-at',
+        25,
+        'age-updated-at',
+        'dob')
+    """)
+
+    db_v35.execSQL("""
+      INSERT INTO $businessIdTable VALUES (
+      '$businessUuid',
+      'patientUuid',
+      'meta-version',
+      'data',
+      'created-at',
+      'updated-at',
+      'null',
+      'recorded-at',
+      'simple-uuid',
+      'bp-passport'
+      )
+    """)
+
+    val db_v36 = helper.migrateTo(version = 36)
+
+    db_v36.query("SELECT * FROM $businessIdTable").use {
+      assertThat(it.count).isEqualTo(1)
+      assertThat(it.getColumnIndex("recordedAt")).isEqualTo(-1)
+      it.moveToNext()
+      assertThat(it.columnCount).isEqualTo(9)
+      assertThat(it.string("patientUuid")).isEqualTo(patientUuid)
+      assertThat(it.string("uuid")).isEqualTo(businessUuid)
     }
   }
 }

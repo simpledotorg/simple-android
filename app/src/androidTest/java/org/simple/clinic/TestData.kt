@@ -1,6 +1,5 @@
 package org.simple.clinic
 
-import android.speech.RecognizerResultsIntent
 import io.bloco.faker.Faker
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
@@ -138,8 +137,7 @@ class TestData @Inject constructor(
       active: Boolean = faker.bool.bool(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ) = PatientPhoneNumber(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -148,8 +146,7 @@ class TestData @Inject constructor(
       active = active,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt,
-      recordedAt = recordedAt
+      deletedAt = deletedAt
   )
 
   fun patientAddress(
@@ -160,8 +157,7 @@ class TestData @Inject constructor(
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ) = PatientAddress(
       uuid = uuid,
       colonyOrVillage = colonyOrVilage,
@@ -170,8 +166,7 @@ class TestData @Inject constructor(
       country = country,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt,
-      recordedAt = recordedAt
+      deletedAt = deletedAt
   )
 
   fun businessIdMetadata(
@@ -193,8 +188,7 @@ class TestData @Inject constructor(
       metaDataVersion: MetaDataVersion = BpPassportMetaDataV1,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ) = BusinessId(
       uuid = uuid,
       patientUuid = patientUuid,
@@ -203,8 +197,7 @@ class TestData @Inject constructor(
       metaDataVersion = metaDataVersion,
       createdAt = createdAt,
       updatedAt = updatedAt,
-      deletedAt = deletedAt,
-      recordedAt = recordedAt
+      deletedAt = deletedAt
   )
 
   fun patientPayload(
@@ -463,8 +456,7 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): PrescribedDrug {
     return PrescribedDrug(
         uuid = uuid,
@@ -478,8 +470,7 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun prescriptionPayload(
@@ -524,8 +515,7 @@ class TestData @Inject constructor(
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): Appointment {
     return Appointment(
         uuid = uuid,
@@ -540,8 +530,7 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun appointmentPayload(
@@ -631,8 +620,7 @@ class TestData @Inject constructor(
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): MedicalHistory {
     return MedicalHistory(
         uuid = uuid,
@@ -646,8 +634,7 @@ class TestData @Inject constructor(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun medicalHistoryPayload(

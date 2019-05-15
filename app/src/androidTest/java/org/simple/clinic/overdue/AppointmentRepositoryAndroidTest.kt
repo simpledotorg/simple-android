@@ -171,8 +171,7 @@ class AppointmentRepositoryAndroidTest {
             "India",
             Instant.now(clock),
             Instant.now(clock),
-            null,
-            Instant.now(clock)
+            null
         )
     )
     val patient1 = UUID.randomUUID()
@@ -222,8 +221,7 @@ class AppointmentRepositoryAndroidTest {
             "India",
             Instant.now(clock),
             Instant.now(clock),
-            null,
-            Instant.now(clock)
+            null
         )
     )
     database.patientDao().save(
@@ -252,8 +250,7 @@ class AppointmentRepositoryAndroidTest {
             active = false,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
-            deletedAt = null,
-            recordedAt = Instant.now(clock)
+            deletedAt = null
         ))
     )
 
@@ -272,8 +269,7 @@ class AppointmentRepositoryAndroidTest {
             "India",
             Instant.now(clock),
             Instant.now(clock),
-            null,
-            Instant.now(clock)
+            null
         )
     )
     database.patientDao().save(
@@ -301,8 +297,7 @@ class AppointmentRepositoryAndroidTest {
             active = true,
             createdAt = Instant.now(clock),
             updatedAt = Instant.now(clock),
-            deletedAt = null,
-            recordedAt = Instant.now(clock)
+            deletedAt = null
         ))
     )
     database.bloodPressureDao().save(listOf(

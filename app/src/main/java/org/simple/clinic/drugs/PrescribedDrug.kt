@@ -42,9 +42,7 @@ data class PrescribedDrug(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?,
-
-    val recordedAt: Instant
+    val deletedAt: Instant?
 ) {
 
   fun toPayload(): PrescribedDrugPayload {
@@ -60,7 +58,7 @@ data class PrescribedDrug(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        recordedAt = createdAt)
   }
 
   @Dao

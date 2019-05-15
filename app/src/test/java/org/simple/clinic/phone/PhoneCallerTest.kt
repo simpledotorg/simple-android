@@ -9,19 +9,19 @@ import org.junit.Test
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.util.RxErrorsRule
 
-class OfflineMaskedPhoneCallerTest {
+class PhoneCallerTest {
 
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private lateinit var maskedPhoneCaller: MaskedPhoneCaller
+  private lateinit var phoneCaller: PhoneCaller
   private lateinit var config: PhoneNumberMaskerConfig
   private val caller: Caller = mock()
   private val activity: TheActivity = mock()
 
   @Before
   fun setUp() {
-    maskedPhoneCaller = OfflineMaskedPhoneCaller(Observable.fromCallable { config }, activity)
+    phoneCaller = PhoneCaller(Observable.fromCallable { config }, activity)
   }
 
   @Test
@@ -30,9 +30,9 @@ class OfflineMaskedPhoneCallerTest {
 
     val plainNumber = "123"
 
-    maskedPhoneCaller.maskedCall(plainNumber, caller = caller).blockingAwait()
+    phoneCaller.normalCall(plainNumber, caller = caller).blockingAwait()
 
-    verify(caller).call(activity, "987,123#")
+    verify(caller).call(activity, plainNumber)
   }
 
   @Test
@@ -40,7 +40,7 @@ class OfflineMaskedPhoneCallerTest {
     config = PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "987")
     val plainNumber = "123"
 
-    maskedPhoneCaller.maskedCall(plainNumber, caller = caller).blockingAwait()
+    phoneCaller.secureCall(plainNumber, caller = caller).blockingAwait()
 
     verify(caller).call(activity, "987,123#")
   }

@@ -9,7 +9,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.phone.Caller.UsingDialer
 import org.simple.clinic.phone.Caller.WithoutDialer
-import org.simple.clinic.phone.MaskedPhoneCaller
+import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
@@ -21,7 +21,7 @@ private typealias Ui = PhoneMaskBottomSheet
 private typealias UiChange = (Ui) -> Unit
 
 class PhoneMaskBottomSheetController @Inject constructor(
-    private val phoneCaller: MaskedPhoneCaller
+    private val phoneCaller: PhoneCaller
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -57,7 +57,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
       callPermissionResult(events)
           .withLatestFrom(secureCallClicked(events), patientPhoneNumberStream(events))
           .flatMapCompletable { (permissionResult, _, phoneNumber) ->
-            phoneCaller.maskedCall(phoneNumber, caller(permissionResult))
+            phoneCaller.secureCall(phoneNumber, caller(permissionResult))
           }
           .andThen(Observable.empty<UiChange>())
 

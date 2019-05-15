@@ -39,7 +39,6 @@ import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
 import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
-import org.simple.clinic.phone.PhoneModule
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
 import org.simple.clinic.registration.confirmpin.RegistrationConfirmPinScreen
@@ -138,8 +137,8 @@ interface TheActivityComponent {
 @Module(includes = [
   OnboardingModule::class,
   PatientsModule::class,
-  SearchResultsModule::class,
-  PhoneModule::class])
+  SearchResultsModule::class
+])
 class TheActivityModule {
 
   @Provides

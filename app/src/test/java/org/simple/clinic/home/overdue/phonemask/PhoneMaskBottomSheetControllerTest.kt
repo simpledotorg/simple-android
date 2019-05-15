@@ -16,7 +16,7 @@ import org.simple.clinic.patient.PatientMocker.overduePatient
 import org.simple.clinic.phone.Caller
 import org.simple.clinic.phone.Caller.UsingDialer
 import org.simple.clinic.phone.Caller.WithoutDialer
-import org.simple.clinic.phone.MaskedPhoneCaller
+import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
@@ -32,7 +32,7 @@ class PhoneMaskBottomSheetControllerTest {
 
   private val screen = mock<PhoneMaskBottomSheet>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val phoneCaller = mock<MaskedPhoneCaller>()
+  private val phoneCaller = mock<PhoneCaller>()
   private val controller = PhoneMaskBottomSheetController(phoneCaller)
 
   @Before
@@ -64,7 +64,7 @@ class PhoneMaskBottomSheetControllerTest {
     val number = "1234567890"
 
     whenever(phoneCaller.normalCall(number, caller)).thenReturn(Completable.complete())
-    whenever(phoneCaller.maskedCall(number, caller)).thenReturn(Completable.complete())
+    whenever(phoneCaller.secureCall(number, caller)).thenReturn(Completable.complete())
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(overduePatient(phoneNumber = number)))
     uiEvents.onNext(callTypeEvent)

@@ -17,7 +17,7 @@ buildscript {
       moshi               : '1.8.0',
       retrofit            : '2.4.0',
       stetho              : '1.5.0',
-      sentry              : '1.7.16',
+      sentry              : '1.7.22',
       slf4j               : '1.7.25',
       groupie             : '2.3.0',
       flow                : '1.0.0-alpha3',

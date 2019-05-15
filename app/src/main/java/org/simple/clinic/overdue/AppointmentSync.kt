@@ -82,7 +82,7 @@ class AppointmentSync @Inject constructor(
                 createdAt = createdAt,
                 updatedAt = updatedAt,
                 deletedAt = deletedAt,
-                recordedAt = recordedAt)
+                recordedAt = createdAt)
           }
         }
         .toList()

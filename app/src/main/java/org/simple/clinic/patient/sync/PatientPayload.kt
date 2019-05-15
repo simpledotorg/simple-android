@@ -132,10 +132,7 @@ data class PatientAddressPayload(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-
-        // recordedAt should be changed here when PatientAddressPayload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt)
+        deletedAt = deletedAt)
   }
 }
 
@@ -175,10 +172,7 @@ data class PatientPhoneNumberPayload(
         active = active,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-
-        // recordedAt should be changed here when PatientPhoneNumberPayload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt
+        deletedAt = deletedAt
     )
   }
 }
@@ -222,10 +216,7 @@ data class BusinessIdPayload(
         metaData = metaData,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-
-        // recordedAt should be changed here when BusinessIdPayload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt
+        deletedAt = deletedAt
     )
   }
 }

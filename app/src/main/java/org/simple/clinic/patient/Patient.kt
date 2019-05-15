@@ -232,15 +232,15 @@ data class Patient(
 
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district,
           PA.state addr_state, PA.country addr_country,
-          PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt, PA.recordedAt addr_recordedAt,
+          PA.createdAt addr_createdAt,PA.updatedAt addr_updatedAt, PA.deletedAt addr_deletedAt,
 
           PPN.uuid phone_uuid, PPN.patientUuid phone_patientUuid, PPN.number phone_number,
           PPN.phoneType phone_phoneType, PPN.active phone_active,
-          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt, PPN.recordedAt phone_recordedAt,
+          PPN.createdAt phone_createdAt, PPN.updatedAt phone_updatedAt, PPN.deletedAt phone_deletedAt,
 
           BI.uuid businessid_uuid, BI.patientUuid businessid_patientUuid, BI.identifier businessid_identifier,
           BI.identifierType businessid_identifierType, BI.meta businessid_meta, BI.metaVersion businessid_metaVersion,
-          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt, BI.recordedAt businessid_recordedAt
+          BI.createdAt businessid_createdAt, BI.updatedAt businessid_updatedAt, BI.deletedAt businessid_deletedAt
         FROM Patient P
         INNER JOIN PatientAddress PA ON P.addressUuid == PA.uuid
         LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid == P.uuid

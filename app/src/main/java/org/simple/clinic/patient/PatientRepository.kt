@@ -279,8 +279,7 @@ class PatientRepository @Inject constructor(
                 state = address.state,
                 createdAt = Instant.now(utcClock),
                 updatedAt = Instant.now(utcClock),
-                deletedAt = null,
-                recordedAt = Instant.now(utcClock))
+                deletedAt = null)
           }
         }
         .flatMapCompletable { address -> saveAddress(address) }
@@ -340,8 +339,7 @@ class PatientRepository @Inject constructor(
                   active = active,
                   createdAt = Instant.now(utcClock),
                   updatedAt = Instant.now(utcClock),
-                  deletedAt = null,
-                  recordedAt = Instant.now(utcClock))
+                  deletedAt = null)
             }
             savePhoneNumber(number)
           }
@@ -393,8 +391,7 @@ class PatientRepository @Inject constructor(
               active = active,
               createdAt = now,
               updatedAt = now,
-              deletedAt = null,
-              recordedAt = now
+              deletedAt = null
           )
         }
         .flatMapCompletable(this::savePhoneNumber)
@@ -486,8 +483,7 @@ class PatientRepository @Inject constructor(
               metaData = metaAndVersion.metaData,
               createdAt = now,
               updatedAt = now,
-              deletedAt = null,
-              recordedAt = now
+              deletedAt = null
           )
         }
 

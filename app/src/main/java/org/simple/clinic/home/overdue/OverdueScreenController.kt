@@ -38,20 +38,15 @@ class OverdueScreenController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    val callEventHandler = if (phoneNumberMaskerConfig.blockingGet().showPhoneMaskBottomSheet) {
-      ::openPhoneMaskBottomSheet
-    } else {
-      ::patientCalls
-    }
-
     return Observable.mergeArray(
         screenSetup(replayedEvents),
         phoneCallPermissionRequests(replayedEvents),
+        patientCalls(replayedEvents),
         markedAsAgreedToVisit(replayedEvents),
         rescheduleAppointment(replayedEvents),
         removeAppointment(replayedEvents),
         reportViewedPatientEvent(replayedEvents),
-        callEventHandler(replayedEvents)
+        openPhoneMaskBottomSheet(replayedEvents)
     )
   }
 
@@ -135,15 +130,22 @@ class OverdueScreenController @Inject constructor(
   private fun phoneCallPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<CallPatientClicked>()
+        .flatMapSingle { phoneNumberMaskerConfig }
+        .filter { it.showPhoneMaskBottomSheet.not() }
         .map { { ui: Ui -> ui.requestCallPermission() } }
   }
 
   private fun patientCalls(events: Observable<UiEvent>): Observable<UiChange> {
-    val callPhonePermissionChanges = events
+    val filteredEvents = events
+        .withLatestFrom(phoneNumberMaskerConfig.toObservable())
+        .filter { (_, config) -> config.showPhoneMaskBottomSheet.not() }
+        .map { (event, _) -> event }
+
+    val callPhonePermissionChanges = filteredEvents
         .ofType<CallPhonePermissionChanged>()
         .map(CallPhonePermissionChanged::result)
 
-    val callClicks = events
+    val callClicks = filteredEvents
         .ofType<CallPatientClicked>()
         .map { it.patient }
         .map { it.phoneNumber!! }
@@ -171,6 +173,8 @@ class OverdueScreenController @Inject constructor(
 
   private fun openPhoneMaskBottomSheet(events: Observable<UiEvent>): Observable<UiChange> =
       events
+          .flatMapSingle { phoneNumberMaskerConfig }
+          .filter { it.showPhoneMaskBottomSheet }
           .ofType<CallPatientClicked>()
           .map { { ui: Ui -> ui.openPhoneMaskBottomSheet(it.patient) } }
 

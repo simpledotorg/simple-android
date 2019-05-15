@@ -52,8 +52,7 @@ class AppointmentRepository @Inject constructor(
               syncStatus = SyncStatus.PENDING,
               createdAt = Instant.now(utcClock),
               updatedAt = Instant.now(utcClock),
-              deletedAt = null,
-              recordedAt = Instant.now(utcClock))
+              deletedAt = null)
         }
         .flatMap { appointment ->
           save(listOf(appointment)).andThen(Single.just(appointment))
@@ -222,10 +221,7 @@ class AppointmentRepository @Inject constructor(
           syncStatus = syncStatus,
           createdAt = createdAt,
           updatedAt = updatedAt,
-          deletedAt = deletedAt,
-
-          // recordedAt should be changed here when Appointment payload starts receiving recorded_at
-          recordedAt = recordedAt ?: createdAt)
+          deletedAt = deletedAt)
     }
   }
 

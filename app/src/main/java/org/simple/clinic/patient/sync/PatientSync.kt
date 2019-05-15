@@ -89,7 +89,7 @@ class PatientSync @Inject constructor(
           createdAt = createdAt,
           updatedAt = updatedAt,
           deletedAt = deletedAt,
-          recordedAt = recordedAt)
+          recordedAt = createdAt)
     }
   }
 }

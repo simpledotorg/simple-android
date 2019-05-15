@@ -40,9 +40,7 @@ data class PatientPhoneNumber(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?,
-
-    val recordedAt: Instant
+    val deletedAt: Instant?
 ) {
 
   @Dao

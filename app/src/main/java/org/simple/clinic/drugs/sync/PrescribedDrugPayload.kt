@@ -60,10 +60,7 @@ data class PrescribedDrugPayload(
         syncStatus = syncStatus,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-
-        // recordedAt should be changed here when PrescribedDrug payload starts receiving this field from server
-        recordedAt = recordedAt ?: createdAt
+        deletedAt = deletedAt
     )
   }
 }

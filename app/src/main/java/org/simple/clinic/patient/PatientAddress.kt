@@ -28,9 +28,7 @@ data class PatientAddress(
 
     val updatedAt: Instant,
 
-    val deletedAt: Instant?,
-
-    val recordedAt: Instant
+    val deletedAt: Instant?
 ) {
 
   fun toPayload(): PatientAddressPayload {
@@ -43,7 +41,7 @@ data class PatientAddress(
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        recordedAt = createdAt)
   }
 
   @Dao

@@ -9,6 +9,7 @@ import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
 import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import java.util.UUID
 
 object Analytics {
@@ -111,6 +112,28 @@ object Analytics {
         createEvent("TimeTaken", mapOf(
             "operationName" to operationName,
             "timeTakenInMillis" to timeTaken.toMillis()
+        ))
+      }
+    }
+  }
+
+  fun reportDataCleared(
+      patientCount: Int,
+      bloodPressureCount: Int,
+      appointmentCount: Int,
+      prescribedDrugCount: Int,
+      medicalHistoryCount: Int,
+      since: Instant
+  ) {
+    reporters.forEach {
+      it.safely("Error reporting data cleared event") {
+        createEvent("DataCleared", mapOf(
+            "pendingPatientCount" to patientCount,
+            "pendingBpCount" to bloodPressureCount,
+            "pendingAppointmentCount" to appointmentCount,
+            "pendingPrescribedDrugCount" to prescribedDrugCount,
+            "pendingMedicalHistoryCount" to medicalHistoryCount,
+            "since" to since.toString()
         ))
       }
     }

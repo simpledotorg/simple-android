@@ -8,8 +8,8 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
@@ -39,6 +39,7 @@ class OverdueScreenControllerTest {
   private val repository = mock<AppointmentRepository>()
   private val maskedPhoneCaller = mock<MaskedPhoneCaller>()
   private val reporter = MockAnalyticsReporter()
+  private val configStream: Subject<PhoneNumberMaskerConfig> = PublishSubject.create()
 
   private lateinit var controller: OverdueScreenController
 
@@ -49,10 +50,12 @@ class OverdueScreenControllerTest {
     controller = OverdueScreenController(
         repository,
         maskedPhoneCaller,
-        Single.just(PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "0123456789"))
+        configStream
     )
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+
+    configStream.onNext(PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "0123456789"))
 
     Analytics.addReporter(reporter)
   }
@@ -177,7 +180,7 @@ class OverdueScreenControllerTest {
     val controller = OverdueScreenController(
         repository,
         maskedPhoneCaller,
-        Single.just(PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "0123456789"))
+        Observable.just(PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "0123456789"))
     )
 
     val uiEvents = PublishSubject.create<UiEvent>()
@@ -203,5 +206,19 @@ class OverdueScreenControllerTest {
             isAtHighRisk = true
         )
     ))
+  }
+
+  @Test
+  fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
+    configStream.onNext(PhoneNumberMaskerConfig(
+        maskingEnabled = true,
+        proxyPhoneNumber = "0123456789",
+        showPhoneMaskBottomSheet = true
+    ))
+    val patient = PatientMocker.overduePatient()
+
+    uiEvents.onNext(CallPatientClicked(patient))
+
+    verify(screen).openPhoneMaskBottomSheet(patient)
   }
 }

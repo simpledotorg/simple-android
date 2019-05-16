@@ -73,7 +73,7 @@ class RecentPatientsScreenController @Inject constructor(
             RecentPatientItem.LastBp(
                 systolic = systolic,
                 diastolic = diastolic,
-                updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(createdAt)
+                updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(recordedAt)
             )
           },
           gender = recentPatient.gender,

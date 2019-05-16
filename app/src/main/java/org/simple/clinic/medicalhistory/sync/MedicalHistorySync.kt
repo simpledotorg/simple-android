@@ -64,8 +64,7 @@ class MedicalHistorySync @Inject constructor(
                 hasDiabetes = hasDiabetes,
                 createdAt = createdAt,
                 updatedAt = updatedAt,
-                deletedAt = deletedAt,
-                recordedAt = createdAt)
+                deletedAt = deletedAt)
           }
         }
     return MedicalHistoryPushRequest(payloads)

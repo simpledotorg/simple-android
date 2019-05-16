@@ -235,8 +235,7 @@ class PatientRepositoryTest {
             active = false,
             createdAt = mock(),
             updatedAt = mock(),
-            deletedAt = mock(),
-            recordedAt = mock())),
+            deletedAt = mock())),
         businessIds = emptyList(),
         recordedAt = mock())
 

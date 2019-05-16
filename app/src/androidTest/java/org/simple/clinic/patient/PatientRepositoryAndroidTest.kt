@@ -338,35 +338,36 @@ class PatientRepositoryAndroidTest {
           }
     }
 
-    fun createBp(patientUuid: UUID, createdAt: Instant, deletedAt: Instant? = null): BloodPressureMeasurement {
+    fun createBp(patientUuid: UUID, recordedAt: Instant, deletedAt: Instant? = null): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = currentFacility.uuid,
           userUuid = user.uuid,
-          createdAt = createdAt,
-          deletedAt = deletedAt)
+          createdAt = now,
+          deletedAt = deletedAt,
+          recordedAt = recordedAt)
     }
 
     val patient0WithLatestBpDeleted = createPatientProfile(fullName = "Patient with latest BP deleted")
     val bpsForPatient0 = listOf(
-        createBp(patient0WithLatestBpDeleted.patient.uuid, createdAt = now.plusSeconds(2L)),
-        createBp(patient0WithLatestBpDeleted.patient.uuid, createdAt = now),
-        createBp(patient0WithLatestBpDeleted.patient.uuid, createdAt = now.plusSeconds(5L), deletedAt = now))
+        createBp(patient0WithLatestBpDeleted.patient.uuid, recordedAt = now.plusSeconds(2L)),
+        createBp(patient0WithLatestBpDeleted.patient.uuid, recordedAt = now),
+        createBp(patient0WithLatestBpDeleted.patient.uuid, recordedAt = now.plusSeconds(5L), deletedAt = now))
     patientRepository.save(listOf(patient0WithLatestBpDeleted))
         .andThen(bloodPressureRepository.save(bpsForPatient0))
         .blockingAwait()
 
     val patient1WithOneDeletedBp = createPatientProfile(fullName = "Patient with only one deleted BP")
     val bpsForPatient1 = listOf(
-        createBp(patient1WithOneDeletedBp.patient.uuid, createdAt = now, deletedAt = now))
+        createBp(patient1WithOneDeletedBp.patient.uuid, recordedAt = now, deletedAt = now))
     patientRepository.save(listOf(patient1WithOneDeletedBp))
         .andThen(bloodPressureRepository.save(bpsForPatient1))
         .blockingAwait()
 
     val patient2WithTwoDeletedBps = createPatientProfile(fullName = "Patient with two deleted BPs")
     val bpsForPatient2 = listOf(
-        createBp(patient2WithTwoDeletedBps.patient.uuid, createdAt = now, deletedAt = now),
-        createBp(patient2WithTwoDeletedBps.patient.uuid, createdAt = now.plusSeconds(1L), deletedAt = now))
+        createBp(patient2WithTwoDeletedBps.patient.uuid, recordedAt = now, deletedAt = now),
+        createBp(patient2WithTwoDeletedBps.patient.uuid, recordedAt = now.plusSeconds(1L), deletedAt = now))
     patientRepository.save(listOf(patient2WithTwoDeletedBps))
         .andThen(bloodPressureRepository.save(bpsForPatient2))
         .blockingAwait()

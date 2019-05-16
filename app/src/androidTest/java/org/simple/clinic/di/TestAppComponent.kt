@@ -9,7 +9,6 @@ import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
 import org.simple.clinic.drugs.PrescriptionRepositoryAndroidTest
 import org.simple.clinic.drugs.sync.PrescriptionSyncAndroidTest
-import org.simple.clinic.editpatient.PatientEditScreenUiTest
 import org.simple.clinic.facility.FacilityRepositoryAndroidTest
 import org.simple.clinic.facility.FacilitySyncAndroidTest
 import org.simple.clinic.help.HelpSyncAndroidTest
@@ -61,7 +60,6 @@ interface TestAppComponent : AppComponent {
   fun inject(target: OngoingLoginEntryRepositoryTest)
   fun inject(target: BruteForceProtectionAndroidTest)
   fun inject(target: DaoWithUpsertAndroidTest)
-  fun inject(target: PatientEditScreenUiTest)
   fun inject(target: ProtocolRepositoryAndroidTest)
   fun inject(target: RegisterPatientRule)
   fun inject(target: DatabaseMigrationAndroidTest)

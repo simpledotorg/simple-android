@@ -5,6 +5,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.threeten.bp.Duration
+import org.threeten.bp.Instant
 import java.util.UUID
 
 class AnalyticsTest {
@@ -68,6 +69,18 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when reporting a data cleared event without any reporters, no error should be thrown`() {
+    Analytics.reportDataCleared(
+        patientCount = 1,
+        bloodPressureCount = 1,
+        appointmentCount = 1,
+        prescribedDrugCount = 1,
+        medicalHistoryCount = 1,
+        since = Instant.EPOCH
+    )
+  }
+
+  @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportUserInteraction("Test")
@@ -119,6 +132,19 @@ class AnalyticsTest {
   fun `when a reporter fails sending a time taken event, no error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportTimeTaken("test", Duration.ofMillis(100L))
+  }
+
+  @Test
+  fun `when a reporter fails sending a data cleared event, no error should be thrown`() {
+    Analytics.addReporter(FailingAnalyticsReporter())
+    Analytics.reportDataCleared(
+        patientCount = 1,
+        bloodPressureCount = 1,
+        appointmentCount = 1,
+        prescribedDrugCount = 1,
+        medicalHistoryCount = 1,
+        since = Instant.EPOCH
+    )
   }
 
   @Test
@@ -183,6 +209,14 @@ class AnalyticsTest {
         downstreamBandwidthKbps = 50,
         upstreamBandwidthKbps = 100)
     Analytics.reportTimeTaken("Operation 1", Duration.ofHours(3L).plusMinutes(30L).plusMillis(1L))
+    Analytics.reportDataCleared(
+        patientCount = 1,
+        bloodPressureCount = 2,
+        appointmentCount = 3,
+        prescribedDrugCount = 4,
+        medicalHistoryCount = 5,
+        since = Instant.parse("2018-12-03T10:15:30.00Z")
+    )
 
     val expected = listOf(
         Event("UserInteraction", mapOf("name" to "Test 1")),
@@ -225,7 +259,15 @@ class AnalyticsTest {
         Event("TimeTaken", mapOf(
             "operationName" to "Operation 1",
             "timeTakenInMillis" to 12600001L)
-        )
+        ),
+        Event("DataCleared", mapOf(
+            "pendingPatientCount" to 1,
+            "pendingBpCount" to 2,
+            "pendingAppointmentCount" to 3,
+            "pendingPrescribedDrugCount" to 4,
+            "pendingMedicalHistoryCount" to 5,
+            "since" to "2018-12-03T10:15:30Z"
+        ))
     )
 
     assertThat(reporter1.receivedEvents).isEqualTo(expected)

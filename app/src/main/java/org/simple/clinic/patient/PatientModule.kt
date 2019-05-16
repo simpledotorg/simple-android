@@ -4,7 +4,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaData
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
@@ -40,9 +40,8 @@ open class PatientModule {
   fun providePatientConfig(configReader: ConfigReader) = PatientConfig.read(configReader)
 
   @Provides
-  fun phoneNumberMaskerConfig(reader: ConfigReader): Single<PhoneNumberMaskerConfig> {
-    return PhoneNumberMaskerConfig.read(reader).firstOrError()
-  }
+  fun phoneNumberMaskerConfig(reader: ConfigReader): Observable<PhoneNumberMaskerConfig> =
+      PhoneNumberMaskerConfig.read(reader)
 
   @Provides
   fun provideBusinessIdMetaAdapter(moshi: Moshi): BusinessIdMetaDataAdapter {

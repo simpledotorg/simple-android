@@ -1,12 +1,12 @@
 package org.simple.clinic.phone
 
 import io.reactivex.Completable
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.simple.clinic.activity.TheActivity
 import javax.inject.Inject
 
 class OfflineMaskedPhoneCaller @Inject constructor(
-    private val configProvider: Single<PhoneNumberMaskerConfig>,
+    private val configProvider: Observable<PhoneNumberMaskerConfig>,
     private val activity: TheActivity
 ) : MaskedPhoneCaller {
 

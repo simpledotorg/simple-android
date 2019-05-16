@@ -2,7 +2,6 @@ package org.simple.clinic.home.overdue
 
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
-import io.reactivex.Single
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.rxkotlin.zipWith
@@ -30,7 +29,7 @@ typealias UiChange = (Ui) -> Unit
 class OverdueScreenController @Inject constructor(
     private val repository: AppointmentRepository,
     private val maskedPhoneCaller: MaskedPhoneCaller,
-    private val phoneNumberMaskerConfig: Single<PhoneNumberMaskerConfig>
+    private val phoneNumberMaskerConfig: Observable<PhoneNumberMaskerConfig>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -80,7 +79,7 @@ class OverdueScreenController @Inject constructor(
                 isAtHighRisk = it.isAtHighRisk)
           }
         }
-        .withLatestFrom(phoneNumberMaskerConfig.toObservable())
+        .withLatestFrom(phoneNumberMaskerConfig)
 
     val noHeaderStream = overduePatientsStream
         .filter { (_, config) -> config.maskingEnabled.not() }
@@ -127,17 +126,17 @@ class OverdueScreenController @Inject constructor(
     return DAYS.between(date, LocalDate.now(UTC)).toInt()
   }
 
-  private fun phoneCallPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<CallPatientClicked>()
-        .flatMapSingle { phoneNumberMaskerConfig }
-        .filter { it.showPhoneMaskBottomSheet.not() }
-        .map { { ui: Ui -> ui.requestCallPermission() } }
-  }
+  private fun phoneCallPermissionRequests(events: Observable<UiEvent>): Observable<UiChange> =
+      events
+          .withLatestFrom(phoneNumberMaskerConfig)
+          .filter { (_, config) -> config.showPhoneMaskBottomSheet.not() }
+          .map { (event, _) -> event }
+          .ofType<CallPatientClicked>()
+          .map { { ui: Ui -> ui.requestCallPermission() } }
 
   private fun patientCalls(events: Observable<UiEvent>): Observable<UiChange> {
     val filteredEvents = events
-        .withLatestFrom(phoneNumberMaskerConfig.toObservable())
+        .withLatestFrom(phoneNumberMaskerConfig)
         .filter { (_, config) -> config.showPhoneMaskBottomSheet.not() }
         .map { (event, _) -> event }
 
@@ -173,8 +172,9 @@ class OverdueScreenController @Inject constructor(
 
   private fun openPhoneMaskBottomSheet(events: Observable<UiEvent>): Observable<UiChange> =
       events
-          .flatMapSingle { phoneNumberMaskerConfig }
-          .filter { it.showPhoneMaskBottomSheet }
+          .withLatestFrom(phoneNumberMaskerConfig)
+          .filter { (_, config) -> config.showPhoneMaskBottomSheet }
+          .map { (event, _) -> event }
           .ofType<CallPatientClicked>()
           .map { { ui: Ui -> ui.openPhoneMaskBottomSheet(it.patient) } }
 

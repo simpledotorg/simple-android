@@ -2,7 +2,7 @@ package org.simple.clinic.phone
 
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
-import io.reactivex.Single
+import io.reactivex.Observable
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -21,7 +21,7 @@ class OfflineMaskedPhoneCallerTest {
 
   @Before
   fun setUp() {
-    maskedPhoneCaller = OfflineMaskedPhoneCaller(Single.fromCallable { config }, activity)
+    maskedPhoneCaller = OfflineMaskedPhoneCaller(Observable.fromCallable { config }, activity)
   }
 
   @Test

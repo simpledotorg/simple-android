@@ -207,7 +207,7 @@ data class Patient(
             END
           ) AS isPatientDefaulter
           FROM Patient P
-          LEFT JOIN (SELECT BP.systolic, BP.diastolic FROM BloodPressureMeasurement BP WHERE BP.deletedAt IS NULL AND BP.patientUuid = :patientUuid ORDER BY BP.createdAt DESC LIMIT 1) BP
+          LEFT JOIN (SELECT BP.systolic, BP.diastolic FROM BloodPressureMeasurement BP WHERE BP.deletedAt IS NULL AND BP.patientUuid = :patientUuid ORDER BY BP.recordedAt DESC LIMIT 1) BP
           LEFT JOIN (SELECT MH.hasHadHeartAttack, MH.hasHadStroke, MH.hasDiabetes, MH.hasHadKidneyDisease FROM MedicalHistory MH WHERE MH.deletedAt IS NULL AND MH.patientUuid = :patientUuid ORDER BY MH.updatedAt DESC LIMIT 1) MH
           LEFT JOIN (SELECT PD.uuid FROM PrescribedDrug PD WHERE PD.deletedAt IS NULL AND PD.patientUuid = :patientUuid ORDER BY PD.updatedAt DESC LIMIT 1) PD
           LEFT JOIN Appointment A ON(A.patientUuid = P.uuid AND A.deletedAt IS NULL AND A.status = :scheduled)

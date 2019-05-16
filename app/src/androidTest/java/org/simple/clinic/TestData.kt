@@ -478,8 +478,7 @@ class TestData @Inject constructor(
       facilityUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): PrescribedDrugPayload {
     return PrescribedDrugPayload(
         uuid = uuid,
@@ -492,8 +491,7 @@ class TestData @Inject constructor(
         facilityId = facilityUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun appointment(
@@ -539,8 +537,7 @@ class TestData @Inject constructor(
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): AppointmentPayload {
     return AppointmentPayload(
         uuid = uuid,
@@ -554,8 +551,7 @@ class TestData @Inject constructor(
         appointmentType = appointmentType,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun communication(
@@ -642,8 +638,7 @@ class TestData @Inject constructor(
       hasDiabetes: Answer = randomOfEnum(Answer::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): MedicalHistoryPayload {
     return MedicalHistoryPayload(
         uuid = uuid,
@@ -656,8 +651,7 @@ class TestData @Inject constructor(
         hasDiabetes = hasDiabetes,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun ongoingPatientEntry(

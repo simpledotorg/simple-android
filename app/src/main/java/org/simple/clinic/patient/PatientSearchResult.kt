@@ -66,17 +66,17 @@ data class PatientSearchResult(
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district, PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-          BP.createdAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
+          BP.recordedAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
           FROM Patient P
           INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
-        		SELECT BP.patientUuid, BP.createdAt, F.name facilityName, F.uuid facilityUuid
+        		SELECT BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
         		FROM (
-                SELECT BP.patientUuid, BP.createdAt, BP.facilityUuid
+                SELECT BP.patientUuid, BP.recordedAt, BP.facilityUuid
                 FROM BloodPressureMeasurement BP
                 WHERE BP.deletedAt IS NULL
-                ORDER BY BP.createdAt DESC
+                ORDER BY BP.recordedAt DESC
             ) BP
         		INNER JOIN Facility F ON BP.facilityUuid = F.uuid
         	) BP ON (BP.patientUuid = P.uuid)

@@ -1636,11 +1636,11 @@ class PatientRepositoryAndroidTest {
             testData.bloodPressureMeasurement(
                 systolic = 180,
                 diastolic = 70,
-                createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
+                recordedAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
             testData.bloodPressureMeasurement(
                 systolic = 180,
                 diastolic = 70,
-                createdAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
+                recordedAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
             )),
         protocolDrug = null,
         appointmentDate = null)
@@ -1651,11 +1651,11 @@ class PatientRepositoryAndroidTest {
             testData.bloodPressureMeasurement(
                 systolic = 180,
                 diastolic = 70,
-                createdAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
+                recordedAt = Instant.now(testClock).minus(40, ChronoUnit.DAYS)),
             testData.bloodPressureMeasurement(
                 systolic = 120,
                 diastolic = 70,
-                createdAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
+                recordedAt = Instant.now(testClock).minus(10, ChronoUnit.DAYS)
             )),
         protocolDrug = null,
         appointmentDate = null)

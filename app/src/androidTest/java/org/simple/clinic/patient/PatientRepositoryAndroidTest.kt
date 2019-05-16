@@ -1058,47 +1058,47 @@ class PatientRepositoryAndroidTest {
     val facility2Uuid = UUID.randomUUID()
     val patientWithBp2 = savePatientWithBp(
         facilityUuid = facility2Uuid,
-        patientUuid = patientWithBp1.uuid
-    )
+        patientUuid = patientWithBp1.uuid)
 
     verifyRecentPatientOrder(patientWithBp2, facilityUuid = facility1Uuid)
     verifyRecentPatientOrder(patientWithBp2, facilityUuid = facility2Uuid)
   }
 
   @Test
-  fun verify_createdAt_is_used_instead_of_updatedAt() {
+  fun verify_latest_bp_is_fetched_using_recordedAt_when_fetching_recent_patients() {
     val facilityUuid = UUID.randomUUID()
     val patientUuid = UUID.randomUUID()
 
-    val creationTimeOf1stBp = Instant.now(clock)
+    val createdAt = Instant.now(clock)
 
     savePatientWithBp(
         facilityUuid = facilityUuid,
         patientUuid = patientUuid,
-        createdAt = creationTimeOf1stBp,
-        updatedAt = creationTimeOf1stBp
-    )
+        createdAt = createdAt,
+        updatedAt = createdAt,
+        recordedAt = createdAt)
 
     val recentPatient = patientRepository
         .recentPatients(facilityUuid, limit = 10)
         .blockingFirst()
         .first()
-    assertEquals(creationTimeOf1stBp, recentPatient.lastBp!!.createdAt)
+    assertEquals(createdAt, recentPatient.lastBp!!.recordedAt)
 
-    val creationTimeOf2ndBp = creationTimeOf1stBp.plusSeconds(5)
-    val updateTimeOf2ndBp = creationTimeOf1stBp.plusSeconds(10)
+    val recordedTimeOf2ndBp = createdAt.plusSeconds(5)
+    val updateTimeOf2ndBp = createdAt.plusSeconds(10)
     savePatientWithBp(
         facilityUuid = facilityUuid,
         patientUuid = patientUuid,
-        createdAt = creationTimeOf2ndBp,
-        updatedAt = updateTimeOf2ndBp
+        createdAt = createdAt,
+        updatedAt = updateTimeOf2ndBp,
+        recordedAt = recordedTimeOf2ndBp
     )
 
     val recentPatientAfter2ndBp = patientRepository
         .recentPatients(facilityUuid, limit = 10)
         .blockingFirst()
         .first()
-    assertEquals(creationTimeOf2ndBp, recentPatientAfter2ndBp.lastBp!!.createdAt)
+    assertEquals(recordedTimeOf2ndBp, recentPatientAfter2ndBp.lastBp!!.recordedAt)
   }
 
   @Test
@@ -1119,7 +1119,8 @@ class PatientRepositoryAndroidTest {
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now()
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -1129,7 +1130,8 @@ class PatientRepositoryAndroidTest {
         facilityUuid = facilityUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
     return patientProfile.patient.toRecentPatient(bpMeasurement)
@@ -1140,7 +1142,8 @@ class PatientRepositoryAndroidTest {
       patientUuid: UUID = UUID.randomUUID(),
       createdAt: Instant = Instant.now(testClock),
       updatedAt: Instant = Instant.now(testClock),
-      deletedAt: Instant? = null
+      deletedAt: Instant? = null,
+      recordedAt: Instant = Instant.now(testClock)
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
       copy(patient = patient.copy(createdAt = createdAt, updatedAt = updatedAt))
@@ -1152,7 +1155,8 @@ class PatientRepositoryAndroidTest {
         facilityUuid = facilityUuid,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt
+        deletedAt = deletedAt,
+        recordedAt = recordedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
     return patientProfile.patient.toRecentPatient(bpMeasurement)
@@ -1167,7 +1171,7 @@ class PatientRepositoryAndroidTest {
       lastBp = RecentPatient.LastBp(
           systolic = bpMeasurement.systolic,
           diastolic = bpMeasurement.diastolic,
-          createdAt = bpMeasurement.createdAt
+          recordedAt = bpMeasurement.recordedAt
       ),
       updatedAt = updatedAt
   )
@@ -1520,7 +1524,7 @@ class PatientRepositoryAndroidTest {
             patientUuid = patientUuid,
             systolic = it.systolic,
             diastolic = it.diastolic,
-            createdAt = it.createdAt
+            recordedAt = it.recordedAt
         ))).blockingAwait()
       }
       medicalHistoryRepository.save(listOf(testData.medicalHistory(

@@ -34,10 +34,10 @@ data class RecentPatient(
 
       const val RECENT_PATIENT_QUERY = """
         SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
-        LAST_BP.systolic last_bp_systolic, LAST_BP.diastolic last_bp_diastolic, LAST_BP.createdAt last_bp_createdAt,
+        LAST_BP.systolic last_bp_systolic, LAST_BP.diastolic last_bp_diastolic, LAST_BP.recordedAt last_bp_recordedAt,
         MAX(
             IFNULL(P.updatedAt, '0'),
-            IFNULL(BP_FOR_ORDERING.latestCreatedAt, '0'),
+            IFNULL(BP_FOR_ORDERING.latestRecordedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),
             IFNULL(AP.latestUpdatedAt, '0'),
             IFNULL(COMM.latestUpdatedAt, '0'),
@@ -45,13 +45,13 @@ data class RecentPatient(
         ) updatedAt
         FROM Patient P
           LEFT JOIN (
-            SELECT MAX(createdAt) latestCreatedAt, patientUuid, systolic, diastolic, createdAt
+            SELECT MAX(recordedAt) latestCreatedAt, patientUuid, systolic, diastolic, recordedAt
               FROM BloodPressureMeasurement
               WHERE deletedAt IS NULL
               GROUP BY patientUuid
           ) LAST_BP ON P.uuid = LAST_BP.patientUuid
           LEFT JOIN (
-            SELECT MAX(createdAt) latestCreatedAt, patientUuid, facilityUuid
+            SELECT MAX(recordedAt) latestRecordedAt, patientUuid, facilityUuid
               FROM BloodPressureMeasurement
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
@@ -112,6 +112,6 @@ data class RecentPatient(
   data class LastBp(
       val systolic: Int,
       val diastolic: Int,
-      val createdAt: Instant
+      val recordedAt: Instant
   )
 }

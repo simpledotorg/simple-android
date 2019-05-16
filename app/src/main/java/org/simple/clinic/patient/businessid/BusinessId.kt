@@ -66,8 +66,7 @@ data class BusinessId(
         metaData = metaData,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = createdAt
+        deletedAt = deletedAt
     )
   }
 

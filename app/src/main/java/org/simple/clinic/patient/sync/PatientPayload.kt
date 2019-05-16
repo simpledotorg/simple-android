@@ -117,10 +117,7 @@ data class PatientAddressPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?,
-
-    @Json(name = "recorded_at")
-    val recordedAt: Instant?
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(): PatientAddress {
@@ -157,10 +154,7 @@ data class PatientPhoneNumberPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?,
-
-    @Json(name = "recorded_at")
-    val recordedAt: Instant?
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(uuidOfPatient: UUID): PatientPhoneNumber {
@@ -201,10 +195,7 @@ data class BusinessIdPayload(
     val updatedAt: Instant,
 
     @Json(name = "deleted_at")
-    val deletedAt: Instant?,
-
-    @Json(name = "recorded_at")
-    val recordedAt: Instant?
+    val deletedAt: Instant?
 ) {
 
   fun toDatabaseModel(patientUuid: UUID): BusinessId {

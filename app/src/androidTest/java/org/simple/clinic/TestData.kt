@@ -242,8 +242,7 @@ class TestData @Inject constructor(
       country: String? = faker.address.country(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): PatientAddressPayload {
     return PatientAddressPayload(
         uuid = uuid,
@@ -253,8 +252,7 @@ class TestData @Inject constructor(
         country = country,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt
+        deletedAt = deletedAt
     )
   }
 
@@ -265,8 +263,7 @@ class TestData @Inject constructor(
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): PatientPhoneNumberPayload {
     return PatientPhoneNumberPayload(
         uuid = uuid,
@@ -275,8 +272,7 @@ class TestData @Inject constructor(
         active = active,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt)
+        deletedAt = deletedAt)
   }
 
   fun businessIdPayload(
@@ -292,8 +288,7 @@ class TestData @Inject constructor(
       ),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      deletedAt: Instant? = null
   ): BusinessIdPayload {
     return BusinessIdPayload(
         uuid = uuid,
@@ -303,8 +298,7 @@ class TestData @Inject constructor(
         metaData = meta,
         createdAt = createdAt,
         updatedAt = updatedAt,
-        deletedAt = deletedAt,
-        recordedAt = recordedAt
+        deletedAt = deletedAt
     )
   }
 

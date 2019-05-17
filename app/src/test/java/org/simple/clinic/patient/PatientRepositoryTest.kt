@@ -33,8 +33,6 @@ import org.simple.clinic.patient.filter.SearchPatientByName
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -60,7 +58,6 @@ class PatientRepositoryTest {
   private val bloodPressureMeasurementDao = mock<BloodPressureMeasurement.RoomDao>()
   private val businessIdDao = mock<BusinessId.RoomDao>()
   private val dobValidator = mock<UserInputDateValidator>()
-  private val userSession = mock<UserSession>()
   private val facilityRepository = mock<FacilityRepository>()
   private val numberValidator = mock<PhoneNumberValidator>()
   private val searchPatientByName = mock<SearchPatientByName>()
@@ -68,6 +65,8 @@ class PatientRepositoryTest {
 
   private val clock = TestUtcClock()
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
+  private val user = PatientMocker.loggedInUser()
+  private val facility = PatientMocker.facility()
 
   @Before
   fun setUp() {
@@ -76,19 +75,15 @@ class PatientRepositoryTest {
     repository = PatientRepository(
         database = database,
         dobValidator = dobValidator,
-        facilityRepository = facilityRepository,
-        userSession = userSession,
         numberValidator = numberValidator,
         utcClock = clock,
-        dateOfBirthFormat = dateOfBirthFormat,
         searchPatientByName = searchPatientByName,
         configProvider = Observable.fromCallable { config },
         reportsRepository = mock(),
-        businessIdMetaDataAdapter = businessIdMetaAdapter)
+        businessIdMetaDataAdapter = businessIdMetaAdapter,
+        dateOfBirthFormat = dateOfBirthFormat)
 
-    val user = PatientMocker.loggedInUser()
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
-    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(PatientMocker.facility()))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any())).thenReturn(Flowable.just(listOf()))
     whenever(database.bloodPressureDao()).thenReturn(bloodPressureMeasurementDao)
   }
@@ -269,7 +264,7 @@ class PatientRepositoryTest {
         .thenReturn(Single.just(filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    repository.search("name").blockingFirst()
+    repository.search("name", facility).blockingFirst()
 
     if (shouldQueryFilteredIds) {
       verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.ACTIVE)
@@ -302,7 +297,7 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    val actualResults = repository.search("name").blockingFirst().run {
+    val actualResults = repository.search("name", facility).blockingFirst().run {
       visitedCurrentFacility + notVisitedCurrentFacility
     }
 
@@ -343,8 +338,6 @@ class PatientRepositoryTest {
     // emission (using just(), for example). This is fine for most of our tests, but the way this
     // test is structured depends on the sources behaving as they do in reality
     // (i.e, infinite sources). We replace the mocks for these tests with Subjects to do this.
-    whenever(userSession.requireLoggedInUser())
-        .thenReturn(BehaviorSubject.createDefault(PatientMocker.loggedInUser()))
     whenever(patientSearchResultDao.nameAndId(any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(PatientNameAndId(patientUuid, "Name")))
@@ -363,19 +356,15 @@ class PatientRepositoryTest {
                 .doOnNext { clock.advanceBy(timeTakenToFetchPatientDetails) }
                 .firstOrError()
         )
-    whenever(facilityRepository.currentFacility(any<User>()))
-        .thenReturn(
-            BehaviorSubject.createDefault(PatientMocker.facility())
-                .doOnNext { clock.advanceBy(timeTakenToSortByFacility) }
-        )
     whenever(bloodPressureMeasurementDao.patientToFacilityIds(any()))
         .thenReturn(
             BehaviorSubject.createDefault(emptyList<PatientToFacilityId>())
+                .doOnNext { clock.advanceBy(timeTakenToSortByFacility) }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
-    repository.search("search").blockingFirst()
+    repository.search("search", facility).blockingFirst()
 
     val receivedEvents = reporter.receivedEvents
     assertThat(receivedEvents).hasSize(4)

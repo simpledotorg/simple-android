@@ -6,7 +6,9 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -14,7 +16,9 @@ typealias Ui = LinkIdWithPatientView
 typealias UiChange = (Ui) -> Unit
 
 class LinkIdWithPatientViewController @Inject constructor(
-    val patientRepository: PatientRepository
+    val patientRepository: PatientRepository,
+    val userSession: UserSession,
+    val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -41,12 +45,23 @@ class LinkIdWithPatientViewController @Inject constructor(
     val screenCreates = events
         .ofType<LinkIdWithPatientViewShown>()
 
+    val currentUserStream = userSession
+        .requireLoggedInUser()
+        .replay()
+        .refCount()
+
+    val currentFacilityStream = currentUserStream
+        .flatMap { loggedInUser -> facilityRepository.currentFacility(loggedInUser) }
+
     return events
         .ofType<LinkIdWithPatientAddClicked>()
-        .withLatestFrom(screenCreates)
-        .switchMapSingle { (_, screen) ->
+        .withLatestFrom(screenCreates, currentUserStream, currentFacilityStream) { _, screenCreated, loggedInUser, currentFacility ->
+          Triple(screenCreated, loggedInUser, currentFacility)
+
+        }
+        .switchMapSingle { (screen, loggedInUser, currentFacility) ->
           patientRepository
-              .addIdentifierToPatient(screen.patientUuid, screen.identifier)
+              .addIdentifierToPatient(screen.patientUuid, screen.identifier, loggedInUser, currentFacility)
               .map { { ui: Ui -> ui.closeSheetWithIdLinked() } }
         }
   }

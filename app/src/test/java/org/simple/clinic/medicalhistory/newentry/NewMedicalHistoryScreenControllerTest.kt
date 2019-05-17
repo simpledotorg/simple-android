@@ -6,11 +6,13 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
@@ -27,6 +29,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -39,17 +42,28 @@ class NewMedicalHistoryScreenControllerTest {
 
   private val screen: NewMedicalHistoryScreen = mock()
   private val medicalHistoryRepository: MedicalHistoryRepository = mock()
+  private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository: PatientRepository = mock()
+  private val userSession = mock<UserSession>()
 
   private lateinit var controller: NewMedicalHistoryScreenController
   private val uiEvents = PublishSubject.create<UiEvent>()
+  private val user = PatientMocker.loggedInUser()
+  private val facility = PatientMocker.facility()
 
   @Before
   fun setUp() {
-    controller = NewMedicalHistoryScreenController(medicalHistoryRepository, patientRepository)
+    controller = NewMedicalHistoryScreenController(
+        medicalHistoryRepository = medicalHistoryRepository,
+        patientRepository = patientRepository,
+        userSession = userSession,
+        facilityRepository = facilityRepository
+    )
 
     whenever(medicalHistoryRepository.save(any<UUID>(), any())).thenReturn(Completable.complete())
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.never())
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
@@ -72,7 +86,7 @@ class NewMedicalHistoryScreenControllerTest {
   @Test
   fun `when save is clicked with selected answers then patient with the answers should be saved and summary screen should be opened`() {
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     val questionsAndAnswers = MedicalHistoryQuestion.values()
         .map { it to randomAnswer() }
@@ -85,7 +99,7 @@ class NewMedicalHistoryScreenControllerTest {
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
-    inOrder.verify(patientRepository).saveOngoingEntryAsPatient()
+    inOrder.verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
@@ -106,13 +120,13 @@ class NewMedicalHistoryScreenControllerTest {
   @Test
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
-    whenever(patientRepository.saveOngoingEntryAsPatient()).thenReturn(Single.just(savedPatient))
+    whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(SaveMedicalHistoryClicked())
 
     val inOrder = inOrder(medicalHistoryRepository, patientRepository, screen)
-    inOrder.verify(patientRepository).saveOngoingEntryAsPatient()
+    inOrder.verify(patientRepository).saveOngoingEntryAsPatient(user, facility)
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(

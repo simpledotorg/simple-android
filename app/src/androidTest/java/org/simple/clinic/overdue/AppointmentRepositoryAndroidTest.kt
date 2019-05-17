@@ -15,6 +15,8 @@ import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGH
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.HIGHEST
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.LOW
@@ -80,12 +82,18 @@ class AppointmentRepositoryAndroidTest {
   @Inject
   lateinit var clock: UtcClock
 
+  @Inject
+  lateinit var facilityRepository: FacilityRepository
+
   private val testClock: TestUtcClock
     get() = clock as TestUtcClock
 
   private val authenticationRule = AuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
+
+  private val currentFacility: Facility
+    get() = facilityRepository.currentFacility(userSession.loggedInUserImmediate()!!).blockingFirst()
 
   @get:Rule
   val ruleChain = RuleChain
@@ -579,7 +587,7 @@ class AppointmentRepositoryAndroidTest {
         appointmentHasBeenOverdueFor: Duration
     ) {
       val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = "30"))
-          .andThen(patientRepository.saveOngoingEntryAsPatient())
+          .andThen(patientRepository.saveOngoingEntryAsPatient(userSession.loggedInUserImmediate()!!, currentFacility))
           .blockingGet()
           .uuid
 

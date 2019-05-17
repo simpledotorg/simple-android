@@ -7,12 +7,14 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.OperationTimingTracker
+import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
-import org.simple.clinic.patient.businessid.BusinessIdMetaData
+import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
+import org.simple.clinic.patient.businessid.BusinessIdMetaData.BpPassportMetaDataV1
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
@@ -21,7 +23,7 @@ import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.reports.ReportsRepository
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -43,8 +45,6 @@ typealias FacilityUuid = UUID
 class PatientRepository @Inject constructor(
     private val database: AppDatabase,
     private val dobValidator: UserInputDateValidator,
-    private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession,
     private val numberValidator: PhoneNumberValidator,
     private val utcClock: UtcClock,
     private val searchPatientByName: SearchPatientByName,
@@ -56,7 +56,7 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun search(name: String): Observable<PatientSearchResults> {
+  fun search(name: String, sortByFacility: Facility): Observable<PatientSearchResults> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)
 
     val fetchPatientNameAnalytics = "Fetch Name and Id"
@@ -92,20 +92,14 @@ class PatientRepository @Inject constructor(
           }
         }
         .doOnNext { timingTracker.start(sortByVisitedFacilityAnalytics) }
-        .compose(sortByCurrentFacility())
+        .compose(sortByVisitedFacility(sortByFacility))
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
         .doOnNext { timingTracker.stop(sortByVisitedFacilityAnalytics) }
   }
 
-  // TODO: Get user from caller.
-  private fun sortByCurrentFacility(): ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
+  private fun sortByVisitedFacility(facility: Facility): ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
     return ObservableTransformer { upstream ->
       val searchResults = upstream.replay().refCount()
-
-      val currentFacilityUuidStream = userSession
-          .requireLoggedInUser()
-          .switchMap { facilityRepository.currentFacility(it) }
-          .map { it.uuid }
 
       val patientToFacilityUuidStream = searchResults
           .map { patients -> patients.map { it.uuid } }
@@ -116,20 +110,13 @@ class PatientRepository @Inject constructor(
                 .toObservable()
           }
 
-      Observables.combineLatest(searchResults, currentFacilityUuidStream, patientToFacilityUuidStream)
-          .map { (patients, currentFacility, patientToFacilities) ->
-            val patientToUniqueFacilities = patientToFacilities
-                .fold(mutableMapOf<PatientUuid, MutableSet<FacilityUuid>>()) { facilityUuids, (patientUuid, facilityUuid) ->
-                  if (patientUuid !in facilityUuids) {
-                    facilityUuids[patientUuid] = mutableSetOf()
-                  }
+      Observables.combineLatest(searchResults, patientToFacilityUuidStream)
+          .map { (patients, patientToFacilities) ->
+            val patientsToVisitedFacilities = mapPatientsToVisitedFacilities(patientToFacilities)
 
-                  facilityUuids[patientUuid]?.add(facilityUuid)
-                  facilityUuids
-                } as Map<PatientUuid, Set<FacilityUuid>>
-
-            val hasVisitedCurrentFacility: (PatientSearchResult) -> Boolean = {
-              patientToUniqueFacilities[it.uuid]?.contains(currentFacility) ?: false
+            val hasVisitedCurrentFacility: (PatientSearchResult) -> Boolean = { searchResult ->
+              val patientUuid = searchResult.uuid
+              patientsToVisitedFacilities[patientUuid]?.contains(facility.uuid) ?: false
             }
 
             val (patientsInCurrentFacility, patientsInOtherFacility) = patients.partition(hasVisitedCurrentFacility)
@@ -140,6 +127,18 @@ class PatientRepository @Inject constructor(
             )
           }
     }
+  }
+
+  private fun mapPatientsToVisitedFacilities(patientToFacilities: List<PatientToFacilityId>): Map<PatientUuid, Set<FacilityUuid>> {
+    return patientToFacilities
+        .fold(mutableMapOf<PatientUuid, MutableSet<FacilityUuid>>()) { facilityUuids, (patientUuid, facilityUuid) ->
+          if (patientUuid !in facilityUuids) {
+            facilityUuids[patientUuid] = mutableSetOf()
+          }
+
+          facilityUuids[patientUuid]?.add(facilityUuid)
+          facilityUuids
+        }
   }
 
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
@@ -254,7 +253,10 @@ class PatientRepository @Inject constructor(
     }
   }
 
-  fun saveOngoingEntryAsPatient(): Single<Patient> {
+  fun saveOngoingEntryAsPatient(
+      loggedInUser: User,
+      currentFacility: Facility
+  ): Single<Patient> {
     val cachedOngoingEntry = ongoingEntry().cache()
 
     val validation = cachedOngoingEntry
@@ -321,7 +323,7 @@ class PatientRepository @Inject constructor(
           if (entry.identifier == null) {
             Completable.complete()
           } else {
-            addIdentifierToPatient(patientUuid, entry.identifier).toCompletable()
+            addIdentifierToPatient(patientUuid, entry.identifier, loggedInUser, currentFacility).toCompletable()
           }
         }
 
@@ -471,8 +473,13 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
-  fun addIdentifierToPatient(patientUuid: UUID, identifier: Identifier): Single<BusinessId> {
-    val businessIdStream = createBusinessIdMetaDataForIdentifier(identifier.type)
+  fun addIdentifierToPatient(
+      patientUuid: UUID,
+      identifier: Identifier,
+      assigningUser: User,
+      assigningFacility: Facility
+  ): Single<BusinessId> {
+    val businessIdStream = createBusinessIdMetaDataForIdentifier(identifier.type, assigningUser, assigningFacility)
         .map { metaAndVersion ->
           val now = Instant.now(utcClock)
           BusinessId(
@@ -494,34 +501,25 @@ class PatientRepository @Inject constructor(
 
   private fun saveBusinessId(businessId: BusinessId): Completable {
     return Completable.fromAction {
-          database.businessIdDao().save(listOf(businessId))
-        }
+      database.businessIdDao().save(listOf(businessId))
+    }
   }
 
-  private fun createBusinessIdMetaDataForIdentifier(identifierType: Identifier.IdentifierType): Single<BusinessIdMetaAndVersion> {
+  private fun createBusinessIdMetaDataForIdentifier(
+      identifierType: Identifier.IdentifierType,
+      assigningUser: User,
+      assigningFacility: Facility
+  ): Single<BusinessIdMetaAndVersion> {
     return when (identifierType) {
-      BpPassport -> createBpPassportMetaData()
+      BpPassport -> createBpPassportMetaData(assigningUser, assigningFacility)
       else -> Single.error<BusinessIdMetaAndVersion>(IllegalArgumentException("Cannot create meta for identifier of type: $identifierType"))
     }
   }
 
-  private fun createBpPassportMetaData(): Single<BusinessIdMetaAndVersion> {
-    val currentUserStream = userSession
-        .requireLoggedInUser()
-        .take(1)
-        .replay()
-        .refCount()
-
-    val currentFacilityStream = currentUserStream
-        .flatMap(facilityRepository::currentFacility)
-        .take(1)
-
-    return Observables
-        .combineLatest(currentUserStream, currentFacilityStream)
-        .map { (user, facility) -> BusinessIdMetaData.BpPassportMetaDataV1(assigningUserUuid = user.uuid, assigningFacilityUuid = facility.uuid) }
-        .map { businessIdMetaDataAdapter.serialize(it, BusinessId.MetaDataVersion.BpPassportMetaDataV1) to BusinessId.MetaDataVersion.BpPassportMetaDataV1 }
+  private fun createBpPassportMetaData(assigningUser: User, assigningFacility: Facility): Single<BusinessIdMetaAndVersion> {
+    return Single.just(BpPassportMetaDataV1(assigningUserUuid = assigningUser.uuid, assigningFacilityUuid = assigningFacility.uuid))
+        .map { businessIdMetaDataAdapter.serialize(it, MetaDataVersion.BpPassportMetaDataV1) to MetaDataVersion.BpPassportMetaDataV1 }
         .map { (meta, version) -> BusinessIdMetaAndVersion(meta, version) }
-        .firstOrError()
   }
 
   fun findPatientWithBusinessId(identifier: String): Observable<Optional<Patient>> {
@@ -561,5 +559,5 @@ class PatientRepository @Inject constructor(
         ).toObservable()
   }
 
-  private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: BusinessId.MetaDataVersion)
+  private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

@@ -36,6 +36,7 @@ import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.Unknown
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.reports.ReportsRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -112,6 +113,12 @@ class PatientRepositoryAndroidTest {
   private val testClock: TestUtcClock
     get() = clock as TestUtcClock
 
+  private val loggedInUser: User
+    get() = userSession.loggedInUserImmediate()!!
+
+  private val currentFacility: Facility
+    get() = facilityRepository.currentFacility(loggedInUser).blockingFirst()
+
   @Before
   fun setUp() {
     TestClinicApp.appComponent().inject(this)
@@ -137,7 +144,7 @@ class PatientRepositoryAndroidTest {
         .map { ongoingEntry -> ongoingEntry.copy(address = ongoingAddress) }
         .map { updatedEntry -> updatedEntry.copy(phoneNumber = ongoingPhoneNumber) }
         .flatMapCompletable { withAddressAndPhoneNumbers -> patientRepository.saveOngoingEntry(withAddressAndPhoneNumbers) }
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     val patient = database.patientDao().getOne(savedPatient.uuid)!!
@@ -163,7 +170,7 @@ class PatientRepositoryAndroidTest {
       val patientEntry = testData.ongoingPatientEntry(fullName = fullName)
 
       val patient = patientRepository.saveOngoingEntry(patientEntry)
-          .andThen(patientRepository.saveOngoingEntryAsPatient())
+          .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
           .blockingGet()
 
       assertThat(patient.searchableName).isEqualTo(expectedSearchableName)
@@ -175,7 +182,7 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Jeevan Bima", phone = null)
 
     val savedPatient = patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     val patient = database.patientDao().patient(savedPatient.uuid)
@@ -191,7 +198,7 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Ashok Kumar")
 
     val savedPatient = patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     val patient = database.patientDao().getOne(savedPatient.uuid)!!
@@ -211,7 +218,7 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(dateOfBirth = null, age = null)
 
     patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .test()
         .assertError(AssertionError::class.java)
   }
@@ -226,7 +233,7 @@ class PatientRepositoryAndroidTest {
     testClock.advanceBy(advanceClockBy)
 
     val savedPatientUuid = patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
         .uuid
 
@@ -247,10 +254,10 @@ class PatientRepositoryAndroidTest {
     val patientEntry = testData.ongoingPatientEntry(fullName = "Asha Kumar", dateOfBirth = "15/08/1947", age = null)
 
     patientRepository.saveOngoingEntry(patientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .subscribe()
 
-    val combinedPatient = patientRepository.search(name = "kumar")
+    val combinedPatient = patientRepository.search(name = "kumar", sortByFacility = currentFacility)
         .blockingFirst()
         .allPatientSearchResults()
         .first()
@@ -274,7 +281,7 @@ class PatientRepositoryAndroidTest {
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
     val abhayKumar = patientRepository.saveOngoingEntry(ongoingPatientEntry)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.TRANSGENDER)
@@ -282,7 +289,7 @@ class PatientRepositoryAndroidTest {
     val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.MOBILE, active = true)
     val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.TRANSGENDER)
@@ -290,7 +297,7 @@ class PatientRepositoryAndroidTest {
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
     val abhishekKumar = patientRepository.saveOngoingEntry(ope3)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.TRANSGENDER)
@@ -298,20 +305,20 @@ class PatientRepositoryAndroidTest {
     val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
     val abshotKumar = patientRepository.saveOngoingEntry(ope4)
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val search0 = patientRepository.search("Vinod").blockingFirst()
+    val search0 = patientRepository.search("Vinod", currentFacility).blockingFirst()
     assertThat(search0.allPatientSearchResults()).hasSize(0)
 
-    val search1 = patientRepository.search("Alok").blockingFirst()
+    val search1 = patientRepository.search("Alok", currentFacility).blockingFirst()
     val person1 = search1.allPatientSearchResults().first()
     assertThat(search1.allPatientSearchResults()).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search("ab").blockingFirst()
+    val search2 = patientRepository.search("ab", currentFacility).blockingFirst()
     val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
 
     assertThat(search2.allPatientSearchResults()).hasSize(expectedResultsInSearch2.size)
@@ -326,8 +333,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun deleted_blood_pressures_should_be_excluded_when_searching_for_patients() {
     val now = Instant.now(clock)
-    val user = userSession.loggedInUserImmediate()!!
-    val currentFacility = facilityRepository.currentFacility(user).blockingFirst()
+    val currentFacility = facilityRepository.currentFacility(loggedInUser).blockingFirst()
 
     fun createPatientProfile(fullName: String): PatientProfile {
       return testData.patientProfile()
@@ -342,7 +348,7 @@ class PatientRepositoryAndroidTest {
       return testData.bloodPressureMeasurement(
           patientUuid = patientUuid,
           facilityUuid = currentFacility.uuid,
-          userUuid = user.uuid,
+          userUuid = loggedInUser.uuid,
           createdAt = now,
           deletedAt = deletedAt,
           recordedAt = recordedAt)
@@ -375,7 +381,7 @@ class PatientRepositoryAndroidTest {
     val patient3WithNoBps = createPatientProfile(fullName = "Patient with no BPs")
     patientRepository.save(listOf(patient3WithNoBps)).blockingAwait()
 
-    val searchResults = patientRepository.search("patient")
+    val searchResults = patientRepository.search("patient", currentFacility)
         .blockingFirst()
         .allPatientSearchResults()
         .groupBy { it.uuid }
@@ -460,14 +466,12 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun patients_who_have_ever_visited_current_facility_should_be_present_at_the_top_when_searching() {
-    val user = userSession.requireLoggedInUser().blockingFirst()
-
     val facilities = facilityRepository.facilities().blockingFirst()
-    val currentFacility = facilityRepository.currentFacility(user).blockingFirst()
+    val currentFacility = facilityRepository.currentFacility(loggedInUser).blockingFirst()
     val otherFacility = facilities.first { it != currentFacility }
 
-    facilityRepository.associateUserWithFacilities(user, facilities.map { it.uuid }).blockingAwait()
-    facilityRepository.setCurrentFacility(user, currentFacility).blockingAwait()
+    facilityRepository.associateUserWithFacilities(loggedInUser, facilities.map { it.uuid }).blockingAwait()
+    facilityRepository.setCurrentFacility(loggedInUser, currentFacility).blockingAwait()
 
     data class FacilityAndBloodPressureDeleted(val facility: Facility, val isBloodPressureDeleted: Boolean)
 
@@ -512,7 +516,7 @@ class PatientRepositoryAndroidTest {
       }
     }
 
-    val searchResults = patientRepository.search("patient").blockingFirst()
+    val searchResults = patientRepository.search("patient", currentFacility).blockingFirst()
     assertThat(searchResults.allPatientSearchResults()).hasSize(data.size)
 
     val patientsWhoHaveVisitedCurrentFacility = setOf(
@@ -544,16 +548,16 @@ class PatientRepositoryAndroidTest {
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient = patientRepository
         .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val searchResults = patientRepository.search(name = "Ashok").blockingFirst()
+    val searchResults = patientRepository.search(name = "Ashok", sortByFacility = currentFacility).blockingFirst()
     assertThat(searchResults.allPatientSearchResults()).isNotEmpty()
     assertThat(searchResults.allPatientSearchResults().first().fullName).isEqualTo("Ashok Kumar")
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok").blockingFirst()
+    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok", sortByFacility = currentFacility).blockingFirst()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(searchResultsAfterUpdate.allPatientSearchResults()).isEmpty()
 
@@ -571,7 +575,7 @@ class PatientRepositoryAndroidTest {
 
     val patient = patientRepository
         .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
-        .andThen(patientRepository.saveOngoingEntryAsPatient())
+        .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
     testClock.advanceBy(Duration.ofDays(365))
@@ -619,7 +623,13 @@ class PatientRepositoryAndroidTest {
     patientRepository.save(patientsToSave).blockingAwait()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1000)
 
-    assertThat(patientRepository.search(name = "ame").blockingFirst().allPatientSearchResults().size).isEqualTo(config.limitOfSearchResults)
+    assertThat(
+        patientRepository
+            .search(name = "ame", sortByFacility = currentFacility)
+            .blockingFirst()
+            .allPatientSearchResults()
+            .size
+    ).isEqualTo(config.limitOfSearchResults)
   }
 
   @Test
@@ -1339,9 +1349,6 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun saving_an_identifier_for_a_patient_must_work_as_expected() {
-    val currentUserUuid = testData.qaUserUuid()
-    val currentUserFacilityUuid = testData.qaUserFacilityUuid()
-
     val patientProfile = testData.patientProfile(syncStatus = DONE, generateBusinessId = false)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
@@ -1354,7 +1361,9 @@ class PatientRepositoryAndroidTest {
     val savedBusinessId = patientRepository
         .addIdentifierToPatient(
             patientUuid = patientProfile.patient.uuid,
-            identifier = Identifier(bpPassportCode, BpPassport)
+            identifier = Identifier(bpPassportCode, BpPassport),
+            assigningUser = loggedInUser,
+            assigningFacility = currentFacility
         )
         .blockingGet()
 
@@ -1368,7 +1377,10 @@ class PatientRepositoryAndroidTest {
     assertThat(savedBusinessId.deletedAt).isNull()
 
     val savedMeta = businessIdMetaDataAdapter.deserialize(savedBusinessId.metaData, BusinessId.MetaDataVersion.BpPassportMetaDataV1)
-    val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(assigningUserUuid = currentUserUuid, assigningFacilityUuid = currentUserFacilityUuid)
+    val expectedSavedMeta = BusinessIdMetaData.BpPassportMetaDataV1(
+        assigningUserUuid = loggedInUser.uuid,
+        assigningFacilityUuid = currentFacility.uuid
+    )
     assertThat(savedMeta).isEqualTo(expectedSavedMeta)
 
     val (updatedPatient) = patientRepository.patient(patientProfile.patient.uuid).blockingFirst() as Just
@@ -1515,7 +1527,7 @@ class PatientRepositoryAndroidTest {
         appointmentDate: LocalDate?
     ): Pair<UUID, String> {
       val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName))
-          .andThen(patientRepository.saveOngoingEntryAsPatient())
+          .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
           .blockingGet()
           .uuid
 

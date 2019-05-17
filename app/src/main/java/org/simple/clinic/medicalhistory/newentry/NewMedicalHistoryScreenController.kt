@@ -7,6 +7,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -16,6 +17,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_F
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -25,7 +27,9 @@ typealias UiChange = (Ui) -> Unit
 
 class NewMedicalHistoryScreenController @Inject constructor(
     private val medicalHistoryRepository: MedicalHistoryRepository,
-    private val patientRepository: PatientRepository
+    private val patientRepository: PatientRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -66,9 +70,20 @@ class NewMedicalHistoryScreenController @Inject constructor(
         .ofType<NewMedicalHistoryAnswerToggled>()
         .scan(OngoingMedicalHistoryEntry(), updateEntry)
 
+    val currentUserStream = userSession
+        .requireLoggedInUser()
+        .replay()
+        .refCount()
+
+    val currentFacilityStream = currentUserStream
+        .flatMap { loggedInUser -> facilityRepository.currentFacility(loggedInUser) }
+
     return events
         .ofType<SaveMedicalHistoryClicked>()
-        .flatMapSingle { patientRepository.saveOngoingEntryAsPatient() }
+        .withLatestFrom(currentUserStream, currentFacilityStream) { _, loggedInUser, currentFacility ->
+          loggedInUser to currentFacility
+        }
+        .flatMapSingle { (loggedInUser, currentFacility) -> patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility) }
         .withLatestFrom(ongoingHistoryEntry)
         .flatMap { (savedPatient, entry) ->
           medicalHistoryRepository

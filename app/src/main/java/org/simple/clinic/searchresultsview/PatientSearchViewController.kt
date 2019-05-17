@@ -58,13 +58,18 @@ class PatientSearchViewController @Inject constructor(
 
     return Observables.combineLatest(viewCreated, patientNames)
         .flatMap { (_, patientName) ->
-          val facilities = userSession
+          val loggedInUserStream = userSession
               .requireLoggedInUser()
-              .switchMap { facilityRepository.currentFacility(it) }
+              .replay()
+              .refCount()
 
-          val searchResults = patientRepository.search(patientName)
+          val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
 
-          Observables.combineLatest(searchResults, facilities)
+          val searchResults = currentFacilityStream.switchMap { facility ->
+            patientRepository.search(patientName, facility)
+          }
+
+          Observables.combineLatest(searchResults, currentFacilityStream)
               // We can't understand why, but search is occasionally
               // running on the main thread. This is a temporary solution.
               .subscribeOn(Schedulers.io())

@@ -18,6 +18,9 @@ import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.UtcClock
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
@@ -43,9 +46,14 @@ class DatabaseMigrationAndroidTest {
   @field:Named("last_patient_pull_token")
   lateinit var lastPatientPullToken: Preference<Optional<String>>
 
+  @Inject
+  lateinit var clock: UtcClock
+
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+    (clock as TestUtcClock).setYear(2000)
+
     helper.migrations = migrations
 
     lastFacilityPullToken.set(None)
@@ -1724,7 +1732,7 @@ class DatabaseMigrationAndroidTest {
         '2018-09-23T11:20:42.008Z',
         'updated-at',
         'null',
-        'IN_FLIGHT',
+        'DONE',
         25,
         'age-updated-at',
         'dob');
@@ -1735,7 +1743,7 @@ class DatabaseMigrationAndroidTest {
       'uuid1',
       120,
       90,
-      'DONE',
+      'PENDING',
       'user-uuid',
       'facility-uuid',
       'Patient created before first BP',
@@ -1756,7 +1764,7 @@ class DatabaseMigrationAndroidTest {
         '2018-11-23T11:20:42.008Z',
         'updated-at',
         NULL,
-        'IN_FLIGHT',
+        'DONE',
         25,
         'age-updated-at',
         'dob');
@@ -1767,7 +1775,7 @@ class DatabaseMigrationAndroidTest {
       'uuid2',
       120,
       90,
-      'DONE',
+      'PENDING',
       'user-uuid',
       'facility-uuid',
       'Patient registered after first BP was recorded',
@@ -1806,7 +1814,7 @@ class DatabaseMigrationAndroidTest {
         '2018-11-23T11:20:42.008Z',
         'updated-at',
         NULL,
-        'IN_FLIGHT',
+        'DONE',
         25,
         'age-updated-at',
         'dob');
@@ -1817,7 +1825,7 @@ class DatabaseMigrationAndroidTest {
       'uuid3',
       120,
       90,
-      'DONE',
+      'PENDING',
       'user-uuid',
       'facility-uuid',
       'Patient has deleted BPs only',
@@ -1849,7 +1857,7 @@ class DatabaseMigrationAndroidTest {
       'uuid4',
       120,
       90,
-      'DONE',
+      'PENDING',
       'user-uuid',
       'facility-uuid',
       'Patient with multiple BPs',
@@ -1872,43 +1880,92 @@ class DatabaseMigrationAndroidTest {
       NULL)
     """)
 
+    db_v34.execSQL("""
+      INSERT INTO $patientTable VALUES(
+        'Patient with no pending BPs',
+        'addressUuid',
+        'Dev',
+        'Dev',
+        'MALE',
+        NULL,
+        'ACTIVE',
+        '2018-11-23T11:20:42.008Z',
+        'updated-at',
+        NULL,
+        'DONE',
+        25,
+        'age-updated-at',
+        'dob');
+    """)
+
+    db_v34.execSQL("""
+      INSERT INTO $bpTable VALUES(
+      'uuid6',
+      120,
+      90,
+      'DONE',
+      'user-uuid',
+      'facility-uuid',
+      'Patient with no pending BPs',
+      '2017-09-25T11:20:42.008Z',
+      'update-at',
+      NULL)
+    """)
+
     val db_v35 = helper.migrateTo(version = 35)
 
-    val newColumnName = "recordedAt"
-
     db_v35.query("""
-      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient created before first BP'
+      SELECT * FROM $patientTable WHERE uuid = 'Patient created before first BP'
     """).use {
       it.moveToNext()
-      assertThat(it.string(newColumnName)).isEqualTo("2018-09-23T11:20:42.008Z")
+      assertThat(it.string("recordedAt")).isEqualTo("2018-09-23T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+      assertThat(it.string("updatedAt")).isEqualTo("updated-at")
     }
 
     db_v35.query("""
-      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient registered after first BP was recorded'
+      SELECT * FROM $patientTable WHERE uuid = 'Patient registered after first BP was recorded'
     """).use {
       it.moveToNext()
-      assertThat(it.string(newColumnName)).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("recordedAt")).isEqualTo("2018-09-25T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+      assertThat(it.string("updatedAt")).isEqualTo(Instant.now(clock).toString())
     }
 
     db_v35.query("""
-      SELECT $newColumnName FROM $patientTable WHERE uuid = 'No BP for patient'
+      SELECT * FROM $patientTable WHERE uuid = 'No BP for patient'
     """).use {
       it.moveToNext()
-      assertThat(it.string(newColumnName)).isEqualTo("2018-11-23T11:20:42.008Z")
+      assertThat(it.string("recordedAt")).isEqualTo("2018-11-23T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("IN_FLIGHT")
+      assertThat(it.string("updatedAt")).isEqualTo("updated-at")
     }
 
     db_v35.query("""
-      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient has deleted BPs only'
+      SELECT * FROM $patientTable WHERE uuid = 'Patient has deleted BPs only'
     """).use {
       it.moveToNext()
-      assertThat(it.string(newColumnName)).isEqualTo("2018-11-23T11:20:42.008Z")
+      assertThat(it.string("recordedAt")).isEqualTo("2018-11-23T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+      assertThat(it.string("updatedAt")).isEqualTo("updated-at")
     }
 
     db_v35.query("""
-      SELECT $newColumnName FROM $patientTable WHERE uuid = 'Patient with multiple BPs'
+      SELECT * FROM $patientTable WHERE uuid = 'Patient with multiple BPs'
     """).use {
       it.moveToNext()
-      assertThat(it.string(newColumnName)).isEqualTo("2017-09-25T11:20:42.008Z")
+      assertThat(it.string("recordedAt")).isEqualTo("2017-09-25T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("PENDING")
+      assertThat(it.string("updatedAt")).isEqualTo(Instant.now(clock).toString())
+    }
+
+    db_v35.query("""
+      SELECT * FROM $patientTable WHERE uuid = 'Patient with no pending BPs'
+    """).use {
+      it.moveToNext()
+      assertThat(it.string("recordedAt")).isEqualTo("2017-09-25T11:20:42.008Z")
+      assertThat(it.string("syncStatus")).isEqualTo("DONE")
+      assertThat(it.string("updatedAt")).isEqualTo("updated-at")
     }
   }
 

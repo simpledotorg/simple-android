@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue.phonemask
 
+import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -55,30 +56,60 @@ class PhoneMaskBottomSheetControllerTest {
       listOf(NormalCallClicked, SecureCallClicked)
 
   @Test
-  @Parameters(method = "params for making phone calls")
-  fun `when any call button is clicked and permission result is received, appropriate call should be made`(
+  @Parameters(method = "params for making normal phone calls")
+  fun `when normal call button is clicked and permission result is received, appropriate call should be made`(
       callTypeEvent: UiEvent,
       permission: RuntimePermissionResult,
       caller: Caller
   ) {
     val number = "1234567890"
 
-    whenever(phoneCaller.normalCall(number, caller)).thenReturn(Completable.complete())
-    whenever(phoneCaller.secureCall(number, caller)).thenReturn(Completable.complete())
+    var isCompletableSubscribed = false
+    val normalCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
+    whenever(phoneCaller.normalCall(number, caller)).thenReturn(normalCallCompletable)
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(overduePatient(phoneNumber = number)))
     uiEvents.onNext(callTypeEvent)
     uiEvents.onNext(CallPhonePermissionChanged(permission))
 
+    assertThat(isCompletableSubscribed).isTrue()
     verify(screen).requestCallPermission()
     verifyNoMoreInteractions(screen)
   }
 
-  private fun `params for making phone calls`() =
+  @Test
+  @Parameters(method = "params for making secure phone calls")
+  fun `when secure call button is clicked and permission result is received, appropriate call should be made`(
+      callTypeEvent: UiEvent,
+      permission: RuntimePermissionResult,
+      caller: Caller
+  ) {
+    val number = "1234567890"
+
+    var isCompletableSubscribed = false
+    val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
+    whenever(phoneCaller.secureCall(number, caller)).thenReturn(secureCallCompletable)
+
+    uiEvents.onNext(PhoneMaskBottomSheetCreated(overduePatient(phoneNumber = number)))
+    uiEvents.onNext(callTypeEvent)
+    uiEvents.onNext(CallPhonePermissionChanged(permission))
+
+    assertThat(isCompletableSubscribed).isTrue()
+    verify(screen).requestCallPermission()
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Suppress("Unused")
+  private fun `params for making normal phone calls`() =
       listOf(
           listOf(NormalCallClicked, GRANTED, WithoutDialer),
           listOf(NormalCallClicked, DENIED, UsingDialer),
-          listOf(NormalCallClicked, NEVER_ASK_AGAIN, UsingDialer),
+          listOf(NormalCallClicked, NEVER_ASK_AGAIN, UsingDialer)
+      )
+
+  @Suppress("Unused")
+  private fun `params for making secure phone calls`() =
+      listOf(
           listOf(SecureCallClicked, GRANTED, WithoutDialer),
           listOf(SecureCallClicked, DENIED, UsingDialer),
           listOf(SecureCallClicked, NEVER_ASK_AGAIN, UsingDialer)

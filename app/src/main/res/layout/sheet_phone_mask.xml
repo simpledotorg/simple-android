@@ -5,7 +5,31 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:layout_marginTop="@dimen/spacing_24"
   android:orientation="vertical">
+
+  <TextView
+    android:id="@+id/phonemask_name"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:gravity="center"
+    android:maxLines="1"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
+    tools:text="Anish Acharya, M, 43" />
+
+  <TextView
+    android:id="@+id/phonemask_phone_number"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_8"
+    android:gravity="center"
+    android:maxLines="1"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
+    tools:text="+91 9876543210" />
 
   <LinearLayout
     android:layout_width="match_parent"

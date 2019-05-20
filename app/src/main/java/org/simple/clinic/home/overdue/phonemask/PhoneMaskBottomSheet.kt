@@ -1,10 +1,12 @@
 package org.simple.clinic.home.overdue.phonemask
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -39,10 +41,15 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
 
   private val normalCallButton by bindView<View>(R.id.phonemask_normal_call_button)
   private val secureCallButton by bindView<View>(R.id.phonemask_secure_call_button)
+  private val nameTextView by bindView<TextView>(R.id.phonemask_name)
+  private val phoneNumberTextView by bindView<TextView>(R.id.phonemask_phone_number)
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_phone_mask)
+
+    setupView()
+
     TheActivity.component.inject(this)
 
     bindUiToController(
@@ -56,6 +63,15 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
         controller = controller,
         screenDestroys = onDestroys
     )
+  }
+
+  @SuppressLint("SetTextI18n")
+  private fun setupView() {
+    patient().apply {
+      val genderLetter = resources.getString(gender.displayLetterRes)
+      nameTextView.text = "$name, $genderLetter, $age"
+      phoneNumberTextView.text = phoneNumber
+    }
   }
 
   private fun normalCallClicks() =

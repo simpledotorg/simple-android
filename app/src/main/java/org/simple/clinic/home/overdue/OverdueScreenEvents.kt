@@ -1,7 +1,6 @@
 package org.simple.clinic.home.overdue
 
 import org.simple.clinic.home.overdue.OverdueListItem.Patient
-import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -9,10 +8,6 @@ class OverdueScreenCreated : UiEvent
 
 data class CallPatientClicked(val patient: Patient) : UiEvent {
   override val analyticsName = "Overdue Screen:Call Patient clicked"
-}
-
-data class CallPhonePermissionChanged(val result: RuntimePermissionResult) : UiEvent {
-  override val analyticsName = "Overdue Screen:Call Phone Permission:$result"
 }
 
 data class AgreedToVisitClicked(val appointmentUuid: UUID) : UiEvent {

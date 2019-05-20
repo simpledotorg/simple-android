@@ -27,6 +27,7 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -109,6 +110,8 @@ class UserSessionTest {
   private val patientPullToken = mock<Preference<Optional<String>>>()
   private val loginOtpSmsListener = mock<LoginOtpSmsListener>()
   private val fileStorage = mock<FileStorage>()
+  private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
+  private val onboardingCompletePreference = mock<Preference<Boolean>>()
 
   private val userSession = UserSession(
       loginApi = loginApi,
@@ -124,6 +127,7 @@ class UserSessionTest {
       accessTokenPreference = accessTokenPref,
       bruteForceProtection = bruteForceProtection,
       fileStorage = fileStorage,
+      reportPendingRecords = reportPendingRecords,
       patientSyncPullToken = patientPullToken,
       bpSyncPullToken = bpPullToken,
       prescriptionSyncPullToken = prescriptionPullToken,
@@ -787,6 +791,8 @@ class UserSessionTest {
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+    var pendingRecordsReported = false
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete().doOnSubscribe { pendingRecordsReported = true })
 
     val result = userSession.logout().blockingGet()
 
@@ -794,16 +800,21 @@ class UserSessionTest {
 
     verify(fileStorage).clearAllFiles()
 
-    val inorder = inOrder(preferencesEditor)
-    inorder.verify(preferencesEditor).clear()
-    inorder.verify(preferencesEditor).apply()
+    val inorderForPreferences = inOrder(preferencesEditor)
+    inorderForPreferences.verify(preferencesEditor).clear()
+    inorderForPreferences.verify(preferencesEditor).apply()
 
-    verify(appDatabase).clearAllTables()
+    val inorderForDatabase = inOrder(reportPendingRecords, appDatabase)
+    inorderForDatabase.verify(reportPendingRecords).report()
+    inorderForDatabase.verify(appDatabase).clearAllTables()
+
+    assertThat(pendingRecordsReported).isTrue()
   }
 
   @Test
   fun `when clearing private files works partially the logout must succeed`() {
     whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.PartiallyDeleted)
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
@@ -817,6 +828,7 @@ class UserSessionTest {
   @Parameters(method = "params for logout clear files failures")
   fun `when clearing private files fails the logout must fail`(cause: Throwable) {
     whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Failure(cause))
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
@@ -835,6 +847,7 @@ class UserSessionTest {
   @Parameters(method = "params for logout clear preferences failures")
   fun `when clearing shared preferences fails, the logout must fail`(cause: Throwable) {
     whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Success)
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(preferencesEditor.apply()).thenThrow(cause)
@@ -854,6 +867,7 @@ class UserSessionTest {
   @Parameters(method = "params for logout clear database failures")
   fun `when clearing app database fails, the logout must fail`(cause: Throwable) {
     whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Success)
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
     val preferencesEditor = mock<SharedPreferences.Editor>()
     whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
     whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
@@ -866,6 +880,34 @@ class UserSessionTest {
 
   @Suppress("Unused")
   private fun `params for logout clear database failures`(): List<Any> {
+    return listOf(NullPointerException(), RuntimeException())
+  }
+
+  @Test
+  @Parameters(method = "params for failures during logout when pending sync records fails")
+  fun `when reporting pending records fails, logout must not be affected`(cause: Throwable) {
+    whenever(fileStorage.clearAllFiles()).thenReturn(ClearAllFilesResult.Success)
+    whenever(reportPendingRecords.report()).thenReturn(Completable.error(cause))
+    val preferencesEditor = mock<SharedPreferences.Editor>()
+    whenever(preferencesEditor.clear()).thenReturn(preferencesEditor)
+    whenever(sharedPrefs.edit()).thenReturn(preferencesEditor)
+
+    val result = userSession.logout().blockingGet()
+
+    verify(fileStorage).clearAllFiles()
+
+    val inorderForPreferences = inOrder(preferencesEditor, onboardingCompletePreference)
+    inorderForPreferences.verify(preferencesEditor).clear()
+    inorderForPreferences.verify(preferencesEditor).apply()
+    inorderForPreferences.verify(onboardingCompletePreference).set(true)
+
+    verify(appDatabase).clearAllTables()
+
+    assertThat(result).isEqualTo(UserSession.LogoutResult.Success)
+  }
+
+  @Suppress("Unused")
+  private fun `params for failures during logout when pending sync records fails`(): List<Any> {
     return listOf(NullPointerException(), RuntimeException())
   }
 }

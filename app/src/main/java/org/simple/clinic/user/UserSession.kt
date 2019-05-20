@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.annotation.WorkerThread
 import com.f2prateek.rx.preferences2.Preference
 import com.squareup.moshi.Moshi
+import dagger.Lazy
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -71,11 +72,12 @@ class UserSession @Inject constructor(
     private val passwordHasher: PasswordHasher,
     // This is Lazy to work around a cyclic dependency between
     // DataSync, UserSession, and PatientRepository.
-    private val dataSync: dagger.Lazy<DataSync>,
+    private val dataSync: Lazy<DataSync>,
     private val loginOtpSmsListener: LoginOtpSmsListener,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
     private val fileStorage: FileStorage,
+    private val reportPendingRecords: ReportPendingRecordsToAnalytics,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
     @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
@@ -373,7 +375,12 @@ class UserSession @Inject constructor(
   // there is no way to log out, but this is something to keep in mind.
   fun logout(): Single<LogoutResult> {
     return Completable
-        .concatArray(clearLocalDatabase(), clearSharedPreferences(), clearPrivateFiles())
+        .concatArray(
+            reportPendingRecords.report().onErrorComplete(),
+            clearLocalDatabase(),
+            clearSharedPreferences(),
+            clearPrivateFiles()
+        )
         .toSingleDefault(LogoutResult.Success as LogoutResult)
         .onErrorReturn { cause -> LogoutResult.Failure(cause) }
   }

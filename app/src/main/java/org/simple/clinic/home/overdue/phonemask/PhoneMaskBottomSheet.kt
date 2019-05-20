@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotterknife.bindView
 import org.simple.clinic.R
@@ -29,15 +28,13 @@ private const val CALL_PHONE_PERMISSION = Manifest.permission.CALL_PHONE
 class PhoneMaskBottomSheet : BottomSheetActivity() {
 
   @Inject
-  lateinit var activity: TheActivity
-
-  @Inject
   lateinit var screenRouter: ScreenRouter
 
   @Inject
   lateinit var controller: PhoneMaskBottomSheetController
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
+  private val permissionResults = PublishSubject.create<ActivityPermissionResult>()
 
   private val normalCallButton by bindView<View>(R.id.phonemask_normal_call_button)
   private val secureCallButton by bindView<View>(R.id.phonemask_secure_call_button)
@@ -96,15 +93,18 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
   }
 
   fun requestCallPermission() {
-    RuntimePermissions.request(activity, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
+    RuntimePermissions.request(this, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
+  }
+
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    permissionResults.onNext(ActivityPermissionResult(requestCode))
   }
 
   private fun callPermissionChanges() =
-      screenRouter
-          .streamScreenResults()
-          .ofType<ActivityPermissionResult>()
+      permissionResults
           .filter { it.requestCode == REQUESTCODE_CALL_PHONE_PERMISSION }
-          .map { RuntimePermissions.check(activity, CALL_PHONE_PERMISSION) }
+          .map { RuntimePermissions.check(this, CALL_PHONE_PERMISSION) }
           .map(::CallPhonePermissionChanged)
 
   companion object {

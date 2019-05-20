@@ -14,9 +14,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker.overduePatient
-import org.simple.clinic.phone.Caller
-import org.simple.clinic.phone.Caller.UsingDialer
-import org.simple.clinic.phone.Caller.WithoutDialer
+import org.simple.clinic.phone.Dialer
+import org.simple.clinic.phone.Dialer.Automatic
+import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
@@ -60,13 +60,13 @@ class PhoneMaskBottomSheetControllerTest {
   fun `when normal call button is clicked and permission result is received, appropriate call should be made`(
       callTypeEvent: UiEvent,
       permission: RuntimePermissionResult,
-      caller: Caller
+      dialer: Dialer
   ) {
     val number = "1234567890"
 
     var isCompletableSubscribed = false
     val normalCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.normalCall(number, caller)).thenReturn(normalCallCompletable)
+    whenever(phoneCaller.normalCall(number, dialer)).thenReturn(normalCallCompletable)
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(overduePatient(phoneNumber = number)))
     uiEvents.onNext(callTypeEvent)
@@ -82,13 +82,13 @@ class PhoneMaskBottomSheetControllerTest {
   fun `when secure call button is clicked and permission result is received, appropriate call should be made`(
       callTypeEvent: UiEvent,
       permission: RuntimePermissionResult,
-      caller: Caller
+      dialer: Dialer
   ) {
     val number = "1234567890"
 
     var isCompletableSubscribed = false
     val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
-    whenever(phoneCaller.secureCall(number, caller)).thenReturn(secureCallCompletable)
+    whenever(phoneCaller.secureCall(number, dialer)).thenReturn(secureCallCompletable)
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(overduePatient(phoneNumber = number)))
     uiEvents.onNext(callTypeEvent)
@@ -102,16 +102,16 @@ class PhoneMaskBottomSheetControllerTest {
   @Suppress("Unused")
   private fun `params for making normal phone calls`() =
       listOf(
-          listOf(NormalCallClicked, GRANTED, WithoutDialer),
-          listOf(NormalCallClicked, DENIED, UsingDialer),
-          listOf(NormalCallClicked, NEVER_ASK_AGAIN, UsingDialer)
+          listOf(NormalCallClicked, GRANTED, Automatic),
+          listOf(NormalCallClicked, DENIED, Manual),
+          listOf(NormalCallClicked, NEVER_ASK_AGAIN, Manual)
       )
 
   @Suppress("Unused")
   private fun `params for making secure phone calls`() =
       listOf(
-          listOf(SecureCallClicked, GRANTED, WithoutDialer),
-          listOf(SecureCallClicked, DENIED, UsingDialer),
-          listOf(SecureCallClicked, NEVER_ASK_AGAIN, UsingDialer)
+          listOf(SecureCallClicked, GRANTED, Automatic),
+          listOf(SecureCallClicked, DENIED, Manual),
+          listOf(SecureCallClicked, NEVER_ASK_AGAIN, Manual)
       )
 }

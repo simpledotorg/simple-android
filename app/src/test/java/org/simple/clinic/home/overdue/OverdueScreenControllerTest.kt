@@ -20,7 +20,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.phone.Caller
+import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
@@ -104,8 +104,8 @@ class OverdueScreenControllerTest {
 
     verify(screen).requestCallPermission()
     when (shouldUseDialer) {
-      true -> verify(maskedPhoneCaller).secureCall(number, Caller.UsingDialer)
-      false -> verify(maskedPhoneCaller).secureCall(number, Caller.WithoutDialer)
+      true -> verify(maskedPhoneCaller).secureCall(number, Dialer.Manual)
+      false -> verify(maskedPhoneCaller).secureCall(number, Dialer.Automatic)
     }
     verifyNoMoreInteractions(screen)
   }

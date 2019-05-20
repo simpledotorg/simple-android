@@ -10,7 +10,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
-import org.simple.clinic.phone.Caller
+import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.util.RuntimePermissionResult
@@ -154,7 +154,7 @@ class OverdueScreenController @Inject constructor(
         .filter { (result, _) -> result == RuntimePermissionResult.GRANTED }
         .flatMap { (_, phoneNumber) ->
           phoneCaller
-              .secureCall(phoneNumber, caller = Caller.WithoutDialer)
+              .secureCall(phoneNumber, dialer = Dialer.Automatic)
               .andThen(Observable.empty<UiChange>())
         }
 
@@ -163,7 +163,7 @@ class OverdueScreenController @Inject constructor(
         .filter { (result, _) -> result != RuntimePermissionResult.GRANTED }
         .flatMap { (_, phoneNumber) ->
           phoneCaller
-              .secureCall(phoneNumber, caller = Caller.UsingDialer)
+              .secureCall(phoneNumber, dialer = Dialer.Manual)
               .andThen(Observable.empty<UiChange>())
         }
 

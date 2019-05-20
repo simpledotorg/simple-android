@@ -10,15 +10,15 @@ class PhoneCaller @Inject constructor(
     private val activity: TheActivity
 ) {
 
-  fun normalCall(number: String, caller: Caller): Completable =
+  fun normalCall(number: String, dialer: Dialer): Completable =
       Completable.fromAction {
-        caller.call(context = activity, phoneNumber = number)
+        dialer.call(context = activity, phoneNumber = number)
       }
 
-  fun secureCall(numberToMask: String, caller: Caller): Completable =
+  fun secureCall(numberToMask: String, dialer: Dialer): Completable =
       configProvider
           .map { config -> maskNumber(config, numberToMask) }
-          .flatMapCompletable { maskedNumber -> normalCall(maskedNumber, caller) }
+          .flatMapCompletable { maskedNumber -> normalCall(maskedNumber, dialer) }
 
   private fun maskNumber(config: PhoneNumberMaskerConfig, numberToMask: String): String {
     val proxyNumber = config.proxyPhoneNumber

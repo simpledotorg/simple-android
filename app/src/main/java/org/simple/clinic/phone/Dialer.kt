@@ -5,11 +5,11 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 
-interface Caller {
+interface Dialer {
 
   fun call(context: Context, phoneNumber: String)
 
-  object UsingDialer : Caller {
+  object Manual : Dialer {
     override fun call(context: Context, phoneNumber: String) {
       val intent = Intent(Intent.ACTION_DIAL, Uri.fromParts("tel", phoneNumber, null))
       context.startActivity(intent)
@@ -17,7 +17,7 @@ interface Caller {
   }
 
   @SuppressLint("MissingPermission")
-  object WithoutDialer : Caller {
+  object Automatic : Dialer {
     override fun call(context: Context, phoneNumber: String) {
       val intent = Intent(Intent.ACTION_CALL, Uri.fromParts("tel", phoneNumber, null))
       context.startActivity(intent)

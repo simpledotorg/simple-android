@@ -7,8 +7,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.phone.Caller.UsingDialer
-import org.simple.clinic.phone.Caller.WithoutDialer
+import org.simple.clinic.phone.Dialer.Automatic
+import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
@@ -49,7 +49,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
       callPermissionResult(events)
           .withLatestFrom(normalCallClicked(events), patientPhoneNumberStream(events))
           .flatMapCompletable { (permissionResult, _, phoneNumber) ->
-            phoneCaller.normalCall(phoneNumber, caller(permissionResult))
+            phoneCaller.normalCall(phoneNumber, dialer(permissionResult))
           }
           .andThen(Observable.empty<UiChange>())
 
@@ -57,7 +57,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
       callPermissionResult(events)
           .withLatestFrom(secureCallClicked(events), patientPhoneNumberStream(events))
           .flatMapCompletable { (permissionResult, _, phoneNumber) ->
-            phoneCaller.secureCall(phoneNumber, caller(permissionResult))
+            phoneCaller.secureCall(phoneNumber, dialer(permissionResult))
           }
           .andThen(Observable.empty<UiChange>())
 
@@ -72,10 +72,10 @@ class PhoneMaskBottomSheetController @Inject constructor(
   private fun secureCallClicked(events: Observable<UiEvent>) =
       events.ofType<SecureCallClicked>()
 
-  private fun caller(permissionResult: RuntimePermissionResult) =
+  private fun dialer(permissionResult: RuntimePermissionResult) =
       when (permissionResult) {
-        GRANTED -> WithoutDialer
-        DENIED, NEVER_ASK_AGAIN -> UsingDialer
+        GRANTED -> Automatic
+        DENIED, NEVER_ASK_AGAIN -> Manual
       }
 
   private fun patientPhoneNumberStream(events: Observable<UiEvent>) =

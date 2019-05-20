@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import junitparams.JUnitParamsRunner
-import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,10 +19,8 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
-import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -49,7 +46,6 @@ class OverdueScreenControllerTest {
 
     controller = OverdueScreenController(
         repository,
-        maskedPhoneCaller,
         configStream
     )
 
@@ -84,33 +80,6 @@ class OverdueScreenControllerTest {
   }
 
   @Test
-  fun `when call button is clicked, call permission should be requested`() {
-    uiEvents.onNext(CallPatientClicked(PatientMocker.overduePatient(phoneNumber = "1234567890")))
-
-    verify(screen).requestCallPermission()
-  }
-
-  @Test
-  @Parameters(method = "params for permission-result dialer-method")
-  fun `when call button is clicked, and permission result is received, call should be made using relevant method`(
-      result: RuntimePermissionResult,
-      shouldUseDialer: Boolean
-  ) {
-    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf()))
-    val number = "99999"
-
-    uiEvents.onNext(CallPatientClicked(PatientMocker.overduePatient(phoneNumber = number)))
-    uiEvents.onNext(CallPhonePermissionChanged(result))
-
-    verify(screen).requestCallPermission()
-    when (shouldUseDialer) {
-      true -> verify(maskedPhoneCaller).secureCall(number, Dialer.Manual)
-      false -> verify(maskedPhoneCaller).secureCall(number, Dialer.Automatic)
-    }
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
   fun `when "remind to call later" is clicked, appointment reminder sheet should open`() {
     val appointmentUuid = UUID.randomUUID()
     uiEvents.onNext(RemindToCallLaterClicked(appointmentUuid))
@@ -139,15 +108,6 @@ class OverdueScreenControllerTest {
         "from" to "Overdue"
     ))
     assertThat(reporter.receivedEvents).contains(expectedEvent)
-  }
-
-  @Suppress("unused")
-  fun `params for permission-result dialer-method`(): Array<Array<Any>> {
-    return arrayOf(
-        arrayOf(RuntimePermissionResult.GRANTED, false),
-        arrayOf(RuntimePermissionResult.DENIED, true),
-        arrayOf(RuntimePermissionResult.NEVER_ASK_AGAIN, true)
-    )
   }
 
   @Test
@@ -179,7 +139,6 @@ class OverdueScreenControllerTest {
   fun `when masking is disabled then the header should be not shown`() {
     val controller = OverdueScreenController(
         repository,
-        maskedPhoneCaller,
         Observable.just(PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "0123456789"))
     )
 
@@ -210,11 +169,6 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
-    configStream.onNext(PhoneNumberMaskerConfig(
-        maskingEnabled = true,
-        proxyPhoneNumber = "0123456789",
-        showPhoneMaskBottomSheet = true
-    ))
     val patient = PatientMocker.overduePatient()
 
     uiEvents.onNext(CallPatientClicked(patient))

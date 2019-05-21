@@ -32,7 +32,6 @@ class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, Ov
   val itemClicks = PublishSubject.create<UiEvent>()!!
 
   companion object {
-    const val OVERDUE_HEADER = R.layout.item_overdue_list_header
     const val OVERDUE_PATIENT = R.layout.item_overdue_list_patient
   }
 
@@ -43,16 +42,12 @@ class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, Ov
 
   override fun getItemViewType(position: Int) =
       when (getItem(position)) {
-        is OverdueListItem.Header -> OVERDUE_HEADER
         is OverdueListItem.Patient -> OVERDUE_PATIENT
       }
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
-    return when (viewType) {
-      OVERDUE_HEADER -> OverdueListViewHolder.Header(layout)
-      else -> OverdueListViewHolder.Patient(layout, itemClicks)
-    }
+    return OverdueListViewHolder.Patient(layout, itemClicks)
   }
 
   override fun onBindViewHolder(holder: OverdueListViewHolder, position: Int) {
@@ -64,8 +59,6 @@ class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, Ov
 }
 
 sealed class OverdueListItem {
-
-  object Header : OverdueListItem()
 
   @Parcelize
   data class Patient(
@@ -84,8 +77,6 @@ sealed class OverdueListItem {
 }
 
 sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-  class Header(itemView: View) : OverdueListViewHolder(itemView)
 
   class Patient(
       itemView: View,

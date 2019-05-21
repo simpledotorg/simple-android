@@ -13,17 +13,17 @@ class MockAnalyticsReporter : AnalyticsReporter {
     receivedEvents.add(Event(event, props))
   }
 
-  fun clearReceivedEvents() {
-    receivedEvents.clear()
-  }
-
-  fun clearSetUserIds() {
-    setUserId = null
-  }
-
   fun clear() {
     clearReceivedEvents()
     clearSetUserIds()
+  }
+
+  private fun clearReceivedEvents() {
+    receivedEvents.clear()
+  }
+
+  private fun clearSetUserIds() {
+    setUserId = null
   }
 
   data class Event(val name: String, val props: Map<String, Any>)

@@ -87,7 +87,7 @@ class PatientEntryScreenControllerTest {
   @After
   fun tearDown() {
     Analytics.removeReporter(reporter)
-    reporter.clearReceivedEvents()
+    reporter.clear()
   }
 
   @Test

@@ -33,7 +33,6 @@ object Analytics {
         val uuidString = uuid.toString()
 
         setUserIdentity(uuidString)
-        setProperty("userId", uuidString)
       }
     }
   }

@@ -13,6 +13,10 @@ class MockAnalyticsReporter : AnalyticsReporter {
     receivedEvents.add(Event(event, props))
   }
 
+  override fun resetUserIdentity() {
+    setUserId = null
+  }
+
   fun clear() {
     clearReceivedEvents()
     clearSetUserIds()

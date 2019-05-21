@@ -81,6 +81,11 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when clearing the user identity without any reporters, no error should be thrown`() {
+    Analytics.clearUserId()
+  }
+
+  @Test
   fun `when a reporter fails when sending interaction events, no error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportUserInteraction("Test")
@@ -148,6 +153,34 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when a reporter fails clearing the user id, no  error should be thrown`() {
+    Analytics.addReporter(FailingAnalyticsReporter())
+    Analytics.clearUserId()
+  }
+
+  @Test
+  fun `when setting the user id, the property must also be set on the reporters`() {
+    val reporter = MockAnalyticsReporter()
+    Analytics.addReporter(reporter)
+
+    val uuid = UUID.randomUUID()
+    Analytics.setUserId(uuid)
+    assertThat(reporter.setUserId).isEqualTo(uuid.toString())
+  }
+
+  @Test
+  fun `when clearing the user id, the user ID must be cleared from the reporters`() {
+    val reporter = MockAnalyticsReporter()
+    Analytics.addReporter(reporter)
+
+    val uuid = UUID.randomUUID()
+    Analytics.setUserId(uuid)
+    assertThat(reporter.setUserId).isEqualTo(uuid.toString())
+    Analytics.clearUserId()
+    assertThat(reporter.setUserId).isNull()
+  }
+
+  @Test
   fun `when multiple reporters are present and one throws an error, the user id must by set on the others`() {
     val reporter1 = MockAnalyticsReporter()
     val reporter2 = FailingAnalyticsReporter()
@@ -159,6 +192,11 @@ class AnalyticsTest {
 
     assertThat(reporter1.setUserId).isEqualTo(userId.toString())
     assertThat(reporter3.setUserId).isEqualTo(userId.toString())
+
+    Analytics.clearUserId()
+
+    assertThat(reporter1.setUserId).isNull()
+    assertThat(reporter3.setUserId).isNull()
   }
 
   @Test
@@ -267,6 +305,10 @@ class AnalyticsTest {
   private class FailingAnalyticsReporter : AnalyticsReporter {
 
     override fun setUserIdentity(id: String) {
+      throw RuntimeException()
+    }
+
+    override fun resetUserIdentity() {
       throw RuntimeException()
     }
 

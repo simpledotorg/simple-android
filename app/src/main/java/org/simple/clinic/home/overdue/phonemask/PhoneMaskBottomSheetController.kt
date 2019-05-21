@@ -7,6 +7,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller
@@ -14,6 +16,9 @@ import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
 import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.estimateCurrentAge
+import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -21,7 +26,9 @@ private typealias Ui = PhoneMaskBottomSheet
 private typealias UiChange = (Ui) -> Unit
 
 class PhoneMaskBottomSheetController @Inject constructor(
-    private val phoneCaller: PhoneCaller
+    private val phoneCaller: PhoneCaller,
+    private val patientRepository: PatientRepository,
+    private val clock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -30,12 +37,39 @@ class PhoneMaskBottomSheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
+        setupView(replayedEvents),
         requestCallPermissionForNormalCalls(replayedEvents),
         requestCallPermissionForSecureCalls(replayedEvents),
         makeNormalCall(replayedEvents),
         makeSecureCall(replayedEvents)
     )
   }
+
+  private fun setupView(events: Observable<UiEvent>) =
+      sheetCreated(events)
+          .switchMap { patientRepository.patient(it.patientUuid) }
+          .filterAndUnwrapJust()
+          .withLatestFrom(patientPhoneNumberStream(events))
+          .map { (patient, phoneNumber) -> patientDetails(patient, phoneNumber) }
+          .map { patient ->
+            { ui: Ui -> ui.setupView(patient) }
+          }
+
+  private fun patientDetails(patient: Patient, phoneNumber: String) =
+      PatientDetails(
+          phoneNumber = phoneNumber,
+          name = patient.fullName,
+          genderLetterRes = patient.gender.displayLetterRes,
+          age = ageValue(patient)
+      )
+
+  private fun ageValue(patient: Patient): Int =
+      if (patient.dateOfBirth == null) {
+        val age = patient.age!!
+        estimateCurrentAge(age.value, age.updatedAt, clock)
+      } else {
+        estimateCurrentAge(patient.dateOfBirth, clock)
+      }
 
   private fun requestCallPermissionForNormalCalls(events: Observable<UiEvent>) =
       normalCallClicked(events)
@@ -79,8 +113,11 @@ class PhoneMaskBottomSheetController @Inject constructor(
       }
 
   private fun patientPhoneNumberStream(events: Observable<UiEvent>) =
+      sheetCreated(events)
+          .switchMap { patientRepository.phoneNumber(it.patientUuid) }
+          .filterAndUnwrapJust()
+          .map { it.number }
+
+  private fun sheetCreated(events: Observable<UiEvent>) =
       events.ofType<PhoneMaskBottomSheetCreated>()
-          .map { it.patient }
-          .filter { it.phoneNumber != null }
-          .map { it.phoneNumber!! }
 }

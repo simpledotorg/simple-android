@@ -162,10 +162,10 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
-    val patient = PatientMocker.overduePatient()
+    val patientUuid = UUID.randomUUID()
 
-    uiEvents.onNext(CallPatientClicked(patient))
+    uiEvents.onNext(CallPatientClicked(patientUuid))
 
-    verify(screen).openPhoneMaskBottomSheet(patient)
+    verify(screen).openPhoneMaskBottomSheet(patientUuid)
   }
 }

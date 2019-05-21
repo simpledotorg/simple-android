@@ -106,7 +106,7 @@ class OverdueScreenController @Inject constructor(
   private fun openPhoneMaskBottomSheet(events: Observable<UiEvent>): Observable<UiChange> =
       events
           .ofType<CallPatientClicked>()
-          .map { { ui: Ui -> ui.openPhoneMaskBottomSheet(it.patient) } }
+          .map { { ui: Ui -> ui.openPhoneMaskBottomSheet(it.patientUuid) } }
 
   private fun markedAsAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<AgreedToVisitClicked>()

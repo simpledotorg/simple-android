@@ -13,7 +13,6 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.home.overdue.OverdueListItem.Patient
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
@@ -84,7 +83,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     activity.startActivity(intent)
   }
 
-  fun openPhoneMaskBottomSheet(patient: Patient) {
-    activity.startActivity(PhoneMaskBottomSheet.intentForPhoneMaskBottomSheet(context, patient))
+  fun openPhoneMaskBottomSheet(patientUuid: UUID) {
+    activity.startActivity(PhoneMaskBottomSheet.intentForPhoneMaskBottomSheet(context, patientUuid))
   }
 }

@@ -96,6 +96,10 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
     RuntimePermissions.request(this, CALL_PHONE_PERMISSION, REQUESTCODE_CALL_PHONE_PERMISSION)
   }
 
+  fun closeSheet() {
+    finish()
+  }
+
   override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     permissionResults.onNext(ActivityPermissionResult(requestCode))

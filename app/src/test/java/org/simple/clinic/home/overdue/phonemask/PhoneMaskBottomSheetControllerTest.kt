@@ -74,6 +74,7 @@ class PhoneMaskBottomSheetControllerTest {
 
     assertThat(isCompletableSubscribed).isTrue()
     verify(screen).requestCallPermission()
+    verify(screen).closeSheet()
     verifyNoMoreInteractions(screen)
   }
 
@@ -96,6 +97,7 @@ class PhoneMaskBottomSheetControllerTest {
 
     assertThat(isCompletableSubscribed).isTrue()
     verify(screen).requestCallPermission()
+    verify(screen).closeSheet()
     verifyNoMoreInteractions(screen)
   }
 

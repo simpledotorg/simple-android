@@ -1,7 +1,6 @@
 package org.simple.clinic
 
 import android.annotation.SuppressLint
-import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.HeapAnalyticsReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
@@ -19,10 +18,11 @@ class ReleaseClinicApp : ClinicApp() {
   @Inject
   lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
 
+  override val analyticsReporters = listOf(HeapAnalyticsReporter(this))
+
   override fun onCreate() {
     super.onCreate()
     appComponent.inject(this)
-    Analytics.addReporter(HeapAnalyticsReporter(this))
     syncScheduler.schedule().subscribe()
     syncIndicatorStatusCalculator.updateSyncResults()
   }

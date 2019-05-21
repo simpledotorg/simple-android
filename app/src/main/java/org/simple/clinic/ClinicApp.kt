@@ -8,6 +8,8 @@ import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
 import com.tspoon.traceur.Traceur
 import io.reactivex.schedulers.Schedulers
+import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.AnalyticsReporter
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.crash.CrashReporter
@@ -36,6 +38,8 @@ abstract class ClinicApp : Application() {
   @Inject
   lateinit var unauthorizeUser: UnauthorizeUser
 
+  open val analyticsReporters = emptyList<AnalyticsReporter>()
+
   @SuppressLint("RestrictedApi")
   override fun onCreate() {
     super.onCreate()
@@ -61,13 +65,16 @@ abstract class ClinicApp : Application() {
     crashReporter.init(this)
     Timber.plant(CrashBreadcrumbsTimberTree(crashReporter))
 
+    analyticsReporters.forEach { reporter ->
+      Analytics.addReporter(reporter)
+    }
+
     updateAnalyticsUserId.listen(Schedulers.io())
     syncProtocolsOnLogin.listen()
 
-//    TODO: Enable this once the feature is complete
-//    unauthorizeUser.listen(Schedulers.io())
+    // TODO: Enable this once the feature is complete
+    // unauthorizeUser.listen(Schedulers.io())
   }
 
   abstract fun buildDaggerGraph(): AppComponent
-
 }

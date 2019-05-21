@@ -48,18 +48,18 @@ class PhoneMaskBottomSheetController @Inject constructor(
   private fun makeNormalCall(events: Observable<UiEvent>) =
       callPermissionResult(events)
           .withLatestFrom(normalCallClicked(events), patientPhoneNumberStream(events))
-          .flatMapCompletable { (permissionResult, _, phoneNumber) ->
+          .flatMap { (permissionResult, _, phoneNumber) ->
             phoneCaller.normalCall(phoneNumber, dialer(permissionResult))
+                .andThen(Observable.just(Ui::closeSheet))
           }
-          .andThen(Observable.empty<UiChange>())
 
   private fun makeSecureCall(events: Observable<UiEvent>) =
       callPermissionResult(events)
           .withLatestFrom(secureCallClicked(events), patientPhoneNumberStream(events))
-          .flatMapCompletable { (permissionResult, _, phoneNumber) ->
+          .flatMap { (permissionResult, _, phoneNumber) ->
             phoneCaller.secureCall(phoneNumber, dialer(permissionResult))
+                .andThen(Observable.just(Ui::closeSheet))
           }
-          .andThen(Observable.empty<UiChange>())
 
   private fun callPermissionResult(events: Observable<UiEvent>) =
       events

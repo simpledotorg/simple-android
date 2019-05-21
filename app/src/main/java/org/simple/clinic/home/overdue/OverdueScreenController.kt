@@ -3,13 +3,11 @@ package org.simple.clinic.home.overdue
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
-import org.simple.clinic.phone.PhoneNumberMaskerConfig
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -23,8 +21,7 @@ typealias Ui = OverdueScreen
 typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(
-    private val repository: AppointmentRepository,
-    private val phoneNumberMaskerConfig: Observable<PhoneNumberMaskerConfig>
+    private val repository: AppointmentRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -72,28 +69,15 @@ class OverdueScreenController @Inject constructor(
                 isAtHighRisk = it.isAtHighRisk)
           }
         }
-        .withLatestFrom(phoneNumberMaskerConfig)
-
-    val noHeaderStream = overduePatientsStream
-        .filter { (_, config) -> config.maskingEnabled.not() }
-        .map { (overduePatients, _) ->
+        .map { overduePatients ->
           { ui: Ui -> ui.updateList(overduePatients) }
-        }
-
-    val withHeaderStream = overduePatientsStream
-        .filter { (_, config) -> config.maskingEnabled }
-        .map { (overduePatients, _) ->
-          { ui: Ui ->
-            val overdueListItems = listOf(OverdueListItem.Header) + overduePatients
-            ui.updateList(overdueListItems)
-          }
         }
 
     val emptyStateStream = dbStream
         .map { it.isEmpty() }
         .map { { ui: Ui -> ui.handleEmptyList(it) } }
 
-    return Observable.merge(noHeaderStream, withHeaderStream, emptyStateStream)
+    return Observable.merge(overduePatientsStream, emptyStateStream)
   }
 
   private fun ageFromDateOfBirth(dateOfBirth: LocalDate?, age: Age?): Int {

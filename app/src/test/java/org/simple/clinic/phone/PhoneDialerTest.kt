@@ -26,7 +26,7 @@ class PhoneDialerTest {
 
   @Test
   fun `when masking is disabled then plain phone numbers should be called`() {
-    config = PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "987")
+    config = PhoneNumberMaskerConfig(proxyPhoneNumber = "987")
 
     val plainNumber = "123"
 
@@ -37,7 +37,7 @@ class PhoneDialerTest {
 
   @Test
   fun `when masking is enabled then masked phone number should be called`() {
-    config = PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "987")
+    config = PhoneNumberMaskerConfig(proxyPhoneNumber = "987")
     val plainNumber = "123"
 
     phoneCaller.secureCall(plainNumber, dialer = dialer).blockingAwait()

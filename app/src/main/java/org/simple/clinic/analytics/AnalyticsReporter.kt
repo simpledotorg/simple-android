@@ -8,8 +8,6 @@ interface AnalyticsReporter {
 
   fun createEvent(event: String, props: Map<String, Any>)
 
-  fun setProperty(key: String, value: Any)
-
   /**
    * Safely report events so that the app does not crash if any of the
    * reporters fail.

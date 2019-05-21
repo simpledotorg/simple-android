@@ -4,7 +4,6 @@ class MockAnalyticsReporter : AnalyticsReporter {
 
   val setUserIds = mutableListOf<String>()
   val receivedEvents = mutableListOf<Event>()
-  val setProperties = mutableMapOf<String, Any>()
 
   override fun setUserIdentity(id: String) {
     setUserIds.add(id)
@@ -14,16 +13,8 @@ class MockAnalyticsReporter : AnalyticsReporter {
     receivedEvents.add(Event(event, props))
   }
 
-  override fun setProperty(key: String, value: Any) {
-    setProperties[key] = value
-  }
-
   fun clearReceivedEvents() {
     receivedEvents.clear()
-  }
-
-  fun clearSetProperties() {
-    setProperties.clear()
   }
 
   fun clearSetUserIds() {
@@ -32,7 +23,6 @@ class MockAnalyticsReporter : AnalyticsReporter {
 
   fun clear() {
     clearReceivedEvents()
-    clearSetProperties()
     clearSetUserIds()
   }
 

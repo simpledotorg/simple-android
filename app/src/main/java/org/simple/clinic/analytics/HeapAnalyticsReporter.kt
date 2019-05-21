@@ -17,8 +17,4 @@ class HeapAnalyticsReporter(context: Context, debug: Boolean = false) : Analytic
   override fun createEvent(event: String, props: Map<String, Any>) {
     Heap.track(event, props.mapValues { (_, value) -> value.toString() })
   }
-
-  override fun setProperty(key: String, value: Any) {
-    Heap.addUserProperties(mapOf(key to value.toString()))
-  }
 }

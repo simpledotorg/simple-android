@@ -37,7 +37,6 @@ import org.simple.clinic.login.applock.ConfirmResetPinDialog
 import org.simple.clinic.login.pin.LoginPinScreen
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreen
 import org.simple.clinic.newentry.PatientEntryScreen
-import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.onboarding.OnboardingScreen
 import org.simple.clinic.recentpatient.RecentPatientsScreen
 import org.simple.clinic.recentpatientsview.RecentPatientsView
@@ -135,7 +134,6 @@ interface TheActivityComponent {
 }
 
 @Module(includes = [
-  OnboardingModule::class,
   PatientsModule::class,
   SearchResultsModule::class
 ])

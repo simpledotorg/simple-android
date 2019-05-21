@@ -126,6 +126,17 @@ data class Patient(
         newUpdatedAt: Instant
     )
 
+    @Query("""
+      UPDATE Patient
+      SET recordedAt = :instantToCompare, syncStatus = :pendingStatus, updatedAt = :updatedAt
+      WHERE uuid = :patientUuid AND recordedAt > :instantToCompare
+    """)
+    abstract fun compareAndUpdateRecordedAt(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        updatedAt: Instant,
+        pendingStatus: SyncStatus
+    )
 
     // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
     // support loading into constructor parameters and needs a settable property. Room does fix

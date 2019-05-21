@@ -44,14 +44,11 @@ class OverdueScreenControllerTest {
   fun setUp() {
     whenever(maskedPhoneCaller.secureCall(any(), any())).thenReturn(Completable.complete())
 
-    controller = OverdueScreenController(
-        repository,
-        configStream
-    )
+    controller = OverdueScreenController(repository)
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
-    configStream.onNext(PhoneNumberMaskerConfig(maskingEnabled = true, proxyPhoneNumber = "0123456789"))
+    configStream.onNext(PhoneNumberMaskerConfig(proxyPhoneNumber = "0123456789"))
 
     Analytics.addReporter(reporter)
   }
@@ -118,7 +115,6 @@ class OverdueScreenControllerTest {
     uiEvents.onNext(OverdueScreenCreated())
 
     verify(screen).updateList(listOf(
-        OverdueListItem.Header,
         OverdueListItem.Patient(
             appointmentUuid = overdueAppointment.appointment.uuid,
             patientUuid = overdueAppointment.appointment.patientUuid,
@@ -137,10 +133,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when masking is disabled then the header should be not shown`() {
-    val controller = OverdueScreenController(
-        repository,
-        Observable.just(PhoneNumberMaskerConfig(maskingEnabled = false, proxyPhoneNumber = "0123456789"))
-    )
+    val controller = OverdueScreenController(repository)
 
     val uiEvents = PublishSubject.create<UiEvent>()
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }

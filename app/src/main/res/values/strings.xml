@@ -372,7 +372,6 @@
   <string name="syncindicator_dialog_error_network">Make sure you have a working internet connection to sync patient records.</string>
   <string name="syncindicator_dialog_button_text">okay</string>
   <string name="syncindicator_dialog_error_server">Sync servers are down at the moment. Please try again later or get in touch with your supervisor.</string>
-  <string name="overdue_list_header">Your mobile number <font color="#2f363d"><b>will be hidden</b></font> from patients. Calls are <font color="#2f363d"><b>toll-free.</b></font></string>
 
   <!-- Help Screen -->
   <string name="help_title">Help</string>

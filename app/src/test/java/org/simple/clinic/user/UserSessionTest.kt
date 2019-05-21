@@ -134,7 +134,8 @@ class UserSessionTest {
       appointmentSyncPullToken = appointmentPullToken,
       communicationSyncPullToken = communicationPullToken,
       medicalHistorySyncPullToken = medicalHistoryPullToken,
-      ongoingLoginEntryRepository = ongoingLoginEntryRepository)
+      ongoingLoginEntryRepository = ongoingLoginEntryRepository,
+      onboardingComplete = onboardingCompletePreference)
 
   @Before
   fun setUp() {
@@ -800,9 +801,10 @@ class UserSessionTest {
 
     verify(fileStorage).clearAllFiles()
 
-    val inorderForPreferences = inOrder(preferencesEditor)
+    val inorderForPreferences = inOrder(preferencesEditor, onboardingCompletePreference)
     inorderForPreferences.verify(preferencesEditor).clear()
     inorderForPreferences.verify(preferencesEditor).apply()
+    inorderForPreferences.verify(onboardingCompletePreference).set(true)
 
     val inorderForDatabase = inOrder(reportPendingRecords, appDatabase)
     inorderForDatabase.verify(reportPendingRecords).report()

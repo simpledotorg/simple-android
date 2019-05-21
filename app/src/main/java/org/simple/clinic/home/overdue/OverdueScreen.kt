@@ -2,7 +2,6 @@ package org.simple.clinic.home.overdue
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +19,7 @@ import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import javax.inject.Inject
 
@@ -70,13 +70,8 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   fun handleEmptyList(isEmpty: Boolean) {
     TransitionManager.beginDelayedTransition(this)
-    if (isEmpty) {
-      overdueRecyclerView.visibility = View.GONE
-      viewForEmptyList.visibility = View.VISIBLE
-    } else {
-      overdueRecyclerView.visibility = View.VISIBLE
-      viewForEmptyList.visibility = View.GONE
-    }
+    viewForEmptyList.visibleOrGone(isEmpty)
+    overdueRecyclerView.visibleOrGone(isEmpty.not())
   }
 
   fun showAppointmentReminderSheet(appointmentUuid: UUID) {

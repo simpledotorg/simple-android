@@ -157,8 +157,8 @@ class AnalyticsTest {
     val userId = UUID.randomUUID()
     Analytics.setUserId(userId)
 
-    assertThat(reporter1.setUserIds.first()).isEqualTo(userId.toString())
-    assertThat(reporter3.setUserIds.first()).isEqualTo(userId.toString())
+    assertThat(reporter1.setUserId).isEqualTo(userId.toString())
+    assertThat(reporter3.setUserId).isEqualTo(userId.toString())
   }
 
   @Test

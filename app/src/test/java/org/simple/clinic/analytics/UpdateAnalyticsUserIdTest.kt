@@ -43,7 +43,7 @@ class UpdateAnalyticsUserIdTest {
 
     updateAnalyticsUserId.listen(scheduler)
 
-    assertThat(reporter.setUserIds).isEmpty()
+    assertThat(reporter.setUserId).isNull()
   }
 
   @Test
@@ -64,9 +64,9 @@ class UpdateAnalyticsUserIdTest {
     updateAnalyticsUserId.listen(scheduler)
 
     if (shouldSetUserId) {
-      assertThat(reporter.setUserIds).isEqualTo(listOf(user.uuid.toString()))
+      assertThat(reporter.setUserId).isEqualTo(user.uuid.toString())
     } else {
-      assertThat(reporter.setUserIds).isEmpty()
+      assertThat(reporter.setUserId).isNull()
     }
   }
 
@@ -81,7 +81,7 @@ class UpdateAnalyticsUserIdTest {
 
     updateAnalyticsUserId.listen(scheduler)
 
-    assertThat(reporter.setUserIds).isEqualTo(listOf(userIdThatMustBeSet))
+    assertThat(reporter.setUserId).isEqualTo(userIdThatMustBeSet)
   }
 
   // Accessed via reflection for test params

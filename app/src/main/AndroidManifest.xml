@@ -31,6 +31,10 @@
     <meta-data
       android:name="google_analytics_adid_collection_enabled"
       android:value="false" />
+    <meta-data
+      android:name="com.heapanalytics.android.autoInitEnvId"
+      android:value="none"
+      tools:replace="android:value"/>
 
     <activity
       android:name=".activity.TheActivity"

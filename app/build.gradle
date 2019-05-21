@@ -72,7 +72,7 @@ android {
 
   buildTypes {
     debug {
-      ext.heap = ["enabled": false]
+      ext.heapEnabled = false
       applicationIdSuffix ".debug"
       minifyEnabled false
       useProguard false
@@ -81,7 +81,7 @@ android {
 
     release {
       debuggable false
-      ext.heap = ["enabled": true]
+      ext.heapEnabled = true
       if (runProguard.equalsIgnoreCase("true")) {
         minifyEnabled true
         shrinkResources true

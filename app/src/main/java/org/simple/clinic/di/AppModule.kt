@@ -10,6 +10,7 @@ import dagger.Provides
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.login.LoginModule
+import org.simple.clinic.onboarding.OnboardingModule
 import org.simple.clinic.patient.PatientModule
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreatorModule
 import org.simple.clinic.registration.RegistrationModule
@@ -42,7 +43,8 @@ import java.util.Locale
   SyncIndicatorModule::class,
   UuidShortCodeCreatorModule::class,
   IdentifierDisplayAdapterModule::class,
-  KeyChangeAnimatorModule::class
+  KeyChangeAnimatorModule::class,
+  OnboardingModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

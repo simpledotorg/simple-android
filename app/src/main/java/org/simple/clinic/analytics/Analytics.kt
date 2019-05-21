@@ -37,6 +37,14 @@ object Analytics {
     }
   }
 
+  fun clearUserId() {
+    reporters.forEach {
+      it.safely("Error clearing user ID!") {
+        resetUserIdentity()
+      }
+    }
+  }
+
   fun reportUserInteraction(name: String) {
     reporters.forEach {
       it.safely("Error reporting interaction!") {

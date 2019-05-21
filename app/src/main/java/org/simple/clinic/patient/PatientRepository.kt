@@ -440,6 +440,17 @@ class PatientRepository @Inject constructor(
         }
   }
 
+  fun compareAndUpdateRecordedAt(patientUuid: UUID, instantToCompare: Instant): Completable {
+    return Completable.fromAction {
+      database.patientDao().compareAndUpdateRecordedAt(
+          patientUuid = patientUuid,
+          instantToCompare = instantToCompare,
+          pendingStatus = PENDING,
+          updatedAt = Instant.now(utcClock)
+      )
+    }
+  }
+
   fun clearPatientData(): Completable {
     return Completable
         .fromCallable {

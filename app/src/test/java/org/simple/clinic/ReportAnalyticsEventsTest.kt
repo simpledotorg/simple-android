@@ -45,7 +45,7 @@ class ReportAnalyticsEventsTest {
   @After
   fun tearDown() {
     forwardedEvents.clear()
-    reporter.clearReceivedEvents()
+    reporter.clear()
     Analytics.clearReporters()
   }
 

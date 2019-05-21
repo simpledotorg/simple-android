@@ -14,6 +14,10 @@ class HeapAnalyticsReporter(context: Context, debug: Boolean = false) : Analytic
     Heap.identify(id)
   }
 
+  override fun resetUserIdentity() {
+    Heap.resetIdentity()
+  }
+
   override fun createEvent(event: String, props: Map<String, Any>) {
     Heap.track(event, props.mapValues { (_, value) -> value.toString() })
   }

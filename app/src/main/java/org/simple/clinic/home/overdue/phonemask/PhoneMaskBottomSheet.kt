@@ -14,12 +14,12 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.home.overdue.OverdueListItem.Patient
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
+import java.util.UUID
 import javax.inject.Inject
 
 private const val REQUESTCODE_CALL_PHONE_PERMISSION = 21
@@ -45,8 +45,6 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.sheet_phone_mask)
 
-    setupView()
-
     TheActivity.component.inject(this)
 
     bindUiToController(
@@ -63,9 +61,9 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
   }
 
   @SuppressLint("SetTextI18n")
-  private fun setupView() {
-    patient().apply {
-      val genderLetter = resources.getString(gender.displayLetterRes)
+  fun setupView(patient: PatientDetails) {
+    patient.apply {
+      val genderLetter = resources.getString(genderLetterRes)
       nameTextView.text = "$name, $genderLetter, $age"
       phoneNumberTextView.text = phoneNumber
     }
@@ -82,10 +80,10 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
           .map { SecureCallClicked }
 
   private fun sheetCreates() =
-      Observable.just(PhoneMaskBottomSheetCreated(patient()))
+      Observable.just(PhoneMaskBottomSheetCreated(patientUuid()))
 
-  private fun patient(): Patient =
-      intent.getParcelableExtra(PATIENT_KEY)
+  private fun patientUuid(): UUID =
+      intent.getSerializableExtra(PATIENT_KEY) as UUID
 
   override fun onDestroy() {
     onDestroys.onNext(ScreenDestroyed())
@@ -115,9 +113,9 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
 
     private const val PATIENT_KEY = "PATIENT_KEY"
 
-    fun intentForPhoneMaskBottomSheet(context: Context, patient: Patient): Intent =
+    fun intentForPhoneMaskBottomSheet(context: Context, patientUuid: UUID): Intent =
         Intent(context, PhoneMaskBottomSheet::class.java).apply {
-          putExtra(PATIENT_KEY, patient)
+          putExtra(PATIENT_KEY, patientUuid)
         }
   }
 }

@@ -11,8 +11,4 @@ class DebugAnalyticsReporter : AnalyticsReporter {
   override fun createEvent(event: String, props: Map<String, Any>) {
     Timber.tag("Analytics").d("Event: $event -> $props")
   }
-
-  override fun setProperty(key: String, value: Any) {
-    Timber.tag("Analytics").d("Prop: $key -> $value")
-  }
 }

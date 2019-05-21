@@ -148,16 +148,6 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when setting the user id, the property must also be set on the reporters`() {
-    val reporter = MockAnalyticsReporter()
-    Analytics.addReporter(reporter)
-
-    val uuid = UUID.randomUUID()
-    Analytics.setUserId(uuid)
-    assertThat(reporter.setProperties).isEqualTo(mapOf("userId" to uuid.toString()))
-  }
-
-  @Test
   fun `when multiple reporters are present and one throws an error, the user id must by set on the others`() {
     val reporter1 = MockAnalyticsReporter()
     val reporter2 = FailingAnalyticsReporter()
@@ -281,10 +271,6 @@ class AnalyticsTest {
     }
 
     override fun createEvent(event: String, props: Map<String, Any>) {
-      throw RuntimeException()
-    }
-
-    override fun setProperty(key: String, value: Any) {
       throw RuntimeException()
     }
   }

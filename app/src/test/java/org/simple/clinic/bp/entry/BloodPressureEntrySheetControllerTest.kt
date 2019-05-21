@@ -33,6 +33,7 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -58,6 +59,7 @@ class BloodPressureEntrySheetControllerTest {
   private val sheet = mock<BloodPressureEntrySheet>()
   private val bloodPressureRepository = mock<BloodPressureRepository>()
   private val appointmentRepository = mock<AppointmentRepository>()
+  private val patientRepository = mock<PatientRepository>()
   private val dateValidator = mock<UserInputDateValidator>()
   private val bpValidator = mock<BpValidator>()
 
@@ -77,6 +79,7 @@ class BloodPressureEntrySheetControllerTest {
     controller = BloodPressureEntrySheetController(
         bloodPressureRepository = bloodPressureRepository,
         appointmentRepository = appointmentRepository,
+        patientRepository = patientRepository,
         dateValidator = dateValidator,
         bpValidator = bpValidator,
         userClock = testUserClock,
@@ -389,6 +392,7 @@ class BloodPressureEntrySheetControllerTest {
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
     whenever(bpValidator.validate(any(), any()))
         .thenReturn(ErrorSystolicEmpty)
@@ -423,6 +427,7 @@ class BloodPressureEntrySheetControllerTest {
         diastolic = 110,
         recordedAt = entryDateAsInstant)
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
+    verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
     verify(sheet).setBpSavedResultAndFinish()
   }
 
@@ -437,6 +442,7 @@ class BloodPressureEntrySheetControllerTest {
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
+    whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
 
     uiEvents.run {
       onNext(BloodPressureEntrySheetCreated(openAs = OpenAs.Update(existingBp.uuid)))
@@ -454,6 +460,7 @@ class BloodPressureEntrySheetControllerTest {
     val newInputDateAsInstant = newInputDate.atTime(OffsetTime.now(testUtcClock)).toInstant()
     val updatedBp = existingBp.copy(systolic = 120, diastolic = 110, updatedAt = oldCreatedAt, recordedAt = newInputDateAsInstant)
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
+    verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())

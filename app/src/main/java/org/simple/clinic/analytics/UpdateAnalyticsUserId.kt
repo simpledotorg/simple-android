@@ -1,14 +1,14 @@
 package org.simple.clinic.analytics
 
 import android.annotation.SuppressLint
+import io.reactivex.Completable
 import io.reactivex.Scheduler
-import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
-import timber.log.Timber
+import org.simple.clinic.util.filterAndUnwrapJust
 import javax.inject.Inject
 
 class UpdateAnalyticsUserId @Inject constructor(private val userSession: UserSession) {
@@ -19,15 +19,27 @@ class UpdateAnalyticsUserId @Inject constructor(private val userSession: UserSes
 
   @SuppressLint("CheckResult")
   fun listen(scheduler: Scheduler) {
-    userSession.loggedInUser()
-        .subscribeOn(scheduler)
-        .filter { it is Just<User> }
-        .map { (user) -> user!! }
+    val loggedInUserStream = userSession
+        .loggedInUser()
+        .filterAndUnwrapJust()
+        .replay()
+        .refCount()
+
+    val setAnalyticsUserId = loggedInUserStream
         .filter { it.loggedInStatus in statesToSetUserIdFor }
-        .subscribe({
-          Analytics.setUserId(it.uuid)
-        }, {
-          Timber.e(it, "Could not update user ID in analytics")
-        })
+        .flatMapCompletable { user ->
+          Completable.fromAction { Analytics.setUserId(user.uuid) }
+        }
+
+    val clearAnalyticsUserId = loggedInUserStream
+        .filter { it.loggedInStatus == UNAUTHORIZED }
+        .flatMapCompletable {
+          Completable.fromAction { Analytics.clearUserId() }
+        }
+
+
+    setAnalyticsUserId.mergeWith(clearAnalyticsUserId)
+        .subscribeOn(scheduler)
+        .subscribe()
   }
 }

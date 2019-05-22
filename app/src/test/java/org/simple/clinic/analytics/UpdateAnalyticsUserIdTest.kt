@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
+import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
@@ -17,6 +18,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import org.simple.clinic.util.toOptional
 
 @RunWith(JUnitParamsRunner::class)
 class UpdateAnalyticsUserIdTest {
@@ -52,7 +54,8 @@ class UpdateAnalyticsUserIdTest {
     "OTP_REQUESTED|false",
     "RESETTING_PIN|true",
     "RESET_PIN_REQUESTED|true",
-    "LOGGED_IN|true"
+    "LOGGED_IN|true",
+    "UNAUTHORIZED|false"
   ])
   fun `the user id must be set only if the local logged in status is LOGGED_IN, RESETTING_PIN or RESET_PIN_REQUESTED`(
       loggedInStatus: User.LoggedInStatus,
@@ -93,5 +96,20 @@ class UpdateAnalyticsUserIdTest {
         arrayOf(None, Just(user1), user1.uuid.toString()),
         arrayOf(Just(user2), Just(user2.copy(loggedInStatus = User.LoggedInStatus.LOGGED_IN)), user2.uuid.toString())
     )
+  }
+
+  @Test
+  fun `when the stored user is marked as unauthorized, the user id must be cleared from analytics`() {
+    val userSubject = PublishSubject.create<Optional<User>>()
+    whenever(userSession.loggedInUser()).thenReturn(userSubject)
+    updateAnalyticsUserId.listen(scheduler)
+
+    val user = PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN)
+
+    userSubject.onNext(user.toOptional())
+    assertThat(reporter.setUserId).isEqualTo(user.uuid.toString())
+
+    userSubject.onNext(user.copy(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED).toOptional())
+    assertThat(reporter.setUserId).isNull()
   }
 }

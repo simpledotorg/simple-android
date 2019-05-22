@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
@@ -60,7 +61,14 @@ class RecentPatientsViewController @Inject constructor(
 
     val updateRecentPatients = recentPatientsStream
         .map { it.map(::recentPatientItem) }
-        .map { it + SeeAllItem }
+        .withLatestFrom(patientConfig)
+        .map { (recentPatients, config) ->
+          if (recentPatients.size > config.recentPatientLimit) {
+            recentPatients + SeeAllItem
+          } else {
+            recentPatients
+          }
+        }
         .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 
     val toggleEmptyState = recentPatientsStream

@@ -178,4 +178,19 @@ class TimeFunctionsTest {
           listOf(ZoneOffset.ofHoursMinutes(-5, -30), LocalDate.of(1969, 12, 31))
       )
 
+  @Test
+  @Parameters(method = "params for testing conversion of local date to instant")
+  fun `different clocks should provide correct instant`(userClock: UserClock, localDate: LocalDate, expectedInstant: Instant) {
+    assertThat(localDate.toUtcInstant(userClock)).isEqualTo(expectedInstant)
+  }
+
+  fun `params for testing conversion of local date to instant`(): List<List<Any>> {
+    val userClock = TestUserClock()
+
+    return listOf(
+        listOf(userClock, LocalDate.now(userClock), Instant.now(userClock)),
+        listOf(userClock, LocalDate.now(userClock).plusDays(2), Instant.now(userClock).plus(2, ChronoUnit.DAYS))
+    )
+  }
+
 }

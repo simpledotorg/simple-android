@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<Button android:id="@+id/seeall_button"
+  style="@style/Widget.AppCompat.Button.Borderless.Colored"
+  xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="wrap_content">
-
-  <Button
-    android:id="@+id/seeall_button"
-    style="@style/Widget.AppCompat.Button.Borderless.Colored"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:paddingBottom="@dimen/spacing_12"
-    android:paddingEnd="@dimen/spacing_24"
-    android:paddingStart="@dimen/spacing_24"
-    android:paddingTop="@dimen/spacing_12"
-    android:text="@string/patients_recentpatients_see_all"
-    android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1" />
-</FrameLayout>
+  android:layout_height="wrap_content"
+  android:layout_marginEnd="@dimen/spacing_4"
+  android:layout_marginStart="@dimen/spacing_4"
+  android:paddingBottom="@dimen/spacing_12"
+  android:paddingTop="@dimen/spacing_12"
+  android:text="@string/patients_recentpatients_see_all"
+  android:textAppearance="@style/Clinic.V2.TextAppearance.Button2.Blue1" />

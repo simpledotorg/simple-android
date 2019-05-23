@@ -27,14 +27,13 @@ import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.exhaustive
+import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalTime
-import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 import javax.inject.Inject
 
@@ -477,25 +476,18 @@ class BloodPressureEntrySheetController @Inject constructor(
           }
         }
 
-    val toUtcInstant = { date: LocalDate ->
-      val userTime = LocalTime.now(userClock)
-      val userDateTime = date.atTime(userTime)
-      val utcDateTime = userDateTime.atZone(userClock.zone).withZoneSameInstant(UTC)
-      utcDateTime.toInstant()
-    }
-
     val saveNewBp = saveClicks
         .withLatestFrom(newBpDataStream) { _, newBp -> newBp }
         .ofType<SaveBpData.ReadyToCreate>()
         .withLatestFrom(prefilledDateStream)
         .flatMapSingle { (newBp, prefilledDate) ->
           bloodPressureRepository
-              .saveMeasurement(newBp.patientUuid, newBp.systolic, newBp.diastolic, toUtcInstant(newBp.date))
+              .saveMeasurement(newBp.patientUuid, newBp.systolic, newBp.diastolic, newBp.date.toUtcInstant(userClock))
               .map { BloodPressureSaved(wasDateChanged = prefilledDate != newBp.date) }
               .flatMap { bpSaved ->
                 appointmentRepository
                     .markAppointmentsCreatedBeforeTodayAsVisited(newBp.patientUuid)
-                    .andThen(patientRepository.compareAndUpdateRecordedAt(newBp.patientUuid, toUtcInstant(newBp.date)))
+                    .andThen(patientRepository.compareAndUpdateRecordedAt(newBp.patientUuid, newBp.date.toUtcInstant(userClock)))
                     .toSingleDefault(bpSaved)
               }
         }
@@ -511,7 +503,7 @@ class BloodPressureEntrySheetController @Inject constructor(
                 existingBp.copy(
                     systolic = updateBp.systolic,
                     diastolic = updateBp.diastolic,
-                    recordedAt = toUtcInstant(updateBp.date))
+                    recordedAt = updateBp.date.toUtcInstant(userClock))
               }
               .flatMapCompletable {
                 bloodPressureRepository.updateMeasurement(it)

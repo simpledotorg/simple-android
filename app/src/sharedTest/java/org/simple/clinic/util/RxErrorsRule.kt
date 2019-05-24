@@ -1,6 +1,6 @@
 package org.simple.clinic.util
 
-import com.tspoon.traceur.Traceur
+import com.uber.rxdogtag.RxDogTag
 import io.reactivex.plugins.RxJavaPlugins
 import org.junit.rules.TestRule
 import org.junit.runner.Description
@@ -25,14 +25,14 @@ class RxErrorsRule : TestRule {
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
-        Traceur.enableLogging()
+        RxDogTag.install()
         RxJavaPlugins.setErrorHandler { t -> errors.add(t) }
 
         try {
           base.evaluate()
 
         } finally {
-          Traceur.disableLogging()
+          RxDogTag.reset()
           RxJavaPlugins.setErrorHandler(null)
           assertNoErrors()
         }

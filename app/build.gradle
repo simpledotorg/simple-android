@@ -256,7 +256,6 @@ dependencies {
   kapt "com.squareup.moshi:moshi-kotlin-codegen:$versions.moshi"
   implementation "com.squareup.moshi:moshi-adapters:$versions.moshi"
   implementation "com.f2prateek.rx.preferences2:rx-preferences:$versions.rxPreference"
-  implementation "com.tspoon.traceur:traceur:$versions.traceur"
   implementation "ru.egslava:MaskedEditText:$versions.maskedEditText"
   implementation "io.sentry:sentry-android:$versions.sentry"
   implementation("org.slf4j:slf4j-nop:$versions.slf4j") {
@@ -280,6 +279,7 @@ dependencies {
   debugImplementation "com.squareup.leakcanary:leakcanary-support-fragment:$versions.leakCanary"
 
   implementation "com.budiyev.android:code-scanner:$versions.codeScanner"
+  implementation "com.uber.rxdogtag:rxdogtag:$versions.rxDogTag"
 }
 
 // This must always be present at the bottom of this file, as per:

@@ -1,7 +1,7 @@
 package org.simple.clinic
 
 import android.app.Application
-import com.tspoon.traceur.Traceur
+import com.uber.rxdogtag.RxDogTag
 import io.reactivex.Completable
 import io.reactivex.Single
 import okhttp3.OkHttpClient
@@ -62,7 +62,7 @@ class TestClinicApp : ClinicApp() {
     super.onCreate()
 
     Timber.plant(Timber.DebugTree())
-    Traceur.enableLogging()
+    RxDogTag.install()
 
     appComponent().inject(this)
     syncScheduler.cancelAll()

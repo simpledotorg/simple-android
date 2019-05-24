@@ -6,7 +6,7 @@ import androidx.arch.core.executor.ArchTaskExecutor
 import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
-import com.tspoon.traceur.Traceur
+import com.uber.rxdogtag.RxDogTag
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
 import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
@@ -45,7 +45,7 @@ abstract class ClinicApp : Application() {
       throw AssertionError("API endpoint cannot be null!")
     }
 
-    Traceur.enableLogging()
+    RxDogTag.install()
     // Room uses the architecture components executor for doing IO work,
     // which is limited to two threads. This causes thread starvation in some
     // cases, especially when syncs are ongoing. This changes the thread pool

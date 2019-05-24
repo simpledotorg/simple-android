@@ -109,14 +109,11 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun illustrationResourceId(): Int {
     val today = LocalDate.now(userClock)
-    val worldHypertensionDay = today.withMonth(Month.MAY.value).withDayOfMonth(17)
-    val dateToShowHypertensionDayBannerFrom = worldHypertensionDay.minusDays(6)
 
     val fathersDay = today.withMonth(Month.JUNE.value).withDayOfMonth(17)
     val dateToShowFathersDayBannerFrom = fathersDay.minusDays(8)
 
     return when (today) {
-      in dateToShowHypertensionDayBannerFrom..worldHypertensionDay -> R.drawable.ic_homescreen_world_hypertension_day
       in dateToShowFathersDayBannerFrom..fathersDay -> R.drawable.ic_homescreen_fathers_day
       else -> R.drawable.illustrations_homescreen
     }

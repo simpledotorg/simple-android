@@ -8,11 +8,13 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.overdue.Appointment.AppointmentType.*
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
+import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -25,7 +27,9 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val configProvider: Single<AppointmentConfig>,
-    private val utcClock: UtcClock
+    private val utcClock: UtcClock,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -114,15 +118,22 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .replay()
         .refCount()
 
+    val currentFacilityStream = userSession
+        .requireLoggedInUser()
+        .switchMap { user -> facilityRepository.currentFacility(user) }
+
     val saveAppointmentAndCloseSheet = isPatientDefaulterStream
-        .withLatestFrom(patientUuidStream, configProvider.toObservable())
-        .filter { (isPatientDefaulter, _, _) -> isPatientDefaulter }
-        .flatMapSingle { (_, patientUuid, config) ->
+        .filter { isPatientDefaulter -> isPatientDefaulter }
+        .withLatestFrom(patientUuidStream, configProvider.toObservable(), currentFacilityStream) { _, patientUuid, config, currentFacilty ->
+          Triple(patientUuid, config, currentFacilty)
+        }
+        .flatMapSingle { (patientUuid, config, currentFacility) ->
           appointmentRepository
               .schedule(
                   patientUuid = patientUuid,
                   appointmentDate = LocalDate.now(utcClock).plus(config.appointmentDuePeriodForDefaulters),
-                  appointmentType = Automatic)
+                  appointmentType = Automatic,
+                  currentFacility = currentFacility)
               .map { { ui: Ui -> ui.closeSheet() } }
         }
 
@@ -141,12 +152,16 @@ class ScheduleAppointmentSheetController @Inject constructor(
     val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated>()
         .map { it.patientUuid }
 
+    val currentFacilityStream = userSession
+        .requireLoggedInUser()
+        .switchMap { user -> facilityRepository.currentFacility(user) }
+
     return events.ofType<AppointmentScheduled>()
         .map { toLocalDate(it.selectedDateState) }
-        .withLatestFrom(patientUuidStream)
-        .flatMapSingle { (date, uuid) ->
+        .withLatestFrom(patientUuidStream, currentFacilityStream)
+        .flatMapSingle { (date, uuid, currentFacility) ->
           appointmentRepository
-              .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual)
+              .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual, currentFacility = currentFacility)
               .map { { ui: Ui -> ui.closeSheet(date) } }
         }
   }

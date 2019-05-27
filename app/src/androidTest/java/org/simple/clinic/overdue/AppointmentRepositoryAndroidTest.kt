@@ -116,7 +116,7 @@ class AppointmentRepositoryAndroidTest {
   fun when_creating_new_appointment_then_the_appointment_should_be_saved() {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual).blockingGet()
+    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
 
     val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()
     savedAppointment.apply {
@@ -134,14 +134,16 @@ class AppointmentRepositoryAndroidTest {
 
     val date1 = LocalDate.now(clock)
     val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, date1, Manual).blockingGet()
+    val facility = testData.qaFacility()
+
+    appointmentRepository.schedule(patientId, date1, Manual, facility).blockingGet()
 
     appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
 
     testClock.advanceBy(Duration.ofHours(24))
 
     val date2 = LocalDate.now(clock).plusDays(10)
-    appointmentRepository.schedule(patientId, date2, Manual).blockingGet()
+    appointmentRepository.schedule(patientId, date2, Manual, facility).blockingGet()
 
     val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(savedAppointment).hasSize(2)
@@ -337,9 +339,11 @@ class AppointmentRepositoryAndroidTest {
         )
     ))
 
-    appointmentRepository.schedule(patient1, date1, Manual).toCompletable()
-        .andThen(appointmentRepository.schedule(patient2, LocalDate.now(clock).minusDays(2), Manual)).toCompletable()
-        .andThen(appointmentRepository.schedule(patient3, date3, Manual))
+    val facility = testData.qaFacility()
+
+    appointmentRepository.schedule(patient1, date1, Manual, facility).toCompletable()
+        .andThen(appointmentRepository.schedule(patient2, LocalDate.now(clock).minusDays(2), Manual, facility)).toCompletable()
+        .andThen(appointmentRepository.schedule(patient3, date3, Manual, facility))
         .blockingGet()
 
     val overdueAppts = appointmentRepository.overdueAppointments().blockingFirst()
@@ -460,7 +464,7 @@ class AppointmentRepositoryAndroidTest {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
     val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual).blockingGet()
+    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
@@ -491,7 +495,7 @@ class AppointmentRepositoryAndroidTest {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
     val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual).blockingGet()
+    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
@@ -520,7 +524,7 @@ class AppointmentRepositoryAndroidTest {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
     val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual).blockingGet()
+    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
@@ -549,7 +553,7 @@ class AppointmentRepositoryAndroidTest {
     val patientId = UUID.randomUUID()
     val appointmentDate = LocalDate.now(clock)
     val timeOfSchedule = Instant.now(clock)
-    appointmentRepository.schedule(patientId, appointmentDate, Manual).blockingGet()
+    appointmentRepository.schedule(patientId, appointmentDate, Manual, testData.qaFacility()).blockingGet()
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
@@ -592,7 +596,7 @@ class AppointmentRepositoryAndroidTest {
           .uuid
 
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
-      appointmentRepository.schedule(patientUuid, scheduledDate, Manual).blockingGet()
+      appointmentRepository.schedule(patientUuid, scheduledDate, Manual, testData.qaFacility()).blockingGet()
       bpMeasurements.forEach {
         bpRepository.saveMeasurement(
             patientUuid = patientUuid,
@@ -787,11 +791,13 @@ class AppointmentRepositoryAndroidTest {
   fun when_fetching_appointment_for_patient_it_should_return_the_last_created_appointment() {
     val patientId = UUID.randomUUID()
     val scheduledDateNextMonth = LocalDate.now(testClock).plusMonths(1)
-    appointmentRepository.schedule(patientId, scheduledDateNextMonth, Manual).blockingGet()
+    val facility = testData.qaFacility()
+
+    appointmentRepository.schedule(patientId, scheduledDateNextMonth, Manual, facility).blockingGet()
 
     val scheduledDateNextWeek = LocalDate.now(testClock).plusWeeks(1)
     testClock.advanceBy(Duration.ofDays(1))
-    val secondAppointment = appointmentRepository.schedule(patientId, scheduledDateNextWeek, Manual).blockingGet()
+    val secondAppointment = appointmentRepository.schedule(patientId, scheduledDateNextWeek, Manual, facility).blockingGet()
 
     val (appointment) = appointmentRepository.lastCreatedAppointmentForPatient(patientId).blockingFirst()
     assertThat(appointment!!).isEqualTo(secondAppointment)
@@ -855,7 +861,8 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.schedule(
         patientUuid = patientId,
         appointmentDate = appointmentDate,
-        appointmentType = Automatic
+        appointmentType = Automatic,
+        currentFacility = testData.qaFacility()
     ).blockingGet()
 
     val savedAppointment = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet().first()

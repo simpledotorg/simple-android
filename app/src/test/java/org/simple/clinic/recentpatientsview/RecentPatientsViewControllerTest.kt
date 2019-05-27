@@ -50,7 +50,8 @@ class RecentPatientsViewControllerTest {
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
-  private val recentPatientLimit = 10
+  private val recentPatientLimit = 3
+  private val recentPatientLimitPlusOne = recentPatientLimit + 1
 
   @Before
   fun setUp() {
@@ -84,7 +85,7 @@ class RecentPatientsViewControllerTest {
     val patientUuid1 = UUID.randomUUID()
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
-    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimit)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -139,6 +140,79 @@ class RecentPatientsViewControllerTest {
                 updatedAtRelativeTimestamp = Yesterday
             ),
             gender = FEMALE
+        )
+    ))
+    verify(screen).showOrHideRecentPatients(isVisible = true)
+  }
+
+  @Test
+  fun `when number of recent patients is greater than recent patient limit then add see all item`() {
+    val patientUuid1 = UUID.randomUUID()
+    val patientUuid2 = UUID.randomUUID()
+    val patientUuid3 = UUID.randomUUID()
+    val patientUuid4 = UUID.randomUUID()
+    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)).thenReturn(Observable.just(listOf(
+        PatientMocker.recentPatient(
+            uuid = patientUuid1,
+            fullName = "Ajay Kumar",
+            age = Age(42, Instant.now(), LocalDate.MIN),
+            gender = TRANSGENDER,
+            lastBp = LastBp(systolic = 127, diastolic = 83, recordedAt = Instant.now())
+        ),
+        PatientMocker.recentPatient(
+            uuid = patientUuid2,
+            fullName = "Vijay Kumar",
+            age = Age(24, Instant.now(), LocalDate.MIN),
+            gender = MALE,
+            lastBp = null
+        ),
+        PatientMocker.recentPatient(
+            uuid = patientUuid3,
+            fullName = "Vinaya Kumari",
+            age = Age(27, Instant.now(), LocalDate.MIN),
+            gender = FEMALE,
+            lastBp = LastBp(systolic = 142, diastolic = 72, recordedAt = Instant.now().minus(1, ChronoUnit.DAYS))
+        ),
+        PatientMocker.recentPatient(
+            uuid = patientUuid4,
+            fullName = "Abhilash Devi",
+            age = Age(37, Instant.now(), LocalDate.MIN),
+            gender = TRANSGENDER,
+            lastBp = LastBp(systolic = 139, diastolic = 92, recordedAt = Instant.now().minus(3, ChronoUnit.DAYS))
+        )
+    )))
+
+    uiEvents.onNext(ScreenCreated())
+
+    verify(screen).updateRecentPatients(listOf(
+        RecentPatientItem(
+            uuid = patientUuid1,
+            name = "Ajay Kumar",
+            age = 42,
+            lastBp = RecentPatientItem.LastBp(
+                systolic = 127,
+                diastolic = 83,
+                updatedAtRelativeTimestamp = Today
+            ),
+            gender = TRANSGENDER
+        ),
+        RecentPatientItem(
+            uuid = patientUuid2,
+            name = "Vijay Kumar",
+            age = 24,
+            lastBp = null,
+            gender = MALE
+        ),
+        RecentPatientItem(
+            uuid = patientUuid3,
+            name = "Vinaya Kumari",
+            age = 27,
+            lastBp = RecentPatientItem.LastBp(
+                systolic = 142,
+                diastolic = 72,
+                updatedAtRelativeTimestamp = Yesterday
+            ),
+            gender = FEMALE
         ),
         SeeAllItem
     ))
@@ -147,7 +221,7 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens and there are no recent patients then show empty state`() {
-    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimit)).thenReturn(Observable.just(emptyList()))
+    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(ScreenCreated())
 

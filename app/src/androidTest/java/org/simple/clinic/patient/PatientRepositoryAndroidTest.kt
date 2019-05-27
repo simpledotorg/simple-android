@@ -1553,7 +1553,12 @@ class PatientRepositoryAndroidTest {
       }
 
       appointmentDate?.let {
-        appointmentRepository.schedule(patientUuid = patientUuid, appointmentDate = it, appointmentType = Manual).blockingGet()
+        appointmentRepository.schedule(
+            patientUuid = patientUuid,
+            appointmentDate = it,
+            appointmentType = Manual,
+            currentFacility = testData.qaFacility()
+        ).blockingGet()
       }
 
       return patientUuid to fullName

@@ -6,17 +6,14 @@ import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.threeten.bp.Instant
@@ -29,29 +26,29 @@ class BloodPressureRepositoryTest {
   val rxErrorsRule = RxErrorsRule()
 
   private val dao = mock<BloodPressureMeasurement.RoomDao>()
-  private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
   private val testClock = TestUtcClock()
 
   private lateinit var repository: BloodPressureRepository
 
   @Before
   fun setUp() {
-    repository = BloodPressureRepository(dao, userSession, facilityRepository, testClock)
+    repository = BloodPressureRepository(dao, testClock)
   }
 
   @Test
   fun `when saving a measurement, correctly get IDs for the current user and facility`() {
-    val aUuid = UUID.randomUUID()
-    val loggedInUser = PatientMocker.loggedInUser(aUuid)
-
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
-
+    val loggedInUser = PatientMocker.loggedInUser()
     val facility = PatientMocker.facility()
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
 
     val patientUuid = UUID.randomUUID()
-    repository.saveMeasurement(patientUuid, systolic = 120, diastolic = 65, recordedAt = Instant.now(testClock)).subscribe()
+    repository.saveMeasurement(
+        patientUuid = patientUuid,
+        systolic = 120,
+        diastolic = 65,
+        loggedInUser = loggedInUser,
+        currentFacility = facility,
+        recordedAt = Instant.now(testClock)
+    ).subscribe()
 
     verify(dao).save(check {
       val measurement = it.first()
@@ -61,8 +58,7 @@ class BloodPressureRepositoryTest {
       assertThat(measurement.patientUuid).isEqualTo(patientUuid)
       assertThat(measurement.createdAt).isEqualTo(Instant.now(testClock))
       assertThat(measurement.updatedAt).isEqualTo(Instant.now(testClock))
-
-      assertThat(measurement.userUuid).isEqualTo(aUuid)
+      assertThat(measurement.userUuid).isEqualTo(loggedInUser.uuid)
     })
   }
 

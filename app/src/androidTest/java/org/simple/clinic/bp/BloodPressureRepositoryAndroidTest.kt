@@ -70,6 +70,8 @@ class BloodPressureRepositoryAndroidTest {
             patientUuid = UUID.randomUUID(),
             systolic = 120,
             diastolic = 80,
+            loggedInUser = testData.qaUser(),
+            currentFacility = testData.qaFacility(),
             recordedAt = now)
         .blockingGet()
 

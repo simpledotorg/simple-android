@@ -31,9 +31,11 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
@@ -70,11 +72,19 @@ class BloodPressureEntrySheetControllerTest {
   private val testUtcClock = TestUtcClock()
   private val testUserClock = TestUserClock()
 
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+
+  private val user = PatientMocker.loggedInUser()
+  private val facility = PatientMocker.facility()
+
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testUtcClock))
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     controller = BloodPressureEntrySheetController(
         bloodPressureRepository = bloodPressureRepository,
@@ -83,7 +93,9 @@ class BloodPressureEntrySheetControllerTest {
         dateValidator = dateValidator,
         bpValidator = bpValidator,
         userClock = testUserClock,
-        inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'))
+        inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'),
+        userSession = userSession,
+        facilityRepository = facilityRepository)
 
     uiEvents
         .compose(controller)
@@ -154,7 +166,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("-"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
 
     uiChangeVerification(sheet)
@@ -199,7 +211,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged(diastolic))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(sheet, never()).setBpSavedResultAndFinish()
   }
 
@@ -218,7 +230,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureDiastolicTextChanged("80"))
     uiEvents.onNext(BloodPressureSaveClicked)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(sheet).showDateEntryScreen()
   }
@@ -370,7 +382,7 @@ class BloodPressureEntrySheetControllerTest {
     uiEvents.onNext(BloodPressureSaveClicked)
 
     when (openAs) {
-      is OpenAs.New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+      is OpenAs.New -> verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
       is OpenAs.Update -> verify(bloodPressureRepository, never()).updateMeasurement(any())
       else -> throw AssertionError()
     }
@@ -391,8 +403,9 @@ class BloodPressureEntrySheetControllerTest {
   @Test
   fun `when save is clicked for a new BP, date entry is active and input is valid then a BP measurement should be saved`() {
     val inputDate = LocalDate.of(1990, 2, 13)
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
+        .thenReturn(Single.just(PatientMocker.bp()))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
     whenever(bpValidator.validate(any(), any()))
         .thenReturn(ErrorSystolicEmpty)
@@ -425,6 +438,8 @@ class BloodPressureEntrySheetControllerTest {
         patientUuid,
         systolic = 130,
         diastolic = 110,
+        loggedInUser = user,
+        currentFacility = facility,
         recordedAt = entryDateAsInstant)
     verify(appointmentRepository).markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)
     verify(patientRepository).compareAndUpdateRecordedAt(patientUuid, entryDateAsInstant)
@@ -439,7 +454,7 @@ class BloodPressureEntrySheetControllerTest {
     val newInputDate = LocalDate.of(1991, 2, 14)
     whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
     whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
     whenever(patientRepository.compareAndUpdateRecordedAt(any(), any())).thenReturn(Completable.complete())
@@ -462,7 +477,7 @@ class BloodPressureEntrySheetControllerTest {
     verify(bloodPressureRepository).updateMeasurement(updatedBp)
     verify(patientRepository).compareAndUpdateRecordedAt(updatedBp.patientUuid, updatedBp.recordedAt)
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(sheet).setBpSavedResultAndFinish()
   }
@@ -487,7 +502,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BloodPressureSaveClicked)
     }
 
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(bloodPressureRepository, never()).updateMeasurement(any())
     verify(sheet, never()).setBpSavedResultAndFinish()
 
@@ -671,7 +686,7 @@ class BloodPressureEntrySheetControllerTest {
     val newInputDate = LocalDate.of(1991, 2, 14)
     whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
     whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
-    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
+    whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
     whenever(bloodPressureRepository.updateMeasurement(any())).thenReturn(Completable.complete())
 
     if (openAs is OpenAs.Update) {
@@ -700,7 +715,7 @@ class BloodPressureEntrySheetControllerTest {
     }
 
     verify(bloodPressureRepository, never()).updateMeasurement(any())
-    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any())
+    verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(sheet, never()).setBpSavedResultAndFinish()
   }

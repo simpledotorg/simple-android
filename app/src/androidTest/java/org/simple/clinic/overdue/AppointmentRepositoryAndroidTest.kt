@@ -594,7 +594,13 @@ class AppointmentRepositoryAndroidTest {
       val scheduledDate = (LocalDateTime.now(clock) - appointmentHasBeenOverdueFor).toLocalDate()
       appointmentRepository.schedule(patientUuid, scheduledDate).blockingGet()
       bpMeasurements.forEach {
-        bpRepository.saveMeasurement(patientUuid, it.systolic, it.diastolic).blockingGet()
+        bpRepository.saveMeasurement(
+            patientUuid = patientUuid,
+            systolic = it.systolic,
+            diastolic = it.diastolic,
+            loggedInUser = testData.qaUser(),
+            currentFacility = testData.qaFacility()
+        ).blockingGet()
         testClock.advanceBy(Duration.ofSeconds(1))
       }
       medicalHistoryRepository.save(patientUuid, OngoingMedicalHistoryEntry(

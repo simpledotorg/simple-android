@@ -21,9 +21,13 @@ import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicLessThanDi
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooHigh
 import org.simple.clinic.bp.entry.BpValidator.Validation.ErrorSystolicTooLow
 import org.simple.clinic.bp.entry.BpValidator.Validation.Success
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientUuid
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
 import org.simple.clinic.util.exhaustive
@@ -50,7 +54,9 @@ class BloodPressureEntrySheetController @Inject constructor(
     private val dateValidator: UserInputDateValidator,
     private val bpValidator: BpValidator,
     private val userClock: UserClock,
-    private val inputDatePaddingCharacter: UserInputDatePaddingCharacter
+    private val inputDatePaddingCharacter: UserInputDatePaddingCharacter,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -458,10 +464,31 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureDateToPrefillCalculated>()
         .map { it.date }
 
-    val newBpDataStream = Observables.combineLatest(dateValidations, bpValidations, patientUuidStream)
-        .map { (dateResult, bpResult, patientUuid) ->
+    val loggedInUserStream = userSession
+        .requireLoggedInUser()
+        .replay()
+        .refCount()
+
+    val currentFacilityStream = loggedInUserStream
+        .flatMap(facilityRepository::currentFacility)
+
+    val newBpDataStream = Observables
+        .combineLatest(
+            dateValidations,
+            bpValidations,
+            patientUuidStream,
+            loggedInUserStream,
+            currentFacilityStream
+        ) { dateResult, bpResult, patientUuid, loggedInUser, currentFacility ->
           if (dateResult is Valid && bpResult is Success) {
-            SaveBpData.ReadyToCreate(dateResult.parsedDate, bpResult.systolic, bpResult.diastolic, patientUuid)
+            SaveBpData.ReadyToCreate(
+                date = dateResult.parsedDate,
+                systolic = bpResult.systolic,
+                diastolic = bpResult.diastolic,
+                patientUuid = patientUuid,
+                loggedInUser = loggedInUser,
+                currentFacility = currentFacility
+            )
           } else {
             SaveBpData.NeedsCorrection
           }
@@ -482,7 +509,14 @@ class BloodPressureEntrySheetController @Inject constructor(
         .withLatestFrom(prefilledDateStream)
         .flatMapSingle { (newBp, prefilledDate) ->
           bloodPressureRepository
-              .saveMeasurement(newBp.patientUuid, newBp.systolic, newBp.diastolic, newBp.date.toUtcInstant(userClock))
+              .saveMeasurement(
+                  patientUuid = newBp.patientUuid,
+                  systolic = newBp.systolic,
+                  diastolic = newBp.diastolic,
+                  recordedAt = newBp.date.toUtcInstant(userClock),
+                  loggedInUser = newBp.loggedInUser,
+                  currentFacility = newBp.currentFacility
+              )
               .map { BloodPressureSaved(wasDateChanged = prefilledDate != newBp.date) }
               .flatMap { bpSaved ->
                 appointmentRepository
@@ -516,8 +550,23 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   sealed class SaveBpData {
-    data class ReadyToCreate(val date: LocalDate, val systolic: Int, val diastolic: Int, val patientUuid: PatientUuid) : SaveBpData()
-    data class ReadyToUpdate(val date: LocalDate, val systolic: Int, val diastolic: Int, val bpUuid: UUID) : SaveBpData()
+
+    data class ReadyToCreate(
+        val date: LocalDate,
+        val systolic: Int,
+        val diastolic: Int,
+        val patientUuid: PatientUuid,
+        val loggedInUser: User,
+        val currentFacility: Facility
+    ) : SaveBpData()
+
+    data class ReadyToUpdate(
+        val date: LocalDate,
+        val systolic: Int,
+        val diastolic: Int,
+        val bpUuid: UUID
+    ) : SaveBpData()
+
     object NeedsCorrection : SaveBpData()
   }
 

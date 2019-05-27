@@ -45,7 +45,7 @@ class UpdateAnalyticsUserIdTest {
 
     updateAnalyticsUserId.listen(scheduler)
 
-    assertThat(reporter.setUserId).isNull()
+    assertThat(reporter.userId).isNull()
   }
 
   @Test
@@ -67,9 +67,9 @@ class UpdateAnalyticsUserIdTest {
     updateAnalyticsUserId.listen(scheduler)
 
     if (shouldSetUserId) {
-      assertThat(reporter.setUserId).isEqualTo(user.uuid.toString())
+      assertThat(reporter.userId).isEqualTo(user.uuid.toString())
     } else {
-      assertThat(reporter.setUserId).isNull()
+      assertThat(reporter.userId).isNull()
     }
   }
 
@@ -84,7 +84,7 @@ class UpdateAnalyticsUserIdTest {
 
     updateAnalyticsUserId.listen(scheduler)
 
-    assertThat(reporter.setUserId).isEqualTo(userIdThatMustBeSet)
+    assertThat(reporter.userId).isEqualTo(userIdThatMustBeSet)
   }
 
   // Accessed via reflection for test params
@@ -107,9 +107,9 @@ class UpdateAnalyticsUserIdTest {
     val user = PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN)
 
     userSubject.onNext(user.toOptional())
-    assertThat(reporter.setUserId).isEqualTo(user.uuid.toString())
+    assertThat(reporter.userId).isEqualTo(user.uuid.toString())
 
     userSubject.onNext(user.copy(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED).toOptional())
-    assertThat(reporter.setUserId).isNull()
+    assertThat(reporter.userId).isNull()
   }
 }

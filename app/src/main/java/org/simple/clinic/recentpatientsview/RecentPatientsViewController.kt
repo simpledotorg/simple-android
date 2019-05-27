@@ -5,6 +5,7 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
@@ -53,14 +54,18 @@ class RecentPatientsViewController @Inject constructor(
     val recentPatientsStream = Observables
         .combineLatest(currentFacilityStream, patientConfig)
         .switchMap { (facility, config) ->
-          patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit)
+          // Fetching an extra recent patient to know whether we have more than "recentPatientLimit" number of recent patients
+          patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit + 1)
         }
         .replay()
         .refCount()
 
     val updateRecentPatients = recentPatientsStream
         .map { it.map(::recentPatientItem) }
-        .map { it + SeeAllItem }
+        .withLatestFrom(patientConfig)
+        .map { (recentPatients, config) ->
+          addSeeAllIfListTooLong(recentPatients, config.recentPatientLimit)
+        }
         .map { { ui: Ui -> ui.updateRecentPatients(it) } }
 
     val toggleEmptyState = recentPatientsStream
@@ -71,6 +76,16 @@ class RecentPatientsViewController @Inject constructor(
 
     return Observable.merge(updateRecentPatients, toggleEmptyState)
   }
+
+  private fun addSeeAllIfListTooLong(
+      recentPatients: List<RecentPatientItem>,
+      recentPatientLimit: Int
+  ) =
+      if (recentPatients.size > recentPatientLimit) {
+        recentPatients.take(recentPatientLimit) + SeeAllItem
+      } else {
+        recentPatients
+      }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(

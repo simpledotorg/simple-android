@@ -2,11 +2,11 @@ package org.simple.clinic.analytics
 
 class MockAnalyticsReporter : AnalyticsReporter {
 
-  var setUserId: String? = null
+  var userId: String? = null
   val receivedEvents = mutableListOf<Event>()
 
   override fun setUserIdentity(id: String) {
-    setUserId = id
+    userId = id
   }
 
   override fun createEvent(event: String, props: Map<String, Any>) {
@@ -14,20 +14,20 @@ class MockAnalyticsReporter : AnalyticsReporter {
   }
 
   override fun resetUserIdentity() {
-    setUserId = null
+    userId = null
   }
 
   fun clear() {
     clearReceivedEvents()
-    clearSetUserIds()
+    clearUserIds()
   }
 
   private fun clearReceivedEvents() {
     receivedEvents.clear()
   }
 
-  private fun clearSetUserIds() {
-    setUserId = null
+  private fun clearUserIds() {
+    userId = null
   }
 
   data class Event(val name: String, val props: Map<String, Any>)

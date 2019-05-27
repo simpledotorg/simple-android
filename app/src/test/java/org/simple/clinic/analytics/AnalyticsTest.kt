@@ -165,7 +165,7 @@ class AnalyticsTest {
 
     val uuid = UUID.randomUUID()
     Analytics.setUserId(uuid)
-    assertThat(reporter.setUserId).isEqualTo(uuid.toString())
+    assertThat(reporter.userId).isEqualTo(uuid.toString())
   }
 
   @Test
@@ -175,9 +175,9 @@ class AnalyticsTest {
 
     val uuid = UUID.randomUUID()
     Analytics.setUserId(uuid)
-    assertThat(reporter.setUserId).isEqualTo(uuid.toString())
+    assertThat(reporter.userId).isEqualTo(uuid.toString())
     Analytics.clearUserId()
-    assertThat(reporter.setUserId).isNull()
+    assertThat(reporter.userId).isNull()
   }
 
   @Test
@@ -190,13 +190,13 @@ class AnalyticsTest {
     val userId = UUID.randomUUID()
     Analytics.setUserId(userId)
 
-    assertThat(reporter1.setUserId).isEqualTo(userId.toString())
-    assertThat(reporter3.setUserId).isEqualTo(userId.toString())
+    assertThat(reporter1.userId).isEqualTo(userId.toString())
+    assertThat(reporter3.userId).isEqualTo(userId.toString())
 
     Analytics.clearUserId()
 
-    assertThat(reporter1.setUserId).isNull()
-    assertThat(reporter3.setUserId).isNull()
+    assertThat(reporter1.userId).isNull()
+    assertThat(reporter3.userId).isNull()
   }
 
   @Test

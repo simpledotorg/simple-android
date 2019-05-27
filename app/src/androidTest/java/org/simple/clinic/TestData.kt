@@ -66,19 +66,17 @@ class TestData @Inject constructor(
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
 ) {
 
-  fun qaUserUuid(): UUID =
-      userSession.requireLoggedInUser()
-          .map { it.uuid }
-          .blockingFirst()
+  fun qaUser() = userSession.loggedInUserImmediate()!!
+
+  fun qaUserUuid() = qaUser().uuid
 
   fun qaUserPin() = "1712"
 
   fun qaUserOtp() = "000000"
 
-  fun qaUserFacilityUuid(): UUID =
-      facilityRepository.currentFacility(userSession)
-          .map { it.uuid }
-          .blockingFirst()
+  fun qaFacility() = facilityRepository.currentFacility(qaUser()).blockingFirst()
+
+  fun qaUserFacilityUuid() = qaFacility().uuid
 
   fun patientProfile(
       patientUuid: UUID = UUID.randomUUID(),

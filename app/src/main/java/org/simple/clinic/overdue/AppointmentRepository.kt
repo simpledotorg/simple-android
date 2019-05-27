@@ -7,7 +7,6 @@ import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment.AppointmentType
-import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.Appointment.Status.VISITED
@@ -59,10 +58,6 @@ class AppointmentRepository @Inject constructor(
         }
 
     return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
-  }
-
-  fun schedule(patientUuid: UUID, appointmentDate: LocalDate): Single<Appointment> {
-    return schedule(patientUuid, appointmentDate, Manual)
   }
 
   private fun markOlderAppointmentsAsVisited(patientUuid: UUID): Completable {

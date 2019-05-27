@@ -8,7 +8,8 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.*
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -145,7 +146,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .withLatestFrom(patientUuidStream)
         .flatMapSingle { (date, uuid) ->
           appointmentRepository
-              .schedule(patientUuid = uuid, appointmentDate = date)
+              .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual)
               .map { { ui: Ui -> ui.closeSheet(date) } }
         }
   }

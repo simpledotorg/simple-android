@@ -23,6 +23,8 @@ import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.*
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationRepository
@@ -1551,7 +1553,7 @@ class PatientRepositoryAndroidTest {
       }
 
       appointmentDate?.let {
-        appointmentRepository.schedule(patientUuid = patientUuid, appointmentDate = it).blockingGet()
+        appointmentRepository.schedule(patientUuid = patientUuid, appointmentDate = it, appointmentType = Manual).blockingGet()
       }
 
       return patientUuid to fullName

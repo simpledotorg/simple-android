@@ -16,7 +16,7 @@ object Analytics {
   private var reporters: List<AnalyticsReporter> = emptyList()
 
   fun addReporter(vararg reportersToAdd: AnalyticsReporter) {
-    reporters += reportersToAdd
+    reporters = reporters + reportersToAdd
   }
 
   fun clearReporters() {
@@ -24,7 +24,7 @@ object Analytics {
   }
 
   fun removeReporter(reporter: AnalyticsReporter) {
-    reporters -= reporter
+    reporters = reporters - reporter
   }
 
   fun setUserId(uuid: UUID) {

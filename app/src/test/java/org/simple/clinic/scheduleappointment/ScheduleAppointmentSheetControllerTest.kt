@@ -14,7 +14,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.*
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
@@ -132,14 +133,14 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
-    whenever(repository.schedule(any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+    whenever(repository.schedule(any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val current = ScheduleAppointment("1 month", 1, ChronoUnit.MONTHS)
     val date = LocalDate.now(utcClock).plus(1, ChronoUnit.MONTHS)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(3, uuid, 4))
     uiEvents.onNext(AppointmentScheduled(current))
 
-    verify(repository).schedule(uuid, date)
+    verify(repository).schedule(uuid, date, Manual)
     verify(sheet).closeSheet(date)
   }
 

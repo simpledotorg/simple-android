@@ -3,15 +3,14 @@ package org.simple.clinic.bp
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.bp.sync.BloodPressureMeasurementPayload
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.User
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -20,8 +19,6 @@ import javax.inject.Inject
 @AppScope
 class BloodPressureRepository @Inject constructor(
     private val dao: BloodPressureMeasurement.RoomDao,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val utcClock: UtcClock
 ) : SynceableRepository<BloodPressureMeasurement, BloodPressureMeasurementPayload> {
 
@@ -29,35 +26,30 @@ class BloodPressureRepository @Inject constructor(
       patientUuid: UUID,
       systolic: Int,
       diastolic: Int,
+      loggedInUser: User,
+      currentFacility: Facility,
       recordedAt: Instant = Instant.now(utcClock)
   ): Single<BloodPressureMeasurement> {
     if (systolic < 0 || diastolic < 0) {
       throw AssertionError("Cannot have negative BP readings.")
     }
 
-    val loggedInUser = userSession.requireLoggedInUser()
-        .firstOrError()
-
-    val currentFacility = facilityRepository
-        .currentFacility(userSession)
-        .firstOrError()
-
     val now = Instant.now(utcClock)
-    return Singles.zip(loggedInUser, currentFacility)
-        .map { (user, facility) ->
-          BloodPressureMeasurement(
-              uuid = UUID.randomUUID(),
-              systolic = systolic,
-              diastolic = diastolic,
-              syncStatus = SyncStatus.PENDING,
-              userUuid = user!!.uuid,
-              facilityUuid = facility.uuid,
-              patientUuid = patientUuid,
-              createdAt = now,
-              updatedAt = now,
-              deletedAt = null,
-              recordedAt = recordedAt)
-        }
+    return Single
+        .just(
+            BloodPressureMeasurement(
+                uuid = UUID.randomUUID(),
+                systolic = systolic,
+                diastolic = diastolic,
+                syncStatus = SyncStatus.PENDING,
+                userUuid = loggedInUser.uuid,
+                facilityUuid = currentFacility.uuid,
+                patientUuid = patientUuid,
+                createdAt = now,
+                updatedAt = now,
+                deletedAt = null,
+                recordedAt = recordedAt)
+        )
         .flatMap {
           save(listOf(it)).toSingleDefault(it)
         }

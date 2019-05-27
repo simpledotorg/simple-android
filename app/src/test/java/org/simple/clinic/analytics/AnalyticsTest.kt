@@ -181,7 +181,7 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when multiple reporters are present and one throws an error, the user id must by set on the others`() {
+  fun `when multiple reporters are present and one throws an error, the user id must be set on the others`() {
     val reporter1 = MockAnalyticsReporter()
     val reporter2 = FailingAnalyticsReporter()
     val reporter3 = MockAnalyticsReporter()

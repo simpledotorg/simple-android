@@ -4,6 +4,7 @@ import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment.AppointmentType
@@ -33,29 +34,29 @@ class AppointmentRepository @Inject constructor(
     private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
-  fun schedule(patientUuid: UUID, appointmentDate: LocalDate, appointmentType: AppointmentType): Single<Appointment> {
-    val newAppointmentStream = facilityRepository
-        .currentFacility(userSession)
-        .firstOrError()
-        .map { facility ->
-          Appointment(
-              uuid = UUID.randomUUID(),
-              patientUuid = patientUuid,
-              facilityUuid = facility.uuid,
-              scheduledDate = appointmentDate,
-              status = SCHEDULED,
-              cancelReason = null,
-              remindOn = null,
-              agreedToVisit = null,
-              appointmentType = appointmentType,
-              syncStatus = SyncStatus.PENDING,
-              createdAt = Instant.now(utcClock),
-              updatedAt = Instant.now(utcClock),
-              deletedAt = null)
-        }
-        .flatMap { appointment ->
-          save(listOf(appointment)).andThen(Single.just(appointment))
-        }
+  fun schedule(
+      patientUuid: UUID,
+      appointmentDate: LocalDate,
+      appointmentType: AppointmentType,
+      currentFacility: Facility
+  ): Single<Appointment> {
+    val newAppointmentStream = Single.just(Appointment(
+        uuid = UUID.randomUUID(),
+        patientUuid = patientUuid,
+        facilityUuid = currentFacility.uuid,
+        scheduledDate = appointmentDate,
+        status = SCHEDULED,
+        cancelReason = null,
+        remindOn = null,
+        agreedToVisit = null,
+        appointmentType = appointmentType,
+        syncStatus = SyncStatus.PENDING,
+        createdAt = Instant.now(utcClock),
+        updatedAt = Instant.now(utcClock),
+        deletedAt = null)
+    ).flatMap { appointment ->
+      save(listOf(appointment)).andThen(Single.just(appointment))
+    }
 
     return markOlderAppointmentsAsVisited(patientUuid).andThen(newAppointmentStream)
   }

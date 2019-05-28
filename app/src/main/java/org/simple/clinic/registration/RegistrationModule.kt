@@ -13,8 +13,8 @@ import retrofit2.Retrofit
 open class RegistrationModule {
 
   @Provides
-  fun api(retrofit: Retrofit): RegistrationApiV1 {
-    return retrofit.create(RegistrationApiV1::class.java)
+  fun api(retrofit: Retrofit): RegistrationApi {
+    return retrofit.create(RegistrationApi::class.java)
   }
 
   @Provides

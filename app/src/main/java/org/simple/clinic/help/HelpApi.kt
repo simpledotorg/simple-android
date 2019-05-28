@@ -5,6 +5,6 @@ import retrofit2.http.GET
 
 interface HelpApi {
 
-  @GET("v2/help.html")
+  @GET("help.html")
   fun help(): Single<String>
 }

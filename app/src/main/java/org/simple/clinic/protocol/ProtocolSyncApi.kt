@@ -1,19 +1,14 @@
-package org.simple.clinic.facility
+package org.simple.clinic.protocol
 
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-interface FacilitySyncApiV2 {
+interface ProtocolSyncApi {
 
-  companion object {
-    const val version = "v2"
-  }
-
-  @GET("$version/facilities/sync")
+  @GET("protocols/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null
-  ): Single<FacilityPullResponse>
-
+  ): Single<ProtocolPullResponse>
 }

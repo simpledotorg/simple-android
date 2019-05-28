@@ -17,7 +17,7 @@ import javax.inject.Named
 class PatientSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: PatientRepository,
-    private val api: PatientSyncApiV3,
+    private val api: PatientSyncApi,
     private val userSession: UserSession,
     @Named("last_patient_pull_token") private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>

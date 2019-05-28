@@ -7,18 +7,14 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface RegistrationApiV1 {
+interface RegistrationApi {
 
-  companion object {
-    const val version = "v3"
-  }
-
-  @GET("$version/users/find")
+  @GET("users/find")
   fun findUser(
       @Query("phone_number") phoneNumber: String
   ): Single<LoggedInUserPayload>
 
-  @POST("$version/users/register")
+  @POST("users/register")
   fun createUser(
       @Body body: RegistrationRequest
   ): Single<RegistrationResponse>

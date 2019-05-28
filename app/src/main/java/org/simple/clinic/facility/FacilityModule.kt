@@ -27,8 +27,8 @@ class FacilityModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): FacilitySyncApiV2 {
-    return retrofit.create(FacilitySyncApiV2::class.java)
+  fun syncApi(retrofit: Retrofit): FacilitySyncApi {
+    return retrofit.create(FacilitySyncApi::class.java)
   }
 
   @Provides

@@ -26,8 +26,8 @@ class ProtocolModule {
   }
 
   @Provides
-  fun protocolSyncApi(retrofit: Retrofit): ProtocolSyncApiV2 {
-    return retrofit.create(ProtocolSyncApiV2::class.java)
+  fun protocolSyncApi(retrofit: Retrofit): ProtocolSyncApi {
+    return retrofit.create(ProtocolSyncApi::class.java)
   }
 
   @Provides

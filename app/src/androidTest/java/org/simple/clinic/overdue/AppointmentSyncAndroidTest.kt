@@ -35,7 +35,7 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   lateinit var sync: AppointmentSync
 
   @Inject
-  lateinit var syncApi: AppointmentSyncApiV3
+  lateinit var syncApi: AppointmentSyncApi
 
   @Inject
   lateinit var testData: TestData

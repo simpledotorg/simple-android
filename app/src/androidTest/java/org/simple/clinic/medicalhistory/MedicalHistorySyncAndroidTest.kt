@@ -13,7 +13,7 @@ import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPushRequest
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
-import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV2
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
@@ -39,7 +39,7 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
   lateinit var sync: MedicalHistorySync
 
   @Inject
-  lateinit var syncApi: MedicalHistorySyncApiV2
+  lateinit var syncApi: MedicalHistorySyncApi
 
   @Inject
   lateinit var repository: MedicalHistoryRepository

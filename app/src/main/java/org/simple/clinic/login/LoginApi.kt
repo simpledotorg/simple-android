@@ -9,18 +9,14 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 import java.util.UUID
 
-interface LoginApiV1 {
+interface LoginApi {
 
-  companion object {
-    const val version = "v3"
-  }
-
-  @POST("$version/login")
+  @POST("login")
   fun login(@Body body: LoginRequest): Single<LoginResponse>
 
-  @POST("$version/users/{userId}/request_otp")
+  @POST("users/{userId}/request_otp")
   fun requestLoginOtp(@Path("userId") userId: UUID): Completable
 
-  @POST("$version/users/me/reset_password")
+  @POST("users/me/reset_password")
   fun resetPin(@Body request: ResetPinRequest): Single<ForgotPinResponse>
 }

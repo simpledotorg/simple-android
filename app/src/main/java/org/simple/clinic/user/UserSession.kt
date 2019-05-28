@@ -19,7 +19,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
-import org.simple.clinic.login.LoginApiV1
+import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginRequest
@@ -28,7 +28,7 @@ import org.simple.clinic.login.LoginResult
 import org.simple.clinic.login.UserPayload
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
-import org.simple.clinic.registration.RegistrationApiV1
+import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
@@ -61,8 +61,8 @@ import kotlin.reflect.KClass
 
 @AppScope
 class UserSession @Inject constructor(
-    private val loginApi: LoginApiV1,
-    private val registrationApi: RegistrationApiV1,
+    private val loginApi: LoginApi,
+    private val registrationApi: RegistrationApi,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,

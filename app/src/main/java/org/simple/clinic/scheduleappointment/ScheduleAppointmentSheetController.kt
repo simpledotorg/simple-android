@@ -109,10 +109,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         configProvider.toObservable()
     )
     val isPatientDefaulterStream = combinedStreams
-        .filter { (_, _, config) -> config.isApiV3Enabled }
-        .switchMap { (_, patientUuid) ->
-          patientRepository.isPatientDefaulter(patientUuid)
-        }
+        .switchMap { (_, patientUuid) -> patientRepository.isPatientDefaulter(patientUuid) }
         .replay()
         .refCount()
 
@@ -132,11 +129,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .filter { isPatientDefaulter -> isPatientDefaulter.not() }
         .map { { ui: Ui -> ui.closeSheet() } }
 
-    val defaulterFeatureDisabledStream = combinedStreams
-        .filter { (_, _, config) -> config.isApiV3Enabled.not() }
-        .map { { ui: Ui -> ui.closeSheet() } }
-
-    return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment, defaulterFeatureDisabledStream)
+    return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
   }
 
   private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {

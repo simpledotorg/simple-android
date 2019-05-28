@@ -18,7 +18,6 @@ import org.simple.clinic.bp.sync.BloodPressureSync
 import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
-import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentSync
 import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
@@ -27,7 +26,6 @@ import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PUSH
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.threeten.bp.Period
 
 @RunWith(JUnitParamsRunner::class)
 class ModelSyncTest {
@@ -84,35 +82,10 @@ class ModelSyncTest {
               AppointmentSync(
                   syncCoordinator = syncCoordinator,
                   repository = mock(),
-                  apiV2 = mock(),
-                  apiV3 = mock(),
+                  api = mock(),
                   userSession = userSession,
-                  lastPullTokenV2 = mock(),
-                  lastPullTokenV3 = mock(),
-                  configProvider = syncConfigProvider,
-                  appointmentConfig = Single.just(AppointmentConfig(
-                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = true,
-                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
-            },
-            setOf(PUSH, PULL)),
-        listOf<Any>(
-            { syncCoordinator: SyncCoordinator, userSession: UserSession ->
-              AppointmentSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  apiV2 = mock(),
-                  apiV3 = mock(),
-                  userSession = userSession,
-                  lastPullTokenV2 = mock(),
-                  lastPullTokenV3 = mock(),
-                  configProvider = syncConfigProvider,
-                  appointmentConfig = Single.just(AppointmentConfig(
-                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = false,
-                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -296,35 +269,10 @@ class ModelSyncTest {
               AppointmentSync(
                   syncCoordinator = syncCoordinator,
                   repository = mock(),
-                  apiV2 = mock(),
-                  apiV3 = mock(),
+                  api = mock(),
                   userSession = userSession,
-                  lastPullTokenV2 = mock(),
-                  lastPullTokenV3 = mock(),
-                  configProvider = syncConfigProvider,
-                  appointmentConfig = Single.just(AppointmentConfig(
-                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = true,
-                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
-            },
-            shouldPushHappen = false),
-        testCase(
-            modelSyncProvider = { syncCoordinator, userSession ->
-              AppointmentSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  apiV2 = mock(),
-                  apiV3 = mock(),
-                  userSession = userSession,
-                  lastPullTokenV2 = mock(),
-                  lastPullTokenV3 = mock(),
-                  configProvider = syncConfigProvider,
-                  appointmentConfig = Single.just(AppointmentConfig(
-                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = false,
-                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
             },
             shouldPushHappen = false),
         testCase(
@@ -450,35 +398,10 @@ class ModelSyncTest {
               AppointmentSync(
                   syncCoordinator = syncCoordinator,
                   repository = mock(),
-                  apiV2 = mock(),
-                  apiV3 = mock(),
+                  api = mock(),
                   userSession = userSession,
-                  lastPullTokenV2 = mock(),
-                  lastPullTokenV3 = mock(),
-                  configProvider = syncConfigProvider,
-                  appointmentConfig = Single.just(AppointmentConfig(
-                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = true,
-                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
-            },
-            shouldPullHappen = false),
-        testCase(
-            modelSyncProvider = { syncCoordinator, userSession ->
-              AppointmentSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  apiV2 = mock(),
-                  apiV3 = mock(),
-                  userSession = userSession,
-                  lastPullTokenV2 = mock(),
-                  lastPullTokenV3 = mock(),
-                  configProvider = syncConfigProvider,
-                  appointmentConfig = Single.just(AppointmentConfig(
-                      minimumOverduePeriodForHighRisk = Period.ofDays(30),
-                      overduePeriodForLowestRiskLevel = Period.ofDays(365),
-                      isApiV3Enabled = false,
-                      appointmentDuePeriodForDefaulters = Period.ofDays(30))))
+                  lastPullToken = mock(),
+                  configProvider = syncConfigProvider)
             },
             shouldPullHappen = false),
         testCase(

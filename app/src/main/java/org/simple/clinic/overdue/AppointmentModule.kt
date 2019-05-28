@@ -23,7 +23,6 @@ class AppointmentModule {
     return Single.just(AppointmentConfig(
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
         overduePeriodForLowestRiskLevel = Period.ofDays(365),
-        isApiV3Enabled = true,
         appointmentDuePeriodForDefaulters = Period.ofDays(30)
     ))
   }
@@ -39,23 +38,12 @@ class AppointmentModule {
   }
 
   @Provides
-  fun syncApiV2(retrofit: Retrofit): AppointmentSyncApiV2 {
-    return retrofit.create(AppointmentSyncApiV2::class.java)
-  }
-
-  @Provides
   fun syncApiV3(retrofit: Retrofit): AppointmentSyncApiV3 {
     return retrofit.create(AppointmentSyncApiV3::class.java)
   }
 
   @Provides
   @Named("last_appointment_pull_token")
-  fun lastPullTokenV2(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
-    return rxSharedPrefs.getObject("last_appointment_pull_token_v2", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
-  }
-
-  @Provides
-  @Named("last_appointment_pull_token_v3")
   fun lastPullTokenV3(rxSharedPrefs: RxSharedPreferences): Preference<Optional<String>> {
     return rxSharedPrefs.getObject("last_appointment_pull_token_v3", None, OptionalRxPreferencesConverter(StringPreferenceConverter()))
   }

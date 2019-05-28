@@ -6,7 +6,7 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilitySyncApiV2
+import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.user.User
@@ -26,7 +26,7 @@ class AuthenticationRule : TestRule {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var facilityApi: FacilitySyncApiV2
+  lateinit var facilityApi: FacilitySyncApi
 
   @Inject
   lateinit var facilityDao: Facility.RoomDao

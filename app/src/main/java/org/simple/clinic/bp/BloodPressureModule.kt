@@ -5,7 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
+import org.simple.clinic.bp.sync.BloodPressureSyncApi
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -24,8 +24,8 @@ open class BloodPressureModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): BloodPressureSyncApiV2 {
-    return retrofit.create(BloodPressureSyncApiV2::class.java)
+  fun syncApi(retrofit: Retrofit): BloodPressureSyncApi {
+    return retrofit.create(BloodPressureSyncApi::class.java)
   }
 
   @Provides

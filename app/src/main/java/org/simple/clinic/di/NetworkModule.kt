@@ -104,8 +104,10 @@ open class NetworkModule {
   @AppScope
   fun retrofit(commonRetrofitBuilder: Retrofit.Builder): Retrofit {
     val baseUrl = BuildConfig.API_ENDPOINT
+    val currentApiVersion = "v3"
+
     return commonRetrofitBuilder
-        .baseUrl(baseUrl)
+        .baseUrl("$baseUrl$currentApiVersion/")
         .build()
   }
 

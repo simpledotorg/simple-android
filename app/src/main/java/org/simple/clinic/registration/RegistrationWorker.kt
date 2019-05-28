@@ -10,7 +10,7 @@ import javax.inject.Inject
 class RegistrationWorker(context: Context, workerParams: WorkerParameters) : Worker(context, workerParams) {
 
   @Inject
-  lateinit var api: RegistrationApiV1
+  lateinit var api: RegistrationApi
 
   @Inject
   lateinit var userSession: UserSession

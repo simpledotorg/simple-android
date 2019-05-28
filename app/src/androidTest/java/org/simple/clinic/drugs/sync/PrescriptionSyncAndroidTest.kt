@@ -39,7 +39,7 @@ class PrescriptionSyncAndroidTest : BaseSyncCoordinatorAndroidTest<PrescribedDru
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
-  lateinit var syncApi: PrescriptionSyncApiV2
+  lateinit var syncApi: PrescriptionSyncApi
 
   @Inject
   lateinit var prescriptionSync: PrescriptionSync

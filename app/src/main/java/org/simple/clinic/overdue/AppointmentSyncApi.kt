@@ -1,4 +1,4 @@
-package org.simple.clinic.drugs.sync
+package org.simple.clinic.overdue
 
 import io.reactivex.Single
 import org.simple.clinic.sync.DataPushResponse
@@ -7,20 +7,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface PrescriptionSyncApiV2 {
+interface AppointmentSyncApi {
 
-  companion object {
-    const val version = "v2"
-  }
-
-  @POST("$version/prescription_drugs/sync")
+  @POST("appointments/sync")
   fun push(
-      @Body body: PrescriptionPushRequest
+      @Body body: AppointmentPushRequest
   ): Single<DataPushResponse>
 
-  @GET("$version/prescription_drugs/sync")
+  @GET("appointments/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null
-  ): Single<PrescriptionPullResponse>
+  ): Single<AppointmentPullResponse>
 }

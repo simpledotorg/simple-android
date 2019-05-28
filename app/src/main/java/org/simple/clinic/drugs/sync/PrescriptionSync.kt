@@ -15,7 +15,7 @@ import javax.inject.Named
 
 class PrescriptionSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
-    private val api: PrescriptionSyncApiV2,
+    private val api: PrescriptionSyncApi,
     private val repository: PrescriptionRepository,
     private val userSession: UserSession,
     @Named("last_prescription_pull_token") private val lastPullToken: Preference<Optional<String>>,

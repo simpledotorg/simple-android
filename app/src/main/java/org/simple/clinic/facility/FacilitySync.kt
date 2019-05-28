@@ -14,7 +14,7 @@ import javax.inject.Named
 class FacilitySync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: FacilityRepository,
-    private val api: FacilitySyncApiV2,
+    private val api: FacilitySyncApi,
     @Named("last_facility_pull_token") private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_daily") private val configProvider: Single<SyncConfig>
 ) : ModelSync {

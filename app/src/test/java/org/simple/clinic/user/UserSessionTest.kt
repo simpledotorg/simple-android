@@ -38,7 +38,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
-import org.simple.clinic.login.LoginApiV1
+import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
@@ -77,7 +77,7 @@ class UserSessionTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val loginApi = mock<LoginApiV1>()
+  private val loginApi = mock<LoginApi>()
   private val registrationApi = mock<RegistrationApiV1>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()

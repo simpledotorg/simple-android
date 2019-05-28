@@ -23,8 +23,8 @@ import javax.inject.Named
 open class LoginModule {
 
   @Provides
-  fun loginApi(retrofit: Retrofit): LoginApiV1 {
-    return retrofit.create(LoginApiV1::class.java)
+  fun loginApi(retrofit: Retrofit): LoginApi {
+    return retrofit.create(LoginApi::class.java)
   }
 
   @Provides

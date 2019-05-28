@@ -19,7 +19,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
-import org.simple.clinic.login.LoginApiV1
+import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginErrorResponse
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginRequest
@@ -61,7 +61,7 @@ import kotlin.reflect.KClass
 
 @AppScope
 class UserSession @Inject constructor(
-    private val loginApi: LoginApiV1,
+    private val loginApi: LoginApi,
     private val registrationApi: RegistrationApiV1,
     private val moshi: Moshi,
     private val facilitySync: FacilitySync,

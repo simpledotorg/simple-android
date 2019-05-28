@@ -6,7 +6,7 @@ import org.junit.runners.model.Statement
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.sync.BloodPressurePushRequest
-import org.simple.clinic.bp.sync.BloodPressureSyncApiV2
+import org.simple.clinic.bp.sync.BloodPressureSyncApi
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.sync.PatientPushRequest
 import org.simple.clinic.patient.sync.PatientSyncApiV3
@@ -29,7 +29,7 @@ class RegisterPatientRule(val patientUuid: UUID) : TestRule {
   lateinit var patientSyncApi: PatientSyncApiV3
 
   @Inject
-  lateinit var bloodPressureSyncApi: BloodPressureSyncApiV2
+  lateinit var bloodPressureSyncApi: BloodPressureSyncApi
 
   /**
    * This registers a patient **AND** a blood pressure at the current logged in facility. This was

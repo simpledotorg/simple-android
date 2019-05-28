@@ -34,7 +34,7 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
   lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
-  lateinit var syncApi: BloodPressureSyncApiV2
+  lateinit var syncApi: BloodPressureSyncApi
 
   @Inject
   lateinit var bpSync: BloodPressureSync

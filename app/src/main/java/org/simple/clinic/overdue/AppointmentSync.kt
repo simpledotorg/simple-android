@@ -14,7 +14,7 @@ import javax.inject.Named
 class AppointmentSync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: AppointmentRepository,
-    private val api: AppointmentSyncApiV3,
+    private val api: AppointmentSyncApi,
     private val userSession: UserSession,
     @Named("last_appointment_pull_token") private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>

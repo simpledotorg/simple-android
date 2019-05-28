@@ -38,8 +38,8 @@ class AppointmentModule {
   }
 
   @Provides
-  fun syncApiV3(retrofit: Retrofit): AppointmentSyncApiV3 {
-    return retrofit.create(AppointmentSyncApiV3::class.java)
+  fun syncApiV3(retrofit: Retrofit): AppointmentSyncApi {
+    return retrofit.create(AppointmentSyncApi::class.java)
   }
 
   @Provides

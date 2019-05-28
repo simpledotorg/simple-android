@@ -14,7 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.overdue.Appointment.AppointmentType.*
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
@@ -131,41 +131,6 @@ class ScheduleAppointmentSheetControllerTest {
   )
 
   @Test
-  @Parameters(value = [
-    "true, false",
-    "true, true",
-    "false, false",
-    "false, true"])
-  fun `when not-now is clicked, appointment should not be scheduled, and sheet should dismiss`(isApiV3Enabled: Boolean, isPatientDefaulter: Boolean) {
-    whenever(patientRepository.isPatientDefaulter(uuid)).thenReturn(Observable.just(isPatientDefaulter))
-    whenever(repository.schedule(any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
-
-    configStream.onNext(AppointmentConfig(
-        minimumOverduePeriodForHighRisk = Period.ofDays(30),
-        overduePeriodForLowestRiskLevel = Period.ofDays(365),
-        isApiV3Enabled = isApiV3Enabled,
-        appointmentDuePeriodForDefaulters = Period.ofDays(30)
-    ))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = 3,
-        patientUuid = uuid,
-        numberOfDates = 4
-    ))
-    uiEvents.onNext(SchedulingSkipped())
-
-    if (isApiV3Enabled && isPatientDefaulter) {
-      verify(repository).schedule(
-          patientUuid = uuid,
-          appointmentDate = LocalDate.now(utcClock).plus(Period.ofDays(30)),
-          appointmentType = Automatic
-      )
-    } else {
-      verify(repository, never()).schedule(any(), any(), any())
-    }
-    verify(sheet).closeSheet()
-  }
-
-  @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
     whenever(repository.schedule(any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
@@ -220,5 +185,41 @@ class ScheduleAppointmentSheetControllerTest {
     ))
 
     verify(sheet).enableDecrementButton(true)
+  }
+
+  @Test
+  @Parameters(value = [
+    "true, true",
+    "false, false"]
+  )
+  fun `when scheduling an appointment is skipped and the patient is a defaulter, an automatic appointment should be scheduled`(
+      isPatientDefaulter: Boolean,
+      shouldAutomaticAppointmentBeScheduled: Boolean
+  ) {
+    whenever(patientRepository.isPatientDefaulter(uuid)).thenReturn(Observable.just(isPatientDefaulter))
+    whenever(repository.schedule(any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
+
+    configStream.onNext(AppointmentConfig(
+        minimumOverduePeriodForHighRisk = Period.ofDays(30),
+        overduePeriodForLowestRiskLevel = Period.ofDays(365),
+        appointmentDuePeriodForDefaulters = Period.ofDays(30)
+    ))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+        defaultDateIndex = 3,
+        patientUuid = uuid,
+        numberOfDates = 4
+    ))
+    uiEvents.onNext(SchedulingSkipped())
+
+    if (shouldAutomaticAppointmentBeScheduled) {
+      verify(repository).schedule(
+          patientUuid = uuid,
+          appointmentDate = LocalDate.now(utcClock).plus(Period.ofDays(30)),
+          appointmentType = Automatic
+      )
+    } else {
+      verify(repository, never()).schedule(any(), any(), any())
+    }
+    verify(sheet).closeSheet()
   }
 }

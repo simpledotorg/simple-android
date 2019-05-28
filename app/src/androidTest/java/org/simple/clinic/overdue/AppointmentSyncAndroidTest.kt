@@ -13,7 +13,6 @@ import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.sync.BaseSyncCoordinatorAndroidTest
 import org.simple.clinic.sync.BatchSize
-import org.simple.clinic.sync.DataPushResponse
 import org.simple.clinic.sync.SyncConfig
 import org.simple.clinic.sync.SyncGroup
 import org.simple.clinic.sync.SyncInterval
@@ -30,20 +29,13 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   @Inject
   @field:Named("last_appointment_pull_token")
-  lateinit var lastPullTokenV2: Preference<Optional<String>>
-
-  @Inject
-  @field:Named("last_appointment_pull_token_v3")
-  lateinit var lastPullTokenV3: Preference<Optional<String>>
+  lateinit var lastPullToken: Preference<Optional<String>>
 
   @Inject
   lateinit var sync: AppointmentSync
 
   @Inject
-  lateinit var syncApiV2: AppointmentSyncApiV2
-
-  @Inject
-  lateinit var syncApiV3: AppointmentSyncApiV3
+  lateinit var syncApi: AppointmentSyncApiV3
 
   @Inject
   lateinit var testData: TestData
@@ -56,12 +48,6 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
   private val authenticationRule = AuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
-
-  @Inject
-  lateinit var appointmentConfigProvider: Single<AppointmentConfig>
-
-  val config: AppointmentConfig
-    get() = appointmentConfigProvider.blockingGet()
 
   @get:Rule
   val ruleChain = RuleChain
@@ -83,19 +69,9 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
 
   override fun generatePayload() = testData.appointmentPayload()
 
-  override fun lastPullToken(): Preference<Optional<String>> {
-    return when {
-      config.isApiV3Enabled -> lastPullTokenV3
-      else -> lastPullTokenV2
-    }
-  }
+  override fun lastPullToken() = lastPullToken
 
-  override fun pushNetworkCall(payloads: List<AppointmentPayload>): Single<DataPushResponse> {
-    return when {
-      config.isApiV3Enabled -> syncApiV3.push(AppointmentPushRequest(payloads))
-      else -> syncApiV2.push(AppointmentPushRequest(payloads))
-    }
-  }
+  override fun pushNetworkCall(payloads: List<AppointmentPayload>) = syncApi.push(AppointmentPushRequest(payloads))
 
   override fun batchSize(): BatchSize = configProvider.blockingGet().batchSize
 }

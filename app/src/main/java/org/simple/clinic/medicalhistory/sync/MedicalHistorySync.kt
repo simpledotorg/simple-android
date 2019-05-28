@@ -16,7 +16,7 @@ import javax.inject.Named
 class MedicalHistorySync @Inject constructor(
     private val syncCoordinator: SyncCoordinator,
     private val repository: MedicalHistoryRepository,
-    private val api: MedicalHistorySyncApiV2,
+    private val api: MedicalHistorySyncApi,
     private val userSession: UserSession,
     @Named("last_medicalhistory_pull_token") private val lastPullToken: Preference<Optional<String>>,
     @Named("sync_config_frequent") private val configProvider: Single<SyncConfig>

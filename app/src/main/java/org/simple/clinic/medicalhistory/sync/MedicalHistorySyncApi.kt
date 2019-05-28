@@ -1,21 +1,21 @@
 package org.simple.clinic.medicalhistory.sync
 
 import io.reactivex.Single
+import org.simple.clinic.CURRENT_API_VERSION
 import org.simple.clinic.sync.DataPushResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface MedicalHistorySyncApiV2 {
+interface MedicalHistorySyncApi {
 
-  @POST("v2/medical_histories/sync")
+  @POST("$CURRENT_API_VERSION/medical_histories/sync")
   fun push(
       @Body body: MedicalHistoryPushRequest
   ): Single<DataPushResponse>
 
-  @GET("v2/medical_histories/sync")
+  @GET("$CURRENT_API_VERSION/medical_histories/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null

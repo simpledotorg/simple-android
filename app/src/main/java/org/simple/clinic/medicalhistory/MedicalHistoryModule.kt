@@ -5,7 +5,7 @@ import com.f2prateek.rx.preferences2.RxSharedPreferences
 import dagger.Module
 import dagger.Provides
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApiV2
+import org.simple.clinic.medicalhistory.sync.MedicalHistorySyncApi
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -22,8 +22,8 @@ class MedicalHistoryModule {
   }
 
   @Provides
-  fun syncApi(retrofit: Retrofit): MedicalHistorySyncApiV2 {
-    return retrofit.create(MedicalHistorySyncApiV2::class.java)
+  fun syncApi(retrofit: Retrofit): MedicalHistorySyncApi {
+    return retrofit.create(MedicalHistorySyncApi::class.java)
   }
 
   @Provides

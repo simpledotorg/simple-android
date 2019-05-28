@@ -38,14 +38,14 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
-import org.simple.clinic.login.LoginApiV1
+import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
-import org.simple.clinic.registration.RegistrationApiV1
+import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
@@ -77,8 +77,8 @@ class UserSessionTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val loginApi = mock<LoginApiV1>()
-  private val registrationApi = mock<RegistrationApiV1>()
+  private val loginApi = mock<LoginApi>()
+  private val registrationApi = mock<RegistrationApi>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
   private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()

@@ -1,4 +1,4 @@
-package org.simple.clinic.bp.sync
+package org.simple.clinic.drugs.sync
 
 import io.reactivex.Single
 import org.simple.clinic.sync.DataPushResponse
@@ -7,20 +7,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface BloodPressureSyncApiV2 {
+interface PrescriptionSyncApi {
 
-  companion object {
-    const val version = "v2"
-  }
-
-  @POST("$version/blood_pressures/sync")
+  @POST("prescription_drugs/sync")
   fun push(
-      @Body body: BloodPressurePushRequest
+      @Body body: PrescriptionPushRequest
   ): Single<DataPushResponse>
 
-  @GET("$version/blood_pressures/sync")
+  @GET("prescription_drugs/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null
-  ): Single<BloodPressurePullResponse>
+  ): Single<PrescriptionPullResponse>
 }

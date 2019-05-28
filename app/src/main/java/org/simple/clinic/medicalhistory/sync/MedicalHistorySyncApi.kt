@@ -1,4 +1,4 @@
-package org.simple.clinic.overdue
+package org.simple.clinic.medicalhistory.sync
 
 import io.reactivex.Single
 import org.simple.clinic.sync.DataPushResponse
@@ -7,16 +7,16 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Query
 
-interface AppointmentSyncApiV3 {
+interface MedicalHistorySyncApi {
 
-  @POST("v3/appointments/sync")
+  @POST("medical_histories/sync")
   fun push(
-      @Body body: AppointmentPushRequest
+      @Body body: MedicalHistoryPushRequest
   ): Single<DataPushResponse>
 
-  @GET("v3/appointments/sync")
+  @GET("medical_histories/sync")
   fun pull(
       @Query("limit") recordsToPull: Int,
       @Query("process_token") lastPullToken: String? = null
-  ): Single<AppointmentPullResponse>
+  ): Single<MedicalHistoryPullResponse>
 }

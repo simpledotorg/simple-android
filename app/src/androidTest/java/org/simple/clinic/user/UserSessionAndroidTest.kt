@@ -12,7 +12,7 @@ import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySyncApiV2
+import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.FindUserResult
@@ -42,7 +42,7 @@ class UserSessionAndroidTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var facilityApi: FacilitySyncApiV2
+  lateinit var facilityApi: FacilitySyncApi
 
   private val authenticationRule = AuthenticationRule()
 

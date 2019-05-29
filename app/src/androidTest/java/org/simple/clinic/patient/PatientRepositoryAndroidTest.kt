@@ -1736,7 +1736,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_updating_patient_recordedAt_then_it_should_compare_and_update_the_date() {
+  fun when_updating_patient_recordedAt_then_it_should_compare_and_then_update_the_date() {
 
     fun createPatientProfile(patientUuid: UUID, recordedAt: Instant): PatientProfile {
       return testData.patientProfile(patientUuid = patientUuid)
@@ -1776,5 +1776,57 @@ class PatientRepositoryAndroidTest {
     assertThat(patient2.syncStatus).isEqualTo(PENDING)
     assertThat(patient2.updatedAt).isEqualTo(Instant.now(testClock))
   }
+
+  @Test
+  fun when_patient_recorded_at_needs_to_be_updated_then_it_should_be_set_based_on_oldest_BP(){
+    val patientUuid = UUID.randomUUID()
+    val patientRecordedDate = Instant.now(clock)
+    val patient =  testData.patientProfile(patientUuid = patientUuid)
+        .run {
+          copy(patient = patient.copy(
+              createdAt = patientRecordedDate,
+              recordedAt = patientRecordedDate,
+              updatedAt = Instant.now(testClock),
+              syncStatus = DONE)
+          )
+        }
+    patientRepository.save(listOf(patient)).blockingAwait()
+
+    val oldestBpRecordedAt1 = Instant.now(clock).minus(2, ChronoUnit.DAYS)
+    val bp1 = testData.bloodPressureMeasurement(patientUuid = patientUuid, deletedAt = null, recordedAt = oldestBpRecordedAt1)
+
+    bloodPressureRepository.save(listOf(bp1)).blockingAwait()
+
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+
+    val savedPatient = patientRepository.patient(patientUuid).blockingFirst().toNullable()!!
+
+    assertThat(savedPatient.recordedAt).isEqualTo(oldestBpRecordedAt1)
+    assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
+    assertThat(savedPatient.updatedAt).isEqualTo(Instant.now(clock))
+
+    bloodPressureRepository.markBloodPressureAsDeleted(bp1).blockingAwait()
+
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+
+    val patientAfterDeletingBP = patientRepository.patient(patientUuid).blockingFirst().toNullable()!!
+
+    assertThat(patientAfterDeletingBP.recordedAt).isEqualTo(patientRecordedDate)
+    assertThat(patientAfterDeletingBP.syncStatus).isEqualTo(PENDING)
+    assertThat(patientAfterDeletingBP.updatedAt).isEqualTo(Instant.now(clock))
+
+    val oldestBpRecordedAt2 = Instant.now(clock).minus(1, ChronoUnit.DAYS)
+    val bp2 = testData.bloodPressureMeasurement(patientUuid = patientUuid, deletedAt = null, recordedAt = oldestBpRecordedAt2)
+    bloodPressureRepository.save(listOf(bp2)).blockingAwait()
+
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+
+    val patientAfterAddingBpRetroactively = patientRepository.patient(patientUuid).blockingFirst().toNullable()!!
+
+    assertThat(patientAfterAddingBpRetroactively.recordedAt).isEqualTo(oldestBpRecordedAt2)
+    assertThat(patientAfterAddingBpRetroactively.syncStatus).isEqualTo(PENDING)
+    assertThat(patientAfterAddingBpRetroactively.updatedAt).isEqualTo(Instant.now(clock))
+  }
+
 }
 

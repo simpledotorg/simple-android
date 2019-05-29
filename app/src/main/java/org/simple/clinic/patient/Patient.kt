@@ -138,6 +138,29 @@ data class Patient(
         pendingStatus: SyncStatus
     )
 
+    @Query("""
+      UPDATE Patient
+      SET
+        recordedAt = MIN(
+          createdAt,
+          IFNULL(
+            (SELECT recordedAt
+            FROM BloodPressureMeasurement
+            WHERE patientUuid = :patientUuid AND deletedAt IS NULL
+            ORDER BY recordedAt ASC LIMIT 1),
+            createdAt
+          )
+        ),
+        updatedAt = :updatedAt,
+        syncStatus = :pendingStatus
+      WHERE uuid = :patientUuid
+    """)
+    abstract fun updateRecordedAt(
+        patientUuid: UUID,
+        updatedAt: Instant,
+        pendingStatus: SyncStatus
+    )
+
     // Patient can have multiple phone numbers, and Room's support for @Relation annotations doesn't
     // support loading into constructor parameters and needs a settable property. Room does fix
     // this limitation in 2.1.0, but it requires migration to AndroidX. For now, we create a

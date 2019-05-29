@@ -8,6 +8,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -15,7 +16,8 @@ typealias Ui = ConfirmRemoveBloodPressureDialog
 typealias UiChange = (Ui) -> Unit
 
 class ConfirmRemoveBloodPressureDialogController @Inject constructor(
-    private val bloodPressureRepository: BloodPressureRepository
+    private val bloodPressureRepository: BloodPressureRepository,
+    private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -39,6 +41,7 @@ class ConfirmRemoveBloodPressureDialogController @Inject constructor(
         .flatMap {
           bloodPressureRepository
               .markBloodPressureAsDeleted(it)
+              .andThen(patientRepository.updateRecordedAt(it.patientUuid))
               .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
         }
   }

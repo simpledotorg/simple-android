@@ -35,6 +35,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_32"
+    android:clipToPadding="false"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/spacing_8"
     android:paddingEnd="@dimen/spacing_16"

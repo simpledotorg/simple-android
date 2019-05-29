@@ -17,7 +17,8 @@
     android:id="@+id/recentpatients_recyclerview"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/spacing_8"
+    android:clipToPadding="false"
+    android:paddingTop="@dimen/spacing_8"
     tools:listitem="@layout/recent_patient_item_view" />
 
 </org.simple.clinic.recentpatient.RecentPatientsScreen>

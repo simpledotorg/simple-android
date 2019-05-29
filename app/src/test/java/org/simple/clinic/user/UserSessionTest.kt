@@ -257,22 +257,6 @@ class UserSessionTest {
   }
 
   @Test
-  fun `when the server sends a user without facilities during registration then registration should be canceled`() {
-    whenever(appDatabase.userDao().user()).thenReturn(Flowable.just(listOf(PatientMocker.loggedInUser())))
-
-    val userFacility = PatientMocker.facility()
-    whenever(facilityRepository.facilityUuidsForUser(any())).thenReturn(Observable.just(listOf(userFacility.uuid)))
-
-    val response = RegistrationResponse(
-        userPayload = PatientMocker.loggedInUserPayload(facilityUuids = emptyList()),
-        accessToken = "token")
-    whenever(registrationApi.createUser(any())).thenReturn(Single.just(response))
-
-    val registrationResult = userSession.register().blockingGet()
-    assertThat(registrationResult).isInstanceOf(RegistrationResult.Error::class.java)
-  }
-
-  @Test
   @Parameters(value = [
     "NOT_LOGGED_IN|WAITING_FOR_APPROVAL|NOT_LOGGED_IN",
     "OTP_REQUESTED|WAITING_FOR_APPROVAL|OTP_REQUESTED",

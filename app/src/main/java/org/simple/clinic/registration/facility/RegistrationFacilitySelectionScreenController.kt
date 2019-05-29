@@ -210,7 +210,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .map { it.facility }
         .flatMap { facility ->
           userSession.ongoingRegistrationEntry()
-              .map { it.copy(facilityIds = listOf(facility.uuid)) }
+              .map { it.copy(facilityId = facility.uuid) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(userSession.loginFromOngoingRegistrationEntry())
               .andThen(registrationScheduler.schedule())

@@ -402,7 +402,7 @@ class TestData @Inject constructor(
   fun ongoingRegistrationEntry(
       phoneNumber: String = faker.number.number(10),
       pin: String = qaUserPin(),
-      facilities: List<Facility>
+      registrationFacility: Facility
   ): OngoingRegistrationEntry {
     return OngoingRegistrationEntry(
         uuid = UUID.randomUUID(),
@@ -410,7 +410,7 @@ class TestData @Inject constructor(
         fullName = faker.name.name(),
         pin = pin,
         pinConfirmation = pin,
-        facilityIds = facilities.map { it.uuid },
+        facilityId = registrationFacility.uuid,
         createdAt = Instant.now())
   }
 

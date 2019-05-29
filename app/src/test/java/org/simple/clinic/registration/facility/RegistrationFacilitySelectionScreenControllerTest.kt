@@ -414,7 +414,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     inOrder.verify(userSession).loginFromOngoingRegistrationEntry()
     inOrder.verify(registrationScheduler).schedule()
     inOrder.verify(screen).openHomeScreen()
-    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityIds = listOf(facility1.uuid)))
+    verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
   }
 
   @Test

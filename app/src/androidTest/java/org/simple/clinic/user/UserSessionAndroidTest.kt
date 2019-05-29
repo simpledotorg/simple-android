@@ -105,8 +105,8 @@ class UserSessionAndroidTest {
         .blockingGet()
     appDatabase.facilityDao().save(facilities)
 
-    val selectedFacilities = facilities.subList(0, 2)
-    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(facilities = selectedFacilities)
+    val selectedFacility = facilities.first()
+    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(registrationFacility = selectedFacility)
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
         .andThen(userSession.loginFromOngoingRegistrationEntry())
         .blockingAwait()
@@ -118,7 +118,7 @@ class UserSessionAndroidTest {
     val currentFacility = facilityRepository
         .currentFacility(userSession)
         .blockingFirst()
-    assertThat(currentFacility.uuid).isEqualTo(selectedFacilities.first().uuid)
+    assertThat(currentFacility.uuid).isEqualTo(selectedFacility.uuid)
 
     val isRegistrationEntryPresent = userSession.isOngoingRegistrationEntryPresent().blockingGet()
     assertThat(isRegistrationEntryPresent).isFalse()
@@ -151,8 +151,7 @@ class UserSessionAndroidTest {
         .blockingGet()
     appDatabase.facilityDao().save(facilities)
 
-    val selectedFacilities = facilities.subList(0, 2)
-    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(facilities = selectedFacilities)
+    val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(registrationFacility = facilities.first())
 
     val registrationResult = userSession
         .saveOngoingRegistrationEntry(ongoingRegistrationEntry)
@@ -184,8 +183,7 @@ class UserSessionAndroidTest {
     assertThat(user.loggedInStatus).isEqualTo(NOT_LOGGED_IN)
 
     val facilityUUIDsForUser = appDatabase.userFacilityMappingDao().facilityUuids(user.uuid).blockingFirst()
-    assertThat(facilityUUIDsForUser.size).isEqualTo(foundUserPayload.facilityUuids.size)
-    assertThat(facilityUUIDsForUser).containsAllIn(foundUserPayload.facilityUuids)
+    assertThat(facilityUUIDsForUser.toSet()).isEqualTo(setOf(foundUserPayload.registrationFacilityId))
   }
 
   @Test

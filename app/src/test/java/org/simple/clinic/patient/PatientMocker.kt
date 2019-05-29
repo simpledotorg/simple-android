@@ -322,7 +322,7 @@ object PatientMocker {
       name: String = "a name",
       phone: String = "a phone",
       pinDigest: String = "a hash",
-      facilityUuids: List<UUID> = listOf(UUID.randomUUID(), UUID.randomUUID()),
+      registrationFacilityUuid: UUID = UUID.randomUUID(),
       status: UserStatus = UserStatus.WAITING_FOR_APPROVAL,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now()
@@ -332,7 +332,7 @@ object PatientMocker {
         fullName = name,
         phoneNumber = phone,
         pinDigest = pinDigest,
-        facilityUuids = facilityUuids,
+        registrationFacilityId = registrationFacilityUuid,
         createdAt = createdAt,
         status = status,
         updatedAt = updatedAt)

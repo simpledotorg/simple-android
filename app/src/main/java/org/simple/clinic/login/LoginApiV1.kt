@@ -12,7 +12,7 @@ import java.util.UUID
 interface LoginApiV1 {
 
   companion object {
-    const val version = "v1"
+    const val version = "v3"
   }
 
   @POST("$version/login")

@@ -9,6 +9,6 @@ data class OngoingRegistrationEntry(
     val fullName: String? = null,
     val pin: String? = null,
     val pinConfirmation: String? = null,
-    val facilityIds: List<UUID>? = null,
+    val facilityId: UUID? = null,
     val createdAt: Instant? = null
 )

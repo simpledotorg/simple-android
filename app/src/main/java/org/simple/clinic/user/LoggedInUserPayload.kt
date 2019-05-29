@@ -20,8 +20,8 @@ data class LoggedInUserPayload(
     @Json(name = "password_digest")
     val pinDigest: String,
 
-    @Json(name = "facility_ids")
-    val facilityUuids: List<UUID>,
+    @Json(name = "registration_facility_id")
+    val registrationFacilityId: UUID,
 
     @Json(name = "sync_approval_status")
     val status: UserStatus,

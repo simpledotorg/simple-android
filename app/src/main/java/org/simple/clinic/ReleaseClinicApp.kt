@@ -18,7 +18,9 @@ class ReleaseClinicApp : ClinicApp() {
   @Inject
   lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
 
-  override val analyticsReporters = listOf(HeapAnalyticsReporter(this))
+  override val analyticsReporters by lazy {
+    listOf(HeapAnalyticsReporter(this))
+  }
 
   override fun onCreate() {
     super.onCreate()

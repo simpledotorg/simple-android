@@ -451,6 +451,15 @@ class PatientRepository @Inject constructor(
     }
   }
 
+  fun updateRecordedAt(patientUuid: UUID): Completable {
+    return Completable.fromAction {
+      database.patientDao().updateRecordedAt(
+          patientUuid = patientUuid,
+          pendingStatus = PENDING,
+          updatedAt = Instant.now(utcClock))
+    }
+  }
+
   fun clearPatientData(): Completable {
     return Completable
         .fromCallable {

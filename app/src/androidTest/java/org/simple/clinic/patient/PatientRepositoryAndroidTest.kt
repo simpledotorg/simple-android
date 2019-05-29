@@ -1736,7 +1736,7 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun when_updating_patient_recordedAt_then_it_should_compare_and_update_the_date() {
+  fun when_updating_patient_recordedAt_then_it_should_compare_and_then_update_the_date() {
 
     fun createPatientProfile(patientUuid: UUID, recordedAt: Instant): PatientProfile {
       return testData.patientProfile(patientUuid = patientUuid)
@@ -1775,6 +1775,80 @@ class PatientRepositoryAndroidTest {
     assertThat(patient2.recordedAt).isEqualTo(instantToCompare2)
     assertThat(patient2.syncStatus).isEqualTo(PENDING)
     assertThat(patient2.updatedAt).isEqualTo(Instant.now(testClock))
+  }
+
+  @Test
+  fun when_patient_recorded_at_needs_to_be_updated_then_it_should_be_set_based_on_oldest_BP() {
+    fun loadPatient(patientUuid: UUID) = patientRepository.patient(patientUuid).blockingFirst().toNullable()!!
+
+    val patientUuid = UUID.randomUUID()
+    val patientCreatedDate = Instant.now(clock)
+    val patient = testData.patientProfile(patientUuid = patientUuid)
+        .run {
+          copy(patient = patient.copy(
+              createdAt = patientCreatedDate,
+              recordedAt = patientCreatedDate,
+              updatedAt = Instant.now(testClock),
+              syncStatus = DONE)
+          )
+        }
+    patientRepository.save(listOf(patient)).blockingAwait()
+
+    val bpRecordedTwoDaysBeforePatientCreated = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        deletedAt = null,
+        recordedAt = patientCreatedDate.minus(2, ChronoUnit.DAYS)
+    )
+    val bpRecordedOneDayBeforePatientCreated = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        deletedAt = null,
+        recordedAt = patientCreatedDate.minus(1, ChronoUnit.DAYS)
+    )
+    val bpRecordedOneMinuteAfterPatientCreated = testData.bloodPressureMeasurement(
+        patientUuid = patientUuid,
+        deletedAt = null,
+        recordedAt = patientCreatedDate.plus(1, ChronoUnit.MINUTES)
+    )
+
+    bloodPressureRepository.save(listOf(
+        bpRecordedTwoDaysBeforePatientCreated,
+        bpRecordedOneDayBeforePatientCreated,
+        bpRecordedOneMinuteAfterPatientCreated
+    )).blockingAwait()
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+    loadPatient(patientUuid).let { savedPatient ->
+      val expectedRecordedAt = bpRecordedTwoDaysBeforePatientCreated.recordedAt
+
+      assertThat(savedPatient.recordedAt).isEqualTo(expectedRecordedAt)
+      assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
+      assertThat(savedPatient.updatedAt).isEqualTo(Instant.now(clock))
+    }
+
+    bloodPressureRepository.markBloodPressureAsDeleted(bpRecordedTwoDaysBeforePatientCreated).blockingAwait()
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+    loadPatient(patientUuid).let { savedPatient ->
+      val expectedRecordedAt = bpRecordedOneDayBeforePatientCreated.recordedAt
+
+      assertThat(savedPatient.recordedAt).isEqualTo(expectedRecordedAt)
+      assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
+      assertThat(savedPatient.updatedAt).isEqualTo(Instant.now(clock))
+    }
+
+    bloodPressureRepository.markBloodPressureAsDeleted(bpRecordedOneDayBeforePatientCreated).blockingAwait()
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+    loadPatient(patientUuid).let { savedPatient ->
+      assertThat(savedPatient.recordedAt).isEqualTo(patientCreatedDate)
+      assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
+      assertThat(savedPatient.updatedAt).isEqualTo(Instant.now(clock))
+    }
+
+    bloodPressureRepository.markBloodPressureAsDeleted(bpRecordedOneMinuteAfterPatientCreated).blockingAwait()
+    patientRepository.updateRecordedAt(patientUuid).blockingAwait()
+    loadPatient(patientUuid).let { savedPatient ->
+      assertThat(savedPatient.recordedAt).isEqualTo(patientCreatedDate)
+      assertThat(savedPatient.syncStatus).isEqualTo(PENDING)
+      assertThat(savedPatient.updatedAt).isEqualTo(Instant.now(clock))
+    }
   }
 }
 

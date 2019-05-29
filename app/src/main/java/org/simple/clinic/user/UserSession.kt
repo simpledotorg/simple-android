@@ -182,7 +182,7 @@ class UserSession @Inject constructor(
               updatedAt = entry.createdAt,
               status = WAITING_FOR_APPROVAL,
               loggedInStatus = NOT_LOGGED_IN)
-          storeUser(user, entry.facilityIds!!)
+          storeUser(user, entry.facilityId!!)
         }
         .andThen(clearOngoingRegistrationEntry())
   }
@@ -210,7 +210,7 @@ class UserSession @Inject constructor(
             is Success -> {
               Single.just(userFromPayload(loggedInUserPayload, NOT_LOGGED_IN))
                   .flatMap {
-                    storeUser(it, loggedInUserPayload.facilityUuids)
+                    storeUser(it, loggedInUserPayload.registrationFacilityId)
                         .toSingleDefault(SaveUserLocallyResult.Success() as SaveUserLocallyResult)
                   }
                   .onErrorResumeNext(Single.just(SaveUserLocallyResult.UnexpectedError()))
@@ -240,8 +240,7 @@ class UserSession @Inject constructor(
                 }
 
                 val user = userFromPayload(userPayload, finalLoggedInStatus)
-                val userFacilities = userPayload.facilityUuids
-                storeUser(user, userFacilities)
+                storeUser(user, userPayload.registrationFacilityId)
               }
         }
   }
@@ -278,7 +277,7 @@ class UserSession @Inject constructor(
           fullName = fullName,
           phoneNumber = phoneNumber,
           pinDigest = pinDigest,
-          facilityUuids = facilityUuids,
+          registrationFacilityId = facilityUuids.first(),
           status = status,
           createdAt = createdAt,
           updatedAt = updatedAt)
@@ -323,7 +322,7 @@ class UserSession @Inject constructor(
     accessTokenPreference.set(Just(response.accessToken))
     return storeUser(
         userFromPayload(response.loggedInUser, LOGGED_IN),
-        response.loggedInUser.facilityUuids)
+        response.loggedInUser.registrationFacilityId)
   }
 
   private fun storeUserAndAccessToken(response: ForgotPinResponse): Completable {
@@ -331,7 +330,7 @@ class UserSession @Inject constructor(
     accessTokenPreference.set(Just(response.accessToken))
 
     val user = userFromPayload(response.loggedInUser, RESET_PIN_REQUESTED)
-    return storeUser(user, response.loggedInUser.facilityUuids)
+    return storeUser(user, response.loggedInUser.registrationFacilityId)
   }
 
   private fun storeUserAndAccessToken(response: RegistrationResponse): Completable {
@@ -339,20 +338,14 @@ class UserSession @Inject constructor(
     accessTokenPreference.set(Just(response.accessToken))
 
     val user = userFromPayload(response.userPayload, LOGGED_IN)
-    val userFacilityIds = response.userPayload.facilityUuids
-
-    if (userFacilityIds.isEmpty()) {
-      throw AssertionError("Server did not send back any facilities")
-    }
-
-    return storeUser(user, userFacilityIds)
+    return storeUser(user, response.userPayload.registrationFacilityId)
   }
 
-  private fun storeUser(user: User, facilityUuids: List<UUID>): Completable {
+  private fun storeUser(user: User, facilityUuid: UUID): Completable {
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
         .doOnSubscribe { Timber.i("Storing user") }
-        .andThen(facilityRepository.associateUserWithFacilities(user, facilityUuids, currentFacility = facilityUuids.first()))
+        .andThen(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), currentFacility = facilityUuid))
         .doOnError { Timber.e(it) }
   }
 

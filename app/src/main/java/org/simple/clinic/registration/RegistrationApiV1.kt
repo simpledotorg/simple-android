@@ -10,7 +10,7 @@ import retrofit2.http.Query
 interface RegistrationApiV1 {
 
   companion object {
-    const val version = "v1"
+    const val version = "v3"
   }
 
   @GET("$version/users/find")

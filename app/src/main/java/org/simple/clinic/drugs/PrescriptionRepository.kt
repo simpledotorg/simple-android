@@ -133,4 +133,14 @@ class PrescriptionRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
+
+  fun hasPrescriptionForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
+    return dao
+        .hasPrescriptionForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = SyncStatus.PENDING
+        )
+        .toObservable()
+  }
 }

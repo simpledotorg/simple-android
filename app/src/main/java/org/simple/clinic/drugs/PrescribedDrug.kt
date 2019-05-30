@@ -98,5 +98,21 @@ data class PrescribedDrug(
 
     @Query("SELECT * FROM PrescribedDrug WHERE uuid = :prescriptionUuid")
     fun prescription(prescriptionUuid: UUID): Flowable<PrescribedDrug>
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM PrescribedDrug
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
+    """)
+    fun hasPrescriptionForPatientChangedSince(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        pendingStatus: SyncStatus
+    ): Flowable<Boolean>
   }
 }

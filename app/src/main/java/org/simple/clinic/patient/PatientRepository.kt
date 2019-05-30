@@ -579,5 +579,16 @@ class PatientRepository @Inject constructor(
         ).toObservable()
   }
 
+  fun hasPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
+    return database
+        .patientDao()
+        .hasPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = PENDING
+        )
+        .toObservable()
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

@@ -253,6 +253,22 @@ data class Patient(
         scheduled: Appointment.Status = Appointment.Status.SCHEDULED
     ): Flowable<Boolean>
 
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM Patient
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND uuid = :patientUuid
+    """)
+    abstract fun hasPatientChangedSince(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        pendingStatus: SyncStatus
+    ): Flowable<Boolean>
+
     companion object {
       @Language("RoomSql")
       const val patientProfileQuery = """

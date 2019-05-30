@@ -138,4 +138,14 @@ class BloodPressureRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
+
+  fun haveBpsForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
+    return dao
+        .haveBpsForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = SyncStatus.PENDING
+        )
+        .toObservable()
+  }
 }

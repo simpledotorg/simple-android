@@ -106,5 +106,21 @@ data class BloodPressureMeasurement(
       WHERE patientUuid IN (:patientUuids) AND deletedAt IS NULL
       """)
     fun patientToFacilityIds(patientUuids: List<UUID>): Flowable<List<PatientToFacilityId>>
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM BloodPressureMeasurement
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
+    """)
+    fun haveBpsForPatientChangedSince(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        pendingStatus: SyncStatus
+    ): Flowable<Boolean>
   }
 }

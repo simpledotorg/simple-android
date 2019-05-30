@@ -38,7 +38,7 @@ abstract class ClinicApp : Application() {
   @Inject
   lateinit var unauthorizeUser: UnauthorizeUser
 
-  open val analyticsReporters = emptyList<AnalyticsReporter>()
+  protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
   @SuppressLint("RestrictedApi")
   override fun onCreate() {

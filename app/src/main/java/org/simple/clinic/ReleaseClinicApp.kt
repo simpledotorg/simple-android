@@ -7,6 +7,7 @@ import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerAppComponent
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.sync.indicator.SyncIndicatorStatusCalculator
+import org.simple.clinic.util.unsafeLazy
 import javax.inject.Inject
 
 @SuppressLint("Registered")
@@ -18,7 +19,7 @@ class ReleaseClinicApp : ClinicApp() {
   @Inject
   lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
 
-  override val analyticsReporters by lazy {
+  override val analyticsReporters by unsafeLazy {
     listOf(HeapAnalyticsReporter(this))
   }
 

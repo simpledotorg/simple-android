@@ -6,10 +6,10 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneOffset
 
 class RelativeTimestampGeneratorTest {
+  private val generator = RelativeTimestampGenerator()
 
   @Test
   fun `generated timestamps should be correct`() {
-    val generator = RelativeTimestampGenerator()
 
     val todayDateTime = LocalDateTime.of(2018, 7, 29, 16, 58)
 
@@ -28,5 +28,18 @@ class RelativeTimestampGeneratorTest {
 
     val olderThanSixMonths = LocalDateTime.of(2017, 1, 27, 3, 0, 0).atOffset(ZoneOffset.UTC).toInstant()
     assertThat(generator.generate(todayDateTime, olderThanSixMonths)).isInstanceOf(OlderThanSixMonths::class.java)
+
+    val tomorrow = todayDateTime.plusDays(1).atOffset(ZoneOffset.UTC).toInstant()
+    val tomorrowTimestamp = generator.generate(todayDateTime, tomorrow)
+    assertThat(tomorrowTimestamp).isEqualTo(Future(tomorrow))
+  }
+
+  @Test
+  fun `verify RelativeTimestamp does not produce yesterday incorrectly`() {
+    val todayDateTime = LocalDateTime.parse("2019-05-29T00:04:51.402")
+
+    val twoDaysOld = LocalDateTime.parse("2019-05-27T09:51:43.623").atOffset(ZoneOffset.UTC).toInstant()
+    val twoDaysOldTimestamp = generator.generate(todayDateTime, twoDaysOld)
+    assertThat(twoDaysOldTimestamp).isEqualTo(WithinSixMonths(2))
   }
 }

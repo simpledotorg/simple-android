@@ -87,5 +87,21 @@ data class MedicalHistory(
       LIMIT 1
     """)
     fun historyForPatient(patientUuid: PatientUuid): Flowable<List<MedicalHistory>>
+
+    @Query("""
+        SELECT (
+            CASE
+                WHEN (COUNT(uuid) > 0) THEN 1
+                ELSE 0
+            END
+        )
+        FROM MedicalHistory
+        WHERE updatedAt > :instantToCompare AND syncStatus = :pendingStatus AND patientUuid = :patientUuid
+    """)
+    fun hasMedicalHistoryForPatientChangedSince(
+        patientUuid: UUID,
+        instantToCompare: Instant,
+        pendingStatus: SyncStatus
+    ): Flowable<Boolean>
   }
 }

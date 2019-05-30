@@ -1857,5 +1857,33 @@ class PatientRepositoryAndroidTest {
       assertThat(savedPatient.updatedAt).isEqualTo(Instant.now(clock))
     }
   }
+
+  @Test
+  fun querying_whether_patient_has_changed_should_work_as_expected() {
+    fun hasPatientChangedSince(patientUuid: UUID, since: Instant): Boolean {
+      return patientRepository.hasPatientChangedSince(patientUuid, since).blockingFirst()
+    }
+
+    val patientUpdatedAt = Instant.now(clock)
+    val patientProfile = testData.patientProfile(syncStatus = PENDING).let { patientProfile ->
+      patientProfile.copy(patient = patientProfile.patient.copy(updatedAt = patientUpdatedAt))
+    }
+    val patientUuid = patientProfile.patient.uuid
+
+    patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+    val oneSecondAfterPatientUpdated = patientUpdatedAt.plus(Duration.ofSeconds(1L))
+    val oneSecondBeforePatientUpdated = patientUpdatedAt.minus(Duration.ofSeconds(1L))
+
+    assertThat(hasPatientChangedSince(patientUuid, oneSecondBeforePatientUpdated)).isTrue()
+    assertThat(hasPatientChangedSince(patientUuid, patientUpdatedAt)).isFalse()
+    assertThat(hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()
+
+    patientRepository.setSyncStatus(listOf(patientUuid), DONE).blockingAwait()
+
+    assertThat(hasPatientChangedSince(patientUuid, patientUpdatedAt)).isFalse()
+    assertThat(hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()
+    assertThat(hasPatientChangedSince(patientUuid, oneSecondBeforePatientUpdated)).isFalse()
+  }
 }
 

@@ -13,6 +13,7 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import java.util.UUID
@@ -127,11 +128,61 @@ class MedicalHistoryRepositoryAndroidTest {
         createdAt = Instant.now(clock).minusMillis(100),
         updatedAt = Instant.now(clock))
 
-    repository.save(olderHistory, updateTime = {olderHistory.updatedAt})
-        .andThen(repository.save(newerHistory, updateTime = {newerHistory.updatedAt}))
+    repository.save(olderHistory, updateTime = { olderHistory.updatedAt })
+        .andThen(repository.save(newerHistory, updateTime = { newerHistory.updatedAt }))
         .blockingAwait()
 
     val foundHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
     assertThat(foundHistory.uuid).isEqualTo(newerHistory.uuid)
+  }
+
+  @Test
+  fun querying_whether_medical_history_for_patient_has_changed_should_work_as_expected() {
+    fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, since: Instant): Boolean {
+      return repository.hasMedicalHistoryForPatientChangedSince(patientUuid, since).blockingFirst()
+    }
+
+    fun setMedicalHistorySyncStatusToDone(medicalHistoryUuid: UUID) {
+      repository.setSyncStatus(listOf(medicalHistoryUuid), SyncStatus.DONE).blockingAwait()
+    }
+
+    val patientUuid = UUID.randomUUID()
+    val now = Instant.now(clock)
+    val oneSecondEarlier = now.minus(Duration.ofSeconds(1))
+    val fiftyNineSecondsLater = now.plus(Duration.ofSeconds(59))
+    val oneMinuteLater = now.plus(Duration.ofMinutes(1))
+
+    val medicalHistory1ForPatient = testData.medicalHistory(
+        patientUuid = patientUuid,
+        syncStatus = SyncStatus.PENDING,
+        updatedAt = now
+    )
+    val medicalHistory2ForPatient = testData.medicalHistory(
+        patientUuid = patientUuid,
+        syncStatus = SyncStatus.PENDING,
+        updatedAt = oneMinuteLater
+    )
+    val medicalHistoryForSomeOtherPatient = testData.medicalHistory(
+        patientUuid = UUID.randomUUID(),
+        syncStatus = SyncStatus.PENDING,
+        updatedAt = now
+    )
+
+    repository.save(listOf(medicalHistory1ForPatient, medicalHistory2ForPatient, medicalHistoryForSomeOtherPatient)).blockingAwait()
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, now)).isTrue()
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isTrue()
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, oneMinuteLater)).isFalse()
+
+    setMedicalHistorySyncStatusToDone(medicalHistory2ForPatient.uuid)
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, fiftyNineSecondsLater)).isFalse()
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isTrue()
+
+    setMedicalHistorySyncStatusToDone(medicalHistory1ForPatient.uuid)
+    assertThat(hasMedicalHistoryForPatientChangedSince(patientUuid, oneSecondEarlier)).isFalse()
+    assertThat(hasMedicalHistoryForPatientChangedSince(medicalHistoryForSomeOtherPatient.patientUuid, oneSecondEarlier)).isTrue()
+
+    setMedicalHistorySyncStatusToDone(medicalHistoryForSomeOtherPatient.uuid)
+    assertThat(hasMedicalHistoryForPatientChangedSince(medicalHistoryForSomeOtherPatient.patientUuid, oneSecondEarlier)).isFalse()
   }
 }

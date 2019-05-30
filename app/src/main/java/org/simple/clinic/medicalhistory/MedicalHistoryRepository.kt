@@ -138,4 +138,14 @@ class MedicalHistoryRepository @Inject constructor(
         .count(SyncStatus.PENDING)
         .toObservable()
   }
+
+  fun hasMedicalHistoryForPatientChangedSince(patientUuid: UUID, instant: Instant): Observable<Boolean> {
+    return dao
+        .hasMedicalHistoryForPatientChangedSince(
+            patientUuid = patientUuid,
+            instantToCompare = instant,
+            pendingStatus = SyncStatus.PENDING
+        )
+        .toObservable()
+  }
 }

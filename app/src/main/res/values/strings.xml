@@ -353,9 +353,6 @@
   <string name="newmedicalhistory_yes">Yes</string>
   <string name="newmedicalhistory_no">No</string>
 
-  <string name="patient_summary_saved_status">Saved</string>
-  <string name="patient_status_summary_saved_scheduled_appointment">Next visit for %s scheduled on</string>
-
   <!--Prescribed Drug with Dosages Sheet-->
   <string name="prescribed_drugs_dosage_none">None</string>
   <string name="prescribed_drug_with_dosages_sheet_drug_name">%s dosage</string>

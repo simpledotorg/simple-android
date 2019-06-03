@@ -8,13 +8,11 @@ import android.view.animation.AnimationUtils
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.RelativeLayout
-import android.widget.TextView
 import android.widget.ViewFlipper
 import androidx.annotation.IdRes
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers.mainThread
 import io.reactivex.disposables.Disposables
 import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
@@ -38,9 +36,6 @@ import org.simple.clinic.widgets.indexOfChildId
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Month
-import org.threeten.bp.format.DateTimeFormatter
-import java.util.Locale
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 private const val REQUESTCODE_CAMERA_PERMISSION = 0
@@ -70,9 +65,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   private val approvalStatusViewFlipper by bindView<ViewFlipper>(R.id.patients_user_status_viewflipper)
   private val dismissApprovedStatusButton by bindView<Button>(R.id.patients_dismiss_user_approved_status)
   private val enterOtpManuallyButton by bindView<Button>(R.id.patients_enter_code)
-  private val nameInStatusSavedText by bindView<TextView>(R.id.patients_summary_saved_name)
-  private val nameInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_name)
-  private val dateInAppointmentSavedText by bindView<TextView>(R.id.patients_summary_appointment_saved_date)
   private val scanSimpleCardButton by bindView<Button>(R.id.patients_scan_simple_card)
   private val syncIndicatorView by bindView<SyncIndicatorView>(R.id.patients_sync_indicator)
   private val illustrationImageView by bindView<ImageView>(R.id.patients_record_bp_illustration)
@@ -173,14 +165,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     disposable.dispose()
   }
 
-  private fun showSummaryStatus(@IdRes statusViewId: Int) {
-    showStatus(statusViewId)
-    disposable = Observable.timer(2500L, TimeUnit.MILLISECONDS, mainThread())
-        .subscribe {
-          showUserAccountStatus(currentStatusViewId)
-        }
-  }
-
   fun showUserStatusAsWaiting() {
     showUserAccountStatus(R.id.patients_user_status_awaitingapproval)
   }
@@ -191,17 +175,6 @@ open class PatientsScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   fun showUserStatusAsPendingVerification() {
     showUserAccountStatus(R.id.patients_user_status_awaitingsmsverification)
-  }
-
-  fun showStatusPatientSummarySaved(patientName: String) {
-    nameInStatusSavedText.text = patientName
-    showSummaryStatus(R.id.patient_status_summary_saved)
-  }
-
-  fun showStatusPatientAppointmentSaved(patientName: String, appointmentDate: LocalDate) {
-    nameInAppointmentSavedText.text = context.getString(R.string.patient_status_summary_saved_scheduled_appointment, patientName)
-    dateInAppointmentSavedText.text = appointmentDate.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy", Locale.ENGLISH))
-    showSummaryStatus(R.id.patients_summary_appointment_saved)
   }
 
   fun hideUserAccountStatus() {

@@ -121,10 +121,6 @@
 
     <include layout="@layout/patients_user_status_approved" />
 
-    <include layout="@layout/patients_summary_appointment_saved" />
-
-    <include layout="@layout/patients_summary_saved" />
-
     <include layout="@layout/patients_user_status_awaitingsmsverification" />
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.home.patients.PatientsScreen>

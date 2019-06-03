@@ -208,10 +208,6 @@
     <item name="android:textColor">@color/blue1</item>
   </style>
 
-  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Grey0">
-    <item name="android:textColor">@color/grey0</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance.Subtitle1Center">
     <item name="android:textSize">16sp</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>

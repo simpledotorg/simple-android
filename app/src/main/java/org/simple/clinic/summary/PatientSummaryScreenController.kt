@@ -28,9 +28,6 @@ import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSummaryResult
-import org.simple.clinic.patient.PatientSummaryResult.Saved
-import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.summary.OpenIntention.LinkIdWithPatient
 import org.simple.clinic.summary.OpenIntention.ViewExistingPatient
 import org.simple.clinic.summary.OpenIntention.ViewNewPatient
@@ -62,7 +59,6 @@ class PatientSummaryScreenController @Inject constructor(
     private val utcClock: UtcClock,
     private val zoneId: ZoneId,
     private val configProvider: Single<PatientSummaryConfig>,
-    @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>,
     @Named("time_for_bps_recorded") private val timeFormatterForBp: DateTimeFormatter
 ) : ObservableTransformer<UiEvent, UiChange> {
 
@@ -83,7 +79,6 @@ class PatientSummaryScreenController @Inject constructor(
         exitScreenAfterSchedulingAppointment(replayedEvents),
         openBloodPressureUpdateSheet(replayedEvents),
         openLinkIdWithPatientSheet(replayedEvents),
-        patientSummaryResultChanged(replayedEvents),
         showUpdatePhoneDialogIfRequired(replayedEvents),
         showScheduleAppointmentSheet(replayedEvents),
         goBackWhenBackClicked(replayedEvents),
@@ -448,31 +443,6 @@ class PatientSummaryScreenController @Inject constructor(
     return events.ofType<PatientSummaryBpClicked>()
         .map { it.bloodPressureMeasurement }
         .map { bp -> { ui: Ui -> ui.showBloodPressureUpdateSheet(bp.uuid) } }
-  }
-
-  private fun patientSummaryResultChanged(events: Observable<UiEvent>): Observable<UiChange> {
-    val screenCreates = events
-        .ofType<PatientSummaryScreenCreated>()
-
-    val isPatientNew = screenCreates
-        .filter { it.openIntention == ViewNewPatient }
-        .map { Saved(it.patientUuid) as PatientSummaryResult }
-
-    val appointmentScheduled = events.ofType<AppointmentScheduled>()
-        .withLatestFrom(screenCreates)
-        .map { (_, createdEvent) -> Scheduled(createdEvent.patientUuid) as PatientSummaryResult }
-
-    val wasPatientSummaryItemsChanged = events.ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems }
-        .withLatestFrom(screenCreates)
-        .filter { (item, createdEvent) -> item.hasItemChangedSince(createdEvent.screenCreatedTimestamp) }
-        .map { (_, createdEvent) -> Saved(createdEvent.patientUuid) as PatientSummaryResult }
-
-    return Observable.merge(isPatientNew, wasPatientSummaryItemsChanged, appointmentScheduled)
-        .flatMap {
-          patientSummaryResult.set(it)
-          Observable.never<UiChange>()
-        }
   }
 
   private fun showUpdatePhoneDialogIfRequired(events: Observable<UiEvent>): Observable<UiChange> {

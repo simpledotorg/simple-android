@@ -29,8 +29,6 @@ class ScheduleAppointmentSheetClosed : UiEvent {
   override val analyticsName = "Patient Summary:Schedule Appointment Sheet Closed"
 }
 
-object AppointmentScheduled : UiEvent
-
 data class SummaryMedicalHistoryAnswerToggled(val question: MedicalHistoryQuestion, val answer: MedicalHistory.Answer) : UiEvent {
   override val analyticsName = "Patient Summary:Answer for $question set to $answer"
 }
@@ -41,8 +39,8 @@ data class PatientSummaryItemChanged(val patientSummaryItems: PatientSummaryItem
 
 data class PatientSummaryAllBloodPressuresDeleted(val allBloodPressuresDeleted: Boolean) : UiEvent
 
-object PatientSummaryBloodPressureSaved: UiEvent
+object PatientSummaryBloodPressureSaved : UiEvent
 
-object PatientSummaryLinkIdCancelled: UiEvent
+object PatientSummaryLinkIdCancelled : UiEvent
 
-object PatientSummaryLinkIdCompleted: UiEvent
+object PatientSummaryLinkIdCompleted : UiEvent

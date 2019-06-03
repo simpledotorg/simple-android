@@ -1,7 +1,8 @@
 # CHANGELOG
 
-## Next release
-- Show full recent patient log
+## On Demo
+- Show 10 recent patients on the home screen, and the rest on a separate screen
+- While calling patients, nurses can choose between phone call or secure anonymous call
 
 ## 2019-05-13-4013
 - Added the BP Passport feature to the app

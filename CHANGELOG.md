@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next release
+## On Demo 
 - Show full recent patient log
 
 ## 2019-05-13-4013

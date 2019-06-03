@@ -12,13 +12,7 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
-import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSummaryResult
-import org.simple.clinic.patient.businessid.Identifier
-import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
@@ -29,10 +23,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
 import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
-import org.simple.clinic.util.None
 import org.simple.clinic.util.RuntimePermissionResult
-import org.simple.clinic.util.filterAndUnwrapJust
-import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
@@ -47,12 +38,9 @@ typealias UiChange = (Ui) -> Unit
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
     private val dataSync: DataSync,
-    private val patientRepository: PatientRepository,
-    private val appointmentRepository: AppointmentRepository,
     private val configProvider: Observable<PatientConfig>,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
-    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
-    @Named("patient_summary_result") private val patientSummaryResult: Preference<PatientSummaryResult>
+    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -66,7 +54,6 @@ class PatientsScreenController @Inject constructor(
         refreshApprovalStatusOnStart(replayedEvents),
         displayUserAccountStatusNotification(replayedEvents),
         dismissApprovalStatus(replayedEvents),
-        showSummarySavedNotification(replayedEvents),
         toggleVisibilityOfScanCardButton(replayedEvents),
         requestCameraPermissions(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
@@ -170,42 +157,6 @@ class PatientsScreenController @Inject constructor(
           hasUserDismissedApprovedStatusPref.set(true)
           Observable.never<UiChange>()
         }
-  }
-
-  private fun showSummarySavedNotification(events: Observable<UiEvent>): Observable<UiChange> {
-    val result = events
-        .ofType<ScreenCreated>()
-        .map { patientSummaryResult.get() }
-
-    val savedStream = result
-        .filter { it is PatientSummaryResult.Saved }
-        .map { it as PatientSummaryResult.Saved }
-        .flatMap { patientRepository.patient(it.patientUuid).take(1).unwrapJust() }
-        .doOnNext { patientSummaryResult.delete() }
-        .map { { ui: Ui -> ui.showStatusPatientSummarySaved(it.fullName) } }
-
-    val scheduledResult = result
-        .filter { it is PatientSummaryResult.Scheduled }
-        .map { it as PatientSummaryResult.Scheduled }
-
-    val patientNameFromScheduled = scheduledResult
-        .flatMap { patientRepository.patient(it.patientUuid).take(1).unwrapJust() }
-        .map { it.fullName }
-
-    val appointmentDate = scheduledResult
-        .flatMap { appointmentRepository.lastCreatedAppointmentForPatient(it.patientUuid) }
-        .unwrapJust()
-        .doOnNext { assert(it.status == SCHEDULED) { "Last appointment's status != 'scheduled'" } }
-        .map { it.scheduledDate }
-
-    val scheduledStream = Observables
-        .zip(patientNameFromScheduled, appointmentDate)
-        .doOnNext { patientSummaryResult.delete() }
-        .map { (name, appointmentDate) ->
-          { ui: Ui -> ui.showStatusPatientAppointmentSaved(name, appointmentDate) }
-        }
-
-    return Observable.merge(savedStream, scheduledStream)
   }
 
   private fun toggleVisibilityOfScanCardButton(events: Observable<UiEvent>): Observable<UiChange> {

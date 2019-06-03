@@ -143,7 +143,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
             doneClicks(),
             adapterUiEvents,
             bloodPressureSaves(),
-            appointmentScheduledSuccess(),
             appointmentScheduleSheetClosed(),
             identifierLinkedEvents(),
             identifierLinkCancelledEvents()
@@ -195,12 +194,6 @@ class PatientSummaryScreen(context: Context, attrs: AttributeSet) : RelativeLayo
       .ofType<ActivityResult>()
       .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() }
       .map { ScheduleAppointmentSheetClosed() }
-
-  private fun appointmentScheduledSuccess() = screenRouter.streamScreenResults()
-      .ofType<ActivityResult>()
-      .filter { it.requestCode == REQCODE_SCHEDULE_APPOINTMENT && it.succeeded() && it.data != null }
-      .map { ScheduleAppointmentSheet.appointmentSavedDate(it.data!!) }
-      .map { AppointmentScheduled }
 
   private fun identifierLinkedEvents(): Observable<UiEvent> {
     return linkIdWithPatientView

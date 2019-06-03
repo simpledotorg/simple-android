@@ -15,7 +15,6 @@
     android:layout_marginEnd="@dimen/spacing_16"
     android:layout_marginStart="@dimen/spacing_16"
     android:gravity="center"
-    android:maxLines="1"
     android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0"
     tools:text="Anish Acharya, M, 43" />
 

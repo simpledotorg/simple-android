@@ -2,7 +2,6 @@ package org.simple.clinic.di
 
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -11,7 +10,6 @@ import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
-import org.simple.clinic.patient.PatientSummaryResult
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.sync.PatientPayload
@@ -40,7 +38,6 @@ open class NetworkModule {
         .add(LocalDateMoshiAdapter())
         .add(UuidMoshiAdapter())
         .add(MoshiOptionalAdapterFactory())
-        .add(patientSummaryResultAdapterFactory())
         .add(AppointmentCancelReason.MoshiTypeConverter())
         .add(Identifier.IdentifierType.MoshiTypeAdapter())
         .add(BusinessId.MetaDataVersion.MoshiTypeAdapter())
@@ -53,12 +50,6 @@ open class NetworkModule {
         .newBuilder()
         .add(PatientPayload::class.java, patientPayloadNullSerializingAdapter)
         .build()
-  }
-
-  private fun patientSummaryResultAdapterFactory(): PolymorphicJsonAdapterFactory<PatientSummaryResult> {
-    return PolymorphicJsonAdapterFactory.of(PatientSummaryResult::class.java, "patient_summary_result")
-        .withSubtype(PatientSummaryResult.Scheduled::class.java, "result_scheduled")
-        .withSubtype(PatientSummaryResult.Saved::class.java, "result_saved")
   }
 
   @Provides

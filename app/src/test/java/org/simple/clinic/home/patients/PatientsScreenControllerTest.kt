@@ -20,14 +20,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
-import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSummaryResult
-import org.simple.clinic.patient.PatientSummaryResult.NotSaved
-import org.simple.clinic.patient.PatientSummaryResult.Saved
-import org.simple.clinic.patient.PatientSummaryResult.Scheduled
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus
 import org.simple.clinic.user.UserSession
@@ -38,17 +32,13 @@ import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
-import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class PatientsScreenControllerTest {
@@ -61,9 +51,6 @@ class PatientsScreenControllerTest {
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val dataSync = mock<DataSync>()
-  private val patientRepository = mock<PatientRepository>()
-  private val appointmentRepository = mock<AppointmentRepository>()
-  private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
@@ -80,11 +67,8 @@ class PatientsScreenControllerTest {
     controller = PatientsScreenController(
         userSession = userSession,
         dataSync = dataSync,
-        patientRepository = patientRepository,
-        appointmentRepository = appointmentRepository,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
-        patientSummaryResult = patientSummaryResult,
         configProvider = configEmitter
     )
 
@@ -112,7 +96,6 @@ class PatientsScreenControllerTest {
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(NotSaved)
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(TheActivityLifecycle.Resumed())
@@ -132,7 +115,6 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(TheActivityLifecycle.Resumed())
@@ -156,7 +138,6 @@ class PatientsScreenControllerTest {
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -173,7 +154,6 @@ class PatientsScreenControllerTest {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -198,7 +178,6 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(hasUserDismissedStatus)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -220,7 +199,6 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(hasUserDismissedStatus)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -235,7 +213,6 @@ class PatientsScreenControllerTest {
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -250,7 +227,6 @@ class PatientsScreenControllerTest {
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(NotSaved)
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(UserApprovedStatusDismissed())
@@ -273,7 +249,6 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -310,7 +285,6 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -345,7 +319,6 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -380,7 +353,6 @@ class PatientsScreenControllerTest {
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -389,50 +361,6 @@ class PatientsScreenControllerTest {
     } else {
       verify(screen, never()).hideUserAccountStatus()
     }
-  }
-
-  @Test
-  @Parameters(method = "params for testing summary result")
-  fun `when patient summary sends result, appropriate notification should be shown`(result: PatientSummaryResult, patientUuid: UUID) {
-    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
-    whenever(patientRepository.patient(any()))
-        .thenReturn(Observable.just(PatientMocker.patient(uuid = patientUuid, fullName = "Anish Acharya").toOptional()))
-
-    val appointment = PatientMocker.appointment(patientUuid = patientUuid, scheduledDate = LocalDate.now(UTC))
-    whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(appointment)))
-    whenever(patientSummaryResult.get()).thenReturn(result)
-    uiEvents.onNext(ScreenCreated())
-
-    when (result) {
-      is Saved -> {
-        verify(screen).showStatusPatientSummarySaved("Anish Acharya")
-        verify(patientSummaryResult).delete()
-      }
-      is Scheduled -> {
-        verify(screen).showStatusPatientAppointmentSaved("Anish Acharya", LocalDate.now(UTC))
-        verify(patientSummaryResult).delete()
-      }
-      else -> {
-        verify(screen, never()).showStatusPatientAppointmentSaved(any(), any())
-        verify(screen, never()).showStatusPatientSummarySaved(any())
-        verify(patientSummaryResult, never()).delete()
-      }
-    }.exhaustive()
-  }
-
-  @Suppress("unused")
-  private fun `params for testing summary result`(): Array<Array<Any>> {
-    val patientUuid = UUID.randomUUID()
-    return arrayOf(
-        arrayOf(Saved(patientUuid), patientUuid),
-        arrayOf(Scheduled(patientUuid), patientUuid),
-        arrayOf(NotSaved, patientUuid)
-    )
   }
 
   @Test
@@ -447,7 +375,6 @@ class PatientsScreenControllerTest {
     configEmitter.onNext(PatientConfig(limitOfSearchResults = 1, scanSimpleCardFeatureEnabled = scanCardFeatureEnabled, recentPatientLimit = 10))
     whenever(userSession.loggedInUser()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.never())
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 
@@ -489,7 +416,6 @@ class PatientsScreenControllerTest {
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(patientSummaryResult.get()).thenReturn(PatientSummaryResult.NotSaved)
 
     uiEvents.onNext(ScreenCreated())
 

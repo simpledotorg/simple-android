@@ -1,16 +1,13 @@
 package org.simple.clinic.summary
 
-import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
-import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -47,12 +44,11 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientMocker.medicalHistory
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSummaryResult
-import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
-import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.*
+import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.HOME
+import org.simple.clinic.summary.PatientSummaryScreenControllerTest.GoBackToScreen.PREVIOUS
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepository
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -82,7 +78,6 @@ class PatientSummaryScreenControllerTest {
   private val appointmentRepository = mock<AppointmentRepository>()
   private val patientUuid = UUID.randomUUID()
   private val clock = TestUtcClock()
-  private val patientSummaryResult = mock<Preference<PatientSummaryResult>>()
   private val missingPhoneReminderRepository = mock<MissingPhoneReminderRepository>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -107,7 +102,6 @@ class PatientSummaryScreenControllerTest {
         utcClock = clock,
         zoneId = zoneId,
         configProvider = configSubject.firstOrError(),
-        patientSummaryResult = patientSummaryResult,
         timeFormatterForBp = timeFormatter)
 
     uiEvents
@@ -607,101 +601,6 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryBpClicked(bloodPressureMeasurement))
 
     verify(screen).showBloodPressureUpdateSheet(bloodPressureMeasurement.uuid)
-  }
-
-  @Test
-  @Parameters(method = "params for patient item changed")
-  fun `when anything is changed on the screen, assert that patient result preference is updated`(
-      openIntention: OpenIntention,
-      status: SyncStatus,
-      screenCreated: Instant,
-      hasChanged: Boolean
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, screenCreated))
-
-    // Clearing invocations here because we have some special cases for a intention of ViewNewPatient,
-    // which are irrelevant to this test.
-    clearInvocations(screen)
-    clearInvocations(patientSummaryResult)
-
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(status)))
-
-    if (hasChanged) {
-      verify(patientSummaryResult).set(any())
-    } else {
-      verify(patientSummaryResult, never()).set(any())
-    }
-
-    verifyZeroInteractions(screen)
-  }
-
-  @Suppress("unused")
-  fun `params for patient item changed`(): Array<Array<Any>> {
-    return arrayOf(
-        arrayOf(randomPatientSummaryOpenIntention(), "PENDING", Instant.now(clock), true),
-        arrayOf(randomPatientSummaryOpenIntention(), "PENDING", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false),
-        arrayOf(randomPatientSummaryOpenIntention(), "DONE", Instant.now(clock), false),
-        arrayOf(randomPatientSummaryOpenIntention(), "DONE", Instant.now(clock).plus(1, ChronoUnit.MINUTES), false)
-    )
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when an appointment is scheduled, patient result should be set`(openIntention: OpenIntention) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
-
-    // Clearing invocations here because we have some special cases for a intention of ViewNewPatient,
-    // which are irrelevant to this test.
-    clearInvocations(screen)
-    clearInvocations(patientSummaryResult)
-
-    uiEvents.onNext(AppointmentScheduled)
-
-    verify(patientSummaryResult).set(any())
-    verifyZeroInteractions(screen)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when something is saved on summary screen and an appointment is scheduled, home screen should be called with scheduled result`(
-      openIntention: OpenIntention
-  ) {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention, Instant.now(clock)))
-
-    // Clearing invocations here because we have some special cases for a intention of ViewNewPatient,
-    // which are irrelevant to this test.
-    clearInvocations(screen)
-    clearInvocations(patientSummaryResult)
-
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItem(SyncStatus.PENDING)))
-    uiEvents.onNext(AppointmentScheduled)
-
-    verify(patientSummaryResult, times(2)).set(any())
-    verifyZeroInteractions(screen)
-  }
-
-  private fun patientSummaryItem(syncStatus: SyncStatus): PatientSummaryItems {
-    val updatedAt = Instant.now(clock).plusMillis(10)
-    return PatientSummaryItems(prescriptionItems = SummaryPrescribedDrugsItem(
-        prescriptions = listOf(
-            PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt),
-            PatientMocker.prescription(syncStatus = syncStatus, updatedAt = updatedAt))),
-        bloodPressureListItems = listOf(SummaryBloodPressureListItem(
-            measurement = PatientMocker.bp(syncStatus = syncStatus, updatedAt = updatedAt),
-            daysAgo = Today,
-            showDivider = true,
-            formattedTime = updatedAt.toString(),
-            addTopPadding = false
-        )),
-        medicalHistoryItems = SummaryMedicalHistoryItem(PatientMocker.medicalHistory(syncStatus = syncStatus, updatedAt = updatedAt), Today)
-    )
-  }
-
-  @Test
-  fun `when a new patient is registered, always show the status as saved`() {
-    uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, OpenIntention.ViewNewPatient, Instant.now(clock)))
-
-    verify(patientSummaryResult, times(1)).set(PatientSummaryResult.Saved(patientUuid))
   }
 
   @Test

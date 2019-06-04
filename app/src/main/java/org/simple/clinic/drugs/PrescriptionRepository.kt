@@ -7,12 +7,11 @@ import io.reactivex.rxkotlin.toObservable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.drugs.sync.PrescribedDrugPayload
-import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -22,27 +21,38 @@ import javax.inject.Inject
 class PrescriptionRepository @Inject constructor(
     private val database: AppDatabase,
     private val dao: PrescribedDrug.RoomDao,
-    private val facilityRepository: FacilityRepository,
-    private val userSession: UserSession,
     private val utcClock: UtcClock
 ) : SynceableRepository<PrescribedDrug, PrescribedDrugPayload> {
 
-  fun savePrescription(patientUuid: UUID, drug: ProtocolDrug): Completable {
-    return savePrescription(patientUuid, drug.name, drug.dosage, drug.rxNormCode, isProtocolDrug = true)
+  fun savePrescription(
+      patientUuid: UUID,
+      drug: ProtocolDrug,
+      facility: Facility
+  ): Completable {
+    return savePrescription(
+        patientUuid = patientUuid,
+        name = drug.name,
+        dosage = drug.dosage,
+        rxNormCode = drug.rxNormCode,
+        isProtocolDrug = true,
+        facility = facility
+    )
   }
 
-  fun savePrescription(patientUuid: UUID, name: String, dosage: String?, rxNormCode: String?, isProtocolDrug: Boolean): Completable {
+  fun savePrescription(
+      patientUuid: UUID,
+      name: String,
+      dosage: String?,
+      rxNormCode: String?,
+      isProtocolDrug: Boolean,
+      facility: Facility
+  ): Completable {
     if (dosage != null && dosage.isBlank()) {
       throw AssertionError("Dosage cannot be both blank and non-null")
     }
 
-    val currentFacility = facilityRepository
-        .currentFacility(userSession)
-        .take(1)
-
-    val now = Instant.now(utcClock)
-    return currentFacility
-        .map { facility ->
+    return Single.just(Instant.now(utcClock))
+        .map { now ->
           PrescribedDrug(
               uuid = UUID.randomUUID(),
               name = name,

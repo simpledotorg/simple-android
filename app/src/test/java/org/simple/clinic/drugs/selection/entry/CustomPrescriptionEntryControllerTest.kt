@@ -17,7 +17,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.UiEvent
@@ -33,13 +35,18 @@ class CustomPrescriptionEntryControllerTest {
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val patientUuid = UUID.randomUUID()
   private val prescriptionUuid = UUID.randomUUID()
-
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var controller: CustomPrescriptionEntryController
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val user = PatientMocker.loggedInUser()
+  private val facility = PatientMocker.facility()
+
+  private val controller = CustomPrescriptionEntryController(prescriptionRepository, userSession, facilityRepository)
 
   @Before
   fun setUp() {
-    controller = CustomPrescriptionEntryController(prescriptionRepository)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     uiEvents
         .compose(controller)
@@ -59,15 +66,28 @@ class CustomPrescriptionEntryControllerTest {
   @Test
   @Parameters(value = ["", "10mg"])
   fun `when sheet is opened in new mode and save is clicked then a new prescription should be saved`(dosage: String) {
-    whenever(prescriptionRepository.savePrescription(patientUuid, "Amlodipine", dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false))
-        .thenReturn(Completable.complete())
+    whenever(prescriptionRepository.savePrescription(
+        patientUuid = patientUuid,
+        name = "Amlodipine",
+        dosage = dosage.nullIfBlank(),
+        rxNormCode = null,
+        isProtocolDrug = false,
+        facility = facility
+    )).thenReturn(Completable.complete())
 
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.New(patientUuid)))
     uiEvents.onNext(CustomPrescriptionDrugNameTextChanged("Amlodipine"))
     uiEvents.onNext(CustomPrescriptionDrugDosageTextChanged(dosage))
     uiEvents.onNext(SaveCustomPrescriptionClicked)
 
-    verify(prescriptionRepository).savePrescription(patientUuid, "Amlodipine", dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
+    verify(prescriptionRepository).savePrescription(
+        patientUuid = patientUuid,
+        name = "Amlodipine",
+        dosage = dosage.nullIfBlank(),
+        rxNormCode = null,
+        isProtocolDrug = false,
+        facility = facility
+    )
     verify(prescriptionRepository, never()).updatePrescription(any())
     verify(sheet).finish()
   }
@@ -167,7 +187,7 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(SaveCustomPrescriptionClicked)
 
     verify(prescriptionRepository).updatePrescription(prescribedDrug.copy(name = "Atenolol", dosage = "5mg"))
-    verify(prescriptionRepository, never()).savePrescription(any(), any())
+    verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
     verify(sheet).finish()
   }
 

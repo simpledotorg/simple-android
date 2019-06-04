@@ -82,12 +82,12 @@ class PrescriptionRepositoryAndroidTest {
     val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg", protocolUuid = protocolUuid)
     val amlodipine10mg = testData.protocolDrug(name = "Amlodipine", dosage = "10mg", protocolUuid = protocolUuid)
 
-    repository.savePrescription(patientUuid, amlodipine5mg).blockingAwait()
+    repository.savePrescription(patientUuid, amlodipine5mg, testData.qaFacility()).blockingAwait()
 
     val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUuid).blockingFirst()
     assertThat(savedPrescriptions).hasSize(1)
 
-    repository.savePrescription(patientUuid, amlodipine10mg)
+    repository.savePrescription(patientUuid, amlodipine10mg, testData.qaFacility())
         .andThen(repository.softDeletePrescription(savedPrescriptions.first().uuid))
         .blockingAwait()
 
@@ -100,7 +100,7 @@ class PrescriptionRepositoryAndroidTest {
     val patientUUID = UUID.randomUUID()
 
     val amlodipine5mg = testData.protocolDrug(name = "Amlodipine", dosage = "5mg")
-    repository.savePrescription(patientUUID, amlodipine5mg).blockingAwait()
+    repository.savePrescription(patientUUID, amlodipine5mg, testData.qaFacility()).blockingAwait()
 
     val savedPrescriptions = repository.newestPrescriptionsForPatient(patientUUID).blockingFirst()
     assertThat(savedPrescriptions).hasSize(1)

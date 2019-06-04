@@ -3,11 +3,14 @@ package org.simple.clinic.home.overdue
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.Age
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -21,7 +24,9 @@ typealias Ui = OverdueScreen
 typealias UiChange = (Ui) -> Unit
 
 class OverdueScreenController @Inject constructor(
-    private val repository: AppointmentRepository
+    private val appointmentRepository: AppointmentRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -46,13 +51,18 @@ class OverdueScreenController @Inject constructor(
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
-    val dbStream = events
+    val currentFacilityStream = userSession
+        .requireLoggedInUser()
+        .switchMap { facilityRepository.currentFacility(it) }
+
+    val overdueAppointmentsStream = events
         .ofType<OverdueScreenCreated>()
-        .flatMap { repository.overdueAppointments() }
+        .withLatestFrom(currentFacilityStream)
+        .flatMap { (_, currentFacility) -> appointmentRepository.overdueAppointments(currentFacility) }
         .replay()
         .refCount()
 
-    val overduePatientsStream = dbStream
+    val overduePatientsStream = overdueAppointmentsStream
         .map { appointments ->
           appointments.map {
             OverdueListItem.Patient(
@@ -73,7 +83,7 @@ class OverdueScreenController @Inject constructor(
           { ui: Ui -> ui.updateList(overduePatients) }
         }
 
-    val emptyStateStream = dbStream
+    val emptyStateStream = overdueAppointmentsStream
         .map { it.isEmpty() }
         .map { { ui: Ui -> ui.handleEmptyList(it) } }
 
@@ -111,7 +121,7 @@ class OverdueScreenController @Inject constructor(
   private fun markedAsAgreedToVisit(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<AgreedToVisitClicked>()
         .flatMap {
-          repository
+          appointmentRepository
               .markAsAgreedToVisit(it.appointmentUuid)
               .toObservable<UiChange>()
         }

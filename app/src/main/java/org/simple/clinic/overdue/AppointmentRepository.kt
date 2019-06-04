@@ -3,9 +3,7 @@ package org.simple.clinic.overdue
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.facility.Facility
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
@@ -14,7 +12,6 @@ import org.simple.clinic.overdue.Appointment.Status.VISITED
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.canBeOverriddenByServerCopy
 import org.simple.clinic.sync.SynceableRepository
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -28,8 +25,6 @@ import javax.inject.Inject
 class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
-    private val userSession: UserSession,
-    private val facilityRepository: FacilityRepository,
     private val utcClock: UtcClock,
     private val appointmentConfigProvider: Single<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
@@ -125,18 +120,14 @@ class AppointmentRepository @Inject constructor(
     return appointmentDao.count().toObservable()
   }
 
-  fun overdueAppointments(): Observable<List<OverdueAppointment>> {
-    val facilityUuidStream = facilityRepository.currentFacility(userSession)
-        .map { it.uuid }
-
-    val appointmentConfigStream = appointmentConfigProvider.toObservable()
-
-    return Observables.combineLatest(facilityUuidStream, appointmentConfigStream)
-        .flatMap { (facilityUuid, appointmentConfig) ->
+  fun overdueAppointments(facility: Facility): Observable<List<OverdueAppointment>> {
+    return appointmentConfigProvider
+        .toObservable()
+        .flatMap { appointmentConfig ->
           val today = LocalDate.now(utcClock)
           overdueDao
               .appointmentsForFacility(
-                  facilityUuid = facilityUuid,
+                  facilityUuid = facility.uuid,
                   scheduledStatus = SCHEDULED,
                   scheduledBefore = today,
                   minimumOverdueDateForHighRisk = today.minus(appointmentConfig.minimumOverduePeriodForHighRisk),

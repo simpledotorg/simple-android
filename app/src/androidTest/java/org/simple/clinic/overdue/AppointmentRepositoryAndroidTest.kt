@@ -28,7 +28,8 @@ import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
-import org.simple.clinic.overdue.Appointment.AppointmentType.*
+import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
+import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.Appointment.Status.VISITED
@@ -346,7 +347,7 @@ class AppointmentRepositoryAndroidTest {
         .andThen(appointmentRepository.schedule(patient3, date3, Manual, facility))
         .blockingGet()
 
-    val overdueAppts = appointmentRepository.overdueAppointments().blockingFirst()
+    val overdueAppts = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
     assertThat(overdueAppts).hasSize(1)
 
     overdueAppts[0].apply {
@@ -448,7 +449,7 @@ class AppointmentRepositoryAndroidTest {
         .save(listOf(appointmentForPatient0, appointmentForPatient1, appointmentsForPatient2, appointmentsForPatient3))
         .blockingAwait()
 
-    val overdueAppointments = appointmentRepository.overdueAppointments().blockingFirst()
+    val overdueAppointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
         .associateBy { it.fullName }
 
     assertThat(overdueAppointments.keys)
@@ -756,7 +757,7 @@ class AppointmentRepositoryAndroidTest {
         bpMeasurements = listOf(BP(systolic = 9000, diastolic = 9000)),
         appointmentHasBeenOverdueFor = Duration.ofDays(3))
 
-    val appointments = appointmentRepository.overdueAppointments().blockingFirst()
+    val appointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
 
     assertThat(appointments.map { it.fullName to it.riskLevel }).isEqualTo(listOf(
         "Systolic > 180, overdue > 30 days" to HIGHEST,

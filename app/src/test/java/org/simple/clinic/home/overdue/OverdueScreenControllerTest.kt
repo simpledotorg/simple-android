@@ -17,10 +17,12 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
+import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.phone.PhoneCaller
 import org.simple.clinic.phone.PhoneNumberMaskerConfig
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -37,14 +39,22 @@ class OverdueScreenControllerTest {
   private val maskedPhoneCaller = mock<PhoneCaller>()
   private val reporter = MockAnalyticsReporter()
   private val configStream: Subject<PhoneNumberMaskerConfig> = PublishSubject.create()
+  private val facilityRepository = mock<FacilityRepository>()
+  private val userSession = mock<UserSession>()
+  private val facility = PatientMocker.facility()
+  private val user = PatientMocker.loggedInUser()
 
-  private lateinit var controller: OverdueScreenController
+  private val controller = OverdueScreenController(
+      appointmentRepository = repository,
+      userSession = userSession,
+      facilityRepository = facilityRepository
+  )
 
   @Before
   fun setUp() {
     whenever(maskedPhoneCaller.secureCall(any(), any())).thenReturn(Completable.complete())
-
-    controller = OverdueScreenController(repository)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
 
@@ -55,7 +65,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is retrieved, show it`() {
-    whenever(repository.overdueAppointments())
+    whenever(repository.overdueAppointments(facility))
         .thenReturn(Observable.just(listOf(PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST))))
 
     uiEvents.onNext(OverdueScreenCreated())
@@ -67,7 +77,7 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created, and overdue list is empty, show empty list UI`() {
-    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf()))
+    whenever(repository.overdueAppointments(facility)).thenReturn(Observable.just(listOf()))
 
     uiEvents.onNext(OverdueScreenCreated())
 
@@ -124,7 +134,7 @@ class OverdueScreenControllerTest {
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
     )
 
-    whenever(repository.overdueAppointments()).thenReturn(Observable.just(overdueAppointments))
+    whenever(repository.overdueAppointments(facility)).thenReturn(Observable.just(overdueAppointments))
 
     uiEvents.onNext(OverdueScreenCreated())
 

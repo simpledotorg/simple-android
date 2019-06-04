@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import com.f2prateek.rx.preferences2.Preference
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -66,6 +65,7 @@ class PatientSummaryScreenController @Inject constructor(
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(mergeWithPatientSummaryChanges())
         .compose(mergeWithAllBloodPressuresDeleted())
+        .compose(mergeWithHasPatientDataChangedSinceScreenCreated())
         .compose(ReportAnalyticsEvents())
         .replay()
 
@@ -201,6 +201,50 @@ class PatientSummaryScreenController @Inject constructor(
     }
   }
 
+  private fun mergeWithHasPatientDataChangedSinceScreenCreated(): ObservableTransformer<UiEvent, UiEvent> {
+    return ObservableTransformer { events ->
+      val patientUuidToScreenCreatedTimeStream = events
+          .ofType<PatientSummaryScreenCreated>()
+          .map { it.patientUuid to it.screenCreatedTimestamp }
+
+      val patientChangedSinceStream = patientUuidToScreenCreatedTimeStream
+          .switchMap { (patientUuid, screenCreatedAt) ->
+            patientRepository.hasPatientChangedSince(patientUuid, screenCreatedAt)
+          }
+
+      val bpsChangedSinceStream = patientUuidToScreenCreatedTimeStream
+          .switchMap { (patientUuid, screenCreatedAt) ->
+            bpRepository.haveBpsForPatientChangedSince(patientUuid, screenCreatedAt)
+          }
+
+      val prescriptionsChangedSinceStream = patientUuidToScreenCreatedTimeStream
+          .switchMap { (patientUuid, screenCreatedAt) ->
+            prescriptionRepository.hasPrescriptionForPatientChangedSince(patientUuid, screenCreatedAt)
+          }
+
+      val medicalHistoryChangedSinceStream = patientUuidToScreenCreatedTimeStream
+          .switchMap { (patientUuid, screenCreatedAt) ->
+            medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(patientUuid, screenCreatedAt)
+          }
+
+      val patientDataChangedSinceScreenCreatedStream = Observables
+          .combineLatest(
+              patientChangedSinceStream,
+              bpsChangedSinceStream,
+              prescriptionsChangedSinceStream,
+              medicalHistoryChangedSinceStream
+          ) { patientChangedSince, bpsChangedSince, prescriptionChangedSince, medicalHistoryChangedSince ->
+            PatientDataChangedSinceScreenCreated(hasChanged = patientChangedSince
+                .or(bpsChangedSince)
+                .or(prescriptionChangedSince)
+                .or(medicalHistoryChangedSince)
+            )
+          }
+
+      events.mergeWith(patientDataChangedSinceScreenCreatedStream)
+    }
+  }
+
   private fun populateList(events: Observable<UiEvent>): Observable<UiChange> {
     val bloodPressurePlaceholders = events.ofType<PatientSummaryItemChanged>()
         .map { it ->
@@ -298,17 +342,9 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryScreenCreated>()
         .map { it.patientUuid }
 
-    val screenOpenedAt = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.screenCreatedTimestamp }
-
-    val patientSummaryItemChanges = events
-        .ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems }
-
-    val hasSummaryItemChangedStream = Observables
-        .combineLatest(screenOpenedAt, patientSummaryItemChanges)
-        .map { (screenOpenedAt, patientSummaryItem) -> patientSummaryItem.hasItemChangedSince(screenOpenedAt) }
+    val hasSummaryItemChangedStream = events
+        .ofType<PatientDataChangedSinceScreenCreated>()
+        .map { it.hasChanged }
 
     val allBpsForPatientDeletedStream = events
         .ofType<PatientSummaryAllBloodPressuresDeleted>()
@@ -355,7 +391,9 @@ class PatientSummaryScreenController @Inject constructor(
         .ofType<PatientSummaryAllBloodPressuresDeleted>()
         .map { it.allBloodPressuresDeleted }
 
-    val hasSummaryItemChangedStream = summaryItemChangedSinceScreenOpenedStream(events)
+    val hasSummaryItemChangedStream = events
+        .ofType<PatientDataChangedSinceScreenCreated>()
+        .map { it.hasChanged }
 
     val shouldGoBackStream = Observables
         .combineLatest(hasSummaryItemChangedStream, allBpsForPatientDeletedStream)
@@ -379,20 +417,6 @@ class PatientSummaryScreenController @Inject constructor(
         .map { { ui: Ui -> ui.goToPreviousScreen() } }
 
     return goBackToHomeScreen.mergeWith(goBackToSearchResults)
-  }
-
-  private fun summaryItemChangedSinceScreenOpenedStream(events: Observable<UiEvent>): Observable<Boolean> {
-    val patientSummaryItemChanges = events
-        .ofType<PatientSummaryItemChanged>()
-        .map { it.patientSummaryItems }
-
-    val screenOpenedAt = events
-        .ofType<PatientSummaryScreenCreated>()
-        .map { it.screenCreatedTimestamp }
-
-    return Observables
-        .combineLatest(screenOpenedAt, patientSummaryItemChanges)
-        .map { (screenOpenedAt, patientSummaryItem) -> patientSummaryItem.hasItemChangedSince(screenOpenedAt) }
   }
 
   private fun goToHomeOnDoneClick(events: Observable<UiEvent>): Observable<UiChange> {

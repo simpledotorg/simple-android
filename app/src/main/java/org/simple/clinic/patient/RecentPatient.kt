@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.simple.clinic.overdue.Appointment.Status
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -69,6 +70,7 @@ data class RecentPatient(
               FROM Appointment
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
+              AND status = :appointmentStatus
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
           LEFT JOIN (
@@ -103,10 +105,10 @@ data class RecentPatient(
     4. Order by updatedAt from final list and cap it to 10 entries.
      */
     @Query("$RECENT_PATIENT_QUERY LIMIT :limit")
-    fun recentPatients(facilityUuid: UUID, limit: Int): Flowable<List<RecentPatient>>
+    fun recentPatients(facilityUuid: UUID, appointmentStatus: Status, limit: Int): Flowable<List<RecentPatient>>
 
     @Query(RECENT_PATIENT_QUERY)
-    fun recentPatients(facilityUuid: UUID): Flowable<List<RecentPatient>>
+    fun recentPatients(facilityUuid: UUID, appointmentStatus: Status): Flowable<List<RecentPatient>>
   }
 
   data class LastBp(

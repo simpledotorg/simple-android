@@ -85,7 +85,10 @@ class RecentPatientsViewControllerTest {
     val patientUuid1 = UUID.randomUUID()
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
-    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients(
+        facilityUuid = facility.uuid,
+        limit = recentPatientLimitPlusOne
+    )).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -151,7 +154,10 @@ class RecentPatientsViewControllerTest {
     val patientUuid2 = UUID.randomUUID()
     val patientUuid3 = UUID.randomUUID()
     val patientUuid4 = UUID.randomUUID()
-    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)).thenReturn(Observable.just(listOf(
+    whenever(patientRepository.recentPatients(
+        facilityUuid = facility.uuid,
+        limit = recentPatientLimitPlusOne
+    )).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
@@ -221,7 +227,10 @@ class RecentPatientsViewControllerTest {
 
   @Test
   fun `when screen opens and there are no recent patients then show empty state`() {
-    whenever(patientRepository.recentPatients(facility.uuid, recentPatientLimitPlusOne)).thenReturn(Observable.just(emptyList()))
+    whenever(patientRepository.recentPatients(
+        facility.uuid,
+        limit = recentPatientLimitPlusOne
+    )).thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(ScreenCreated())
 

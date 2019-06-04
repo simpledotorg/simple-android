@@ -108,64 +108,42 @@ class OverdueScreenControllerTest {
   }
 
   @Test
-  fun `when masking is enabled then the header should be added`() {
-    val overdueAppointment = PatientMocker.overdueAppointment(riskLevelIndex = 0)
-    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf(overdueAppointment)))
-
-    uiEvents.onNext(OverdueScreenCreated())
-
-    verify(screen).updateList(listOf(
-        OverdueListItem.Patient(
-            appointmentUuid = overdueAppointment.appointment.uuid,
-            patientUuid = overdueAppointment.appointment.patientUuid,
-            name = overdueAppointment.fullName,
-            gender = overdueAppointment.gender,
-            age = 30,
-            phoneNumber = null,
-            bpSystolic = overdueAppointment.bloodPressure.systolic,
-            bpDiastolic = overdueAppointment.bloodPressure.diastolic,
-            bpDaysAgo = 0,
-            overdueDays = 0,
-            isAtHighRisk = true
-        )
-    ))
-  }
-
-  @Test
-  fun `when masking is disabled then the header should be not shown`() {
-    val controller = OverdueScreenController(repository)
-
-    val uiEvents = PublishSubject.create<UiEvent>()
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
-
-    val overdueAppointment = PatientMocker.overdueAppointment(riskLevelIndex = 0)
-    whenever(repository.overdueAppointments()).thenReturn(Observable.just(listOf(overdueAppointment)))
-
-    uiEvents.onNext(OverdueScreenCreated())
-
-    verify(screen).updateList(listOf(
-        OverdueListItem.Patient(
-            appointmentUuid = overdueAppointment.appointment.uuid,
-            patientUuid = overdueAppointment.appointment.patientUuid,
-            name = overdueAppointment.fullName,
-            gender = overdueAppointment.gender,
-            age = 30,
-            phoneNumber = null,
-            bpSystolic = overdueAppointment.bloodPressure.systolic,
-            bpDiastolic = overdueAppointment.bloodPressure.diastolic,
-            bpDaysAgo = 0,
-            overdueDays = 0,
-            isAtHighRisk = true
-        )
-    ))
-  }
-
-  @Test
   fun `when showPhoneMaskBottomSheet config is true and call patient is clicked then open phone mask bottom sheet`() {
     val patientUuid = UUID.randomUUID()
 
     uiEvents.onNext(CallPatientClicked(patientUuid))
 
     verify(screen).openPhoneMaskBottomSheet(patientUuid)
+  }
+
+  @Test
+  fun `when screen is created then the overdue appointments must be displayed`() {
+    val overdueAppointments = listOf(
+        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST),
+        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW),
+        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
+    )
+
+    whenever(repository.overdueAppointments()).thenReturn(Observable.just(overdueAppointments))
+
+    uiEvents.onNext(OverdueScreenCreated())
+
+    val expectedOverdueListItems = overdueAppointments.map { overdueAppointment ->
+      OverdueListItem.Patient(
+          appointmentUuid = overdueAppointment.appointment.uuid,
+          patientUuid = overdueAppointment.appointment.patientUuid,
+          name = overdueAppointment.fullName,
+          gender = overdueAppointment.gender,
+          age = 30,
+          phoneNumber = null,
+          bpSystolic = overdueAppointment.bloodPressure.systolic,
+          bpDiastolic = overdueAppointment.bloodPressure.diastolic,
+          bpDaysAgo = 0,
+          overdueDays = 0,
+          isAtHighRisk = overdueAppointment.isAtHighRisk
+      )
+    }
+
+    verify(screen).updateList(expectedOverdueListItems)
   }
 }

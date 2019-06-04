@@ -55,7 +55,10 @@ class RecentPatientsViewController @Inject constructor(
         .combineLatest(currentFacilityStream, patientConfig)
         .switchMap { (facility, config) ->
           // Fetching an extra recent patient to know whether we have more than "recentPatientLimit" number of recent patients
-          patientRepository.recentPatients(facility.uuid, limit = config.recentPatientLimit + 1)
+          patientRepository.recentPatients(
+              facilityUuid = facility.uuid,
+              limit = config.recentPatientLimit + 1
+          )
         }
         .replay()
         .refCount()

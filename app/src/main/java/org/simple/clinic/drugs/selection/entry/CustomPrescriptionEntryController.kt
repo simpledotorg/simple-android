@@ -9,8 +9,12 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.nullIfBlank
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 private typealias Ui = CustomPrescriptionEntrySheet
@@ -19,7 +23,9 @@ private typealias UiChange = (Ui) -> Unit
 const val DOSAGE_PLACEHOLDER = "mg"
 
 class CustomPrescriptionEntryController @Inject constructor(
-    private val prescriptionRepository: PrescriptionRepository
+    private val prescriptionRepository: PrescriptionRepository,
+    private val userSession: UserSession,
+    private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -66,11 +72,29 @@ class CustomPrescriptionEntryController @Inject constructor(
     val saveClicks = events
         .ofType<SaveCustomPrescriptionClicked>()
 
-    return Observables
-        .combineLatest(saveClicks, patientUuids, nameChanges, dosageChanges) { _, uuid, name, dosage -> Triple(uuid, name, dosage) }
-        .flatMap { (patientUuid, name, dosage) ->
+    val currentFacilityStream = userSession
+        .requireLoggedInUser()
+        .switchMap { facilityRepository.currentFacility(it) }
+
+    return saveClicks
+        .withLatestFrom(patientUuids, nameChanges, dosageChanges, currentFacilityStream) { _, uuid, name, dosage, currentFacility ->
+          SavePrescription(
+              patientUuid = uuid,
+              name = name,
+              dosage = dosage,
+              facility = currentFacility
+          )
+        }
+        .flatMap { savePrescription ->
           prescriptionRepository
-              .savePrescription(patientUuid, name, dosage.nullIfBlank(), rxNormCode = null, isProtocolDrug = false)
+              .savePrescription(
+                  patientUuid = savePrescription.patientUuid,
+                  name = savePrescription.name,
+                  dosage = savePrescription.dosage.nullIfBlank(),
+                  rxNormCode = null,
+                  isProtocolDrug = false,
+                  facility = savePrescription.facility
+              )
               .andThen(Observable.just({ ui: Ui -> ui.finish() }))
         }
   }
@@ -207,4 +231,11 @@ class CustomPrescriptionEntryController @Inject constructor(
         .take(1)
         .map { { ui: Ui -> ui.finish() } }
   }
+
+  private data class SavePrescription(
+      val patientUuid: UUID,
+      val name: String,
+      val dosage: String,
+      val facility: Facility
+  )
 }

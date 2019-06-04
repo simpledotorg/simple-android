@@ -126,7 +126,7 @@ class PrescribedDrugsScreenControllerTest {
   @Test
   fun `when a protocol drug is selected then open dosages sheet for that drug`(drugName: String) {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.never())
-    whenever(prescriptionRepository.savePrescription(any(), any())).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.savePrescription(any(), any(), any())).thenReturn(Completable.complete())
     whenever(protocolRepository.drugsForProtocolOrDefault(any())).thenReturn(Observable.never())
     whenever(prescriptionRepository.newestPrescriptionsForPatient(patientUuid)).thenReturn(Observable.empty())
 

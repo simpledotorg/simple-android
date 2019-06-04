@@ -1,23 +1,17 @@
 package org.simple.clinic.drugs
 
-import com.google.common.truth.Truth.assertThat
 import com.nhaarman.mockito_kotlin.argThat
-import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
-import io.reactivex.Observable
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import java.util.UUID
@@ -30,35 +24,9 @@ class PrescriptionRepositoryTest {
 
   private val database = mock<AppDatabase>()
   private val dao = mock<PrescribedDrug.RoomDao>()
-  private val facilityRepository = mock<FacilityRepository>()
-  private val userSession = mock<UserSession>()
   private val testClock = TestUtcClock()
 
-  private lateinit var repository: PrescriptionRepository
-
-  @Before
-  fun setUp() {
-    repository = PrescriptionRepository(database, dao, facilityRepository, userSession, testClock)
-  }
-
-  @Test
-  fun `when saving a prescription, correctly get the current facility ID`() {
-    val facility = PatientMocker.facility()
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility))
-
-    val patientUuid = UUID.randomUUID()
-    repository
-        .savePrescription(patientUuid, name = "Drug name", dosage = "dosage", rxNormCode = "rx-norm-code", isProtocolDrug = true)
-        .subscribe()
-
-    verify(dao).save(check {
-      assertThat(it.first().name).isEqualTo("Drug name")
-      assertThat(it.first().dosage).isEqualTo("dosage")
-      assertThat(it.first().rxNormCode).isEqualTo("rx-norm-code")
-      assertThat(it.first().facilityUuid).isEqualTo(facility.uuid)
-      assertThat(it.first().patientUuid).isEqualTo(patientUuid)
-    })
-  }
+  private val repository = PrescriptionRepository(database, dao, testClock)
 
   @Test
   @Parameters(value = [

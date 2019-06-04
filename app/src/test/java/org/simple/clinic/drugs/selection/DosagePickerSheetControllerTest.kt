@@ -23,7 +23,6 @@ import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
@@ -41,22 +40,21 @@ class DosagePickerSheetControllerTest {
   private val screen = mock<DosagePickerSheet>()
   private val facilityRepository = mock<FacilityRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
-
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var controller: DosagePickerSheetController
   private val protocolUuid = UUID.randomUUID()
+  private val user = PatientMocker.loggedInUser()
+  private val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
+
+  private val controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
 
   @Before
   fun setUp() {
-    controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
-
-    val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(PatientMocker.loggedInUser()))
-    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
   }
 
   @Test
@@ -85,12 +83,12 @@ class DosagePickerSheetControllerTest {
     val dosageSelected = PatientMocker.protocolDrug(name = drugName, dosage = "5 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected)).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected, currentFacility)).thenReturn(Completable.complete())
 
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUUID, None))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
-    verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected)
+    verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected, currentFacility)
     verify(prescriptionRepository, never()).softDeletePrescription(any())
     verify(screen).finish()
   }
@@ -103,14 +101,14 @@ class DosagePickerSheetControllerTest {
     val existingPrescription = PatientMocker.prescription(name = drugName, dosage = "10 mg")
 
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.never())
-    whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected)).thenReturn(Completable.complete())
+    whenever(prescriptionRepository.savePrescription(patientUUID, dosageSelected, currentFacility)).thenReturn(Completable.complete())
     whenever(prescriptionRepository.softDeletePrescription(existingPrescription.uuid)).thenReturn(Completable.complete())
 
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUUID, existingPrescription.uuid.toOptional()))
     uiEvents.onNext(DosageSelected(dosageSelected))
 
     verify(prescriptionRepository, times(1)).softDeletePrescription(existingPrescription.uuid)
-    verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected)
+    verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected, currentFacility)
     verify(screen).finish()
   }
 
@@ -127,6 +125,6 @@ class DosagePickerSheetControllerTest {
     uiEvents.onNext(NoneSelected)
 
     verify(prescriptionRepository, times(1)).softDeletePrescription(existingPrescription.uuid)
-    verify(prescriptionRepository, never()).savePrescription(any(), any())
+    verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
   }
 }

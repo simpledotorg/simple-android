@@ -116,10 +116,10 @@ class PatientRepositoryAndroidTest {
     get() = clock as TestUtcClock
 
   private val loggedInUser: User
-    get() = userSession.loggedInUserImmediate()!!
+    get() = testData.qaUser()
 
   private val currentFacility: Facility
-    get() = facilityRepository.currentFacility(loggedInUser).blockingFirst()
+    get() = testData.qaFacility()
 
   @Before
   fun setUp() {
@@ -962,7 +962,7 @@ class PatientRepositoryAndroidTest {
 
     testClock.advanceBy(Duration.ofSeconds(1))
 
-    prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug()).blockingAwait()
+    prescriptionRepository.savePrescription(recentPatient1.uuid, testData.protocolDrug(), currentFacility).blockingAwait()
 
     recentPatient1 = recentPatient1.copy(updatedAt = testClock.instant())
     verifyRecentPatientOrder(
@@ -1549,7 +1549,7 @@ class PatientRepositoryAndroidTest {
           hasHadStroke = hasHadStroke))).blockingAwait()
 
       protocolDrug?.let {
-        prescriptionRepository.savePrescription(patientUuid = patientUuid, drug = it).blockingAwait()
+        prescriptionRepository.savePrescription(patientUuid = patientUuid, drug = it, facility = currentFacility).blockingAwait()
       }
 
       appointmentDate?.let {

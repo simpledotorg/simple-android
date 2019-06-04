@@ -117,6 +117,10 @@ class PatientSummaryScreenControllerTest {
     whenever(bpRepository.bloodPressureCount(patientUuid)).thenReturn(Observable.just(1))
     whenever(missingPhoneReminderRepository.hasShownReminderFor(patientUuid)).thenReturn(Single.never())
     whenever(patientRepository.bpPassportForPatient(patientUuid)).thenReturn(Observable.never())
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.never())
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.never())
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.never())
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.never())
 
     Analytics.addReporter(reporter)
   }
@@ -377,152 +381,6 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(PatientSummaryScreenCreated(patientUuid, openIntention = openIntention, screenCreatedTimestamp = Instant.now(clock)))
 
     verify(screen, never()).showBloodPressureEntrySheet(any())
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions")
-  fun `when there are patient summary changes and all bps are not deleted, clicking on back must show the schedule appointment sheet`(
-      openIntention: OpenIntention
-  ) {
-    val patientSummaryItems = mock<PatientSummaryItems>()
-    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(clock)
-    ))
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    verify(screen, never()).goToPreviousScreen()
-    verify(screen, never()).goToHomeScreen()
-    verify(screen).showScheduleAppointmentSheet(patientUuid)
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and screen to go back")
-  fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
-      openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen
-  ) {
-    val patientSummaryItems = mock<PatientSummaryItems>()
-    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(true)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(clock)
-    ))
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (goBackToScreen == HOME) {
-      verify(screen).goToHomeScreen()
-    } else {
-      verify(screen).goToPreviousScreen()
-    }
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and screen to go back")
-  fun `when there are no patient summary changes and all bps are not deleted, clicking on back must go back`(
-      openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen
-  ) {
-    val patientSummaryItems = mock<PatientSummaryItems>()
-    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(clock)
-    ))
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (goBackToScreen == HOME) {
-      verify(screen).goToHomeScreen()
-    } else {
-      verify(screen).goToPreviousScreen()
-    }
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and screen to go back")
-  fun `when there are no patient summary changes and all bps are deleted, clicking on back must go back`(
-      openIntention: OpenIntention,
-      goBackToScreen: GoBackToScreen
-  ) {
-    val patientSummaryItems = mock<PatientSummaryItems>()
-    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(false)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(clock)
-    ))
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
-    uiEvents.onNext(PatientSummaryBackClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    if (goBackToScreen == HOME) {
-      verify(screen).goToHomeScreen()
-    } else {
-      verify(screen).goToPreviousScreen()
-    }
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and summary item changed")
-  fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet`(
-      openIntention: OpenIntention,
-      patientSummaryItemChanged: Boolean
-  ) {
-    val patientSummaryItems = mock<PatientSummaryItems>()
-    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(patientSummaryItemChanged)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(clock)
-    ))
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    verify(screen).showScheduleAppointmentSheet(patientUuid)
-    verify(screen, never()).goToHomeScreen()
-    verify(screen, never()).goToPreviousScreen()
-  }
-
-  @Test
-  @Parameters(method = "patient summary open intentions and summary item changed")
-  fun `when all bps are deleted, clicking on save must go to the home screen`(
-      openIntention: OpenIntention,
-      patientSummaryItemChanged: Boolean
-  ) {
-    val patientSummaryItems = mock<PatientSummaryItems>()
-    whenever(patientSummaryItems.hasItemChangedSince(any())).thenReturn(patientSummaryItemChanged)
-
-    uiEvents.onNext(PatientSummaryScreenCreated(
-        patientUuid = patientUuid,
-        openIntention = openIntention,
-        screenCreatedTimestamp = Instant.now(clock)
-    ))
-    uiEvents.onNext(PatientSummaryItemChanged(patientSummaryItems))
-    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
-    uiEvents.onNext(PatientSummaryDoneClicked())
-
-    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
-    verify(screen, never()).goToPreviousScreen()
-    verify(screen).goToHomeScreen()
   }
 
   @Test
@@ -968,4 +826,468 @@ class PatientSummaryScreenControllerTest {
     HOME,
     PREVIOUS
   }
+
+  @Test
+  @Parameters(method = "params for showing schedule appointment sheet when clicking back when there is at least one BP")
+  fun `when there are patient summary changes and at least one BP is present, clicking on back must show the schedule appointment sheet`(
+      openIntention: OpenIntention,
+      patientChanged: Boolean,
+      bpsChanged: Boolean,
+      medicalHistoryChanged: Boolean,
+      prescribedDrugsChanged: Boolean
+  ) {
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
+    uiEvents.onNext(PatientSummaryBackClicked())
+
+    verify(screen, never()).goToPreviousScreen()
+    verify(screen, never()).goToHomeScreen()
+    verify(screen).showScheduleAppointmentSheet(patientUuid)
+  }
+
+  @Suppress("Unused")
+  private fun `params for showing schedule appointment sheet when clicking back when there is at least one BP`(): List<List<Any>> {
+    fun testCase(
+        patientChanged: Boolean,
+        bpsChanged: Boolean,
+        medicalHistoryChanged: Boolean,
+        prescribedDrugsChanged: Boolean
+    ): List<List<Any>> {
+      return listOf(
+          listOf(
+              OpenIntention.ViewExistingPatient,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.ViewNewPatient,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          )
+      )
+    }
+
+    return testCase(
+        patientChanged = true,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for going back or home when clicking back when there are no BPs")
+  fun `when there are patient summary changes and all bps are deleted, clicking on back must go back`(
+      openIntention: OpenIntention,
+      goBackToScreen: GoBackToScreen,
+      patientChanged: Boolean,
+      bpsChanged: Boolean,
+      medicalHistoryChanged: Boolean,
+      prescribedDrugsChanged: Boolean
+  ) {
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
+    uiEvents.onNext(PatientSummaryBackClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    if (goBackToScreen == HOME) {
+      verify(screen).goToHomeScreen()
+    } else {
+      verify(screen).goToPreviousScreen()
+    }
+  }
+
+  @Suppress("Unused")
+  private fun `params for going back or home when clicking back when there are no BPs`(): List<List<Any>> {
+    fun testCase(
+        patientChanged: Boolean,
+        bpsChanged: Boolean,
+        medicalHistoryChanged: Boolean,
+        prescribedDrugsChanged: Boolean
+    ): List<List<Any>> {
+      return listOf(
+          listOf(
+              OpenIntention.ViewExistingPatient,
+              PREVIOUS,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.ViewNewPatient,
+              HOME,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
+              HOME,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          )
+      )
+    }
+
+    return testCase(
+        patientChanged = true,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    )
+  }
+
+  @Test
+  @Parameters(method = "patient summary open intentions and screen to go back")
+  fun `when there are no patient summary changes and all bps are not deleted, clicking on back must go back`(
+      openIntention: OpenIntention,
+      goBackToScreen: GoBackToScreen
+  ) {
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
+    uiEvents.onNext(PatientSummaryBackClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    if (goBackToScreen == HOME) {
+      verify(screen).goToHomeScreen()
+    } else {
+      verify(screen).goToPreviousScreen()
+    }
+  }
+
+  @Test
+  @Parameters(method = "patient summary open intentions and screen to go back")
+  fun `when there are no patient summary changes and all bps are deleted, clicking on back must go back`(
+      openIntention: OpenIntention,
+      goBackToScreen: GoBackToScreen
+  ) {
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(false))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
+    uiEvents.onNext(PatientSummaryBackClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    if (goBackToScreen == HOME) {
+      verify(screen).goToHomeScreen()
+    } else {
+      verify(screen).goToPreviousScreen()
+    }
+  }
+
+  @Test
+  @Parameters(method = "params for showing schedule appointment sheet on hitting save")
+  fun `when all bps are not deleted, clicking on save must show the schedule appointment sheet regardless of summary changes`(
+      openIntention: OpenIntention,
+      patientChanged: Boolean,
+      bpsChanged: Boolean,
+      medicalHistoryChanged: Boolean,
+      prescribedDrugsChanged: Boolean
+  ) {
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(false))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    verify(screen).showScheduleAppointmentSheet(patientUuid)
+    verify(screen, never()).goToHomeScreen()
+    verify(screen, never()).goToPreviousScreen()
+  }
+
+  @Suppress("Unused")
+  private fun `params for showing schedule appointment sheet on hitting save`(): List<List<Any>> {
+    fun testCase(
+        patientChanged: Boolean,
+        bpsChanged: Boolean,
+        medicalHistoryChanged: Boolean,
+        prescribedDrugsChanged: Boolean
+    ): List<List<Any>> {
+      return listOf(
+          listOf(
+              OpenIntention.ViewExistingPatient,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.ViewNewPatient,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          )
+      )
+    }
+
+    return testCase(
+        patientChanged = true,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    )
+  }
+
+  @Test
+  @Parameters(method = "params for going to home screen on hitting save")
+  fun `when all bps are deleted, clicking on save must go to the home screen regardless of summary changes`(
+      openIntention: OpenIntention,
+      patientChanged: Boolean,
+      bpsChanged: Boolean,
+      medicalHistoryChanged: Boolean,
+      prescribedDrugsChanged: Boolean
+  ) {
+    whenever(patientRepository.hasPatientChangedSince(any(), any())).thenReturn(Observable.just(patientChanged))
+    whenever(bpRepository.haveBpsForPatientChangedSince(any(), any())).thenReturn(Observable.just(bpsChanged))
+    whenever(medicalHistoryRepository.hasMedicalHistoryForPatientChangedSince(any(), any())).thenReturn(Observable.just(medicalHistoryChanged))
+    whenever(prescriptionRepository.hasPrescriptionForPatientChangedSince(any(), any())).thenReturn(Observable.just(prescribedDrugsChanged))
+
+    uiEvents.onNext(PatientSummaryScreenCreated(
+        patientUuid = patientUuid,
+        openIntention = openIntention,
+        screenCreatedTimestamp = Instant.now(clock)
+    ))
+    uiEvents.onNext(PatientSummaryAllBloodPressuresDeleted(true))
+    uiEvents.onNext(PatientSummaryDoneClicked())
+
+    verify(screen, never()).showScheduleAppointmentSheet(patientUuid)
+    verify(screen, never()).goToPreviousScreen()
+    verify(screen).goToHomeScreen()
+  }
+
+  @Suppress("Unused")
+  private fun `params for going to home screen on hitting save`(): List<List<Any>> {
+    fun testCase(
+        patientChanged: Boolean,
+        bpsChanged: Boolean,
+        medicalHistoryChanged: Boolean,
+        prescribedDrugsChanged: Boolean
+    ): List<List<Any>> {
+      return listOf(
+          listOf(
+              OpenIntention.ViewExistingPatient,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.ViewNewPatient,
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          ),
+          listOf(
+              OpenIntention.LinkIdWithPatient(Identifier(UUID.randomUUID().toString(), BpPassport)),
+              patientChanged,
+              bpsChanged,
+              medicalHistoryChanged,
+              prescribedDrugsChanged
+          )
+      )
+    }
+
+    return testCase(
+        patientChanged = true,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = true,
+        bpsChanged = true,
+        medicalHistoryChanged = true,
+        prescribedDrugsChanged = true
+    ) + testCase(
+        patientChanged = false,
+        bpsChanged = false,
+        medicalHistoryChanged = false,
+        prescribedDrugsChanged = false
+    )
+  }
+
 }

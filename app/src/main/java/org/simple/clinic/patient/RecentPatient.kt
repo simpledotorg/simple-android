@@ -71,6 +71,7 @@ data class RecentPatient(
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
               AND status = :appointmentStatus
+              AND remindOn IS NULL
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
           LEFT JOIN (

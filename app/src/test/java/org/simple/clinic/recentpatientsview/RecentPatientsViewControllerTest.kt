@@ -228,7 +228,7 @@ class RecentPatientsViewControllerTest {
   @Test
   fun `when screen opens and there are no recent patients then show empty state`() {
     whenever(patientRepository.recentPatients(
-        facility.uuid,
+        facilityUuid = facility.uuid,
         limit = recentPatientLimitPlusOne
     )).thenReturn(Observable.just(emptyList()))
 

@@ -1291,6 +1291,19 @@ class PatientRepositoryAndroidTest {
     assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
   }
 
+  @Test
+  fun verify_only_patients_whose_agreed_to_visit_state_is_absent_are_included_when_fetching_recent_patients() {
+    val facilityUuid = UUID.randomUUID()
+    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, agreedToVisit = null)
+    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, agreedToVisit = true)
+    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, agreedToVisit = false)
+
+    val recentPatients = patientRepository
+        .recentPatients(facilityUuid)
+        .blockingFirst()
+    assertThat(recentPatients).isEqualTo(listOf(recentPatient1))
+  }
+
   private fun savePatientWithAppointment(
       appointmentUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
@@ -1299,7 +1312,8 @@ class PatientRepositoryAndroidTest {
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
       status: Appointment.Status = SCHEDULED,
-      remindOn: LocalDate? = null
+      remindOn: LocalDate? = null,
+      agreedToVisit: Boolean? = null
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -1312,7 +1326,8 @@ class PatientRepositoryAndroidTest {
         updatedAt = updatedAt,
         deletedAt = deletedAt,
         status = status,
-        remindOn = remindOn
+        remindOn = remindOn,
+        agreedToVisit = agreedToVisit
     )
     database.appointmentDao().save(listOf(appointment))
     return patientProfile.patient.run {

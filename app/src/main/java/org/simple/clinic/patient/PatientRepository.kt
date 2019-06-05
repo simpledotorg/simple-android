@@ -10,6 +10,8 @@ import org.simple.clinic.analytics.OperationTimingTracker
 import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.overdue.Appointment
+import org.simple.clinic.overdue.Appointment.AppointmentType.*
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -480,12 +482,12 @@ class PatientRepository @Inject constructor(
 
   fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, SCHEDULED, limit)
+          .recentPatients(facilityUuid, SCHEDULED, Manual, limit)
           .toObservable()
 
   fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, SCHEDULED)
+          .recentPatients(facilityUuid, SCHEDULED, Manual)
           .toObservable()
 
   override fun pendingSyncRecordCount(): Observable<Int> {

@@ -35,6 +35,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
@@ -66,40 +67,42 @@ class BloodPressureEntrySheetControllerTest {
   private val bpValidator = mock<BpValidator>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private lateinit var controller: BloodPressureEntrySheetController
-
   private val patientUuid = UUID.randomUUID()
+
   private val testUtcClock = TestUtcClock()
   private val testUserClock = TestUserClock()
-
   private val userSession = mock<UserSession>()
-  private val facilityRepository = mock<FacilityRepository>()
 
+  private val facilityRepository = mock<FacilityRepository>()
   private val user = PatientMocker.loggedInUser()
+
   private val facility = PatientMocker.facility()
+  private val userSubject = PublishSubject.create<User>()
+
+  private val controller = BloodPressureEntrySheetController(
+      bloodPressureRepository = bloodPressureRepository,
+      appointmentRepository = appointmentRepository,
+      patientRepository = patientRepository,
+      dateValidator = dateValidator,
+      bpValidator = bpValidator,
+      userClock = testUserClock,
+      inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'),
+      userSession = userSession,
+      facilityRepository = facilityRepository)
 
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(dateValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(testUtcClock))
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
-
-    controller = BloodPressureEntrySheetController(
-        bloodPressureRepository = bloodPressureRepository,
-        appointmentRepository = appointmentRepository,
-        patientRepository = patientRepository,
-        dateValidator = dateValidator,
-        bpValidator = bpValidator,
-        userClock = testUserClock,
-        inputDatePaddingCharacter = UserInputDatePaddingCharacter('0'),
-        userSession = userSession,
-        facilityRepository = facilityRepository)
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
+
+    userSubject.onNext(user)
   }
 
   @Test
@@ -718,5 +721,31 @@ class BloodPressureEntrySheetControllerTest {
     verify(bloodPressureRepository, never()).saveMeasurement(any(), any(), any(), any(), any(), any())
     verify(appointmentRepository, never()).markAppointmentsCreatedBeforeTodayAsVisited(any())
     verify(sheet, never()).setBpSavedResultAndFinish()
+  }
+
+  @Test
+  @Parameters(value = [
+    "NOT_LOGGED_IN|false",
+    "OTP_REQUESTED|false",
+    "LOGGED_IN|false",
+    "RESETTING_PIN|false",
+    "RESET_PIN_REQUESTED|false",
+    "UNAUTHORIZED|true"
+  ])
+  fun `whenever the user status becomes unauthorized, then close the sheet`(
+      loggedInStatus: User.LoggedInStatus,
+      shouldCloseSheet: Boolean
+  ) {
+    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(facility))
+
+    verify(sheet, never()).finish()
+
+    userSubject.onNext(user.copy(loggedInStatus = loggedInStatus))
+
+    if(shouldCloseSheet) {
+      verify(sheet).finish()
+    } else {
+      verify(sheet, never()).finish()
+    }
   }
 }

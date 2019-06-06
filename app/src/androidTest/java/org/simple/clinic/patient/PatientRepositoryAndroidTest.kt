@@ -29,6 +29,7 @@ import org.simple.clinic.overdue.Appointment.Status
 import org.simple.clinic.overdue.Appointment.Status.CANCELLED
 import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
 import org.simple.clinic.overdue.Appointment.Status.VISITED
+import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationRepository
@@ -980,7 +981,8 @@ class PatientRepositoryAndroidTest {
         patientUuid = recentPatient2.uuid,
         updatedAt = testClock.instant(),
         status = SCHEDULED,
-        appointmentType = Manual
+        appointmentType = Manual,
+        cancelReason = null
     )
     appointmentRepository.save(listOf(appointment2)).blockingAwait()
 
@@ -996,7 +998,8 @@ class PatientRepositoryAndroidTest {
         patientUuid = recentPatient1.uuid,
         updatedAt = testClock.instant(),
         status = SCHEDULED,
-        appointmentType = Manual
+        appointmentType = Manual,
+        cancelReason = null
     )
     appointmentRepository.save(listOf(appointment1)).blockingAwait()
     communicationRepository.save(listOf(
@@ -1321,6 +1324,19 @@ class PatientRepositoryAndroidTest {
     assertThat(recentPatients).isEqualTo(listOf(recentPatient2))
   }
 
+  @Test
+  fun verify_only_patients_with_no_cancel_reason_are_included_when_fetching_recent_patients() {
+    val facilityUuid = UUID.randomUUID()
+    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, cancelReason = null)
+    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, cancelReason = AppointmentCancelReason.random())
+    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, cancelReason = null)
+
+    val recentPatients = patientRepository
+        .recentPatients(facilityUuid)
+        .blockingFirst()
+    assertThat(recentPatients).isEqualTo(listOf(recentPatient3, recentPatient1))
+  }
+
   private fun savePatientWithAppointment(
       appointmentUuid: UUID = UUID.randomUUID(),
       facilityUuid: UUID = testData.qaUserFacilityUuid(),
@@ -1331,7 +1347,8 @@ class PatientRepositoryAndroidTest {
       status: Status = SCHEDULED,
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
-      appointmentType: AppointmentType = Manual
+      appointmentType: AppointmentType = Manual,
+      cancelReason: AppointmentCancelReason? = null
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid)
     patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -1346,7 +1363,8 @@ class PatientRepositoryAndroidTest {
         status = status,
         remindOn = remindOn,
         agreedToVisit = agreedToVisit,
-        appointmentType = appointmentType
+        appointmentType = appointmentType,
+        cancelReason = cancelReason
     )
     database.appointmentDao().save(listOf(appointment))
     return patientProfile.patient.run {

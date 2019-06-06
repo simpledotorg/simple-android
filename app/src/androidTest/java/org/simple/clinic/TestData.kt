@@ -499,7 +499,7 @@ class TestData @Inject constructor(
       facilityUuid: UUID = qaUserFacilityUuid(),
       scheduledDate: LocalDate = LocalDate.now(UTC).plusDays(30),
       status: Appointment.Status = randomOfEnum(Appointment.Status::class),
-      cancelReason: AppointmentCancelReason = AppointmentCancelReason.random(),
+      cancelReason: AppointmentCancelReason? = AppointmentCancelReason.random(),
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
       appointmentType: Appointment.AppointmentType = Appointment.AppointmentType.random(),

@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.nullIfBlank
@@ -40,17 +41,20 @@ class CustomPrescriptionEntryControllerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val user = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
+  private val userSubject = PublishSubject.create<User>()
 
   private val controller = CustomPrescriptionEntryController(prescriptionRepository, userSession, facilityRepository)
 
   @Before
   fun setUp() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(sheet) }
+
+    userSubject.onNext(user)
   }
 
   @Test
@@ -208,5 +212,31 @@ class CustomPrescriptionEntryControllerTest {
     uiEvents.onNext(CustomPrescriptionSheetCreated(OpenAs.Update(prescriptionUuid)))
 
     verify(sheet).finish()
+  }
+
+  @Test
+  @Parameters(value = [
+    "NOT_LOGGED_IN|false",
+    "OTP_REQUESTED|false",
+    "LOGGED_IN|false",
+    "RESETTING_PIN|false",
+    "RESET_PIN_REQUESTED|false",
+    "UNAUTHORIZED|true"
+  ])
+  fun `whenever the user status becomes unauthorized, then close the sheet`(
+      loggedInStatus: User.LoggedInStatus,
+      shouldCloseSheet: Boolean
+  ) {
+    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(facility))
+
+    verify(sheet, never()).finish()
+
+    userSubject.onNext(user.copy(loggedInStatus = loggedInStatus))
+
+    if(shouldCloseSheet) {
+      verify(sheet).finish()
+    } else {
+      verify(sheet, never()).finish()
+    }
   }
 }

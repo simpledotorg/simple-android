@@ -8,6 +8,7 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -23,7 +24,10 @@ import org.simple.clinic.overdue.AppointmentCancelReason.Other
 import org.simple.clinic.overdue.AppointmentCancelReason.PatientNotResponding
 import org.simple.clinic.overdue.AppointmentCancelReason.TransferredToAnotherPublicHospital
 import org.simple.clinic.overdue.AppointmentRepository
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.User
+import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -41,12 +45,19 @@ class RemoveAppointmentScreenControllerTest {
   private val appointmentUuid = UUID.randomUUID()
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  lateinit var controller: RemoveAppointmentScreenController
+  val user = PatientMocker.loggedInUser()
+  val userSubject = PublishSubject.create<User>()
+  val userSession = mock<UserSession>()
+
+  val controller = RemoveAppointmentScreenController(repository, patientRepository, userSession)
 
   @Before
   fun setUp() {
-    controller = RemoveAppointmentScreenController(repository, patientRepository)
+    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
+
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
+
+    userSubject.onNext(user)
   }
 
   @Test
@@ -129,5 +140,29 @@ class RemoveAppointmentScreenControllerTest {
     inOrder.verify(sheet, atLeastOnce()).enableDoneButton()
     inOrder.verify(repository).markAsAlreadyVisited(appointmentUuid)
     inOrder.verify(sheet).closeScreen()
+  }
+
+  @Test
+  @Parameters(value = [
+    "NOT_LOGGED_IN|false",
+    "OTP_REQUESTED|false",
+    "LOGGED_IN|false",
+    "RESETTING_PIN|false",
+    "RESET_PIN_REQUESTED|false",
+    "UNAUTHORIZED|true"
+  ])
+  fun `whenever the user status becomes unauthorized, then close the sheet`(
+      loggedInStatus: User.LoggedInStatus,
+      shouldCloseSheet: Boolean
+  ) {
+    verify(sheet, never()).finish()
+
+    userSubject.onNext(user.copy(loggedInStatus = loggedInStatus))
+
+    if(shouldCloseSheet) {
+      verify(sheet).finish()
+    } else {
+      verify(sheet, never()).finish()
+    }
   }
 }

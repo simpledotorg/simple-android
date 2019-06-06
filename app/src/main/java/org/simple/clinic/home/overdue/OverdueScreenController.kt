@@ -18,6 +18,7 @@ import org.threeten.bp.LocalDateTime
 import org.threeten.bp.Period
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.temporal.ChronoUnit.DAYS
+import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = OverdueScreen
@@ -51,14 +52,11 @@ class OverdueScreenController @Inject constructor(
   }
 
   private fun screenSetup(events: Observable<UiEvent>): Observable<UiChange> {
-    val currentFacilityStream = userSession
-        .requireLoggedInUser()
-        .switchMap { facilityRepository.currentFacility(it) }
-
     val overdueAppointmentsStream = events
         .ofType<OverdueScreenCreated>()
-        .withLatestFrom(currentFacilityStream)
-        .flatMap { (_, currentFacility) -> appointmentRepository.overdueAppointments(currentFacility) }
+        .flatMap { userSession.requireLoggedInUser() }
+        .switchMap { facilityRepository.currentFacility(it) }
+        .flatMap { currentFacility -> appointmentRepository.overdueAppointments(currentFacility) }
         .replay()
         .refCount()
 

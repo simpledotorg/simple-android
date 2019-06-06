@@ -14,6 +14,7 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
@@ -42,7 +43,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
         dateIncrements(replayedEvents),
         dateDecrements(replayedEvents),
         schedulingSkips(replayedEvents),
-        scheduleCreates(replayedEvents))
+        scheduleCreates(replayedEvents),
+        closeSheetWhenUserBecomesUnauthorized())
   }
 
   private fun setupDefaultState(events: Observable<UiEvent>): Observable<UiChange> {
@@ -164,5 +166,12 @@ class ScheduleAppointmentSheetController @Inject constructor(
               .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual, currentFacility = currentFacility)
               .map { { ui: Ui -> ui.closeSheet(date) } }
         }
+  }
+
+  private fun closeSheetWhenUserBecomesUnauthorized(): Observable<UiChange> {
+    return userSession
+        .requireLoggedInUser()
+        .filter { user -> user.loggedInStatus == User.LoggedInStatus.UNAUTHORIZED }
+        .map { { ui: Ui -> ui.finish() } }
   }
 }

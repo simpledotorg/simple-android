@@ -12,6 +12,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -38,7 +39,8 @@ class DosagePickerSheetController @Inject constructor(
     return Observable.mergeArray(
         displayDosageList(replayedEvents),
         savePrescription(replayedEvents),
-        noneSelected(replayedEvents))
+        noneSelected(replayedEvents),
+        closeSheetWhenUserBecomesUnauthorized())
   }
 
   private fun displayDosageList(events: Observable<UiEvent>): Observable<UiChange> {
@@ -138,5 +140,12 @@ class DosagePickerSheetController @Inject constructor(
             is None -> Completable.complete()
           }
         }.andThen(Observable.just { ui: Ui -> ui.finish() })
+  }
+
+  private fun closeSheetWhenUserBecomesUnauthorized(): Observable<UiChange> {
+    return userSession
+        .requireLoggedInUser()
+        .filter { user -> user.loggedInStatus == User.LoggedInStatus.UNAUTHORIZED }
+        .map { { ui: Ui -> ui.finish() } }
   }
 }

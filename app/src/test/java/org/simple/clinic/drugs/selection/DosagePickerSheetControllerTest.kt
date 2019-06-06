@@ -9,9 +9,12 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.drugs.selection.dosage.DosageListItem
 import org.simple.clinic.drugs.selection.dosage.DosageOption
@@ -23,6 +26,7 @@ import org.simple.clinic.drugs.selection.dosage.NoneSelected
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.protocol.ProtocolRepository
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
@@ -30,6 +34,7 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
+@RunWith(JUnitParamsRunner::class)
 class DosagePickerSheetControllerTest {
 
   @get:Rule
@@ -37,24 +42,27 @@ class DosagePickerSheetControllerTest {
 
   private val protocolRepository = mock<ProtocolRepository>()
   private val userSession = mock<UserSession>()
-  private val screen = mock<DosagePickerSheet>()
+  private val sheet = mock<DosagePickerSheet>()
   private val facilityRepository = mock<FacilityRepository>()
   private val prescriptionRepository = mock<PrescriptionRepository>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val protocolUuid = UUID.randomUUID()
   private val user = PatientMocker.loggedInUser()
   private val currentFacility = PatientMocker.facility(protocolUuid = protocolUuid)
+  private val userSubject = PublishSubject.create<User>()
 
   private val controller = DosagePickerSheetController(userSession, facilityRepository, protocolRepository, prescriptionRepository)
 
   @Before
   fun setUp() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
+    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
 
     uiEvents
         .compose(controller)
-        .subscribe { uiChange -> uiChange(screen) }
+        .subscribe { uiChange -> uiChange(sheet) }
+
+    userSubject.onNext(user)
   }
 
   @Test
@@ -68,8 +76,9 @@ class DosagePickerSheetControllerTest {
     whenever(protocolRepository.drugsByNameOrDefault(drugName, protocolUuid)).thenReturn(Observable.just(listOf(protocolDrug1, protocolDrug2)))
 
     uiEvents.onNext(DosagePickerSheetCreated(drugName, patientUUID, None))
+    userSubject.onNext(user)
 
-    verify(screen).populateDosageList(listOf(
+    verify(sheet).populateDosageList(listOf(
         DosageListItem(DosageOption.Dosage(protocolDrug1)),
         DosageListItem(DosageOption.Dosage(protocolDrug2)),
         DosageListItem(DosageOption.None)
@@ -90,7 +99,7 @@ class DosagePickerSheetControllerTest {
 
     verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected, currentFacility)
     verify(prescriptionRepository, never()).softDeletePrescription(any())
-    verify(screen).finish()
+    verify(sheet).finish()
   }
 
   @Test
@@ -109,7 +118,7 @@ class DosagePickerSheetControllerTest {
 
     verify(prescriptionRepository, times(1)).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, times(1)).savePrescription(patientUUID, dosageSelected, currentFacility)
-    verify(screen).finish()
+    verify(sheet).finish()
   }
 
   @Test
@@ -126,5 +135,31 @@ class DosagePickerSheetControllerTest {
 
     verify(prescriptionRepository, times(1)).softDeletePrescription(existingPrescription.uuid)
     verify(prescriptionRepository, never()).savePrescription(any(), any(), any())
+  }
+
+  @Test
+  @Parameters(value = [
+    "NOT_LOGGED_IN|false",
+    "OTP_REQUESTED|false",
+    "LOGGED_IN|false",
+    "RESETTING_PIN|false",
+    "RESET_PIN_REQUESTED|false",
+    "UNAUTHORIZED|true"
+  ])
+  fun `whenever the user status becomes unauthorized, then close the sheet`(
+      loggedInStatus: User.LoggedInStatus,
+      shouldCloseSheet: Boolean
+  ) {
+    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(currentFacility))
+
+    verify(sheet, never()).finish()
+
+    userSubject.onNext(user.copy(loggedInStatus = loggedInStatus))
+
+    if(shouldCloseSheet) {
+      verify(sheet).finish()
+    } else {
+      verify(sheet, never()).finish()
+    }
   }
 }

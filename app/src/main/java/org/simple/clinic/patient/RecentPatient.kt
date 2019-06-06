@@ -75,6 +75,7 @@ data class RecentPatient(
               AND remindOn IS NULL
               AND agreedToVisit IS NULL
               AND appointmentType = :appointmentType
+              AND cancelReason IS NULL
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
           LEFT JOIN (

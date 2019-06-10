@@ -48,6 +48,7 @@ import org.simple.clinic.registration.facility.RegistrationFacilitySelectionScre
 import org.simple.clinic.registration.location.RegistrationLocationPermissionScreen
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
+import org.simple.clinic.registration.phone.loggedout.LoggedOutOfDeviceDialog
 import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.router.screen.ScreenRouter
@@ -127,6 +128,7 @@ interface TheActivityComponent {
   fun inject(target: PatientSearchResultView)
   fun inject(target: AllPatientsInFacilityView)
   fun inject(target: RegistrationLoadingScreen)
+  fun inject(target: LoggedOutOfDeviceDialog)
 
   @Subcomponent.Builder
   interface Builder {

@@ -7,6 +7,7 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
 import org.simple.clinic.login.LoginModule
@@ -44,7 +45,8 @@ import java.util.Locale
   UuidShortCodeCreatorModule::class,
   IdentifierDisplayAdapterModule::class,
   KeyChangeAnimatorModule::class,
-  OnboardingModule::class
+  OnboardingModule::class,
+  AppUpdateModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

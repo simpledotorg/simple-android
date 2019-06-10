@@ -35,11 +35,13 @@ class RegistrationPhoneScreenController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return Observable.merge(
+    return Observable.mergeArray(
         createEmptyOngoingEntryAndPreFill(replayedEvents),
         showValidationError(replayedEvents),
         hideValidationError(replayedEvents),
-        saveOngoingEntryAndProceed(replayedEvents))
+        saveOngoingEntryAndProceed(replayedEvents),
+        showLoggedOutOnThisDeviceDialog(replayedEvents)
+    )
   }
 
   private fun createEmptyOngoingEntryAndPreFill(events: Observable<UiEvent>): Observable<UiChange> {
@@ -156,4 +158,16 @@ class RegistrationPhoneScreenController @Inject constructor(
       createdAt = loggedInUserPayload.createdAt,
       updatedAt = loggedInUserPayload.updatedAt
   )
+
+  private fun showLoggedOutOnThisDeviceDialog(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<RegistrationPhoneScreenCreated>()
+        .flatMap {
+          userSession
+              .isUserUnauthorized()
+              .take(1)
+        }
+        .filter { isUserUnauthorized -> isUserUnauthorized }
+        .map { { ui: Ui -> ui.showLoggedOutOfDeviceDialog() } }
+  }
 }

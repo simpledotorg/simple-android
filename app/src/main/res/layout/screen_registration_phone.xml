@@ -32,7 +32,7 @@
 
       <TextView
         style="@style/Clinic.LoginCardTitle"
-        android:labelFor="@+id/registrationphone_phone"
+        android:labelFor="@+id/phoneNumberEditText"
         android:text="@string/registrationphone_phone_number_label" />
 
       <LinearLayout
@@ -54,7 +54,7 @@
           tools:ignore="Deprecated,LabelFor" />
 
         <EditText
-          android:id="@+id/registrationphone_phone"
+          android:id="@id/phoneNumberEditText"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:digits="1234567890"
@@ -66,7 +66,7 @@
       </LinearLayout>
 
       <TextView
-        android:id="@+id/registrationphone_error"
+        android:id="@+id/validationErrorTextView"
         style="@style/Clinic.V2.RegistrationInputError"
         android:layout_marginTop="@dimen/spacing_8"
         android:visibility="gone"
@@ -74,7 +74,7 @@
     </LinearLayout>
 
     <FrameLayout
-      android:id="@+id/registrationphone_progress"
+      android:id="@+id/progressView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:background="@color/white"

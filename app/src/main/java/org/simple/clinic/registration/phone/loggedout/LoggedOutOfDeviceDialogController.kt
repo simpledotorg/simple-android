@@ -25,7 +25,17 @@ class LoggedOutOfDeviceDialogController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return logoutUser(replayedEvents)
+    return Observable.merge(
+        disableOkayButtonOnStart(replayedEvents),
+        logoutUser(replayedEvents)
+    )
+  }
+
+  private fun disableOkayButtonOnStart(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<ScreenCreated>()
+        .firstOrError()
+        .flatMapObservable { Observable.just(Ui::disableOkayButton) }
   }
 
   private fun logoutUser(events: Observable<UiEvent>): Observable<UiChange> {

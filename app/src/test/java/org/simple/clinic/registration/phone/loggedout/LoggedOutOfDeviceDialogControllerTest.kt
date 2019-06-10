@@ -11,74 +11,85 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
+import org.junit.rules.TestRule
 import org.junit.runner.RunWith
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserSession.LogoutResult.Failure
 import org.simple.clinic.user.UserSession.LogoutResult.Success
+import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
 @RunWith(JUnitParamsRunner::class)
 class LoggedOutOfDeviceDialogControllerTest {
 
-  val dialog = mock<LoggedOutOfDeviceDialog>()
-  val userSession = mock<UserSession>()
-  val uiEvents = PublishSubject.create<UiEvent>()
+  @get:Rule
+  val rule: TestRule = RxErrorsRule()
 
-  val controller = LoggedOutOfDeviceDialogController(userSession)
+  private val dialog = mock<LoggedOutOfDeviceDialog>()
+  private val userSession = mock<UserSession>()
+  private val uiEvents = PublishSubject.create<UiEvent>()
+
+  private val controller = LoggedOutOfDeviceDialogController(userSession)
 
   @Before
   fun setUp() {
     RxJavaPlugins.setErrorHandler(null)
+
+    whenever(userSession.logout())
+        .thenReturn(Single.never())
+
     uiEvents
         .compose(controller)
         .subscribe({ uiChange -> uiChange(dialog) }, { throw it })
   }
 
   @Test
-  @Parameters(method = "params for enabling okay button")
-  fun `when the logout result completes successfully, the okay button must be enabled`(
-      logoutResult: UserSession.LogoutResult,
-      shouldEnableButton: Boolean
-  ) {
-    var thrownError: Throwable? = null
-    RxJavaPlugins.setErrorHandler { thrownError = it }
-    whenever(userSession.logout()).thenReturn(Single.just(logoutResult))
-
+  fun `when the dialog is created, the okay button must be disabled`() {
+    // when
     uiEvents.onNext(ScreenCreated())
 
-    if (shouldEnableButton) {
-      verify(dialog).enableOkayButton()
-      assertThat(thrownError).isNull()
-    } else {
-      verify(dialog, never()).enableOkayButton()
-      assertThat(thrownError).isNotNull()
-    }
+    // then
+    verify(dialog).disableOkayButton()
+  }
+
+  @Test
+  fun `when the logout result completes successfully, the okay button must be enabled`() {
+    // given
+    whenever(userSession.logout())
+        .thenReturn(Single.just(Success))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(dialog).enableOkayButton()
+  }
+
+  @Test
+  @Parameters(method = "params for logout result failures")
+  fun `when the logout fails, the error must be thrown`(logoutResult: UserSession.LogoutResult) {
+    // given
+    var thrownError: Throwable? = null
+    RxJavaPlugins.setErrorHandler { thrownError = it }
+    whenever(userSession.logout())
+        .thenReturn(Single.just(logoutResult))
+
+    // when
+    uiEvents.onNext(ScreenCreated())
+
+    // then
+    verify(dialog, never()).enableOkayButton()
+    assertThat(thrownError).isNotNull()
   }
 
   @Suppress("Unused")
-  fun `params for enabling okay button`(): List<List<Any>> {
-    fun testCase(
-        logoutResult: UserSession.LogoutResult,
-        shouldEnableButton: Boolean
-    ): List<Any> {
-      return listOf(logoutResult, shouldEnableButton)
-    }
-
+  fun `params for logout result failures`(): List<UserSession.LogoutResult> {
     return listOf(
-        testCase(
-            logoutResult = Success,
-            shouldEnableButton = true
-        ),
-        testCase(
-            logoutResult = Failure(RuntimeException()),
-            shouldEnableButton = false
-        ),
-        testCase(
-            logoutResult = Failure(NullPointerException()),
-            shouldEnableButton = false
-        )
+        Failure(RuntimeException()),
+        Failure(NullPointerException())
     )
   }
 }

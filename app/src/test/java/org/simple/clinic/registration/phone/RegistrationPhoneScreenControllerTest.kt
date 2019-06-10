@@ -9,11 +9,16 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
+import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
+import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
@@ -25,6 +30,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
+@RunWith(JUnitParamsRunner::class)
 class RegistrationPhoneScreenControllerTest {
 
   @get:Rule
@@ -34,13 +40,19 @@ class RegistrationPhoneScreenControllerTest {
   private val userSession = mock<UserSession>()
   private val numberValidator = mock<PhoneNumberValidator>()
 
-  private val uiEvents = PublishSubject.create<UiEvent>()!!
+  private val uiEvents: Subject<UiEvent> = PublishSubject.create<UiEvent>()
 
-  private lateinit var controller: RegistrationPhoneScreenController
+  private val controller: RegistrationPhoneScreenController = RegistrationPhoneScreenController(
+      userSession = userSession,
+      numberValidator = numberValidator
+  )
 
   @Before
   fun setUp() {
-    controller = RegistrationPhoneScreenController(userSession, numberValidator)
+    whenever(userSession.isOngoingRegistrationEntryPresent())
+        .thenReturn(Single.never())
+    whenever(userSession.isUserUnauthorized())
+        .thenReturn(Observable.never())
 
     uiEvents
         .compose(controller)
@@ -238,5 +250,25 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
     verify(screen, times(2)).hideAnyError()
+  }
+
+  @Test
+  @Parameters(value = [
+    "true|true",
+    "false|false"
+  ])
+  fun `when the screen is created and a local logged in user exists, show the logged out dialog if the user is unauthorized`(
+      isUserUnauthorized: Boolean,
+      shouldShowLoggedOutDialog: Boolean
+  ) {
+    whenever(userSession.isUserUnauthorized()).thenReturn(Observable.just(isUserUnauthorized))
+
+    uiEvents.onNext(RegistrationPhoneScreenCreated())
+
+    if (shouldShowLoggedOutDialog) {
+      verify(screen).showLoggedOutOfDeviceDialog()
+    } else {
+      verify(screen, never()).showLoggedOutOfDeviceDialog()
+    }
   }
 }

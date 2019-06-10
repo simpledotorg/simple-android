@@ -76,8 +76,6 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment() {
   }
 
   private fun setupDialog() {
-    okayButton.isEnabled = false
-
     bindUiToControllerWithoutDelay(
         ui = this,
         events = screenCreates(),
@@ -100,5 +98,9 @@ class LoggedOutOfDeviceDialog : AppCompatDialogFragment() {
 
   fun enableOkayButton() {
     okayButton.isEnabled = true
+  }
+
+  fun disableOkayButton() {
+    okayButton.isEnabled = false
   }
 }

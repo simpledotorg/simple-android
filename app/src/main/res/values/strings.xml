@@ -236,6 +236,9 @@
   <string name="registrationphone_error_invalid_number">Check phone number. It looks like it is too short.</string>
   <string name="registrationphone_error_unexpected_error">@string/api_unexpected_error</string>
   <string name="registrationphone_error_check_internet_connection">@string/api_network_error</string>
+  <string name="registration_loggedout_dialog_title">You have been logged out</string>
+  <string name="registration_loggedout_dialog_message">Please login again to continue</string>
+  <string name="registration_loggedout_dialog_confirm">Okay</string>
 
   <string name="registrationname_name_label">Tell us your full name</string>
   <string name="registrationname_error_empty_name">Please enter your full name</string>

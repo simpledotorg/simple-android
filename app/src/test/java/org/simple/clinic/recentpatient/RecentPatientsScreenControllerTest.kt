@@ -18,23 +18,18 @@ import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.summary.Today
+import org.simple.clinic.summary.WithinSixMonths
 import org.simple.clinic.summary.Yesterday
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
-import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -52,7 +47,6 @@ class RecentPatientsScreenControllerTest {
   private val loggedInUser = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
   private val relativeTimestampGenerator = RelativeTimestampGenerator()
-  private val dateFormatter: DateTimeFormatter = mock()
 
   @Before
   fun setUp() {
@@ -65,10 +59,7 @@ class RecentPatientsScreenControllerTest {
         patientRepository = patientRepository,
         facilityRepository = facilityRepository,
         relativeTimestampGenerator = relativeTimestampGenerator,
-        recentPatientRelativeTimestampGenerator = RecentPatientRelativeTimeStampGenerator(ZoneOffset.UTC),
-        utcClock = UtcClock(),
-        userClock = TestUserClock(),
-        dateFormatter = dateFormatter
+        utcClock = UtcClock()
     )
 
     uiEvents
@@ -87,14 +78,13 @@ class RecentPatientsScreenControllerTest {
 
     val today = Instant.now()
     val yesterday = today.minus(Duration.ofDays(1))
-    val twoDaysAgo = yesterday.minus(Duration.ofDays(2))
+    val twoDaysAgo = today.minus(Duration.ofDays(2))
     whenever(patientRepository.recentPatients(facility.uuid)).thenReturn(Observable.just(listOf(
         PatientMocker.recentPatient(
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
             gender = Gender.TRANSGENDER,
-            lastBp = RecentPatient.LastBp(systolic = 127, diastolic = 83, recordedAt = Instant.now()),
             updatedAt = today
         ),
         PatientMocker.recentPatient(
@@ -102,7 +92,6 @@ class RecentPatientsScreenControllerTest {
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
             gender = Gender.MALE,
-            lastBp = null,
             updatedAt = yesterday
         ),
         PatientMocker.recentPatient(
@@ -110,7 +99,6 @@ class RecentPatientsScreenControllerTest {
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = Gender.FEMALE,
-            lastBp = RecentPatient.LastBp(systolic = 142, diastolic = 72, recordedAt = Instant.now().minus(1, ChronoUnit.DAYS)),
             updatedAt = twoDaysAgo
         )
     )))
@@ -118,40 +106,26 @@ class RecentPatientsScreenControllerTest {
     uiEvents.onNext(ScreenCreated())
 
     verify(screen).updateRecentPatients(listOf(
-        DateHeader(RelativeTimestamp.Today, dateFormatter),
         RecentPatientItem(
             uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
-            lastBp = RecentPatientItem.LastBp(
-                systolic = 127,
-                diastolic = 83,
-                updatedAtRelativeTimestamp = Today
-            ),
             gender = Gender.TRANSGENDER,
-            updatedAt = today
+            updatedAt = Today
         ),
-        DateHeader(RelativeTimestamp.Yesterday, dateFormatter),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
-            lastBp = null,
             gender = Gender.MALE,
-            updatedAt = yesterday
+            updatedAt = Yesterday
         ),
-        DateHeader(RelativeTimestamp.OlderThanTwoDays(twoDaysAgo.toLocalDateAtZone(ZoneOffset.UTC)), dateFormatter),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
-            lastBp = RecentPatientItem.LastBp(
-                systolic = 142,
-                diastolic = 72,
-                updatedAtRelativeTimestamp = Yesterday
-            ),
             gender = Gender.FEMALE,
-            updatedAt = twoDaysAgo
+            updatedAt = WithinSixMonths(2)
         )
     ))
   }

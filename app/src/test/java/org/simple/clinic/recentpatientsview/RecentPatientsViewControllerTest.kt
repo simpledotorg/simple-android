@@ -21,9 +21,9 @@ import org.simple.clinic.patient.Gender.TRANSGENDER
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.RecentPatient.LastBp
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.summary.Today
+import org.simple.clinic.summary.WithinSixMonths
 import org.simple.clinic.summary.Yesterday
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -93,22 +93,21 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = TRANSGENDER,
-            lastBp = LastBp(systolic = 127, diastolic = 83, recordedAt = Instant.now())
+            gender = TRANSGENDER
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
             gender = MALE,
-            lastBp = null
+            updatedAt = Instant.now().minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = FEMALE,
-            lastBp = LastBp(systolic = 142, diastolic = 72, recordedAt = Instant.now().minus(1, ChronoUnit.DAYS))
+            updatedAt = Instant.now().minus(3, ChronoUnit.DAYS)
         )
     )))
 
@@ -119,30 +118,22 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
-            lastBp = RecentPatientItem.LastBp(
-                systolic = 127,
-                diastolic = 83,
-                updatedAtRelativeTimestamp = Today
-            ),
-            gender = TRANSGENDER
+            gender = TRANSGENDER,
+            updatedAt = Today
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
-            lastBp = null,
-            gender = MALE
+            gender = MALE,
+            updatedAt = Yesterday
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
-            lastBp = RecentPatientItem.LastBp(
-                systolic = 142,
-                diastolic = 72,
-                updatedAtRelativeTimestamp = Yesterday
-            ),
-            gender = FEMALE
+            gender = FEMALE,
+            updatedAt = WithinSixMonths(3)
         )
     ))
     verify(screen).showOrHideRecentPatients(isVisible = true)
@@ -162,29 +153,27 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = TRANSGENDER,
-            lastBp = LastBp(systolic = 127, diastolic = 83, recordedAt = Instant.now())
+            gender = TRANSGENDER
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
             gender = MALE,
-            lastBp = null
+            updatedAt = Instant.now().minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
             gender = FEMALE,
-            lastBp = LastBp(systolic = 142, diastolic = 72, recordedAt = Instant.now().minus(1, ChronoUnit.DAYS))
+            updatedAt = Instant.now().minus(4, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid4,
             fullName = "Abhilash Devi",
             age = Age(37, Instant.now(), LocalDate.MIN),
-            gender = TRANSGENDER,
-            lastBp = LastBp(systolic = 139, diastolic = 92, recordedAt = Instant.now().minus(3, ChronoUnit.DAYS))
+            gender = TRANSGENDER
         )
     )))
 
@@ -195,30 +184,22 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
-            lastBp = RecentPatientItem.LastBp(
-                systolic = 127,
-                diastolic = 83,
-                updatedAtRelativeTimestamp = Today
-            ),
-            gender = TRANSGENDER
+            gender = TRANSGENDER,
+            updatedAt = Today
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
-            lastBp = null,
-            gender = MALE
+            gender = MALE,
+            updatedAt = Yesterday
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
-            lastBp = RecentPatientItem.LastBp(
-                systolic = 142,
-                diastolic = 72,
-                updatedAtRelativeTimestamp = Yesterday
-            ),
-            gender = FEMALE
+            gender = FEMALE,
+            updatedAt = WithinSixMonths(4)
         ),
         SeeAllItem
     ))

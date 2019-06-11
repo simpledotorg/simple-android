@@ -47,7 +47,9 @@ class TheActivityController @Inject constructor(
     return Observable.mergeArray(
         showAppLock(replayedEvents),
         updateLockTime(replayedEvents),
-        displayUserLoggedOutOnOtherDevice(replayedEvents))
+        displayUserLoggedOutOnOtherDevice(replayedEvents),
+        redirectToLoginScreen()
+    )
   }
 
   private fun showAppLock(events: Observable<UiEvent>): Observable<UiChange> {
@@ -120,5 +122,13 @@ class TheActivityController @Inject constructor(
         }
       }
     }
+  }
+
+  private fun redirectToLoginScreen(): Observable<UiChange> {
+    return userSession
+        .isUserUnauthorized()
+        .distinctUntilChanged()
+        .filter { isUserUnauthorized -> isUserUnauthorized }
+        .map { Ui::redirectToLogin }
   }
 }

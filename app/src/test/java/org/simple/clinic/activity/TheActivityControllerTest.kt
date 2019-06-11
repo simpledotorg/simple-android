@@ -6,7 +6,9 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.check
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -35,7 +37,9 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
@@ -52,19 +56,22 @@ class TheActivityControllerTest {
   private val activity = mock<TheActivity>()
   private val userSession = mock<UserSession>()
   private val lockAfterTimestamp = mock<Preference<Instant>>()
-  private lateinit var hasUserCompletedOnboarding: Preference<Boolean>
-
+  private val hasUserCompletedOnboarding = mock<Preference<Boolean>>()
   private val uiEvents = PublishSubject.create<UiEvent>()
-  lateinit var controller: TheActivityController
+  private val userSubject = PublishSubject.create<Optional<User>>()
+  private val userUnauthorizedSubject = PublishSubject.create<Boolean>()
+
+  private val controller = TheActivityController(
+      userSession = userSession,
+      appLockConfig = Single.just(AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))),
+      lockAfterTimestamp = lockAfterTimestamp,
+      hasUserCompletedOnboarding = hasUserCompletedOnboarding
+  )
 
   @Before
   fun setUp() {
-    hasUserCompletedOnboarding = mock()
-
-    val appLockConfig = AppLockConfig(lockAfterTimeMillis = TimeUnit.MINUTES.toMillis(lockInMinutes))
-    controller = TheActivityController(userSession, Single.just(appLockConfig), lockAfterTimestamp, hasUserCompletedOnboarding)
-
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(PatientMocker.loggedInUser(loggedInStatus = NOT_LOGGED_IN))))
+    whenever(userSession.isUserUnauthorized()).thenReturn(userUnauthorizedSubject)
+    whenever(userSession.loggedInUser()).thenReturn(userSubject)
 
     uiEvents
         .compose(controller)
@@ -293,6 +300,63 @@ class TheActivityControllerTest {
     return arrayOf(
         arrayOf<Any>(true, RegistrationPhoneScreenKey()::class.java),
         arrayOf<Any>(false, OnboardingScreenKey()::class.java)
+    )
+  }
+
+  data class RedirectToSignInParams(
+      val userUnauthorizedValues: List<Boolean>,
+      val numberOfTimesShouldRedirectToSignIn: Int
+  )
+
+  @Test
+  @Parameters(method = "params for redirecting to sign in")
+  fun `whenever the user logged in status becomes unauthorized, the sign in screen must be shown`(testCase: RedirectToSignInParams) {
+    val (userUnauthorizedValues, numberOfTimesShouldRedirectToSignIn) = testCase
+    userUnauthorizedValues.forEach(userUnauthorizedSubject::onNext)
+
+    if (numberOfTimesShouldRedirectToSignIn > 0) {
+      verify(activity, times(numberOfTimesShouldRedirectToSignIn)).redirectToLogin()
+    } else {
+      verify(activity, never()).redirectToLogin()
+    }
+    verifyNoMoreInteractions(activity)
+  }
+
+  @Suppress("Unused")
+  private fun `params for redirecting to sign in`(): List<RedirectToSignInParams> {
+    return listOf(
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(true),
+            numberOfTimesShouldRedirectToSignIn = 1
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(false),
+            numberOfTimesShouldRedirectToSignIn = 0
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(true, true),
+            numberOfTimesShouldRedirectToSignIn = 1
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(true, false, true),
+            numberOfTimesShouldRedirectToSignIn = 2
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(false, true, true, false, true),
+            numberOfTimesShouldRedirectToSignIn = 2
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(false, false, false, false),
+            numberOfTimesShouldRedirectToSignIn = 0
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(true, true, true, true),
+            numberOfTimesShouldRedirectToSignIn = 1
+        ),
+        RedirectToSignInParams(
+            userUnauthorizedValues = listOf(true, false, true, false, true, false),
+            numberOfTimesShouldRedirectToSignIn = 3
+        )
     )
   }
 }

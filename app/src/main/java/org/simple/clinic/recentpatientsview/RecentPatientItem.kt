@@ -1,12 +1,11 @@
 package org.simple.clinic.recentpatientsview
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.view.View
-import com.xwray.groupie.ViewHolder
-import io.reactivex.subjects.Subject
 import android.widget.ImageView
 import android.widget.TextView
+import com.xwray.groupie.ViewHolder
+import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
@@ -14,7 +13,6 @@ import org.simple.clinic.recentpatientsview.SeeAllItem.SeeAllItemViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.summary.RelativeTimestamp
 import org.simple.clinic.widgets.UiEvent
-import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 
 sealed class RecentPatientItemType<VH : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<VH>(adapterId) {
@@ -25,8 +23,8 @@ data class RecentPatientItem(
     val uuid: UUID,
     val name: String,
     val age: Int,
-    val lastBp: LastBp?,
-    val gender: Gender
+    val gender: Gender,
+    val updatedAt: RelativeTimestamp
 ) : RecentPatientItemType<RecentPatientItem.RecentPatientViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
@@ -41,37 +39,24 @@ data class RecentPatientItem(
       uiEvents.onNext(RecentPatientItemClicked(patientUuid = uuid))
     }
 
-    viewHolder.render(name, age, lastBp, gender)
+    viewHolder.render(name, age, gender, updatedAt)
   }
-
-  data class LastBp(
-      val systolic: Int,
-      val diastolic: Int,
-      val updatedAtRelativeTimestamp: RelativeTimestamp
-  )
 
   class RecentPatientViewHolder(rootView: View) : ViewHolder(rootView) {
     private val nameAgeTextView by bindView<TextView>(R.id.recentpatient_item_title)
-    private val lastBpTextView by bindView<TextView>(R.id.recentpatient_item_last_bp)
-    private val lastBpLabel by bindView<View>(R.id.recentpatient_item_last_bp_label)
+    private val lastSeenTextView by bindView<TextView>(R.id.recentpatient_item_last_seen)
     private val genderImageView by bindView<ImageView>(R.id.recentpatient_item_gender)
 
+    @SuppressLint("SetTextI18n")
     fun render(
         name: String,
         age: Int,
-        lastBp: LastBp?,
-        gender: Gender
+        gender: Gender,
+        updatedAt: RelativeTimestamp
     ) {
       nameAgeTextView.text = itemView.resources.getString(R.string.patients_recentpatients_nameage, name, age)
-
-      val lastBpText = lastBpText(itemView.context, lastBp)
-      lastBpTextView.text = lastBpText
-      lastBpLabel.visibleOrGone(lastBpText.isNotBlank())
       genderImageView.setImageResource(gender.displayIconRes)
-    }
-
-    private fun lastBpText(context: Context, lastBp: LastBp?): String {
-      return lastBp?.run { "$systolic/$diastolic, ${updatedAtRelativeTimestamp.displayText(context)}" } ?: ""
+      lastSeenTextView.text = updatedAt.displayText(itemView.context)
     }
   }
 }

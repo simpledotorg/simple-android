@@ -11,15 +11,11 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.RecentPatient
 import org.simple.clinic.summary.RelativeTimestampGenerator
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
-import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
-import javax.inject.Named
 
 typealias Ui = RecentPatientsScreen
 typealias UiChange = (Ui) -> Unit
@@ -29,10 +25,7 @@ class RecentPatientsScreenController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val facilityRepository: FacilityRepository,
     private val relativeTimestampGenerator: RelativeTimestampGenerator,
-    private val recentPatientRelativeTimestampGenerator: RecentPatientRelativeTimeStampGenerator,
-    private val utcClock: UtcClock,
-    private val userClock: UserClock,
-    @Named("recent_patients_header") private val dateFormatter: DateTimeFormatter
+    private val utcClock: UtcClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -54,30 +47,15 @@ class RecentPatientsScreenController @Inject constructor(
             patientRepository.recentPatients(facility.uuid)
           }
           .map { it.map(::recentPatientItem) }
-          .map { segregateByDay(it) }
           .map { { ui: Ui -> ui.updateRecentPatients(it) } }
-
-  private fun segregateByDay(recentPatientItems: List<RecentPatientItem>) =
-      recentPatientItems.groupBy { it.updatedAt.toLocalDateAtZone(userClock.zone) }
-          .flatMap { (date, recentPatientItems) ->
-            val relativeTimestamp = recentPatientRelativeTimestampGenerator.generate(date)
-            listOf(DateHeader(relativeTimestamp, dateFormatter)) + recentPatientItems
-          }
 
   private fun recentPatientItem(recentPatient: RecentPatient) =
       RecentPatientItem(
           uuid = recentPatient.uuid,
           name = recentPatient.fullName,
           age = age(recentPatient),
-          lastBp = recentPatient.lastBp?.run {
-            RecentPatientItem.LastBp(
-                systolic = systolic,
-                diastolic = diastolic,
-                updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(recordedAt)
-            )
-          },
           gender = recentPatient.gender,
-          updatedAt = recentPatient.updatedAt
+          updatedAt = relativeTimestampGenerator.generate(recentPatient.updatedAt)
       )
 
   private fun age(recentPatient: RecentPatient): Int =

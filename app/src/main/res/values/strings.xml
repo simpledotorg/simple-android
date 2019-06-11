@@ -392,6 +392,9 @@
   <!-- Recent Patients -->
   <string name="recent_patients_toolbar_title">Recent patients</string>
 
+  <!-- Recent Patients Item View -->
+  <string name="recent_patients_itemview_last_seen">Last Seen:\u0020</string>
+
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
   <string name="addidtopatientsearchresults_to_patient">\u0020to\u00A0patient</string>

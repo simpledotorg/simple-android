@@ -23,9 +23,6 @@ data class RecentPatient(
     @Embedded(prefix = "age_")
     val age: Age?,
 
-    @Embedded(prefix = "last_bp_")
-    val lastBp: LastBp?,
-
     val updatedAt: Instant
 ) {
 
@@ -36,7 +33,6 @@ data class RecentPatient(
 
       const val RECENT_PATIENT_QUERY = """
         SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
-        LAST_BP.systolic last_bp_systolic, LAST_BP.diastolic last_bp_diastolic, LAST_BP.recordedAt last_bp_recordedAt,
         MAX(
             IFNULL(P.updatedAt, '0'),
             IFNULL(BP_FOR_ORDERING.latestRecordedAt, '0'),
@@ -46,12 +42,6 @@ data class RecentPatient(
             IFNULL(MH.latestUpdatedAt, '0')
         ) updatedAt
         FROM Patient P
-          LEFT JOIN (
-            SELECT MAX(recordedAt) latestCreatedAt, patientUuid, systolic, diastolic, recordedAt
-              FROM BloodPressureMeasurement
-              WHERE deletedAt IS NULL
-              GROUP BY patientUuid
-          ) LAST_BP ON P.uuid = LAST_BP.patientUuid
           LEFT JOIN (
             SELECT MAX(recordedAt) latestRecordedAt, patientUuid, facilityUuid
               FROM BloodPressureMeasurement
@@ -124,10 +114,4 @@ data class RecentPatient(
         appointmentType: AppointmentType
     ): Flowable<List<RecentPatient>>
   }
-
-  data class LastBp(
-      val systolic: Int,
-      val diastolic: Int,
-      val recordedAt: Instant
-  )
 }

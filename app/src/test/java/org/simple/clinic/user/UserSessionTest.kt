@@ -33,11 +33,9 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
-import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.PatientMocker
@@ -54,6 +52,7 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
+import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
 import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.WaitingForApproval
@@ -839,5 +838,108 @@ class UserSessionTest {
   @Suppress("Unused")
   private fun `params for failures during logout when pending sync records fails`(): List<Any> {
     return listOf(NullPointerException(), RuntimeException())
+  }
+
+  @Test
+  @Parameters(method = "params for checking if user is unauthorized")
+  fun `checking whether the user is unauthorized should work as expected`(
+      loggedInStatus: List<User.LoggedInStatus>,
+      expectedIsUnauthorized: List<Boolean>
+  ) {
+    val user = PatientMocker
+        .loggedInUser()
+        .let { userTemplate ->
+          loggedInStatus.map { userTemplate.copy(loggedInStatus = it) }
+        }
+        .map { listOf(it) }
+
+    whenever(userDao.user()).thenReturn(Flowable.fromIterable(user))
+
+    val isUnauthorized = userSession.isUserUnauthorized().blockingIterable().toList()
+
+    assertThat(isUnauthorized).isEqualTo(expectedIsUnauthorized)
+  }
+
+  @Suppress("Unused")
+  private fun `params for checking if user is unauthorized`(): List<List<Any>> {
+    fun testCase(
+        loggedInStatus: List<User.LoggedInStatus>,
+        expectedIsUnauthorized: List<Boolean>
+    ) = listOf(loggedInStatus, expectedIsUnauthorized)
+
+    return listOf(
+        testCase(
+            loggedInStatus = listOf(NOT_LOGGED_IN),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(NOT_LOGGED_IN, NOT_LOGGED_IN),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(OTP_REQUESTED),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(OTP_REQUESTED, OTP_REQUESTED),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(LOGGED_IN),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(LOGGED_IN, LOGGED_IN),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(RESETTING_PIN),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(RESETTING_PIN, RESETTING_PIN),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(RESET_PIN_REQUESTED),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(RESET_PIN_REQUESTED, RESET_PIN_REQUESTED),
+            expectedIsUnauthorized = listOf(false)
+        ),
+        testCase(
+            loggedInStatus = listOf(UNAUTHORIZED),
+            expectedIsUnauthorized = listOf(true)
+        ),
+        testCase(
+            loggedInStatus = listOf(UNAUTHORIZED, UNAUTHORIZED),
+            expectedIsUnauthorized = listOf(true)
+        ),
+        testCase(
+            loggedInStatus = listOf(UNAUTHORIZED, UNAUTHORIZED, UNAUTHORIZED),
+            expectedIsUnauthorized = listOf(true)
+        ),
+        testCase(
+            loggedInStatus = listOf(UNAUTHORIZED, UNAUTHORIZED, LOGGED_IN, UNAUTHORIZED, UNAUTHORIZED, LOGGED_IN),
+            expectedIsUnauthorized = listOf(true, false, true, false)
+        ),
+        testCase(
+            loggedInStatus = listOf(NOT_LOGGED_IN, UNAUTHORIZED),
+            expectedIsUnauthorized = listOf(false, true)
+        ),
+        testCase(
+            loggedInStatus = listOf(NOT_LOGGED_IN, UNAUTHORIZED, LOGGED_IN, UNAUTHORIZED),
+            expectedIsUnauthorized = listOf(false, true, false, true)
+        ),
+        testCase(
+            loggedInStatus = listOf(NOT_LOGGED_IN, UNAUTHORIZED, UNAUTHORIZED, LOGGED_IN, LOGGED_IN),
+            expectedIsUnauthorized = listOf(false, true, false)
+        ),
+        testCase(
+            loggedInStatus = listOf(NOT_LOGGED_IN, OTP_REQUESTED, LOGGED_IN, UNAUTHORIZED, LOGGED_IN, UNAUTHORIZED),
+            expectedIsUnauthorized = listOf(false, true, false, true)
+        )
+    )
   }
 }

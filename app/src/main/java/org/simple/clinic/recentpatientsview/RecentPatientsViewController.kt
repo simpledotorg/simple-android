@@ -95,14 +95,8 @@ class RecentPatientsViewController @Inject constructor(
           uuid = recentPatient.uuid,
           name = recentPatient.fullName,
           age = age(recentPatient),
-          lastBp = recentPatient.lastBp?.run {
-            RecentPatientItem.LastBp(
-                systolic = systolic,
-                diastolic = diastolic,
-                updatedAtRelativeTimestamp = relativeTimestampGenerator.generate(recordedAt)
-            )
-          },
-          gender = recentPatient.gender
+          gender = recentPatient.gender,
+          updatedAt = relativeTimestampGenerator.generate(recentPatient.updatedAt)
       )
 
   private fun age(recentPatient: RecentPatient): Int =

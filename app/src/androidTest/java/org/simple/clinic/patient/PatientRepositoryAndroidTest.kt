@@ -1094,43 +1094,6 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun verify_latest_bp_is_fetched_using_recordedAt_when_fetching_recent_patients() {
-    val facilityUuid = UUID.randomUUID()
-    val patientUuid = UUID.randomUUID()
-
-    val createdAt = Instant.now(clock)
-
-    savePatientWithBp(
-        facilityUuid = facilityUuid,
-        patientUuid = patientUuid,
-        createdAt = createdAt,
-        updatedAt = createdAt,
-        recordedAt = createdAt)
-
-    val recentPatient = patientRepository
-        .recentPatients(facilityUuid)
-        .blockingFirst()
-        .first()
-    assertThat(createdAt).isEqualTo(recentPatient.lastBp!!.recordedAt)
-
-    val recordedTimeOf2ndBp = createdAt.plusSeconds(5)
-    val updateTimeOf2ndBp = createdAt.plusSeconds(10)
-    savePatientWithBp(
-        facilityUuid = facilityUuid,
-        patientUuid = patientUuid,
-        createdAt = createdAt,
-        updatedAt = updateTimeOf2ndBp,
-        recordedAt = recordedTimeOf2ndBp
-    )
-
-    val recentPatientAfter2ndBp = patientRepository
-        .recentPatients(facilityUuid)
-        .blockingFirst()
-        .first()
-    assertThat(recordedTimeOf2ndBp).isEqualTo(recentPatientAfter2ndBp.lastBp!!.recordedAt)
-  }
-
-  @Test
   fun verify_deleted_bps_are_not_included_when_fetching_recent_patients() {
     val facilityUuid = testData.qaUserFacilityUuid()
     val recentPatient1 = savePatientWithBp(facilityUuid = facilityUuid)
@@ -1163,7 +1126,7 @@ class PatientRepositoryAndroidTest {
         recordedAt = recordedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
-    return patientProfile.patient.toRecentPatient(bpMeasurement)
+    return patientProfile.patient.toRecentPatient()
   }
 
   private fun savePatientWithBpWithTestClock(
@@ -1188,20 +1151,15 @@ class PatientRepositoryAndroidTest {
         recordedAt = recordedAt
     )
     database.bloodPressureDao().save(listOf(bpMeasurement))
-    return patientProfile.patient.toRecentPatient(bpMeasurement)
+    return patientProfile.patient.toRecentPatient()
   }
 
-  private fun Patient.toRecentPatient(bpMeasurement: BloodPressureMeasurement) = RecentPatient(
+  private fun Patient.toRecentPatient() = RecentPatient(
       uuid = uuid,
       fullName = fullName,
       gender = gender,
       dateOfBirth = dateOfBirth,
       age = age,
-      lastBp = RecentPatient.LastBp(
-          systolic = bpMeasurement.systolic,
-          diastolic = bpMeasurement.diastolic,
-          recordedAt = bpMeasurement.recordedAt
-      ),
       updatedAt = updatedAt
   )
 
@@ -1253,7 +1211,6 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           dateOfBirth = dateOfBirth,
           age = age,
-          lastBp = null,
           updatedAt = this.updatedAt
       )
     }
@@ -1374,7 +1331,6 @@ class PatientRepositoryAndroidTest {
           gender = gender,
           dateOfBirth = dateOfBirth,
           age = age,
-          lastBp = null,
           updatedAt = this.updatedAt
       )
     }

@@ -473,6 +473,13 @@ class UserSession @Inject constructor(
         }
   }
 
+  fun isUserUnauthorized(): Observable<Boolean> {
+    return loggedInUser()
+        .filterAndUnwrapJust()
+        .map { user -> user.loggedInStatus == UNAUTHORIZED }
+        .distinctUntilChanged()
+  }
+
   sealed class LogoutResult {
     object Success : LogoutResult()
     data class Failure(val cause: Throwable) : LogoutResult()

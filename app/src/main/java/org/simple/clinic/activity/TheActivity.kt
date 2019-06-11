@@ -1,5 +1,6 @@
 package org.simple.clinic.activity
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -15,6 +16,7 @@ import org.simple.clinic.R
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.home.patients.LoggedOutOnOtherDeviceDialog
 import org.simple.clinic.login.applock.AppLockScreenKey
+import org.simple.clinic.registration.phone.RegistrationPhoneScreenKey
 import org.simple.clinic.router.ScreenResultBus
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ActivityResult
@@ -22,6 +24,7 @@ import org.simple.clinic.router.screen.FullScreenKey
 import org.simple.clinic.router.screen.FullScreenKeyChanger
 import org.simple.clinic.router.screen.KeyChangeAnimator
 import org.simple.clinic.router.screen.NestedKeyChanger
+import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.screen.FullScreenKeyChangeAnimator
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -46,6 +49,7 @@ class TheActivity : AppCompatActivity() {
 
   private val screenResults: ScreenResultBus = ScreenResultBus()
 
+  @SuppressLint("CheckResult")
   override fun onPostCreate(savedInstanceState: Bundle?) {
     super.onPostCreate(savedInstanceState)
     @Suppress("ConstantConditionIf")
@@ -121,5 +125,9 @@ class TheActivity : AppCompatActivity() {
   // screens when the user gets verified in the background.
   fun showUserLoggedOutOnOtherDeviceAlert() {
     LoggedOutOnOtherDeviceDialog.show(supportFragmentManager)
+  }
+
+  fun redirectToLogin() {
+    screenRouter.clearHistoryAndPush(RegistrationPhoneScreenKey(), RouterDirection.REPLACE)
   }
 }

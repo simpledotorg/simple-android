@@ -34,7 +34,7 @@ class LoginPinScreenController @Inject constructor(
     return events.ofType<PinScreenCreated>()
         .flatMapSingle { _ ->
           userSession.ongoingLoginEntry()
-              .map { { ui: Ui -> ui.showPhoneNumber(it.phoneNumber) } }
+              .map { { ui: Ui -> ui.showPhoneNumber(it.phoneNumber!!) } }
         }
   }
 

@@ -104,7 +104,7 @@ class UserSession @Inject constructor(
   fun loginWithOtp(otp: String): Single<LoginResult> {
     return ongoingLoginEntry()
         .doOnSubscribe { Timber.i("Logging in with OTP") }
-        .map { LoginRequest(UserPayload(it.phoneNumber, it.pin!!, otp)) }
+        .map { LoginRequest(UserPayload(it.phoneNumber!!, it.pin!!, otp)) }
         .flatMap { loginApi.login(it) }
         .flatMap {
           storeUserAndAccessToken(it)

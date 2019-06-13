@@ -1,6 +1,5 @@
 package org.simple.clinic.home.overdue
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.GONE
@@ -9,10 +8,9 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
@@ -20,28 +18,30 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.marginLayoutParams
 import org.simple.clinic.widgets.setCompoundDrawableStart
+import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import javax.inject.Inject
 
-class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, OverdueListViewHolder>(OverdueListDiffer()) {
-
-  private lateinit var recyclerView: RecyclerView
-
-  val itemClicks = PublishSubject.create<UiEvent>()!!
+class OverdueListAdapter @Inject constructor() : RecyclerView.Adapter<OverdueListViewHolder>() {
 
   companion object {
-    const val OVERDUE_PATIENT = R.layout.item_overdue_list_patient
+    private const val OVERDUE_PATIENT = R.layout.item_overdue_list_patient
   }
 
-  override fun onAttachedToRecyclerView(rv: RecyclerView) {
-    super.onAttachedToRecyclerView(rv)
-    recyclerView = rv
-  }
+  var items: List<OverdueListItem> = emptyList()
+    set(value) {
+      field = value
+      notifyDataSetChanged()
+    }
+
+  val itemClicks: Subject<UiEvent> = PublishSubject.create()
 
   override fun getItemViewType(position: Int) =
-      when (getItem(position)) {
+      when (items[position]) {
         is OverdueListItem.Patient -> OVERDUE_PATIENT
       }
+
+  override fun getItemCount(): Int = items.size
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
@@ -50,7 +50,7 @@ class OverdueListAdapter @Inject constructor() : ListAdapter<OverdueListItem, Ov
 
   override fun onBindViewHolder(holder: OverdueListViewHolder, position: Int) {
     if (holder is OverdueListViewHolder.Patient) {
-      holder.appointment = getItem(position) as OverdueListItem.Patient
+      holder.appointment = items[position] as OverdueListItem.Patient
       holder.render()
     }
   }
@@ -70,14 +70,16 @@ sealed class OverdueListItem {
       val bpDaysAgo: Int,
       val overdueDays: Int,
       val isAtHighRisk: Boolean
-  ) : OverdueListItem()
+  ) : OverdueListItem() {
+    var cardExpanded = false
+  }
 }
 
 sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
   class Patient(
       itemView: View,
-      private val eventStream: PublishSubject<UiEvent>
+      private val eventStream: Subject<UiEvent>
   ) : OverdueListViewHolder(itemView) {
 
     private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
@@ -96,8 +98,12 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
     init {
       itemView.apply {
         setOnClickListener {
-          toggleBottomLayoutVisibility()
-          togglePhoneNumberViewVisibility()
+          appointment.cardExpanded = appointment.cardExpanded.not()
+          if (appointment.cardExpanded) {
+            eventStream.onNext(AppointmentExpanded(appointment.patientUuid))
+          }
+          updateBottomLayoutVisibility()
+          updatePhoneNumberViewVisibility()
 
           post {
             val itemLocation = locationRectOnScreen()
@@ -127,24 +133,12 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
       }
     }
 
-    private fun toggleBottomLayoutVisibility() {
-      val isVisible = actionsContainer.visibility == VISIBLE
-      actionsContainer.visibility =
-          if (isVisible) {
-            GONE
-          } else {
-            eventStream.onNext(AppointmentExpanded(appointment.patientUuid))
-            VISIBLE
-          }
+    private fun updateBottomLayoutVisibility() {
+      actionsContainer.visibleOrGone(appointment.cardExpanded)
     }
 
-    private fun togglePhoneNumberViewVisibility() {
-      val isVisible = phoneNumberTextView.visibility == VISIBLE
-      if (!isVisible && appointment.phoneNumber != null) {
-        phoneNumberTextView.visibility = VISIBLE
-      } else {
-        phoneNumberTextView.visibility = GONE
-      }
+    private fun updatePhoneNumberViewVisibility() {
+      phoneNumberTextView.visibleOrGone(appointment.cardExpanded && appointment.phoneNumber != null)
     }
 
     fun render() {
@@ -171,19 +165,9 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
           appointment.overdueDays,
           appointment.overdueDays
       )
+
+      updateBottomLayoutVisibility()
+      updatePhoneNumberViewVisibility()
     }
   }
-}
-
-class OverdueListDiffer : DiffUtil.ItemCallback<OverdueListItem>() {
-
-  override fun areItemsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean =
-      if (oldItem is OverdueListItem.Patient && newItem is OverdueListItem.Patient) {
-        oldItem.appointmentUuid == newItem.appointmentUuid
-      } else {
-        oldItem == newItem
-      }
-
-  @SuppressLint("DiffUtilEquals")
-  override fun areContentsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean = oldItem == newItem
 }

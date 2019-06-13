@@ -64,7 +64,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   private fun screenCreates() = Observable.just(OverdueScreenCreated())
 
   fun updateList(overdueListItems: List<OverdueListItem>) {
-    overdueListAdapter.submitList(overdueListItems)
+    overdueListAdapter.items = overdueListItems
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

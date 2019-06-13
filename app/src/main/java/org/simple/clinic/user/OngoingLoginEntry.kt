@@ -7,13 +7,28 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity(tableName = "OngoingLoginEntry")
 data class OngoingLoginEntry(
     @PrimaryKey val uuid: UUID,
-    val phoneNumber: String = "",
-    val pin: String? = ""
+
+    val phoneNumber: String? = null,
+
+    val pin: String? = null,
+
+    val fullName: String? = null,
+
+    val pinDigest: String? = null,
+
+    val registrationFacilityUuid: UUID? = null,
+
+    val status: UserStatus? = null,
+
+    val createdAt: Instant? = null,
+
+    val updatedAt: Instant? = null
 ) {
 
   @Dao

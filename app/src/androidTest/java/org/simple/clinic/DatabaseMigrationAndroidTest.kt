@@ -15,6 +15,7 @@ import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
 import org.simple.clinic.storage.inTransaction
+import org.simple.clinic.user.User
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -2692,6 +2693,370 @@ class DatabaseMigrationAndroidTest {
     val dbV43 = helper.migrateTo(43)
     dbV43.assertTableDoesNotExist("Communication")
   }
+
+  @Test
+  fun migrating_ongoing_login_entry_to_44_should_add_the_new_columns() {
+    val db_v43 = helper.createDatabase(43)
+    val tableName = "OngoingLoginEntry"
+
+    db_v43.assertColumns(
+        tableName = tableName,
+        expectedColumns = setOf("uuid", "phoneNumber", "pin")
+    )
+
+    val db_v44 = helper.migrateTo(44)
+
+    db_v44.assertColumns(
+        tableName = tableName,
+        expectedColumns = setOf(
+            "uuid", "phoneNumber", "pin",
+            "fullName", "pinDigest", "registrationFacilityUuid",
+            "status", "createdAt", "updatedAt"
+        )
+    )
+  }
+
+  @Test
+  fun migrating_existing_ongoing_login_entry_to_44_should_migrate_exiting_data_from_not_logged_in_user() {
+    fun createFacility(
+        db: SupportSQLiteDatabase,
+        facilityUuid: UUID
+    ) {
+      require(db.version == 43) { "Required DB version: 43; Found: ${db.version}" }
+      db.execSQL("""
+      INSERT INTO "Facility"
+      VALUES (
+        '$facilityUuid',
+        'Facility',
+        'Facility type',
+        'Street address',
+        'Village or colony',
+        'District',
+        'State',
+        'Country',
+        'Pin code',
+        NULL,
+        NULL,
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        'PENDING',
+        NULL,
+        NULL,
+        NULL
+      )
+    """
+      )
+    }
+
+    fun createUser(
+        db: SupportSQLiteDatabase,
+        userUuid: String,
+        facilityUuid: UUID,
+        name: String,
+        phoneNumber: String,
+        pinDigest: String,
+        status: String,
+        createdAt: String,
+        updatedAt: String,
+        loggedInStatus: User.LoggedInStatus
+    ) {
+      require(db.version == 43) { "Required DB version: 43; Found: ${db.version}" }
+      db.execSQL("""
+        INSERT INTO "LoggedInUser"
+        VALUES (
+          '$userUuid',
+          '$name',
+          '$phoneNumber',
+          '$pinDigest',
+          '$status',
+          '$createdAt',
+          '$updatedAt',
+          '$loggedInStatus'
+        )
+      """)
+
+      db.execSQL("""
+        INSERT INTO "LoggedInUserFacilityMapping"
+        VALUES (
+          '$userUuid',
+          '$facilityUuid',
+          1
+        )
+      """)
+    }
+
+    fun createLoginEntry(
+        db: SupportSQLiteDatabase,
+        userUuid: String,
+        pin: String
+    ) {
+      require(db.version == 43) { "Required DB version: 43; Found: ${db.version}" }
+      db.execSQL("""
+        INSERT INTO "OngoingLoginEntry"
+        VALUES (
+          '$userUuid',
+          '',
+          '$pin'
+        )
+      """)
+    }
+
+    fun verifyLoginEntryPresent(
+        db: SupportSQLiteDatabase,
+        userUuid: String,
+        facilityUuid: UUID,
+        name: String,
+        phoneNumber: String,
+        pin: String,
+        pinDigest: String,
+        status: String,
+        createdAt: String,
+        updatedAt: String
+    ) {
+      require(db.version == 44) { "Required DB version: 44; Found: ${db.version}" }
+      db.query("""
+        SELECT * FROM "OngoingLoginEntry"
+        WHERE "uuid" = '$userUuid'
+      """
+      ).use { cursor ->
+        assertThat(cursor.count).isEqualTo(1)
+        cursor.moveToFirst()
+
+        assertThat(cursor.string("fullName")).isEqualTo(name)
+        assertThat(cursor.string("phoneNumber")).isEqualTo(phoneNumber)
+        assertThat(cursor.string("pin")).isEqualTo(pin)
+        assertThat(cursor.string("pinDigest")).isEqualTo(pinDigest)
+        assertThat(cursor.string("registrationFacilityUuid")).isEqualTo(facilityUuid.toString())
+        assertThat(cursor.string("status")).isEqualTo(status)
+        assertThat(cursor.string("createdAt")).isEqualTo(createdAt)
+        assertThat(cursor.string("updatedAt")).isEqualTo(updatedAt)
+      }
+    }
+
+    fun verifyLoginEntryAbsent(db: SupportSQLiteDatabase, userUuid: String) {
+      require(db.version == 44) { "Required DB version: 44; Found: ${db.version}" }
+      db.query("""
+        SELECT * FROM "OngoingLoginEntry"
+        WHERE "uuid" = '$userUuid'
+      """
+      ).use { cursor ->
+        assertThat(cursor.count).isEqualTo(0)
+      }
+    }
+
+    fun verifyUserPresent(db: SupportSQLiteDatabase, userUuid: String) {
+      require(db.version == 44) { "Required DB version: 44; Found: ${db.version}" }
+      db.query("""
+        SELECT * FROM "LoggedInUser"
+        WHERE "uuid" = '$userUuid'
+      """
+      ).use { cursor ->
+        assertThat(cursor.count).isEqualTo(1)
+      }
+    }
+
+    fun verifyUserAbsent(db: SupportSQLiteDatabase, userUuid: String) {
+      require(db.version == 44) { "Required DB version: 44; Found: ${db.version}" }
+      db.query("""
+        SELECT * FROM "LoggedInUser"
+        WHERE "uuid" = '$userUuid'
+      """
+      ).use { cursor ->
+        assertThat(cursor.count).isEqualTo(0)
+      }
+    }
+
+    data class TestCase(
+        val uuid: UUID,
+        val name: String,
+        val phoneNumber: String,
+        val pinDigest: String,
+        val status: String,
+        val createdAt: String,
+        val updatedAt: String,
+        val loggedInStatus: User.LoggedInStatus,
+        val pin: String,
+        val createUserBeforeMigration: Boolean = true,
+        val createLoginEntryBeforeMigration: Boolean = true,
+        val shouldUserBePresentAfterMigration: Boolean,
+        val shouldLoginEntryBePresentAfterMigration: Boolean
+    )
+
+    val notLoggedInUserTestCase = TestCase(
+        uuid = UUID.fromString("b2e149db-6184-4ad1-9bd9-333a3bfd2061"),
+        name = "Not Logged In User",
+        phoneNumber = "phone 1",
+        pinDigest = "pin digest 1",
+        status = "allowed",
+        createdAt = "created 1",
+        updatedAt = "updated 1",
+        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
+        pin = "pin 1",
+        shouldUserBePresentAfterMigration = false,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+    val otpRequestedUserTestCase = TestCase(
+        uuid = UUID.fromString("af518d41-2a3b-48df-8c89-dda9b3c721b5"),
+        name = "OTP Requested User",
+        phoneNumber = "phone 2",
+        pinDigest = "pin digest 2",
+        status = "allowed",
+        createdAt = "created 2",
+        updatedAt = "updated 2",
+        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED,
+        pin = "pin 2",
+        shouldUserBePresentAfterMigration = true,
+        shouldLoginEntryBePresentAfterMigration = true
+    )
+    val loggedInUserTestCase = TestCase(
+        uuid = UUID.fromString("6da6169b-c235-41d3-b252-70343aae7df9"),
+        name = "Logged In User",
+        phoneNumber = "phone 3",
+        pinDigest = "pin digest 3",
+        status = "allowed",
+        createdAt = "created 3",
+        updatedAt = "updated 3",
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN,
+        pin = "pin 3",
+        shouldUserBePresentAfterMigration = true,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+    val resettingPinUserTestCase = TestCase(
+        uuid = UUID.fromString("462ea175-0f42-4662-a4aa-b68bb92482b1"),
+        name = "Resetting PIN User",
+        phoneNumber = "phone 4",
+        pinDigest = "pin digest 4",
+        status = "allowed",
+        createdAt = "created 4",
+        updatedAt = "updated 4",
+        loggedInStatus = User.LoggedInStatus.RESETTING_PIN,
+        pin = "pin 4",
+        shouldUserBePresentAfterMigration = true,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+    val resetPinRequestedUserTestCase = TestCase(
+        uuid = UUID.fromString("0a01ea29-7860-4d75-b595-7a1460f7082c"),
+        name = "Reset PIN Requested User",
+        phoneNumber = "phone 5",
+        pinDigest = "pin digest 5",
+        status = "allowed",
+        createdAt = "created 5",
+        updatedAt = "updated 5",
+        loggedInStatus = User.LoggedInStatus.RESET_PIN_REQUESTED,
+        pin = "pin 5",
+        shouldUserBePresentAfterMigration = true,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+    val unauthorizedTestCase = TestCase(
+        uuid = UUID.fromString("534b6bb1-1b12-4e68-95dd-faa68a1cc3b0"),
+        name = "Unauthorized User",
+        phoneNumber = "phone 6",
+        pinDigest = "pin digest 6",
+        status = "allowed",
+        createdAt = "created 6",
+        updatedAt = "updated 6",
+        loggedInStatus = User.LoggedInStatus.UNAUTHORIZED,
+        pin = "pin 6",
+        shouldUserBePresentAfterMigration = true,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+    val userNotPresentTestCase = TestCase(
+        uuid = UUID.fromString("fee6e4a8-fdea-4f4f-8e12-95c66978e7bf"),
+        name = "Not Present User",
+        phoneNumber = "phone 7",
+        pinDigest = "pin digest 7",
+        status = "allowed",
+        createdAt = "created 7",
+        updatedAt = "updated 7",
+        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
+        pin = "pin 7",
+        createUserBeforeMigration = false,
+        shouldUserBePresentAfterMigration = false,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+    val newlyRegisteredUserTestCase = TestCase(
+        uuid = UUID.fromString("238d4b62-b043-4e55-a2f9-8385dc745bdd"),
+        name = "Newly Registered User",
+        phoneNumber = "phone 8",
+        pinDigest = "pin digest 8",
+        status = "requested",
+        createdAt = "created 8",
+        updatedAt = "updated 8",
+        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN,
+        pin = "pin 8",
+        createLoginEntryBeforeMigration = false,
+        shouldUserBePresentAfterMigration = false,
+        shouldLoginEntryBePresentAfterMigration = false
+    )
+
+    val testCases = listOf(
+        notLoggedInUserTestCase,
+        otpRequestedUserTestCase,
+        loggedInUserTestCase,
+        resettingPinUserTestCase,
+        resetPinRequestedUserTestCase,
+        unauthorizedTestCase,
+        userNotPresentTestCase,
+        newlyRegisteredUserTestCase
+    )
+
+    testCases.forEach { testCase ->
+      // given
+      val db_v43 = helper.createDatabase(43)
+      val facilityUuid = UUID.fromString("77cf0466-6446-473a-830d-ca49bb1607f4")
+      createFacility(db = db_v43, facilityUuid = facilityUuid)
+
+      if (testCase.createUserBeforeMigration) {
+        createUser(
+            db = db_v43,
+            userUuid = testCase.uuid.toString(),
+            facilityUuid = facilityUuid,
+            name = testCase.name,
+            phoneNumber = testCase.phoneNumber,
+            pinDigest = testCase.pinDigest,
+            status = testCase.status,
+            createdAt = testCase.createdAt,
+            updatedAt = testCase.updatedAt,
+            loggedInStatus = testCase.loggedInStatus
+        )
+      }
+
+      if (testCase.createLoginEntryBeforeMigration) {
+        createLoginEntry(
+            db = db_v43,
+            userUuid = testCase.uuid.toString(),
+            pin = testCase.pin
+        )
+      }
+
+      // when
+      val db_v44 = helper.migrateTo(44)
+
+      // then
+      if (testCase.shouldUserBePresentAfterMigration) {
+        verifyUserPresent(db = db_v44, userUuid = testCase.uuid.toString())
+      } else {
+        verifyUserAbsent(db = db_v44, userUuid = testCase.uuid.toString())
+      }
+
+      if (testCase.shouldLoginEntryBePresentAfterMigration) {
+        verifyLoginEntryPresent(
+            db = db_v44,
+            userUuid = testCase.uuid.toString(),
+            facilityUuid = facilityUuid,
+            name = testCase.name,
+            phoneNumber = testCase.phoneNumber,
+            pin = testCase.pin,
+            pinDigest = testCase.pinDigest,
+            status = testCase.status,
+            createdAt = testCase.createdAt,
+            updatedAt = testCase.updatedAt
+        )
+      } else {
+        verifyLoginEntryAbsent(db = db_v44, userUuid = testCase.uuid.toString())
+      }
+    }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))
@@ -2720,5 +3085,14 @@ private fun SupportSQLiteDatabase.assertTableExists(tableName: String) {
     SELECT DISTINCT "tbl_name" FROM "sqlite_master" WHERE "tbl_name"='$tableName'
     """).use {
     assertWithMessage("Expected that [$tableName] exists, but found it does not exist").that(it.count).isEqualTo(1)
+  }
+}
+
+private fun SupportSQLiteDatabase.assertColumns(tableName: String, expectedColumns: Set<String>) {
+  query("""
+    SELECT * FROM "$tableName" LIMIT 0
+  """).use { cursor ->
+    val columnsPresentInDatabase = cursor.columnNames.toSet()
+    assertThat(columnsPresentInDatabase).isEqualTo(expectedColumns)
   }
 }

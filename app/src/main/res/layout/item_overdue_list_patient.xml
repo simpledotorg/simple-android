@@ -69,8 +69,7 @@
           android:layout_marginStart="@dimen/spacing_56"
           android:drawablePadding="@dimen/spacing_4"
           android:drawableStart="@drawable/ic_call_16dp"
-          android:gravity="center"
-          android:visibility="gone" />
+          android:gravity="center" />
 
         <LinearLayout
           android:layout_width="wrap_content"
@@ -118,8 +117,7 @@
       android:layout_below="@+id/patient_details"
       android:orientation="vertical"
       android:paddingBottom="@dimen/spacing_8"
-      android:paddingTop="@dimen/spacing_16"
-      android:visibility="gone">
+      android:paddingTop="@dimen/spacing_16">
 
       <TextView
         style="@style/Clinic.V2.TextAppearance.Body2Tag.Grey1"

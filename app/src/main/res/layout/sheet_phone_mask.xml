@@ -36,7 +36,7 @@
     android:layout_marginTop="@dimen/spacing_32"
     android:clipToPadding="false"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/spacing_8"
+    android:paddingBottom="@dimen/spacing_12"
     android:paddingEnd="@dimen/spacing_16"
     tools:ignore="RtlSymmetry">
 

@@ -170,7 +170,7 @@ class UserSessionAndroidTest {
         .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
-    val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber).blockingGet()
+    val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber!!).blockingGet()
     assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
 
     val foundUserPayload = (findUserResult as FindUserResult.Found).user
@@ -214,7 +214,7 @@ class UserSessionAndroidTest {
         .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
-    val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber).blockingGet()
+    val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber!!).blockingGet()
     assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
 
     val foundUser = (findUserResult as FindUserResult.Found).user

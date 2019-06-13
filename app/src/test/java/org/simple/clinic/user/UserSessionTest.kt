@@ -141,7 +141,8 @@ class UserSessionTest {
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(appDatabase.userDao()).thenReturn(userDao)
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    whenever(ongoingLoginEntryRepository.entry()).thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "982312441")))
+    whenever(ongoingLoginEntryRepository.entry())
+        .thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "982312441", pin = "")))
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()

@@ -3,6 +3,7 @@ package org.simple.clinic.security.pin
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
@@ -11,7 +12,6 @@ import org.simple.clinic.security.ComparisonResult.SAME
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection.ProtectedState
 import org.simple.clinic.security.pin.PinEntryCardView.State
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -23,7 +23,6 @@ typealias Ui = PinEntryCardView
 typealias UiChange = (Ui) -> Unit
 
 class PinEntryCardController @Inject constructor(
-    private val userSession: UserSession,
     private val passwordHasher: PasswordHasher,
     private val utcClock: UtcClock,
     private val bruteForceProtection: BruteForceProtection
@@ -37,7 +36,6 @@ class PinEntryCardController @Inject constructor(
 
     return Observable.merge(
         validatePin(replayedEvents),
-        removeErrorOnSubmit(replayedEvents),
         blockWhenAuthenticationLimitIsReached(replayedEvents),
         updateIncorrectPinError(replayedEvents))
   }
@@ -54,19 +52,28 @@ class PinEntryCardController @Inject constructor(
   }
 
   private fun validatePin(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<PinSubmitClicked>()
+    val pinDigestToVerifyStream = events
+        .ofType<PinDigestToVerify>()
+        .map { it.pinDigest }
+
+    val submittedPinStream = events
+        .ofType<PinSubmitClicked>()
         .map { it.pin }
-        .flatMap { pin ->
-          val cachedPinValidation = userSession.requireLoggedInUser()
-              .take(1)
-              .flatMapSingle { user -> passwordHasher.compare(user.pinDigest, pin) }
+
+    return Observables.combineLatest(pinDigestToVerifyStream, submittedPinStream)
+        .flatMap { (pinDigestToVerify, submittedPin) ->
+          val cachedPinValidation = passwordHasher.compare(pinDigestToVerify, submittedPin)
+              .toObservable()
               .replay()
               .refCount()
 
           val progressUiChanges = cachedPinValidation
               .filter { it == DIFFERENT }
               .map { { ui: Ui -> ui.moveToState(State.PinEntry) } }
-              .startWith { ui: Ui -> ui.moveToState(State.Progress) }
+              .startWith { ui: Ui ->
+                ui.hideError()
+                ui.moveToState(State.Progress)
+              }
 
           val recordAttempts = cachedPinValidation
               .switchMap {
@@ -79,7 +86,7 @@ class PinEntryCardController @Inject constructor(
           val validationResultUiChange = cachedPinValidation
               .map {
                 when (it) {
-                  SAME -> { ui: Ui -> ui.dispatchAuthenticatedCallback(pin) }
+                  SAME -> { ui: Ui -> ui.dispatchAuthenticatedCallback(submittedPin) }
                   DIFFERENT -> { ui: Ui -> ui.clearPin() }
                 }
               }
@@ -143,11 +150,5 @@ class PinEntryCardController @Inject constructor(
             }
           }
         }
-  }
-
-  private fun removeErrorOnSubmit(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<PinSubmitClicked>()
-        .map { { ui: Ui -> ui.hideError() } }
   }
 }

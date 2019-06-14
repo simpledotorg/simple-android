@@ -36,7 +36,7 @@ class AppLockScreenControllerTest {
   @Before
   fun setUp() {
     controller = AppLockScreenController(userSession, facilityRepository, lastUnlockTimestamp)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(loggedInUser)))
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(loggedInUser))
 
     uiEvents
         .compose(controller)
@@ -54,7 +54,7 @@ class AppLockScreenControllerTest {
 
   @Test
   fun `On start, the logged in user's full name should be shown`() {
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.never())
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.never())
 
     uiEvents.onNext(AppLockScreenCreated())
     verify(screen).setUserFullName(loggedInUser.fullName)
@@ -64,7 +64,7 @@ class AppLockScreenControllerTest {
   fun `On start, the currently selected facility should be shown`() {
     val facility1 = PatientMocker.facility(name = "facility1")
     val facility2 = PatientMocker.facility(name = "facility2")
-    whenever(facilityRepository.currentFacility(userSession)).thenReturn(Observable.just(facility1, facility2))
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.just(facility1, facility2))
 
     uiEvents.onNext(AppLockScreenCreated())
     verify(screen).setFacilityName(facility1.name)
@@ -75,5 +75,13 @@ class AppLockScreenControllerTest {
   fun `when forgot pin is clicked then the confirm forgot pin alert must be shown`() {
     uiEvents.onNext(AppLockForgotPinClicked())
     verify(screen).showConfirmResetPinDialog()
+  }
+
+  @Test
+  fun `when the screen is created the pin digest to verify must be forwarded to the screen`() {
+    whenever(facilityRepository.currentFacility(loggedInUser)).thenReturn(Observable.never())
+    uiEvents.onNext(AppLockScreenCreated())
+
+    verify(screen).unlockWithPinDigest(loggedInUser.pinDigest)
   }
 }

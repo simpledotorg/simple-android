@@ -26,7 +26,8 @@ class LoginPinScreenController @Inject constructor(
     return Observable.merge(
         screenSetups(replayedEvents),
         submitClicks(replayedEvents),
-        backClicks(replayedEvents))
+        backClicks(replayedEvents),
+        readPinDigestToVerify(replayedEvents))
   }
 
   private fun screenSetups(events: Observable<UiEvent>): Observable<UiChange> {
@@ -66,5 +67,13 @@ class LoginPinScreenController @Inject constructor(
               .andThen(userSession.clearOngoingLoginEntry())
               .andThen(Observable.just({ ui: Ui -> ui.goBackToRegistrationScreen() }))
         }
+  }
+
+  private fun readPinDigestToVerify(events: Observable<UiEvent>): Observable<UiChange> {
+    return events.ofType<PinScreenCreated>()
+        .flatMap { userSession.requireLoggedInUser() }
+        .take(1)
+        .map { it.pinDigest }
+        .map { pinDigestToVerify -> { ui: Ui -> ui.submitWithPinDigest(pinDigestToVerify) } }
   }
 }

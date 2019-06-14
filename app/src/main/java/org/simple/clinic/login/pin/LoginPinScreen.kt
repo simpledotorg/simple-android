@@ -17,6 +17,7 @@ import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.security.pin.PinEntryCardView.State
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -113,5 +114,9 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   fun goBackToRegistrationScreen() {
     screenRouter.pop()
+  }
+
+  fun submitWithPinDigest(pinDigest: String) {
+    pinEntryCardView.upstreamUiEvents.onNext(PinDigestToVerify(pinDigest))
   }
 }

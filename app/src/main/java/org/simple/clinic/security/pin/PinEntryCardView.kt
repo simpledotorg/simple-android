@@ -22,6 +22,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.util.exhaustive
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.StaggeredEditText
+import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.hideKeyboard
 import org.simple.clinic.widgets.setPaddingBottom
@@ -45,6 +46,8 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   private val successfulAuthSubject = PublishSubject.create<PinAuthenticated>()
   val successfulAuthentications: Observable<PinAuthenticated> = successfulAuthSubject.hide()
 
+  val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
+
   sealed class State {
     object PinEntry : State()
     object Progress : State()
@@ -66,7 +69,11 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(viewCreated(), pinTextChanges()),
+        events = Observable.merge(
+            viewCreated(),
+            pinTextChanges(),
+            upstreamUiEvents
+        ),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )

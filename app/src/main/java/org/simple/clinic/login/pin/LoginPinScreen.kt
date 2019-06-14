@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -17,6 +18,7 @@ import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.security.pin.PinEntryCardView.State
@@ -65,7 +67,8 @@ class LoginPinScreen(context: Context, attrs: AttributeSet) : RelativeLayout(con
 
   private fun pinAuthentications() =
       pinEntryCardView
-          .successfulAuthentications
+          .downstreamUiEvents
+          .ofType<PinAuthenticated>()
           .map { LoginPinAuthenticated(it.pin) }
 
   private fun backClicks(): Observable<PinBackClicked> {

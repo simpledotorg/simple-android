@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -15,6 +16,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.security.pin.PinAuthenticated
 import org.simple.clinic.security.pin.PinDigestToVerify
 import org.simple.clinic.security.pin.PinEntryCardView
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -87,7 +89,8 @@ class AppLockScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   private fun pinAuthentications() =
       pinEntryCardView
-          .successfulAuthentications
+          .downstreamUiEvents
+          .ofType<PinAuthenticated>()
           .map { AppLockPinAuthenticated() }
 
   fun setUserFullName(fullName: String) {

@@ -42,11 +42,8 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   private val timeRemainingTillUnlockTextView by bindView<TextView>(R.id.pinentry_bruteforcelock_time_remaining)
   private val errorTextView by bindView<TextView>(R.id.pinentry_error)
   val forgotPinButton by bindView<Button>(R.id.pinentry_forgotpin)
-
-  private val successfulAuthSubject = PublishSubject.create<PinAuthenticated>()
-  val successfulAuthentications: Observable<PinAuthenticated> = successfulAuthSubject.hide()
-
   val upstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
+  val downstreamUiEvents: PublishSubject<UiEvent> = PublishSubject.create<UiEvent>()
 
   sealed class State {
     object PinEntry : State()
@@ -153,7 +150,7 @@ class PinEntryCardView(context: Context, attrs: AttributeSet) : CardView(context
   }
 
   fun dispatchAuthenticatedCallback(enteredPin: String) {
-    successfulAuthSubject.onNext(PinAuthenticated(enteredPin))
+    downstreamUiEvents.onNext(PinAuthenticated(enteredPin))
   }
 
   /** Defaults to visible. */

@@ -194,11 +194,11 @@ class UserSession @Inject constructor(
         .map { user -> FindUserResult.Found(user) as FindUserResult }
         .onErrorReturn { e ->
           when {
-            e is IOException -> FindUserResult.NetworkError()
-            e is HttpException && e.code() == 404 -> FindUserResult.NotFound()
+            e is IOException -> FindUserResult.NetworkError
+            e is HttpException && e.code() == 404 -> FindUserResult.NotFound
             else -> {
               Timber.e(e)
-              FindUserResult.UnexpectedError()
+              FindUserResult.UnexpectedError
             }
           }
         }

@@ -8,14 +8,13 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.FindUserResult.Found
 import org.simple.clinic.registration.FindUserResult.NetworkError
 import org.simple.clinic.registration.FindUserResult.NotFound
 import org.simple.clinic.registration.FindUserResult.UnexpectedError
-import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
+import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
@@ -127,11 +126,11 @@ class RegistrationPhoneScreenController @Inject constructor(
               .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
 
           val proceedToLogin = cachedUserFindResult
-              .ofType<FindUserResult.Found>()
+              .ofType<Found>()
               .flatMap(this::saveFoundUserLocallyAndProceedToLogin)
 
           val proceedWithRegistration = cachedUserFindResult
-              .ofType<FindUserResult.NotFound>()
+              .ofType<NotFound>()
               .flatMap { _ ->
                 userSession.ongoingRegistrationEntry()
                     .map { it.copy(phoneNumber = number) }
@@ -144,29 +143,31 @@ class RegistrationPhoneScreenController @Inject constructor(
   }
 
   private fun saveFoundUserLocallyAndProceedToLogin(foundUser: Found): Observable<UiChange> {
-    return userSession
-        .saveOngoingLoginEntry(OngoingLoginEntry(uuid = foundUser.user.uuid, phoneNumber = foundUser.user.phoneNumber))
+    return Single.just(foundUser.user)
+        .map(this::loggedInUserPayloadToOngoingLoginEntry)
+        .flatMapCompletable(userSession::saveOngoingLoginEntry)
         .andThen(userSession.clearOngoingRegistrationEntry())
-        .andThen(
-            userSession
-                .syncFacilityAndSaveUser(foundUser.user)
-                .flatMap {
-                  Single.just(when (it) {
-                    is SaveUserLocallyResult.Success -> { ui: Ui ->
-                      ui.hideProgressIndicator()
-                      ui.openLoginPinEntryScreen()
-                    }
-                    is SaveUserLocallyResult.NetworkError -> { ui: Ui ->
-                      ui.hideProgressIndicator()
-                      ui.showNetworkErrorMessage()
-                    }
-                    is SaveUserLocallyResult.UnexpectedError -> { ui: Ui ->
-                      ui.hideProgressIndicator()
-                      ui.showUnexpectedErrorMessage()
-                    }
-                  })
-                }.toObservable()
-                .startWith(Observable.just({ ui: Ui -> ui.hideAnyError() }, { ui: Ui -> ui.showProgressIndicator() }))
-        )
+        .andThen(Observable.just { ui: Ui ->
+          ui.hideProgressIndicator()
+          ui.openLoginPinEntryScreen()
+        })
+        .onErrorReturn {
+          { ui: Ui ->
+            ui.hideProgressIndicator()
+            ui.showUnexpectedErrorMessage()
+          }
+        }
   }
+
+  private fun loggedInUserPayloadToOngoingLoginEntry(loggedInUserPayload: LoggedInUserPayload) = OngoingLoginEntry(
+      uuid = loggedInUserPayload.uuid,
+      phoneNumber = loggedInUserPayload.phoneNumber,
+      pin = null,
+      fullName = loggedInUserPayload.fullName,
+      pinDigest = loggedInUserPayload.pinDigest,
+      registrationFacilityUuid = loggedInUserPayload.registrationFacilityId,
+      status = loggedInUserPayload.status,
+      createdAt = loggedInUserPayload.createdAt,
+      updatedAt = loggedInUserPayload.updatedAt
+  )
 }

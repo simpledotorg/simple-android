@@ -44,6 +44,7 @@ class LoginPinScreenControllerTest {
 
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(localUser)))
     whenever(userSession.loggedInUserImmediate()).thenReturn(localUser)
+    whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(localUser))
   }
 
   @Test
@@ -103,5 +104,13 @@ class LoginPinScreenControllerTest {
 
     uiEvents.onNext(PinBackClicked())
     verify(userSession).clearOngoingLoginEntry()
+  }
+
+  @Test
+  fun `when the screen is created, the pin digest to verify must be forwarded to the screen`() {
+    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.never<OngoingLoginEntry>())
+    uiEvents.onNext(PinScreenCreated())
+
+    verify(screen).submitWithPinDigest(localUser.pinDigest)
   }
 }

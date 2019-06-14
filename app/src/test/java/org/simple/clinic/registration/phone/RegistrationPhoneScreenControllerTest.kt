@@ -14,18 +14,16 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.registration.FindUserResult
-import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.MOBILE
-import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
-import java.util.UUID
 
 class RegistrationPhoneScreenControllerTest {
 
@@ -103,7 +101,7 @@ class RegistrationPhoneScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).thenReturn(Completable.complete())
     whenever(numberValidator.validate(validNumber, MOBILE)).thenReturn(VALID)
-    whenever(userSession.findExistingUser(validNumber)).thenReturn(Single.just(FindUserResult.NotFound()))
+    whenever(userSession.findExistingUser(validNumber)).thenReturn(Single.just(FindUserResult.NotFound))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(validNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
@@ -119,7 +117,7 @@ class RegistrationPhoneScreenControllerTest {
     val validNumber = "1234567890"
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(OngoingRegistrationEntry()))
     whenever(userSession.saveOngoingRegistrationEntry(OngoingRegistrationEntry(phoneNumber = validNumber))).thenReturn(Completable.complete())
-    whenever(userSession.findExistingUser(validNumber)).thenReturn(Single.just(FindUserResult.NotFound()))
+    whenever(userSession.findExistingUser(validNumber)).thenReturn(Single.just(FindUserResult.NotFound))
 
     whenever(numberValidator.validate(invalidNumber, MOBILE)).thenReturn(LENGTH_TOO_SHORT)
     whenever(numberValidator.validate(validNumber, MOBILE)).thenReturn(VALID)
@@ -172,8 +170,8 @@ class RegistrationPhoneScreenControllerTest {
     val inputNumber = "1234567890"
 
     whenever(userSession.findExistingUser(inputNumber))
-        .thenReturn(Single.just(FindUserResult.UnexpectedError()))
-        .thenReturn(Single.just(FindUserResult.NetworkError()))
+        .thenReturn(Single.just(FindUserResult.UnexpectedError))
+        .thenReturn(Single.just(FindUserResult.NetworkError))
 
     whenever(numberValidator.validate(inputNumber, MOBILE)).thenReturn(VALID)
 
@@ -190,13 +188,9 @@ class RegistrationPhoneScreenControllerTest {
   @Test
   fun `when the phone number belongs to an existing user then an ongoing login entry should be created and login PIN entry screen should be opened`() {
     val inputNumber = "1234567890"
-    val mockUser = mock<LoggedInUserPayload>()
-    val userId = UUID.randomUUID()
-    whenever(mockUser.uuid).thenReturn(userId)
-    whenever(mockUser.phoneNumber).thenReturn(inputNumber)
+    val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber)
 
-    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(mockUser)))
-    whenever(userSession.syncFacilityAndSaveUser(any())).thenReturn(Single.just(SaveUserLocallyResult.Success()))
+    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).thenReturn(VALID)
     whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.complete())
@@ -204,40 +198,46 @@ class RegistrationPhoneScreenControllerTest {
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = inputNumber))
-    verify(userSession).syncFacilityAndSaveUser(mockUser)
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(
+        uuid = userPayload.uuid,
+        phoneNumber = inputNumber,
+        pin = null,
+        fullName = userPayload.fullName,
+        pinDigest = userPayload.pinDigest,
+        registrationFacilityUuid = userPayload.registrationFacilityId,
+        status = userPayload.status,
+        createdAt = userPayload.createdAt,
+        updatedAt = userPayload.updatedAt
+    ))
     verify(userSession).clearOngoingRegistrationEntry()
     verify(screen).openLoginPinEntryScreen()
   }
 
   @Test
-  fun `when the phone number belongs to an existing user and save user locally fails, an error should be shown`() {
+  fun `when the phone number belongs to an existing user and creating ongoing entry fails, an error should be shown`() {
     val inputNumber = "1234567890"
-    val mockUser = mock<LoggedInUserPayload>()
-    val userId = UUID.randomUUID()
-    whenever(mockUser.uuid).thenReturn(userId)
-    whenever(mockUser.phoneNumber).thenReturn(inputNumber)
+    val userPayload = PatientMocker.loggedInUserPayload(phone = inputNumber)
 
-    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(mockUser)))
-
-    whenever(userSession.syncFacilityAndSaveUser(any())).thenReturn(
-        Single.just(SaveUserLocallyResult.NetworkError()),
-        Single.just(SaveUserLocallyResult.UnexpectedError())
-    )
-
+    whenever(userSession.findExistingUser(inputNumber)).thenReturn(Single.just(FindUserResult.Found(userPayload)))
     whenever(numberValidator.validate(inputNumber, MOBILE)).thenReturn(VALID)
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.error(RuntimeException()))
 
     uiEvents.onNext(RegistrationPhoneNumberTextChanged(inputNumber))
     uiEvents.onNext(RegistrationPhoneDoneClicked())
-    uiEvents.onNext(RegistrationPhoneDoneClicked())
 
-    verify(userSession, times(2)).saveOngoingLoginEntry(OngoingLoginEntry(uuid = userId, phoneNumber = inputNumber))
-    verify(userSession, times(2)).syncFacilityAndSaveUser(mockUser)
-    verify(userSession, times(2)).clearOngoingRegistrationEntry()
+    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(
+        uuid = userPayload.uuid,
+        phoneNumber = inputNumber,
+        pin = null,
+        fullName = userPayload.fullName,
+        pinDigest = userPayload.pinDigest,
+        registrationFacilityUuid = userPayload.registrationFacilityId,
+        status = userPayload.status,
+        createdAt = userPayload.createdAt,
+        updatedAt = userPayload.updatedAt
+    ))
     verify(screen, never()).openLoginPinEntryScreen()
-    verify(screen).showNetworkErrorMessage()
     verify(screen).showUnexpectedErrorMessage()
   }
 

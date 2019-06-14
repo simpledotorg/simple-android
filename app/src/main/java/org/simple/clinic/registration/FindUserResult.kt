@@ -6,9 +6,9 @@ sealed class FindUserResult {
 
   data class Found(val user: LoggedInUserPayload) : FindUserResult()
 
-  class NotFound : FindUserResult()
+  object NotFound : FindUserResult()
 
-  class NetworkError : FindUserResult()
+  object NetworkError : FindUserResult()
 
-  class UnexpectedError : FindUserResult()
+  object UnexpectedError : FindUserResult()
 }

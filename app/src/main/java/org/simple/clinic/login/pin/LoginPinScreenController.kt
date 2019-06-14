@@ -71,8 +71,7 @@ class LoginPinScreenController @Inject constructor(
 
   private fun readPinDigestToVerify(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<PinScreenCreated>()
-        .flatMap { userSession.requireLoggedInUser() }
-        .take(1)
+        .flatMapSingle { userSession.ongoingLoginEntry() }
         .map { it.pinDigest }
         .map { pinDigestToVerify -> { ui: Ui -> ui.submitWithPinDigest(pinDigestToVerify) } }
   }

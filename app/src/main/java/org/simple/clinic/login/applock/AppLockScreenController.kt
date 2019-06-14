@@ -8,9 +8,7 @@ import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.Just
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import javax.inject.Inject
@@ -35,25 +33,26 @@ class AppLockScreenController @Inject constructor(
         populateFacilityName(replayedEvents),
         unlockOnAuthentication(replayedEvents),
         exitOnBackClick(replayedEvents),
-        showConfirmResetPinDialog(replayedEvents))
+        showConfirmResetPinDialog(replayedEvents),
+        readPinDigestToVerify(replayedEvents)
+    )
   }
 
   private fun populateFullName(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenCreated>()
-        .flatMap { _ ->
-          userSession.loggedInUser()
-              .filter { it is Just<User> }
-              .map { (user) -> user!! }
-              .map { it.fullName }
-        }
+        .flatMap { userSession.requireLoggedInUser() }
+        .take(1)
+        .map { loggedInUser -> loggedInUser.fullName }
         .map { { ui: Ui -> ui.setUserFullName(it) } }
   }
 
   private fun populateFacilityName(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppLockScreenCreated>()
-        .flatMap { facilityRepository.currentFacility(userSession) }
+        .flatMap { userSession.requireLoggedInUser() }
+        .take(1)
+        .switchMap { loggedInUser -> facilityRepository.currentFacility(loggedInUser) }
         .map { { ui: Ui -> ui.setFacilityName(it.name) } }
   }
 
@@ -80,5 +79,14 @@ class AppLockScreenController @Inject constructor(
     return events
         .ofType<AppLockForgotPinClicked>()
         .map { { ui: Ui -> ui.showConfirmResetPinDialog() } }
+  }
+
+  private fun readPinDigestToVerify(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<AppLockScreenCreated>()
+        .flatMap { userSession.requireLoggedInUser() }
+        .take(1)
+        .map { loggedInUser -> loggedInUser.pinDigest }
+        .map { unlockWithPinDigest -> { ui: Ui -> ui.unlockWithPinDigest(unlockWithPinDigest) } }
   }
 }

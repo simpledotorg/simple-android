@@ -24,7 +24,7 @@ data class RecentPatientItem(
     val name: String,
     val age: Int,
     val gender: Gender,
-    val updatedAt: RelativeTimestamp
+    val lastSeenTimestamp: RelativeTimestamp
 ) : RecentPatientScreenItemTypes<RecentPatientItemViewHolder>(uuid.hashCode().toLong()) {
 
   override fun getLayout(): Int = R.layout.recent_patient_item_view
@@ -36,7 +36,7 @@ data class RecentPatientItem(
     viewHolder.apply {
       titleTextView.text = "$name, $age"
 
-      lastSeenTextView.text = updatedAt.displayText(itemView.context)
+      lastSeenTextView.text = lastSeenTimestamp.displayText(itemView.context)
       genderImageView.setImageResource(gender.displayIconRes)
 
       itemView.setOnClickListener {

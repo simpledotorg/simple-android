@@ -111,21 +111,21 @@ class RecentPatientsScreenControllerTest {
             name = "Ajay Kumar",
             age = 42,
             gender = Gender.TRANSGENDER,
-            updatedAt = Today
+            lastSeenTimestamp = Today
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
             gender = Gender.MALE,
-            updatedAt = Yesterday
+            lastSeenTimestamp = Yesterday
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
             gender = Gender.FEMALE,
-            updatedAt = WithinSixMonths(2)
+            lastSeenTimestamp = WithinSixMonths(2)
         )
     ))
   }

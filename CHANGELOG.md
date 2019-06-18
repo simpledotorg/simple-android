@@ -4,6 +4,9 @@
 ### Feature
 - Show "Last Seen" time of patient in recent patients list instead of "Last BP"
 
+### Internal
+- Change PinEntryCardView to accept PIN digest to verify externally instead of reading from UserSession
+
 ## 2019-06-17-4397
 - Show 10 recent patients on the home screen, and the rest on a separate screen
 - While calling patients, nurses can choose between phone call or secure anonymous call

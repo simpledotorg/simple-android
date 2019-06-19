@@ -18,6 +18,7 @@ import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 import javax.inject.Inject
@@ -33,9 +34,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var controller: OverdueScreenController
 
-  @Inject
-  lateinit var overdueListAdapter: OverdueListAdapter
-
+  private val overdueListAdapter = OverdueListAdapter(this::scrollTillExpandedCardIsVisible)
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
@@ -62,6 +61,15 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   private fun screenCreates() = Observable.just(OverdueScreenCreated())
+
+  private fun scrollTillExpandedCardIsVisible(cardBottomWithMargin: Int) {
+    val rvLocation = overdueRecyclerView.locationRectOnScreen()
+    val differenceInBottoms = cardBottomWithMargin - rvLocation.bottom
+
+    if (differenceInBottoms > 0) {
+      overdueRecyclerView.smoothScrollBy(0, differenceInBottoms)
+    }
+  }
 
   fun updateList(overdueListItems: List<OverdueListItem>) {
     overdueListAdapter.items = overdueListItems

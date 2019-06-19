@@ -20,9 +20,10 @@ import org.simple.clinic.widgets.marginLayoutParams
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
-import javax.inject.Inject
 
-class OverdueListAdapter @Inject constructor() : RecyclerView.Adapter<OverdueListViewHolder>() {
+class OverdueListAdapter(
+    private val onToggleCardExpansion: (Int) -> Unit
+) : RecyclerView.Adapter<OverdueListViewHolder>() {
 
   companion object {
     private const val OVERDUE_PATIENT = R.layout.item_overdue_list_patient
@@ -45,13 +46,12 @@ class OverdueListAdapter @Inject constructor() : RecyclerView.Adapter<OverdueLis
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
-    return OverdueListViewHolder.Patient(layout, itemClicks)
+    return OverdueListViewHolder.Patient(layout, itemClicks, onToggleCardExpansion)
   }
 
   override fun onBindViewHolder(holder: OverdueListViewHolder, position: Int) {
     if (holder is OverdueListViewHolder.Patient) {
-      holder.appointment = items[position] as OverdueListItem.Patient
-      holder.render()
+      holder.bind(items[position] as OverdueListItem.Patient)
     }
   }
 }
@@ -79,7 +79,8 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
 
   class Patient(
       itemView: View,
-      private val eventStream: Subject<UiEvent>
+      private val eventStream: Subject<UiEvent>,
+      private val onToggleCardExpansion: (Int) -> Unit
   ) : OverdueListViewHolder(itemView) {
 
     private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
@@ -93,81 +94,76 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
     private val remindLaterTextView by bindView<TextView>(R.id.overdue_reminder_later)
     private val removeFromListTextView by bindView<TextView>(R.id.overdue_remove_from_list)
 
-    lateinit var appointment: OverdueListItem.Patient
+    fun bind(overdueAppointmentListItem: OverdueListItem.Patient) {
+      setupEvents(overdueAppointmentListItem)
+      render(overdueAppointmentListItem)
+    }
 
-    init {
-      itemView.apply {
-        setOnClickListener {
-          appointment.cardExpanded = appointment.cardExpanded.not()
-          if (appointment.cardExpanded) {
-            eventStream.onNext(AppointmentExpanded(appointment.patientUuid))
-          }
-          updateBottomLayoutVisibility()
-          updatePhoneNumberViewVisibility()
+    private fun setupEvents(overdueAppointmentListItem: OverdueListItem.Patient) {
+      itemView.setOnClickListener {
+        overdueAppointmentListItem.cardExpanded = overdueAppointmentListItem.cardExpanded.not()
+        if (overdueAppointmentListItem.cardExpanded) {
+          eventStream.onNext(AppointmentExpanded(overdueAppointmentListItem.patientUuid))
+        }
+        updateBottomLayoutVisibility(overdueAppointmentListItem)
+        updatePhoneNumberViewVisibility(overdueAppointmentListItem)
 
-          post {
-            val itemLocation = locationRectOnScreen()
-            val itemBottomWithMargin = itemLocation.bottom + marginLayoutParams.bottomMargin
-
-            val recyclerView = parent as RecyclerView
-            val rvLocation = recyclerView.locationRectOnScreen()
-            val differenceInBottoms = itemBottomWithMargin - rvLocation.bottom
-
-            if (differenceInBottoms > 0) {
-              recyclerView.smoothScrollBy(0, differenceInBottoms)
-            }
-          }
+        itemView.post {
+          val itemLocation = itemView.locationRectOnScreen()
+          val itemBottomWithMargin = itemLocation.bottom + itemView.marginLayoutParams.bottomMargin
+          onToggleCardExpansion(itemBottomWithMargin)
         }
       }
       callButton.setOnClickListener {
-        eventStream.onNext(CallPatientClicked(appointment.patientUuid))
+        eventStream.onNext(CallPatientClicked(overdueAppointmentListItem.patientUuid))
       }
       agreedToVisitTextView.setOnClickListener {
-        eventStream.onNext(AgreedToVisitClicked(appointment.appointmentUuid))
+        eventStream.onNext(AgreedToVisitClicked(overdueAppointmentListItem.appointmentUuid))
       }
       remindLaterTextView.setOnClickListener {
-        eventStream.onNext(RemindToCallLaterClicked(appointment.appointmentUuid))
+        eventStream.onNext(RemindToCallLaterClicked(overdueAppointmentListItem.appointmentUuid))
       }
       removeFromListTextView.setOnClickListener {
-        eventStream.onNext(RemoveFromListClicked(appointment.appointmentUuid, appointment.patientUuid))
+        eventStream.onNext(RemoveFromListClicked(overdueAppointmentListItem.appointmentUuid, overdueAppointmentListItem.patientUuid))
       }
     }
 
-    private fun updateBottomLayoutVisibility() {
-      actionsContainer.visibleOrGone(appointment.cardExpanded)
-    }
-
-    private fun updatePhoneNumberViewVisibility() {
-      phoneNumberTextView.visibleOrGone(appointment.cardExpanded && appointment.phoneNumber != null)
-    }
-
-    fun render() {
+    private fun render(overdueAppointmentListItem: OverdueListItem.Patient) {
       val context = itemView.context
 
-      patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, appointment.name, appointment.age)
-      patientNameTextView.setCompoundDrawableStart(appointment.gender.displayIconRes)
+      patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, overdueAppointmentListItem.name, overdueAppointmentListItem.age)
+      patientNameTextView.setCompoundDrawableStart(overdueAppointmentListItem.gender.displayIconRes)
 
       patientBPTextView.text = context.resources.getQuantityString(
           R.plurals.overdue_list_item_patient_bp,
-          appointment.bpDaysAgo,
-          appointment.bpSystolic,
-          appointment.bpDiastolic,
-          appointment.bpDaysAgo
+          overdueAppointmentListItem.bpDaysAgo,
+          overdueAppointmentListItem.bpSystolic,
+          overdueAppointmentListItem.bpDiastolic,
+          overdueAppointmentListItem.bpDaysAgo
       )
 
-      callButton.visibility = if (appointment.phoneNumber == null) GONE else VISIBLE
-      phoneNumberTextView.text = appointment.phoneNumber
+      callButton.visibility = if (overdueAppointmentListItem.phoneNumber == null) GONE else VISIBLE
+      phoneNumberTextView.text = overdueAppointmentListItem.phoneNumber
 
-      isAtHighRiskTextView.visibility = if (appointment.isAtHighRisk) VISIBLE else GONE
+      isAtHighRiskTextView.visibility = if (overdueAppointmentListItem.isAtHighRisk) VISIBLE else GONE
 
       overdueDaysTextView.text = context.resources.getQuantityString(
           R.plurals.overdue_list_item_overdue_days,
-          appointment.overdueDays,
-          appointment.overdueDays
+          overdueAppointmentListItem.overdueDays,
+          overdueAppointmentListItem.overdueDays
       )
 
-      updateBottomLayoutVisibility()
-      updatePhoneNumberViewVisibility()
+      updateBottomLayoutVisibility(overdueAppointmentListItem)
+      updatePhoneNumberViewVisibility(overdueAppointmentListItem)
+    }
+
+    private fun updateBottomLayoutVisibility(overdueAppointmentListItem: OverdueListItem.Patient) {
+      actionsContainer.visibleOrGone(overdueAppointmentListItem.cardExpanded)
+    }
+
+    private fun updatePhoneNumberViewVisibility(overdueAppointmentListItem: OverdueListItem.Patient) {
+      val shouldShowPhoneNumberView = overdueAppointmentListItem.cardExpanded && overdueAppointmentListItem.phoneNumber != null
+      phoneNumberTextView.visibleOrGone(shouldShowPhoneNumberView)
     }
   }
 }

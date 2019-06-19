@@ -398,4 +398,10 @@
   <!-- Add ID to Patient: Search Results-->
   <string name="addidtopatientsearchresults_add">Add %1$s\u0020</string>
   <string name="addidtopatientsearchresults_to_patient">\u0020to\u00A0patient</string>
+
+  <!-- App update : Dialog -->
+  <string name="appupdatedialog_title">Update app</string>
+  <string name="appupdatedialog_body">You will be taken to Play Store to update Simple</string>
+  <string name="appupdatedialog_positive_button_text">Update</string>
+  <string name="appupdatedialog_negative_button_text">Not Now</string>
 </resources>

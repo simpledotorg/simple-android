@@ -27,7 +27,8 @@ class AllPatientsInFacilityViewStateProducerTest {
       initialState,
       userSession,
       facilityRepository,
-      patientRepository
+      patientRepository,
+      TrampolineSchedulersProvider()
   )
   private val uiEventsSubject = PublishSubject.create<UiEvent>()
 

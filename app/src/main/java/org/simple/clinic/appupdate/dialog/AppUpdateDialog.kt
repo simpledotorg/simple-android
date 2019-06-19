@@ -1,6 +1,9 @@
 package org.simple.clinic.appupdate.dialog
 
 import android.app.Dialog
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -34,7 +37,11 @@ class AppUpdateDialog : DialogFragment() {
   }
 
   private fun launchPlayStoreForUpdate() {
-    TODO("not implemented") //Implement later
+    val appPackageName = "org.simple.clinic"
+    val intent = Intent(ACTION_VIEW).apply {
+      data = Uri.parse(
+          "https://play.google.com/store/apps/details?id=$appPackageName")
+    }
+    startActivity(intent)
   }
-
 }

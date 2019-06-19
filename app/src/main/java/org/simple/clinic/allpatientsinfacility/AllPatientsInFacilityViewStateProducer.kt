@@ -15,7 +15,8 @@ class AllPatientsInFacilityViewStateProducer(
     private val initialState: AllPatientsInFacilityViewState,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val patientRepository: PatientRepository
+    private val patientRepository: PatientRepository,
+    private val schedulersProvider: SchedulersProvider
 ) : ObservableTransformer<UiEvent, AllPatientsInFacilityViewState> {
   override fun apply(
       uiEvents: Observable<UiEvent>
@@ -23,17 +24,20 @@ class AllPatientsInFacilityViewStateProducer(
     return uiEvents
         .ofType<ScreenCreated>()
         .switchMap {
-          userSession.requireLoggedInUser()
+          userSession
+              .requireLoggedInUser()
+              .subscribeOn(schedulersProvider.io())
               .switchMap { user ->
                 val sharedFacilities = facilityRepository
                     .currentFacility(user)
+                    .subscribeOn(schedulersProvider.io())
                     .share()
 
                 val facilityViewStates = sharedFacilities
                     .map { initialState.facilityFetched(it) }
 
                 val patientsViewStates = sharedFacilities
-                    .switchMap { patientRepository.allPatientsInFacility(it) }
+                    .switchMap { patientRepository.allPatientsInFacility(it).subscribeOn(schedulersProvider.io()) }
                     .withLatestFrom(facilityViewStates)
                     .map { (searchResults, state) ->
                       if (searchResults.isEmpty()) state.noPatients() else state.hasPatients(searchResults)

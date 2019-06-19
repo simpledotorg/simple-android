@@ -35,7 +35,8 @@ class AllPatientsInFacilityViewControllerTest {
         AllPatientsInFacilityViewState.FETCHING_PATIENTS,
         userSession,
         facilityRepository,
-        patientRepository
+        patientRepository,
+        TrampolineSchedulersProvider()
     )
     val uiChangeProducer = AllPatientsInFacilityUiChangeProducer()
     val controller = AllPatientsInFacilityViewController(viewStateProducer, uiChangeProducer)

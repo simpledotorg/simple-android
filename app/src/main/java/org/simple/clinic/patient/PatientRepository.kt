@@ -593,5 +593,9 @@ class PatientRepository @Inject constructor(
         .toObservable()
   }
 
+  fun allPatientsInFacility(facility: Facility): Observable<List<PatientSearchResult>> {
+    TODO("not implemented")
+  }
+
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)
 }

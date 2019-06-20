@@ -15,7 +15,7 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-class AllPatientsInFacilityViewControllerTest {
+class AllPatientsInFacilityUiControllerTest {
 
   @Test
   fun `verify that the state producer and ui change producer are connected`() {
@@ -31,17 +31,17 @@ class AllPatientsInFacilityViewControllerTest {
     val patientRepository = mock<PatientRepository>()
     whenever(patientRepository.allPatientsInFacility(facility)).thenReturn(Observable.just(emptyList()))
 
-    val viewStateProducer = AllPatientsInFacilityViewStateProducer(
-        AllPatientsInFacilityViewState.FETCHING_PATIENTS,
+    val viewStateProducer = AllPatientsInFacilityUiStateProducer(
+        AllPatientsInFacilityUiState.FETCHING_PATIENTS,
         userSession,
         facilityRepository,
         patientRepository,
         TrampolineSchedulersProvider()
     )
     val uiChangeProducer = AllPatientsInFacilityUiChangeProducer()
-    val controller = AllPatientsInFacilityViewController(viewStateProducer, uiChangeProducer)
+    val controller = AllPatientsInFacilityUiController(viewStateProducer, uiChangeProducer)
     val uiEvents = PublishSubject.create<UiEvent>()
-    val view = mock<AllPatientsInFacilityView>()
+    val view = mock<AllPatientsInFacilityUi>()
 
     uiEvents
         .compose(controller)

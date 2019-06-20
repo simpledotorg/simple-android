@@ -5,14 +5,14 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import org.simple.clinic.widgets.UiEvent
 
-class AllPatientsInFacilityViewController(
-    private val viewStateProducer: AllPatientsInFacilityViewStateProducer,
+class AllPatientsInFacilityUiController(
+    private val uiStateProducer: AllPatientsInFacilityUiStateProducer,
     private val uiChangeProducer: AllPatientsInFacilityUiChangeProducer
 ) : ObservableTransformer<UiEvent, AllPatientsInFacilityUiChange> {
 
   override fun apply(uiEvents: Observable<UiEvent>): ObservableSource<AllPatientsInFacilityUiChange> {
     return uiEvents
-        .compose(viewStateProducer)
+        .compose(uiStateProducer)
         .compose(uiChangeProducer)
   }
 }

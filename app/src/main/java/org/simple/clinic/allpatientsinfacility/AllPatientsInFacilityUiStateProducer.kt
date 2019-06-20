@@ -11,16 +11,16 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
-class AllPatientsInFacilityViewStateProducer(
-    private val initialState: AllPatientsInFacilityViewState,
+class AllPatientsInFacilityUiStateProducer(
+    private val initialState: AllPatientsInFacilityUiState,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider
-) : ObservableTransformer<UiEvent, AllPatientsInFacilityViewState> {
+) : ObservableTransformer<UiEvent, AllPatientsInFacilityUiState> {
   override fun apply(
       uiEvents: Observable<UiEvent>
-  ): ObservableSource<AllPatientsInFacilityViewState> {
+  ): ObservableSource<AllPatientsInFacilityUiState> {
     return uiEvents
         .ofType<ScreenCreated>()
         .flatMap {
@@ -29,7 +29,7 @@ class AllPatientsInFacilityViewStateProducer(
         }
   }
 
-  private fun fetchAllPatientsInFacility(): Observable<AllPatientsInFacilityViewState> {
+  private fun fetchAllPatientsInFacility(): Observable<AllPatientsInFacilityUiState> {
     return userSession
         .requireLoggedInUser()
         .subscribeOn(schedulersProvider.io())

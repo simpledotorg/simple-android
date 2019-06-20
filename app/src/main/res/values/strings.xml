@@ -404,4 +404,7 @@
   <string name="appupdatedialog_body">You will be taken to Play Store to update Simple</string>
   <string name="appupdatedialog_positive_button_text">Update</string>
   <string name="appupdatedialog_negative_button_text">Not Now</string>
+
+  <!-- All Patients In Facility View-->
+  <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
 </resources>

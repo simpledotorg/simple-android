@@ -184,10 +184,11 @@
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Tag">
-    <item name="android:textSize">12sp</item>
+    <item name="android:textSize">14sp</item>
     <item name="android:fontFamily">sans-serif-medium</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.06</item>
-    <item name="android:lineSpacingExtra">8sp</item>
+    <item name="android:lineSpacingExtra">6sp</item>
+    <item name="android:textStyle">normal</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.Body2Tag.Grey1">

@@ -13,9 +13,9 @@ import org.simple.clinic.patient.PatientMocker
 import java.util.UUID
 
 class AllPatientsInFacilityUiChangeProducerTest {
-  private val view = mock<AllPatientsInFacilityView>()
+  private val view = mock<AllPatientsInFacilityUi>()
   private val uiChangeProducer = AllPatientsInFacilityUiChangeProducer()
-  private val viewStateSubject = PublishSubject.create<AllPatientsInFacilityViewState>()
+  private val viewStateSubject = PublishSubject.create<AllPatientsInFacilityUiState>()
 
   private val facility = PatientMocker.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))
 
@@ -36,7 +36,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
   @Test
   fun `when a facility is being fetched, then do nothing`() {
     // when
-    viewStateSubject.onNext(AllPatientsInFacilityViewState.FETCHING_PATIENTS)
+    viewStateSubject.onNext(AllPatientsInFacilityUiState.FETCHING_PATIENTS)
 
     // then
     verifyZeroInteractions(view)
@@ -45,7 +45,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
   @Test
   fun `when a facility is fetched, then do nothing`() {
     // given
-    val fetchingPatientsState = AllPatientsInFacilityViewState
+    val fetchingPatientsState = AllPatientsInFacilityUiState
         .FETCHING_PATIENTS
         .facilityFetched(facility)
 
@@ -59,7 +59,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
   @Test
   fun `when a facility has no patients, then show no patients found in facility`() {
     // given
-    val noPatientsFoundInFacilityState = AllPatientsInFacilityViewState
+    val noPatientsFoundInFacilityState = AllPatientsInFacilityUiState
         .FETCHING_PATIENTS
         .facilityFetched(facility)
         .noPatients()
@@ -77,7 +77,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
     // given
     val patientSearchResults = listOf(PatientMocker.patientSearchResult())
 
-    val hasPatientsInFacilityState = AllPatientsInFacilityViewState
+    val hasPatientsInFacilityState = AllPatientsInFacilityUiState
         .FETCHING_PATIENTS
         .facilityFetched(facility)
         .hasPatients(patientSearchResults)

@@ -14,8 +14,8 @@ import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-class AllPatientsInFacilityViewStateProducerTest {
-  private val initialState = AllPatientsInFacilityViewState.FETCHING_PATIENTS
+class AllPatientsInFacilityUiStateProducerTest {
+  private val initialState = AllPatientsInFacilityUiState.FETCHING_PATIENTS
   private val facility = PatientMocker.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))
   private val user = PatientMocker.loggedInUser()
 
@@ -23,7 +23,7 @@ class AllPatientsInFacilityViewStateProducerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
 
-  private val viewStateProducer = AllPatientsInFacilityViewStateProducer(
+  private val viewStateProducer = AllPatientsInFacilityUiStateProducer(
       initialState,
       userSession,
       facilityRepository,

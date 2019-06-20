@@ -4,19 +4,19 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 
-typealias AllPatientsInFacilityUiChange = (AllPatientsInFacilityView) -> Unit
+typealias AllPatientsInFacilityUiChange = (AllPatientsInFacilityUi) -> Unit
 
-class AllPatientsInFacilityUiChangeProducer : ObservableTransformer<AllPatientsInFacilityViewState, AllPatientsInFacilityUiChange> {
-  override fun apply(viewStates: Observable<AllPatientsInFacilityViewState>): ObservableSource<AllPatientsInFacilityUiChange> {
-    val queriedPatientsViewStates = viewStates.filter { it.patientsQueried }
+class AllPatientsInFacilityUiChangeProducer : ObservableTransformer<AllPatientsInFacilityUiState, AllPatientsInFacilityUiChange> {
+  override fun apply(uiStates: Observable<AllPatientsInFacilityUiState>): ObservableSource<AllPatientsInFacilityUiChange> {
+    val queriedPatientsViewStates = uiStates.filter { it.patientsQueried }
 
     val noPatientsInFacilityUiChanges = queriedPatientsViewStates
         .filter { it.patients.isEmpty() }
-        .map { { view: AllPatientsInFacilityView -> view.showNoPatientsFound(it.facility!!.name) } }
+        .map { { view: AllPatientsInFacilityUi -> view.showNoPatientsFound(it.facility!!.name) } }
 
     val hasPatientsInFacilityUiChanges = queriedPatientsViewStates
         .filter { it.patients.isNotEmpty() }
-        .map { { view: AllPatientsInFacilityView -> view.showPatients(it.facility!!, it.patients) } }
+        .map { { ui: AllPatientsInFacilityUi -> ui.showPatients(it.facility!!, it.patients) } }
 
     return Observable.merge(noPatientsInFacilityUiChanges, hasPatientsInFacilityUiChanges)
   }

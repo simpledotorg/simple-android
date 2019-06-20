@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView style="@style/Clinic.V2.CardView"
+<org.simple.clinic.widgets.PatientSearchResultView android:id="@+id/patientSearchResultView"
+  style="@style/Clinic.V2.CardView"
   xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
@@ -7,98 +8,4 @@
   android:layout_marginBottom="@dimen/spacing_8"
   android:layout_marginEnd="@dimen/spacing_8"
   android:layout_marginStart="@dimen/spacing_8"
-  tools:layout_marginTop="@dimen/spacing_8">
-
-  <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/spacing_16"
-    android:paddingEnd="@dimen/spacing_16"
-    android:paddingStart="@dimen/spacing_16"
-    android:paddingTop="@dimen/spacing_16">
-
-    <ImageView
-      android:id="@+id/patientsearchresult_item_gender"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      tools:ignore="ContentDescription"
-      tools:src="@drawable/ic_patient_female" />
-
-    <LinearLayout
-      android:layout_width="0dp"
-      android:layout_height="wrap_content"
-      android:layout_marginStart="@dimen/spacing_16"
-      android:layout_weight="1"
-      android:orientation="vertical">
-
-      <TextView
-        android:id="@+id/patientsearchresult_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
-        tools:text="Anshu Acharya, M, 43" />
-
-      <TextView
-        android:id="@+id/patientsearchresult_item_address"
-        style="@style/Clinic.V2.TextAppearance.Body2Left.Grey0"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="51dp"
-        android:layout_marginTop="6dp"
-        android:textColor="@color/gray_950"
-        tools:text="House No. 14, Street No. 10/11, Guru Gobind Singh Nagar, Bathinda" />
-
-      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-          android:id="@+id/patientsearchresult_item_dateofbirth"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginEnd="@dimen/spacing_12"
-          android:layout_marginTop="6dp"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
-          tools:text="24-Mar-1975" />
-
-        <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-          android:id="@+id/patientsearchresult_item_phone"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="6dp"
-          android:drawablePadding="@dimen/spacing_4"
-          android:drawableStart="@drawable/ic_call_16dp"
-          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
-          tools:text="98*****365" />
-      </LinearLayout>
-
-      <LinearLayout
-        android:id="@+id/patientsearchresults_item_last_bp_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:orientation="horizontal">
-
-        <TextView
-          style="@style/Clinic.V2.TextAppearance.Body2Tag.Green1"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:text="@string/patientsearchresults_item_last_bp"
-          android:textAllCaps="true" />
-
-        <TextView
-          android:id="@+id/patientsearchresults_item_last_bp"
-          style="@style/Clinic.V2.TextAppearance.Body2Left.Green1"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginStart="@dimen/spacing_4"
-          android:ellipsize="end"
-          android:maxLines="1"
-          tools:text="12-Jul-2018, PHC Bagta" />
-      </LinearLayout>
-    </LinearLayout>
-  </LinearLayout>
-</androidx.cardview.widget.CardView>
+  tools:layout_marginTop="@dimen/spacing_8" />

@@ -24,9 +24,7 @@ import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.format.DateTimeFormatter
 
 @RunWith(JUnitParamsRunner::class)
 class PatientSearchViewControllerTest {
@@ -38,18 +36,12 @@ class PatientSearchViewControllerTest {
   private val patientRepository: PatientRepository = mock()
   private val userSession: UserSession = mock()
   private val facilityRepository: FacilityRepository = mock()
-  private val phoneObfuscator: PhoneNumberObfuscator = mock()
-  private val utcClock: UtcClock = mock()
   private val userClock: UserClock = mock()
-  private val dateOfBirthFormatter: DateTimeFormatter = mock()
 
   private val controller = PatientSearchViewController(
       patientRepository = patientRepository,
       userSession = userSession,
       facilityRepository = facilityRepository,
-      phoneObfuscator = phoneObfuscator,
-      utcClock = utcClock,
-      dateOfBirthFormatter = dateOfBirthFormatter,
       userClock = userClock
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
@@ -85,20 +77,12 @@ class PatientSearchViewControllerTest {
         InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultRow(
             searchResult = patientSearchResult1,
-            currentFacility = currentFacility,
-            phoneObfuscator = phoneObfuscator,
-            dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock,
-            userClock = userClock
+            currentFacility = currentFacility
         ),
         NotInCurrentFacilityHeader,
         SearchResultRow(
             searchResult = patientSearchResult2,
-            currentFacility = currentFacility,
-            phoneObfuscator = phoneObfuscator,
-            dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock,
-            userClock = userClock
+            currentFacility = currentFacility
         )
     ))
     verify(screen).setEmptyStateVisible(false)
@@ -139,19 +123,11 @@ class PatientSearchViewControllerTest {
         InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultRow(
             searchResult = patientSearchResult1,
-            currentFacility = currentFacility,
-            phoneObfuscator = phoneObfuscator,
-            dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock,
-            userClock = userClock
+            currentFacility = currentFacility
         ),
         SearchResultRow(
             searchResult = patientSearchResult2,
-            currentFacility = currentFacility,
-            phoneObfuscator = phoneObfuscator,
-            dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock,
-            userClock = userClock
+            currentFacility = currentFacility
         )
     ))
     verify(screen).setEmptyStateVisible(false)
@@ -178,19 +154,11 @@ class PatientSearchViewControllerTest {
         NotInCurrentFacilityHeader,
         SearchResultRow(
             searchResult = patientSearchResult1,
-            currentFacility = currentFacility,
-            phoneObfuscator = phoneObfuscator,
-            dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock,
-            userClock = userClock
+            currentFacility = currentFacility
         ),
         SearchResultRow(
             searchResult = patientSearchResult2,
-            currentFacility = currentFacility,
-            phoneObfuscator = phoneObfuscator,
-            dateOfBirthFormat = dateOfBirthFormatter,
-            clock = utcClock,
-            userClock = userClock
+            currentFacility = currentFacility
         )
     ))
     verify(screen).setEmptyStateVisible(false)

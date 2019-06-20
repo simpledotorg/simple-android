@@ -7,10 +7,10 @@ import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
 import com.google.android.play.core.install.model.UpdateAvailability
-import io.reactivex.Single
-import org.simple.clinic.util.None
-import org.simple.clinic.util.Optional
-import org.simple.clinic.util.toOptional
+import io.reactivex.Observable
+import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
+import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
+import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
@@ -19,22 +19,21 @@ class CheckAppUpdateAvailability @Inject constructor(
     private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate
 ) {
 
-  fun listen(): Single<Optional<AppUpdateData>> {
+  fun listen(): Observable<AppUpdateState> {
     val appUpdateManager = AppUpdateManagerFactory.create(appContext)
     val appUpdateInfoTask = appUpdateManager.appUpdateInfo
 
-    return Single.create { emitter ->
-
+    return Observable.create { emitter ->
       appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
         if (shouldNudgeForAppUpdate(appUpdateInfo)) {
-          emitter.onSuccess(AppUpdateData(appUpdateInfo).toOptional())
+          emitter.onNext(ShowAppUpdate)
         } else {
-          emitter.onSuccess(None)
+          emitter.onNext(DontShowAppUpdate)
         }
       }
 
       appUpdateInfoTask.addOnFailureListener { exception ->
-        emitter.onError(exception)
+        emitter.onNext(AppUpdateStateError(exception))
       }
     }
   }

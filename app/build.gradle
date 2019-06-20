@@ -160,7 +160,6 @@ android {
 
   androidExtensions {
     experimental = true
-    features = ["parcelize"]
   }
 
   sourceSets {

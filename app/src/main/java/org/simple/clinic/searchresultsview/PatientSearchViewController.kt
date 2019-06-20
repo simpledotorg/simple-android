@@ -20,11 +20,8 @@ import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFac
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
-import javax.inject.Named
 
 typealias Ui = PatientSearchView
 typealias UiChange = (Ui) -> Unit
@@ -33,10 +30,7 @@ class PatientSearchViewController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    private val phoneObfuscator: PhoneNumberObfuscator,
-    private val utcClock: UtcClock,
-    val userClock: UserClock,
-    @Named("date_for_search_results") private val dateOfBirthFormatter: DateTimeFormatter
+    val userClock: UserClock
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -90,7 +84,7 @@ class PatientSearchViewController @Inject constructor(
 
     val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {
       results.visitedCurrentFacility.map {
-        SearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock, userClock)
+        SearchResultRow(it, currentFacility)
       }
     } else {
       listOf(NoPatientsInCurrentFacility)
@@ -99,7 +93,7 @@ class PatientSearchViewController @Inject constructor(
     val itemsInOtherFacility = if (results.notVisitedCurrentFacility.isNotEmpty()) {
       listOf(NotInCurrentFacilityHeader) +
           results.notVisitedCurrentFacility.map {
-            SearchResultRow(it, currentFacility, phoneObfuscator, dateOfBirthFormatter, utcClock, userClock)
+            SearchResultRow(it, currentFacility)
           }
     } else {
       emptyList()

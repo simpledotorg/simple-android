@@ -194,6 +194,16 @@ android {
     exclude 'lib/armeabi/libsqlite3x.so'
   }
 
+  bundle {
+    language {
+      // Specifies that the app bundle should not support configuration APKs for language resources.
+      // These resources are instead packaged with each base and dynamic feature APK.
+      // We are doing this since we support switching the language within the app and we want all
+      // translations to be delivered to all devices.
+      enableSplit = false
+    }
+  }
+
   // We don't obfuscate (only minify) using proguard. Gradle plugin 3.2.0 (and greater?) generates
   // an empty mappings.txt file. This caused an issue where the CI deploy to play store task tries
   // to upload the empty mapping file, which causes the Play Store api to complain.

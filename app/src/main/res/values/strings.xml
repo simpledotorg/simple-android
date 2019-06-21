@@ -407,5 +407,5 @@
 
   <!-- All Patients In Facility View-->
   <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
-  <string name="allpatientsinfacility_no_patients_title">No patients at %1$s</string>
+  <string name="allpatientsinfacility_nopatients_title">No patients at %1$s</string>
 </resources>

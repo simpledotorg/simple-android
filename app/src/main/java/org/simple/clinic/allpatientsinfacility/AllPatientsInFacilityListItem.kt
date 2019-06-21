@@ -32,7 +32,7 @@ sealed class AllPatientsInFacilityListItem {
 
     override fun render(holder: ViewHolderX) {
       val resources = holder.itemView.resources
-      holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_nopatients_title, facilityName)
+      holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_foundpatients_header, facilityName)
     }
   }
 

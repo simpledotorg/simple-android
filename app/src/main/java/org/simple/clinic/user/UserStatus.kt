@@ -1,18 +1,49 @@
 package org.simple.clinic.user
 
-import com.squareup.moshi.Json
-import org.simple.clinic.util.RoomEnumTypeConverter
+import androidx.annotation.VisibleForTesting
+import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
+import org.simple.clinic.util.SafeEnumTypeAdapter
 
-enum class UserStatus {
+sealed class UserStatus {
 
-  @Json(name = "requested")
-  WAITING_FOR_APPROVAL,
+  object WaitingForApproval : UserStatus()
 
-  @Json(name = "allowed")
-  APPROVED_FOR_SYNCING,
+  object ApprovedForSyncing : UserStatus()
 
-  @Json(name = "denied")
-  DISAPPROVED_FOR_SYNCING;
+  object DisapprovedForSyncing : UserStatus()
 
-  class RoomTypeConverter : RoomEnumTypeConverter<UserStatus>(UserStatus::class.java)
+  data class Unknown(val actualValue: String) : UserStatus()
+
+  object TypeAdapter : SafeEnumTypeAdapter<UserStatus>(
+      knownMappings = mapOf(
+          WaitingForApproval to "requested",
+          ApprovedForSyncing to "allowed",
+          DisapprovedForSyncing to "denied"
+      ),
+      unknownStringToEnumConverter = { Unknown(it) },
+      unknownEnumToStringConverter = { (it as Unknown).actualValue }
+  )
+
+  class RoomTypeConverter {
+    @TypeConverter
+    fun toEnum(value: String?): UserStatus? = TypeAdapter.toEnum(value)
+
+    @TypeConverter
+    fun fromEnum(reason: UserStatus?): String? = TypeAdapter.fromEnum(reason)
+  }
+
+  class MoshiTypeConverter {
+    @FromJson
+    fun toEnum(value: String?): UserStatus? = TypeAdapter.toEnum(value)
+
+    @ToJson
+    fun fromEnum(reason: UserStatus?): String? = TypeAdapter.fromEnum(reason)
+  }
+
+  companion object {
+    @VisibleForTesting
+    fun random(): UserStatus = TypeAdapter.knownMappings.keys.shuffled().first()
+  }
 }

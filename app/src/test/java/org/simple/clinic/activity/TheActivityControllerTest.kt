@@ -169,7 +169,7 @@ class TheActivityControllerTest {
       nextLoggedInStatus: User.LoggedInStatus,
       shouldShowLoggedOutAlert: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    val user = PatientMocker.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
     whenever(lockAfterTimestamp.get()).thenReturn(Instant.MAX)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(

@@ -16,7 +16,6 @@ import com.squareup.moshi.Moshi
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
-import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
@@ -27,7 +26,6 @@ import okhttp3.MediaType
 import okhttp3.ResponseBody
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -47,8 +45,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
-import org.simple.clinic.registration.RegistrationResponse
-import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
@@ -60,9 +56,9 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
-import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.user.UserStatus.ApprovedForSyncing
+import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
+import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
@@ -262,26 +258,7 @@ class UserSessionTest {
   }
 
   @Test
-  @Parameters(value = [
-    "NOT_LOGGED_IN|WAITING_FOR_APPROVAL|NOT_LOGGED_IN",
-    "OTP_REQUESTED|WAITING_FOR_APPROVAL|OTP_REQUESTED",
-    "LOGGED_IN|WAITING_FOR_APPROVAL|LOGGED_IN",
-    "RESETTING_PIN|WAITING_FOR_APPROVAL|RESETTING_PIN",
-    "RESET_PIN_REQUESTED|WAITING_FOR_APPROVAL|RESET_PIN_REQUESTED",
-
-    "NOT_LOGGED_IN|APPROVED_FOR_SYNCING|LOGGED_IN",
-    "OTP_REQUESTED|APPROVED_FOR_SYNCING|LOGGED_IN",
-    "LOGGED_IN|APPROVED_FOR_SYNCING|LOGGED_IN",
-    "RESETTING_PIN|APPROVED_FOR_SYNCING|LOGGED_IN",
-    "RESET_PIN_REQUESTED|APPROVED_FOR_SYNCING|LOGGED_IN",
-
-    "NOT_LOGGED_IN|DISAPPROVED_FOR_SYNCING|NOT_LOGGED_IN",
-    "OTP_REQUESTED|DISAPPROVED_FOR_SYNCING|OTP_REQUESTED",
-    "LOGGED_IN|DISAPPROVED_FOR_SYNCING|LOGGED_IN",
-    "RESETTING_PIN|DISAPPROVED_FOR_SYNCING|RESETTING_PIN",
-    "RESET_PIN_REQUESTED|DISAPPROVED_FOR_SYNCING|RESET_PIN_REQUESTED"
-  ]
-  )
+  @Parameters(method = "params for checking login status")
   fun `when refreshing the logged in user then the user details should be fetched from the server and login status must be updated`(
       olderLoggedInStatus: User.LoggedInStatus,
       userStatus: UserStatus,
@@ -303,6 +280,28 @@ class UserSessionTest {
       assertThat(it.loggedInStatus).isEqualTo(newerLoggedInStatus)
     })
   }
+
+  @Suppress("unused")
+  private fun `params for checking login status`() =
+      listOf(
+          listOf(NOT_LOGGED_IN, WaitingForApproval, NOT_LOGGED_IN),
+          listOf(OTP_REQUESTED, WaitingForApproval, OTP_REQUESTED),
+          listOf(LOGGED_IN, WaitingForApproval, LOGGED_IN),
+          listOf(RESETTING_PIN, WaitingForApproval, RESETTING_PIN),
+          listOf(RESET_PIN_REQUESTED, WaitingForApproval, RESET_PIN_REQUESTED),
+
+          listOf(NOT_LOGGED_IN, ApprovedForSyncing, LOGGED_IN),
+          listOf(OTP_REQUESTED, ApprovedForSyncing, LOGGED_IN),
+          listOf(LOGGED_IN, ApprovedForSyncing, LOGGED_IN),
+          listOf(RESETTING_PIN, ApprovedForSyncing, LOGGED_IN),
+          listOf(RESET_PIN_REQUESTED, ApprovedForSyncing, LOGGED_IN),
+
+          listOf(NOT_LOGGED_IN, DisapprovedForSyncing, NOT_LOGGED_IN),
+          listOf(OTP_REQUESTED, DisapprovedForSyncing, OTP_REQUESTED),
+          listOf(LOGGED_IN, DisapprovedForSyncing, LOGGED_IN),
+          listOf(RESETTING_PIN, DisapprovedForSyncing, RESETTING_PIN),
+          listOf(RESET_PIN_REQUESTED, DisapprovedForSyncing, RESET_PIN_REQUESTED)
+      )
 
   @Test
   fun `when ongoing registration entry is cleared then isOngoingRegistrationEntryPresent() should emit false`() {
@@ -559,7 +558,7 @@ class UserSessionTest {
     val currentUser = PatientMocker.loggedInUser(
         pinDigest = "old-digest",
         loggedInStatus = RESETTING_PIN,
-        status = APPROVED_FOR_SYNCING
+        status = ApprovedForSyncing
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
@@ -571,7 +570,7 @@ class UserSessionTest {
             name = currentUser.fullName,
             phone = currentUser.phoneNumber,
             pinDigest = "new-digest",
-            status = WAITING_FOR_APPROVAL,
+            status = WaitingForApproval,
             createdAt = currentUser.createdAt,
             updatedAt = currentUser.updatedAt
         ),
@@ -584,7 +583,7 @@ class UserSessionTest {
     verify(userDao).createOrUpdate(currentUser.copy(
         pinDigest = "new-digest",
         loggedInStatus = RESET_PIN_REQUESTED,
-        status = WAITING_FOR_APPROVAL
+        status = WaitingForApproval
     ))
   }
 
@@ -593,7 +592,7 @@ class UserSessionTest {
     val currentUser = PatientMocker.loggedInUser(
         pinDigest = "old-digest",
         loggedInStatus = RESETTING_PIN,
-        status = APPROVED_FOR_SYNCING
+        status = ApprovedForSyncing
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
@@ -605,7 +604,7 @@ class UserSessionTest {
             name = currentUser.fullName,
             phone = currentUser.phoneNumber,
             pinDigest = "new-digest",
-            status = WAITING_FOR_APPROVAL,
+            status = WaitingForApproval,
             createdAt = currentUser.createdAt,
             updatedAt = currentUser.updatedAt
         ),
@@ -663,7 +662,7 @@ class UserSessionTest {
             name = currentUser.fullName,
             phone = currentUser.phoneNumber,
             pinDigest = "new-digest",
-            status = WAITING_FOR_APPROVAL,
+            status = WaitingForApproval,
             createdAt = currentUser.createdAt,
             updatedAt = currentUser.updatedAt
         ),
@@ -729,56 +728,56 @@ class UserSessionTest {
     val observer = userSession.canSyncData().test()
 
     userSubject.apply {
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = WaitingForApproval))
       observer.assertLatestValue(false)
 
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(true)
 
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = DISAPPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = DisapprovedForSyncing))
       observer.assertLatestValue(false)
 
-      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = WaitingForApproval))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = DISAPPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = NOT_LOGGED_IN, userStatus = DisapprovedForSyncing))
       observer.assertLatestValue(false)
 
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(true)
 
-      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = WaitingForApproval))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = DISAPPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = OTP_REQUESTED, userStatus = DisapprovedForSyncing))
       observer.assertLatestValue(false)
 
       onNext(emptyList())
       observer.assertLatestValue(false)
 
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(true)
 
-      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = WaitingForApproval))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = DISAPPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = RESETTING_PIN, userStatus = DisapprovedForSyncing))
       observer.assertLatestValue(false)
 
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(true)
 
-      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = WAITING_FOR_APPROVAL))
+      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = WaitingForApproval))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(false)
-      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = DISAPPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = RESET_PIN_REQUESTED, userStatus = DisapprovedForSyncing))
       observer.assertLatestValue(false)
 
-      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = APPROVED_FOR_SYNCING))
+      onNext(createUser(loggedInStatus = LOGGED_IN, userStatus = ApprovedForSyncing))
       observer.assertLatestValue(true)
 
       onNext(emptyList())

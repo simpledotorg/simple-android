@@ -17,6 +17,7 @@ import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.remoteconfig.FirebaseConfigReader
 import org.simple.clinic.remoteconfig.FirebaseRemoteConfigCacheExpiration
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.InstantMoshiAdapter
 import org.simple.clinic.util.LocalDateMoshiAdapter
 import org.simple.clinic.util.MoshiOptionalAdapterFactory
@@ -42,6 +43,7 @@ open class NetworkModule {
         .add(Identifier.IdentifierType.MoshiTypeAdapter())
         .add(BusinessId.MetaDataVersion.MoshiTypeAdapter())
         .add(Appointment.AppointmentType.MoshiTypeAdapter())
+        .add(UserStatus.MoshiTypeConverter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

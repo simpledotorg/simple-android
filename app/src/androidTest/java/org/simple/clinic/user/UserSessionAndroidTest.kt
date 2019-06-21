@@ -75,7 +75,7 @@ class UserSessionAndroidTest {
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)
     assertThat(loggedInUser.loggedInStatus).isEqualTo(LOGGED_IN)
   }
 
@@ -113,7 +113,7 @@ class UserSessionAndroidTest {
 
     assertThat(userSession.isUserLoggedIn()).isTrue()
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.WAITING_FOR_APPROVAL)
+    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.WaitingForApproval)
 
     val currentFacility = facilityRepository
         .currentFacility(userSession)

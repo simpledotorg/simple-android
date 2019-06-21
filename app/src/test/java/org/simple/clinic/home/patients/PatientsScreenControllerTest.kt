@@ -24,11 +24,14 @@ import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus
+import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
+import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.user.UserStatus.ApprovedForSyncing
+import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
+import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
@@ -90,7 +93,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when screen is created and the user is awaiting approval then the approval status should be checked`() {
-    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL)
+    val user = PatientMocker.loggedInUser(status = WaitingForApproval)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
@@ -105,7 +108,7 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(value = ["APPROVED_FOR_SYNCING", "DISAPPROVED_FOR_SYNCING"])
+  @Parameters(method = "params for approved and disapproved for syncing")
   fun `when screen is created and the user is not awaiting approval then the user's status should not be checked`(
       status: UserStatus
   ) {
@@ -123,6 +126,10 @@ class PatientsScreenControllerTest {
     verify(userSession, never()).refreshLoggedInUser()
   }
 
+  @Suppress("unused")
+  private fun `params for approved and disapproved for syncing`() =
+      listOf(ApprovedForSyncing, DisapprovedForSyncing)
+
   @Test
   @Parameters(value = [
     "LOGGED_IN|true",
@@ -132,7 +139,7 @@ class PatientsScreenControllerTest {
       loggedInStatus: LoggedInStatus,
       shouldShowApprovalStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL, loggedInStatus = loggedInStatus)
+    val user = PatientMocker.loggedInUser(status = WaitingForApproval, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
@@ -150,7 +157,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user has been disapproved then the approval status shouldn't be shown`() {
-    val user = PatientMocker.loggedInUser(status = DISAPPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = DisapprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
@@ -173,7 +180,7 @@ class PatientsScreenControllerTest {
       hasUserDismissedStatus: Boolean,
       shouldShowApprovedStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING, loggedInStatus = loggedInStatus)
+    val user = PatientMocker.loggedInUser(status = ApprovedForSyncing, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
@@ -193,7 +200,7 @@ class PatientsScreenControllerTest {
   fun `when the user was approved earlier than 24h then the approval status should not be shown`(
       hasUserDismissedStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
@@ -207,7 +214,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when checking the user's status fails with any error then the error should be silently swallowed`() {
-    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL)
+    val user = PatientMocker.loggedInUser(status = WaitingForApproval)
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.error(SocketTimeoutException()))
@@ -222,7 +229,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `when the user dismisses the approved status then the status should be hidden`() {
-    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING)
+    val user = PatientMocker.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(23, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
@@ -240,7 +247,7 @@ class PatientsScreenControllerTest {
       canUserSyncData: Boolean
   ) {
     whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL).toOptional()))
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = WaitingForApproval).toOptional()))
 
     whenever(userSession.canSyncData()).thenReturn(Observable.just(canUserSyncData))
 
@@ -262,17 +269,7 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  @Parameters(
-      "WAITING_FOR_APPROVAL|NOT_LOGGED_IN|false",
-      "WAITING_FOR_APPROVAL|OTP_REQUESTED|false",
-      "WAITING_FOR_APPROVAL|LOGGED_IN|false",
-      "APPROVED_FOR_SYNCING|NOT_LOGGED_IN|true",
-      "APPROVED_FOR_SYNCING|OTP_REQUESTED|true",
-      "APPROVED_FOR_SYNCING|LOGGED_IN|false",
-      "DISAPPROVED_FOR_SYNCING|NOT_LOGGED_IN|true",
-      "DISAPPROVED_FOR_SYNCING|OTP_REQUESTED|true",
-      "DISAPPROVED_FOR_SYNCING|LOGGED_IN|false"
-  )
+  @Parameters(method = "params for verification status when when waiting for sms verification")
   fun `when an approved user is awaiting sms verification, the verification status must be shown`(
       userStatus: UserStatus,
       loggedInStatus: LoggedInStatus,
@@ -295,18 +292,22 @@ class PatientsScreenControllerTest {
     }
   }
 
+  @Suppress("unused")
+  private fun `params for verification status when when waiting for sms verification`() =
+      listOf(
+          listOf(WaitingForApproval, NOT_LOGGED_IN, false),
+          listOf(WaitingForApproval, OTP_REQUESTED, false),
+          listOf(WaitingForApproval, LOGGED_IN, false),
+          listOf(ApprovedForSyncing, NOT_LOGGED_IN, true),
+          listOf(ApprovedForSyncing, OTP_REQUESTED, true),
+          listOf(ApprovedForSyncing, LOGGED_IN, false),
+          listOf(DisapprovedForSyncing, NOT_LOGGED_IN, true),
+          listOf(DisapprovedForSyncing, OTP_REQUESTED, true),
+          listOf(DisapprovedForSyncing, LOGGED_IN, false)
+      )
+
   @Test
-  @Parameters(
-      "WAITING_FOR_APPROVAL|NOT_LOGGED_IN|false",
-      "WAITING_FOR_APPROVAL|OTP_REQUESTED|false",
-      "WAITING_FOR_APPROVAL|LOGGED_IN|false",
-      "APPROVED_FOR_SYNCING|NOT_LOGGED_IN|false",
-      "APPROVED_FOR_SYNCING|OTP_REQUESTED|false",
-      "APPROVED_FOR_SYNCING|LOGGED_IN|true",
-      "DISAPPROVED_FOR_SYNCING|NOT_LOGGED_IN|false",
-      "DISAPPROVED_FOR_SYNCING|OTP_REQUESTED|false",
-      "DISAPPROVED_FOR_SYNCING|LOGGED_IN|true"
-  )
+  @Parameters(method = "params for verification status of approved user")
   fun `when an approved user is verified, the verification status must be hidden`(
       userStatus: UserStatus,
       loggedInStatus: LoggedInStatus,
@@ -329,6 +330,20 @@ class PatientsScreenControllerTest {
     }
   }
 
+  @Suppress("unused")
+  private fun `params for verification status of approved user`() =
+      listOf(
+          listOf(WaitingForApproval, NOT_LOGGED_IN, false),
+          listOf(WaitingForApproval, OTP_REQUESTED, false),
+          listOf(WaitingForApproval, LOGGED_IN, false),
+          listOf(ApprovedForSyncing, NOT_LOGGED_IN, false),
+          listOf(ApprovedForSyncing, OTP_REQUESTED, false),
+          listOf(ApprovedForSyncing, LOGGED_IN, true),
+          listOf(DisapprovedForSyncing, NOT_LOGGED_IN, false),
+          listOf(DisapprovedForSyncing, OTP_REQUESTED, false),
+          listOf(DisapprovedForSyncing, LOGGED_IN, true)
+      )
+
   @Test
   @Parameters(
       "OTP_REQUESTED|OTP_REQUESTED|OTP_REQUESTED|false",
@@ -342,7 +357,7 @@ class PatientsScreenControllerTest {
       nextLoggedInStatus: LoggedInStatus,
       shouldHideUserAccountStatus: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    val user = PatientMocker.loggedInUser(status = ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(
             Just(user),
@@ -411,7 +426,7 @@ class PatientsScreenControllerTest {
 
   @Test
   fun `sync indicator should be visible only when user is approved for syncing`() {
-    val user = PatientMocker.loggedInUser(status = WAITING_FOR_APPROVAL).toOptional()
+    val user = PatientMocker.loggedInUser(status = WaitingForApproval).toOptional()
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(user))
     whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))

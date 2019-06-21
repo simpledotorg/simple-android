@@ -11,6 +11,17 @@ import org.simple.clinic.widgets.recyclerview.ViewHolderX
 
 sealed class AllPatientsInFacilityListItem {
 
+  companion object {
+    fun mapSearchResultsToListItems(
+        facility: Facility,
+        patientSearchResults: List<PatientSearchResult>
+    ): List<AllPatientsInFacilityListItem> {
+      return patientSearchResults
+          .map { patientSearchResult -> SearchResult(facility, patientSearchResult) }
+          .let { searchResultItems -> listOf(FacilityHeader(facility.name)) + searchResultItems }
+    }
+  }
+
   abstract val layoutResId: Int
 
   abstract fun render(holder: ViewHolderX)
@@ -21,7 +32,7 @@ sealed class AllPatientsInFacilityListItem {
 
     override fun render(holder: ViewHolderX) {
       val resources = holder.itemView.resources
-      holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_no_patients_title, facilityName)
+      holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_nopatients_title, facilityName)
     }
   }
 

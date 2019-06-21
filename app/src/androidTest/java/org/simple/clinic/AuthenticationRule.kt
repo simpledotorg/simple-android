@@ -88,7 +88,7 @@ class AuthenticationRule : TestRule {
 
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
-    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.APPROVED_FOR_SYNCING)
+    assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)
     assertThat(loggedInUser.loggedInStatus).isEqualTo(User.LoggedInStatus.LOGGED_IN)
   }
 

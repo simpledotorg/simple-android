@@ -2265,6 +2265,51 @@ class DatabaseMigrationAndroidTest {
       assertThat(it.string("uuid")).isEqualTo(businessUuid)
     }
   }
+
+  @Test
+  fun migrate_userstatus_from_36_to_37() {
+    val db_v36 = helper.createDatabase(version = 36)
+
+    fun insertUser(uuid: String, oldStatus: String) {
+      db_v36.execSQL("""
+        INSERT OR ABORT INTO `LoggedInUser`(`uuid`,`fullName`,`phoneNumber`,`pinDigest`, `status`,`createdAt`,`updatedAt`, `loggedInStatus`)
+        VALUES (
+          '$uuid',
+          'Ashok Kumar',
+          '1234567890',
+          'pinDigest',
+          '$oldStatus',
+          '2018-06-21T10:15:58.666Z',
+          '2018-06-21T10:15:58.666Z',
+          'NOT_LOGGED_IN'
+        )
+      """)
+    }
+
+    val uuid1 = UUID.randomUUID().toString()
+    insertUser(uuid = uuid1, oldStatus = "WAITING_FOR_APPROVAL")
+
+    val uuid2 = UUID.randomUUID().toString()
+    insertUser(uuid = uuid2, oldStatus = "APPROVED_FOR_SYNCING")
+
+    val uuid3 = UUID.randomUUID().toString()
+    insertUser(uuid = uuid3, oldStatus = "DISAPPROVED_FOR_SYNCING")
+
+    val db_v37 = helper.migrateTo(version = 37)
+
+    fun verifyNewStatus(uuid: String, newStatus: String) {
+      val cursor = db_v37.query("""SELECT "status" FROM "LoggedInUser" WHERE "uuid"='$uuid'""")
+
+      cursor.use {
+        assertThat(it.moveToFirst()).isTrue()
+        assertThat(it.string("status")).isEqualTo(newStatus)
+      }
+    }
+
+    verifyNewStatus(uuid = uuid1, newStatus = "requested")
+    verifyNewStatus(uuid = uuid2, newStatus = "allowed")
+    verifyNewStatus(uuid = uuid3, newStatus = "denied")
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

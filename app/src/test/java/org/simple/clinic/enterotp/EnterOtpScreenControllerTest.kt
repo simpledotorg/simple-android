@@ -244,7 +244,7 @@ class EnterOtpScreenControllerTest {
       curLoggedInStatus: User.LoggedInStatus,
       shouldCloseScreen: Boolean
   ) {
-    val user = PatientMocker.loggedInUser(status = UserStatus.APPROVED_FOR_SYNCING, loggedInStatus = prevloggedInStatus)
+    val user = PatientMocker.loggedInUser(status = UserStatus.ApprovedForSyncing, loggedInStatus = prevloggedInStatus)
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(userSession.loggedInUser()).thenReturn(
         Observable.just(

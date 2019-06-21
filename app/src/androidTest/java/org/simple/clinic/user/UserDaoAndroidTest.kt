@@ -7,8 +7,8 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.TestData
 import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import javax.inject.Inject
 
 @RunWith(AndroidJUnit4::class)
@@ -38,8 +38,8 @@ class UserDaoAndroidTest {
    */
   @Test
   fun update_should_work_correctly() {
-    val user = testData.loggedInUser(status = UserStatus.WAITING_FOR_APPROVAL)
-    val updatedUser = user.copy(status = UserStatus.APPROVED_FOR_SYNCING)
+    val user = testData.loggedInUser(status = UserStatus.WaitingForApproval)
+    val updatedUser = user.copy(status = UserStatus.ApprovedForSyncing)
 
     appDatabase.userDao().createOrUpdate(user)
     appDatabase.userDao().createOrUpdate(updatedUser)

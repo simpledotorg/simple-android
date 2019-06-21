@@ -302,7 +302,7 @@ object PatientMocker {
       name: String = "a name",
       phone: String = "a phone",
       pinDigest: String = "a hash",
-      status: UserStatus = UserStatus.WAITING_FOR_APPROVAL,
+      status: UserStatus = UserStatus.WaitingForApproval,
       loggedInStatus: User.LoggedInStatus = User.LoggedInStatus.LOGGED_IN
   ): User {
     return User(
@@ -323,7 +323,7 @@ object PatientMocker {
       phone: String = "a phone",
       pinDigest: String = "a hash",
       registrationFacilityUuid: UUID = UUID.randomUUID(),
-      status: UserStatus = UserStatus.WAITING_FOR_APPROVAL,
+      status: UserStatus = UserStatus.WaitingForApproval,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now()
   ): LoggedInUserPayload {

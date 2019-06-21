@@ -385,7 +385,7 @@ class TestData @Inject constructor(
       name: String = faker.name.name(),
       phone: String = faker.phoneNumber.phoneNumber(),
       pinDigest: String = "pin-digest",
-      status: UserStatus = randomOfEnum(UserStatus::class),
+      status: UserStatus = UserStatus.random(),
       loggedInStatus: User.LoggedInStatus = randomOfEnum(User.LoggedInStatus::class)
   ): User {
     return User(

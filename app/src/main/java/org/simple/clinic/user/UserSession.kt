@@ -45,8 +45,8 @@ import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
-import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.user.UserStatus.ApprovedForSyncing
+import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
@@ -183,7 +183,7 @@ class UserSession @Inject constructor(
               pinDigest = passwordDigest,
               createdAt = entry.createdAt!!,
               updatedAt = entry.createdAt,
-              status = WAITING_FOR_APPROVAL,
+              status = WaitingForApproval,
               loggedInStatus = NOT_LOGGED_IN)
           storeUser(user, entry.facilityId!!)
         }
@@ -235,7 +235,7 @@ class UserSession @Inject constructor(
                 // not get set to LOGGED_IN when the PIN reset request is approved. See if it can
                 // be done in a better way since there are many places where this sort of logic is
                 // littered all over the app currently.
-                val finalLoggedInStatus = if (userPayload.status == APPROVED_FOR_SYNCING) {
+                val finalLoggedInStatus = if (userPayload.status == ApprovedForSyncing) {
                   LOGGED_IN
 
                 } else {
@@ -503,7 +503,7 @@ class UserSession @Inject constructor(
     return loggedInUser()
         .map { (user) ->
           when {
-            user?.loggedInStatus == LOGGED_IN && user.status == APPROVED_FOR_SYNCING -> true
+            user?.loggedInStatus == LOGGED_IN && user.status == ApprovedForSyncing -> true
             else -> false
           }
         }

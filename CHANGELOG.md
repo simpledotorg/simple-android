@@ -1,7 +1,8 @@
 # CHANGELOG
 
 ## Next Release
-- ?
+### Internal
+- Change `LoggedInUser#status` to be a forward-compatible enum
 
 ## On Demo
 ### Feature

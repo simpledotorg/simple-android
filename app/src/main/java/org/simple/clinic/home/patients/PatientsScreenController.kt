@@ -20,9 +20,10 @@ import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.user.UserStatus.APPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.DISAPPROVED_FOR_SYNCING
-import org.simple.clinic.user.UserStatus.WAITING_FOR_APPROVAL
+import org.simple.clinic.user.UserStatus.ApprovedForSyncing
+import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
+import org.simple.clinic.user.UserStatus.Unknown
+import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -84,7 +85,7 @@ class PatientsScreenController @Inject constructor(
         .flatMapMaybe({ _ ->
           userSession.loggedInUser()
               .firstOrError()
-              .filter { (user) -> user!!.status == WAITING_FOR_APPROVAL }
+              .filter { (user) -> user!!.status == WaitingForApproval }
               .doOnSuccess {
                 // Resetting this flag here to show the approved status later
                 if (hasUserDismissedApprovedStatusPref.get()) {
@@ -133,9 +134,9 @@ class PatientsScreenController @Inject constructor(
           Observables.combineLatest(user, hasUserDismissedApprovedStatusPref.asObservable())
               .map { (user, userDismissedStatus) ->
                 when (user.status) {
-                  WAITING_FOR_APPROVAL -> { ui: Ui -> ui.showUserStatusAsWaiting() }
-                  DISAPPROVED_FOR_SYNCING -> { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
-                  APPROVED_FOR_SYNCING -> {
+                  WaitingForApproval -> { ui: Ui -> ui.showUserStatusAsWaiting() }
+                  DisapprovedForSyncing -> { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
+                  ApprovedForSyncing -> {
                     val twentyFourHoursAgo = Instant.now().minus(24, ChronoUnit.HOURS)
                     val wasApprovedInLast24Hours = twentyFourHoursAgo < approvalStatusUpdatedAtPref.get()
 
@@ -145,6 +146,7 @@ class PatientsScreenController @Inject constructor(
                       { ui: Ui -> setVerificationStatusMessageVisible(user.loggedInStatus, ui) }
                     }
                   }
+                  is Unknown -> { _ -> }
                 }
               }
         }

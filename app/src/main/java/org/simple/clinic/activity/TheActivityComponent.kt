@@ -10,6 +10,8 @@ import dagger.Subcomponent
 import io.reactivex.Observable
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
+import org.simple.clinic.allpatientsinfacility.di.AllPatientsInFacilityModule
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
@@ -121,6 +123,7 @@ interface TheActivityComponent {
   fun inject(target: RecentPatientsScreen)
   fun inject(target: PhoneMaskBottomSheet)
   fun inject(target: PatientSearchResultView)
+  fun inject(target: AllPatientsInFacilityView)
 
   @Subcomponent.Builder
   interface Builder {
@@ -137,7 +140,8 @@ interface TheActivityComponent {
 
 @Module(includes = [
   PatientsModule::class,
-  SearchResultsModule::class
+  SearchResultsModule::class,
+  AllPatientsInFacilityModule::class
 ])
 class TheActivityModule {
 

@@ -10,8 +10,9 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import javax.inject.Inject
 
-class AllPatientsInFacilityUiStateProducer(
+class AllPatientsInFacilityUiStateProducer @Inject constructor(
     private val initialState: AllPatientsInFacilityUiState,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,

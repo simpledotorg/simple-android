@@ -22,12 +22,13 @@ fun <T> bindUiToController(
       .mergeWith(screenDestroys)
       .observeOn(io())
       .compose(controller)
-      .delaySubscription(uiChangeDelay.toMillis(), TimeUnit.MILLISECONDS)
+      .delaySubscription(uiChangeDelay.toMillis(), TimeUnit.MILLISECONDS, mainThread())
       .observeOn(mainThread())
       .takeUntil(screenDestroys)
       .subscribe { uiChange -> uiChange(ui) }
 }
 
+// FIXME(vs) 21/Jun/19 - Revisit and try to de-dupe `bindUiToController`.
 @SuppressLint("CheckResult")
 fun <T> bindUiToControllerWithoutDelay(
     ui: T,

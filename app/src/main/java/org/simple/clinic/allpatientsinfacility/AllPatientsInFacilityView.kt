@@ -6,10 +6,18 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding2.view.RxView
+import io.reactivex.Observable
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
+import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.UiEvent
+import javax.inject.Inject
 
 class AllPatientsInFacilityView(
     context: Context,
@@ -18,10 +26,26 @@ class AllPatientsInFacilityView(
 
   private val searchResultsAdapter = AllPatientsInFacilityListAdapter()
 
+  @Inject
+  lateinit var controller: AllPatientsInFacilityUiController
+
   override fun onFinishInflate() {
     super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
+
+    TheActivity.component.inject(this)
+
     setupAllPatientsList()
     setupInitialViewVisibility()
+
+    bindUiToController(
+        ui = this,
+        events = Observable.just<UiEvent>(ScreenCreated()),
+        controller = controller,
+        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    )
   }
 
   private fun setupInitialViewVisibility() {

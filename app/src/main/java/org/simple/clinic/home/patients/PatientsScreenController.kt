@@ -12,6 +12,8 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers.io
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
+import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
@@ -40,6 +42,7 @@ class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
     private val dataSync: DataSync,
     private val configProvider: Observable<PatientConfig>,
+    private val checkAppUpdate: CheckAppUpdateAvailability,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
     @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -58,7 +61,8 @@ class PatientsScreenController @Inject constructor(
         toggleVisibilityOfScanCardButton(replayedEvents),
         requestCameraPermissions(replayedEvents),
         openScanSimpleIdScreen(replayedEvents),
-        toggleVisibilityOfSyncIndicator(replayedEvents)
+        toggleVisibilityOfSyncIndicator(replayedEvents),
+        showAppUpdateDialog(replayedEvents)
     )
   }
 
@@ -204,5 +208,19 @@ class PatientsScreenController @Inject constructor(
             }
           }
         }
+  }
+
+  private fun showAppUpdateDialog(events: Observable<UiEvent>): Observable<UiChange> {
+    val screenCreated = events
+        .ofType<ScreenCreated>()
+
+    val availableUpdate = checkAppUpdate
+        .listen()
+        .filter { it is ShowAppUpdate }
+
+    return Observables
+        .combineLatest(screenCreated, availableUpdate)
+        .map { (_, update) -> update }
+        .map { Ui::showAppUpdateDialog }
   }
 }

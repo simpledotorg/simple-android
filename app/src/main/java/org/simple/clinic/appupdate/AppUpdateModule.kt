@@ -1,5 +1,6 @@
 package org.simple.clinic.appupdate
 
+import android.app.Application
 import dagger.Module
 import dagger.Provides
 
@@ -10,4 +11,13 @@ open class AppUpdateModule {
   fun appUpdateConfig() = AppUpdateConfig(
       inAppUpdateEnabled = false,
       differenceBetweenVersionsToNudge = 1000)
+
+
+  @Provides
+  fun checkAppUpdate(application: Application, appUpdateConfig: AppUpdateConfig) =
+      CheckAppUpdateAvailability(
+          appContext = application,
+          config = appUpdateConfig
+      )
+
 }

@@ -20,6 +20,8 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.verify
+import org.simple.clinic.appupdate.AppUpdateState
+import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.sync.DataSync
@@ -41,6 +43,7 @@ import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
+import java.lang.IllegalStateException
 import java.net.SocketTimeoutException
 
 @RunWith(JUnitParamsRunner::class)
@@ -54,12 +57,14 @@ class PatientsScreenControllerTest {
   private val approvalStatusApprovedAt = mock<Preference<Instant>>()
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val dataSync = mock<DataSync>()
+  private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
   private val configEmitter = PublishSubject.create<PatientConfig>()
 
   private val canSyncStream = PublishSubject.create<Boolean>()
+  private val appUpdatesStream = PublishSubject.create<AppUpdateState>()
 
   @Before
   fun setUp() {
@@ -72,10 +77,12 @@ class PatientsScreenControllerTest {
         dataSync = dataSync,
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
-        configProvider = configEmitter
+        configProvider = configEmitter,
+        checkAppUpdate = checkAppUpdate
     )
 
     whenever(userSession.canSyncData()).thenReturn(canSyncStream)
+    whenever(checkAppUpdate.listen()).thenReturn(appUpdatesStream)
 
     uiEvents
         .compose(controller)
@@ -441,5 +448,32 @@ class PatientsScreenControllerTest {
     val inOrder = inOrder(screen)
     inOrder.verify(screen).hideSyncIndicator()
     inOrder.verify(screen).showSyncIndicator()
+  }
+
+  @Test
+  @Parameters(method = "params for testing app update dialog")
+  fun `when app update is available and the update dialog was not shown for the day, then it should be shown`(
+      appUpdateState: AppUpdateState,
+      shouldShow: Boolean
+  ) {
+    whenever(userSession.loggedInUser()).thenReturn(Observable.never())
+    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+
+    uiEvents.onNext(ScreenCreated())
+    appUpdatesStream.onNext(appUpdateState)
+
+    if (shouldShow) {
+      verify(screen).showAppUpdateDialog()
+    } else {
+      verify(screen, never()).showAppUpdateDialog()
+    }
+  }
+
+  fun `params for testing app update dialog`(): List<Any> {
+    return listOf(
+        listOf(AppUpdateState.ShowAppUpdate, true),
+        listOf(AppUpdateState.DontShowAppUpdate, false),
+        listOf(AppUpdateState.AppUpdateStateError(IllegalStateException()), false)
+    )
   }
 }

@@ -22,4 +22,10 @@ class PatientsModule {
   fun hasUserDismissedApprovedStatus(rxSharedPrefs: RxSharedPreferences): Preference<Boolean> {
     return rxSharedPrefs.getBoolean("approved_status_dismissed", false)
   }
+
+  @Provides
+  @Named("app_update_dialog_shown_at")
+  fun timestampForAppUpdateDialogShown(rxSharedPrefs: RxSharedPreferences): Preference<Instant> {
+    return rxSharedPrefs.getObject("app_update_dialog_shown_at", Instant.EPOCH, InstantRxPreferencesConverter())
+  }
 }

@@ -37,13 +37,15 @@ import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.RuntimePermissionResult
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
-import java.lang.IllegalStateException
+import timber.log.Timber
 import java.net.SocketTimeoutException
 
 @RunWith(JUnitParamsRunner::class)
@@ -58,6 +60,9 @@ class PatientsScreenControllerTest {
   private val hasUserDismissedApprovedStatus = mock<Preference<Boolean>>()
   private val dataSync = mock<DataSync>()
   private val checkAppUpdate = mock<CheckAppUpdateAvailability>()
+  private val appUpdateDialogShownPref = mock<Preference<Instant>>()
+  private val clock = TestUtcClock()
+
 
   private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
   private lateinit var controller: PatientsScreenController
@@ -78,7 +83,9 @@ class PatientsScreenControllerTest {
         approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
         hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         configProvider = configEmitter,
-        checkAppUpdate = checkAppUpdate
+        checkAppUpdate = checkAppUpdate,
+        utcClock = clock,
+        appUpdateDialogShownAtPref = appUpdateDialogShownPref
     )
 
     whenever(userSession.canSyncData()).thenReturn(canSyncStream)
@@ -454,10 +461,15 @@ class PatientsScreenControllerTest {
   @Parameters(method = "params for testing app update dialog")
   fun `when app update is available and the update dialog was not shown for the day, then it should be shown`(
       appUpdateState: AppUpdateState,
+      lastAppUpdateDialogShownAt: Instant,
       shouldShow: Boolean
   ) {
+
     whenever(userSession.loggedInUser()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
+    whenever(appUpdateDialogShownPref.get()).thenReturn(lastAppUpdateDialogShownAt)
+
+    clock.advanceBy(Duration.ofHours(1))
 
     uiEvents.onNext(ScreenCreated())
     appUpdatesStream.onNext(appUpdateState)
@@ -470,10 +482,49 @@ class PatientsScreenControllerTest {
   }
 
   fun `params for testing app update dialog`(): List<Any> {
+
+    fun testCase(
+        appUpdateState: AppUpdateState,
+        lastAppUpdateDialogShownAt: Instant,
+        shouldShow: Boolean
+    ) = listOf(appUpdateState, lastAppUpdateDialogShownAt, shouldShow)
+
     return listOf(
-        listOf(AppUpdateState.ShowAppUpdate, true),
-        listOf(AppUpdateState.DontShowAppUpdate, false),
-        listOf(AppUpdateState.AppUpdateStateError(IllegalStateException()), false)
+        testCase(
+            appUpdateState = AppUpdateState.ShowAppUpdate,
+            lastAppUpdateDialogShownAt = Instant.now(clock).minus(1, ChronoUnit.DAYS),
+            shouldShow = true
+        ),
+        testCase(
+            appUpdateState = AppUpdateState.ShowAppUpdate,
+            lastAppUpdateDialogShownAt = Instant.now(clock),
+            shouldShow = false
+        ),
+        testCase(
+            appUpdateState = AppUpdateState.ShowAppUpdate,
+            lastAppUpdateDialogShownAt = Instant.now(clock).plus(1, ChronoUnit.DAYS),
+            shouldShow = false
+        ),
+        testCase(
+            appUpdateState = AppUpdateState.DontShowAppUpdate,
+            lastAppUpdateDialogShownAt = Instant.now(clock),
+            shouldShow = false
+        ),
+        testCase(
+            appUpdateState = AppUpdateState.DontShowAppUpdate,
+            lastAppUpdateDialogShownAt = Instant.now(clock).minus(2, ChronoUnit.DAYS),
+            shouldShow = false
+        ),
+        testCase(
+            appUpdateState = AppUpdateState.AppUpdateStateError(IllegalStateException()),
+            lastAppUpdateDialogShownAt = Instant.now(clock),
+            shouldShow = false
+        ),
+        testCase(
+            appUpdateState = AppUpdateState.AppUpdateStateError(IllegalStateException()),
+            lastAppUpdateDialogShownAt = Instant.now(clock).minus(1, ChronoUnit.DAYS),
+            shouldShow = false
+        )
     )
   }
 }

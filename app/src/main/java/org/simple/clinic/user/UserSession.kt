@@ -13,9 +13,6 @@ import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
-import org.simple.clinic.facility.FacilityPullResult.NetworkError
-import org.simple.clinic.facility.FacilityPullResult.Success
-import org.simple.clinic.facility.FacilityPullResult.UnexpectedError
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
@@ -33,7 +30,6 @@ import org.simple.clinic.registration.RegistrationApi
 import org.simple.clinic.registration.RegistrationRequest
 import org.simple.clinic.registration.RegistrationResponse
 import org.simple.clinic.registration.RegistrationResult
-import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -200,24 +196,6 @@ class UserSession @Inject constructor(
               Timber.e(e)
               FindUserResult.UnexpectedError
             }
-          }
-        }
-  }
-
-  fun syncFacilityAndSaveUser(loggedInUserPayload: LoggedInUserPayload): Single<SaveUserLocallyResult> {
-    return facilitySync.pullWithResult()
-        .flatMap { result ->
-          when (result) {
-            is Success -> {
-              Single.just(userFromPayload(loggedInUserPayload, NOT_LOGGED_IN))
-                  .flatMap {
-                    storeUser(it, loggedInUserPayload.registrationFacilityId)
-                        .toSingleDefault(SaveUserLocallyResult.Success() as SaveUserLocallyResult)
-                  }
-                  .onErrorResumeNext(Single.just(SaveUserLocallyResult.UnexpectedError()))
-            }
-            is NetworkError -> Single.just(SaveUserLocallyResult.NetworkError())
-            is UnexpectedError -> Single.just(SaveUserLocallyResult.UnexpectedError())
           }
         }
   }

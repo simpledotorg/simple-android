@@ -15,9 +15,7 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationResult
-import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
@@ -165,28 +163,6 @@ class UserSessionAndroidTest {
   }
 
   @Test
-  fun when_saving_a_user_locally_it_should_save_the_user_locally_with_a_status_of_not_signed_in() {
-    val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
-        .blockingFirst()
-
-    val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber!!).blockingGet()
-    assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
-
-    val foundUserPayload = (findUserResult as FindUserResult.Found).user
-    val result = userSession.syncFacilityAndSaveUser(foundUserPayload).blockingGet()
-
-    assertThat(result).isInstanceOf(SaveUserLocallyResult::class.java)
-
-    val user = appDatabase.userDao().userImmediate()!!
-    assertThat(user.uuid).isEqualTo(foundUserPayload.uuid)
-    assertThat(user.loggedInStatus).isEqualTo(NOT_LOGGED_IN)
-
-    val facilityUUIDsForUser = appDatabase.userFacilityMappingDao().facilityUuids(user.uuid).blockingFirst()
-    assertThat(facilityUUIDsForUser.toSet()).isEqualTo(setOf(foundUserPayload.registrationFacilityId))
-  }
-
-  @Test
   fun when_logged_in_user_is_cleared_the_local_saved_user_must_be_removed_from_database() {
     val ongoingLoginEntry = userSession.requireLoggedInUser()
         .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
@@ -214,15 +190,7 @@ class UserSessionAndroidTest {
         .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
-    val findUserResult = userSession.findExistingUser(ongoingLoginEntry.phoneNumber!!).blockingGet()
-    assertThat(findUserResult).isInstanceOf(FindUserResult.Found::class.java)
-
-    val foundUser = (findUserResult as FindUserResult.Found).user
-
-    val saveLocallyResult = userSession.syncFacilityAndSaveUser(foundUser).blockingGet()
-    assertThat(saveLocallyResult).isInstanceOf(SaveUserLocallyResult.Success::class.java)
-
-    assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(NOT_LOGGED_IN)
+    appDatabase.userDao().updateLoggedInStatusForUser(testData.qaUserUuid(), NOT_LOGGED_IN)
 
     val requestOtpResult = userSession
         .saveOngoingLoginEntry(ongoingLoginEntry)

@@ -32,7 +32,6 @@ import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
-import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
@@ -45,7 +44,6 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
 import org.simple.clinic.registration.RegistrationApi
-import org.simple.clinic.registration.SaveUserLocallyResult
 import org.simple.clinic.security.PasswordHasher
 import org.simple.clinic.security.pin.BruteForceProtection
 import org.simple.clinic.storage.files.ClearAllFilesResult
@@ -310,25 +308,6 @@ class UserSessionTest {
         .test()
         .await()
         .assertValue(false)
-  }
-
-  @Test
-  fun `when saving the user locally and the facility sync fails, the network error should correctly map results`() {
-    whenever(facilitySync.pullWithResult())
-        .thenReturn(
-            Single.just(FacilityPullResult.Success()),
-            Single.just(FacilityPullResult.UnexpectedError()),
-            Single.just(FacilityPullResult.NetworkError())
-        )
-
-    var result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
-    assertThat(result).isInstanceOf(SaveUserLocallyResult.Success::class.java)
-
-    result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
-    assertThat(result).isInstanceOf(SaveUserLocallyResult.UnexpectedError::class.java)
-
-    result = userSession.syncFacilityAndSaveUser(loggedInUserPayload).blockingGet()
-    assertThat(result).isInstanceOf(SaveUserLocallyResult.NetworkError::class.java)
   }
 
   @Test

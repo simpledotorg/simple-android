@@ -27,10 +27,14 @@ import org.simple.clinic.user.UserStatus.DisapprovedForSyncing
 import org.simple.clinic.user.UserStatus.Unknown
 import org.simple.clinic.user.UserStatus.WaitingForApproval
 import org.simple.clinic.util.RuntimePermissionResult
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -43,8 +47,11 @@ class PatientsScreenController @Inject constructor(
     private val dataSync: DataSync,
     private val configProvider: Observable<PatientConfig>,
     private val checkAppUpdate: CheckAppUpdateAvailability,
+    private val utcClock: UtcClock,
+    private val userClock: UserClock,
     @Named("approval_status_changed_at") private val approvalStatusUpdatedAtPref: Preference<Instant>,
-    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>
+    @Named("approved_status_dismissed") private val hasUserDismissedApprovedStatusPref: Preference<Boolean>,
+    @Named("app_update_last_shown_at") private val appUpdateDialogShownAtPref: Preference<Instant>
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -211,6 +218,13 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun showAppUpdateDialog(events: Observable<UiEvent>): Observable<UiChange> {
+
+    fun hasADayPassedSinceLastUpdateShown(): Boolean {
+      val today = LocalDate.now(userClock)
+      val lastShownDate = appUpdateDialogShownAtPref.get().toLocalDateAtZone(userClock.zone)
+      return lastShownDate.isBefore(today)
+    }
+
     val screenCreated = events
         .ofType<ScreenCreated>()
 
@@ -218,9 +232,12 @@ class PatientsScreenController @Inject constructor(
         .listen()
         .filter { it is ShowAppUpdate }
 
+
     return Observables
         .combineLatest(screenCreated, availableUpdate)
         .map { (_, update) -> update }
+        .filter { hasADayPassedSinceLastUpdateShown() }
+        .doOnNext { appUpdateDialogShownAtPref.set(Instant.now(utcClock)) }
         .map { Ui::showAppUpdateDialog }
   }
 }

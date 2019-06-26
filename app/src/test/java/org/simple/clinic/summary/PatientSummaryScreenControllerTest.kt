@@ -36,8 +36,8 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_KIDNEY_
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
-import org.simple.clinic.overdue.Appointment.Status.CANCELLED
-import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
+import org.simple.clinic.overdue.Appointment.Status.Cancelled
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
@@ -540,7 +540,7 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
-    val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
+    val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(
@@ -568,7 +568,7 @@ class PatientSummaryScreenControllerTest {
       openIntention: OpenIntention,
       cancelReason: AppointmentCancelReason
   ) {
-    val canceledAppointment = PatientMocker.appointment(status = CANCELLED, cancelReason = cancelReason)
+    val canceledAppointment = PatientMocker.appointment(status = Cancelled, cancelReason = cancelReason)
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(Observable.just(Just(canceledAppointment)))
 
     val phoneNumber = PatientMocker.phoneNumber(
@@ -621,7 +621,7 @@ class PatientSummaryScreenControllerTest {
   ) {
     val appointmentStream = Observable.just(
         None,
-        Just(PatientMocker.appointment(status = SCHEDULED, cancelReason = null)))
+        Just(PatientMocker.appointment(status = Scheduled, cancelReason = null)))
     whenever(appointmentRepository.lastCreatedAppointmentForPatient(patientUuid)).thenReturn(appointmentStream)
 
     val config = PatientSummaryConfig(

@@ -3,14 +3,13 @@ package org.simple.clinic.appupdate
 import android.app.Application
 import dagger.Module
 import dagger.Provides
+import org.simple.clinic.remoteconfig.ConfigReader
 
 @Module
 open class AppUpdateModule {
 
   @Provides
-  fun appUpdateConfig() = AppUpdateConfig(
-      inAppUpdateEnabled = false,
-      differenceBetweenVersionsToNudge = 1000)
+  fun appUpdateConfig(reader: ConfigReader) = AppUpdateConfig.read(reader)
 
 
   @Provides

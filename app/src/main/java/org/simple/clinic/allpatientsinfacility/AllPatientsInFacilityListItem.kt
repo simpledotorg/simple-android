@@ -2,6 +2,7 @@ package org.simple.clinic.allpatientsinfacility
 
 import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
+import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_allpatientsinfacility_facility_header.*
 import kotlinx.android.synthetic.main.list_patient_search.*
 import org.simple.clinic.R
@@ -24,13 +25,19 @@ sealed class AllPatientsInFacilityListItem {
 
   abstract val layoutResId: Int
 
-  abstract fun render(holder: ViewHolderX)
+  abstract fun render(
+      holder: ViewHolderX,
+      eventSubject: Subject<Event>
+  )
 
   data class FacilityHeader(val facilityName: String) : AllPatientsInFacilityListItem() {
 
     override val layoutResId = R.layout.list_allpatientsinfacility_facility_header
 
-    override fun render(holder: ViewHolderX) {
+    override fun render(
+        holder: ViewHolderX,
+        eventSubject: Subject<Event>
+    ) {
       val resources = holder.itemView.resources
       holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_foundpatients_header, facilityName)
     }
@@ -43,9 +50,17 @@ sealed class AllPatientsInFacilityListItem {
 
     override val layoutResId = R.layout.list_patient_search
 
-    override fun render(holder: ViewHolderX) {
+    override fun render(
+        holder: ViewHolderX,
+        eventSubject: Subject<Event>
+    ) {
       holder.patientSearchResultView.render(patientSearchResult, facility)
+      holder.itemView.setOnClickListener { eventSubject.onNext(Event.SearchResultClicked(patientSearchResult)) }
     }
+  }
+
+  sealed class Event {
+    data class SearchResultClicked(val patientSearchResult: PatientSearchResult): AllPatientsInFacilityListItem.Event()
   }
 
   class AllPatientsInFacilityListItemCallback : DiffUtil.ItemCallback<AllPatientsInFacilityListItem>() {

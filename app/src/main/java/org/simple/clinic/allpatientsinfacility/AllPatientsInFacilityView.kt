@@ -1,5 +1,6 @@
 package org.simple.clinic.allpatientsinfacility
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -8,9 +9,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.*
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
@@ -24,10 +29,14 @@ class AllPatientsInFacilityView(
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
 
-  private val searchResultsAdapter = AllPatientsInFacilityListAdapter()
+  private val searchResultsAdapter = AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback())
 
   @Inject
   lateinit var controller: AllPatientsInFacilityUiController
+
+  private val downstreamUiEvents = PublishSubject.create<UiEvent>()
+
+  val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -40,12 +49,26 @@ class AllPatientsInFacilityView(
     setupAllPatientsList()
     setupInitialViewVisibility()
 
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    forwardListItemEventsToDownstream(screenDestroys)
+
     bindUiToController(
         ui = this,
         events = Observable.just<UiEvent>(ScreenCreated()),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = screenDestroys
     )
+  }
+
+  @SuppressLint("CheckResult")
+  private fun forwardListItemEventsToDownstream(screenDestroys: Observable<ScreenDestroyed>) {
+    searchResultsAdapter
+        .listItemEvents
+        .ofType<SearchResultClicked>()
+        .map { it.patientSearchResult.uuid }
+        .map(::AllPatientsInFacilitySearchResultClicked)
+        .takeUntil(screenDestroys)
+        .subscribe { downstreamUiEvents.onNext(it) }
   }
 
   private fun setupInitialViewVisibility() {

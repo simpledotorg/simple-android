@@ -26,9 +26,9 @@ import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status
-import org.simple.clinic.overdue.Appointment.Status.CANCELLED
-import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
-import org.simple.clinic.overdue.Appointment.Status.VISITED
+import org.simple.clinic.overdue.Appointment.Status.Cancelled
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.Communication
@@ -980,7 +980,7 @@ class PatientRepositoryAndroidTest {
     val appointment2 = testData.appointment(
         patientUuid = recentPatient2.uuid,
         updatedAt = testClock.instant(),
-        status = SCHEDULED,
+        status = Scheduled,
         appointmentType = Manual,
         cancelReason = null
     )
@@ -997,7 +997,7 @@ class PatientRepositoryAndroidTest {
     val appointment1 = testData.appointment(
         patientUuid = recentPatient1.uuid,
         updatedAt = testClock.instant(),
-        status = SCHEDULED,
+        status = Scheduled,
         appointmentType = Manual,
         cancelReason = null
     )
@@ -1232,9 +1232,9 @@ class PatientRepositoryAndroidTest {
   @Test
   fun verify_only_scheduled_appointments_are_included_when_fetching_recent_patients() {
     val facilityUuid = UUID.randomUUID()
-    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, status = SCHEDULED)
-    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, status = CANCELLED)
-    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, status = VISITED)
+    val recentPatient1 = savePatientWithAppointment(facilityUuid = facilityUuid, status = Scheduled)
+    val recentPatient2 = savePatientWithAppointment(facilityUuid = facilityUuid, status = Cancelled)
+    val recentPatient3 = savePatientWithAppointment(facilityUuid = facilityUuid, status = Visited)
 
     val recentPatients = patientRepository
         .recentPatients(facilityUuid)
@@ -1301,7 +1301,7 @@ class PatientRepositoryAndroidTest {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      status: Status = SCHEDULED,
+      status: Status = Scheduled,
       remindOn: LocalDate? = null,
       agreedToVisit: Boolean? = null,
       appointmentType: AppointmentType = Manual,

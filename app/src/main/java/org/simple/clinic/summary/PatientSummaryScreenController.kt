@@ -23,7 +23,7 @@ import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_STROKE
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.IS_ON_TREATMENT_FOR_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.overdue.Appointment.Status.CANCELLED
+import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.AppointmentCancelReason.InvalidPhoneNumber
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
@@ -521,7 +521,7 @@ class PatientSummaryScreenController @Inject constructor(
     return appointmentRepository
         .lastCreatedAppointmentForPatient(patientUuid)
         .filterAndUnwrapJust()
-        .filter { it.status == CANCELLED && it.cancelReason == InvalidPhoneNumber }
+        .filter { it.status == Cancelled && it.cancelReason == InvalidPhoneNumber }
   }
 
   private fun hasShownReminderForMissingPhone(patientUuid: UUID): Observable<Boolean> {

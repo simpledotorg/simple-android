@@ -30,9 +30,9 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
-import org.simple.clinic.overdue.Appointment.Status.CANCELLED
-import org.simple.clinic.overdue.Appointment.Status.SCHEDULED
-import org.simple.clinic.overdue.Appointment.Status.VISITED
+import org.simple.clinic.overdue.Appointment.Status.Cancelled
+import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
@@ -123,7 +123,7 @@ class AppointmentRepositoryAndroidTest {
     savedAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(appointmentDate)
-      assertThat(this.status).isEqualTo(Appointment.Status.SCHEDULED)
+      assertThat(this.status).isEqualTo(Scheduled)
       assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
@@ -153,7 +153,7 @@ class AppointmentRepositoryAndroidTest {
     oldAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(date1)
-      assertThat(this.status).isEqualTo(Appointment.Status.VISITED)
+      assertThat(this.status).isEqualTo(Visited)
       assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
       assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
@@ -164,7 +164,7 @@ class AppointmentRepositoryAndroidTest {
     newAppointment.apply {
       assertThat(this.patientUuid).isEqualTo(patientId)
       assertThat(this.scheduledDate).isEqualTo(date2)
-      assertThat(this.status).isEqualTo(SCHEDULED)
+      assertThat(this.status).isEqualTo(Scheduled)
       assertThat(this.cancelReason).isEqualTo(null)
       assertThat(this.syncStatus).isEqualTo(SyncStatus.PENDING)
     }
@@ -353,7 +353,7 @@ class AppointmentRepositoryAndroidTest {
     overdueAppts[0].apply {
       assertThat(this.appointment.patientUuid).isEqualTo(patient3)
       assertThat(this.appointment.scheduledDate).isEqualTo(date3)
-      assertThat(this.appointment.status).isEqualTo(SCHEDULED)
+      assertThat(this.appointment.status).isEqualTo(Scheduled)
       assertThat(this.appointment.cancelReason).isEqualTo(null)
       assertThat(this.bloodPressure.uuid).isEqualTo(bp30)
     }
@@ -376,7 +376,7 @@ class AppointmentRepositoryAndroidTest {
       return testData.appointment(
           patientUuid = patientUuid,
           facilityUuid = testData.qaUserFacilityUuid(),
-          status = SCHEDULED,
+          status = Scheduled,
           scheduledDate = scheduledDate)
     }
 
@@ -543,7 +543,7 @@ class AppointmentRepositoryAndroidTest {
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.cancelReason).isEqualTo(AppointmentCancelReason.PatientNotResponding)
-      assertThat(this.status).isEqualTo(CANCELLED)
+      assertThat(this.status).isEqualTo(Cancelled)
       assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
       assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
     }
@@ -558,7 +558,7 @@ class AppointmentRepositoryAndroidTest {
 
     val appointments = appointmentRepository.recordsWithSyncStatus(SyncStatus.PENDING).blockingGet()
     assertThat(appointments).hasSize(1)
-    assertThat(appointments.first().status).isEqualTo(SCHEDULED)
+    assertThat(appointments.first().status).isEqualTo(Scheduled)
 
     val uuid = appointments[0].uuid
     appointmentRepository.setSyncStatus(from = SyncStatus.PENDING, to = SyncStatus.DONE).blockingAwait()
@@ -572,7 +572,7 @@ class AppointmentRepositoryAndroidTest {
     updatedList[0].apply {
       assertThat(this.uuid).isEqualTo(uuid)
       assertThat(this.cancelReason).isNull()
-      assertThat(this.status).isEqualTo(VISITED)
+      assertThat(this.status).isEqualTo(Visited)
       assertThat(this.updatedAt).isEqualTo(Instant.now(clock))
       assertThat(this.updatedAt).isNotEqualTo(timeOfSchedule)
     }
@@ -817,7 +817,7 @@ class AppointmentRepositoryAndroidTest {
         .save(listOf(testData.appointment(
             uuid = appointmentUuid1,
             patientUuid = patientId,
-            status = SCHEDULED,
+            status = Scheduled,
             syncStatus = SyncStatus.DONE,
             scheduledDate = scheduleDate,
             createdAt = Instant.now(testClock),
@@ -838,7 +838,7 @@ class AppointmentRepositoryAndroidTest {
             uuid = appointmentUuid2,
             patientUuid = patientId,
             scheduledDate = scheduleDate,
-            status = SCHEDULED,
+            status = Scheduled,
             syncStatus = SyncStatus.PENDING,
             createdAt = Instant.now(testClock),
             updatedAt = Instant.now(testClock)
@@ -848,7 +848,7 @@ class AppointmentRepositoryAndroidTest {
     appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientId).blockingAwait()
 
     database.appointmentDao().getOne(firstAppointment!!.uuid)!!.run {
-      assertThat(status).isEqualTo(VISITED)
+      assertThat(status).isEqualTo(Visited)
       assertThat(syncStatus).isEqualTo(SyncStatus.PENDING)
       assertThat(updatedAt).isEqualTo(Instant.now(testClock))
     }
@@ -870,7 +870,7 @@ class AppointmentRepositoryAndroidTest {
     savedAppointment.let {
       assertThat(it.patientUuid).isEqualTo(patientId)
       assertThat(it.scheduledDate).isEqualTo(appointmentDate)
-      assertThat(it.status).isEqualTo(Appointment.Status.SCHEDULED)
+      assertThat(it.status).isEqualTo(Scheduled)
       assertThat(it.syncStatus).isEqualTo(SyncStatus.PENDING)
       assertThat(it.appointmentType).isEqualTo(Automatic)
     }

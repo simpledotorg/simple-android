@@ -9,11 +9,9 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
-import com.squareup.moshi.Json
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
 import org.simple.clinic.patient.SyncStatus
-import org.simple.clinic.util.RoomEnumTypeConverter
 import org.simple.clinic.util.SafeEnumTypeAdapter
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -36,18 +34,46 @@ data class Appointment(
     val deletedAt: Instant?
 ) {
 
-  enum class Status {
+  sealed class Status {
 
-    @Json(name = "scheduled")
-    SCHEDULED,
+    object Scheduled : Status()
 
-    @Json(name = "cancelled")
-    CANCELLED,
+    object Cancelled : Status()
 
-    @Json(name = "visited")
-    VISITED;
+    object Visited : Status()
 
-    class RoomTypeConverter : RoomEnumTypeConverter<Status>(Status::class.java)
+    data class Unknown(val actualValue: String) : Status()
+
+    object TypeAdapter : SafeEnumTypeAdapter<Status>(
+        knownMappings = mapOf(
+            Scheduled to "scheduled",
+            Cancelled to "cancelled",
+            Visited to "visited"
+        ),
+        unknownStringToEnumConverter = { Unknown(it) },
+        unknownEnumToStringConverter = { (it as Unknown).actualValue }
+    )
+
+    class RoomTypeConverter {
+      @TypeConverter
+      fun toEnum(value: String?): Status? = TypeAdapter.toEnum(value)
+
+      @TypeConverter
+      fun fromEnum(reason: Status?): String? = TypeAdapter.fromEnum(reason)
+    }
+
+    class MoshiTypeConverter {
+      @FromJson
+      fun toEnum(value: String?): Status? = TypeAdapter.toEnum(value)
+
+      @ToJson
+      fun fromEnum(reason: Status?): String? = TypeAdapter.fromEnum(reason)
+    }
+
+    companion object {
+      @VisibleForTesting
+      fun random(): Status = TypeAdapter.knownMappings.keys.shuffled().first()
+    }
   }
 
   sealed class AppointmentType {

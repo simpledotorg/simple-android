@@ -250,7 +250,7 @@ data class Patient(
     abstract fun isPatientDefaulter(
         patientUuid: UUID,
         yesAnswer: MedicalHistory.Answer = MedicalHistory.Answer.YES,
-        scheduled: Appointment.Status = Appointment.Status.SCHEDULED
+        scheduled: Appointment.Status = Appointment.Status.Scheduled
     ): Flowable<Boolean>
 
     @Query("""

@@ -23,29 +23,33 @@ class AllPatientsInFacilityViewStateProducer(
   ): ObservableSource<AllPatientsInFacilityViewState> {
     return uiEvents
         .ofType<ScreenCreated>()
-        .switchMap {
-          userSession
-              .requireLoggedInUser()
-              .subscribeOn(schedulersProvider.io())
-              .switchMap { user ->
-                val sharedFacilities = facilityRepository
-                    .currentFacility(user)
-                    .subscribeOn(schedulersProvider.io())
-                    .share()
-
-                val facilityViewStates = sharedFacilities
-                    .map { initialState.facilityFetched(it) }
-
-                val patientsViewStates = sharedFacilities
-                    .switchMap { patientRepository.allPatientsInFacility(it).subscribeOn(schedulersProvider.io()) }
-                    .withLatestFrom(facilityViewStates)
-                    .map { (searchResults, state) ->
-                      if (searchResults.isEmpty()) state.noPatients() else state.hasPatients(searchResults)
-                    }
-
-                Observable.merge(facilityViewStates, patientsViewStates)
-              }
+        .flatMap {
+          fetchAllPatientsInFacility()
               .startWith(initialState)
+        }
+  }
+
+  private fun fetchAllPatientsInFacility(): Observable<AllPatientsInFacilityViewState> {
+    return userSession
+        .requireLoggedInUser()
+        .subscribeOn(schedulersProvider.io())
+        .flatMap { user ->
+          val sharedFacilities = facilityRepository
+              .currentFacility(user)
+              .subscribeOn(schedulersProvider.io())
+              .share()
+
+          val facilityViewStates = sharedFacilities
+              .map { initialState.facilityFetched(it) }
+
+          val patientsViewStates = sharedFacilities
+              .switchMap { patientRepository.allPatientsInFacility(it).subscribeOn(schedulersProvider.io()) }
+              .withLatestFrom(facilityViewStates)
+              .map { (searchResults, state) ->
+                if (searchResults.isEmpty()) state.noPatients() else state.hasPatients(searchResults)
+              }
+
+          Observable.merge(facilityViewStates, patientsViewStates)
         }
   }
 }

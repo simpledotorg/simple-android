@@ -58,7 +58,8 @@ buildscript {
       firebaseCore        : '16.0.8',
       firebaseConfig      : '16.4.1',
       googleServices      : '4.0.1',
-      playCore            : '1.6.1'
+      playCore            : '1.6.1',
+      fastScroll          : '2.0.0'
   ]
 
   repositories {

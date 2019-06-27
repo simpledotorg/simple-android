@@ -15,13 +15,15 @@ import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
-import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.*
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import java.util.Locale
 import javax.inject.Inject
 
 class AllPatientsInFacilityView(
@@ -29,10 +31,15 @@ class AllPatientsInFacilityView(
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
 
-  private val searchResultsAdapter = AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback())
+  private val searchResultsAdapter by unsafeLazy {
+    AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback(), locale)
+  }
 
   @Inject
   lateinit var controller: AllPatientsInFacilityUiController
+
+  @Inject
+  lateinit var locale: Locale
 
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
 

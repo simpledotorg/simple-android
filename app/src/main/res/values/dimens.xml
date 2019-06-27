@@ -22,6 +22,7 @@
   <dimen name="textsize_16">16sp</dimen>
   <dimen name="textsize_18">18sp</dimen>
   <dimen name="textsize_20">20sp</dimen>
+  <dimen name="textsize_24">24sp</dimen>
   <dimen name="textsize_34">34sp</dimen>
 
   <dimen name="medicalhistory_selected_padding">10dp</dimen>
@@ -43,4 +44,6 @@
   <dimen name="bloodpressureentry_navigation_arrow_width">48dp</dimen>
 
   <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
+
+  <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>
 </resources>

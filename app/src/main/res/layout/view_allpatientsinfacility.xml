@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
@@ -34,10 +35,17 @@
 
   </LinearLayout>
 
-  <androidx.recyclerview.widget.RecyclerView
+  <com.simplecityapps.recyclerview_fastscroll.views.FastScrollRecyclerView
     android:id="@+id/patientsList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:visibility="gone"
+    app:fastScrollPopupBackgroundSize="@dimen/allpatientsinfacility_fastscrollpopup_size"
+    app:fastScrollPopupBgColor="@color/blue1"
+    app:fastScrollPopupTextColor="@color/white100"
+    app:fastScrollPopupTextSize="@dimen/textsize_24"
+    app:fastScrollThumbColor="@color/blue1"
+    app:fastScrollTrackColor="@color/transparent"
     tools:listitem="@layout/list_patient_search" />
 
 </org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView>

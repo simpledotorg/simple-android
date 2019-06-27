@@ -9,6 +9,7 @@ import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
+import java.util.Locale
 
 sealed class AllPatientsInFacilityListItem {
 
@@ -30,6 +31,8 @@ sealed class AllPatientsInFacilityListItem {
       eventSubject: Subject<Event>
   )
 
+  abstract fun sectionTitle(locale: Locale): SectionTitle
+
   data class FacilityHeader(val facilityName: String) : AllPatientsInFacilityListItem() {
 
     override val layoutResId = R.layout.list_allpatientsinfacility_facility_header
@@ -41,6 +44,8 @@ sealed class AllPatientsInFacilityListItem {
       val resources = holder.itemView.resources
       holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_foundpatients_header, facilityName)
     }
+
+    override fun sectionTitle(locale: Locale): SectionTitle = SectionTitle.None
   }
 
   data class SearchResult(
@@ -57,10 +62,19 @@ sealed class AllPatientsInFacilityListItem {
       holder.patientSearchResultView.render(patientSearchResult, facility)
       holder.itemView.setOnClickListener { eventSubject.onNext(Event.SearchResultClicked(patientSearchResult)) }
     }
+
+    override fun sectionTitle(locale: Locale): SectionTitle {
+      return SectionTitle.Text(patientSearchResult.fullName.take(1).toUpperCase(locale))
+    }
   }
 
   sealed class Event {
-    data class SearchResultClicked(val patientSearchResult: PatientSearchResult): AllPatientsInFacilityListItem.Event()
+    data class SearchResultClicked(val patientSearchResult: PatientSearchResult) : AllPatientsInFacilityListItem.Event()
+  }
+
+  sealed class SectionTitle {
+    object None : SectionTitle()
+    data class Text(val title: String) : SectionTitle()
   }
 
   class AllPatientsInFacilityListItemCallback : DiffUtil.ItemCallback<AllPatientsInFacilityListItem>() {

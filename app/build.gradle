@@ -280,6 +280,8 @@ dependencies {
 
   implementation "com.budiyev.android:code-scanner:$versions.codeScanner"
   implementation "com.google.android.play:core:$versions.playCore"
+
+  implementation "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll"
 }
 
 // This must always be present at the bottom of this file, as per:

@@ -60,7 +60,8 @@ open class StorageModule(
         Migration_33_34(),
         Migration_34_35(),
         Migration_35_36(),
-        Migration_36_37()
+        Migration_36_37(),
+        Migration_37_38()
     )
   }
 

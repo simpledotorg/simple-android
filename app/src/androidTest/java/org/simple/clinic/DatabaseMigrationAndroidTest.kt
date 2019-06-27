@@ -2310,6 +2310,53 @@ class DatabaseMigrationAndroidTest {
     verifyNewStatus(uuid = uuid2, newStatus = "allowed")
     verifyNewStatus(uuid = uuid3, newStatus = "denied")
   }
+
+  @Test
+  fun migrate_appointment_status_from_37_to_38() {
+    val db_v37 = helper.createDatabase(version = 37)
+
+    fun insertAppointment(uuid: String, oldStatus: String) {
+      db_v37.execSQL("""
+        INSERT OR REPLACE INTO Appointment
+          (uuid, patientUuid, facilityUuid, scheduledDate, status, appointmentType, syncStatus, createdAt, updatedAt)
+        VALUES (
+          '$uuid',
+          'a1d33096-cea6-4beb-8441-82cab2befe2d',
+          '0274a4a6-dd0e-493c-86aa-6502cd1fc2a0',
+          '2011-12-03',
+          '$oldStatus',
+          'automatic',
+          'PENDING',
+          '2018-06-21T10:15:58.666Z',
+          '2018-06-21T10:15:58.666Z'
+        );
+      """)
+    }
+
+    val uuid1 = UUID.randomUUID().toString()
+    insertAppointment(uuid = uuid1, oldStatus = "SCHEDULED")
+
+    val uuid2 = UUID.randomUUID().toString()
+    insertAppointment(uuid = uuid2, oldStatus = "CANCELLED")
+
+    val uuid3 = UUID.randomUUID().toString()
+    insertAppointment(uuid = uuid3, oldStatus = "VISITED")
+
+    val db_v38 = helper.migrateTo(version = 38)
+
+    fun verifyNewAppointmentStatus(uuid: String, newStatus: String) {
+      val cursor = db_v38.query("SELECT status FROM Appointment WHERE uuid='$uuid'")
+
+      cursor.use {
+        assertThat(it.moveToFirst()).isTrue()
+        assertThat(it.string("status")).isEqualTo(newStatus)
+      }
+    }
+
+    verifyNewAppointmentStatus(uuid = uuid1, newStatus = "scheduled")
+    verifyNewAppointmentStatus(uuid = uuid2, newStatus = "cancelled")
+    verifyNewAppointmentStatus(uuid = uuid3, newStatus = "visited")
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

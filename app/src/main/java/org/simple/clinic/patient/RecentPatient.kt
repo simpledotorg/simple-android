@@ -34,12 +34,9 @@ data class RecentPatient(
       const val RECENT_PATIENT_QUERY = """
         SELECT P.uuid, P.fullName, P.gender, P.dateOfBirth, P.age_value, P.age_updatedAt, P.age_computedDateOfBirth,
         MAX(
-            IFNULL(P.updatedAt, '0'),
-            IFNULL(BP_FOR_ORDERING.latestRecordedAt, '0'),
+            IFNULL(BP.latestRecordedAt, '0'),
             IFNULL(PD.latestUpdatedAt, '0'),
-            IFNULL(AP.latestUpdatedAt, '0'),
-            IFNULL(COMM.latestUpdatedAt, '0'),
-            IFNULL(MH.latestUpdatedAt, '0')
+            IFNULL(AP.latestCreatedAt, '0')
         ) updatedAt
         FROM Patient P
           LEFT JOIN (
@@ -48,7 +45,7 @@ data class RecentPatient(
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
               GROUP BY patientUuid
-          ) BP_FOR_ORDERING ON P.uuid = BP_FOR_ORDERING.patientUuid
+          ) BP ON P.uuid = BP.patientUuid
           LEFT JOIN (
             SELECT MAX(updatedAt) latestUpdatedAt, patientUuid, facilityUuid
               FROM PrescribedDrug
@@ -57,32 +54,17 @@ data class RecentPatient(
               GROUP BY patientUuid
           ) PD ON P.uuid = PD.patientUuid
           LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, uuid, patientUuid, facilityUuid
+            SELECT MAX(createdAt) latestCreatedAt, uuid, patientUuid, facilityUuid
               FROM Appointment
               WHERE facilityUuid = :facilityUuid
               AND deletedAt IS NULL
               AND status = :appointmentStatus
-              AND remindOn IS NULL
-              AND agreedToVisit IS NULL
               AND appointmentType = :appointmentType
-              AND cancelReason IS NULL
               GROUP BY patientUuid
           ) AP ON P.uuid = AP.patientUuid
-          LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, appointmentUuid
-              FROM Communication
-              WHERE deletedAt IS NULL
-              GROUP BY appointmentUuid
-          ) COMM ON AP.uuid = COMM.appointmentUuid
-          LEFT JOIN (
-            SELECT MAX(updatedAt) latestUpdatedAt, patientUuid
-              FROM MedicalHistory
-              WHERE deletedAt IS NULL
-              GROUP BY patientUuid
-          ) MH ON P.uuid = MH.patientUuid
         WHERE (
           (
-            BP_FOR_ORDERING.facilityUuid = :facilityUuid OR
+            BP.facilityUuid = :facilityUuid OR
             PD.facilityUuid = :facilityUuid OR
             AP.facilityUuid = :facilityUuid
           ) 

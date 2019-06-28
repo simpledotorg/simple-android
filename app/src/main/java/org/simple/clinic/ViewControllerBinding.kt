@@ -16,13 +16,20 @@ fun <T> bindUiToController(
     events: Observable<UiEvent>,
     controller: ObservableTransformer<UiEvent, (T) -> Unit>,
     screenDestroys: Observable<ScreenDestroyed>,
-    uiChangeDelay: Duration = SCREEN_CHANGE_ANIMATION_DURATION
+    uiChangeDelay: Duration = SCREEN_CHANGE_ANIMATION_DURATION,
+    delaySubscription: Boolean = true
 ) {
   events
       .mergeWith(screenDestroys)
       .observeOn(io())
       .compose(controller)
-      .delaySubscription(uiChangeDelay.toMillis(), TimeUnit.MILLISECONDS, mainThread())
+      .let { uiChanges ->
+        if (delaySubscription) {
+          uiChanges.delaySubscription(uiChangeDelay.toMillis(), TimeUnit.MILLISECONDS, mainThread())
+        } else {
+          uiChanges
+        }
+      }
       .observeOn(mainThread())
       .takeUntil(screenDestroys)
       .subscribe { uiChange -> uiChange(ui) }

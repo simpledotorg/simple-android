@@ -11,7 +11,6 @@ import io.reactivex.Observable
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreen
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreen
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
-import org.simple.clinic.allpatientsinfacility.di.AllPatientsInFacilityModule
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
 import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
@@ -144,7 +143,6 @@ interface TheActivityComponent {
 @Module(includes = [
   PatientsModule::class,
   SearchResultsModule::class,
-  AllPatientsInFacilityModule::class,
   BloodPressureEntryModule::class
 ])
 class TheActivityModule {

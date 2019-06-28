@@ -25,6 +25,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
+import org.simple.clinic.widgets.ScreenRestored
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -129,7 +130,8 @@ class AllPatientsInFacilityView(
         delaySubscription = false
     )
 
-    controllerEvents.onNext(ScreenCreated())
+    val screenEvent = if (states.value == null) ScreenCreated() else ScreenRestored
+    controllerEvents.onNext(screenEvent)
   }
 
   override fun onSaveInstanceState(): Parcelable? {

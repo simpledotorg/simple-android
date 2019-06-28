@@ -28,32 +28,35 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
   ): ObservableSource<AllPatientsInFacilityUiState> {
     val initialState = AllPatientsInFacilityUiState.FETCHING_PATIENTS
 
-    val screenCreatedStates = uiEvents
-        .ofType<ScreenCreated>()
-        .flatMap {
-          fetchAllPatientsInFacility(initialState)
-              .startWith(initialState)
-        }
-
-    val screenRestoredStates = uiEvents
-        .ofType<ScreenRestored>()
-        .withLatestFrom(states) { _, state -> state }
-
-    return Observable.merge(screenCreatedStates, screenRestoredStates)
+    return Observable.merge(
+        screenCreatedUseCase(initialState, uiEvents.ofType(ScreenCreated::class.java)),
+        screenRestoredUseCase(uiEvents.ofType(ScreenRestored::class.java))
+    )
   }
 
-  private fun fetchAllPatientsInFacility(initialState: AllPatientsInFacilityUiState): Observable<AllPatientsInFacilityUiState> {
+  private fun screenCreatedUseCase(
+      initialState: AllPatientsInFacilityUiState,
+      screenCreatedEvents: Observable<ScreenCreated>
+  ): Observable<AllPatientsInFacilityUiState> {
+    return screenCreatedEvents
+        .flatMap {
+          fetchAllPatientsInFacility()
+              .startWith(initialState)
+        }
+  }
+
+  private fun fetchAllPatientsInFacility(): Observable<AllPatientsInFacilityUiState> {
     return userSession
         .requireLoggedInUser()
         .subscribeOn(schedulersProvider.io())
-        .flatMap { user ->
+        .switchMap { user ->
           val sharedFacilities = facilityRepository
               .currentFacility(user)
               .subscribeOn(schedulersProvider.io())
               .share()
 
           val facilityViewStates = sharedFacilities
-              .map { initialState.facilityFetched(it) }
+              .withLatestFrom(states) { facility, state -> state.facilityFetched(facility) }
 
           val patientsViewStates = sharedFacilities
               .switchMap { patientRepository.allPatientsInFacility(it).subscribeOn(schedulersProvider.io()) }
@@ -64,5 +67,13 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
 
           Observable.merge(facilityViewStates, patientsViewStates)
         }
+  }
+
+  private fun screenRestoredUseCase(
+      screenRestoredEvents: Observable<ScreenRestored>
+  ): Observable<AllPatientsInFacilityUiState> {
+    return screenRestoredEvents
+        .ofType<ScreenRestored>()
+        .withLatestFrom(states) { _, state -> state }
   }
 }

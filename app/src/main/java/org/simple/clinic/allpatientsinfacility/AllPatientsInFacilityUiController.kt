@@ -8,14 +8,13 @@ import org.simple.clinic.widgets.UiEvent
 
 class AllPatientsInFacilityUiController(
     private val uiStateProducer: AllPatientsInFacilityUiStateProducer,
-    private val uiChangeProducer: AllPatientsInFacilityUiChangeProducer,
-    private val states: Subject<AllPatientsInFacilityUiState>
+    private val uiChangeProducer: AllPatientsInFacilityUiChangeProducer
 ) : ObservableTransformer<UiEvent, AllPatientsInFacilityUiChange> {
 
   override fun apply(uiEvents: Observable<UiEvent>): ObservableSource<AllPatientsInFacilityUiChange> {
     return uiEvents
         .compose(uiStateProducer)
-        .doOnNext { states.onNext(it) }
+        .doOnNext { uiStateProducer.states.onNext(it) }
         .compose(uiChangeProducer)
   }
 }

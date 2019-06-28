@@ -5,11 +5,13 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.subjects.BehaviorSubject
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenRestored
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -19,17 +21,25 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider
 ) : ObservableTransformer<UiEvent, AllPatientsInFacilityUiState> {
+  val states: BehaviorSubject<AllPatientsInFacilityUiState> = BehaviorSubject.create()
+
   override fun apply(
       uiEvents: Observable<UiEvent>
   ): ObservableSource<AllPatientsInFacilityUiState> {
     val initialState = AllPatientsInFacilityUiState.FETCHING_PATIENTS
 
-    return uiEvents
+    val screenCreatedStates = uiEvents
         .ofType<ScreenCreated>()
         .flatMap {
           fetchAllPatientsInFacility(initialState)
               .startWith(initialState)
         }
+
+    val screenRestoredStates = uiEvents
+        .ofType<ScreenRestored>()
+        .withLatestFrom(states) { _, state -> state }
+
+    return Observable.merge(screenCreatedStates, screenRestoredStates)
   }
 
   private fun fetchAllPatientsInFacility(initialState: AllPatientsInFacilityUiState): Observable<AllPatientsInFacilityUiState> {

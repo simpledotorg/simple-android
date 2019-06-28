@@ -31,17 +31,6 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `search button should remain enabled only when name is present`() {
-    uiEvents.onNext(SearchQueryNameChanged(""))
-    uiEvents.onNext(SearchQueryNameChanged("foo"))
-    uiEvents.onNext(SearchQueryNameChanged(" "))
-    uiEvents.onNext(SearchQueryNameChanged("bar"))
-
-    verify(screen, times(2)).showSearchButtonAsDisabled()
-    verify(screen, times(2)).showSearchButtonAsEnabled()
-  }
-
-  @Test
   fun `when search is clicked with empty name then a validation error should be shown`() {
     uiEvents.onNext(SearchQueryNameChanged(""))
     uiEvents.onNext(SearchClicked())
@@ -84,5 +73,41 @@ class PatientSearchScreenControllerTest {
 
     // then
     verify(screen).openPatientSummary(patientUuid)
+  }
+
+  @Test
+  fun `when the search query is blank, the all patients list must be shown`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged(""))
+
+    // then
+    verify(screen).showAllPatientsInFacility()
+  }
+
+  @Test
+  fun `when the search query is blank, the search button must be hidden`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged(""))
+
+    // then
+    verify(screen).hideSearchButton()
+  }
+
+  @Test
+  fun `when the search query is not blank, the all patients list must be hidden`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged("a"))
+
+    // then
+    verify(screen).hideAllPatientsInFacility()
+  }
+
+  @Test
+  fun `when the search query is not blank, the search button must be shown`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged("a"))
+
+    // then
+    verify(screen).showSearchButton()
   }
 }

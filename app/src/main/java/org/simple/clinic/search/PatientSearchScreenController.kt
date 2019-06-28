@@ -25,27 +25,13 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         .replay()
 
     return Observable.mergeArray(
-        enableSearchButton(replayedEvents),
         showValidationErrors(replayedEvents),
         resetValidationErrors(replayedEvents),
         openSearchResults(replayedEvents),
-        openPatientSummary(replayedEvents)
+        openPatientSummary(replayedEvents),
+        toggleAllPatientsVisibility(replayedEvents),
+        toggleSearchButtonVisibility(replayedEvents)
     )
-  }
-
-  private fun enableSearchButton(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.isNotBlank() }
-        .map { isQueryComplete ->
-          { ui: Ui ->
-            if (isQueryComplete) {
-              ui.showSearchButtonAsEnabled()
-            } else {
-              ui.showSearchButtonAsDisabled()
-            }
-          }
-        }
   }
 
   private fun validateQuery(): ObservableTransformer<UiEvent, UiEvent> {
@@ -113,5 +99,35 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         .ofType<PatientItemClicked>()
         .map { it.patientUuid }
         .map { patientUuid -> { ui: Ui -> ui.openPatientSummary(patientUuid) } }
+  }
+
+  private fun toggleAllPatientsVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    return events
+        .ofType<SearchQueryNameChanged>()
+        .map { it.name.isNotBlank() }
+        .map { isSearchQueryPresent ->
+          { ui: Ui ->
+            if (isSearchQueryPresent) {
+              ui.hideAllPatientsInFacility()
+            } else {
+              ui.showAllPatientsInFacility()
+            }
+          }
+        }
+  }
+
+  private fun toggleSearchButtonVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
+    return events
+        .ofType<SearchQueryNameChanged>()
+        .map { it.name.isNotBlank() }
+        .map { isSearchQueryPresent ->
+          { ui: Ui ->
+            if (isSearchQueryPresent) {
+              ui.showSearchButton()
+            } else {
+              ui.hideSearchButton()
+            }
+          }
+        }
   }
 }

@@ -2,6 +2,7 @@ package org.simple.clinic.search
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.RelativeLayout
 import com.jakewharton.rxbinding2.view.RxView
@@ -86,14 +87,6 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .map { PatientItemClicked(it.patientUuid) }
   }
 
-  fun showSearchButtonAsEnabled() {
-    searchButtonFrame.isEnabled = true
-  }
-
-  fun showSearchButtonAsDisabled() {
-    searchButtonFrame.isEnabled = false
-  }
-
   fun openPatientSearchResultsScreen(name: String) {
     screenRouter.push(PatientSearchResultsScreenKey(name))
   }
@@ -113,5 +106,21 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         intention = OpenIntention.ViewExistingPatient,
         screenCreatedTimestamp = Instant.now(utcClock)
     ))
+  }
+
+  fun showAllPatientsInFacility() {
+    allPatientsView.visibility = View.VISIBLE
+  }
+
+  fun hideAllPatientsInFacility() {
+    allPatientsView.visibility = View.GONE
+  }
+
+  fun showSearchButton() {
+    searchButtonFrame.visibility = View.VISIBLE
+  }
+
+  fun hideSearchButton() {
+    searchButtonFrame.visibility = View.GONE
   }
 }

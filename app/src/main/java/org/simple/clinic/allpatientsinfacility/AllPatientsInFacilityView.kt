@@ -2,6 +2,7 @@ package org.simple.clinic.allpatientsinfacility
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Bundle
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
@@ -33,6 +34,10 @@ class AllPatientsInFacilityView(
     context: Context,
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
+  companion object {
+    private val FEATURE_STATE_KEY = AllPatientsInFacilityView::class.java.name
+    private val VIEW_STATE_KEY = FEATURE_STATE_KEY + "ViewState"
+  }
 
   private val searchResultsAdapter by unsafeLazy {
     AllPatientsInFacilityListAdapter(AllPatientsInFacilityListItemCallback(), locale)
@@ -129,10 +134,22 @@ class AllPatientsInFacilityView(
   }
 
   override fun onSaveInstanceState(): Parcelable? {
-    return super.onSaveInstanceState()
+    return Bundle().apply {
+      val viewState = super.onSaveInstanceState()
+      putParcelable(VIEW_STATE_KEY, viewState)
+      putParcelable(FEATURE_STATE_KEY, states.value)
+    }
   }
 
   override fun onRestoreInstanceState(state: Parcelable?) {
-    super.onRestoreInstanceState(state)
+    val bundle = state as Bundle
+    val viewState = bundle[VIEW_STATE_KEY]
+    val controllerState = bundle[FEATURE_STATE_KEY]
+
+    (controllerState as AllPatientsInFacilityUiState?)?.let {
+      states.onNext(it)
+    }
+
+    super.onRestoreInstanceState(viewState as Parcelable)
   }
 }

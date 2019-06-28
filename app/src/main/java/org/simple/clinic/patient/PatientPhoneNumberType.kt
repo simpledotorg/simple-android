@@ -1,21 +1,26 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.SafeEnumTypeAdapter
 
-sealed class PatientPhoneNumberType {
+sealed class PatientPhoneNumberType : Parcelable {
 
+  @Parcelize
   object Mobile : PatientPhoneNumberType()
 
+  @Parcelize
   object Landline : PatientPhoneNumberType()
 
-  data class Unknown(val actualValue: String): PatientPhoneNumberType()
+  @Parcelize
+  data class Unknown(val actualValue: String) : PatientPhoneNumberType()
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  object TypeAdapter: SafeEnumTypeAdapter<PatientPhoneNumberType>(
+  object TypeAdapter : SafeEnumTypeAdapter<PatientPhoneNumberType>(
       knownMappings = mapOf(
           Mobile to "mobile",
           Landline to "landline"

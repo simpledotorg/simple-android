@@ -1,16 +1,19 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.patient.sync.PatientAddressPayload
 import org.simple.clinic.storage.DaoWithUpsert
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity
+@Parcelize
 data class PatientAddress(
     @PrimaryKey
     val uuid: UUID,
@@ -29,7 +32,7 @@ data class PatientAddress(
     val updatedAt: Instant,
 
     val deletedAt: Instant?
-) {
+) : Parcelable {
 
   fun toPayload(): PatientAddressPayload {
     return PatientAddressPayload(

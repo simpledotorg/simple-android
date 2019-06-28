@@ -1,9 +1,11 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
@@ -11,14 +13,18 @@ import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.util.SafeEnumTypeAdapter
 
-sealed class Gender {
+sealed class Gender: Parcelable {
 
+  @Parcelize
   object Male : Gender()
 
+  @Parcelize
   object Female : Gender()
 
+  @Parcelize
   object Transgender : Gender()
 
+  @Parcelize
   data class Unknown(val actualValue: String): Gender()
 
   @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)

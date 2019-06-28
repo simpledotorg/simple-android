@@ -25,7 +25,6 @@ class AllPatientsInFacilityUiStateProducerTest {
   private val patientRepository = mock<PatientRepository>()
 
   private val viewStateProducer = AllPatientsInFacilityUiStateProducer(
-      initialState,
       userSession,
       facilityRepository,
       patientRepository,

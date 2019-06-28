@@ -14,7 +14,6 @@ import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
 class AllPatientsInFacilityUiStateProducer @Inject constructor(
-    private val initialState: AllPatientsInFacilityUiState,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
@@ -23,15 +22,17 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
   override fun apply(
       uiEvents: Observable<UiEvent>
   ): ObservableSource<AllPatientsInFacilityUiState> {
+    val initialState = AllPatientsInFacilityUiState.FETCHING_PATIENTS
+
     return uiEvents
         .ofType<ScreenCreated>()
         .flatMap {
-          fetchAllPatientsInFacility()
+          fetchAllPatientsInFacility(initialState)
               .startWith(initialState)
         }
   }
 
-  private fun fetchAllPatientsInFacility(): Observable<AllPatientsInFacilityUiState> {
+  private fun fetchAllPatientsInFacility(initialState: AllPatientsInFacilityUiState): Observable<AllPatientsInFacilityUiState> {
     return userSession
         .requireLoggedInUser()
         .subscribeOn(schedulersProvider.io())

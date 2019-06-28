@@ -33,7 +33,6 @@ class AllPatientsInFacilityUiControllerTest {
     whenever(patientRepository.allPatientsInFacility(facility)).thenReturn(Observable.just(emptyList()))
 
     val viewStateProducer = AllPatientsInFacilityUiStateProducer(
-        AllPatientsInFacilityUiState.FETCHING_PATIENTS,
         userSession,
         facilityRepository,
         patientRepository,

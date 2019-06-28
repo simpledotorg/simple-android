@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Feature
+- Nudge users to update the app if it is older than expected
+
 ### Internal
 - Change `LoggedInUser#status` to be a forward-compatible enum
 

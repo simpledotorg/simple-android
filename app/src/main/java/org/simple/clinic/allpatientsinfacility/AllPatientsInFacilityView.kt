@@ -13,7 +13,6 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
@@ -54,7 +53,7 @@ class AllPatientsInFacilityView(
 
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
   private val controllerEvents = PublishSubject.create<UiEvent>()
-  private val states = BehaviorSubject.create<AllPatientsInFacilityUiState>()
+  private val states by unsafeLazy { uiStateProducer.states }
 
   val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
 
@@ -125,7 +124,7 @@ class AllPatientsInFacilityView(
     bindUiToController(
         ui = this,
         events = controllerEvents.hide(),
-        controller = AllPatientsInFacilityUiController(uiStateProducer, uiChangeProducer, states),
+        controller = AllPatientsInFacilityUiController(uiStateProducer, uiChangeProducer),
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() },
         delaySubscription = false
     )

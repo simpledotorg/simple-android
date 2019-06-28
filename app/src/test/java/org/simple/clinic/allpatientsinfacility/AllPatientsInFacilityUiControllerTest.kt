@@ -39,7 +39,7 @@ class AllPatientsInFacilityUiControllerTest {
         TrampolineSchedulersProvider()
     )
     val uiChangeProducer = AllPatientsInFacilityUiChangeProducer()
-    val controller = AllPatientsInFacilityUiController(viewStateProducer, uiChangeProducer, PublishSubject.create())
+    val controller = AllPatientsInFacilityUiController(viewStateProducer, uiChangeProducer)
     val uiEvents = PublishSubject.create<UiEvent>()
     val view = mock<AllPatientsInFacilityUi>()
 

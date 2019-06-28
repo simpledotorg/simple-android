@@ -12,6 +12,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
+import org.simple.clinic.widgets.ScreenRestored
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -24,13 +25,16 @@ class AllPatientsInFacilityUiStateProducerTest {
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
 
-  private val viewStateProducer = AllPatientsInFacilityUiStateProducer(
+  private val uiStateProducer = AllPatientsInFacilityUiStateProducer(
       userSession,
       facilityRepository,
       patientRepository,
       TrampolineSchedulersProvider()
   )
   private val uiEventsSubject = PublishSubject.create<UiEvent>()
+  private val uiStates = uiEventsSubject
+      .compose(uiStateProducer)
+      .doOnNext { uiStateProducer.states.onNext(it) }
 
   @Before
   fun setUp() {
@@ -46,7 +50,7 @@ class AllPatientsInFacilityUiStateProducerTest {
     whenever(patientRepository.allPatientsInFacility(facility))
         .thenReturn(Observable.never())
 
-    val testObserver = uiEventsSubject.compose(viewStateProducer).test()
+    val testObserver = uiStates.test()
 
     // when
     uiEventsSubject.onNext(ScreenCreated())
@@ -65,7 +69,7 @@ class AllPatientsInFacilityUiStateProducerTest {
     whenever(patientRepository.allPatientsInFacility(facility))
         .thenReturn(Observable.just(emptyList()))
 
-    val testObserver = uiEventsSubject.compose(viewStateProducer).test()
+    val testObserver = uiStates.test()
 
     // when
     uiEventsSubject.onNext(ScreenCreated())
@@ -87,7 +91,7 @@ class AllPatientsInFacilityUiStateProducerTest {
     whenever(patientRepository.allPatientsInFacility(facility))
         .thenReturn(Observable.just(patientSearchResults))
 
-    val testObserver = uiEventsSubject.compose(viewStateProducer).test()
+    val testObserver = uiStates.test()
 
     // when
     uiEventsSubject.onNext(ScreenCreated())
@@ -99,6 +103,38 @@ class AllPatientsInFacilityUiStateProducerTest {
     with(testObserver) {
       assertNoErrors()
       assertValues(initialState, facilityFetchedState, hasPatientsState)
+      assertNotTerminated()
+    }
+  }
+
+  @Test
+  fun `when the screen is restored, then the ui change producer should emit the last known state`() {
+    // given
+    whenever(patientRepository.allPatientsInFacility(facility))
+        .thenReturn(Observable.just(emptyList()))
+
+    val testObserver = uiStates.test()
+
+    uiEventsSubject.onNext(ScreenCreated())
+
+    val facilityFetchedState = initialState.facilityFetched(facility)
+    val noPatientsState = facilityFetchedState.noPatients()
+
+    with(testObserver) {
+      assertNoErrors()
+      assertValues(initialState, facilityFetchedState, noPatientsState)
+      assertNotTerminated()
+    }
+
+    // when
+    testObserver.dispose()
+    val restoredTestObserver = uiStates.test()
+    uiEventsSubject.onNext(ScreenRestored)
+
+    // then
+    with(restoredTestObserver) {
+      assertNoErrors()
+      assertValue(noPatientsState)
       assertNotTerminated()
     }
   }

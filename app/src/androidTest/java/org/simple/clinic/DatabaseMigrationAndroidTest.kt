@@ -2272,7 +2272,7 @@ class DatabaseMigrationAndroidTest {
 
     fun insertUser(uuid: String, oldStatus: String) {
       db_v36.execSQL("""
-        INSERT OR ABORT INTO `LoggedInUser`(`uuid`,`fullName`,`phoneNumber`,`pinDigest`, `status`,`createdAt`,`updatedAt`, `loggedInStatus`)
+        INSERT OR ABORT INTO LoggedInUser (uuid, fullName, phoneNumber, pinDigest,  status, createdAt, updatedAt, loggedInStatus)
         VALUES (
           '$uuid',
           'Ashok Kumar',
@@ -2298,7 +2298,7 @@ class DatabaseMigrationAndroidTest {
     val db_v37 = helper.migrateTo(version = 37)
 
     fun verifyNewStatus(uuid: String, newStatus: String) {
-      val cursor = db_v37.query("""SELECT "status" FROM "LoggedInUser" WHERE "uuid"='$uuid'""")
+      val cursor = db_v37.query("SELECT status FROM LoggedInUser WHERE uuid='$uuid'")
 
       cursor.use {
         assertThat(it.moveToFirst()).isTrue()

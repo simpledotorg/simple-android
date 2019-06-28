@@ -1,23 +1,31 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
 import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
+import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.util.SafeEnumTypeAdapter
 
-sealed class PatientStatus {
+sealed class PatientStatus: Parcelable {
 
+  @Parcelize
   object Active : PatientStatus()
 
+  @Parcelize
   object Dead : PatientStatus()
 
+  @Parcelize
   object Migrated : PatientStatus()
 
+  @Parcelize
   object Unresponsive : PatientStatus()
 
+  @Parcelize
   object Inactive : PatientStatus()
 
+  @Parcelize
   data class Unknown(val actualValue: String) : PatientStatus()
 
   object TypeAdapter : SafeEnumTypeAdapter<PatientStatus>(

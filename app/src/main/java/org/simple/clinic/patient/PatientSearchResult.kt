@@ -1,15 +1,18 @@
 package org.simple.clinic.patient
 
+import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Query
 import io.reactivex.Flowable
 import io.reactivex.Single
+import kotlinx.android.parcel.Parcelize
 import org.intellij.lang.annotations.Language
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
+@Parcelize
 data class PatientSearchResult(
 
     val uuid: UUID,
@@ -50,7 +53,7 @@ data class PatientSearchResult(
 
     @Embedded(prefix = "bp_")
     val lastBp: LastBp?
-) {
+) : Parcelable {
 
   override fun toString(): String {
     return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastBp?.takenAtFacilityUuid}"
@@ -112,10 +115,11 @@ data class PatientSearchResult(
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)
 
+  @Parcelize
   data class LastBp(
       val uuid: UUID,
       val takenOn: Instant,
       val takenAtFacilityName: String,
       val takenAtFacilityUuid: UUID
-  )
+  ) : Parcelable
 }

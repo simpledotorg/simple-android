@@ -2,6 +2,7 @@ package org.simple.clinic.allpatientsinfacility
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.widget.FrameLayout
@@ -11,6 +12,7 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
@@ -47,6 +49,7 @@ class AllPatientsInFacilityView(
 
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
   private val controllerEvents = PublishSubject.create<UiEvent>()
+  private val states = BehaviorSubject.create<AllPatientsInFacilityUiState>()
 
   val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
 
@@ -117,11 +120,19 @@ class AllPatientsInFacilityView(
     bindUiToController(
         ui = this,
         events = controllerEvents.hide(),
-        controller = AllPatientsInFacilityUiController(uiStateProducer, uiChangeProducer),
+        controller = AllPatientsInFacilityUiController(uiStateProducer, uiChangeProducer, states),
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() },
         delaySubscription = false
     )
 
     controllerEvents.onNext(ScreenCreated())
+  }
+
+  override fun onSaveInstanceState(): Parcelable? {
+    return super.onSaveInstanceState()
+  }
+
+  override fun onRestoreInstanceState(state: Parcelable?) {
+    super.onRestoreInstanceState(state)
   }
 }

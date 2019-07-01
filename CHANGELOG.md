@@ -4,7 +4,7 @@
 ### Internal
 - Change `LoggedInUser#status` to be a forward-compatible enum
 
-## On Demo
+## 2019-07-01-4522
 ### Feature
 - Show "Last Seen" time of patient in recent patients list instead of "Last BP"
 

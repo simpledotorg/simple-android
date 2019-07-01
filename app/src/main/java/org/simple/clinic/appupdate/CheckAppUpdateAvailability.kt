@@ -3,6 +3,7 @@ package org.simple.clinic.appupdate
 import android.app.Application
 import android.os.Build
 import androidx.annotation.VisibleForTesting
+import androidx.annotation.VisibleForTesting.PRIVATE
 import com.google.android.play.core.appupdate.AppUpdateInfo
 import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
@@ -15,31 +16,48 @@ import javax.inject.Inject
 
 class CheckAppUpdateAvailability @Inject constructor(
     private val appContext: Application,
-    private val config: AppUpdateConfig,
+    private val config: Observable<AppUpdateConfig>,
     private val versionUpdateCheck: (Int, Application, AppUpdateConfig) -> Boolean = isVersionApplicableForUpdate
 ) {
 
   fun listen(): Observable<AppUpdateState> {
+    return appUpdateCallback()
+        .flatMap(this::shouldNudgeForUpdate)
+        .onErrorReturn(::AppUpdateStateError)
+  }
+
+  private fun appUpdateCallback(): Observable<AppUpdateInfo> {
     val appUpdateManager = AppUpdateManagerFactory.create(appContext)
     val appUpdateInfoTask = appUpdateManager.appUpdateInfo
 
-    return Observable.create { emitter ->
+    return Observable.create<AppUpdateInfo> { emitter ->
       appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
-        if (shouldNudgeForAppUpdate(appUpdateInfo)) {
-          emitter.onNext(ShowAppUpdate)
-        } else {
-          emitter.onNext(DontShowAppUpdate)
-        }
+        emitter.onNext(appUpdateInfo)
       }
 
       appUpdateInfoTask.addOnFailureListener { exception ->
-        emitter.onNext(AppUpdateStateError(exception))
+        emitter.onError(exception)
       }
     }
   }
 
-  @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-  fun shouldNudgeForAppUpdate(appUpdateInfo: AppUpdateInfo): Boolean {
+  @VisibleForTesting(otherwise = PRIVATE)
+  fun shouldNudgeForUpdate(appUpdateInfo: AppUpdateInfo): Observable<AppUpdateState> {
+    val checkUpdate = config
+        .map { checkForUpdate(appUpdateInfo, it) }
+
+    val shouldShow = checkUpdate
+        .filter { showUpdate -> showUpdate }
+        .map { ShowAppUpdate }
+
+    val doNotShow = checkUpdate
+        .filter { showUpdate -> showUpdate.not() }
+        .map { DontShowAppUpdate }
+
+    return Observable.mergeArray(shouldShow, doNotShow)
+  }
+
+  private fun checkForUpdate(appUpdateInfo: AppUpdateInfo, config: AppUpdateConfig): Boolean {
     return config.inAppUpdateEnabled
         && appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
         && appUpdateInfo.isUpdateTypeAllowed(FLEXIBLE)

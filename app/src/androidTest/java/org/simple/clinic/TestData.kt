@@ -27,6 +27,7 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
+import org.simple.clinic.patient.PatientStatus.ACTIVE
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
@@ -89,7 +90,12 @@ class TestData @Inject constructor(
     val businessIds = if (generateBusinessId) listOf(businessId(patientUuid = patientUuid)) else emptyList()
 
     return PatientProfile(
-        patient = patient(uuid = patientUuid, syncStatus = syncStatus, addressUuid = patientAddressUuid),
+        patient = patient(
+            uuid = patientUuid,
+            syncStatus = syncStatus,
+            addressUuid = patientAddressUuid,
+            status = ACTIVE
+        ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
         businessIds = businessIds)

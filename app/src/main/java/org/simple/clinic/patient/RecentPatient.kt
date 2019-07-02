@@ -81,9 +81,13 @@ data class RecentPatient(
               GROUP BY patientUuid
           ) MH ON P.uuid = MH.patientUuid
         WHERE (
-          BP_FOR_ORDERING.facilityUuid = :facilityUuid OR
-          PD.facilityUuid = :facilityUuid OR
-          AP.facilityUuid = :facilityUuid
+          (
+            BP_FOR_ORDERING.facilityUuid = :facilityUuid OR
+            PD.facilityUuid = :facilityUuid OR
+            AP.facilityUuid = :facilityUuid
+          ) 
+          AND P.deletedAt IS NULL
+          AND P.status = :patientStatus
         )
         ORDER BY updatedAt DESC
       """
@@ -104,6 +108,7 @@ data class RecentPatient(
         facilityUuid: UUID,
         appointmentStatus: Status,
         appointmentType: AppointmentType,
+        patientStatus: PatientStatus,
         limit: Int
     ): Flowable<List<RecentPatient>>
 
@@ -111,7 +116,8 @@ data class RecentPatient(
     fun recentPatients(
         facilityUuid: UUID,
         appointmentStatus: Status,
-        appointmentType: AppointmentType
+        appointmentType: AppointmentType,
+        patientStatus: PatientStatus
     ): Flowable<List<RecentPatient>>
   }
 }

@@ -33,6 +33,11 @@ import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationRepository
+import org.simple.clinic.patient.PatientStatus.ACTIVE
+import org.simple.clinic.patient.PatientStatus.DEAD
+import org.simple.clinic.patient.PatientStatus.INACTIVE
+import org.simple.clinic.patient.PatientStatus.MIGRATED
+import org.simple.clinic.patient.PatientStatus.UNRESPONSIVE
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
@@ -347,7 +352,7 @@ class PatientRepositoryAndroidTest {
           .let { profile ->
             profile.copy(patient = profile.patient.copy(
                 fullName = fullName,
-                status = PatientStatus.ACTIVE))
+                status = ACTIVE))
           }
     }
 
@@ -507,7 +512,7 @@ class PatientRepositoryAndroidTest {
     data.forEach { (patientName, visitedFacilities) ->
       val patientProfile = testData.patientProfile()
           .let { profile ->
-            profile.copy(patient = profile.patient.copy(fullName = patientName, status = PatientStatus.ACTIVE))
+            profile.copy(patient = profile.patient.copy(fullName = patientName, status = ACTIVE))
           }
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -573,7 +578,7 @@ class PatientRepositoryAndroidTest {
         .blockingFirst()
 
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
-    assertThat(deadPatient.status).isEqualTo(PatientStatus.DEAD)
+    assertThat(deadPatient.status).isEqualTo(DEAD)
   }
 
   @Test
@@ -617,7 +622,7 @@ class PatientRepositoryAndroidTest {
               fullName = "Name",
               searchableName = "Name",
               dateOfBirth = LocalDate.now(clock).minusYears(10),
-              status = PatientStatus.ACTIVE
+              status = ACTIVE
           ),
           address = template.address.copy(uuid = addressUuid),
           phoneNumbers = template.phoneNumbers
@@ -1112,9 +1117,12 @@ class PatientRepositoryAndroidTest {
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
-      recordedAt: Instant = Instant.now()
+      recordedAt: Instant = Instant.now(),
+      patientStatus: PatientStatus = ACTIVE
   ): RecentPatient {
-    val patientProfile = testData.patientProfile(patientUuid = patientUuid)
+    val patientProfile = testData.patientProfile(patientUuid = patientUuid).run {
+      copy(patient = patient.copy(status = patientStatus))
+    }
     patientRepository.save(listOf(patientProfile)).blockingAwait()
 
     val bpMeasurement = testData.bloodPressureMeasurement(
@@ -1932,5 +1940,27 @@ class PatientRepositoryAndroidTest {
     assertThat(hasPatientChangedSince(patientUuid, oneSecondAfterPatientUpdated)).isFalse()
     assertThat(hasPatientChangedSince(patientUuid, oneSecondBeforePatientUpdated)).isFalse()
   }
-}
 
+  @Test
+  fun patients_that_are_not_active_should_not_come_up_in_recent_patients_list() {
+    val facilityUuid = UUID.randomUUID()
+
+    val patient1 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = ACTIVE)
+    verifyRecentPatientOrder(patient1, facilityUuid = facilityUuid)
+
+    val patient2 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = ACTIVE)
+    verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
+
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = DEAD)
+    verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
+
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = MIGRATED)
+    verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
+
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = UNRESPONSIVE)
+    verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
+
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = INACTIVE)
+    verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
+  }
+}

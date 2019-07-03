@@ -10,11 +10,12 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import java.util.UUID
 
 class AllPatientsInFacilityUiChangeProducerTest {
   private val view = mock<AllPatientsInFacilityUi>()
-  private val uiChangeProducer = AllPatientsInFacilityUiChangeProducer()
+  private val uiChangeProducer = AllPatientsInFacilityUiChangeProducer(TrampolineSchedulersProvider())
   private val viewStateSubject = PublishSubject.create<AllPatientsInFacilityUiState>()
 
   private val facility = PatientMocker.facility(UUID.fromString("1be5097b-1c9f-4f78-aa70-9b907f241669"))

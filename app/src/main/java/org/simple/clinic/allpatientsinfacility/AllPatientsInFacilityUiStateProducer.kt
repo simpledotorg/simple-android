@@ -2,12 +2,11 @@ package org.simple.clinic.allpatientsinfacility
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
-import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.subjects.BehaviorSubject
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.plumbing.BaseUiStateProducer
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
@@ -20,12 +19,9 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
     private val facilityRepository: FacilityRepository,
     private val patientRepository: PatientRepository,
     private val schedulersProvider: SchedulersProvider
-) : ObservableTransformer<UiEvent, AllPatientsInFacilityUiState> {
-  val states: BehaviorSubject<AllPatientsInFacilityUiState> = BehaviorSubject.create()
+) : BaseUiStateProducer<UiEvent, AllPatientsInFacilityUiState>() {
 
-  override fun apply(
-      uiEvents: Observable<UiEvent>
-  ): ObservableSource<AllPatientsInFacilityUiState> {
+  override fun apply(uiEvents: Observable<UiEvent>): ObservableSource<AllPatientsInFacilityUiState> {
     val initialState = AllPatientsInFacilityUiState.FETCHING_PATIENTS
 
     return Observable.merge(

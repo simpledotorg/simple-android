@@ -90,6 +90,18 @@ data class PatientSearchResult(
       SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status
     """)
     fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
+
+    @Suppress("AndroidUnresolvedRoomSqlReference")
+    @Query("""
+      SELECT * FROM ($mainQuery) AllSearchResults
+      INNER JOIN (
+        SELECT DISTINCT P.uuid FROM Patient P
+          INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
+          WHERE BP.deletedAt IS NULL AND P.status = :status AND BP.facilityUuid = :facilityUuid
+      ) PatientsAtFacility ON AllSearchResults.uuid = PatientsAtFacility.uuid
+      GROUP BY AllSearchResults.uuid ORDER BY AllSearchResults.fullName
+    """)
+    fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

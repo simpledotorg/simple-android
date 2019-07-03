@@ -1963,4 +1963,154 @@ class PatientRepositoryAndroidTest {
     savePatientWithBp(facilityUuid = facilityUuid, patientStatus = INACTIVE)
     verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
   }
+
+  @Test
+  fun querying_all_patients_in_a_facility_should_return_only_patients_in_that_facility_ordered_by_name() {
+
+    fun recordPatientAtFacility(
+        patientName: String,
+        status: PatientStatus,
+        facility: Facility
+    ) {
+      val patientUuid = UUID.randomUUID()
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
+        patientProfile.copy(patient = patientProfile.patient.copy(status = status, fullName = patientName))
+      }
+      val bp = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
+    }
+
+    // given
+    val (facilityA, facilityB, facilityC) = facilityRepository.facilities().blockingFirst()
+
+    recordPatientAtFacility(
+        "Chitra",
+        ACTIVE,
+        facilityA
+    )
+    recordPatientAtFacility(
+        "Anubhav",
+        ACTIVE,
+        facilityA
+    )
+    recordPatientAtFacility(
+        "Bhim",
+        DEAD,
+        facilityA
+    )
+    recordPatientAtFacility(
+        "Elvis",
+        DEAD,
+        facilityB
+    )
+    recordPatientAtFacility(
+        "Farhan",
+        DEAD,
+        facilityB
+    )
+    recordPatientAtFacility(
+        "Dhruv",
+        ACTIVE,
+        facilityB
+    )
+
+    // when
+    fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
+      return patientRepository
+          .allPatientsInFacility(facility)
+          .blockingFirst()
+    }
+
+    val allPatientFullNamesInFacilityA = patientsInFacility(facilityA).map { it.fullName }
+    val allPatientFullNamesInFacilityB = patientsInFacility(facilityB).map { it.fullName }
+    val allPatientFullNamesInFacilityC = patientsInFacility(facilityC).map { it.fullName }
+
+    // then
+    assertThat(allPatientFullNamesInFacilityA)
+        .containsExactly("Anubhav", "Chitra")
+        .inOrder()
+
+    assertThat(allPatientFullNamesInFacilityB)
+        .containsExactly("Dhruv")
+        .inOrder()
+
+    assertThat(allPatientFullNamesInFacilityC).isEmpty()
+  }
+
+  @Test
+  fun querying_all_patients_in_a_facility_should_set_the_last_bp_to_the_last_recorded_one_within_any_facility() {
+
+    fun createPatient(patientUuid: UUID, patientName: String): PatientProfile {
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
+        patientProfile.copy(patient = patientProfile.patient.copy(status = ACTIVE, fullName = patientName))
+      }
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      return patientProfile
+    }
+
+    fun recordBp(uuid: UUID, patientUuid: UUID, facilityUuid: UUID, recordedAt: Instant) {
+      val bp = testData.bloodPressureMeasurement(uuid = uuid, patientUuid = patientUuid, facilityUuid = facilityUuid, recordedAt = recordedAt)
+
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
+    }
+
+    // given
+    val (facilityA, facilityB) = facilityRepository.facilities().blockingFirst()
+    val now = Instant.parse("2019-06-26T00:00:00Z")
+    val oneSecondLater = now.plusSeconds(1)
+    val oneSecondEarlier = now.minusSeconds(1)
+    val fiveSecondsLater = now.plusSeconds(5)
+
+    val uuidOfPatientA = UUID.fromString("e2a49529-3b46-4c9e-a7bc-af3090f1ecbb")
+    val uuidOfBp1OfPatientA = UUID.fromString("588b0d8c-6dce-4664-863f-8c79c06c6c3c")
+    val uuidOfBp2OfPatientA = UUID.fromString("ba875b98-4ca0-4097-bbc7-56041b377cf2")
+    val uuidOfBp3OfPatientA = UUID.fromString("4b92601e-4a86-40de-b6b7-707f9122a81b")
+    createPatient(patientUuid = uuidOfPatientA, patientName = "Patient with latest BP in Facility A")
+    recordBp(uuid = uuidOfBp1OfPatientA, patientUuid = uuidOfPatientA, facilityUuid = facilityA.uuid, recordedAt = oneSecondLater)
+    recordBp(uuid = uuidOfBp2OfPatientA, patientUuid = uuidOfPatientA, facilityUuid = facilityB.uuid, recordedAt = oneSecondEarlier)
+    recordBp(uuid = uuidOfBp3OfPatientA, patientUuid = uuidOfPatientA, facilityUuid = facilityA.uuid, recordedAt = now)
+
+    val uuidOfPatientB = UUID.fromString("7925e13f-3b04-46b0-b685-7005ebb1b6fd")
+    val uuidOfBp1OfPatientB = UUID.fromString("00e39456-f5e4-4538-956d-7e973ec5da88")
+    val uuidOfBp2OfPatientB = UUID.fromString("b72e28cd-1b46-4c72-84cd-58530c2829e3")
+    val uuidOfBp3OfPatientB = UUID.fromString("c18b41d5-260e-4a26-8030-45c621ded98d")
+    createPatient(patientUuid = uuidOfPatientB, patientName = "Patient with latest BP in Facility B")
+    recordBp(uuid = uuidOfBp1OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityB.uuid, recordedAt = fiveSecondsLater)
+    recordBp(uuid = uuidOfBp2OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityA.uuid, recordedAt = oneSecondEarlier)
+    recordBp(uuid = uuidOfBp3OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityB.uuid, recordedAt = now)
+
+    // when
+    fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
+      return patientRepository
+          .allPatientsInFacility(facility)
+          .blockingFirst()
+    }
+
+    data class PatientUuidAndLatestBpRecorded(val patientUuid: UUID, val latestBpRecordedAt: Instant) {
+      constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastBp!!.takenOn)
+    }
+
+    val patientsAndLatestBpRecordedAtFacilityA = patientsInFacility(facilityA)
+        .map(::PatientUuidAndLatestBpRecorded)
+    val patientsAndLatestBpRecordedAtFacilityB = patientsInFacility(facilityB)
+        .map(::PatientUuidAndLatestBpRecorded)
+
+    // then
+    assertThat(patientsAndLatestBpRecordedAtFacilityA)
+        .containsExactly(
+            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientA, latestBpRecordedAt = oneSecondLater),
+            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientB, latestBpRecordedAt = fiveSecondsLater)
+        )
+        .inOrder()
+
+    assertThat(patientsAndLatestBpRecordedAtFacilityB)
+        .containsExactly(
+            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientA, latestBpRecordedAt = oneSecondLater),
+            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientB, latestBpRecordedAt = fiveSecondsLater)
+        )
+        .inOrder()
+  }
 }

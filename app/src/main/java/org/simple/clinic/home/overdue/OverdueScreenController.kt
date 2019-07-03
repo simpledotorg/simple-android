@@ -72,7 +72,7 @@ class OverdueScreenController @Inject constructor(
                 phoneNumber = it.phoneNumber?.number,
                 bpSystolic = it.bloodPressure.systolic,
                 bpDiastolic = it.bloodPressure.diastolic,
-                bpDaysAgo = calculateDaysAgoFromInstant(it.bloodPressure.updatedAt),
+                bpDaysAgo = calculateDaysAgoFromInstant(it.bloodPressure.recordedAt),
                 overdueDays = calculateOverdueDays(it.appointment.scheduledDate),
                 isAtHighRisk = it.isAtHighRisk)
           }

@@ -16,16 +16,13 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
+import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
-import org.simple.clinic.bindUiToController
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.ScreenCreated
-import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.ScreenRestored
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
 import javax.inject.Inject
@@ -53,8 +50,7 @@ class AllPatientsInFacilityView(
   lateinit var locale: Locale
 
   private val downstreamUiEvents = PublishSubject.create<UiEvent>()
-  private val controllerEvents = PublishSubject.create<UiEvent>()
-  private val states by unsafeLazy { uiStateProducer.states }
+  private lateinit var binding: ViewControllerBinding<UiEvent, AllPatientsInFacilityUiState, AllPatientsInFacilityUi>
 
   val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
 
@@ -70,6 +66,12 @@ class AllPatientsInFacilityView(
     setupInitialViewVisibility()
     forwardListItemEventsToDownstream()
     forwardListScrolledEventsToDownstream()
+
+    binding = ViewControllerBinding.bindToView(
+        view = this,
+        uiStateProducer = uiStateProducer,
+        uiChangeProducer = uiChangeProducer
+    )
   }
 
   @SuppressLint("CheckResult")
@@ -119,26 +121,11 @@ class AllPatientsInFacilityView(
     searchResultsAdapter.submitList(listItems)
   }
 
-  override fun onAttachedToWindow() {
-    super.onAttachedToWindow()
-
-    bindUiToController(
-        ui = this,
-        events = controllerEvents.hide(),
-        controller = AllPatientsInFacilityUiController(uiStateProducer, uiChangeProducer),
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() },
-        delaySubscription = false
-    )
-
-    val screenEvent = if (states.value == null) ScreenCreated() else ScreenRestored
-    controllerEvents.onNext(screenEvent)
-  }
-
   override fun onSaveInstanceState(): Parcelable? {
     return Bundle().apply {
       val viewState = super.onSaveInstanceState()
       putParcelable(VIEW_STATE_KEY, viewState)
-      putParcelable(FEATURE_STATE_KEY, states.value)
+      putParcelable(FEATURE_STATE_KEY, binding.latestState())
     }
   }
 
@@ -148,7 +135,7 @@ class AllPatientsInFacilityView(
     val controllerState = bundle[FEATURE_STATE_KEY]
 
     (controllerState as AllPatientsInFacilityUiState?)?.let {
-      states.onNext(it)
+      binding.restoreSavedState(it)
     }
 
     super.onRestoreInstanceState(viewState as Parcelable)

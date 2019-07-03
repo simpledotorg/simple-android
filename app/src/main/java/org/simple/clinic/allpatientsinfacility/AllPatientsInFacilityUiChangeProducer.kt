@@ -1,20 +1,26 @@
 package org.simple.clinic.allpatientsinfacility
 
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import org.simple.clinic.plumbing.BaseUiChangeProducer
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import javax.inject.Inject
 
 typealias AllPatientsInFacilityUiChange = (AllPatientsInFacilityUi) -> Unit
 
-class AllPatientsInFacilityUiChangeProducer @Inject constructor() : ObservableTransformer<AllPatientsInFacilityUiState, AllPatientsInFacilityUiChange> {
-  override fun apply(uiStates: Observable<AllPatientsInFacilityUiState>): ObservableSource<AllPatientsInFacilityUiChange> {
-    val queriedPatientsStates = uiStates.filter { it.patientsQueried }
+class AllPatientsInFacilityUiChangeProducer @Inject constructor(
+    schedulersProvider: SchedulersProvider
+) : BaseUiChangeProducer<AllPatientsInFacilityUiState, AllPatientsInFacilityUi>(schedulersProvider.ui()) {
 
-    return Observable.merge(
-        noPatientsInFacilityUiChanges(queriedPatientsStates),
-        hasPatientsInFacilityUiChanges(queriedPatientsStates)
-    )
+  override fun uiChanges(): ObservableTransformer<AllPatientsInFacilityUiState, AllPatientsInFacilityUiChange> {
+    return ObservableTransformer { uiStates ->
+      val queriedPatientsStates = uiStates.filter { it.patientsQueried }
+
+      Observable.merge(
+          noPatientsInFacilityUiChanges(queriedPatientsStates),
+          hasPatientsInFacilityUiChanges(queriedPatientsStates)
+      )
+    }
   }
 
   private fun hasPatientsInFacilityUiChanges(

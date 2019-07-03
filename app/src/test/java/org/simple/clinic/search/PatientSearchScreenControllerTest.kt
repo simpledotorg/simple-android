@@ -11,6 +11,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class PatientSearchScreenControllerTest {
 
@@ -72,5 +73,16 @@ class PatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked())
 
     verify(screen).openPatientSearchResultsScreen(fullName)
+  }
+
+  @Test
+  fun `when a patient item is clicked, the patient summary screen should be opened`() {
+    val patientUuid = UUID.fromString("7925e13f-3b04-46b0-b685-7005ebb1b6fd")
+
+    // when
+    uiEvents.onNext(PatientItemClicked(patientUuid))
+
+    // then
+    verify(screen).openPatientSummary(patientUuid)
   }
 }

@@ -4,10 +4,11 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:paddingTop="@dimen/spacing_8">
 
   <ImageButton
-    android:id="@+id/patientsearch_back"
+    android:id="@+id/backButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_12"
@@ -20,58 +21,47 @@
     android:tint="@color/gray_600"
     tools:ignore="ContentDescription" />
 
-  <ScrollView
+  <FrameLayout
+    android:id="@+id/fullNameInputLayoutContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_above="@+id/patientsearch_search"
-    android:layout_toEndOf="@+id/patientsearch_back"
-    android:scrollbarStyle="insideOverlay"
-    android:scrollbars="vertical">
+    android:layout_height="wrap_content"
+    android:layout_toEndOf="@+id/backButton">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/fullNameInputLayout"
+      style="@style/Clinic.V2.TextInputLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:paddingBottom="64dp"
-      android:paddingEnd="@dimen/spacing_8"
-      android:paddingTop="@dimen/spacing_16"
-      tools:ignore="RtlSymmetry">
+      app:errorEnabled="false">
 
-      <FrameLayout
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/fullNameEditText"
+        style="@style/Clinic.V2.TextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="UselessParent">
+        android:hint="@string/patientsearch_name"
+        android:imeOptions="flagNoFullscreen|actionSearch"
+        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+        android:privateImeOptions="nm"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/patientsearch_fullname_inputlayout"
-          style="@style/Clinic.V2.TextInputLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:errorEnabled="false">
+    <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+      style="@style/Clinic.V2.ClearEditTextButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:cleareableField="@id/fullNameEditText" />
+  </FrameLayout>
 
-          <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/patientsearch_fullname"
-            style="@style/Clinic.V2.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/patientsearch_name"
-            android:imeOptions="flagNoFullscreen|actionSearch"
-            android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-            android:privateImeOptions="nm"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/Clinic.V2.ClearEditTextButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          app:cleareableField="@id/patientsearch_fullname" />
-      </FrameLayout>
-    </LinearLayout>
-  </ScrollView>
+  <include
+    android:id="@+id/allPatientsView"
+    layout="@layout/view_allpatientsinfacility"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/fullNameInputLayoutContainer" />
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/patientsearch_search_frame"
+    android:id="@+id/searchButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     app:buttonBackgroundDisabled="@color/grey2"
     app:buttonBackgroundEnabled="@color/blue1"

@@ -3,23 +3,26 @@ package org.simple.clinic.search
 import android.content.Context
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
-import android.widget.ImageButton
 import android.widget.RelativeLayout
-import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import kotterknife.bindView
+import io.reactivex.rxkotlin.ofType
+import kotlinx.android.synthetic.main.screen_patient_search.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.showKeyboard
+import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayout(context, attrs) {
@@ -33,10 +36,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   @Inject
   lateinit var controller: PatientSearchScreenController
 
-  private val backButton by bindView<ImageButton>(R.id.patientsearch_back)
-  private val fullNameEditText by bindView<EditText>(R.id.patientsearch_fullname)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patientsearch_fullname_inputlayout)
-  private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patientsearch_search_frame)
+  @Inject
+  lateinit var utcClock: UtcClock
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -45,14 +46,17 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
     TheActivity.component.inject(this)
 
-    fullNameEditText.showKeyboard()
     backButton.setOnClickListener {
       screenRouter.pop()
     }
 
     bindUiToController(
         ui = this,
-        events = Observable.merge(nameChanges(), searchClicks()),
+        events = Observable.merge(
+            nameChanges(),
+            searchClicks(),
+            patientClickEvents()
+        ),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -75,16 +79,19 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .map { SearchClicked() }
   }
 
+  private fun patientClickEvents(): Observable<UiEvent> {
+    return (allPatientsView as AllPatientsInFacilityView)
+        .uiEvents
+        .ofType<AllPatientsInFacilitySearchResultClicked>()
+        .map { PatientItemClicked(it.patientUuid) }
+  }
+
   fun showSearchButtonAsEnabled() {
     searchButtonFrame.isEnabled = true
   }
 
   fun showSearchButtonAsDisabled() {
     searchButtonFrame.isEnabled = false
-  }
-
-  fun openPatientEntryScreen() {
-    screenRouter.push(PatientEntryScreenKey())
   }
 
   fun openPatientSearchResultsScreen(name: String) {
@@ -98,5 +105,13 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
       null
     }
     fullNameInputLayout.isErrorEnabled = visible
+  }
+
+  fun openPatientSummary(patientUuid: UUID) {
+    screenRouter.push(PatientSummaryScreenKey(
+        patientUuid = patientUuid,
+        intention = OpenIntention.ViewExistingPatient,
+        screenCreatedTimestamp = Instant.now(utcClock)
+    ))
   }
 }

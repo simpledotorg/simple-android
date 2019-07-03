@@ -113,7 +113,7 @@ data class OverdueAppointment(
             AND PPN.number IS NOT NULL
             AND (A.remindOn < :scheduledBefore OR A.remindOn IS NULL)
 
-          GROUP BY P.uuid HAVING max(BP.updatedAt)
+          GROUP BY P.uuid HAVING max(BP.recordedAt)
           ORDER BY riskLevelIndex ASC, A.scheduledDate, A.updatedAt ASC
           """)
     fun appointmentsForFacility(

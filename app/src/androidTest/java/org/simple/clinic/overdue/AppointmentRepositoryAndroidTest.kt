@@ -3,6 +3,7 @@ package org.simple.clinic.overdue
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
+import io.reactivex.Single
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -50,6 +51,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
 
@@ -805,7 +807,7 @@ class AppointmentRepositoryAndroidTest {
   }
 
   @Test
-  fun marking_appointment_older_than_current_date_should_work_correctly() {
+  fun marking_appointment_older_than_current_date_as_visited_should_work_correctly() {
     val patientId = UUID.randomUUID()
     val appointmentUuid1 = UUID.randomUUID()
     val appointmentUuid2 = UUID.randomUUID()
@@ -873,6 +875,79 @@ class AppointmentRepositoryAndroidTest {
       assertThat(it.status).isEqualTo(Scheduled)
       assertThat(it.syncStatus).isEqualTo(SyncStatus.PENDING)
       assertThat(it.appointmentType).isEqualTo(Automatic)
+    }
+  }
+
+  @Test
+  fun when_picking_overdue_appointment_then_the_latest_recorded_bp_should_be_considered() {
+    val facility = testData.qaFacility()
+    val now = Instant.now(clock)
+
+    fun createBloodPressure(patientProfile: PatientProfile, recordedAt: Instant, updatedAt: Instant): BloodPressureMeasurement {
+      return testData.bloodPressureMeasurement(
+          patientUuid = patientProfile.patient.uuid,
+          recordedAt = recordedAt,
+          updatedAt = updatedAt
+      )
+    }
+
+    fun createPatient(fullName: String): PatientProfile {
+      return testData.patientProfile(generatePhoneNumber = true)
+          .let { patientProfile ->
+            patientProfile.copy(patient = patientProfile.patient.copy(fullName = fullName))
+          }
+    }
+
+    fun scheduleAppointment(patientProfile: PatientProfile): Single<Appointment> {
+      return appointmentRepository.schedule(
+          patientUuid = patientProfile.patient.uuid,
+          appointmentDate = LocalDate.now(clock).minus(2, ChronoUnit.DAYS),
+          appointmentType = Manual,
+          currentFacility = facility)
+    }
+
+    val patient1 = createPatient("Patient with one latest updated retro-active BP")
+    val patient2 = createPatient("Patient with no retro-active BP")
+
+    patientRepository.save(listOf(patient1, patient2)).blockingAwait()
+
+    val bpOneForPatient1 = createBloodPressure(
+        patientProfile = patient1,
+        recordedAt = now,
+        updatedAt = now
+    )
+    val bpTwoForPatient1 = createBloodPressure(
+        patientProfile = patient1,
+        recordedAt = now.minus(10, ChronoUnit.DAYS),
+        updatedAt = now.plusSeconds(10)
+    )
+
+    val bpOneForPatient2 = createBloodPressure(
+        patientProfile = patient2,
+        recordedAt = now,
+        updatedAt = now)
+
+    val bpTwoForPatient2 = createBloodPressure(
+        patientProfile = patient2,
+        recordedAt = now.plus(10, ChronoUnit.MINUTES),
+        updatedAt = now
+    )
+
+    bpRepository.save(listOf(bpOneForPatient1, bpTwoForPatient1, bpOneForPatient2, bpTwoForPatient2)).blockingAwait()
+
+    scheduleAppointment(patient1).blockingGet()
+    scheduleAppointment(patient2).blockingGet()
+
+    val appointments = appointmentRepository.overdueAppointments(facility).blockingFirst().associateBy { it.fullName }
+
+    assertThat(appointments.keys).isEqualTo(setOf("Patient with one latest updated retro-active BP", "Patient with no retro-active BP"))
+
+    appointments["Patient with one latest updated retro-active BP"]?.let {
+      assertThat(it.bloodPressure).isEqualTo(bpOneForPatient1)
+    }
+
+    appointments["Patient with no retro-active BP"]?.let {
+      assertThat(it.bloodPressure).isEqualTo(bpTwoForPatient2)
     }
   }
 }

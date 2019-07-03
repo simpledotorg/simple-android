@@ -28,7 +28,8 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         enableSearchButton(replayedEvents),
         showValidationErrors(replayedEvents),
         resetValidationErrors(replayedEvents),
-        openSearchResults(replayedEvents)
+        openSearchResults(replayedEvents),
+        openPatientSummary(replayedEvents)
     )
   }
 
@@ -105,5 +106,12 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         .withLatestFrom(nameChanges) { _, name ->
           { ui: Ui -> ui.openPatientSearchResultsScreen(name) }
         }
+  }
+
+  private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientItemClicked>()
+        .map { it.patientUuid }
+        .map { patientUuid -> { ui: Ui -> ui.openPatientSummary(patientUuid) } }
   }
 }

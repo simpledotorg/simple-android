@@ -27,56 +27,48 @@
 
   </androidx.appcompat.widget.Toolbar>
 
-  <ScrollView
+  <FrameLayout
+    android:id="@+id/fullNameInputLayoutContainer"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_above="@+id/addidtopatientsearch_search"
     android:layout_below="@id/toolBar"
-    android:scrollbarStyle="insideOverlay"
-    android:scrollbars="vertical">
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_marginStart="@dimen/spacing_24"
+    android:layout_marginTop="@dimen/spacing_24">
 
-    <LinearLayout
+    <com.google.android.material.textfield.TextInputLayout
+      android:id="@+id/fullNameInputLayout"
+      style="@style/Clinic.V2.TextInputLayout"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:orientation="vertical"
-      android:paddingBottom="64dp"
-      android:paddingEnd="@dimen/spacing_24"
-      android:paddingStart="@dimen/spacing_24"
-      android:paddingTop="@dimen/spacing_24"
-      tools:ignore="RtlSymmetry">
+      app:errorEnabled="false">
 
-      <FrameLayout
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/fullNameEditText"
+        style="@style/Clinic.V2.TextInputEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="UselessParent">
+        android:hint="@string/addidtopatientsearch_name"
+        android:imeOptions="flagNoFullscreen|actionSearch"
+        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+        android:privateImeOptions="nm"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/fullNameInputLayout"
-          style="@style/Clinic.V2.TextInputLayout"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          app:errorEnabled="false">
+    <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+      style="@style/Clinic.V2.ClearEditTextButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:cleareableField="@id/fullNameEditText" />
+  </FrameLayout>
 
-          <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/fullNameEditText"
-            style="@style/Clinic.V2.TextInputEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/addidtopatientsearch_name"
-            android:imeOptions="flagNoFullscreen|actionSearch"
-            android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-            android:privateImeOptions="nm"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-          style="@style/Clinic.V2.ClearEditTextButton"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          app:cleareableField="@id/fullNameEditText" />
-      </FrameLayout>
-    </LinearLayout>
-  </ScrollView>
+  <include
+    android:id="@+id/allPatientsView"
+    layout="@layout/view_allpatientsinfacility"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_below="@id/fullNameInputLayoutContainer" />
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/searchButtonFrame"

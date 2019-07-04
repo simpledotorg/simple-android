@@ -67,7 +67,7 @@ class PatientRepository @Inject constructor(
     val sortByVisitedFacilityAnalytics = "Sort By Visited Facility"
 
     val patientUuidsMatchingName = database.patientSearchDao()
-        .nameAndId(PatientStatus.ACTIVE)
+        .nameAndId(PatientStatus.Active)
         .toObservable()
         .switchMapSingle {
           timingTracker.stop(fetchPatientNameAnalytics)
@@ -83,7 +83,7 @@ class PatientRepository @Inject constructor(
             matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
             else -> {
               database.patientSearchDao()
-                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.ACTIVE)
+                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.Active)
                   .doOnSubscribe { timingTracker.start(fetchPatientDetailsAnalytics) }
                   .map { results ->
                     timingTracker.stop(fetchPatientDetailsAnalytics)
@@ -163,7 +163,7 @@ class PatientRepository @Inject constructor(
           .patientDao()
           .updatePatientStatus(
               uuid = patientUuid,
-              newStatus = PatientStatus.DEAD,
+              newStatus = PatientStatus.Dead,
               newSyncStatus = SyncStatus.PENDING,
               newUpdatedAt = Instant.now(utcClock))
     }
@@ -306,7 +306,7 @@ class PatientRepository @Inject constructor(
                       computedDateOfBirth = LocalDate.now(utcClock).minusYears(personalDetails.age.toLong()))
                 },
 
-                status = PatientStatus.ACTIVE,
+                status = PatientStatus.Active,
 
                 createdAt = Instant.now(utcClock),
                 updatedAt = Instant.now(utcClock),
@@ -481,12 +481,12 @@ class PatientRepository @Inject constructor(
 
   fun recentPatients(facilityUuid: UUID, limit: Int): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.ACTIVE, limit)
+          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active, limit)
           .toObservable()
 
   fun recentPatients(facilityUuid: UUID): Observable<List<RecentPatient>> =
       database.recentPatientDao()
-          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.ACTIVE)
+          .recentPatients(facilityUuid, Scheduled, Manual, PatientStatus.Active)
           .toObservable()
 
   override fun pendingSyncRecordCount(): Observable<Int> {
@@ -595,7 +595,7 @@ class PatientRepository @Inject constructor(
   fun allPatientsInFacility(facility: Facility): Observable<List<PatientSearchResult>> {
     return database
         .patientSearchDao()
-        .searchInFacilityAndSortByName(facility.uuid, PatientStatus.ACTIVE)
+        .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
         .toObservable()
   }
 

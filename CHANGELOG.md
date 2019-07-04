@@ -7,6 +7,9 @@
 ### Internal
 - Change `LoggedInUser#status` to be a forward-compatible enum
 
+### Fixes
+- Fix overdue list to show last recorded BP, instead of last updated BP
+
 ## 2019-07-01-4522
 ### Feature
 - Show "Last Seen" time of patient in recent patients list instead of "Last BP"

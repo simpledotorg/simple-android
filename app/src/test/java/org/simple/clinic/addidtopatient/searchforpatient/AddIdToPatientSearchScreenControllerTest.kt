@@ -1,7 +1,6 @@
 package org.simple.clinic.addidtopatient.searchforpatient
 
 import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -14,6 +13,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class AddIdToPatientSearchScreenControllerTest {
@@ -29,21 +29,6 @@ class AddIdToPatientSearchScreenControllerTest {
   @Before
   fun setUp() {
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
-  }
-
-  @Test
-  fun `search button should remain enabled only when name is present`() {
-    uiEvents.onNext(SearchQueryNameChanged(""))
-    verify(screen).showSearchButtonAsDisabled()
-    uiEvents.onNext(SearchQueryNameChanged("foo"))
-    verify(screen).showSearchButtonAsEnabled()
-
-    clearInvocations(screen)
-
-    uiEvents.onNext(SearchQueryNameChanged(" "))
-    verify(screen).showSearchButtonAsDisabled()
-    uiEvents.onNext(SearchQueryNameChanged("bar"))
-    verify(screen).showSearchButtonAsEnabled()
   }
 
   @Test
@@ -78,5 +63,52 @@ class AddIdToPatientSearchScreenControllerTest {
     uiEvents.onNext(SearchClicked)
 
     verify(screen).openAddIdToPatientSearchResultsScreen(fullName)
+  }
+
+  @Test
+  fun `when a patient item is clicked, the patient summary screen should be opened`() {
+    val patientUuid = UUID.fromString("7925e13f-3b04-46b0-b685-7005ebb1b6fd")
+
+    // when
+    uiEvents.onNext(PatientItemClicked(patientUuid))
+
+    // then
+    verify(screen).openPatientSummary(patientUuid)
+  }
+
+  @Test
+  fun `when the search query is blank, the all patients list must be shown`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged(""))
+
+    // then
+    verify(screen).showAllPatientsInFacility()
+  }
+
+  @Test
+  fun `when the search query is blank, the search button must be hidden`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged(""))
+
+    // then
+    verify(screen).hideSearchButton()
+  }
+
+  @Test
+  fun `when the search query is not blank, the all patients list must be hidden`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged("a"))
+
+    // then
+    verify(screen).hideAllPatientsInFacility()
+  }
+
+  @Test
+  fun `when the search query is not blank, the search button must be shown`() {
+    // when
+    uiEvents.onNext(SearchQueryNameChanged("a"))
+
+    // then
+    verify(screen).showSearchButton()
   }
 }

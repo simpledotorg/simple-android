@@ -35,7 +35,7 @@
     android:layout_below="@id/toolBar"
     android:layout_marginEnd="@dimen/spacing_24"
     android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_24">
+    android:layout_marginTop="@dimen/spacing_12">
 
     <com.google.android.material.textfield.TextInputLayout
       android:id="@+id/fullNameInputLayout"

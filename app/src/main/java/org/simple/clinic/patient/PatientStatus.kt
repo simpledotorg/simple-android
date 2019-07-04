@@ -1,24 +1,59 @@
 package org.simple.clinic.patient
 
-import com.squareup.moshi.Json
-import org.simple.clinic.util.RoomEnumTypeConverter
+import androidx.annotation.VisibleForTesting
+import androidx.room.TypeConverter
+import com.squareup.moshi.FromJson
+import com.squareup.moshi.ToJson
+import org.simple.clinic.util.SafeEnumTypeAdapter
 
-enum class PatientStatus {
+sealed class PatientStatus {
 
-  @Json(name = "active")
-  ACTIVE,
+  object Active : PatientStatus()
 
-  @Json(name = "dead")
-  DEAD,
+  object Dead : PatientStatus()
 
-  @Json(name = "migrated")
-  MIGRATED,
+  object Migrated : PatientStatus()
 
-  @Json(name = "unresponsive")
-  UNRESPONSIVE,
+  object Unresponsive : PatientStatus()
 
-  @Json(name = "inactive")
-  INACTIVE;
+  object Inactive : PatientStatus()
 
-  class RoomTypeConverter : RoomEnumTypeConverter<PatientStatus>(PatientStatus::class.java)
+  data class Unknown(val actualValue: String) : PatientStatus()
+
+  object TypeAdapter : SafeEnumTypeAdapter<PatientStatus>(
+      knownMappings = mapOf(
+          Active to "active",
+          Dead to "dead",
+          Migrated to "migrated",
+          Unresponsive to "unresponsive",
+          Inactive to "inactive"
+      ),
+      unknownStringToEnumConverter = { Unknown(it) },
+      unknownEnumToStringConverter = { (it as Unknown).actualValue }
+  )
+
+  class RoomTypeConverter {
+
+    @TypeConverter
+    fun toEnum(value: String?): PatientStatus? = TypeAdapter.toEnum(value)
+
+    @TypeConverter
+    fun fromEnum(status: PatientStatus?): String? = TypeAdapter.fromEnum(status)
+  }
+
+  class MoshiTypeAdapter {
+
+    @FromJson
+    fun fromJson(value: String?): PatientStatus? = TypeAdapter.toEnum(value)
+
+    @ToJson
+    fun toJson(status: PatientStatus?): String? = TypeAdapter.fromEnum(status)
+  }
+
+  companion object {
+
+    @VisibleForTesting
+    fun random() = TypeAdapter.knownMappings.keys.shuffled().first()
+  }
+
 }

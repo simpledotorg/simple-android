@@ -27,7 +27,6 @@ import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientProfile
 import org.simple.clinic.patient.PatientStatus
-import org.simple.clinic.patient.PatientStatus.ACTIVE
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessId.MetaDataVersion
@@ -94,7 +93,7 @@ class TestData @Inject constructor(
             uuid = patientUuid,
             syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
-            status = ACTIVE
+            status = PatientStatus.Active
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,
@@ -109,7 +108,7 @@ class TestData @Inject constructor(
       gender: Gender = randomOfEnum(Gender::class),
       dateOfBirth: LocalDate? = LocalDate.now(),
       age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now(), computedDateOfBirth = LocalDate.now()),
-      status: PatientStatus = randomOfEnum(PatientStatus::class),
+      status: PatientStatus = PatientStatus.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
@@ -211,7 +210,7 @@ class TestData @Inject constructor(
       age: Int? = Math.random().times(100).toInt(),
       dateOfBirth: LocalDate? = null,
       ageUpdatedAt: Instant? = Instant.now(),
-      status: PatientStatus = randomOfEnum(PatientStatus::class),
+      status: PatientStatus = PatientStatus.random(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,

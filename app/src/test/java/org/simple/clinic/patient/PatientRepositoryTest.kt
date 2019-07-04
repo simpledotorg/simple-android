@@ -126,7 +126,7 @@ class PatientRepositoryTest {
         dateOfBirth = mock(),
         age = 0,
         ageUpdatedAt = mock(),
-        status = PatientStatus.ACTIVE,
+        status = PatientStatus.Active,
         createdAt = mock(),
         updatedAt = mock(),
         deletedAt = null,
@@ -169,7 +169,7 @@ class PatientRepositoryTest {
         dateOfBirth = mock(),
         age = 0,
         ageUpdatedAt = mock(),
-        status = PatientStatus.ACTIVE,
+        status = PatientStatus.Active,
         createdAt = mock(),
         updatedAt = mock(),
         deletedAt = null,
@@ -218,7 +218,7 @@ class PatientRepositoryTest {
         dateOfBirth = mock(),
         age = 0,
         ageUpdatedAt = mock(),
-        status = PatientStatus.ACTIVE,
+        status = PatientStatus.Active,
         createdAt = mock(),
         updatedAt = mock(),
         deletedAt = null,
@@ -267,9 +267,9 @@ class PatientRepositoryTest {
     repository.search("name", facility).blockingFirst()
 
     if (shouldQueryFilteredIds) {
-      verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.ACTIVE)
+      verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.Active)
     } else {
-      verify(patientSearchResultDao, never()).searchByIds(filteredUuids, PatientStatus.ACTIVE)
+      verify(patientSearchResultDao, never()).searchByIds(filteredUuids, PatientStatus.Active)
     }
   }
 

@@ -25,7 +25,7 @@ class PatientFuzzySearch {
       return patientUuidsMatching(query).flatMap { uuidsSortedByScore ->
         val uuids = uuidsSortedByScore.map { it.uuid }
         patientSearchDao
-            .searchByIds(uuids, PatientStatus.ACTIVE)
+            .searchByIds(uuids, PatientStatus.Active)
             .compose(sortPatientSearchResultsByScore(uuidsSortedByScore))
       }
     }

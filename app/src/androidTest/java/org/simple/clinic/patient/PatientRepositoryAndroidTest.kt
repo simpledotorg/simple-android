@@ -32,11 +32,11 @@ import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.communication.Communication
 import org.simple.clinic.overdue.communication.CommunicationRepository
-import org.simple.clinic.patient.PatientStatus.ACTIVE
-import org.simple.clinic.patient.PatientStatus.DEAD
-import org.simple.clinic.patient.PatientStatus.INACTIVE
-import org.simple.clinic.patient.PatientStatus.MIGRATED
-import org.simple.clinic.patient.PatientStatus.UNRESPONSIVE
+import org.simple.clinic.patient.PatientStatus.Active
+import org.simple.clinic.patient.PatientStatus.Dead
+import org.simple.clinic.patient.PatientStatus.Inactive
+import org.simple.clinic.patient.PatientStatus.Migrated
+import org.simple.clinic.patient.PatientStatus.Unresponsive
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
@@ -351,7 +351,7 @@ class PatientRepositoryAndroidTest {
           .let { profile ->
             profile.copy(patient = profile.patient.copy(
                 fullName = fullName,
-                status = ACTIVE))
+                status = Active))
           }
     }
 
@@ -511,7 +511,7 @@ class PatientRepositoryAndroidTest {
     data.forEach { (patientName, visitedFacilities) ->
       val patientProfile = testData.patientProfile()
           .let { profile ->
-            profile.copy(patient = profile.patient.copy(fullName = patientName, status = ACTIVE))
+            profile.copy(patient = profile.patient.copy(fullName = patientName, status = Active))
           }
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
@@ -577,7 +577,7 @@ class PatientRepositoryAndroidTest {
         .blockingFirst()
 
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
-    assertThat(deadPatient.status).isEqualTo(DEAD)
+    assertThat(deadPatient.status).isEqualTo(Dead)
   }
 
   @Test
@@ -621,7 +621,7 @@ class PatientRepositoryAndroidTest {
               fullName = "Name",
               searchableName = "Name",
               dateOfBirth = LocalDate.now(clock).minusYears(10),
-              status = ACTIVE
+              status = Active
           ),
           address = template.address.copy(uuid = addressUuid),
           phoneNumbers = template.phoneNumbers
@@ -1069,7 +1069,7 @@ class PatientRepositoryAndroidTest {
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null,
       recordedAt: Instant = Instant.now(),
-      patientStatus: PatientStatus = ACTIVE
+      patientStatus: PatientStatus = Active
   ): RecentPatient {
     val patientProfile = testData.patientProfile(patientUuid = patientUuid, patientAddressUuid = patientAddressUuid).run {
       copy(patient = patient.copy(status = patientStatus))
@@ -1865,7 +1865,7 @@ class PatientRepositoryAndroidTest {
             addressUuid = patient1AddressUuid,
             age = recentPatient1.age,
             gender = recentPatient1.gender,
-            status = ACTIVE
+            status = Active
         ))
         .blockingAwait()
 
@@ -1876,22 +1876,22 @@ class PatientRepositoryAndroidTest {
   fun patients_that_are_not_active_should_not_come_up_in_recent_patients_list() {
     val facilityUuid = UUID.randomUUID()
 
-    val patient1 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = ACTIVE)
+    val patient1 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Active)
     verifyRecentPatientOrder(patient1, facilityUuid = facilityUuid)
 
-    val patient2 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = ACTIVE)
+    val patient2 = savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Active)
     verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
 
-    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = DEAD)
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Dead)
     verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
 
-    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = MIGRATED)
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Migrated)
     verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
 
-    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = UNRESPONSIVE)
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Unresponsive)
     verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
 
-    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = INACTIVE)
+    savePatientWithBp(facilityUuid = facilityUuid, patientStatus = Inactive)
     verifyRecentPatientOrder(patient2, patient1, facilityUuid = facilityUuid)
   }
 
@@ -1918,32 +1918,32 @@ class PatientRepositoryAndroidTest {
 
     recordPatientAtFacility(
         "Chitra",
-        ACTIVE,
+        Active,
         facilityA
     )
     recordPatientAtFacility(
         "Anubhav",
-        ACTIVE,
+        Active,
         facilityA
     )
     recordPatientAtFacility(
         "Bhim",
-        DEAD,
+        Dead,
         facilityA
     )
     recordPatientAtFacility(
         "Elvis",
-        DEAD,
+        Dead,
         facilityB
     )
     recordPatientAtFacility(
         "Farhan",
-        DEAD,
+        Dead,
         facilityB
     )
     recordPatientAtFacility(
         "Dhruv",
-        ACTIVE,
+        Active,
         facilityB
     )
 
@@ -1975,7 +1975,7 @@ class PatientRepositoryAndroidTest {
 
     fun createPatient(patientUuid: UUID, patientName: String): PatientProfile {
       val patientProfile = testData.patientProfile(patientUuid = patientUuid).let { patientProfile ->
-        patientProfile.copy(patient = patientProfile.patient.copy(status = ACTIVE, fullName = patientName))
+        patientProfile.copy(patient = patientProfile.patient.copy(status = Active, fullName = patientName))
       }
       patientRepository.save(listOf(patientProfile)).blockingAwait()
 

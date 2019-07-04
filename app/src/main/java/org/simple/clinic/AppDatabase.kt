@@ -72,7 +72,8 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     UuidRoomTypeConverter::class,
     Identifier.IdentifierType.RoomTypeConverter::class,
     BusinessId.MetaDataVersion.RoomTypeConverter::class,
-    Appointment.AppointmentType.RoomTypeConverter::class
+    Appointment.AppointmentType.RoomTypeConverter::class,
+    PatientStatus.RoomTypeConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
 

@@ -31,13 +31,19 @@ class CheckAppUpdateAvailability @Inject constructor(
     val appUpdateInfoTask = appUpdateManager.appUpdateInfo
 
     return Observable.create<AppUpdateInfo> { emitter ->
+      var cancelled = false
+
       appUpdateInfoTask.addOnSuccessListener { appUpdateInfo ->
         emitter.onNext(appUpdateInfo)
       }
 
       appUpdateInfoTask.addOnFailureListener { exception ->
-        emitter.onError(exception)
+        if (cancelled.not()) {
+          emitter.onError(exception)
+        }
       }
+
+      emitter.setCancellable { cancelled = true }
     }
   }
 

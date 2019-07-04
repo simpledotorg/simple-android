@@ -1,11 +1,11 @@
 package org.simple.clinic.newentry.clearbutton
 
 import android.content.Context
-import androidx.appcompat.widget.AppCompatImageButton
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.appcompat.widget.AppCompatImageButton
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
@@ -39,12 +39,15 @@ class ClearFieldImageButton(context: Context, attrs: AttributeSet) : AppCompatIm
 
   override fun onLayout(changed: Boolean, left: Int, top: Int, right: Int, bottom: Int) {
     super.onLayout(changed, left, top, right, bottom)
+    if (isInEditMode) {
+      return
+    }
     field.setPaddingRelative(field.paddingStart, field.paddingTop, fieldOriginalPaddingEnd + (width), field.paddingBottom)
   }
 
   override fun onAttachedToWindow() {
     super.onAttachedToWindow()
-    if(isInEditMode) {
+    if (isInEditMode) {
       return
     }
     ClinicApp.appComponent.inject(this)

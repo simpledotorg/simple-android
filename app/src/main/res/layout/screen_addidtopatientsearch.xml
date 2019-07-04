@@ -7,14 +7,14 @@
   android:layout_height="match_parent">
 
   <androidx.appcompat.widget.Toolbar
-    android:id="@+id/addidtopatientsearch_toolbar"
+    android:id="@+id/toolBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     tools:ignore="ContentDescription">
 
     <TextView
-      android:id="@+id/addidtopatientsearch_title"
+      android:id="@+id/titleTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_16"
@@ -31,7 +31,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/addidtopatientsearch_search"
-    android:layout_below="@id/addidtopatientsearch_toolbar"
+    android:layout_below="@id/toolBar"
     android:scrollbarStyle="insideOverlay"
     android:scrollbars="vertical">
 
@@ -51,14 +51,14 @@
         tools:ignore="UselessParent">
 
         <com.google.android.material.textfield.TextInputLayout
-          android:id="@+id/addidtopatientsearch_fullname_inputlayout"
+          android:id="@+id/fullNameInputLayout"
           style="@style/Clinic.V2.TextInputLayout"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           app:errorEnabled="false">
 
           <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/addidtopatientsearch_fullname"
+            android:id="@+id/fullNameEditText"
             style="@style/Clinic.V2.TextInputEditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,13 +73,13 @@
           style="@style/Clinic.V2.ClearEditTextButton"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          app:cleareableField="@id/addidtopatientsearch_fullname" />
+          app:cleareableField="@id/fullNameEditText" />
       </FrameLayout>
     </LinearLayout>
   </ScrollView>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
-    android:id="@+id/addidtopatientsearch_search_frame"
+    android:id="@+id/searchButtonFrame"
     style="@style/Clinic.V2.BottomAlignedButtonFrame"
     app:buttonBackgroundDisabled="@color/grey2"
     app:buttonBackgroundEnabled="@color/blue1"

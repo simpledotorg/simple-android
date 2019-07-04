@@ -3,15 +3,11 @@ package org.simple.clinic.addidtopatient.searchforpatient
 import android.content.Context
 import android.util.AttributeSet
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.RelativeLayout
-import android.widget.TextView
-import androidx.appcompat.widget.Toolbar
-import com.google.android.material.textfield.TextInputLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
@@ -21,7 +17,6 @@ import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.showKeyboard
 import javax.inject.Inject
@@ -40,11 +35,6 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
 
-  private val toolBar by bindView<Toolbar>(R.id.addidtopatientsearch_toolbar)
-  private val titleTextView by bindView<TextView>(R.id.addidtopatientsearch_title)
-  private val fullNameEditText by bindView<EditText>(R.id.addidtopatientsearch_fullname)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.addidtopatientsearch_fullname_inputlayout)
-  private val searchButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.addidtopatientsearch_search_frame)
   private val screenKey by unsafeLazy {
     screenRouter.key<AddIdToPatientSearchScreenKey>(this)
   }

@@ -6,6 +6,7 @@ import com.facebook.stetho.Stetho
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.squareup.leakcanary.LeakCanary
+import com.tspoon.traceur.Traceur
 import io.github.inflationx.viewpump.ViewPump
 import io.reactivex.Single
 import org.simple.clinic.activity.TheActivity
@@ -54,6 +55,7 @@ class DebugClinicApp : ClinicApp() {
     if (LeakCanary.isInAnalyzerProcess(this)) {
       return
     }
+    Traceur.enableLogging()
     super.onCreate()
     LeakCanary.install(this)
 

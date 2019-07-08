@@ -59,6 +59,7 @@ class RecentPatientsView(context: Context, attrs: AttributeSet) : FrameLayout(co
     recyclerView.apply {
       layoutManager = LinearLayoutManager(context)
       adapter = groupAdapter
+      isNestedScrollingEnabled = false
     }
 
     bindUiToController(

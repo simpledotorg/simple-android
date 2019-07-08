@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo 
 ### Feature
 - Nudge users to update the app if it is older than expected
 

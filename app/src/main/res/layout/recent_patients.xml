@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:orientation="vertical">
+  android:layout_height="wrap_content"
+  tools:context="org.simple.clinic.recentpatientsview.RecentPatientsView"
+  tools:parentTag="org.simple.clinic.recentpatientsview.RecentPatientsView">
 
   <androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recentpatients_recyclerview"
@@ -22,4 +24,4 @@
     android:background="@drawable/results_row_empty_state_background"
     android:padding="@dimen/spacing_16"
     android:text="@string/patients_recentpatients_no_recent_patients" />
-</FrameLayout>
+</merge>

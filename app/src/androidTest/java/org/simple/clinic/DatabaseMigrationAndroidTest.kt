@@ -2357,6 +2357,74 @@ class DatabaseMigrationAndroidTest {
     verifyNewAppointmentStatus(uuid = uuid2, newStatus = "cancelled")
     verifyNewAppointmentStatus(uuid = uuid3, newStatus = "visited")
   }
+
+  @Test
+  fun migrate_patient_status_from_38_to_39() {
+    val db_38 = helper.createDatabase(version = 38)
+
+    db_38.execSQL("""
+      INSERT INTO PatientAddress VALUES(
+        'addressUuid',
+        'colony or village',
+        'district',
+        'state',
+        'country',
+        '2018-09-25T11:20:42.008Z',
+        '2018-09-25T11:20:42.008Z',
+        NULL
+      )
+    """)
+
+    fun insertPatient(oldStatus: String): UUID {
+      val uuid = UUID.randomUUID()
+      db_38.execSQL("""
+        INSERT INTO Patient VALUES(
+          '$uuid',
+          'addressUuid',
+          'Ash Kumar',
+          'AshokKumar',
+          'MALE',
+          NULL,
+          '$oldStatus',
+          'created-at',
+          'updated-at',
+          NULL,
+          'recorded-at',
+          'DONE',
+          23,
+          'age-updated-at',
+          'dob'
+        )
+      """)
+      return uuid
+    }
+
+    val activePatient = insertPatient("ACTIVE")
+    val inactivePatient = insertPatient("INACTIVE")
+    val migratedPatient = insertPatient("MIGRATED")
+    val deadPatient = insertPatient("DEAD")
+    val unresponsivePatient = insertPatient("UNRESPONSIVE")
+
+    val db_39 = helper.migrateTo(version = 39)
+
+    fun verifyNewStatus(uuid: UUID, newStatus: String) {
+      val cursor = db_39.query("""
+        SELECT status FROM Patient WHERE uuid = '$uuid'
+      """)
+
+      assertThat(cursor.count).isEqualTo(1)
+      cursor.use {
+        it.moveToFirst()
+        assertThat(it.string("status")).isEqualTo(newStatus)
+      }
+    }
+
+    verifyNewStatus(activePatient, "active")
+    verifyNewStatus(inactivePatient, "inactive")
+    verifyNewStatus(migratedPatient, "migrated")
+    verifyNewStatus(deadPatient, "dead")
+    verifyNewStatus(unresponsivePatient, "unresponsive")
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

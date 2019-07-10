@@ -2044,4 +2044,21 @@ class PatientRepositoryAndroidTest {
         )
         .inOrder()
   }
+
+  @Test
+  fun verify_recordedAt_is_being_used_for_bp_instead_of_updatedAt_for_recent_patients() {
+    val initialTime = testClock.instant()
+
+    val patient1 = savePatientWithBp(
+        recordedAt = initialTime,
+        updatedAt = initialTime.plusSeconds(100)
+    )
+    verifyRecentPatientOrder(patient1)
+
+    val patient2 = savePatientWithBp(
+        recordedAt = initialTime.plusSeconds(10),
+        updatedAt = initialTime.plusSeconds(50)
+    )
+    verifyRecentPatientOrder(patient2, patient1)
+  }
 }

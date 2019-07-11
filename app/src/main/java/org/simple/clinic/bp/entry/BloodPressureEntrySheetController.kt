@@ -78,7 +78,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
         showBpEntryWhenPreviousArrowIsPressed(replayedEvents),
         dismissSheetWhenBackIsPressedOnBp(replayedEvents),
-        enableNextArrowWhileBpIsValid(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
         showConfirmRemoveBloodPressureDialog(replayedEvents),
@@ -269,14 +268,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == BP_ENTRY }
         .map { { ui: Ui -> ui.finish() } }
-  }
-
-  private fun enableNextArrowWhileBpIsValid(events: Observable<UiEvent>): Observable<UiChange> {
-    return events
-        .ofType<BloodPressureReadingsValidated>()
-        .map { it.result is Success }
-        .distinctUntilChanged()
-        .map { isBpValid -> { ui: Ui -> ui.setNextArrowIconEnabled(isBpValid) } }
   }
 
   private fun validateBpInput() = ObservableTransformer<UiEvent, UiEvent> { events ->

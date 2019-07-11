@@ -76,7 +76,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         showBpValidationErrors(replayedEvents),
         hideBpValidationErrors(replayedEvents),
         proceedToDateEntryWhenBpEntryIsDone(replayedEvents),
-        showBpEntryWhenPreviousArrowIsPressed(replayedEvents),
+        showBpEntry(replayedEvents),
         dismissSheetWhenBackIsPressedOnBp(replayedEvents),
         toggleRemoveBloodPressureButton(replayedEvents),
         updateSheetTitle(replayedEvents),
@@ -241,10 +241,7 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { Ui::showDateEntryScreen }
   }
 
-  private fun showBpEntryWhenPreviousArrowIsPressed(events: Observable<UiEvent>): Observable<UiChange> {
-    val previousArrowClicks = events
-        .ofType<BloodPressurePreviousArrowClicked>()
-
+  private fun showBpEntry(events: Observable<UiEvent>): Observable<UiChange> {
     val screenChanges = events
         .ofType<BloodPressureScreenChanged>()
         .map { it.type }
@@ -254,8 +251,16 @@ class BloodPressureEntrySheetController @Inject constructor(
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == DATE_ENTRY }
 
-    return Observable
-        .merge(previousArrowClicks, backPresses)
+    val showBpEvents = Observable.merge(
+        events.ofType<BloodPressureShowBpClicked>(),
+        backPresses
+    )
+
+    val showBpValidDateEvents = showBpEvents
+        .withLatestFrom(events.ofType<BloodPressureDateValidated>()) { _, validated -> validated.result }
+        .ofType<Valid>()
+
+    return showBpValidDateEvents
         .map { { ui: Ui -> ui.showBpEntryScreen() } }
   }
 
@@ -399,14 +404,17 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun showDateValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = events.ofType<BloodPressureSaveClicked>()
+    val showBpClicks = events.ofType<BloodPressureShowBpClicked>()
+    val backPresses = events.ofType<BloodPressureBackPressed>()
 
     val validations = events
         .ofType<BloodPressureDateValidated>()
         .map { it.result }
 
-    return saveClicks
+    return Observable
+        .merge(saveClicks, showBpClicks, backPresses)
         .withLatestFrom(validations)
-        .map<UiChange> { (_, result) ->
+        .map { (_, result) ->
           when (result) {
             is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
             is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }

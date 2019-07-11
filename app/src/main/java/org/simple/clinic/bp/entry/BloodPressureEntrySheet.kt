@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TextView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import com.jakewharton.rxbinding2.view.RxView
@@ -45,6 +46,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
   private val bpErrorTextView by bindView<TextView>(R.id.bloodpressureentry_bp_error)
   private val bpDateButton by bindView<Button>(R.id.bloodpressureentry_bp_date)
+  private val showBpImageButton by bindView<ImageButton>(R.id.bloodpressureentry_show_bp)
   private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
@@ -97,6 +99,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             diastolicBackspaceClicks(),
             removeClicks(),
             bpDateClicks(),
+            showBpClicks(),
             hardwareBackPresses(),
             screenTypeChanges(),
             dayTextChanges(),
@@ -161,6 +164,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       RxView
           .clicks(bpDateButton)
           .map { BloodPressureDateClicked }
+
+  private fun showBpClicks(): Observable<UiEvent> =
+      RxView
+          .clicks(showBpImageButton)
+          .map { BloodPressureShowBpClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->

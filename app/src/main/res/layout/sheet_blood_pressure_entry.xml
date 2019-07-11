@@ -18,7 +18,7 @@
     android:outAnimation="@anim/bloodpressureentry_bp_exit_to_left"
     android:paddingBottom="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_12"
-    app:debug_displayedChild="0"
+    app:debug_displayedChild="1"
     tools:background="@color/white">
 
     <LinearLayout
@@ -164,128 +164,133 @@
         tools:text="6 December, 2019"/>
     </LinearLayout>
 
-    <LinearLayout
+    <FrameLayout
       android:id="@+id/bloodpressureentry_flipper_date_entry"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="vertical">
-
-      <TextView
-        android:id="@+id/bloodpressureentry_enter_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:gravity="center_horizontal"
-        android:text="@string/bloodpressureentry_sheet_title_enter_date"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
+      android:layout_height="wrap_content">
+      <ImageButton
+        android:id="@+id/bloodpressureentry_show_bp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        />
 
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-          android:layout_width="0dp"
+        <TextView
+          android:id="@+id/bloodpressureentry_enter_date"
+          android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_12"
-          android:layout_weight="1">
+          android:layout_marginTop="@dimen/spacing_8"
+          android:gravity="center_horizontal"
+          android:text="@string/bloodpressureentry_sheet_title_enter_date"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
-          <EditText
-            android:id="@+id/bloodpressureentry_day"
-            style="@style/Clinic.V2.BloodPressureInput.Date"
-            android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodPressureInputTheme"
-            app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_day_month_separator"
-            app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute" />
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
 
-          <TextView
-            android:id="@+id/bloodpressureentry_day_label"
-            style="@style/Clinic.BloodPressureInputLabel"
-            android:gravity="center_horizontal"
-            android:labelFor="@id/bloodpressureentry_day"
-            android:text="@string/bloodpressureentry_day"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-            app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_day"
-            app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_day"
-            app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_day" />
+          <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_12"
+            android:layout_weight="1">
 
-          <TextView
-            android:id="@+id/bloodpressureentry_day_month_separator"
-            style="@style/Clinic.V2.BloodPressureInputSeparator"
-            app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_day"
-            app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month"
-            app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day"
-            app:layout_constraintTop_toTopOf="@+id/bloodpressureentry_day" />
+            <EditText
+              android:id="@+id/bloodpressureentry_day"
+              style="@style/Clinic.V2.BloodPressureInput.Date"
+              android:importantForAutofill="no"
+              android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+              app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_day_month_separator"
+              app:layout_constraintHorizontal_chainStyle="packed"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toTopOf="parent"
+              tools:ignore="UnusedAttribute" />
 
-          <EditText
-            android:id="@+id/bloodpressureentry_month"
-            style="@style/Clinic.V2.BloodPressureInput.Date"
-            android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodPressureInputTheme"
-            app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month_year_separator"
-            app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day_month_separator"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute" />
+            <TextView
+              android:id="@+id/bloodpressureentry_day_label"
+              style="@style/Clinic.BloodPressureInputLabel"
+              android:gravity="center_horizontal"
+              android:labelFor="@id/bloodpressureentry_day"
+              android:text="@string/bloodpressureentry_day"
+              android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+              app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_day"
+              app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_day"
+              app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_day" />
 
-          <TextView
-            android:id="@+id/bloodpressureentry_month_label"
-            style="@style/Clinic.BloodPressureInputLabel"
-            android:gravity="center_horizontal"
-            android:labelFor="@id/bloodpressureentry_month"
-            android:text="@string/bloodpressureentry_month"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-            app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_month"
-            app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_month"
-            app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_month" />
+            <TextView
+              android:id="@+id/bloodpressureentry_day_month_separator"
+              style="@style/Clinic.V2.BloodPressureInputSeparator"
+              app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_day"
+              app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month"
+              app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day"
+              app:layout_constraintTop_toTopOf="@+id/bloodpressureentry_day" />
 
-          <TextView
-            android:id="@+id/bloodpressureentry_month_year_separator"
-            style="@style/Clinic.V2.BloodPressureInputSeparator"
-            app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_month"
-            app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_year"
-            app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month"
-            app:layout_constraintTop_toTopOf="@+id/bloodpressureentry_month" />
+            <EditText
+              android:id="@+id/bloodpressureentry_month"
+              style="@style/Clinic.V2.BloodPressureInput.Date"
+              android:importantForAutofill="no"
+              android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+              app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_month_year_separator"
+              app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_day_month_separator"
+              app:layout_constraintTop_toTopOf="parent"
+              tools:ignore="UnusedAttribute" />
 
-          <EditText
-            android:id="@+id/bloodpressureentry_year"
-            style="@style/Clinic.V2.BloodPressureInput.Date"
-            android:importantForAutofill="no"
-            android:theme="@style/Clinic.V2.BloodPressureInputTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month_year_separator"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="UnusedAttribute" />
+            <TextView
+              android:id="@+id/bloodpressureentry_month_label"
+              style="@style/Clinic.BloodPressureInputLabel"
+              android:gravity="center_horizontal"
+              android:labelFor="@id/bloodpressureentry_month"
+              android:text="@string/bloodpressureentry_month"
+              android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+              app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_month"
+              app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_month"
+              app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_month" />
 
-          <TextView
-            android:id="@+id/bloodpressureentry_year_label"
-            style="@style/Clinic.BloodPressureInputLabel"
-            android:gravity="center_horizontal"
-            android:labelFor="@id/bloodpressureentry_year"
-            android:text="@string/bloodpressureentry_year"
-            android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
-            app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_year"
-            app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_year"
-            app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_year" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            <TextView
+              android:id="@+id/bloodpressureentry_month_year_separator"
+              style="@style/Clinic.V2.BloodPressureInputSeparator"
+              app:layout_constraintBottom_toBottomOf="@+id/bloodpressureentry_month"
+              app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_year"
+              app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month"
+              app:layout_constraintTop_toTopOf="@+id/bloodpressureentry_month" />
 
-        <Space
-          android:id="@+id/bloodpressureentry_date_space"
-          android:layout_width="@dimen/bloodpressureentry_navigation_arrow_width"
-          android:layout_height="wrap_content" />
+            <EditText
+              android:id="@+id/bloodpressureentry_year"
+              style="@style/Clinic.V2.BloodPressureInput.Date"
+              android:importantForAutofill="no"
+              android:theme="@style/Clinic.V2.BloodPressureInputTheme"
+              app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toEndOf="@+id/bloodpressureentry_month_year_separator"
+              app:layout_constraintTop_toTopOf="parent"
+              tools:ignore="UnusedAttribute" />
+
+            <TextView
+              android:id="@+id/bloodpressureentry_year_label"
+              style="@style/Clinic.BloodPressureInputLabel"
+              android:gravity="center_horizontal"
+              android:labelFor="@id/bloodpressureentry_year"
+              android:text="@string/bloodpressureentry_year"
+              android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
+              app:layout_constraintEnd_toEndOf="@+id/bloodpressureentry_year"
+              app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_year"
+              app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_year" />
+          </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+
+        <TextView
+          android:id="@+id/bloodpressureentry_date_error"
+          style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/spacing_8"
+          android:gravity="center_horizontal"
+          android:visibility="gone"
+          tools:text="@string/bloodpressureentry_error_date_is_in_future" />
       </LinearLayout>
-
-      <TextView
-        android:id="@+id/bloodpressureentry_date_error"
-        style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_8"
-        android:gravity="center_horizontal"
-        android:visibility="gone"
-        tools:text="@string/bloodpressureentry_error_date_is_in_future" />
-    </LinearLayout>
+    </FrameLayout>
   </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.bp.entry.LinearLayoutWithPreImeKeyEventListener>

@@ -3,10 +3,10 @@ package org.simple.clinic.home.patients
 import com.f2prateek.rx.preferences2.Preference
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.atLeastOnce
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -43,7 +43,6 @@ import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
 import java.net.SocketTimeoutException
@@ -91,6 +90,7 @@ class PatientsScreenControllerTest {
     )
 
     whenever(userSession.canSyncData()).thenReturn(canSyncStream)
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(checkAppUpdate.listen()).thenReturn(appUpdatesStream)
 
     uiEvents
@@ -108,43 +108,29 @@ class PatientsScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created and the user is awaiting approval then the approval status should be checked`() {
-    val user = PatientMocker.loggedInUser(status = WaitingForApproval)
-    whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
-    whenever(userSession.canSyncData()).thenReturn(Observable.never())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-
-    uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(TheActivityLifecycle.Resumed())
-    uiEvents.onNext(TheActivityLifecycle.Resumed())
-
-    verify(userSession, times(3)).refreshLoggedInUser()
-  }
-
-  @Test
-  @Parameters(method = "params for approved and disapproved for syncing")
-  fun `when screen is created and the user is not awaiting approval then the user's status should not be checked`(
+  @Parameters(method = "params for user status for syncing")
+  fun `when screen is created or resumed then the user's status should refresh regardless of current status`(
       status: UserStatus
   ) {
     val user = PatientMocker.loggedInUser(status = status)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
+    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
 
     uiEvents.onNext(ScreenCreated())
-    uiEvents.onNext(TheActivityLifecycle.Resumed())
-    uiEvents.onNext(TheActivityLifecycle.Resumed())
+    verify(userSession).refreshLoggedInUser()
 
-    verify(userSession, never()).refreshLoggedInUser()
+    clearInvocations(userSession)
+
+    uiEvents.onNext(TheActivityLifecycle.Resumed())
+    verify(userSession).refreshLoggedInUser()
   }
 
   @Suppress("unused")
-  private fun `params for approved and disapproved for syncing`() =
-      listOf(ApprovedForSyncing, DisapprovedForSyncing)
+  private fun `params for user status for syncing`() =
+      listOf(ApprovedForSyncing, DisapprovedForSyncing, WaitingForApproval)
 
   @Test
   @Parameters(value = [
@@ -157,7 +143,6 @@ class PatientsScreenControllerTest {
   ) {
     val user = PatientMocker.loggedInUser(status = WaitingForApproval, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
@@ -218,7 +203,6 @@ class PatientsScreenControllerTest {
   ) {
     val user = PatientMocker.loggedInUser(status = ApprovedForSyncing)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(hasUserDismissedStatus))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(hasUserDismissedStatus)
@@ -293,7 +277,6 @@ class PatientsScreenControllerTest {
   ) {
     val user = PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
@@ -332,7 +315,6 @@ class PatientsScreenControllerTest {
     val user = PatientMocker.loggedInUser(status = userStatus, loggedInStatus = loggedInStatus)
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(Just(user)))
     whenever(userSession.canSyncData()).thenReturn(Observable.never())
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
@@ -380,7 +362,6 @@ class PatientsScreenControllerTest {
             Just(user.copy(loggedInStatus = curLoggedInStatus)),
             Just(user.copy(loggedInStatus = nextLoggedInStatus)))
     )
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(true))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(true)
     whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now().minus(25, ChronoUnit.HOURS))
@@ -444,7 +425,6 @@ class PatientsScreenControllerTest {
   fun `sync indicator should be visible only when user is approved for syncing`() {
     val user = PatientMocker.loggedInUser(status = WaitingForApproval).toOptional()
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(user))
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.never())
     whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
     whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
 

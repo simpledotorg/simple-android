@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  tools:context="org.simple.clinic.widgets.FindOrRegisterPatientToolbar"
+  tools:parentTag="org.simple.clinic.widgets.FindOrRegisterPatientToolbar">
+
+  <FrameLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white100"
+    android:elevation="@dimen/elevation_toolbar"
+    android:padding="@dimen/spacing_8">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/background_findorregister_toolbar"
+      android:orientation="horizontal"
+      android:padding="@dimen/spacing_8">
+
+      <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_arrow_back_24dp"
+        android:tint="@color/grey1"
+        tools:ignore="ContentDescription" />
+
+      <EditText
+        android:id="@+id/patientNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="@string/findorregisterpatient_input_hint"
+        android:imeOptions="flagNoFullscreen|actionSearch"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+        android:privateImeOptions="nm"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
+        android:textColorHint="@color/grey1"
+        tools:targetApi="o" />
+
+      <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+        style="@style/Clinic.V2.ClearEditTextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cleareableField="@id/patientNameEditText" />
+    </LinearLayout>
+  </FrameLayout>
+</merge>

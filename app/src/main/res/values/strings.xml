@@ -409,4 +409,7 @@
   <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
   <string name="allpatientsinfacility_nopatients_title">No patients at %1$s</string>
   <string name="allpatientsinfacility_foundpatients_header">All Patients: %1$s</string>
+
+  <!-- Find Or Register Patient Toolbar -->
+  <string name="findorregisterpatient_input_hint">Find or register patient</string>
 </resources>

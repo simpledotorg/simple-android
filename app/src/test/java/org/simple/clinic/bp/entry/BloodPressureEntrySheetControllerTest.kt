@@ -42,6 +42,7 @@ import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserInputDatePaddingCharacter
+import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
@@ -745,6 +746,29 @@ class BloodPressureEntrySheetControllerTest {
     )
     verify(sheet).hideRemoveBpButton()
     verify(sheet).showEnterNewBloodPressureTitle()
+    verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `whenever the BP sheet is shown to update an existing BP, then show the BP date`() {
+    val bp = PatientMocker.bp(patientUuid = patientUuid)
+    val recordedDate = bp.recordedAt.toLocalDateAtZone(testUserClock.zone)
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.Update(bpUuid = bp.uuid)))
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
+
+    verify(sheet).showDate(recordedDate)
+
+    verify(sheet).setDate(
+        recordedDate.dayOfMonth.toString().padStart(2, '0'),
+        recordedDate.month.value.toString().padStart(2, '0'),
+        recordedDate.year.toString().takeLast(2)
+    )
+    verify(sheet).setSystolic(bp.systolic.toString())
+    verify(sheet).setDiastolic(bp.diastolic.toString())
+    verify(sheet).showRemoveBpButton()
+    verify(sheet).showEditBloodPressureTitle()
     verifyNoMoreInteractions(sheet)
   }
 }

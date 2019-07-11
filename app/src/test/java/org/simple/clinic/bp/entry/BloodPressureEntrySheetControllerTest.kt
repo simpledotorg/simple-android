@@ -832,4 +832,34 @@ class BloodPressureEntrySheetControllerTest {
     verify(sheet).showInvalidDateError()
     verifyNoMoreInteractions(sheet)
   }
+
+  @Test
+  fun `when the update BP sheet has an invalid date and back key is pressed, then show date validation errors`() {
+    val systolic = 120.toString()
+    val diastolic = 110.toString()
+
+    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate2(any(), any())).thenReturn(InvalidPattern) // TODO Use actual values
+
+    val bp = PatientMocker.bp(patientUuid = patientUuid)
+    whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
+
+    with(uiEvents) {
+      onNext(BloodPressureEntrySheetCreated(OpenAs.Update(bp.uuid)))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged(systolic))
+      onNext(BloodPressureDiastolicTextChanged(diastolic))
+      onNext(BloodPressureDateClicked)
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureDayChanged("1"))
+      onNext(BloodPressureMonthChanged("24"))
+      onNext(BloodPressureYearChanged("91"))
+
+      reset(sheet)
+      onNext(BloodPressureBackPressed)
+    }
+
+    verify(sheet).showInvalidDateError()
+    verifyNoMoreInteractions(sheet)
+  }
 }

@@ -18,7 +18,7 @@
     android:outAnimation="@anim/bloodpressureentry_bp_exit_to_left"
     android:paddingBottom="@dimen/spacing_24"
     android:paddingTop="@dimen/spacing_12"
-    app:debug_displayedChild="1"
+    app:debug_displayedChild="0"
     tools:background="@color/white">
 
     <LinearLayout
@@ -93,6 +93,7 @@
           <EditText
             android:id="@+id/bloodpressureentry_systolic"
             style="@style/Clinic.V2.BloodPressureInput.BpReading"
+            android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:theme="@style/Clinic.V2.BloodPressureInputTheme"
             app:layout_constraintEnd_toStartOf="@+id/bloodpressureentry_systolic_diastolic_separator"
@@ -126,6 +127,7 @@
           <org.simple.clinic.bp.entry.EditTextWithBackspaceListener
             android:id="@+id/bloodpressureentry_diastolic"
             style="@style/Clinic.V2.BloodPressureInput.BpReading"
+            android:imeOptions="actionDone"
             android:importantForAutofill="no"
             android:theme="@style/Clinic.V2.BloodPressureInputTheme"
             app:layout_constraintEnd_toStartOf="parent"
@@ -161,18 +163,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        tools:text="6 December, 2019"/>
+        tools:text="6 December, 2019" />
     </LinearLayout>
 
     <FrameLayout
       android:id="@+id/bloodpressureentry_flipper_date_entry"
       android:layout_width="match_parent"
       android:layout_height="wrap_content">
+
       <ImageButton
         android:id="@+id/bloodpressureentry_show_bp"
         android:layout_width="48dp"
-        android:layout_height="48dp"
-        />
+        android:layout_height="48dp" />
 
       <LinearLayout
         android:layout_width="match_parent"

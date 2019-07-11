@@ -195,7 +195,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun showBpValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = Observable.merge(
-        events.ofType<BloodPressureNextArrowClicked>(),
+        events.ofType<BloodPressureDateClicked>(),
         events.ofType<BloodPressureSaveClicked>())
 
     val validations = events
@@ -224,7 +224,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
   private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
     val saveClicks = Observable.merge(
-        events.ofType<BloodPressureNextArrowClicked>(),
+        events.ofType<BloodPressureDateClicked>(),
         events.ofType<BloodPressureSaveClicked>())
 
     val screenChanges = events

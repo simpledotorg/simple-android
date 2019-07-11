@@ -209,6 +209,10 @@
     <item name="android:textColor">@color/blue1</item>
   </style>
 
+  <style name="Clinic.V2.TextAppearance.Subtitle1Left.Grey1">
+    <item name="android:textColor">@color/grey1</item>
+  </style>
+
   <style name="Clinic.V2.TextAppearance.Subtitle1Center">
     <item name="android:textSize">16sp</item>
     <item name="android:letterSpacing" tools:ignore="NewApi">0.01</item>
@@ -487,7 +491,6 @@
 
   <style name="Clinic.V2.ClearEditTextButton">
     <item name="android:background">?attr/selectableItemBackgroundBorderless</item>
-    <item name="android:padding">@dimen/spacing_8</item>
     <item name="android:tint">@color/grey2</item>
     <item name="android:src">@drawable/ic_clear_circular_24dp</item>
     <item name="android:layout_gravity">end</item>

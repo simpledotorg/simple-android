@@ -288,10 +288,10 @@ class UserSessionTest {
           listOf(RESETTING_PIN, WaitingForApproval, RESETTING_PIN),
           listOf(RESET_PIN_REQUESTED, WaitingForApproval, RESET_PIN_REQUESTED),
 
-          listOf(NOT_LOGGED_IN, ApprovedForSyncing, LOGGED_IN),
-          listOf(OTP_REQUESTED, ApprovedForSyncing, LOGGED_IN),
+          listOf(NOT_LOGGED_IN, ApprovedForSyncing, NOT_LOGGED_IN),
+          listOf(OTP_REQUESTED, ApprovedForSyncing, OTP_REQUESTED),
           listOf(LOGGED_IN, ApprovedForSyncing, LOGGED_IN),
-          listOf(RESETTING_PIN, ApprovedForSyncing, LOGGED_IN),
+          listOf(RESETTING_PIN, ApprovedForSyncing, RESETTING_PIN),
           listOf(RESET_PIN_REQUESTED, ApprovedForSyncing, LOGGED_IN),
 
           listOf(NOT_LOGGED_IN, DisapprovedForSyncing, NOT_LOGGED_IN),

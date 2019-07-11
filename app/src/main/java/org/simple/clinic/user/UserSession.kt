@@ -233,7 +233,7 @@ class UserSession @Inject constructor(
                 // not get set to LOGGED_IN when the PIN reset request is approved. See if it can
                 // be done in a better way since there are many places where this sort of logic is
                 // littered all over the app currently.
-                val finalLoggedInStatus = if (userPayload.status == ApprovedForSyncing) {
+                val finalLoggedInStatus = if (loggedInUser.loggedInStatus == RESET_PIN_REQUESTED && userPayload.status == ApprovedForSyncing) {
                   LOGGED_IN
 
                 } else {

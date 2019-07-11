@@ -93,13 +93,14 @@ class PatientsScreenController @Inject constructor(
         // So duplicate triggers are dropped by restricting flatMap's
         // concurrency to 1.
         .toFlowable(BackpressureStrategy.LATEST)
-        .flatMapMaybe({ _ ->
+        .flatMapMaybe({
           userSession.loggedInUser()
               .firstOrError()
-              .filter { (user) -> user!!.status == WaitingForApproval }
-              .doOnSuccess {
+              .filter { (user) -> user != null }
+              .doOnSuccess { (user) ->
+                val userStatus = user?.status
                 // Resetting this flag here to show the approved status later
-                if (hasUserDismissedApprovedStatusPref.get()) {
+                if (userStatus != ApprovedForSyncing && hasUserDismissedApprovedStatusPref.get()) {
                   hasUserDismissedApprovedStatusPref.set(false)
                 }
 

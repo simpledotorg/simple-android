@@ -661,27 +661,6 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
-  fun `while BP readings are invalid, next arrow should remain disabled`() {
-    whenever(bpValidator.validate(any(), any()))
-        .thenReturn(ErrorDiastolicEmpty)
-        .thenReturn(ErrorDiastolicTooHigh)
-        .thenReturn(Success(systolic = 0, diastolic = 0))
-        .thenReturn(ErrorSystolicLessThanDiastolic)
-
-    uiEvents.run {
-      onNext(BloodPressureScreenChanged(BP_ENTRY))
-      onNext(BloodPressureSystolicTextChanged("-"))
-      onNext(BloodPressureDiastolicTextChanged("-"))
-      onNext(BloodPressureSystolicTextChanged("-"))
-      onNext(BloodPressureDiastolicTextChanged("-"))
-      onNext(BloodPressureDiastolicTextChanged("-"))
-    }
-
-    verify(sheet, times(2)).setNextArrowIconEnabled(false)
-    verify(sheet, times(1)).setNextArrowIconEnabled(true)
-  }
-
-  @Test
   @Parameters(method = "params for OpenAs types")
   fun `when save is clicked, user input is complete, but date entry is not active then BP should not be saved`(
       openAs: OpenAs

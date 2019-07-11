@@ -149,26 +149,6 @@
             app:layout_constraintStart_toStartOf="@+id/bloodpressureentry_diastolic"
             app:layout_constraintTop_toBottomOf="@+id/bloodpressureentry_diastolic" />
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <FrameLayout
-          android:id="@+id/bloodpressureentry_next_arrow_container"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:layout_marginBottom="@dimen/spacing_8"
-          android:background="?selectableItemBackground"
-          android:paddingEnd="@dimen/spacing_16"
-          android:paddingStart="@dimen/spacing_8">
-
-          <ImageView
-            android:id="@+id/bloodpressureentry_next_arrow"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@null"
-            app:srcCompat="@drawable/ic_round_arrow_forward_24dp"
-            app:tint="@color/selector_bloodpressureentry_next_arrow_tint"
-            tools:ignore="ContentDescription,RtlSymmetry" />
-        </FrameLayout>
       </LinearLayout>
 
       <TextView
@@ -201,26 +181,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <FrameLayout
-          android:id="@+id/bloodpressureentry_previous_arrow_container"
-          android:layout_width="wrap_content"
-          android:layout_height="match_parent"
-          android:layout_marginBottom="@dimen/spacing_8"
-          android:layout_marginTop="@dimen/spacing_8"
-          android:background="?selectableItemBackground"
-          android:paddingEnd="@dimen/spacing_8"
-          android:paddingStart="@dimen/spacing_16">
-
-          <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:rotation="180"
-            app:srcCompat="@drawable/ic_round_arrow_forward_24dp"
-            app:tint="@color/selector_bloodpressureentry_next_arrow_tint"
-            tools:ignore="ContentDescription,RtlSymmetry" />
-        </FrameLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="0dp"

@@ -46,4 +46,7 @@
   <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
 
   <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>
+
+  <dimen name="findorregisterpatienttoolbar_bg_corners">4dp</dimen>
+  <dimen name="findorregisterpatienttoolbar_bg_stroke">1dp</dimen>
 </resources>

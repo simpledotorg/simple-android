@@ -96,6 +96,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             diastolicImeOptionClicks(),
             diastolicBackspaceClicks(),
             removeClicks(),
+            bpDateClicks(),
             hardwareBackPresses(),
             screenTypeChanges(),
             dayTextChanges(),
@@ -155,6 +156,11 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       RxView
           .clicks(removeBloodPressureButton)
           .map { BloodPressureRemoveClicked }
+
+  private fun bpDateClicks(): Observable<UiEvent> =
+      RxView
+          .clicks(bpDateButton)
+          .map { BloodPressureDateClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->

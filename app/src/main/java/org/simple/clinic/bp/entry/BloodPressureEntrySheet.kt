@@ -30,6 +30,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
+import org.threeten.bp.LocalDate
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -43,6 +44,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
   private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
   private val bpErrorTextView by bindView<TextView>(R.id.bloodpressureentry_bp_error)
+  private val bpDateButton by bindView<Button>(R.id.bloodpressureentry_bp_date)
   private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
@@ -317,5 +319,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     dayEditText.setTextAndCursor(dayOfMonth)
     monthEditText.setTextAndCursor(month)
     yearEditText.setTextAndCursor(twoDigitYear)
+  }
+
+  fun showDate(today: LocalDate) {
+    bpDateButton.text = today.toString()
   }
 }

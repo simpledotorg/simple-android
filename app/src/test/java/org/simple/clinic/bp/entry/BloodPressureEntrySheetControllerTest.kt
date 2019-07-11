@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
 import io.reactivex.Observable
@@ -726,5 +727,24 @@ class BloodPressureEntrySheetControllerTest {
     } else {
       verify(sheet, never()).finish()
     }
+  }
+
+  @Test
+  fun `whenever the BP sheet is shown to add a new BP, then show today's date`() {
+    val today = LocalDate.now(testUserClock)
+
+    uiEvents.onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
+    uiEvents.onNext(BloodPressureScreenChanged(BP_ENTRY))
+
+    verify(sheet).showDate(today)
+
+    verify(sheet).setDate(
+        today.dayOfMonth.toString().padStart(2, '0'),
+        today.month.value.toString().padStart(2, '0'),
+        today.year.toString().takeLast(2)
+    )
+    verify(sheet).hideRemoveBpButton()
+    verify(sheet).showEnterNewBloodPressureTitle()
+    verifyNoMoreInteractions(sheet)
   }
 }

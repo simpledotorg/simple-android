@@ -223,10 +223,6 @@ class BloodPressureEntrySheetController @Inject constructor(
   }
 
   private fun proceedToDateEntryWhenBpEntryIsDone(events: Observable<UiEvent>): Observable<UiChange> {
-    val saveClicks = Observable.merge(
-        events.ofType<BloodPressureDateClicked>(),
-        events.ofType<BloodPressureSaveClicked>())
-
     val screenChanges = events
         .ofType<BloodPressureScreenChanged>()
         .map { it.type }
@@ -235,7 +231,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<BloodPressureReadingsValidated>()
         .map { it.result }
 
-    return saveClicks
+    return events
+        .ofType<BloodPressureDateClicked>()
         .withLatestFrom(screenChanges, validations)
         .filter { (_, screen, result) -> screen == BP_ENTRY && result is Success }
         .map { Ui::showDateEntryScreen }
@@ -393,7 +390,6 @@ class BloodPressureEntrySheetController @Inject constructor(
         .map { it.date }
 
     val validations = Observables.combineLatest(screenChanges, dateChanges)
-        .filter { (screen) -> screen.type == DATE_ENTRY }
         .map { (_, date) ->
           val validationResult = dateValidator.validate2(date)
           BloodPressureDateValidated(date, validationResult)
@@ -450,14 +446,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         .ofType<OpenAs.Update>()
         .map { it.bpUuid }
 
-    val screenChanges = events
-        .ofType<BloodPressureScreenChanged>()
-        .map { it.type }
-
     val saveClicks = events
         .ofType<BloodPressureSaveClicked>()
-        .withLatestFrom(screenChanges)
-        .filter { (_, screen) -> screen == DATE_ENTRY }
 
     val prefilledDateStream = events
         .ofType<BloodPressureDateToPrefillCalculated>()

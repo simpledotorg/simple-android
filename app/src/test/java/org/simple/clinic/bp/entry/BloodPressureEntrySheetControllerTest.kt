@@ -548,7 +548,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BloodPressureScreenChanged(BP_ENTRY))
       onNext(BloodPressureSystolicTextChanged("120"))
       onNext(BloodPressureDiastolicTextChanged("110"))
-      onNext(BloodPressureNextArrowClicked)
+      onNext(BloodPressureDateClicked)
     }
 
     verify(sheet).showDateEntryScreen()
@@ -568,7 +568,7 @@ class BloodPressureEntrySheetControllerTest {
       onNext(BloodPressureScreenChanged(BP_ENTRY))
       onNext(BloodPressureSystolicTextChanged("-"))
       onNext(BloodPressureDiastolicTextChanged("-"))
-      onNext(BloodPressureNextArrowClicked)
+      onNext(BloodPressureDateClicked)
     }
 
     verify(sheet, never()).showDateEntryScreen()

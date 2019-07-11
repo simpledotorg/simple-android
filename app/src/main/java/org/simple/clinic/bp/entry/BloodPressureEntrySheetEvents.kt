@@ -49,7 +49,7 @@ object BloodPressureDateClicked : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Next Arrow Clicked"
 }
 
-object BloodPressurePreviousArrowClicked : UiEvent {
+object BloodPressureShowBpClicked : UiEvent {
   override val analyticsName = "Blood Pressure Entry:Previous Arrow Clicked"
 }
 

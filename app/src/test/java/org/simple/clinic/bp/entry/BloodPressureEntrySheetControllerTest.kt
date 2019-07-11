@@ -3,6 +3,7 @@ package org.simple.clinic.bp.entry
 import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
+import com.nhaarman.mockito_kotlin.reset
 import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -595,30 +596,6 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for OpenAs types")
-  fun `when date entry is active and previous arrow is pressed then BP entry should be shown`(
-      openAs: OpenAs
-  ) {
-    uiEvents.run {
-      onNext(BloodPressureScreenChanged(DATE_ENTRY))
-      onNext(BloodPressurePreviousArrowClicked)
-    }
-
-    verify(sheet).showBpEntryScreen()
-  }
-
-  @Test
-  fun `when date entry is active and back is pressed then BP entry should be shown`() {
-    uiEvents.run {
-      onNext(BloodPressureScreenChanged(DATE_ENTRY))
-      onNext(BloodPressureBackPressed)
-    }
-
-    verify(sheet).showBpEntryScreen()
-    verify(sheet, never()).finish()
-  }
-
-  @Test
   fun `when BP entry is active and back is pressed then the sheet should be closed`() {
     uiEvents.run {
       onNext(BloodPressureScreenChanged(BP_ENTRY))
@@ -769,6 +746,60 @@ class BloodPressureEntrySheetControllerTest {
     verify(sheet).setDiastolic(bp.diastolic.toString())
     verify(sheet).showRemoveBpButton()
     verify(sheet).showEditBloodPressureTitle()
+    verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `whenever the BP sheet has an invalid date (new BP) and show BP button is pressed, then show date validation errors`() {
+    val systolic = 120.toString()
+    val diastolic = 110.toString()
+
+    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate2(any(), any())).thenReturn(InvalidPattern) // TODO Use actual values
+
+    with(uiEvents) {
+      onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged(systolic))
+      onNext(BloodPressureDiastolicTextChanged(diastolic))
+      onNext(BloodPressureDateClicked)
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureDayChanged("1"))
+      onNext(BloodPressureMonthChanged("24"))
+      onNext(BloodPressureYearChanged("91"))
+
+      reset(sheet)
+      onNext(BloodPressureShowBpClicked)
+    }
+
+    verify(sheet).showInvalidDateError()
+    verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `whenever the BP sheet has an invalid date (new BP) and back key is pressed, then show date validation errors`() {
+    val systolic = 120.toString()
+    val diastolic = 110.toString()
+
+    whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
+    whenever(dateValidator.validate2(any(), any())).thenReturn(InvalidPattern) // TODO Use actual values
+
+    with(uiEvents) {
+      onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
+      onNext(BloodPressureScreenChanged(BP_ENTRY))
+      onNext(BloodPressureSystolicTextChanged(systolic))
+      onNext(BloodPressureDiastolicTextChanged(diastolic))
+      onNext(BloodPressureDateClicked)
+      onNext(BloodPressureScreenChanged(DATE_ENTRY))
+      onNext(BloodPressureDayChanged("1"))
+      onNext(BloodPressureMonthChanged("24"))
+      onNext(BloodPressureYearChanged("91"))
+
+      reset(sheet)
+      onNext(BloodPressureBackPressed)
+    }
+
+    verify(sheet).showInvalidDateError()
     verifyNoMoreInteractions(sheet)
   }
 }

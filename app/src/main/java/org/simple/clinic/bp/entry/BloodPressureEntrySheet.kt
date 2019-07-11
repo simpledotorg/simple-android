@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.view.inputmethod.EditorInfo
 import android.widget.Button
@@ -47,9 +46,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
-  private val nextArrowIconContainer by bindView<ViewGroup>(R.id.bloodpressureentry_next_arrow_container)
-  private val nextArrowIcon by bindView<View>(R.id.bloodpressureentry_next_arrow)
-  private val previousArrowIconContainer by bindView<View>(R.id.bloodpressureentry_previous_arrow_container)
   private val dayEditText by bindView<EditText>(R.id.bloodpressureentry_day)
   private val monthEditText by bindView<EditText>(R.id.bloodpressureentry_month)
   private val yearEditText by bindView<EditText>(R.id.bloodpressureentry_year)
@@ -98,8 +94,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             diastolicImeOptionClicks(),
             diastolicBackspaceClicks(),
             removeClicks(),
-            nextArrowClicks(),
-            previousArrowClicks(),
             hardwareBackPresses(),
             screenTypeChanges(),
             dayTextChanges(),
@@ -159,16 +153,6 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       RxView
           .clicks(removeBloodPressureButton)
           .map { BloodPressureRemoveClicked }
-
-  private fun nextArrowClicks(): Observable<UiEvent> =
-      RxView
-          .clicks(nextArrowIconContainer)
-          .map { BloodPressureNextArrowClicked }
-
-  private fun previousArrowClicks(): Observable<UiEvent> =
-      RxView
-          .clicks(previousArrowIconContainer)
-          .map { BloodPressurePreviousArrowClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {
     return Observable.create { emitter ->
@@ -333,9 +317,5 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     dayEditText.setTextAndCursor(dayOfMonth)
     monthEditText.setTextAndCursor(month)
     yearEditText.setTextAndCursor(twoDigitYear)
-  }
-
-  fun setNextArrowIconEnabled(enabled: Boolean) {
-    nextArrowIcon.isEnabled = enabled
   }
 }

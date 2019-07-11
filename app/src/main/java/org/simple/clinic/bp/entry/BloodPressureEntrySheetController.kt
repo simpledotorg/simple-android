@@ -418,9 +418,7 @@ class BloodPressureEntrySheetController @Inject constructor(
           when (result) {
             is InvalidPattern -> { ui: Ui -> ui.showInvalidDateError() }
             is DateIsInFuture -> { ui: Ui -> ui.showDateIsInFutureError() }
-            is Valid -> { ui: Ui ->
-              // Nothing to do here.
-            }
+            is Valid -> { ui: Ui -> ui.showDate(result.parsedDate) }
           }
         }
   }

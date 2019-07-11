@@ -11,9 +11,6 @@
     <ignore path="src/main/res/drawable/ic_patient_male.xml" />
     <ignore path="src/main/res/drawable/ic_patient_transgender.xml" />
 
-    <!-- TODO: Remove once the layout is used in the future PR -->
-    <ignore path="src/main/res/layout/view_allpatientsinfacility.xml" />
-
     <!-- Heap analytics plugin adds these resources dynamically. -->
     <ignore regexp="com.heapanalytics.android.*" />
   </issue>

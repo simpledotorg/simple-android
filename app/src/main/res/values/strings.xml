@@ -406,7 +406,6 @@
   <string name="appupdatedialog_negative_button_text">Not Now</string>
 
   <!-- All Patients In Facility View-->
-  <!--suppress UnusedResources -->
   <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
   <string name="allpatientsinfacility_nopatients_title">No patients at %1$s</string>
   <string name="allpatientsinfacility_foundpatients_header">All Patients: %1$s</string>

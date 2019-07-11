@@ -83,11 +83,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <Space
-          android:id="@+id/bloodpressureentry_bp_space"
-          android:layout_width="@dimen/bloodpressureentry_navigation_arrow_width"
-          android:layout_height="wrap_content" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="0dp"
           android:layout_height="wrap_content"
@@ -160,6 +155,13 @@
         android:gravity="center_horizontal"
         android:visibility="gone"
         tools:text="@string/bloodpressureentry_error_diastolic_180" />
+
+      <Button
+        android:id="@+id/bloodpressureentry_bp_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        tools:text="6 December, 2019"/>
     </LinearLayout>
 
     <LinearLayout

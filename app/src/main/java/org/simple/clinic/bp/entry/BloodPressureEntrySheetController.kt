@@ -188,6 +188,7 @@ class BloodPressureEntrySheetController @Inject constructor(
             val monthString = date.monthValue.toString().padStart(length = 2, padChar = inputDatePaddingCharacter.value)
             val yearString = date.year.toString().substring(startIndex = 2, endIndex = 4)
             ui.setDate(dayString, monthString, yearString)
+            ui.showDate(date)
           }
         }
   }

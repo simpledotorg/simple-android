@@ -41,8 +41,6 @@
   <dimen name="patientsummary_bp_list_item_multiple_in_group_bp_bottom_padding">@dimen/spacing_12</dimen>
   <dimen name="patientsummary_elevation_linkidwithpatient">@dimen/elevation_toolbar</dimen>
 
-  <dimen name="bloodpressureentry_navigation_arrow_width">48dp</dimen>
-
   <dimen name="registrationfacilities_header_top_spacing_with_previous_section">0dp</dimen>
 
   <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>

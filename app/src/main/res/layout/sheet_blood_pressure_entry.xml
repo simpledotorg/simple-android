@@ -15,6 +15,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:inAnimation="@anim/bloodpressureentry_date_entry_from_right"
+    android:measureAllChildren="false"
     android:outAnimation="@anim/bloodpressureentry_bp_exit_to_left"
     android:paddingBottom="@dimen/spacing_8"
     android:paddingTop="@dimen/spacing_12"
@@ -186,6 +187,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
+          android:layout_marginBottom="@dimen/spacing_24"
           android:layout_marginTop="@dimen/spacing_12">
 
           <EditText

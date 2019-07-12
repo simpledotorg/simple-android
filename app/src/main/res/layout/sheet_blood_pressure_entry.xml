@@ -165,8 +165,9 @@
 
       <ImageButton
         android:id="@+id/bloodpressureentry_show_bp"
-        android:layout_width="48dp"
-        android:layout_height="48dp" />
+        android:layout_width="@dimen/spacing_48"
+        android:layout_height="@dimen/spacing_48"
+        tools:ignore="ContentDescription" />
 
       <LinearLayout
         android:layout_width="match_parent"

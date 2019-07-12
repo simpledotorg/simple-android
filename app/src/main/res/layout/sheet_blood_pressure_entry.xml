@@ -19,7 +19,7 @@
     android:outAnimation="@anim/bloodpressureentry_bp_exit_to_left"
     android:paddingBottom="@dimen/spacing_8"
     android:paddingTop="@dimen/spacing_12"
-    app:debug_displayedChild="0"
+    app:debug_displayedChild="1"
     tools:background="@color/white">
 
     <LinearLayout
@@ -166,8 +166,14 @@
 
       <ImageButton
         android:id="@+id/bloodpressureentry_show_bp"
-        android:layout_width="@dimen/spacing_48"
-        android:layout_height="@dimen/spacing_48"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_4"
+        android:background="?selectableItemBackgroundBorderless"
+        android:padding="@dimen/spacing_8"
+        android:src="@drawable/ic_arrow_back_24dp"
+        app:tint="@color/blue1"
         tools:ignore="ContentDescription" />
 
       <LinearLayout
@@ -179,7 +185,7 @@
           android:id="@+id/bloodpressureentry_enter_date"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/spacing_8"
+          android:layout_marginTop="10dp"
           android:gravity="center_horizontal"
           android:text="@string/bloodpressureentry_sheet_title_enter_date"
           android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />

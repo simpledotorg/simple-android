@@ -10,6 +10,7 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_patient_search.view.*
+import kotlinx.android.synthetic.main.view_findorregisterpatient_toolbar.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
@@ -47,7 +48,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
     TheActivity.component.inject(this)
 
-    backButton.setOnClickListener {
+    toolbar.backButton.setOnClickListener {
       screenRouter.pop()
     }
 
@@ -65,13 +66,13 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun nameChanges() =
       RxTextView
-          .textChanges(fullNameEditText)
+          .textChanges(toolbar.patientNameEditText)
           .map(CharSequence::toString)
           .map(::SearchQueryNameChanged)
 
   private fun searchClicks(): Observable<SearchClicked> {
     val imeSearchClicks = RxTextView
-        .editorActionEvents(fullNameEditText)
+        .editorActionEvents(toolbar.patientNameEditText)
         .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
 
     return RxView
@@ -92,12 +93,9 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun setEmptyFullNameErrorVisible(visible: Boolean) {
-    fullNameInputLayout.error = if (visible) {
+    patientNameEditText.error = if (visible) {
       resources.getString(R.string.patientsearch_error_empty_fullname)
-    } else {
-      null
-    }
-    fullNameInputLayout.isErrorEnabled = visible
+    } else null
   }
 
   fun openPatientSummary(patientUuid: UUID) {

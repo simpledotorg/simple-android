@@ -22,7 +22,6 @@
   <string name="identifiertype_unknown">ID</string>
 
   <!-- Patient search -->
-  <string name="patientsearch_name">Patient’s name</string>
   <string name="patientsearch_search">Next</string>
   <string name="patientsearch_error_empty_fullname">Enter patient’s full name</string>
 

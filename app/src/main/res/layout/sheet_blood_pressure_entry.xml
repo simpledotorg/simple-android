@@ -16,7 +16,7 @@
     android:layout_height="wrap_content"
     android:inAnimation="@anim/bloodpressureentry_date_entry_from_right"
     android:outAnimation="@anim/bloodpressureentry_bp_exit_to_left"
-    android:paddingBottom="@dimen/spacing_24"
+    android:paddingBottom="@dimen/spacing_8"
     android:paddingTop="@dimen/spacing_12"
     app:debug_displayedChild="0"
     tools:background="@color/white">
@@ -149,9 +149,12 @@
 
       <Button
         android:id="@+id/bloodpressureentry_bp_date"
+        style="@style/Clinic.V2.BpEntryDateButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
         tools:text="6 December, 2019" />
     </LinearLayout>
 

@@ -95,7 +95,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             sheetCreates(),
             systolicTextChanges(),
             diastolicTextChanges(),
-            diastolicImeOptionClicks(),
+            imeDoneClicks(),
             diastolicBackspaceClicks(),
             removeClicks(),
             bpDateClicks(),
@@ -141,7 +141,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
       .map(CharSequence::toString)
       .map(::BloodPressureDiastolicTextChanged)
 
-  private fun diastolicImeOptionClicks(): Observable<BloodPressureSaveClicked> {
+  private fun imeDoneClicks(): Observable<BloodPressureSaveClicked> {
     return listOf(systolicEditText, diastolicEditText, dayEditText, monthEditText, yearEditText)
         .map { RxTextView.editorActions(it) { actionId -> actionId == EditorInfo.IME_ACTION_DONE } }
         .toObservable()

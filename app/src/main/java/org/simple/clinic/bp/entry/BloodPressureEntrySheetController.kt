@@ -248,16 +248,16 @@ class BloodPressureEntrySheetController @Inject constructor(
         .withLatestFrom(screenChanges)
         .filter { (_, screen) -> screen == DATE_ENTRY }
 
-    val showBpEvents = Observable.merge(
+    val mergedBackClicks = Observable.merge(
         events.ofType<BloodPressureShowBpClicked>(),
         backPresses
     )
 
-    val showBpValidDateEvents = showBpEvents
+    val validateDateEvents = mergedBackClicks
         .withLatestFrom(events.ofType<BloodPressureDateValidated>()) { _, validated -> validated.result }
         .ofType<Valid>()
 
-    return showBpValidDateEvents
+    return validateDateEvents
         .map { { ui: Ui -> ui.showBpEntryScreen() } }
   }
 

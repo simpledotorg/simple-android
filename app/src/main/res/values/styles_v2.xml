@@ -474,6 +474,14 @@
     <item name="android:layout_gravity">end</item>
   </style>
 
+  <style name="Clinic.V2.BpEntryDateButton">
+    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:paddingTop">@dimen/spacing_12</item>
+    <item name="android:paddingBottom">@dimen/spacing_12</item>
+    <item name="android:paddingStart">@dimen/spacing_24</item>
+    <item name="android:paddingEnd">@dimen/spacing_24</item>
+  </style>
+
   <style name="Clinic.V2.OverdueListAction">
     <item name="android:textAppearance">@style/Clinic.V2.TextAppearance.Body1Left.Grey0</item>
     <item name="android:paddingStart">@dimen/spacing_16</item>

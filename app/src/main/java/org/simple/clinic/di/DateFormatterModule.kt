@@ -28,4 +28,9 @@ class DateFormatterModule {
   @AppScope
   @Named("recent_patients_header")
   fun providesTimeFormatterForRecentPatientsHeader(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
+
+  @Provides
+  @AppScope
+  @Named("bp_entry")
+  fun providesTimeFormatterForBpEntry(locale: Locale): DateTimeFormatter = DateTimeFormatter.ofPattern("d MMMM, yyyy", locale)
 }

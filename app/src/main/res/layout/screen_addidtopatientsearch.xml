@@ -4,12 +4,14 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
-  android:layout_height="match_parent">
+  android:layout_height="match_parent"
+  android:clipChildren="false">
 
   <androidx.appcompat.widget.Toolbar
     android:id="@+id/toolBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:outlineProvider="none"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     tools:ignore="ContentDescription">
 
@@ -17,58 +19,71 @@
       android:id="@+id/titleTextView"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_8"
       android:layout_marginEnd="@dimen/spacing_16"
       android:layout_marginTop="@dimen/spacing_16"
       android:ellipsize="end"
       android:maxLines="2"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body0Left.White100"
       tools:text="Add BP Passport 512 8097 to patient" />
-
   </androidx.appcompat.widget.Toolbar>
-
-  <FrameLayout
-    android:id="@+id/fullNameInputLayoutContainer"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_above="@+id/addidtopatientsearch_search"
-    android:layout_below="@id/toolBar"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/spacing_12">
-
-    <com.google.android.material.textfield.TextInputLayout
-      android:id="@+id/fullNameInputLayout"
-      style="@style/Clinic.V2.TextInputLayout"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      app:errorEnabled="false">
-
-      <com.google.android.material.textfield.TextInputEditText
-        android:id="@+id/fullNameEditText"
-        style="@style/Clinic.V2.TextInputEditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/addidtopatientsearch_name"
-        android:imeOptions="flagNoFullscreen|actionSearch"
-        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
-        android:privateImeOptions="nm"
-        android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Grey0" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-      style="@style/Clinic.V2.ClearEditTextButton"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      app:cleareableField="@id/fullNameEditText" />
-  </FrameLayout>
 
   <include
     android:id="@+id/allPatientsView"
     layout="@layout/view_allpatientsinfacility"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_below="@id/fullNameInputLayoutContainer" />
+    android:layout_below="@+id/enterPatientNameInputContainer" />
+
+  <!-- This is placed below the all patients view so that the shadow of the toolbar can be cast -->
+  <FrameLayout
+    android:id="@id/enterPatientNameInputContainer"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/toolBar"
+    android:background="?colorPrimary"
+    android:elevation="@dimen/elevation_toolbar"
+    android:padding="@dimen/spacing_8">
+
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@drawable/background_addidtopatientsearch_searchfield"
+      android:orientation="horizontal"
+      android:padding="@dimen/spacing_8">
+
+      <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_search_24dp"
+        android:tint="@color/grey1"
+        tools:ignore="ContentDescription" />
+
+      <EditText
+        android:id="@+id/patientNameEditText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginEnd="@dimen/spacing_8"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_weight="1"
+        android:background="@null"
+        android:hint="@string/addidtopatientsearch_hint"
+        android:imeOptions="flagNoFullscreen|actionSearch"
+        android:importantForAutofill="no"
+        android:inputType="textPersonName|textCapWords|textFilter|textNoSuggestions"
+        android:privateImeOptions="nm"
+        android:textAppearance="@style/Clinic.V2.TextAppearance.Subtitle1Left.Grey1"
+        android:textColorHint="@color/grey1"
+        tools:targetApi="o" />
+
+      <org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
+        style="@style/Clinic.V2.ClearEditTextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cleareableField="@id/patientNameEditText" />
+    </LinearLayout>
+  </FrameLayout>
 
   <org.simple.clinic.widgets.PrimarySolidButtonWithFrame
     android:id="@+id/searchButtonFrame"

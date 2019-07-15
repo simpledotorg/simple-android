@@ -179,22 +179,21 @@
       <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_16"
+        android:layout_marginTop="@dimen/spacing_12"
         android:orientation="vertical">
 
         <TextView
           android:id="@+id/bloodpressureentry_enter_date"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:layout_marginTop="10dp"
           android:gravity="center_horizontal"
           android:text="@string/bloodpressureentry_sheet_title_enter_date"
           android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
           android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_24"
-          android:layout_marginTop="@dimen/spacing_12">
+          android:layout_height="wrap_content">
 
           <EditText
             android:id="@+id/bloodpressureentry_day"
@@ -284,7 +283,6 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_8"
           android:gravity="center_horizontal"
-          android:visibility="gone"
           tools:text="@string/bloodpressureentry_error_date_is_in_future" />
       </LinearLayout>
     </FrameLayout>

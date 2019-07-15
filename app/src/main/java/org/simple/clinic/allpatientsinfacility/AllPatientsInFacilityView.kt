@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.FrameLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
@@ -58,6 +59,7 @@ class AllPatientsInFacilityView(
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     forwardListItemEventsToDownstream(screenDestroys)
+    forwardListScrollEventsToDownstream(screenDestroys)
 
     bindUiToController(
         ui = this,
@@ -76,6 +78,15 @@ class AllPatientsInFacilityView(
         .map(::AllPatientsInFacilitySearchResultClicked)
         .takeUntil(screenDestroys)
         .subscribe { downstreamUiEvents.onNext(it) }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun forwardListScrollEventsToDownstream(screenDestroys: Observable<ScreenDestroyed>) {
+    RxRecyclerView
+        .scrollStateChanges(patientsList)
+        .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
+        .takeUntil(screenDestroys)
+        .subscribe { downstreamUiEvents.onNext(AllPatientsInFacilityListScrolled) }
   }
 
   private fun setupInitialViewVisibility() {

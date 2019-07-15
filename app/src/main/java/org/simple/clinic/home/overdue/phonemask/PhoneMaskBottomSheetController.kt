@@ -3,11 +3,13 @@ package org.simple.clinic.home.overdue.phonemask
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
+import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.Patient
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.phone.Dialer.Automatic
@@ -19,7 +21,7 @@ import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.util.estimateCurrentAge
-import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.unwrapJust
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -46,31 +48,43 @@ class PhoneMaskBottomSheetController @Inject constructor(
     )
   }
 
-  private fun setupView(events: Observable<UiEvent>) =
-      sheetCreated(events)
-          .switchMap { patientRepository.patient(it.patientUuid) }
-          .filterAndUnwrapJust()
-          .withLatestFrom(patientPhoneNumberStream(events))
-          .map { (patient, phoneNumber) -> patientDetails(patient, phoneNumber) }
-          .map { patient ->
-            { ui: Ui -> ui.setupView(patient) }
-          }
+  private fun setupView(events: Observable<UiEvent>): Observable<UiChange> {
+    val patientUuidStream = events
+        .ofType<PhoneMaskBottomSheetCreated>()
+        .map { it.patientUuid }
 
-  private fun patientDetails(patient: Patient, phoneNumber: String) =
-      PatientDetails(
-          phoneNumber = phoneNumber,
-          name = patient.fullName,
-          genderLetterRes = patient.gender.displayLetterRes,
-          age = ageValue(patient)
-      )
+    val patientStream = patientUuidStream
+        .flatMap(patientRepository::patient)
+        .unwrapJust()
 
-  private fun ageValue(patient: Patient): Int =
-      if (patient.dateOfBirth == null) {
-        val age = patient.age!!
-        estimateCurrentAge(age.value, age.updatedAt, clock)
-      } else {
-        estimateCurrentAge(patient.dateOfBirth, clock)
-      }
+    val patientPhoneNumberStream = patientUuidStream
+        .flatMap(patientRepository::phoneNumber)
+        .unwrapJust()
+
+    return Observables.combineLatest(patientStream, patientPhoneNumberStream)
+        .map { (patient, phoneNumber) -> patientDetails(patient, phoneNumber) }
+        .map { patientDetails ->
+          { ui: Ui -> ui.setupView(patientDetails) }
+        }
+  }
+
+  private fun patientDetails(patient: Patient, phoneNumber: PatientPhoneNumber): PatientDetails {
+    return PatientDetails(
+        phoneNumber = phoneNumber.number,
+        name = patient.fullName,
+        genderLetterRes = patient.gender.displayLetterRes,
+        age = ageValue(patient)
+    )
+  }
+
+  private fun ageValue(patient: Patient): Int {
+    return if (patient.dateOfBirth == null) {
+      val age = patient.age!!
+      estimateCurrentAge(age.value, age.updatedAt, clock)
+    } else {
+      estimateCurrentAge(patient.dateOfBirth, clock)
+    }
+  }
 
   private fun requestCallPermissionForNormalCalls(events: Observable<UiEvent>) =
       normalCallClicked(events)
@@ -113,12 +127,11 @@ class PhoneMaskBottomSheetController @Inject constructor(
         DENIED, NEVER_ASK_AGAIN -> Manual
       }
 
-  private fun patientPhoneNumberStream(events: Observable<UiEvent>) =
-      sheetCreated(events)
-          .switchMap { patientRepository.phoneNumber(it.patientUuid) }
-          .filterAndUnwrapJust()
-          .map { it.number }
-
-  private fun sheetCreated(events: Observable<UiEvent>) =
-      events.ofType<PhoneMaskBottomSheetCreated>()
+  private fun patientPhoneNumberStream(events: Observable<UiEvent>): Observable<String> {
+    return events
+        .ofType<PhoneMaskBottomSheetCreated>()
+        .flatMap { patientRepository.phoneNumber(it.patientUuid) }
+        .unwrapJust()
+        .map { it.number }
+  }
 }

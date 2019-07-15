@@ -15,8 +15,11 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.phone.Dialer
@@ -30,9 +33,11 @@ import org.simple.clinic.util.RuntimePermissionResult.GRANTED
 import org.simple.clinic.util.RuntimePermissionResult.NEVER_ASK_AGAIN
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Month
 import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
@@ -44,7 +49,7 @@ class PhoneMaskBottomSheetControllerTest {
   private val screen = mock<PhoneMaskBottomSheet>()
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val phoneCaller = mock<PhoneCaller>()
-  private val patientUuid: UUID = UUID.randomUUID()
+  private val patientUuid: UUID = UUID.fromString("90d20a06-6e8b-4f26-b317-1ac18441765d")
   private val patientRepository: PatientRepository = mock()
   private val clock = TestUtcClock()
 
@@ -67,17 +72,17 @@ class PhoneMaskBottomSheetControllerTest {
     val gender = Transgender
     val age = 32
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.patient(
+    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(PatientMocker.patient(
         uuid = patientUuid,
         fullName = name,
         gender = gender,
         age = Age(age, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
         dateOfBirth = null
-    ))))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.phoneNumber(
+    ).toOptional()))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
         uuid = patientUuid,
         number = phoneNumber
-    ))))
+    ).toOptional()))
 
     uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
     uiEvents.onNext(callTypeEvent)
@@ -108,17 +113,17 @@ class PhoneMaskBottomSheetControllerTest {
     val gender = Transgender
     val age = 32
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.patient(
+    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(PatientMocker.patient(
         uuid = patientUuid,
         fullName = name,
         gender = gender,
         age = Age(age, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
         dateOfBirth = null
-    ))))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.phoneNumber(
+    ).toOptional()))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
         uuid = patientUuid,
         number = number
-    ))))
+    ).toOptional()))
 
     var isCompletableSubscribed = false
     val normalCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
@@ -152,17 +157,17 @@ class PhoneMaskBottomSheetControllerTest {
     val gender = Transgender
     val age = 32
 
-    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.patient(
+    whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(PatientMocker.patient(
         uuid = patientUuid,
         fullName = name,
         gender = gender,
         age = Age(age, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
         dateOfBirth = null
-    ))))
-    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.phoneNumber(
+    ).toOptional()))
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(Observable.just(PatientMocker.phoneNumber(
         uuid = patientUuid,
         number = number
-    ))))
+    ).toOptional()))
 
     var isCompletableSubscribed = false
     val secureCallCompletable = Completable.complete().doOnSubscribe { isCompletableSubscribed = true }
@@ -199,4 +204,45 @@ class PhoneMaskBottomSheetControllerTest {
           listOf(SecureCallClicked, DENIED, Manual),
           listOf(SecureCallClicked, NEVER_ASK_AGAIN, Manual)
       )
+
+  @Test
+  fun `when the screen is created, the patient details must be populated`() {
+    // given
+    val patientSubject = PublishSubject.create<Optional<Patient>>()
+    val patientPhoneNumberSubject = PublishSubject.create<Optional<PatientPhoneNumber>>()
+    whenever(patientRepository.patient(patientUuid)).thenReturn(patientSubject)
+    whenever(patientRepository.phoneNumber(patientUuid)).thenReturn(patientPhoneNumberSubject)
+
+    val patientName = "Anish Acharya"
+    val gender = Male
+    val number = "1234567890"
+
+    val patient = PatientMocker.patient(
+        uuid = patientUuid,
+        fullName = patientName,
+        gender = gender,
+        dateOfBirth = LocalDate.of(1940, Month.JANUARY, 1),
+        age = null
+    )
+    val phoneNumber = PatientMocker.phoneNumber(
+        uuid = UUID.fromString("fe364a55-118a-4f0f-bb64-b7b0ca2e8282"),
+        patientUuid = patientUuid,
+        number = number
+    )
+
+    // when
+    uiEvents.onNext(PhoneMaskBottomSheetCreated(patientUuid))
+    patientSubject.onNext(patient.toOptional())
+    patientPhoneNumberSubject.onNext(phoneNumber.toOptional())
+
+    // then
+    val expectedPatientDetails = PatientDetails(
+        phoneNumber = number,
+        name = patientName,
+        genderLetterRes = gender.displayLetterRes,
+        // Test UTC clock is set to EPOCH
+        age = 30
+    )
+    verify(screen).setupView(expectedPatientDetails)
+  }
 }

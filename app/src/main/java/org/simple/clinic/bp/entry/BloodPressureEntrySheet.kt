@@ -32,14 +32,19 @@ import org.simple.clinic.widgets.ViewFlipperWithDebugPreview
 import org.simple.clinic.widgets.displayedChildResId
 import org.simple.clinic.widgets.setTextAndCursor
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
+import javax.inject.Named
 
 class BloodPressureEntrySheet : BottomSheetActivity() {
 
   @Inject
   lateinit var controller: BloodPressureEntrySheetController
+
+  @field:[Inject Named("bp_entry")]
+  lateinit var dateFormatter: DateTimeFormatter
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)
   private val systolicEditText by bindView<EditText>(R.id.bloodpressureentry_systolic)
@@ -335,7 +340,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
     yearEditText.setTextAndCursor(twoDigitYear)
   }
 
-  fun showDate(today: LocalDate) {
-    bpDateButton.text = today.toString()
+  fun showDate(date: LocalDate) {
+    bpDateButton.text = dateFormatter.format(date)
   }
 }

@@ -10,8 +10,6 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.*
-import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.allPatientsView
-import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.searchButtonFrame
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
@@ -71,7 +69,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
     displayScreenTitle()
-    fullNameEditText.showKeyboard()
+    patientNameEditText.showKeyboard()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
@@ -108,13 +106,13 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
 
   private fun nameChanges() =
       RxTextView
-          .textChanges(fullNameEditText)
+          .textChanges(patientNameEditText)
           .map(CharSequence::toString)
           .map(::SearchQueryNameChanged)
 
   private fun searchClicks(): Observable<SearchClicked> {
     val imeSearchClicks = RxTextView
-        .editorActionEvents(fullNameEditText)
+        .editorActionEvents(patientNameEditText)
         .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
 
     return RxView
@@ -137,7 +135,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
         .uiEvents
         .ofType<AllPatientsInFacilityListScrolled>()
         .takeUntil(screenDestroys)
-        .subscribe { fullNameInputLayout.hideKeyboard() }
+        .subscribe { enterPatientNameInputContainer.hideKeyboard() }
   }
 
   fun openAddIdToPatientSearchResultsScreen(name: String) {
@@ -148,12 +146,9 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   fun setEmptyFullNameErrorVisible(visible: Boolean) {
-    fullNameInputLayout.error = if (visible) {
+    patientNameEditText.error = if (visible) {
       resources.getString(R.string.addidtopatientsearch_error_empty_fullname)
-    } else {
-      null
-    }
-    fullNameInputLayout.isErrorEnabled = visible
+    } else null
   }
 
   fun openPatientSummary(patientUuid: UUID) {

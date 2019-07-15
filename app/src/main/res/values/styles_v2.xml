@@ -91,24 +91,7 @@
     <item name="android:windowTranslucentStatus">true</item>
   </style>
 
-  <style name="Clinic.V2.TextInputLayout">
-    <item name="android:theme">@style/Clinic.V2.TextInputLayoutTheme</item>
-    <item name="hintTextAppearance">@style/Clinic.V2.TextAppearance.Label</item>
-    <item name="errorTextAppearance">@style/Clinic.V2.TextAppearance.TextInputLayoutError</item>
-  </style>
-
   <style name="Clinic.V2.TextAppearance" />
-
-  <style name="Clinic.V2.TextInputLayoutTheme">
-    <item name="colorControlNormal">@color/grey2</item>
-  </style>
-
-  <style name="Clinic.V2.TextAppearance.Label">
-    <item name="android:textSize">@dimen/textsize_12</item>
-    <item name="android:letterSpacing" tools:ignore="NewApi">0.03</item>
-    <item name="android:lineSpacingExtra">4sp</item>
-    <item name="android:textColor">@color/grey1</item>
-  </style>
 
   <style name="Clinic.V2.TextAppearance.TextInputLayoutError">
     <item name="android:textSize">@dimen/textsize_12</item>
@@ -367,11 +350,6 @@
 
   <style name="Clinic.V2.TextAppearance.Button1.Green1">
     <item name="android:textColor">@color/green1</item>
-  </style>
-
-  <style name="Clinic.V2.TextInputEditText">
-    <item name="android:paddingTop">6dp</item>
-    <item name="android:paddingBottom">@dimen/spacing_16</item>
   </style>
 
   <style name="Clinic.V2.TextAppearance.H6">

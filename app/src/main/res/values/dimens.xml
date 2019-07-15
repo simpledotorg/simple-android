@@ -49,4 +49,6 @@
 
   <dimen name="findorregisterpatienttoolbar_bg_corners">4dp</dimen>
   <dimen name="findorregisterpatienttoolbar_bg_stroke">1dp</dimen>
+
+  <dimen name="addidtopatientsearch_searchfield_bg_corners">4dp</dimen>
 </resources>

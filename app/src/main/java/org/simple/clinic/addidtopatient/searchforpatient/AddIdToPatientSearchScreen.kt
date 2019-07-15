@@ -10,9 +10,12 @@ import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.*
+import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.allPatientsView
+import kotlinx.android.synthetic.main.screen_addidtopatientsearch.view.searchButtonFrame
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchresults.AddIdToPatientSearchResultsScreenKey
+import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
@@ -26,6 +29,8 @@ import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
+import org.simple.clinic.widgets.hideKeyboard
+import org.simple.clinic.widgets.showKeyboard
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -51,6 +56,10 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     screenRouter.key<AddIdToPatientSearchScreenKey>(this)
   }
 
+  private val allPatientsInFacilityView by unsafeLazy {
+    allPatientsView as AllPatientsInFacilityView
+  }
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -62,6 +71,10 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
     displayScreenTitle()
+    fullNameEditText.showKeyboard()
+
+    val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+    hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
 
     bindUiToController(
         ui = this,
@@ -71,7 +84,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
             patientClickEvents()
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = screenDestroys
     )
   }
 
@@ -111,11 +124,20 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
   }
 
   private fun patientClickEvents(): Observable<UiEvent> {
-    return (allPatientsView as AllPatientsInFacilityView)
+    return allPatientsInFacilityView
         .uiEvents
         .ofType<AllPatientsInFacilitySearchResultClicked>()
         .map { it.patientUuid }
         .map(::PatientItemClicked)
+  }
+
+  @Suppress("CheckResult")
+  private fun hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys: Observable<ScreenDestroyed>) {
+    allPatientsInFacilityView
+        .uiEvents
+        .ofType<AllPatientsInFacilityListScrolled>()
+        .takeUntil(screenDestroys)
+        .subscribe { fullNameInputLayout.hideKeyboard() }
   }
 
   fun openAddIdToPatientSearchResultsScreen(name: String) {

@@ -7,6 +7,7 @@
 ## On Demo
 ### Feature
 - All patients that have visited the current facility will be shown in the patient search screen
+- Make BP date entry optional
 
 ### Internal
 - Added forward compatibility support to MedicalHistory.Answer enum

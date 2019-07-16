@@ -1917,12 +1917,12 @@ class PatientRepositoryAndroidTest {
     val (facilityA, facilityB, facilityC) = facilityRepository.facilities().blockingFirst()
 
     recordPatientAtFacility(
-        "Chitra",
+        "Chitra Naik",
         Active,
         facilityA
     )
     recordPatientAtFacility(
-        "Anubhav",
+        "Anubhav acharya",
         Active,
         facilityA
     )
@@ -1946,6 +1946,21 @@ class PatientRepositoryAndroidTest {
         Active,
         facilityB
     )
+    recordPatientAtFacility(
+        "chitra menon",
+        Active,
+        facilityA
+    )
+    recordPatientAtFacility(
+        "anubhav Bansal",
+        Active,
+        facilityA
+    )
+    recordPatientAtFacility(
+        "bhim",
+        Active,
+        facilityB
+    )
 
     // when
     fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
@@ -1960,11 +1975,11 @@ class PatientRepositoryAndroidTest {
 
     // then
     assertThat(allPatientFullNamesInFacilityA)
-        .containsExactly("Anubhav", "Chitra")
+        .containsExactly("Anubhav acharya", "anubhav Bansal", "chitra menon", "Chitra Naik")
         .inOrder()
 
     assertThat(allPatientFullNamesInFacilityB)
-        .containsExactly("Dhruv")
+        .containsExactly("bhim", "Dhruv")
         .inOrder()
 
     assertThat(allPatientFullNamesInFacilityC).isEmpty()

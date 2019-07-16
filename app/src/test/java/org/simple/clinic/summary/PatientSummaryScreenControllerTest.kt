@@ -26,8 +26,9 @@ import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -415,7 +416,7 @@ class PatientSummaryScreenControllerTest {
   fun `when answers for medical history questions are toggled, then the updated medical history should be saved`(
       openIntention: OpenIntention,
       question: MedicalHistoryQuestion,
-      newAnswer: MedicalHistory.Answer
+      newAnswer: Answer
   ) {
     val medicalHistory = medicalHistory(
         diagnosedWithHypertension = Unanswered,

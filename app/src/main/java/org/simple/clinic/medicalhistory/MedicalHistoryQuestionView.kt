@@ -13,9 +13,9 @@ import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.widgets.CheckboxWithSuppressibleListener
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setHorizontalPadding
@@ -30,9 +30,9 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   private val contentLayout by bindView<ViewGroup>(R.id.newmedicalhistory_layout)
 
   lateinit var question: MedicalHistoryQuestion
-  var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}
+  var answerChangeListener: (Answer) -> Unit = {}
 
-  var answer: MedicalHistory.Answer = Unanswered
+  var answer: Answer = Unanswered
     set(value) {
       field = value
       answerChangeListener(value)
@@ -96,13 +96,13 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     dividerView.visibility = View.GONE
   }
 
-  fun render(question: MedicalHistoryQuestion, answer: MedicalHistory.Answer) {
+  fun render(question: MedicalHistoryQuestion, answer: Answer) {
     this.question = question
     setAnswerWithoutListener(answer)
     labelTextView.setText(question.questionRes)
   }
 
-  fun answers() = Observable.create<MedicalHistory.Answer> { emitter ->
+  fun answers() = Observable.create<Answer> { emitter ->
     answerChangeListener = emitter::onNext
     emitter.setCancellable { answerChangeListener = {} }
 
@@ -110,7 +110,7 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
     emitter.onNext(answer)
   }!!
 
-  private fun setAnswerWithoutListener(answer: MedicalHistory.Answer) {
+  private fun setAnswerWithoutListener(answer: Answer) {
     val listenerCopy = answerChangeListener
     answerChangeListener = {}
 

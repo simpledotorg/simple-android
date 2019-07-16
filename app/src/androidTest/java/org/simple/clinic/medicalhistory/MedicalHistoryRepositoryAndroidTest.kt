@@ -7,9 +7,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock

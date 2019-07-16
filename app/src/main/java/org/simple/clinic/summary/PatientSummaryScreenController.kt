@@ -13,6 +13,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -282,7 +283,7 @@ class PatientSummaryScreenController @Inject constructor(
     val medicalHistories = patientUuids
         .flatMap { medicalHistoryRepository.historyForPatientOrDefault(it) }
 
-    val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, answer: MedicalHistory.Answer ->
+    val updateHistory = { medicalHistory: MedicalHistory, question: MedicalHistoryQuestion, answer: Answer ->
       when (question) {
         DIAGNOSED_WITH_HYPERTENSION -> medicalHistory.copy(diagnosedWithHypertension = answer)
         IS_ON_TREATMENT_FOR_HYPERTENSION -> medicalHistory.copy(isOnTreatmentForHypertension = answer)

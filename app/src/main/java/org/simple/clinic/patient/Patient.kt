@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
 import org.intellij.lang.annotations.Language
-import org.simple.clinic.medicalhistory.MedicalHistory
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.storage.DaoWithUpsert
@@ -249,7 +249,7 @@ data class Patient(
   """)
     abstract fun isPatientDefaulter(
         patientUuid: UUID,
-        yesAnswer: MedicalHistory.Answer = MedicalHistory.Answer.Yes,
+        yesAnswer: Answer = Answer.Yes,
         scheduled: Appointment.Status = Appointment.Status.Scheduled
     ): Flowable<Boolean>
 

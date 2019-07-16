@@ -7,6 +7,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -66,7 +67,7 @@ import org.simple.clinic.util.UuidRoomTypeConverter
     AppointmentCancelReason.RoomTypeConverter::class,
     Communication.Type.RoomTypeConverter::class,
     Communication.Result.RoomTypeConverter::class,
-    MedicalHistory.Answer.RoomTypeConverter::class,
+    Answer.RoomTypeConverter::class,
     InstantRoomTypeConverter::class,
     LocalDateRoomTypeConverter::class,
     UuidRoomTypeConverter::class,

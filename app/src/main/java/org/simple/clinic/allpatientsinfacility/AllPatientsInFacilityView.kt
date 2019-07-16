@@ -1,6 +1,5 @@
 package org.simple.clinic.allpatientsinfacility
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
@@ -11,7 +10,6 @@ import com.jakewharton.rxbinding2.support.v7.widget.RxRecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.view_allpatientsinfacility.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -42,9 +40,7 @@ class AllPatientsInFacilityView(
   @Inject
   lateinit var locale: Locale
 
-  private val downstreamUiEvents = PublishSubject.create<UiEvent>()
-
-  val uiEvents: Observable<UiEvent> = downstreamUiEvents.hide()
+  val uiEvents: Observable<UiEvent> by unsafeLazy { Observable.merge(searchResultClicks(), listScrolled()) }
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -58,8 +54,6 @@ class AllPatientsInFacilityView(
     setupInitialViewVisibility()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    forwardListItemEventsToDownstream(screenDestroys)
-    forwardListScrollEventsToDownstream(screenDestroys)
 
     bindUiToController(
         ui = this,
@@ -69,24 +63,19 @@ class AllPatientsInFacilityView(
     )
   }
 
-  @SuppressLint("CheckResult")
-  private fun forwardListItemEventsToDownstream(screenDestroys: Observable<ScreenDestroyed>) {
-    searchResultsAdapter
+  private fun searchResultClicks(): Observable<UiEvent> {
+    return searchResultsAdapter
         .listItemEvents
         .ofType<SearchResultClicked>()
         .map { it.patientSearchResult.uuid }
         .map(::AllPatientsInFacilitySearchResultClicked)
-        .takeUntil(screenDestroys)
-        .subscribe { downstreamUiEvents.onNext(it) }
   }
 
-  @SuppressLint("CheckResult")
-  private fun forwardListScrollEventsToDownstream(screenDestroys: Observable<ScreenDestroyed>) {
-    RxRecyclerView
+  private fun listScrolled(): Observable<UiEvent> {
+    return RxRecyclerView
         .scrollStateChanges(patientsList)
         .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
-        .takeUntil(screenDestroys)
-        .subscribe { downstreamUiEvents.onNext(AllPatientsInFacilityListScrolled) }
+        .map { AllPatientsInFacilityListScrolled }
   }
 
   private fun setupInitialViewVisibility() {

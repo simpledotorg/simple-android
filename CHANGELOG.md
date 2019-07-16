@@ -10,6 +10,7 @@
 
 ### Fixes
 - Fix camera not getting released properly and causing memory leaks
+- Fix patient details not showing up sometimes in the phone call screen
 
 ## 2019-07-15-4657
 ### Feature

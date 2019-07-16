@@ -47,6 +47,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -604,12 +605,12 @@ class TestData @Inject constructor(
   fun medicalHistory(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      hasHadHeartAttack: Answer = randomOfEnum(Answer::class),
-      hasHadStroke: Answer = randomOfEnum(Answer::class),
-      hasHadKidneyDisease: Answer = randomOfEnum(Answer::class),
-      diagnosedWithHypertension: Answer = randomOfEnum(Answer::class),
-      isOnTreatmentForHypertension: Answer = randomOfEnum(Answer::class),
-      hasDiabetes: Answer = randomOfEnum(Answer::class),
+      hasHadHeartAttack: Answer = randomMedicalHistoryAnswer(),
+      hasHadStroke: Answer = randomMedicalHistoryAnswer(),
+      hasHadKidneyDisease: Answer = randomMedicalHistoryAnswer(),
+      diagnosedWithHypertension: Answer = randomMedicalHistoryAnswer(),
+      isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
+      hasDiabetes: Answer = randomMedicalHistoryAnswer(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -633,12 +634,12 @@ class TestData @Inject constructor(
   fun medicalHistoryPayload(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
-      diagnosedWithHypertension: Answer = randomOfEnum(Answer::class),
-      hasHadHeartAttack: Answer = randomOfEnum(Answer::class),
-      hasHadStroke: Answer = randomOfEnum(Answer::class),
-      hasHadKidneyDisease: Answer = randomOfEnum(Answer::class),
-      isOnTreatmentForHypertension: Answer = randomOfEnum(Answer::class),
-      hasDiabetes: Answer = randomOfEnum(Answer::class),
+      diagnosedWithHypertension: Answer = randomMedicalHistoryAnswer(),
+      hasHadHeartAttack: Answer = randomMedicalHistoryAnswer(),
+      hasHadStroke: Answer = randomMedicalHistoryAnswer(),
+      hasHadKidneyDisease: Answer = randomMedicalHistoryAnswer(),
+      isOnTreatmentForHypertension: Answer = randomMedicalHistoryAnswer(),
+      hasDiabetes: Answer = randomMedicalHistoryAnswer(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       deletedAt: Instant? = null

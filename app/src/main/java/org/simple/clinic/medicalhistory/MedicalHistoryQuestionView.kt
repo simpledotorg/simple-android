@@ -13,9 +13,9 @@ import androidx.core.content.ContextCompat
 import io.reactivex.Observable
 import kotterknife.bindView
 import org.simple.clinic.R
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
 import org.simple.clinic.widgets.CheckboxWithSuppressibleListener
 import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.setHorizontalPadding
@@ -32,7 +32,7 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
   lateinit var question: MedicalHistoryQuestion
   var answerChangeListener: (MedicalHistory.Answer) -> Unit = {}
 
-  var answer: MedicalHistory.Answer = UNKNOWN
+  var answer: MedicalHistory.Answer = Unanswered
     set(value) {
       field = value
       answerChangeListener(value)
@@ -41,8 +41,8 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   private val checkboxChangeListener: (CompoundButton, Boolean) -> Unit = { checkBox, checked ->
     answer = when (checkBox) {
-      yesCheckBox -> if (checked) YES else UNKNOWN
-      noCheckBox -> if (checked) NO else UNKNOWN
+      yesCheckBox -> if (checked) Yes else Unanswered
+      noCheckBox -> if (checked) No else Unanswered
       else -> throw AssertionError()
     }
   }
@@ -66,10 +66,10 @@ class MedicalHistoryQuestionView(context: Context, attrs: AttributeSet) : FrameL
 
   private fun updateCheckboxesFromAnswer() {
     yesCheckBox.runWithoutListener {
-      yesCheckBox.isChecked = answer == YES
+      yesCheckBox.isChecked = answer == Yes
     }
     noCheckBox.runWithoutListener {
-      noCheckBox.isChecked = answer == NO
+      noCheckBox.isChecked = answer == No
     }
 
     arrayOf(yesCheckBox, noCheckBox).forEach { checkBox ->

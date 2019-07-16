@@ -8,6 +8,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.simple.clinic.BuildConfig
 import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.PatientStatus
@@ -47,6 +48,7 @@ open class NetworkModule {
         .add(UserStatus.MoshiTypeConverter())
         .add(Appointment.Status.MoshiTypeConverter())
         .add(PatientStatus.MoshiTypeAdapter())
+        .add(MedicalHistory.Answer.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

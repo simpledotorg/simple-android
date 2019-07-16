@@ -19,8 +19,8 @@ import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -1482,10 +1482,10 @@ class PatientRepositoryAndroidTest {
     fun savePatientRecord(
         fullName: String,
         bpMeasurement: List<BloodPressureMeasurement>?,
-        hasHadHeartAttack: MedicalHistory.Answer = NO,
-        hasHadStroke: MedicalHistory.Answer = NO,
-        hasDiabetes: MedicalHistory.Answer = NO,
-        hasHadKidneyDisease: MedicalHistory.Answer = NO,
+        hasHadHeartAttack: MedicalHistory.Answer = No,
+        hasHadStroke: MedicalHistory.Answer = No,
+        hasDiabetes: MedicalHistory.Answer = No,
+        hasHadKidneyDisease: MedicalHistory.Answer = No,
         protocolDrug: ProtocolDrug?,
         appointmentDate: LocalDate?
     ): Pair<UUID, String> {
@@ -1551,7 +1551,7 @@ class PatientRepositoryAndroidTest {
             systolic = 120,
             diastolic = 70
         )),
-        hasDiabetes = YES,
+        hasDiabetes = Yes,
         protocolDrug = null,
         appointmentDate = null)
 
@@ -1561,7 +1561,7 @@ class PatientRepositoryAndroidTest {
             systolic = 120,
             diastolic = 70
         )),
-        hasHadStroke = YES,
+        hasHadStroke = Yes,
         protocolDrug = null,
         appointmentDate = null)
 
@@ -1571,7 +1571,7 @@ class PatientRepositoryAndroidTest {
             systolic = 120,
             diastolic = 70
         )),
-        hasHadKidneyDisease = YES,
+        hasHadKidneyDisease = Yes,
         protocolDrug = null,
         appointmentDate = null)
 
@@ -1581,7 +1581,7 @@ class PatientRepositoryAndroidTest {
             systolic = 120,
             diastolic = 70
         )),
-        hasHadHeartAttack = YES,
+        hasHadHeartAttack = Yes,
         protocolDrug = null,
         appointmentDate = null)
 
@@ -1610,7 +1610,7 @@ class PatientRepositoryAndroidTest {
             diastolic = 70,
             deletedAt = Instant.now(testClock)
         )),
-        hasHadHeartAttack = YES,
+        hasHadHeartAttack = Yes,
         protocolDrug = null,
         appointmentDate = null)
 

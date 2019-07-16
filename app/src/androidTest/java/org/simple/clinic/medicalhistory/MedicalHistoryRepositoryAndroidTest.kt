@@ -7,9 +7,9 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.UtcClock
@@ -50,21 +50,21 @@ class MedicalHistoryRepositoryAndroidTest {
   fun when_creating_new_medical_history_from_ongoing_entry_then_the_medical_history_should_be_saved() {
     val patientUuid = UUID.randomUUID()
     val historyEntry = OngoingMedicalHistoryEntry(
-        hasHadHeartAttack = YES,
-        hasHadStroke = YES,
-        hasHadKidneyDisease = YES,
-        isOnTreatmentForHypertension = NO,
-        hasDiabetes = NO)
+        hasHadHeartAttack = Yes,
+        hasHadStroke = Yes,
+        hasHadKidneyDisease = Yes,
+        isOnTreatmentForHypertension = No,
+        hasDiabetes = No)
 
     repository.save(patientUuid, historyEntry).blockingAwait()
 
     val savedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 
-    assertThat(savedHistory.hasHadHeartAttack).isEqualTo(YES)
-    assertThat(savedHistory.hasHadStroke).isEqualTo(YES)
-    assertThat(savedHistory.hasHadKidneyDisease).isEqualTo(YES)
-    assertThat(savedHistory.isOnTreatmentForHypertension).isEqualTo(NO)
-    assertThat(savedHistory.hasDiabetes).isEqualTo(NO)
+    assertThat(savedHistory.hasHadHeartAttack).isEqualTo(Yes)
+    assertThat(savedHistory.hasHadStroke).isEqualTo(Yes)
+    assertThat(savedHistory.hasHadKidneyDisease).isEqualTo(Yes)
+    assertThat(savedHistory.isOnTreatmentForHypertension).isEqualTo(No)
+    assertThat(savedHistory.hasDiabetes).isEqualTo(No)
     assertThat(savedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
   }
 
@@ -86,18 +86,18 @@ class MedicalHistoryRepositoryAndroidTest {
     val patientUuid = UUID.randomUUID()
     val oldHistory = testData.medicalHistory(
         patientUuid = patientUuid,
-        hasHadHeartAttack = NO,
+        hasHadHeartAttack = No,
         syncStatus = SyncStatus.DONE,
         updatedAt = Instant.now().minus(10, DAYS))
 
     repository.save(listOf(oldHistory)).blockingAwait()
 
-    val newHistory = oldHistory.copy(hasHadHeartAttack = YES)
+    val newHistory = oldHistory.copy(hasHadHeartAttack = Yes)
     repository.save(newHistory).blockingAwait()
 
     val updatedHistory = repository.historyForPatientOrDefault(patientUuid).blockingFirst()
 
-    assertThat(updatedHistory.hasHadHeartAttack).isEqualTo(YES)
+    assertThat(updatedHistory.hasHadHeartAttack).isEqualTo(Yes)
     assertThat(updatedHistory.syncStatus).isEqualTo(SyncStatus.PENDING)
     assertThat(updatedHistory.updatedAt).isEqualTo(clock.instant())
   }
@@ -106,11 +106,11 @@ class MedicalHistoryRepositoryAndroidTest {
   fun when_medical_history_isnt_present_for_a_patient_then_an_empty_value_should_be_returned() {
     val emptyHistory = repository.historyForPatientOrDefault(UUID.randomUUID()).blockingFirst()
 
-    assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(UNKNOWN)
-    assertThat(emptyHistory.hasHadStroke).isEqualTo(UNKNOWN)
-    assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(UNKNOWN)
-    assertThat(emptyHistory.isOnTreatmentForHypertension).isEqualTo(UNKNOWN)
-    assertThat(emptyHistory.hasDiabetes).isEqualTo(UNKNOWN)
+    assertThat(emptyHistory.hasHadHeartAttack).isEqualTo(Unanswered)
+    assertThat(emptyHistory.hasHadStroke).isEqualTo(Unanswered)
+    assertThat(emptyHistory.hasHadKidneyDisease).isEqualTo(Unanswered)
+    assertThat(emptyHistory.isOnTreatmentForHypertension).isEqualTo(Unanswered)
+    assertThat(emptyHistory.hasDiabetes).isEqualTo(Unanswered)
     assertThat(emptyHistory.syncStatus).isEqualTo(SyncStatus.DONE)
   }
 

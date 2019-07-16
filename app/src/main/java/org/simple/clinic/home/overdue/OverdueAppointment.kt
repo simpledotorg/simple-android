@@ -120,7 +120,7 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
-        yesAnswer: MedicalHistory.Answer = Answer.YES,
+        yesAnswer: MedicalHistory.Answer = Answer.Yes,
         minimumOverdueDateForHighRisk: LocalDate,
         overdueDateForLowestRiskLevel: LocalDate
     ): Flowable<List<OverdueAppointment>>

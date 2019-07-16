@@ -56,10 +56,10 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     }
     TheActivity.component.inject(this)
 
-    toolbar.backButton.setOnClickListener {
+    backButton.setOnClickListener {
       screenRouter.pop()
     }
-    toolbar.patientNameEditText.showKeyboard()
+    patientNameEditText.showKeyboard()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
@@ -78,13 +78,13 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
 
   private fun nameChanges() =
       RxTextView
-          .textChanges(toolbar.patientNameEditText)
+          .textChanges(patientNameEditText)
           .map(CharSequence::toString)
           .map(::SearchQueryNameChanged)
 
   private fun searchClicks(): Observable<SearchClicked> {
     val imeSearchClicks = RxTextView
-        .editorActionEvents(toolbar.patientNameEditText)
+        .editorActionEvents(patientNameEditText)
         .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
 
     return RxView
@@ -106,7 +106,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .uiEvents
         .ofType<AllPatientsInFacilityListScrolled>()
         .takeUntil(screenDestroys)
-        .subscribe { toolbar.hideKeyboard() }
+        .subscribe { hideKeyboard() }
   }
 
   fun openPatientSearchResultsScreen(name: String) {

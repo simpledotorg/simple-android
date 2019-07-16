@@ -2425,6 +2425,142 @@ class DatabaseMigrationAndroidTest {
     verifyNewStatus(deadPatient, "dead")
     verifyNewStatus(unresponsivePatient, "unresponsive")
   }
+
+  @Test
+  fun migrate_medical_history_answer_from_39_to_40() {
+    data class AnswerTuple(
+        val medicalHistoryUuid: UUID,
+        val diagnosedWithHypertension: String,
+        val isOnTreatmentForHypertension: String,
+        val hasHadHeartAttack: String,
+        val hasHadStroke: String,
+        val hasHadKidneyDisease: String,
+        val hasDiabetes: String
+    )
+
+    fun saveMedicalHistory(db: SupportSQLiteDatabase, answerTuple: AnswerTuple) {
+      db.execSQL("""
+        INSERT INTO "MedicalHistory" (
+            "uuid", "patientUuid", "syncStatus",
+            "diagnosedWithHypertension", "isOnTreatmentForHypertension", "hasHadHeartAttack",
+            "hasHadStroke", "hasHadKidneyDisease", "hasDiabetes",
+            "createdAt", "updatedAt", "deletedAt"
+        ) VALUES (
+            '${answerTuple.medicalHistoryUuid}', 'patient-id', 'DONE',
+            '${answerTuple.diagnosedWithHypertension}', '${answerTuple.isOnTreatmentForHypertension}', '${answerTuple.hasHadHeartAttack}',
+            '${answerTuple.hasHadStroke}', '${answerTuple.hasHadKidneyDisease}', '${answerTuple.hasDiabetes}',
+            'created_at', 'updated_at', NULL
+        )
+      """)
+    }
+
+    fun verifyMedicalHistory(db: SupportSQLiteDatabase, answerTuple: AnswerTuple) {
+      db.query("""
+        SELECT * FROM "MedicalHistory" WHERE "uuid" = '${answerTuple.medicalHistoryUuid}'
+      """).use { cursor ->
+        cursor.moveToNext()
+        assertThat(cursor.string("diagnosedWithHypertension")).isEqualTo(answerTuple.diagnosedWithHypertension)
+        assertThat(cursor.string("isOnTreatmentForHypertension")).isEqualTo(answerTuple.isOnTreatmentForHypertension)
+        assertThat(cursor.string("hasHadHeartAttack")).isEqualTo(answerTuple.hasHadHeartAttack)
+        assertThat(cursor.string("hasHadStroke")).isEqualTo(answerTuple.hasHadStroke)
+        assertThat(cursor.string("hasHadKidneyDisease")).isEqualTo(answerTuple.hasHadKidneyDisease)
+        assertThat(cursor.string("hasDiabetes")).isEqualTo(answerTuple.hasDiabetes)
+      }
+    }
+
+    val allUnknownAnswersUuid = UUID.fromString("b2e3b63f-9b09-4b8d-bfa7-af2ac5972786")
+    val allYesAnswersUuid = UUID.fromString("c11af491-d125-45af-9b3c-aa73510960c3")
+    val allNoAnswersUuid = UUID.fromString("05384716-65d7-4261-8bcf-f2faecf62bb2")
+    val mixedAnswersUuid = UUID.fromString("f0a50cf4-cf78-450a-979a-00df585fd642")
+
+    val (allUnknownAnswersBeforeMigration, allUnknownAnswersAfterMigration) = AnswerTuple(
+        medicalHistoryUuid = allUnknownAnswersUuid,
+        diagnosedWithHypertension = "UNKNOWN",
+        isOnTreatmentForHypertension = "UNKNOWN",
+        hasHadHeartAttack = "UNKNOWN",
+        hasHadStroke = "UNKNOWN",
+        hasHadKidneyDisease = "UNKNOWN",
+        hasDiabetes = "UNKNOWN"
+    ) to AnswerTuple(
+        medicalHistoryUuid = allUnknownAnswersUuid,
+        diagnosedWithHypertension = "unknown",
+        isOnTreatmentForHypertension = "unknown",
+        hasHadHeartAttack = "unknown",
+        hasHadStroke = "unknown",
+        hasHadKidneyDisease = "unknown",
+        hasDiabetes = "unknown"
+    )
+
+    val (allYesAnswersBeforeMigration, allYesAnswersAfterMigration) = AnswerTuple(
+        medicalHistoryUuid = allYesAnswersUuid,
+        diagnosedWithHypertension = "YES",
+        isOnTreatmentForHypertension = "YES",
+        hasHadHeartAttack = "YES",
+        hasHadStroke = "YES",
+        hasHadKidneyDisease = "YES",
+        hasDiabetes = "YES"
+    ) to AnswerTuple(
+        medicalHistoryUuid = allYesAnswersUuid,
+        diagnosedWithHypertension = "yes",
+        isOnTreatmentForHypertension = "yes",
+        hasHadHeartAttack = "yes",
+        hasHadStroke = "yes",
+        hasHadKidneyDisease = "yes",
+        hasDiabetes = "yes"
+    )
+
+    val (allNoAnswersBeforeMigration, allNoAnswersAfterMigration) = AnswerTuple(
+        medicalHistoryUuid = allNoAnswersUuid,
+        diagnosedWithHypertension = "NO",
+        isOnTreatmentForHypertension = "NO",
+        hasHadHeartAttack = "NO",
+        hasHadStroke = "NO",
+        hasHadKidneyDisease = "NO",
+        hasDiabetes = "NO"
+    ) to AnswerTuple(
+        medicalHistoryUuid = allNoAnswersUuid,
+        diagnosedWithHypertension = "no",
+        isOnTreatmentForHypertension = "no",
+        hasHadHeartAttack = "no",
+        hasHadStroke = "no",
+        hasHadKidneyDisease = "no",
+        hasDiabetes = "no"
+    )
+
+    val (mixedAnswersBeforeMigration, mixedAnswersAfterMigration) = AnswerTuple(
+        medicalHistoryUuid = mixedAnswersUuid,
+        diagnosedWithHypertension = "YES",
+        isOnTreatmentForHypertension = "NO",
+        hasHadHeartAttack = "UNKNOWN",
+        hasHadStroke = "UNKNOWN",
+        hasHadKidneyDisease = "NO",
+        hasDiabetes = "YES"
+    ) to AnswerTuple(
+        medicalHistoryUuid = mixedAnswersUuid,
+        diagnosedWithHypertension = "yes",
+        isOnTreatmentForHypertension = "no",
+        hasHadHeartAttack = "unknown",
+        hasHadStroke = "unknown",
+        hasHadKidneyDisease = "no",
+        hasDiabetes = "yes"
+    )
+
+    val db_v39 = helper.createDatabase(39)
+    listOf(
+        allUnknownAnswersBeforeMigration,
+        allYesAnswersBeforeMigration,
+        allNoAnswersBeforeMigration,
+        mixedAnswersBeforeMigration
+    ).forEach { saveMedicalHistory(db = db_v39, answerTuple = it) }
+
+    val db_v40 = helper.migrateTo(40)
+    listOf(
+        allUnknownAnswersAfterMigration,
+        allYesAnswersAfterMigration,
+        allNoAnswersAfterMigration,
+        mixedAnswersAfterMigration
+    ).forEach { verifyMedicalHistory(db = db_v40, answerTuple = it) }
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

@@ -3,7 +3,7 @@ package org.simple.clinic.medicalhistory
 import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.Single
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.patient.PatientUuid
 import org.simple.clinic.patient.SyncStatus
@@ -23,12 +23,12 @@ class MedicalHistoryRepository @Inject constructor(
     val defaultValue = MedicalHistory(
         uuid = UUID.randomUUID(),
         patientUuid = patientUuid,
-        diagnosedWithHypertension = UNKNOWN,
-        isOnTreatmentForHypertension = UNKNOWN,
-        hasHadHeartAttack = UNKNOWN,
-        hasHadStroke = UNKNOWN,
-        hasHadKidneyDisease = UNKNOWN,
-        hasDiabetes = UNKNOWN,
+        diagnosedWithHypertension = Unanswered,
+        isOnTreatmentForHypertension = Unanswered,
+        hasHadHeartAttack = Unanswered,
+        hasHadStroke = Unanswered,
+        hasHadKidneyDisease = Unanswered,
+        hasDiabetes = Unanswered,
         syncStatus = SyncStatus.DONE,
         createdAt = Instant.now(utcClock),
         updatedAt = Instant.now(utcClock),

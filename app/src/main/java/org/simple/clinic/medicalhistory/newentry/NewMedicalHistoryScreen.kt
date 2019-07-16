@@ -10,7 +10,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_HAD_A_HEART_ATTACK
@@ -62,12 +62,12 @@ class NewMedicalHistoryScreen(context: Context, attrs: AttributeSet) : RelativeL
       screenRouter.pop()
     }
 
-    diagnosedForHypertensionQuestionView.render(DIAGNOSED_WITH_HYPERTENSION, UNKNOWN)
-    treatmentForHypertensionQuestionView.render(IS_ON_TREATMENT_FOR_HYPERTENSION, UNKNOWN)
-    heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, UNKNOWN)
-    strokeQuestionView.render(HAS_HAD_A_STROKE, UNKNOWN)
-    kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, UNKNOWN)
-    diabetesQuestionView.render(HAS_DIABETES, UNKNOWN)
+    diagnosedForHypertensionQuestionView.render(DIAGNOSED_WITH_HYPERTENSION, Unanswered)
+    treatmentForHypertensionQuestionView.render(IS_ON_TREATMENT_FOR_HYPERTENSION, Unanswered)
+    heartAttackQuestionView.render(HAS_HAD_A_HEART_ATTACK, Unanswered)
+    strokeQuestionView.render(HAS_HAD_A_STROKE, Unanswered)
+    kidneyDiseaseQuestionView.render(HAS_HAD_A_KIDNEY_DISEASE, Unanswered)
+    diabetesQuestionView.render(HAS_DIABETES, Unanswered)
 
     diabetesQuestionView.hideDivider()
 

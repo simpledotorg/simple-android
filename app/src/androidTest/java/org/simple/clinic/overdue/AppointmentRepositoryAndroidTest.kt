@@ -25,8 +25,8 @@ import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.REGULAR
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.VERY_HIGH
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -587,10 +587,10 @@ class AppointmentRepositoryAndroidTest {
     fun savePatientAndAppointment(
         fullName: String,
         bpMeasurements: List<BP>,
-        hasHadHeartAttack: MedicalHistory.Answer = NO,
-        hasHadStroke: MedicalHistory.Answer = NO,
-        hasDiabetes: MedicalHistory.Answer = NO,
-        hasHadKidneyDisease: MedicalHistory.Answer = NO,
+        hasHadHeartAttack: MedicalHistory.Answer = No,
+        hasHadStroke: MedicalHistory.Answer = No,
+        hasDiabetes: MedicalHistory.Answer = No,
+        hasHadKidneyDisease: MedicalHistory.Answer = No,
         appointmentHasBeenOverdueFor: Duration
     ) {
       val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = "30"))
@@ -625,43 +625,43 @@ class AppointmentRepositoryAndroidTest {
     savePatientAndAppointment(
         fullName = "Has had a heart attack, overdue == 30 days",
         bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        hasHadHeartAttack = YES,
+        hasHadHeartAttack = Yes,
         appointmentHasBeenOverdueFor = thirtyDays)
 
     savePatientAndAppointment(
         fullName = "Has had a stroke, overdue == 20 days",
         bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = YES,
+        hasHadStroke = Yes,
         appointmentHasBeenOverdueFor = Duration.ofDays(10))
 
     savePatientAndAppointment(
         fullName = "Has had a kidney disease, overdue == 30 days",
         bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        hasHadKidneyDisease = YES,
+        hasHadKidneyDisease = Yes,
         appointmentHasBeenOverdueFor = thirtyDays)
 
     savePatientAndAppointment(
         fullName = "Has diabetes, overdue == 27 days",
         bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        hasDiabetes = YES,
+        hasDiabetes = Yes,
         appointmentHasBeenOverdueFor = Duration.ofDays(27))
 
     savePatientAndAppointment(
         fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue == 30 days",
         bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = YES,
-        hasHadHeartAttack = YES,
-        hasHadKidneyDisease = YES,
-        hasDiabetes = YES,
+        hasHadStroke = Yes,
+        hasHadHeartAttack = Yes,
+        hasHadKidneyDisease = Yes,
+        hasDiabetes = Yes,
         appointmentHasBeenOverdueFor = thirtyDays)
 
     savePatientAndAppointment(
         fullName = "Has had a heart attack, stroke, kidney disease and has diabetes, overdue > 30 days",
         bpMeasurements = listOf(BP(systolic = 100, diastolic = 90)),
-        hasHadStroke = YES,
-        hasHadHeartAttack = YES,
-        hasHadKidneyDisease = YES,
-        hasDiabetes = YES,
+        hasHadStroke = Yes,
+        hasHadHeartAttack = Yes,
+        hasHadKidneyDisease = Yes,
+        hasDiabetes = Yes,
         appointmentHasBeenOverdueFor = threeSixtyFiveDays)
 
     savePatientAndAppointment(

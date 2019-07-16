@@ -27,7 +27,7 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -54,6 +54,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -417,12 +418,12 @@ class PatientSummaryScreenControllerTest {
       newAnswer: MedicalHistory.Answer
   ) {
     val medicalHistory = medicalHistory(
-        diagnosedWithHypertension = UNKNOWN,
-        isOnTreatmentForHypertension = UNKNOWN,
-        hasHadHeartAttack = UNKNOWN,
-        hasHadStroke = UNKNOWN,
-        hasHadKidneyDisease = UNKNOWN,
-        hasDiabetes = UNKNOWN,
+        diagnosedWithHypertension = Unanswered,
+        isOnTreatmentForHypertension = Unanswered,
+        hasHadHeartAttack = Unanswered,
+        hasHadStroke = Unanswered,
+        hasHadKidneyDisease = Unanswered,
+        hasDiabetes = Unanswered,
         updatedAt = Instant.now())
     whenever(medicalHistoryRepository.historyForPatientOrDefault(patientUuid)).thenReturn(Observable.just(medicalHistory))
     whenever(medicalHistoryRepository.save(any<MedicalHistory>(), any())).thenReturn(Completable.complete())
@@ -431,25 +432,27 @@ class PatientSummaryScreenControllerTest {
     uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, answer = newAnswer))
 
     val updatedMedicalHistory = medicalHistory.copy(
-        diagnosedWithHypertension = if (question == DIAGNOSED_WITH_HYPERTENSION) newAnswer else UNKNOWN,
-        isOnTreatmentForHypertension = if (question == IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else UNKNOWN,
-        hasHadHeartAttack = if (question == HAS_HAD_A_HEART_ATTACK) newAnswer else UNKNOWN,
-        hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else UNKNOWN,
-        hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else UNKNOWN,
-        hasDiabetes = if (question == HAS_DIABETES) newAnswer else UNKNOWN)
+        diagnosedWithHypertension = if (question == DIAGNOSED_WITH_HYPERTENSION) newAnswer else Unanswered,
+        isOnTreatmentForHypertension = if (question == IS_ON_TREATMENT_FOR_HYPERTENSION) newAnswer else Unanswered,
+        hasHadHeartAttack = if (question == HAS_HAD_A_HEART_ATTACK) newAnswer else Unanswered,
+        hasHadStroke = if (question == HAS_HAD_A_STROKE) newAnswer else Unanswered,
+        hasHadKidneyDisease = if (question == HAS_HAD_A_KIDNEY_DISEASE) newAnswer else Unanswered,
+        hasDiabetes = if (question == HAS_DIABETES) newAnswer else Unanswered)
     verify(medicalHistoryRepository).save(eq(updatedMedicalHistory), any())
   }
 
   @Suppress("unused")
   fun medicalHistoryQuestionsAndAnswers(): List<List<Any>> {
-    fun randomAnswer(): MedicalHistory.Answer {
-      return MedicalHistory.Answer.values().asList().shuffled().first()
-    }
-
     val questions = MedicalHistoryQuestion.values().asList()
     return questions
         .asSequence()
-        .map { question -> listOf(randomPatientSummaryOpenIntention(), question, randomAnswer()) }
+        .map { question ->
+          listOf(
+              randomPatientSummaryOpenIntention(),
+              question,
+              randomMedicalHistoryAnswer()
+          )
+        }
         .toList()
   }
 

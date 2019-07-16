@@ -13,8 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.UNKNOWN
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.HAS_DIABETES
@@ -31,6 +30,7 @@ import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
+import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -89,7 +89,7 @@ class NewMedicalHistoryScreenControllerTest {
     whenever(patientRepository.saveOngoingEntryAsPatient(user, facility)).thenReturn(Single.just(savedPatient))
 
     val questionsAndAnswers = MedicalHistoryQuestion.values()
-        .map { it to randomAnswer() }
+        .map { it to randomMedicalHistoryAnswer() }
         .toMap()
 
     uiEvents.onNext(ScreenCreated())
@@ -113,10 +113,6 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
   }
 
-  private fun randomAnswer(): MedicalHistory.Answer {
-    return MedicalHistory.Answer::class.java.enumConstants.asList().shuffled().first()
-  }
-
   @Test
   fun `when save is clicked with no answers then patient with an empty medical history should be saved and summary screen should be opened`() {
     val savedPatient = PatientMocker.patient(uuid = UUID.randomUUID())
@@ -130,12 +126,12 @@ class NewMedicalHistoryScreenControllerTest {
     inOrder.verify(medicalHistoryRepository).save(
         patientUuid = savedPatient.uuid,
         historyEntry = OngoingMedicalHistoryEntry(
-            diagnosedWithHypertension = UNKNOWN,
-            isOnTreatmentForHypertension = UNKNOWN,
-            hasHadHeartAttack = UNKNOWN,
-            hasHadStroke = UNKNOWN,
-            hasHadKidneyDisease = UNKNOWN,
-            hasDiabetes = UNKNOWN))
+            diagnosedWithHypertension = Unanswered,
+            isOnTreatmentForHypertension = Unanswered,
+            hasHadHeartAttack = Unanswered,
+            hasHadStroke = Unanswered,
+            hasHadKidneyDisease = Unanswered,
+            hasDiabetes = Unanswered))
     inOrder.verify(screen).openPatientSummaryScreen(savedPatient.uuid)
   }
 }

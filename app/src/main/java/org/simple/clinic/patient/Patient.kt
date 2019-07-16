@@ -249,7 +249,7 @@ data class Patient(
   """)
     abstract fun isPatientDefaulter(
         patientUuid: UUID,
-        yesAnswer: MedicalHistory.Answer = MedicalHistory.Answer.YES,
+        yesAnswer: MedicalHistory.Answer = MedicalHistory.Answer.Yes,
         scheduled: Appointment.Status = Appointment.Status.Scheduled
     ): Flowable<Boolean>
 

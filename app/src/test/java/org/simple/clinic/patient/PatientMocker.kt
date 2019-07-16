@@ -9,8 +9,8 @@ import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.NO
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.YES
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
+import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.businessid.BusinessId
@@ -367,12 +367,12 @@ object PatientMocker {
   }
 
   fun medicalHistory(
-      hasHadHeartAttack: Answer = YES,
-      hasHadStroke: Answer = NO,
-      hasHadKidneyDisease: Answer = YES,
-      diagnosedWithHypertension: Answer = NO,
-      isOnTreatmentForHypertension: Answer = YES,
-      hasDiabetes: Answer = YES,
+      hasHadHeartAttack: Answer = Yes,
+      hasHadStroke: Answer = No,
+      hasHadKidneyDisease: Answer = Yes,
+      diagnosedWithHypertension: Answer = No,
+      isOnTreatmentForHypertension: Answer = Yes,
+      hasDiabetes: Answer = Yes,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
       syncStatus: SyncStatus = SyncStatus.PENDING,

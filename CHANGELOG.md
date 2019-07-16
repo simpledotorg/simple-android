@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Next Release
+### Feature
+- All patients that have visited the current facility will be shown in the patient search screen
+
 ## 2019-07-15-4657
 ### Feature
 - Nudge users to update the app if it is older than expected

@@ -11,7 +11,7 @@ import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason

@@ -6,8 +6,7 @@ import androidx.room.Ignore
 import androidx.room.Query
 import io.reactivex.Flowable
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
@@ -120,7 +119,7 @@ data class OverdueAppointment(
         facilityUuid: UUID,
         scheduledStatus: Appointment.Status,
         scheduledBefore: LocalDate,
-        yesAnswer: MedicalHistory.Answer = Answer.Yes,
+        yesAnswer: Answer = Answer.Yes,
         minimumOverdueDateForHighRisk: LocalDate,
         overdueDateForLowestRiskLevel: LocalDate
     ): Flowable<List<OverdueAppointment>>

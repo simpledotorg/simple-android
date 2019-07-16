@@ -24,9 +24,9 @@ import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.LOW
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.NONE
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.REGULAR
 import org.simple.clinic.home.overdue.OverdueAppointment.RiskLevel.VERY_HIGH
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.medicalhistory.OngoingMedicalHistoryEntry
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -587,10 +587,10 @@ class AppointmentRepositoryAndroidTest {
     fun savePatientAndAppointment(
         fullName: String,
         bpMeasurements: List<BP>,
-        hasHadHeartAttack: MedicalHistory.Answer = No,
-        hasHadStroke: MedicalHistory.Answer = No,
-        hasDiabetes: MedicalHistory.Answer = No,
-        hasHadKidneyDisease: MedicalHistory.Answer = No,
+        hasHadHeartAttack: Answer = No,
+        hasHadStroke: Answer = No,
+        hasDiabetes: Answer = No,
+        hasHadKidneyDisease: Answer = No,
         appointmentHasBeenOverdueFor: Duration
     ) {
       val patientUuid = patientRepository.saveOngoingEntry(testData.ongoingPatientEntry(fullName = fullName, age = "30"))

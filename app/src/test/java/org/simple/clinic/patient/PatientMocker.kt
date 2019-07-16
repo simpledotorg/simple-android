@@ -8,9 +8,9 @@ import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.businessid.BusinessId

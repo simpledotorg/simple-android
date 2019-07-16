@@ -18,9 +18,9 @@ import org.simple.clinic.bp.BloodPressureRepository
 import org.simple.clinic.drugs.PrescriptionRepository
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.medicalhistory.MedicalHistory
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.No
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Yes
+import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.Answer.No
+import org.simple.clinic.medicalhistory.Answer.Yes
 import org.simple.clinic.medicalhistory.MedicalHistoryRepository
 import org.simple.clinic.overdue.Appointment.AppointmentType
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
@@ -1482,10 +1482,10 @@ class PatientRepositoryAndroidTest {
     fun savePatientRecord(
         fullName: String,
         bpMeasurement: List<BloodPressureMeasurement>?,
-        hasHadHeartAttack: MedicalHistory.Answer = No,
-        hasHadStroke: MedicalHistory.Answer = No,
-        hasDiabetes: MedicalHistory.Answer = No,
-        hasHadKidneyDisease: MedicalHistory.Answer = No,
+        hasHadHeartAttack: Answer = No,
+        hasHadStroke: Answer = No,
+        hasDiabetes: Answer = No,
+        hasHadKidneyDisease: Answer = No,
         protocolDrug: ProtocolDrug?,
         appointmentDate: LocalDate?
     ): Pair<UUID, String> {

@@ -6,6 +6,7 @@ import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
+import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion
 import org.simple.clinic.medicalhistory.MedicalHistoryQuestion.DIAGNOSED_WITH_HYPERTENSION
@@ -37,7 +38,7 @@ data class SummaryMedicalHistoryItem(
         R.string.patientsummary_medicalhistory_last_updated,
         lastUpdatedAt.displayText(context).toLowerCase(ENGLISH))
 
-    val renderQuestionView = { view: MedicalHistoryQuestionView, question: MedicalHistoryQuestion, answer: MedicalHistory.Answer ->
+    val renderQuestionView = { view: MedicalHistoryQuestionView, question: MedicalHistoryQuestion, answer: Answer ->
       view.render(question, answer)
       view.answerChangeListener = { newAnswer ->
         uiEvents.onNext(SummaryMedicalHistoryAnswerToggled(question, newAnswer))

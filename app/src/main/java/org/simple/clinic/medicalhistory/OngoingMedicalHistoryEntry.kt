@@ -1,7 +1,6 @@
 package org.simple.clinic.medicalhistory
 
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer
-import org.simple.clinic.medicalhistory.MedicalHistory.Answer.Unanswered
+import org.simple.clinic.medicalhistory.Answer.Unanswered
 
 data class OngoingMedicalHistoryEntry(
     val hasHadHeartAttack: Answer = Unanswered,

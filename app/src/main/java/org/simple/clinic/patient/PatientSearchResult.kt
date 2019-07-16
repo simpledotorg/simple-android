@@ -99,7 +99,8 @@ data class PatientSearchResult(
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           WHERE BP.deletedAt IS NULL AND P.status = :status AND BP.facilityUuid = :facilityUuid
       ) PatientsAtFacility ON AllSearchResults.uuid = PatientsAtFacility.uuid
-      GROUP BY AllSearchResults.uuid ORDER BY AllSearchResults.fullName
+      GROUP BY AllSearchResults.uuid 
+      ORDER BY AllSearchResults.fullName COLLATE NOCASE ASC
     """)
     fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
   }

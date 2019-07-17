@@ -1,6 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -73,6 +74,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private val decrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_increment_date)
+  private val calendarButton by bindView<Button>(R.id.scheduleappointment_calendar_button)
   private val currentDateTextView by bindView<TextView>(R.id.scheduleappointment_current_date)
   private val notNowButton by bindView<Button>(R.id.scheduleappointment_not_now)
   private val doneButton by bindView<Button>(R.id.scheduleappointment_done)
@@ -97,6 +99,17 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
         controller = controller,
         screenDestroys = onDestroys
     )
+
+    calendarButton.setOnClickListener {
+      showCalendar(LocalDate.now())
+    }
+  }
+
+  private fun showCalendar(date: LocalDate) {
+    DatePickerDialog(
+        this, { _, year, month, dayOfMonth ->
+
+    }, date.year, date.monthValue - 1, date.dayOfMonth).show()
   }
 
   override fun onDestroy() {

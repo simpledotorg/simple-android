@@ -8,6 +8,7 @@
   tools:ignore="MissingPrefix">
 
   <TextView
+    style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:ellipsize="end"
@@ -15,8 +16,7 @@
     android:maxLines="1"
     android:paddingBottom="@dimen/textsize_18"
     android:paddingTop="@dimen/textsize_18"
-    android:text="@string/scheduleappointment_next_visit_in"
-    style="@style/Clinic.V2.TextAppearance.H6.Grey0">
+    android:text="@string/scheduleappointment_next_visit_in">
 
     <requestFocus />
   </TextView>
@@ -64,6 +64,13 @@
       tools:ignore="ContentDescription" />
 
   </LinearLayout>
+
+  <Button
+    android:id="@+id/scheduleappointment_calendar_button"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_horizontal"
+    tools:text="Calendar" />
 
   <LinearLayout
     android:layout_width="match_parent"

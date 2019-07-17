@@ -145,7 +145,7 @@ class PatientRepositoryAndroidTest {
   @Test
   fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingNewPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
-    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.TRANSGENDER)
+    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.Transgender)
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber(number = "227788", type = PatientPhoneNumberType.LANDLINE)
 
     val personalDetailsOnlyEntry = OngoingNewPatientEntry(personalDetails = ongoingPersonalDetails)
@@ -287,7 +287,7 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun when_patients_are_present_then_search_should_correctly_find_them() {
-    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.TRANSGENDER)
+    val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.Transgender)
     val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
     val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
@@ -295,7 +295,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.TRANSGENDER)
+    val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.Transgender)
     val opa2 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.MOBILE, active = true)
     val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
@@ -303,7 +303,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.TRANSGENDER)
+    val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.Transgender)
     val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
@@ -311,7 +311,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.TRANSGENDER)
+    val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.Transgender)
     val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
     val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
@@ -791,7 +791,7 @@ class PatientRepositoryAndroidTest {
         syncStatus = DONE,
         addressUuid = addressToSave.uuid,
         fullName = "Old Name",
-        gender = Gender.MALE,
+        gender = Gender.Male,
         age = Age(value = 30, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
         dateOfBirth = LocalDate.now(clock),
         createdAt = Instant.now(clock),
@@ -815,7 +815,7 @@ class PatientRepositoryAndroidTest {
 
     val newPatientToSave = originalSavedPatient.copy(
         fullName = "New Name",
-        gender = Gender.TRANSGENDER,
+        gender = Gender.Transgender,
         age = Age(value = 35, updatedAt = Instant.now(clock), computedDateOfBirth = LocalDate.now(clock)),
         dateOfBirth = LocalDate.now(clock)
     )
@@ -832,7 +832,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(savedPatient.fullName).isEqualTo("New Name")
     assertThat(savedPatient.searchableName).isEqualTo("NewName")
-    assertThat(savedPatient.gender).isEqualTo(Gender.TRANSGENDER)
+    assertThat(savedPatient.gender).isEqualTo(Gender.Transgender)
   }
 
   @Test

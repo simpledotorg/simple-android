@@ -47,6 +47,7 @@ import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -106,7 +107,7 @@ class TestData @Inject constructor(
       addressUuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
       searchableName: String = nameToSearchableForm(fullName),
-      gender: Gender = randomOfEnum(Gender::class),
+      gender: Gender = randomGender(),
       dateOfBirth: LocalDate? = LocalDate.now(),
       age: Age? = Age(value = Math.random().times(100).toInt(), updatedAt = Instant.now(), computedDateOfBirth = LocalDate.now()),
       status: PatientStatus = PatientStatus.random(),
@@ -207,7 +208,7 @@ class TestData @Inject constructor(
   fun patientPayload(
       uuid: UUID = UUID.randomUUID(),
       fullName: String = faker.name.name(),
-      gender: Gender = randomOfEnum(Gender::class),
+      gender: Gender = randomGender(),
       age: Int? = Math.random().times(100).toInt(),
       dateOfBirth: LocalDate? = null,
       ageUpdatedAt: Instant? = Instant.now(),
@@ -662,7 +663,7 @@ class TestData @Inject constructor(
       fullName: String = faker.name.name(),
       dateOfBirth: String? = null,
       age: String? = faker.number.between(0, 100).toString(),
-      gender: Gender = randomOfEnum(Gender::class),
+      gender: Gender = randomGender(),
       colony: String = faker.address.streetName(),
       district: String = faker.address.city(),
       state: String = faker.address.state(),

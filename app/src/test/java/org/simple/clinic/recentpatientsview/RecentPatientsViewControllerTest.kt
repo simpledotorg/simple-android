@@ -15,9 +15,9 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.Gender.FEMALE
-import org.simple.clinic.patient.Gender.MALE
-import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientConfig
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
@@ -93,20 +93,20 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = TRANSGENDER
+            gender = Transgender
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
-            gender = MALE,
+            gender = Male,
             updatedAt = Instant.now().minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
-            gender = FEMALE,
+            gender = Female,
             updatedAt = Instant.now().minus(3, ChronoUnit.DAYS)
         )
     )))
@@ -118,21 +118,21 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
-            gender = TRANSGENDER,
+            gender = Transgender,
             updatedAt = Today
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
-            gender = MALE,
+            gender = Male,
             updatedAt = Yesterday
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
-            gender = FEMALE,
+            gender = Female,
             updatedAt = WithinSixMonths(3)
         )
     ))
@@ -153,27 +153,27 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = TRANSGENDER
+            gender = Transgender
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
-            gender = MALE,
+            gender = Male,
             updatedAt = Instant.now().minus(1, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
-            gender = FEMALE,
+            gender = Female,
             updatedAt = Instant.now().minus(4, ChronoUnit.DAYS)
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid4,
             fullName = "Abhilash Devi",
             age = Age(37, Instant.now(), LocalDate.MIN),
-            gender = TRANSGENDER
+            gender = Transgender
         )
     )))
 
@@ -184,21 +184,21 @@ class RecentPatientsViewControllerTest {
             uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
-            gender = TRANSGENDER,
+            gender = Transgender,
             updatedAt = Today
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
-            gender = MALE,
+            gender = Male,
             updatedAt = Yesterday
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
-            gender = FEMALE,
+            gender = Female,
             updatedAt = WithinSixMonths(4)
         ),
         SeeAllItem

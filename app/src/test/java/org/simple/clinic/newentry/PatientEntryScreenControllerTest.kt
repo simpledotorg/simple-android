@@ -24,6 +24,9 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.Address
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
@@ -128,14 +131,14 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
-        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
         address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
@@ -189,7 +192,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
     uiEvents.onNext(PatientAgeTextChanged(""))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
@@ -197,7 +200,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(TheActivityLifecycle.Paused())
 
     verify(patientRepository).saveOngoingEntry(OngoingNewPatientEntry(
-        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Gender.TRANSGENDER),
+        personalDetails = PersonalDetails("Ashok", "12/04/1993", age = null, gender = Transgender),
         address = Address(colonyOrVillage = "colony", district = "district", state = "state"),
         phoneNumber = OngoingNewPatientEntry.PhoneNumber("1234567890")
     ))
@@ -286,7 +289,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
     uiEvents.onNext(PatientPhoneNumberTextChanged("1234567890"))
     uiEvents.onNext(PatientDateOfBirthTextChanged("12/04/1993"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("colony"))
     uiEvents.onNext(PatientDistrictTextChanged("district"))
     uiEvents.onNext(PatientStateTextChanged("state"))
@@ -317,7 +320,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.MALE)))
+    uiEvents.onNext(PatientGenderChanged(Just(Male)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
@@ -337,7 +340,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.MALE)))
+    uiEvents.onNext(PatientGenderChanged(Just(Male)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
@@ -377,7 +380,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.FEMALE)))
+    uiEvents.onNext(PatientGenderChanged(Just(Female)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("Colony"))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
@@ -389,7 +392,7 @@ class PatientEntryScreenControllerTest {
   }
 
   @Test
-  @Parameters(value = ["FEMALE", "MALE", "TRANSGENDER"])
+  @Parameters(method = "params for gender values")
   fun `when gender is selected for the first time then the form should be scrolled to bottom`(gender: Gender) {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     uiEvents.onNext(PatientGenderChanged(None))
@@ -397,6 +400,11 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientGenderChanged(Just(gender)))
 
     verify(screen, times(1)).scrollFormToBottom()
+  }
+
+  @Suppress("Unused")
+  private fun `params for gender values`(): List<Gender> {
+    return listOf(Male, Female, Transgender)
   }
 
   @Test
@@ -408,7 +416,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.TRANSGENDER)))
+    uiEvents.onNext(PatientGenderChanged(Just(Transgender)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged(""))
     uiEvents.onNext(PatientDistrictTextChanged(""))
     uiEvents.onNext(PatientStateTextChanged(""))
@@ -432,7 +440,7 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientPhoneNumberTextChanged(""))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientAgeTextChanged("20"))
-    uiEvents.onNext(PatientGenderChanged(Just(Gender.FEMALE)))
+    uiEvents.onNext(PatientGenderChanged(Just(Female)))
     uiEvents.onNext(PatientColonyOrVillageTextChanged("Colony"))
     uiEvents.onNext(PatientDistrictTextChanged("District"))
     uiEvents.onNext(PatientStateTextChanged("State"))
@@ -443,7 +451,7 @@ class PatientEntryScreenControllerTest {
             fullName = "Ashok Kumar",
             dateOfBirth = null,
             age = "20",
-            gender = Gender.FEMALE
+            gender = Female
         ),
         address = Address(
             colonyOrVillage = "Colony",

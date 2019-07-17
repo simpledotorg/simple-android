@@ -9,6 +9,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
 import org.simple.clinic.phone.PhoneCaller

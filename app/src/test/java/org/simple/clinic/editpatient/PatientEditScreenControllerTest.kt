@@ -29,9 +29,9 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Gender.FEMALE
-import org.simple.clinic.patient.Gender.MALE
-import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientMocker
@@ -217,7 +217,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
@@ -249,7 +249,7 @@ class PatientEditScreenControllerTest {
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
@@ -292,7 +292,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
@@ -318,7 +318,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
@@ -346,7 +346,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
 
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
@@ -371,7 +371,7 @@ class PatientEditScreenControllerTest {
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
@@ -404,7 +404,7 @@ class PatientEditScreenControllerTest {
 
     uiEvents.onNext(PatientEditScreenCreated(UUID.randomUUID()))
     uiEvents.onNext(PatientEditPhoneNumberTextChanged(""))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     uiEvents.onNext(PatientEditColonyOrVillageChanged("Colony"))
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
@@ -448,7 +448,7 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditColonyOrVillageChanged(colonyOrVillage))
     uiEvents.onNext(PatientEditDistrictTextChanged(district))
     uiEvents.onNext(PatientEditStateTextChanged(state))
-    uiEvents.onNext(PatientEditGenderChanged(MALE))
+    uiEvents.onNext(PatientEditGenderChanged(Male))
     if (age != null) {
       uiEvents.onNext(PatientEditDateOfBirthTextChanged(""))
       uiEvents.onNext(PatientEditAgeTextChanged(age))
@@ -653,7 +653,7 @@ class PatientEditScreenControllerTest {
         listOf(PatientEditDistrictTextChanged("District"), setOf(DISTRICT_EMPTY)),
         listOf(PatientEditAgeTextChanged("1"), setOf(BOTH_DATEOFBIRTH_AND_AGE_ABSENT)),
         listOf(PatientEditDateOfBirthTextChanged("20/02/1990"), setOf(DATE_OF_BIRTH_IN_FUTURE, INVALID_DATE_OF_BIRTH)),
-        listOf(PatientEditGenderChanged(TRANSGENDER), emptySet<PatientEditValidationError>())
+        listOf(PatientEditGenderChanged(Transgender), emptySet<PatientEditValidationError>())
     )
   }
 
@@ -808,11 +808,11 @@ class PatientEditScreenControllerTest {
                 PatientEditDistrictTextChanged("District"),
                 PatientEditColonyOrVillageChanged("Colony"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(MALE),
+                PatientEditGenderChanged(Male),
                 PatientEditPhoneNumberTextChanged("12345678"),
                 PatientEditDateOfBirthTextChanged("20/05/1985")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name", gender = MALE, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
+            createExpectedPatient = { it.copy(fullName = "Name", gender = Male, dateOfBirth = LocalDate.of(1985, Month.MAY, 20)) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "12345678") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "12345678")
@@ -825,7 +825,7 @@ class PatientEditScreenControllerTest {
                 PatientEditDistrictTextChanged("District"),
                 PatientEditColonyOrVillageChanged("Colony"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(MALE),
+                PatientEditGenderChanged(Male),
                 PatientEditPhoneNumberTextChanged("12345678"),
                 PatientEditDateOfBirthTextChanged(""),
                 PatientEditAgeTextChanged("22")),
@@ -836,7 +836,7 @@ class PatientEditScreenControllerTest {
                   updatedAt = Instant.now(utcClock).plus(oneYear),
                   computedDateOfBirth = LocalDate.parse("1949-01-01"))
 
-              it.copy(fullName = "Name", gender = MALE, dateOfBirth = null, age = expectedAge)
+              it.copy(fullName = "Name", gender = Male, dateOfBirth = null, age = expectedAge)
             },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -849,10 +849,10 @@ class PatientEditScreenControllerTest {
                 PatientEditDistrictTextChanged("District"),
                 PatientEditColonyOrVillageChanged("Colony"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(MALE),
+                PatientEditGenderChanged(Male),
                 PatientEditPhoneNumberTextChanged("")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name", gender = MALE) },
+            createExpectedPatient = { it.copy(fullName = "Name", gender = Male) },
             createExpectedAddress = { it.copy(district = "District", colonyOrVillage = "Colony", state = "State") }),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = true),
@@ -860,7 +860,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
@@ -870,7 +870,7 @@ class PatientEditScreenControllerTest {
                   updatedAt = Instant.now(utcClock),
                   computedDateOfBirth = LocalDate.parse("1945-01-01"))
 
-              it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
+              it.copy(fullName = "Name", gender = Transgender, age = expectedAge)
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -882,7 +882,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditAgeTextChanged(""),
                 PatientEditDateOfBirthTextChanged("25/06/1965")),
@@ -890,7 +890,7 @@ class PatientEditScreenControllerTest {
             createExpectedPatient = {
               it.copy(
                   fullName = "Name",
-                  gender = TRANSGENDER,
+                  gender = Transgender,
                   age = null,
                   dateOfBirth = LocalDate.parse("1965-06-25"))
             },
@@ -905,7 +905,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditAgeTextChanged("25")),
             shouldSavePatient = true,
@@ -915,7 +915,7 @@ class PatientEditScreenControllerTest {
                   updatedAt = Instant.now(utcClock).plus(twoYears),
                   computedDateOfBirth = LocalDate.parse("1947-01-01"))
 
-              it.copy(fullName = "Name", gender = TRANSGENDER, age = expectedAge)
+              it.copy(fullName = "Name", gender = Transgender, age = expectedAge)
             },
             createExpectedAddress = { it.copy(district = "District", state = "State") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
@@ -927,13 +927,13 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
                 PatientEditPhoneNumberTextChanged("1234567")),
             shouldSavePatient = true,
-            createExpectedPatient = { it.copy(fullName = "Name 2", gender = TRANSGENDER) },
+            createExpectedPatient = { it.copy(fullName = "Name 2", gender = Transgender) },
             createExpectedAddress = { it.copy(district = "District", state = "State 2") },
             createExpectedPhoneNumber = { patientId, alreadyPresentPhoneNumber ->
               alreadyPresentPhoneNumber?.copy(number = "1234567") ?: PatientMocker.phoneNumber(patientUuid = patientId, number = "1234567")
@@ -944,7 +944,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -958,7 +958,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -972,7 +972,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -985,7 +985,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -999,7 +999,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -1014,7 +1014,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -1029,7 +1029,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(TRANSGENDER)),
+                PatientEditGenderChanged(Transgender)),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -1037,7 +1037,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name 1"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State 1"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditPhoneNumberTextChanged("123456"),
                 PatientEditStateTextChanged("State 2"),
                 PatientEditPatientNameTextChanged("Name 2"),
@@ -1051,7 +1051,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged(""),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(TRANSGENDER)),
+                PatientEditGenderChanged(Transgender)),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = true, shouldHaveAge = false),
@@ -1059,7 +1059,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged(""),
                 PatientEditStateTextChanged("State"),
-                PatientEditGenderChanged(TRANSGENDER)),
+                PatientEditGenderChanged(Transgender)),
             shouldSavePatient = false),
         generateTestData(
             patientProfile = generatePatientProfile(shouldAddNumber = false, shouldHaveAge = false),
@@ -1068,7 +1068,7 @@ class PatientEditScreenControllerTest {
                 PatientEditPatientNameTextChanged("Name"),
                 PatientEditDistrictTextChanged("District"),
                 PatientEditStateTextChanged(""),
-                PatientEditGenderChanged(Gender.FEMALE)),
+                PatientEditGenderChanged(Gender.Female)),
             shouldSavePatient = false)
     )
   }
@@ -1245,7 +1245,7 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(
                 name = "Anish",
                 phoneNumber = "123456",
-                gender = FEMALE,
+                gender = Female,
                 colonyOrVillage = "Bathinda",
                 district = "Hoshiarpur",
                 state = "Bengaluru",
@@ -1253,7 +1253,7 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPhoneNumberTextChanged("12345"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditColonyOrVillageChanged("Batinda"),
                 PatientEditDistrictTextChanged("Hosiarpur"),
                 PatientEditStateTextChanged("Bangalore"),
@@ -1263,7 +1263,7 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(
                 name = "Anish",
                 phoneNumber = "123456",
-                gender = FEMALE,
+                gender = Female,
                 colonyOrVillage = "Bathinda",
                 district = "Hoshiarpur",
                 state = "Bengaluru",
@@ -1271,7 +1271,7 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPhoneNumberTextChanged("12345"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditColonyOrVillageChanged("Batinda"),
                 PatientEditDistrictTextChanged("Hosiarpur"),
                 PatientEditStateTextChanged("Bangalore"),
@@ -1282,7 +1282,7 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(
                 name = "Anish",
                 phoneNumber = "123456",
-                gender = FEMALE,
+                gender = Female,
                 colonyOrVillage = "Bathinda",
                 district = "Hoshiarpur",
                 state = "Bengaluru",
@@ -1290,7 +1290,7 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPhoneNumberTextChanged("12345"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditColonyOrVillageChanged("Batinda"),
                 PatientEditDistrictTextChanged("Hosiarpur"),
                 PatientEditStateTextChanged("Bangalore"),
@@ -1300,7 +1300,7 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(
                 name = "Anish",
                 phoneNumber = "123456",
-                gender = FEMALE,
+                gender = Female,
                 colonyOrVillage = "Bathinda",
                 district = "Hoshiarpur",
                 state = "Bengaluru",
@@ -1308,7 +1308,7 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPhoneNumberTextChanged("12345"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditColonyOrVillageChanged("Batinda"),
                 PatientEditDistrictTextChanged("Hosiarpur"),
                 PatientEditStateTextChanged("Bangalore"),
@@ -1319,7 +1319,7 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(
                 name = "Anish",
                 phoneNumber = "123456",
-                gender = FEMALE,
+                gender = Female,
                 colonyOrVillage = "Bathinda",
                 district = "Hoshiarpur",
                 state = "Bengaluru",
@@ -1327,14 +1327,14 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPhoneNumberTextChanged("12345"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditColonyOrVillageChanged("Batinda"),
                 PatientEditDistrictTextChanged("Hosiarpur"),
                 PatientEditStateTextChanged("Bangalore"),
                 PatientEditAgeTextChanged("31"),
                 PatientEditPatientNameTextChanged("Anish"),
                 PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditGenderChanged(FEMALE),
+                PatientEditGenderChanged(Female),
                 PatientEditColonyOrVillageChanged("Bathinda"),
                 PatientEditDistrictTextChanged("Hoshiarpur"),
                 PatientEditStateTextChanged("Bengaluru"),
@@ -1344,7 +1344,7 @@ class PatientEditScreenControllerTest {
             patientProfile = generatePatientProfile(
                 name = "Anish",
                 phoneNumber = "123456",
-                gender = FEMALE,
+                gender = Female,
                 colonyOrVillage = "Bathinda",
                 district = "Hoshiarpur",
                 state = "Bengaluru",
@@ -1352,14 +1352,14 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(
                 PatientEditPatientNameTextChanged("Anisha"),
                 PatientEditPhoneNumberTextChanged("12345"),
-                PatientEditGenderChanged(TRANSGENDER),
+                PatientEditGenderChanged(Transgender),
                 PatientEditColonyOrVillageChanged("Batinda"),
                 PatientEditDistrictTextChanged("Hosiarpur"),
                 PatientEditStateTextChanged("Bangalore"),
                 PatientEditDateOfBirthTextChanged("13/06/1996"),
                 PatientEditPatientNameTextChanged("Anish"),
                 PatientEditPhoneNumberTextChanged("123456"),
-                PatientEditGenderChanged(FEMALE),
+                PatientEditGenderChanged(Female),
                 PatientEditColonyOrVillageChanged("Bathinda"),
                 PatientEditDistrictTextChanged("Hoshiarpur"),
                 PatientEditStateTextChanged("Bengaluru"),
@@ -1446,18 +1446,18 @@ class PatientEditScreenControllerTest {
             inputEvents = listOf(PatientEditStateTextChanged("Bengaluru")),
             shouldShowConfirmDiscardChangesPopup = false),
         generateTestData(
-            patientProfile = generatePatientProfile(gender = MALE),
-            inputEvents = listOf(PatientEditGenderChanged(FEMALE)),
+            patientProfile = generatePatientProfile(gender = Male),
+            inputEvents = listOf(PatientEditGenderChanged(Female)),
             shouldShowConfirmDiscardChangesPopup = true),
         generateTestData(
-            patientProfile = generatePatientProfile(gender = MALE),
+            patientProfile = generatePatientProfile(gender = Male),
             inputEvents = listOf(
-                PatientEditGenderChanged(FEMALE),
-                PatientEditGenderChanged(MALE)),
+                PatientEditGenderChanged(Female),
+                PatientEditGenderChanged(Male)),
             shouldShowConfirmDiscardChangesPopup = false),
         generateTestData(
-            patientProfile = generatePatientProfile(gender = MALE),
-            inputEvents = listOf(PatientEditGenderChanged(MALE)),
+            patientProfile = generatePatientProfile(gender = Male),
+            inputEvents = listOf(PatientEditGenderChanged(Male)),
             shouldShowConfirmDiscardChangesPopup = false),
         generateTestData(
             patientProfile = generatePatientProfile(ageValue = 30),

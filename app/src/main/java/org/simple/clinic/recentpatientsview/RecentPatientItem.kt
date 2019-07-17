@@ -9,6 +9,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.recentpatientsview.SeeAllItem.SeeAllItemViewHolder
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.summary.RelativeTimestamp

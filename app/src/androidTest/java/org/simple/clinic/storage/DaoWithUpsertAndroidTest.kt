@@ -8,8 +8,8 @@ import org.junit.Test
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
-import org.simple.clinic.patient.Gender.FEMALE
-import org.simple.clinic.patient.Gender.MALE
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.util.RxErrorsRule
@@ -54,19 +54,19 @@ class DaoWithUpsertAndroidTest {
   fun when_upserting_a_record_it_should_be_updated_if_it_already_exists() {
     val patientUuid = UUID.randomUUID()
     val address = testData.patientAddress(patientUuid)
-    val patient = testData.patient(uuid = patientUuid, addressUuid = address.uuid, gender = MALE)
+    val patient = testData.patient(uuid = patientUuid, addressUuid = address.uuid, gender = Male)
     val patientNumber = testData.patientPhoneNumber(patientUuid = patientUuid, number = "123")
 
     database.addressDao().save(address)
     database.patientDao().save(patient)
     database.phoneNumberDao().save(listOf(patientNumber))
 
-    val updatedPatient = patient.copy(gender = FEMALE)
+    val updatedPatient = patient.copy(gender = Female)
     database.patientDao().save(updatedPatient)
 
     val storedPatient = database.patientDao().patient(patientUuid).blockingFirst().first()
     assertThat(storedPatient.uuid).isEqualTo(patientUuid)
-    assertThat(storedPatient.gender).isEqualTo(FEMALE)
+    assertThat(storedPatient.gender).isEqualTo(Female)
 
     val storedNumbers = database.phoneNumberDao().count()
     assertThat(storedNumbers).isEqualTo(1)

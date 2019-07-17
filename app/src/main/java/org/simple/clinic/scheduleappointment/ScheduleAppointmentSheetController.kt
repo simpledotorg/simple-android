@@ -163,7 +163,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .flatMapSingle { (date, uuid, currentFacility) ->
           appointmentRepository
               .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual, currentFacility = currentFacility)
-              .map { { ui: Ui -> ui.closeSheet(date) } }
+              .map { { ui: Ui -> ui.closeSheet() } }
         }
   }
 }

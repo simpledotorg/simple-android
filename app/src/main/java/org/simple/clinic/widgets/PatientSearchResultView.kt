@@ -10,6 +10,8 @@ import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.patient.displayIconRes
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.searchresultsview.PhoneNumberObfuscator
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock

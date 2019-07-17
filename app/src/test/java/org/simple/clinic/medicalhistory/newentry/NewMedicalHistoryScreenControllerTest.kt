@@ -75,7 +75,7 @@ class NewMedicalHistoryScreenControllerTest {
         fullName = patientName,
         dateOfBirth = null,
         age = "20",
-        gender = Gender.TRANSGENDER))
+        gender = Gender.Transgender))
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(patientEntry))
 
     uiEvents.onNext(ScreenCreated())

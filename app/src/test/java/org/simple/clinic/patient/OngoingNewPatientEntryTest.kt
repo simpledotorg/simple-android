@@ -36,7 +36,7 @@ class OngoingNewPatientEntryTest {
       phoneValidationResult: PhoneNumberValidator.Result
   ) {
     val entry = OngoingNewPatientEntry(
-        personalDetails = PersonalDetails(fullname, dateOfBirth, age, Gender.MALE),
+        personalDetails = PersonalDetails(fullname, dateOfBirth, age, Gender.Male),
         address = Address(colonyOrVillage, district, state),
         phoneNumber = PhoneNumber(""))
 
@@ -71,7 +71,7 @@ class OngoingNewPatientEntryTest {
   @Test
   fun `future date-of-birth should not be accepted`() {
     val entry = OngoingNewPatientEntry(
-        personalDetails = PersonalDetails("Ashok", "01/01/3000", "", Gender.MALE),
+        personalDetails = PersonalDetails("Ashok", "01/01/3000", "", Gender.Male),
         address = Address("colony", "district", "state"),
         phoneNumber = PhoneNumber("phone-number"))
 

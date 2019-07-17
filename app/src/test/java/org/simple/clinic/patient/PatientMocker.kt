@@ -19,6 +19,7 @@ import org.simple.clinic.protocol.ProtocolDrug
 import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
+import org.simple.clinic.util.randomGender
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -41,7 +42,7 @@ object PatientMocker {
       fullName: String = "name",
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       status: PatientStatus = PatientStatus.Active,
-      gender: Gender = randomOfEnum(Gender::class),
+      gender: Gender = randomGender(),
       dateOfBirth: LocalDate? = LocalDate.now(ZoneOffset.UTC),
       age: Age? = null,
       createdAt: Instant = Instant.now(),
@@ -416,7 +417,7 @@ object PatientMocker {
   fun recentPatient(
       uuid: UUID = UUID.randomUUID(),
       fullName: String = "fullName",
-      gender: Gender = randomOfEnum(Gender::class),
+      gender: Gender = randomGender(),
       dateOfBirth: LocalDate? = null,
       age: Age? = null,
       updatedAt: Instant = Instant.now()

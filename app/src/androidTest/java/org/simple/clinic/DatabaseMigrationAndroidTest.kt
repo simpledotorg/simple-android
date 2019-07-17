@@ -2561,6 +2561,65 @@ class DatabaseMigrationAndroidTest {
         mixedAnswersAfterMigration
     ).forEach { verifyMedicalHistory(db = db_v40, answerTuple = it) }
   }
+
+  @Test
+  fun migrate_gender_from_40_to_41() {
+    fun savePatient(db: SupportSQLiteDatabase, patientUuid: UUID, gender: String) {
+      val addressUuid = UUID.randomUUID()
+
+      db.execSQL("""
+        INSERT INTO "PatientAddress" VALUES(
+          '$addressUuid',
+          'colony or village',
+          'district',
+          'state',
+          'country',
+          '2018-09-25T11:20:42.008Z',
+          '2018-09-25T11:20:42.008Z',
+          NULL
+        )
+      """)
+
+      db.execSQL("""
+        INSERT INTO "Patient" (
+            "uuid", "addressUuid", "fullName", "searchableName",
+            "gender", "dateOfBirth", "age_value", "age_updatedAt",
+            "age_computedDateOfBirth", "status", "createdAt",
+            "updatedAt", "deletedAt", "recordedAt", "syncStatus"
+        ) VALUES (
+            '$patientUuid', '$addressUuid', 'full-name', 'searchable-name',
+            '$gender', 'date-of-birth', 'age-value', 'age-updated-at',
+            'age-computed-date-of-birth', 'status', 'created-at',
+            'updated-at', 'deleted-at', 'recorded-at', 'sync-status'
+        )
+      """)
+    }
+
+    fun verifyPatient(db: SupportSQLiteDatabase, patientUuid: UUID, expectedGenderString: String) {
+      db.query("""
+        SELECT * FROM "Patient" WHERE "uuid" = '$patientUuid'
+      """).use { cursor ->
+        cursor.moveToNext()
+
+        assertThat(cursor.getString(cursor.getColumnIndex("gender")))
+            .isEqualTo(expectedGenderString)
+      }
+    }
+
+    val dbV40 = helper.createDatabase(40)
+    val maleUuid = UUID.fromString("b2e3b63f-9b09-4b8d-bfa7-af2ac5972786")
+    val femaleUuid = UUID.fromString("c11af491-d125-45af-9b3c-aa73510960c3")
+    val transgenderUuid = UUID.fromString("05384716-65d7-4261-8bcf-f2faecf62bb2")
+
+    savePatient(dbV40, maleUuid, "MALE")
+    savePatient(dbV40, femaleUuid, "FEMALE")
+    savePatient(dbV40, transgenderUuid, "TRANSGENDER")
+
+    val dbV41 = helper.migrateTo(41)
+    verifyPatient(dbV41, maleUuid, "male")
+    verifyPatient(dbV41, femaleUuid, "female")
+    verifyPatient(dbV41, transgenderUuid, "transgender")
+  }
 }
 
 private fun Cursor.string(column: String): String? = getString(getColumnIndex(column))

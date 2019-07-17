@@ -24,6 +24,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.editpatient.PatientEditValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.editpatient.PatientEditValidationError.COLONY_OR_VILLAGE_EMPTY
 import org.simple.clinic.editpatient.PatientEditValidationError.DATE_OF_BIRTH_IN_FUTURE
@@ -35,9 +36,10 @@ import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LEN
 import org.simple.clinic.editpatient.PatientEditValidationError.PHONE_NUMBER_LENGTH_TOO_SHORT
 import org.simple.clinic.editpatient.PatientEditValidationError.STATE_EMPTY
 import org.simple.clinic.patient.Gender
-import org.simple.clinic.patient.Gender.FEMALE
-import org.simple.clinic.patient.Gender.MALE
-import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.router.screen.BackPressInterceptCallback
 import org.simple.clinic.router.screen.BackPressInterceptor
 import org.simple.clinic.router.screen.ScreenRouter
@@ -71,6 +73,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   @Inject
   lateinit var activity: TheActivity
+
+  @Inject
+  lateinit var crashReporter: CrashReporter
 
   private val formScrollView by bindView<ScrollView>(R.id.patientedit_form_scrollview)
   private val fullNameEditText by bindView<EditText>(R.id.patientedit_full_name)
@@ -177,9 +182,9 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
 
   private fun genderChanges(): Observable<UiEvent> {
     val radioIdToGenders = mapOf(
-        R.id.patientedit_gender_female to FEMALE,
-        R.id.patientedit_gender_male to MALE,
-        R.id.patientedit_gender_transgender to TRANSGENDER)
+        R.id.patientedit_gender_female to Female,
+        R.id.patientedit_gender_male to Male,
+        R.id.patientedit_gender_transgender to Transgender)
 
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .filter { it != -1 }
@@ -216,13 +221,17 @@ class PatientEditScreen(context: Context, attributeSet: AttributeSet) : Relative
   }
 
   fun setGender(gender: Gender) {
-    val genderButton = when (gender) {
-      MALE -> maleRadioButton
-      FEMALE -> femaleRadioButton
-      TRANSGENDER -> transgenderRadioButton
+    val genderButton: RadioButton? = when (gender) {
+      Male -> maleRadioButton
+      Female -> femaleRadioButton
+      Transgender -> transgenderRadioButton
+      is Unknown -> {
+        crashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${PatientEditScreen::class.java.name}"))
+        null
+      }
     }
 
-    genderButton.isChecked = true
+    genderButton?.isChecked = true
   }
 
   fun setPatientAge(age: Int) {

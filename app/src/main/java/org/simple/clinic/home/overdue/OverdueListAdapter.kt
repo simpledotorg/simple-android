@@ -14,6 +14,7 @@ import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.displayIconRes
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.marginLayoutParams

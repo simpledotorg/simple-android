@@ -84,21 +84,21 @@ class RecentPatientsScreenControllerTest {
             uuid = patientUuid1,
             fullName = "Ajay Kumar",
             age = Age(42, Instant.now(), LocalDate.MIN),
-            gender = Gender.TRANSGENDER,
+            gender = Gender.Transgender,
             updatedAt = today
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid2,
             fullName = "Vijay Kumar",
             age = Age(24, Instant.now(), LocalDate.MIN),
-            gender = Gender.MALE,
+            gender = Gender.Male,
             updatedAt = yesterday
         ),
         PatientMocker.recentPatient(
             uuid = patientUuid3,
             fullName = "Vinaya Kumari",
             age = Age(27, Instant.now(), LocalDate.MIN),
-            gender = Gender.FEMALE,
+            gender = Gender.Female,
             updatedAt = twoDaysAgo
         )
     )))
@@ -110,21 +110,21 @@ class RecentPatientsScreenControllerTest {
             uuid = patientUuid1,
             name = "Ajay Kumar",
             age = 42,
-            gender = Gender.TRANSGENDER,
+            gender = Gender.Transgender,
             lastSeenTimestamp = Today
         ),
         RecentPatientItem(
             uuid = patientUuid2,
             name = "Vijay Kumar",
             age = 24,
-            gender = Gender.MALE,
+            gender = Gender.Male,
             lastSeenTimestamp = Yesterday
         ),
         RecentPatientItem(
             uuid = patientUuid3,
             name = "Vinaya Kumari",
             age = 27,
-            gender = Gender.FEMALE,
+            gender = Gender.Female,
             lastSeenTimestamp = WithinSixMonths(2)
         )
     ))

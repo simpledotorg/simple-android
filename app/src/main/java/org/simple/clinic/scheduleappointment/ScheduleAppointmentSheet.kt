@@ -28,15 +28,10 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   companion object {
     private const val KEY_PATIENT_UUID = "patientUuid"
-    private const val EXTRAS_SAVED_APPOINTMENT_DATE = "extras_saved_appointment_date"
 
-    fun intent(context: Context, patientUuid: UUID) =
+    fun intent(context: Context, patientUuid: UUID): Intent =
         Intent(context, ScheduleAppointmentSheet::class.java)
-            .putExtra(KEY_PATIENT_UUID, patientUuid)!!
-
-    fun appointmentSavedDate(intent: Intent): LocalDate? {
-      return intent.extras!!.getSerializable(EXTRAS_SAVED_APPOINTMENT_DATE) as LocalDate
-    }
+            .putExtra(KEY_PATIENT_UUID, patientUuid)
   }
 
   private val oneMonth = ScheduleAppointment("1 month", 1, MONTHS)
@@ -136,13 +131,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
-    finish()
-  }
-
-  fun closeSheet(appointmentDate: LocalDate) {
-    val intent = Intent()
-    intent.putExtra(EXTRAS_SAVED_APPOINTMENT_DATE, appointmentDate)
-    setResult(Activity.RESULT_OK, intent)
     finish()
   }
 

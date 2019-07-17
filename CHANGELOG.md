@@ -7,6 +7,9 @@
 ### Internal
 - Added forward compatibility support to MedicalHistory.Answer enum
 
+### Fixes
+- Fix camera not getting released properly and causing memory leaks
+
 ## 2019-07-15-4657
 ### Feature
 - Nudge users to update the app if it is older than expected

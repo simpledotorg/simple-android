@@ -1,5 +1,6 @@
 package org.simple.clinic.widgets.qrcodescanner
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -13,25 +14,17 @@ import com.budiyev.android.codescanner.ScanMode
 import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.bindUiToController
-import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
-import org.simple.clinic.widgets.UiEvent
 import timber.log.Timber
 import javax.inject.Inject
 
 class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(context, attrs) {
 
   @Inject
-  lateinit var activity: TheActivity
-
-  @Inject
   lateinit var lifecycle: Observable<TheActivityLifecycle>
-
-  @Inject
-  lateinit var controller: QrCodeScannerViewController
 
   private val scannerView = CodeScannerView(context)
       .apply {
@@ -53,13 +46,7 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
     TheActivity.component.inject(this)
     addView(scannerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     initializeCodeScanner()
-
-    bindUiToController(
-        ui = this,
-        events = Observable.merge(screenCreates(), lifecycle),
-        controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
-    )
+    bindCameraToActivityLifecycle()
   }
 
   private fun initializeCodeScanner() {
@@ -90,21 +77,51 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
       emitter.setCancellable {
         codeScanner.decodeCallback = null
+        codeScanner.errorCallback = null
       }
     }
   }
 
-  private fun screenCreates(): Observable<UiEvent> = Observable.just(ScreenCreated())
-
-  fun stopScanning() {
+  private fun stopScanning() {
     codeScanner.releaseResources()
   }
 
-  fun startScanning() {
-    // If a keyboard is open on a screen later in the user flow, and hitting back on that screen
-    // pops the navigation stack where we hide the keyboard, there is a weird bug where the camera
-    // preview is sometimes distorted because the view size is reported incorrectly. This is a
-    // "fix" (insert :sad-parrot gif) for this bug.
-    postDelayed({ codeScanner.startPreview() }, 100L)
+  private fun startScanning() {
+    codeScanner.startPreview()
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    startScanning()
+  }
+
+  override fun onDetachedFromWindow() {
+    super.onDetachedFromWindow()
+    stopScanning()
+  }
+
+  private fun bindCameraToActivityLifecycle() {
+    val screenDestroys = RxView
+        .detaches(this)
+        .map { ScreenDestroyed() }
+
+    startScanningWhenActivityIsResumed(screenDestroys)
+    stopScanningWhenActivityIsPaused(screenDestroys)
+  }
+
+  @SuppressLint("CheckResult")
+  private fun startScanningWhenActivityIsResumed(screenDestroys: Observable<ScreenDestroyed>) {
+    lifecycle
+        .ofType<TheActivityLifecycle.Resumed>()
+        .takeUntil(screenDestroys)
+        .subscribe { startScanning() }
+  }
+
+  @SuppressLint("CheckResult")
+  private fun stopScanningWhenActivityIsPaused(screenDestroys: Observable<ScreenDestroyed>) {
+    lifecycle
+        .ofType<TheActivityLifecycle.Paused>()
+        .takeUntil(screenDestroys)
+        .subscribe { stopScanning() }
   }
 }

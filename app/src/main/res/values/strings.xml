@@ -11,6 +11,7 @@
   <string name="gender_female_letter">F</string>
   <!--suppress UnusedResources -->
   <string name="gender_trans_letter">T</string>
+  <string name="gender_unknown_letter">U</string>
   <string name="api_unexpected_error">Something went wrong. Please try again.</string>
   <string name="api_network_error">No internet connection</string>
 

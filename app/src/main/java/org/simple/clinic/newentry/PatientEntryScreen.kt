@@ -27,10 +27,12 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
-import org.simple.clinic.patient.Gender.FEMALE
-import org.simple.clinic.patient.Gender.MALE
-import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.patient.Gender.Female
+import org.simple.clinic.patient.Gender.Male
+import org.simple.clinic.patient.Gender.Transgender
+import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
@@ -65,6 +67,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var identifierDisplayAdapter: IdentifierDisplayAdapter
+
+  @Inject
+  lateinit var crashReporter: CrashReporter
 
   private val backButton by bindView<View>(R.id.patiententry_back)
   private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollview)
@@ -154,9 +159,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private fun genderChanges(): Observable<PatientGenderChanged> {
     val radioIdToGenders = mapOf(
-        R.id.patiententry_gender_female to FEMALE,
-        R.id.patiententry_gender_male to MALE,
-        R.id.patiententry_gender_transgender to TRANSGENDER)
+        R.id.patiententry_gender_female to Female,
+        R.id.patiententry_gender_male to Male,
+        R.id.patiententry_gender_transgender to Transgender)
 
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .map { checkedId ->
@@ -183,12 +188,17 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     stateEditText.setTextAndCursor(entry.address?.state)
 
     entry.personalDetails?.gender?.let {
-      val genderButton = when (it) {
-        MALE -> maleRadioButton
-        FEMALE -> femaleRadioButton
-        TRANSGENDER -> transgenderRadioButton
+      val genderButton: RadioButton? = when (it) {
+        Male -> maleRadioButton
+        Female -> femaleRadioButton
+        Transgender -> transgenderRadioButton
+        is Unknown -> {
+          crashReporter.report(IllegalStateException("Heads-up: unknown gender ${it.actualValue} found in ${PatientEntryScreen::class.java.name}"))
+          null
+        }
       }
-      genderButton.isChecked = true
+
+      genderButton?.isChecked = true
     }
 
     identifierTextView.text = entry.identifier?.let { identifier ->

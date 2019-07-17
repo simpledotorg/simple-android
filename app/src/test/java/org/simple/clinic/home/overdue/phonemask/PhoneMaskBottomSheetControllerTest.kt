@@ -15,9 +15,10 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.Age
-import org.simple.clinic.patient.Gender.TRANSGENDER
+import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
@@ -63,7 +64,7 @@ class PhoneMaskBottomSheetControllerTest {
   fun `when any call button is clicked, call permission should be requested`(callTypeEvent: UiEvent) {
     val phoneNumber = "1234567890"
     val name = "Kumar Verma"
-    val gender = TRANSGENDER
+    val gender = Transgender
     val age = 32
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.patient(
@@ -104,7 +105,7 @@ class PhoneMaskBottomSheetControllerTest {
   ) {
     val number = "1234567890"
     val name = "Kumar Verma"
-    val gender = TRANSGENDER
+    val gender = Transgender
     val age = 32
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.patient(
@@ -148,7 +149,7 @@ class PhoneMaskBottomSheetControllerTest {
   ) {
     val number = "1234567890"
     val name = "Kumar Verma"
-    val gender = TRANSGENDER
+    val gender = Transgender
     val age = 32
 
     whenever(patientRepository.patient(patientUuid)).thenReturn(Observable.just(Optional.toOptional(PatientMocker.patient(

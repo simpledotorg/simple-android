@@ -11,6 +11,7 @@ import org.simple.clinic.analytics.NetworkAnalyticsInterceptor
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
@@ -49,6 +50,7 @@ open class NetworkModule {
         .add(Appointment.Status.MoshiTypeConverter())
         .add(PatientStatus.MoshiTypeAdapter())
         .add(Answer.MoshiTypeAdapter())
+        .add(Gender.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

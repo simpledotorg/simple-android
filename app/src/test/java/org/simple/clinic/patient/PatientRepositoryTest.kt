@@ -24,7 +24,6 @@ import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
 import org.simple.clinic.patient.businessid.BusinessId
@@ -330,7 +329,6 @@ class PatientRepositoryTest {
     val timeTakenToFetchPatientNameAndId = Duration.ofMinutes(1L)
     val timeTakenToFuzzyFilterPatientNames = Duration.ofMinutes(5L)
     val timeTakenToFetchPatientDetails = Duration.ofSeconds(45L)
-    val timeTakenToSortByFacility = Duration.ofDays(1L)
 
     val patientUuid = UUID.randomUUID()
 
@@ -356,23 +354,16 @@ class PatientRepositoryTest {
                 .doOnNext { clock.advanceBy(timeTakenToFetchPatientDetails) }
                 .firstOrError()
         )
-    whenever(bloodPressureMeasurementDao.patientToFacilityIds(any()))
-        .thenReturn(
-            BehaviorSubject.createDefault(emptyList<PatientToFacilityId>())
-                .doOnNext { clock.advanceBy(timeTakenToSortByFacility) }
-                .toFlowable(BackpressureStrategy.LATEST)
-        )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
     repository.search("search", facility).blockingFirst()
 
     val receivedEvents = reporter.receivedEvents
-    assertThat(receivedEvents).hasSize(4)
+    assertThat(receivedEvents).hasSize(3)
 
     val (fetchNameAndId,
         fuzzyFilterByName,
-        fetchPatientDetails,
-        sortByFacility) = receivedEvents
+        fetchPatientDetails) = receivedEvents
 
     assertThat(fetchNameAndId.props["operationName"]).isEqualTo("Search Patient:Fetch Name and Id")
     assertThat(fetchNameAndId.props["timeTakenInMillis"]).isEqualTo(timeTakenToFetchPatientNameAndId.toMillis())
@@ -382,8 +373,5 @@ class PatientRepositoryTest {
 
     assertThat(fetchPatientDetails.props["operationName"]).isEqualTo("Search Patient:Fetch Patient Details")
     assertThat(fetchPatientDetails.props["timeTakenInMillis"]).isEqualTo(timeTakenToFetchPatientDetails.toMillis())
-
-    assertThat(sortByFacility.props["operationName"]).isEqualTo("Search Patient:Sort By Visited Facility")
-    assertThat(sortByFacility.props["timeTakenInMillis"]).isEqualTo(timeTakenToSortByFacility.toMillis())
   }
 }

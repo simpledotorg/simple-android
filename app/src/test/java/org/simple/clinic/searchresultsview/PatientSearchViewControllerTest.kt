@@ -8,6 +8,7 @@ import io.reactivex.plugins.RxJavaPlugins
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -60,7 +61,7 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when screen is created then patients matching the search query should be shown`() {
+  fun `when searching patients by name returns results, the results should be displayed`() {
     val patientSearchResult1 = PatientMocker.patientSearchResult()
     val patientSearchResult2 = PatientMocker.patientSearchResult()
 
@@ -72,7 +73,7 @@ class PatientSearchViewControllerTest {
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchResultPatientName(patientName = "name"))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
 
     verify(screen).updateSearchResults(listOf(
         InCurrentFacilityHeader(facilityName = currentFacility.name),
@@ -90,7 +91,7 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when screen is created and no matching patients are available then the empty state should be shown`() {
+  fun `when searching patients by name returns no results, the empty state should be displayed`() {
     val emptySearchResults = PatientSearchResults(
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = emptyList()
@@ -99,14 +100,14 @@ class PatientSearchViewControllerTest {
         .thenReturn(Observable.just(emptySearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchResultPatientName(patientName = "name"))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
 
     verify(screen).updateSearchResults(emptyList())
     verify(screen).setEmptyStateVisible(true)
   }
 
   @Test
-  fun `when there are only patients in current facility, then "Other Results" header should not be shown`() {
+  fun `when there are patients only in current facility, then "Other Results" header should not be shown`() {
     val patientSearchResult1 = PatientMocker.patientSearchResult()
     val patientSearchResult2 = PatientMocker.patientSearchResult()
 
@@ -118,7 +119,7 @@ class PatientSearchViewControllerTest {
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchResultPatientName(patientName = "name"))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
 
     verify(screen).updateSearchResults(listOf(
         InCurrentFacilityHeader(facilityName = currentFacility.name),
@@ -135,7 +136,7 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when there are only patients in other facility, then current facility header with "no results" should be shown`() {
+  fun `when there are patients only in other facilities, then current facility header with "no results" should be shown`() {
     val patientSearchResult1 = PatientMocker.patientSearchResult()
     val patientSearchResult2 = PatientMocker.patientSearchResult()
 
@@ -147,7 +148,7 @@ class PatientSearchViewControllerTest {
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchResultPatientName(patientName = "name"))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
 
     verify(screen).updateSearchResults(listOf(
         InCurrentFacilityHeader(facilityName = currentFacility.name),
@@ -175,11 +176,20 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when register new patient clicked then RegisterNewPatient event should be emitted`() {
+  @Parameters(method = "params for search by parameters on register click")
+  fun `when register new patient clicked then RegisterNewPatient event should be emitted`(searchPatientBy: SearchPatientBy) {
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchResultPatientName(patientName = "name"))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy))
     uiEvents.onNext(RegisterNewPatientClicked)
 
-    verify(screen).registerNewPatient(RegisterNewPatient("name"))
+    verify(screen).registerNewPatient(RegisterNewPatient(searchPatientBy))
+  }
+
+  @Suppress("Unused")
+  private fun `params for search by parameters on register click`(): List<SearchPatientBy> {
+    return listOf(
+        SearchPatientBy.Name(searchText = patientName),
+        SearchPatientBy.PhoneNumber(searchText = "123456")
+    )
   }
 }

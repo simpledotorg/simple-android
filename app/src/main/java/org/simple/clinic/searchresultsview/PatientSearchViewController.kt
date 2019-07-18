@@ -45,17 +45,17 @@ class PatientSearchViewController @Inject constructor(
   }
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientNames = events.ofType<SearchResultPatientName>()
-        .map { it.patientName }
+    val patientNames = events
+        .ofType<SearchPatientCriteria>()
+        .map { it.searchPatientBy }
+        .ofType<SearchPatientBy.Name>()
+        .map { it.searchText }
 
     val viewCreated = events.ofType<SearchResultsViewCreated>()
 
     return Observables.combineLatest(viewCreated, patientNames)
         .flatMap { (_, patientName) ->
-          val loggedInUserStream = userSession
-              .requireLoggedInUser()
-              .replay()
-              .refCount()
+          val loggedInUserStream = userSession.requireLoggedInUser()
 
           val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
 
@@ -109,13 +109,14 @@ class PatientSearchViewController @Inject constructor(
   }
 
   private fun createNewPatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientNames = events.ofType<SearchResultPatientName>()
-        .map { it.patientName }
+    val searchPatientByStream = events
+        .ofType<SearchPatientCriteria>()
+        .map { it.searchPatientBy }
 
     return events.ofType<RegisterNewPatientClicked>()
-        .withLatestFrom(patientNames)
-        .map { (_, patientName) ->
-          { ui: Ui -> ui.registerNewPatient(RegisterNewPatient(patientName)) }
+        .withLatestFrom(searchPatientByStream)
+        .map { (_, searchPatientBy) ->
+          { ui: Ui -> ui.registerNewPatient(RegisterNewPatient(searchPatientBy)) }
         }
   }
 }

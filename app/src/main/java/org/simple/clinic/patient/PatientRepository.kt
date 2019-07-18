@@ -57,10 +57,18 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
+  @Deprecated(
+      message = "use search that returns search results",
+      replaceWith = ReplaceWith(expression = "search(name).compose(partitionTransformer)")
+  )
   fun search(
       name: String,
       partitionTransformer: ObservableTransformer<List<PatientSearchResult>, PatientSearchResults>
   ): Observable<PatientSearchResults> {
+    return search(name).compose(partitionTransformer)
+  }
+
+  fun search(name: String): Observable<List<PatientSearchResult>> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)
 
     val fetchPatientNameAnalytics = "Fetch Name and Id"
@@ -94,7 +102,6 @@ class PatientRepository @Inject constructor(
             }
           }
         }
-        .compose(partitionTransformer)
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
   }
 

@@ -7,7 +7,6 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.OperationTimingTracker
-import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -58,7 +57,18 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
-  fun search(name: String, sortByFacility: Facility): Observable<PatientSearchResults> {
+  fun search(
+      name: String,
+      sortByFacility: Facility
+  ): Observable<PatientSearchResults> {
+    return search(name, sortByFacility, PartitionSearchResultsByVisitedFacility(database.bloodPressureDao(), facility = sortByFacility))
+  }
+
+  fun search(
+      name: String,
+      sortByFacility: Facility,
+      partitionTransformer: ObservableTransformer<List<PatientSearchResult>, PatientSearchResults>
+  ): Observable<PatientSearchResults> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)
 
     val fetchPatientNameAnalytics = "Fetch Name and Id"
@@ -92,12 +102,8 @@ class PatientRepository @Inject constructor(
             }
           }
         }
-        .compose(sortByVisitedFacility(sortByFacility))
+        .compose(partitionTransformer)
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
-  }
-
-  private fun sortByVisitedFacility(facility: Facility): ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
-    return PartitionSearchResultsByVisitedFacility(database.bloodPressureDao(), facility)
   }
 
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }

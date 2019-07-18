@@ -11,6 +11,8 @@ import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
+import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.subjects.BehaviorSubject
 import junitparams.JUnitParamsRunner
@@ -263,7 +265,7 @@ class PatientRepositoryTest {
         .thenReturn(Single.just(filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    repository.search("name", facility).blockingFirst()
+    repository.search("name", facility, DontPartitionTransformer()).blockingFirst()
 
     if (shouldQueryFilteredIds) {
       verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.Active)
@@ -296,7 +298,7 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    val actualResults = repository.search("name", facility).blockingFirst().run {
+    val actualResults = repository.search("name", facility, DontPartitionTransformer()).blockingFirst().run {
       visitedCurrentFacility + notVisitedCurrentFacility
     }
 
@@ -356,7 +358,7 @@ class PatientRepositoryTest {
         )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
-    repository.search("search", facility).blockingFirst()
+    repository.search("search", facility, DontPartitionTransformer()).blockingFirst()
 
     val receivedEvents = reporter.receivedEvents
     assertThat(receivedEvents).hasSize(3)
@@ -373,5 +375,13 @@ class PatientRepositoryTest {
 
     assertThat(fetchPatientDetails.props["operationName"]).isEqualTo("Search Patient:Fetch Patient Details")
     assertThat(fetchPatientDetails.props["timeTakenInMillis"]).isEqualTo(timeTakenToFetchPatientDetails.toMillis())
+  }
+
+  class DontPartitionTransformer : ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
+
+    override fun apply(upstream: Observable<List<PatientSearchResult>>): ObservableSource<PatientSearchResults> {
+      return upstream
+          .map { PatientSearchResults(visitedCurrentFacility = it, notVisitedCurrentFacility = emptyList()) }
+    }
   }
 }

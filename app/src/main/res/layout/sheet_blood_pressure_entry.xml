@@ -165,7 +165,7 @@
       android:layout_height="wrap_content">
 
       <ImageButton
-        android:id="@+id/bloodpressureentry_show_bp"
+        android:id="@+id/bloodpressureentry_back_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/spacing_16"

@@ -12,6 +12,7 @@ import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.Gender
+import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.patient.PatientStatus
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.Identifier
@@ -51,6 +52,7 @@ open class NetworkModule {
         .add(PatientStatus.MoshiTypeAdapter())
         .add(Answer.MoshiTypeAdapter())
         .add(Gender.MoshiTypeAdapter())
+        .add(PatientPhoneNumberType.MoshiTypeAdapter())
         .build()
 
     val patientPayloadNullSerializingAdapter = moshi.adapter(PatientPayload::class.java).serializeNulls()

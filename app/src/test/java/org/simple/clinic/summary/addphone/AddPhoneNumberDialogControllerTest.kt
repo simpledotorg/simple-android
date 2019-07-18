@@ -13,7 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientPhoneNumberType.MOBILE
+import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
@@ -61,7 +61,7 @@ class AddPhoneNumberDialogControllerTest {
     uiEvents.onNext(AddPhoneNumberDialogCreated(patientUuid))
     uiEvents.onNext(AddPhoneNumberSaveClicked(newNumber))
 
-    verify(repository).createPhoneNumberForPatient(patientUuid, newNumber, phoneNumberType = MOBILE, active = true)
+    verify(repository).createPhoneNumberForPatient(patientUuid, newNumber, phoneNumberType = Mobile, active = true)
   }
 
   @Test

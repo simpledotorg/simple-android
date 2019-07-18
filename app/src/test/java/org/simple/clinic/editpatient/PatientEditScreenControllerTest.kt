@@ -696,7 +696,7 @@ class PatientEditScreenControllerTest {
           verify(patientRepository).createPhoneNumberForPatient(
               patientUuid = expectedSavedPatientPhoneNumber.patientUuid,
               number = expectedSavedPatientPhoneNumber.number,
-              phoneNumberType = PatientPhoneNumberType.MOBILE,
+              phoneNumberType = PatientPhoneNumberType.Mobile,
               active = true
           )
         } else {

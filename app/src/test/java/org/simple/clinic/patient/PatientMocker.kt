@@ -7,10 +7,10 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.home.overdue.OverdueAppointment
 import org.simple.clinic.location.Coordinates
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.Answer
 import org.simple.clinic.medicalhistory.Answer.No
 import org.simple.clinic.medicalhistory.Answer.Yes
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.patient.businessid.BusinessId
@@ -20,6 +20,7 @@ import org.simple.clinic.user.LoggedInUserPayload
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.randomGender
+import org.simple.clinic.util.randomPatientPhoneNumberType
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -398,7 +399,7 @@ object PatientMocker {
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       number: String = "1111111111",
-      phoneType: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
+      phoneType: PatientPhoneNumberType = randomPatientPhoneNumberType(),
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),

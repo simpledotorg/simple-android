@@ -14,6 +14,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
+import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -2601,7 +2602,7 @@ class DatabaseMigrationAndroidTest {
       """).use { cursor ->
         cursor.moveToNext()
 
-        assertThat(cursor.getString(cursor.getColumnIndex("gender")))
+        assertThat(cursor.string("gender"))
             .isEqualTo(expectedGenderString)
       }
     }
@@ -2619,6 +2620,69 @@ class DatabaseMigrationAndroidTest {
     verifyPatient(dbV41, maleUuid, "male")
     verifyPatient(dbV41, femaleUuid, "female")
     verifyPatient(dbV41, transgenderUuid, "transgender")
+  }
+
+  @Test
+  fun migrate_patient_phone_number_type_from_41_to_42() {
+    fun savePatientPhoneNumber(db: SupportSQLiteDatabase, phoneNumberUuid: UUID, phoneNumberType: String) {
+      val addressUuid = UUID.randomUUID()
+      val patientUuid = UUID.randomUUID()
+
+      db.execSQL("""
+        INSERT INTO "PatientAddress" VALUES(
+          '$addressUuid',
+          'colony-or-village',
+          'district',
+          'state',
+          'country',
+          '2018-09-25T11:20:42.008Z',
+          '2018-09-25T11:20:42.008Z',
+          NULL
+        )
+      """)
+
+      db.execSQL("""
+        INSERT INTO "Patient" (
+            "uuid", "addressUuid", "fullName", "searchableName",
+            "gender", "dateOfBirth", "age_value", "age_updatedAt",
+            "age_computedDateOfBirth", "status", "createdAt",
+            "updatedAt", "deletedAt", "recordedAt", "syncStatus"
+        ) VALUES (
+            '$patientUuid', '$addressUuid', 'full-name', 'searchable-name',
+            'gender', 'date-of-birth', 'age-value', 'age-updated-at',
+            'age-computed-date-of-birth', 'status', 'created-at',
+            'updated-at', 'deleted-at', 'recorded-at', 'sync-status'
+        )
+      """)
+
+      db.execSQL("""
+        INSERT INTO "PatientPhoneNumber" VALUES(
+          '$phoneNumberUuid', '$patientUuid', 'number', '$phoneNumberType',
+          'true', '2018-09-25T11:20:42.008Z', '2018-09-25T11:20:42.008Z', NULL
+        )
+      """)
+    }
+
+    fun verifyPatientPhoneNumber(db: SupportSQLiteDatabase, phoneNumberUuid: UUID, expectedPhoneNumberType: String) {
+      db.query("""
+        SELECT * FROM "PatientPhoneNumber" WHERE "uuid" = '$phoneNumberUuid'
+      """).use { cursor ->
+        cursor.moveToNext()
+
+        assertThat(cursor.string("phoneType")).isEqualTo(expectedPhoneNumberType)
+      }
+    }
+
+    val mobileUuid = UUID.fromString("b2e3b63f-9b09-4b8d-bfa7-af2ac5972786")
+    val landlineUuid = UUID.fromString("c11af491-d125-45af-9b3c-aa73510960c3")
+
+    val dbV41 = helper.createDatabase(41)
+    savePatientPhoneNumber(dbV41, mobileUuid, "MOBILE")
+    savePatientPhoneNumber(dbV41, landlineUuid, "LANDLINE")
+
+    val dbV42 = helper.migrateTo(42)
+    verifyPatientPhoneNumber(dbV42, mobileUuid, "mobile")
+    verifyPatientPhoneNumber(dbV42, landlineUuid, "landline")
   }
 }
 

@@ -93,6 +93,10 @@ class PatientRepository @Inject constructor(
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
   }
 
+  fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
+    TODO("not implemented")
+  }
+
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }
 
   fun patient(uuid: UUID): Observable<Optional<Patient>> {

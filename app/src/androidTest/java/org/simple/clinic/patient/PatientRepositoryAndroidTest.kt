@@ -4,6 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Observable
+import io.reactivex.ObservableSource
+import io.reactivex.ObservableTransformer
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -268,7 +270,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .subscribe()
 
-    val combinedPatient = patientRepository.search(name = "kumar", sortByFacility = currentFacility)
+    val combinedPatient = patientRepository.search(name = "kumar", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer())
         .blockingFirst()
         .allPatientSearchResults()
         .first()
@@ -319,17 +321,17 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val search0 = patientRepository.search("Vinod", currentFacility).blockingFirst()
+    val search0 = patientRepository.search("Vinod", currentFacility, DontPartitionTransformer()).blockingFirst()
     assertThat(search0.allPatientSearchResults()).hasSize(0)
 
-    val search1 = patientRepository.search("Alok", currentFacility).blockingFirst()
+    val search1 = patientRepository.search("Alok", currentFacility, DontPartitionTransformer()).blockingFirst()
     val person1 = search1.allPatientSearchResults().first()
     assertThat(search1.allPatientSearchResults()).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search("ab", currentFacility).blockingFirst()
+    val search2 = patientRepository.search("ab", currentFacility, DontPartitionTransformer()).blockingFirst()
     val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
 
     assertThat(search2.allPatientSearchResults()).hasSize(expectedResultsInSearch2.size)
@@ -392,7 +394,7 @@ class PatientRepositoryAndroidTest {
     val patient3WithNoBps = createPatientProfile(fullName = "Patient with no BPs")
     patientRepository.save(listOf(patient3WithNoBps)).blockingAwait()
 
-    val searchResults = patientRepository.search("patient", currentFacility)
+    val searchResults = patientRepository.search("patient", currentFacility, DontPartitionTransformer())
         .blockingFirst()
         .allPatientSearchResults()
         .groupBy { it.uuid }
@@ -476,99 +478,19 @@ class PatientRepositoryAndroidTest {
   }
 
   @Test
-  fun patients_who_have_ever_visited_current_facility_should_be_present_at_the_top_when_searching() {
-    val facilities = facilityRepository.facilities().blockingFirst()
-    val currentFacility = facilityRepository.currentFacility(loggedInUser).blockingFirst()
-    val otherFacility = facilities.first { it != currentFacility }
-
-    facilityRepository.associateUserWithFacilities(loggedInUser, facilities.map { it.uuid }).blockingAwait()
-    facilityRepository.setCurrentFacility(loggedInUser, currentFacility).blockingAwait()
-
-    data class FacilityAndBloodPressureDeleted(val facility: Facility, val isBloodPressureDeleted: Boolean)
-
-    val data = listOf(
-        "Patient with one BP in other facility" to listOf(
-            FacilityAndBloodPressureDeleted(otherFacility, false)),
-        "Patient with one BP in current facility" to listOf(
-            FacilityAndBloodPressureDeleted(currentFacility, false)),
-        "Patient with two BPs in current facility" to listOf(
-            FacilityAndBloodPressureDeleted(currentFacility, false),
-            FacilityAndBloodPressureDeleted(currentFacility, false)),
-        "Patient with two BPs, latest in current facility" to listOf(
-            FacilityAndBloodPressureDeleted(otherFacility, false),
-            FacilityAndBloodPressureDeleted(currentFacility, false)),
-        "Patient with two BPs, latest in other facility" to listOf(
-            FacilityAndBloodPressureDeleted(currentFacility, false),
-            FacilityAndBloodPressureDeleted(otherFacility, false)),
-        "Patient with two BPs, latest in other facility deleted, older in current facility" to listOf(
-            FacilityAndBloodPressureDeleted(currentFacility, false),
-            FacilityAndBloodPressureDeleted(otherFacility, true)),
-        "Patient with two BPs, latest in current facility deleted, older in other facility" to listOf(
-            FacilityAndBloodPressureDeleted(otherFacility, false),
-            FacilityAndBloodPressureDeleted(currentFacility, true)),
-        "Patient with no BPs" to listOf())
-
-    data.forEach { (patientName, visitedFacilities) ->
-      val patientProfile = testData.patientProfile()
-          .let { profile ->
-            profile.copy(patient = profile.patient.copy(fullName = patientName, status = Active))
-          }
-
-      patientRepository.save(listOf(patientProfile)).blockingAwait()
-
-      // Record BPs in different facilities.
-      visitedFacilities.forEach { (facility, isBloodPressureDeleted) ->
-        val bloodPressureMeasurement = testData.bloodPressureMeasurement(
-            patientUuid = patientProfile.patient.uuid,
-            facilityUuid = facility.uuid,
-            deletedAt = if (isBloodPressureDeleted) Instant.now() else null)
-
-        bloodPressureRepository.save(listOf(bloodPressureMeasurement)).blockingAwait()
-      }
-    }
-
-    val searchResults = patientRepository.search("patient", currentFacility).blockingFirst()
-    assertThat(searchResults.allPatientSearchResults()).hasSize(data.size)
-
-    val patientsWhoHaveVisitedCurrentFacility = setOf(
-        "Patient with one BP in current facility",
-        "Patient with two BPs in current facility",
-        "Patient with two BPs, latest in current facility",
-        "Patient with two BPs, latest in other facility deleted, older in current facility",
-        "Patient with two BPs, latest in other facility")
-    val patientsWhoHaveNeverVisitedCurrentFacility = setOf(
-        "Patient with one BP in other facility",
-        "Patient with no BPs",
-        "Patient with two BPs, latest in current facility deleted, older in other facility")
-
-    val findIndexOfPatientInSearchResults: (String) -> Int = { patientName ->
-      searchResults.allPatientSearchResults().indexOfFirst { it.fullName == patientName }
-    }
-    val indicesOfVisitedCurrentFacilityPatientsInSearchResults = patientsWhoHaveVisitedCurrentFacility
-        .map(findIndexOfPatientInSearchResults)
-        .toSet()
-    val indicesOfNotVisitedCurrentFacilityPatientsInSearchResults = patientsWhoHaveNeverVisitedCurrentFacility
-        .map(findIndexOfPatientInSearchResults)
-        .toSet()
-
-    assertThat(indicesOfVisitedCurrentFacilityPatientsInSearchResults).isEqualTo(setOf(0, 1, 2, 3, 4))
-    assertThat(indicesOfNotVisitedCurrentFacilityPatientsInSearchResults).isEqualTo(setOf(5, 6, 7))
-  }
-
-  @Test
   fun when_patient_is_marked_dead_they_should_not_show_in_search_results() {
     val patient = patientRepository
         .saveOngoingEntry(testData.ongoingPatientEntry(fullName = "Ashok Kumar"))
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val searchResults = patientRepository.search(name = "Ashok", sortByFacility = currentFacility).blockingFirst()
+    val searchResults = patientRepository.search(name = "Ashok", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer()).blockingFirst()
     assertThat(searchResults.allPatientSearchResults()).isNotEmpty()
     assertThat(searchResults.allPatientSearchResults().first().fullName).isEqualTo("Ashok Kumar")
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok", sortByFacility = currentFacility).blockingFirst()
+    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer()).blockingFirst()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(searchResultsAfterUpdate.allPatientSearchResults()).isEmpty()
 
@@ -636,7 +558,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(
         patientRepository
-            .search(name = "ame", sortByFacility = currentFacility)
+            .search(name = "ame", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer())
             .blockingFirst()
             .allPatientSearchResults()
             .size
@@ -2075,5 +1997,13 @@ class PatientRepositoryAndroidTest {
         updatedAt = initialTime.plusSeconds(50)
     )
     verifyRecentPatientOrder(patient2, patient1)
+  }
+
+  class DontPartitionTransformer : ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
+
+    override fun apply(upstream: Observable<List<PatientSearchResult>>): ObservableSource<PatientSearchResults> {
+      return upstream
+          .map { PatientSearchResults(visitedCurrentFacility = it, notVisitedCurrentFacility = emptyList()) }
+    }
   }
 }

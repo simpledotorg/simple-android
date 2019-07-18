@@ -61,10 +61,9 @@ class PatientSearchViewController @Inject constructor(
           val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
 
           val searchResults = currentFacilityStream.switchMap { facility ->
-            patientRepository.search(
-                name = patientName,
-                partitionTransformer = PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility)
-            )
+            patientRepository
+                .search(name = patientName)
+                .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility))
           }
 
           Observables.combineLatest(searchResults, currentFacilityStream)

@@ -1,7 +1,5 @@
 package org.simple.clinic.searchresultsview
 
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -49,12 +47,15 @@ class PatientSearchViewControllerTest {
   private val currentFacility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
 
+  private val patientName = "name"
+
   @Before
   fun setUp() {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
+    whenever(patientRepository.search(patientName, currentFacility)).thenReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -67,12 +68,12 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = listOf(patientSearchResult1),
         notVisitedCurrentFacility = listOf(patientSearchResult2)
     )
-    whenever(patientRepository.search(any(), eq(currentFacility))).thenReturn(Observable.just(patientSearchResults))
+    whenever(patientRepository.search(patientName, currentFacility))
+        .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
     uiEvents.onNext(SearchResultPatientName(patientName = "name"))
 
-    verify(patientRepository).search("name", currentFacility)
     verify(screen).updateSearchResults(listOf(
         InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultRow(
@@ -94,12 +95,12 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = emptyList()
     )
-    whenever(patientRepository.search(any(), eq(currentFacility))).thenReturn(Observable.just(emptySearchResults))
+    whenever(patientRepository.search(patientName, currentFacility))
+        .thenReturn(Observable.just(emptySearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
     uiEvents.onNext(SearchResultPatientName(patientName = "name"))
 
-    verify(patientRepository).search("name", currentFacility)
     verify(screen).updateSearchResults(emptyList())
     verify(screen).setEmptyStateVisible(true)
   }
@@ -113,12 +114,12 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),
         notVisitedCurrentFacility = emptyList()
     )
-    whenever(patientRepository.search(any(), eq(currentFacility))).thenReturn(Observable.just(patientSearchResults))
+    whenever(patientRepository.search(patientName, currentFacility))
+        .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
     uiEvents.onNext(SearchResultPatientName(patientName = "name"))
 
-    verify(patientRepository).search("name", currentFacility)
     verify(screen).updateSearchResults(listOf(
         InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultRow(
@@ -142,12 +143,12 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2)
     )
-    whenever(patientRepository.search(any(), eq(currentFacility))).thenReturn(Observable.just(patientSearchResults))
+    whenever(patientRepository.search(patientName, currentFacility))
+        .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
     uiEvents.onNext(SearchResultPatientName(patientName = "name"))
 
-    verify(patientRepository).search("name", currentFacility)
     verify(screen).updateSearchResults(listOf(
         InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultsItemType.NoPatientsInCurrentFacility,
@@ -175,8 +176,6 @@ class PatientSearchViewControllerTest {
 
   @Test
   fun `when register new patient clicked then RegisterNewPatient event should be emitted`() {
-    whenever(patientRepository.search(any(), eq(currentFacility))).thenReturn(Observable.empty())
-
     uiEvents.onNext(SearchResultsViewCreated)
     uiEvents.onNext(SearchResultPatientName(patientName = "name"))
     uiEvents.onNext(RegisterNewPatientClicked)

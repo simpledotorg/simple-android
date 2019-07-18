@@ -56,7 +56,7 @@ class PatientSearchViewControllerTest {
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any())).thenReturn(Observable.never())
+    whenever(patientRepository.search(eq(patientName), any())).thenReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -69,7 +69,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = listOf(patientSearchResult1),
         notVisitedCurrentFacility = listOf(patientSearchResult2)
     )
-    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
+    whenever(patientRepository.search(eq(patientName), any()))
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
@@ -96,7 +96,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = emptyList()
     )
-    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
+    whenever(patientRepository.search(eq(patientName), any()))
         .thenReturn(Observable.just(emptySearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
@@ -115,7 +115,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),
         notVisitedCurrentFacility = emptyList()
     )
-    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
+    whenever(patientRepository.search(eq(patientName), any()))
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
@@ -144,7 +144,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2)
     )
-    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
+    whenever(patientRepository.search(eq(patientName), any()))
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)

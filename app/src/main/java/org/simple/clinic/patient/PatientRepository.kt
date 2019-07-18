@@ -97,47 +97,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun sortByVisitedFacility(facility: Facility): ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
-    return ObservableTransformer { upstream ->
-      val searchResults = upstream.replay().refCount()
-
-      val patientToFacilityUuidStream = searchResults
-          .map { patients -> patients.map { it.uuid } }
-          .switchMap {
-            database
-                .bloodPressureDao()
-                .patientToFacilityIds(it)
-                .toObservable()
-          }
-
-      Observables.combineLatest(searchResults, patientToFacilityUuidStream)
-          .map { (patients, patientToFacilities) ->
-            val patientsToVisitedFacilities = mapPatientsToVisitedFacilities(patientToFacilities)
-
-            val hasVisitedCurrentFacility: (PatientSearchResult) -> Boolean = { searchResult ->
-              val patientUuid = searchResult.uuid
-              patientsToVisitedFacilities[patientUuid]?.contains(facility.uuid) ?: false
-            }
-
-            val (patientsInCurrentFacility, patientsInOtherFacility) = patients.partition(hasVisitedCurrentFacility)
-
-            PatientSearchResults(
-                visitedCurrentFacility = patientsInCurrentFacility,
-                notVisitedCurrentFacility = patientsInOtherFacility
-            )
-          }
-    }
-  }
-
-  private fun mapPatientsToVisitedFacilities(patientToFacilities: List<PatientToFacilityId>): Map<PatientUuid, Set<FacilityUuid>> {
-    return patientToFacilities
-        .fold(mutableMapOf<PatientUuid, MutableSet<FacilityUuid>>()) { facilityUuids, (patientUuid, facilityUuid) ->
-          if (patientUuid !in facilityUuids) {
-            facilityUuids[patientUuid] = mutableSetOf()
-          }
-
-          facilityUuids[patientUuid]?.add(facilityUuid)
-          facilityUuids
-        }
+    return PartitionSearchResultsByVisitedFacility(database.bloodPressureDao(), facility)
   }
 
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }

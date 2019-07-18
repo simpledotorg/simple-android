@@ -7,6 +7,7 @@
 ### Internal
 - Added forward compatibility support to MedicalHistory.Answer enum
 - Added forward compatibility support to Gender enum
+- Added forward compatibility support to PatientPhoneNumberType enum
 
 ### Fixes
 - Fix camera not getting released properly and causing memory leaks

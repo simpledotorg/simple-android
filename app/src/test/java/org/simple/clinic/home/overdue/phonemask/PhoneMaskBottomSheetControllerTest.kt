@@ -21,7 +21,6 @@ import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientPhoneNumber
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.phone.Dialer
 import org.simple.clinic.phone.Dialer.Automatic
 import org.simple.clinic.phone.Dialer.Manual
@@ -91,7 +90,7 @@ class PhoneMaskBottomSheetControllerTest {
     verify(screen).setupView(PatientDetails(
         phoneNumber = phoneNumber,
         name = name,
-        genderLetterRes = gender.displayLetterRes,
+        gender = gender,
         age = age
     ))
     verifyNoMoreInteractions(screen)
@@ -137,7 +136,7 @@ class PhoneMaskBottomSheetControllerTest {
     verify(screen).setupView(PatientDetails(
         phoneNumber = number,
         name = name,
-        genderLetterRes = gender.displayLetterRes,
+        gender = gender,
         age = age
     ))
     verify(screen).requestCallPermission()
@@ -181,7 +180,7 @@ class PhoneMaskBottomSheetControllerTest {
     verify(screen).setupView(PatientDetails(
         phoneNumber = number,
         name = name,
-        genderLetterRes = gender.displayLetterRes,
+        gender = gender,
         age = age
     ))
     verify(screen).requestCallPermission()
@@ -239,7 +238,7 @@ class PhoneMaskBottomSheetControllerTest {
     val expectedPatientDetails = PatientDetails(
         phoneNumber = number,
         name = patientName,
-        genderLetterRes = gender.displayLetterRes,
+        gender = gender,
         // Test UTC clock is set to EPOCH
         age = 30
     )

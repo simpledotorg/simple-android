@@ -14,6 +14,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.patient.displayLetterRes
 import org.simple.clinic.router.screen.ActivityPermissionResult
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
@@ -63,7 +64,7 @@ class PhoneMaskBottomSheet : BottomSheetActivity() {
   @SuppressLint("SetTextI18n")
   fun setupView(patient: PatientDetails) {
     patient.apply {
-      val genderLetter = resources.getString(genderLetterRes)
+      val genderLetter = resources.getString(gender.displayLetterRes)
       nameTextView.text = "$name, $genderLetter, $age"
       phoneNumberTextView.text = phoneNumber
     }

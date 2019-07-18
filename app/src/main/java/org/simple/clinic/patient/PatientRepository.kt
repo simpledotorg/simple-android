@@ -2,7 +2,6 @@ package org.simple.clinic.patient
 
 import io.reactivex.Completable
 import io.reactivex.Observable
-import io.reactivex.ObservableTransformer
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
@@ -56,17 +55,6 @@ class PatientRepository @Inject constructor(
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
-
-  @Deprecated(
-      message = "use search that returns search results",
-      replaceWith = ReplaceWith(expression = "search(name).compose(partitionTransformer)")
-  )
-  fun search(
-      name: String,
-      partitionTransformer: ObservableTransformer<List<PatientSearchResult>, PatientSearchResults>
-  ): Observable<PatientSearchResults> {
-    return search(name).compose(partitionTransformer)
-  }
 
   fun search(name: String): Observable<List<PatientSearchResult>> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)

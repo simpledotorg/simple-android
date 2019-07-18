@@ -64,7 +64,6 @@ class PatientRepository @Inject constructor(
     val fetchPatientNameAnalytics = "Fetch Name and Id"
     val fuzzyFilterPatientNameAnalytics = "Fuzzy Filtering By Name"
     val fetchPatientDetailsAnalytics = "Fetch Patient Details"
-    val sortByVisitedFacilityAnalytics = "Sort By Visited Facility"
 
     val patientUuidsMatchingName = database.patientSearchDao()
         .nameAndId(PatientStatus.Active)
@@ -93,10 +92,8 @@ class PatientRepository @Inject constructor(
             }
           }
         }
-        .doOnNext { timingTracker.start(sortByVisitedFacilityAnalytics) }
         .compose(sortByVisitedFacility(sortByFacility))
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
-        .doOnNext { timingTracker.stop(sortByVisitedFacilityAnalytics) }
   }
 
   private fun sortByVisitedFacility(facility: Facility): ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {

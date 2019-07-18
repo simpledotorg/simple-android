@@ -59,14 +59,6 @@ class PatientRepository @Inject constructor(
 
   fun search(
       name: String,
-      sortByFacility: Facility
-  ): Observable<PatientSearchResults> {
-    return search(name, sortByFacility, PartitionSearchResultsByVisitedFacility(database.bloodPressureDao(), facility = sortByFacility))
-  }
-
-  fun search(
-      name: String,
-      sortByFacility: Facility,
       partitionTransformer: ObservableTransformer<List<PatientSearchResult>, PatientSearchResults>
   ): Observable<PatientSearchResults> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)

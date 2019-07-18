@@ -270,7 +270,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .subscribe()
 
-    val combinedPatient = patientRepository.search(name = "kumar", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer())
+    val combinedPatient = patientRepository.search(name = "kumar", partitionTransformer = DontPartitionTransformer())
         .blockingFirst()
         .allPatientSearchResults()
         .first()
@@ -321,17 +321,17 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val search0 = patientRepository.search("Vinod", currentFacility, DontPartitionTransformer()).blockingFirst()
+    val search0 = patientRepository.search("Vinod", DontPartitionTransformer()).blockingFirst()
     assertThat(search0.allPatientSearchResults()).hasSize(0)
 
-    val search1 = patientRepository.search("Alok", currentFacility, DontPartitionTransformer()).blockingFirst()
+    val search1 = patientRepository.search("Alok", DontPartitionTransformer()).blockingFirst()
     val person1 = search1.allPatientSearchResults().first()
     assertThat(search1.allPatientSearchResults()).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search("ab", currentFacility, DontPartitionTransformer()).blockingFirst()
+    val search2 = patientRepository.search("ab", DontPartitionTransformer()).blockingFirst()
     val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
 
     assertThat(search2.allPatientSearchResults()).hasSize(expectedResultsInSearch2.size)
@@ -394,7 +394,7 @@ class PatientRepositoryAndroidTest {
     val patient3WithNoBps = createPatientProfile(fullName = "Patient with no BPs")
     patientRepository.save(listOf(patient3WithNoBps)).blockingAwait()
 
-    val searchResults = patientRepository.search("patient", currentFacility, DontPartitionTransformer())
+    val searchResults = patientRepository.search("patient", DontPartitionTransformer())
         .blockingFirst()
         .allPatientSearchResults()
         .groupBy { it.uuid }
@@ -484,13 +484,13 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val searchResults = patientRepository.search(name = "Ashok", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer()).blockingFirst()
+    val searchResults = patientRepository.search(name = "Ashok", partitionTransformer = DontPartitionTransformer()).blockingFirst()
     assertThat(searchResults.allPatientSearchResults()).isNotEmpty()
     assertThat(searchResults.allPatientSearchResults().first().fullName).isEqualTo("Ashok Kumar")
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer()).blockingFirst()
+    val searchResultsAfterUpdate = patientRepository.search(name = "Ashok", partitionTransformer = DontPartitionTransformer()).blockingFirst()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(searchResultsAfterUpdate.allPatientSearchResults()).isEmpty()
 
@@ -558,7 +558,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(
         patientRepository
-            .search(name = "ame", sortByFacility = currentFacility, partitionTransformer = DontPartitionTransformer())
+            .search(name = "ame", partitionTransformer = DontPartitionTransformer())
             .blockingFirst()
             .allPatientSearchResults()
             .size

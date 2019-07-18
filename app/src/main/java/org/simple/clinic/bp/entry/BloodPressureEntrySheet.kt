@@ -51,7 +51,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   private val diastolicEditText by bindView<EditTextWithBackspaceListener>(R.id.bloodpressureentry_diastolic)
   private val bpErrorTextView by bindView<TextView>(R.id.bloodpressureentry_bp_error)
   private val bpDateButton by bindView<Button>(R.id.bloodpressureentry_bp_date)
-  private val showBpImageButton by bindView<ImageButton>(R.id.bloodpressureentry_show_bp)
+  private val backImageButton by bindView<ImageButton>(R.id.bloodpressureentry_back_button)
   private val enterBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_enter_blood_pressure)
   private val editBloodPressureTitleTextView by bindView<TextView>(R.id.bloodpressureentry_edit_blood_pressure)
   private val removeBloodPressureButton by bindView<Button>(R.id.bloodpressureentry_remove)
@@ -104,7 +104,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
             diastolicBackspaceClicks(),
             removeClicks(),
             bpDateClicks(),
-            showBpClicks(),
+            backClicks(),
             hardwareBackPresses(),
             screenTypeChanges(),
             dayTextChanges(),
@@ -170,9 +170,9 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
           .clicks(bpDateButton)
           .map { BloodPressureDateClicked }
 
-  private fun showBpClicks(): Observable<UiEvent> =
+  private fun backClicks(): Observable<UiEvent> =
       RxView
-          .clicks(showBpImageButton)
+          .clicks(backImageButton)
           .map { BloodPressureShowBpClicked }
 
   private fun hardwareBackPresses(): Observable<UiEvent> {

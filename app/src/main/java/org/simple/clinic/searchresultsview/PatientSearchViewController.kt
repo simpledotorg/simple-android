@@ -63,7 +63,6 @@ class PatientSearchViewController @Inject constructor(
           val searchResults = currentFacilityStream.switchMap { facility ->
             patientRepository.search(
                 name = patientName,
-                sortByFacility = facility,
                 partitionTransformer = PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility)
             )
           }

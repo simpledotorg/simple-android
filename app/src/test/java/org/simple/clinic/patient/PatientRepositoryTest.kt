@@ -265,7 +265,7 @@ class PatientRepositoryTest {
         .thenReturn(Single.just(filteredUuids.map { PatientMocker.patientSearchResult(uuid = it) }))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    repository.search("name", facility, DontPartitionTransformer()).blockingFirst()
+    repository.search("name", DontPartitionTransformer()).blockingFirst()
 
     if (shouldQueryFilteredIds) {
       verify(patientSearchResultDao, atLeastOnce()).searchByIds(filteredUuids, PatientStatus.Active)
@@ -298,7 +298,7 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    val actualResults = repository.search("name", facility, DontPartitionTransformer()).blockingFirst().run {
+    val actualResults = repository.search("name", DontPartitionTransformer()).blockingFirst().run {
       visitedCurrentFacility + notVisitedCurrentFacility
     }
 
@@ -358,7 +358,7 @@ class PatientRepositoryTest {
         )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
-    repository.search("search", facility, DontPartitionTransformer()).blockingFirst()
+    repository.search("search", DontPartitionTransformer()).blockingFirst()
 
     val receivedEvents = reporter.receivedEvents
     assertThat(receivedEvents).hasSize(3)

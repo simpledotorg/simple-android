@@ -16,8 +16,9 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
+import org.simple.clinic.searchresultsview.SearchPatientBy
+import org.simple.clinic.searchresultsview.SearchPatientCriteria
 import org.simple.clinic.searchresultsview.SearchResultClicked
-import org.simple.clinic.searchresultsview.SearchResultPatientName
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -74,7 +75,14 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     return searchResultsView
         .upstreamUiEvents
         .ofType<RegisterNewPatient>()
-        .map { PatientSearchResultRegisterNewPatient(it.patientName) }
+        .map { PatientSearchResultRegisterNewPatient(extractPatientName(it.searchBy)) }
+  }
+
+  private fun extractPatientName(searchBy: SearchPatientBy): String {
+    return when (searchBy) {
+      is SearchPatientBy.Name -> searchBy.searchText
+      is SearchPatientBy.PhoneNumber -> TODO("not yet implemented")
+    }
   }
 
   private fun setupScreen() {
@@ -92,7 +100,9 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
 
   private fun screenCreates(): Observable<UiEvent> {
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
-    searchResultsView.downstreamUiEvents.onNext(SearchResultPatientName(screenKey.fullName))
+    searchResultsView
+        .downstreamUiEvents
+        .onNext(SearchPatientCriteria(SearchPatientBy.Name(screenKey.fullName)))
     return Observable.just(PatientSearchResultsScreenCreated(screenKey))
   }
 

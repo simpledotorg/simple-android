@@ -1,5 +1,7 @@
 package org.simple.clinic.searchresultsview
 
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.eq
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -22,7 +24,6 @@ import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFac
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.UiEvent
 
 @RunWith(JUnitParamsRunner::class)
@@ -31,17 +32,16 @@ class PatientSearchViewControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private val screen: PatientSearchView = mock()
-  private val patientRepository: PatientRepository = mock()
-  private val userSession: UserSession = mock()
-  private val facilityRepository: FacilityRepository = mock()
-  private val userClock: UserClock = mock()
+  private val screen = mock<PatientSearchView>()
+  private val patientRepository = mock<PatientRepository>()
+  private val userSession = mock<UserSession>()
+  private val facilityRepository = mock<FacilityRepository>()
 
   private val controller = PatientSearchViewController(
       patientRepository = patientRepository,
       userSession = userSession,
       facilityRepository = facilityRepository,
-      userClock = userClock
+      bloodPressureDao = mock()
   )
   private val uiEvents = PublishSubject.create<UiEvent>()
 
@@ -56,7 +56,7 @@ class PatientSearchViewControllerTest {
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-    whenever(patientRepository.search(patientName, currentFacility)).thenReturn(Observable.never())
+    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any())).thenReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -69,7 +69,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = listOf(patientSearchResult1),
         notVisitedCurrentFacility = listOf(patientSearchResult2)
     )
-    whenever(patientRepository.search(patientName, currentFacility))
+    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
@@ -96,7 +96,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = emptyList()
     )
-    whenever(patientRepository.search(patientName, currentFacility))
+    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
         .thenReturn(Observable.just(emptySearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
@@ -115,7 +115,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2),
         notVisitedCurrentFacility = emptyList()
     )
-    whenever(patientRepository.search(patientName, currentFacility))
+    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)
@@ -144,7 +144,7 @@ class PatientSearchViewControllerTest {
         visitedCurrentFacility = emptyList(),
         notVisitedCurrentFacility = listOf(patientSearchResult1, patientSearchResult2)
     )
-    whenever(patientRepository.search(patientName, currentFacility))
+    whenever(patientRepository.search(eq(patientName), eq(currentFacility), any()))
         .thenReturn(Observable.just(patientSearchResults))
 
     uiEvents.onNext(SearchResultsViewCreated)

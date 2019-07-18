@@ -10,8 +10,10 @@ import io.reactivex.rxkotlin.withLatestFrom
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.PartitionSearchResultsByVisitedFacility
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
@@ -19,7 +21,6 @@ import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCur
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
 import org.simple.clinic.user.UserSession
-import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -30,7 +31,7 @@ class PatientSearchViewController @Inject constructor(
     private val patientRepository: PatientRepository,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository,
-    val userClock: UserClock
+    private val bloodPressureDao: BloodPressureMeasurement.RoomDao
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -60,7 +61,11 @@ class PatientSearchViewController @Inject constructor(
           val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
 
           val searchResults = currentFacilityStream.switchMap { facility ->
-            patientRepository.search(patientName, facility)
+            patientRepository.search(
+                name = patientName,
+                sortByFacility = facility,
+                partitionTransformer = PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility)
+            )
           }
 
           Observables.combineLatest(searchResults, currentFacilityStream)

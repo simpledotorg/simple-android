@@ -10,8 +10,8 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPayload
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.location.Coordinates
-import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.Answer
+import org.simple.clinic.medicalhistory.MedicalHistory
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
@@ -49,6 +49,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomMedicalHistoryAnswer
+import org.simple.clinic.util.randomPatientPhoneNumberType
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
@@ -138,7 +139,7 @@ class TestData @Inject constructor(
       uuid: UUID = UUID.randomUUID(),
       patientUuid: UUID = UUID.randomUUID(),
       number: String = faker.phoneNumber.phoneNumber(),
-      phoneType: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
+      phoneType: PatientPhoneNumberType = randomPatientPhoneNumberType(),
       active: Boolean = faker.bool.bool(),
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -264,7 +265,7 @@ class TestData @Inject constructor(
   fun phoneNumberPayload(
       uuid: UUID = UUID.randomUUID(),
       number: String = faker.phoneNumber.phoneNumber(),
-      type: PatientPhoneNumberType = randomOfEnum(PatientPhoneNumberType::class),
+      type: PatientPhoneNumberType = randomPatientPhoneNumberType(),
       active: Boolean = true,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -673,7 +674,7 @@ class TestData @Inject constructor(
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails(fullName, dateOfBirth, age, gender)
     val ongoingAddress = OngoingNewPatientEntry.Address(colony, district, state)
     val ongoingPhoneNumber = phone?.let {
-      OngoingNewPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.MOBILE, active = true)
+      OngoingNewPatientEntry.PhoneNumber(phone, PatientPhoneNumberType.Mobile, active = true)
     }
 
     return OngoingNewPatientEntry(

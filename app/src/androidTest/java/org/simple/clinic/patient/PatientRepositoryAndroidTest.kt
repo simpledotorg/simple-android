@@ -146,7 +146,7 @@ class PatientRepositoryAndroidTest {
   fun when_a_patient_with_phone_numbers_is_saved_then_it_should_be_correctly_stored_in_the_database() {
     val ongoingAddress = OngoingNewPatientEntry.Address("HSR Layout", "Bangalore South", "Karnataka")
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Ashok Kumar", "08/04/1985", null, Gender.Transgender)
-    val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber(number = "227788", type = PatientPhoneNumberType.LANDLINE)
+    val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber(number = "227788", type = PatientPhoneNumberType.Landline)
 
     val personalDetailsOnlyEntry = OngoingNewPatientEntry(personalDetails = ongoingPersonalDetails)
 
@@ -289,7 +289,7 @@ class PatientRepositoryAndroidTest {
   fun when_patients_are_present_then_search_should_correctly_find_them() {
     val ongoingPersonalDetails = OngoingNewPatientEntry.PersonalDetails("Abhay Kumar", "15/08/1950", null, Gender.Transgender)
     val ongoingAddress = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.MOBILE, active = true)
+    val ongoingPhoneNumber = OngoingNewPatientEntry.PhoneNumber("3914159", PatientPhoneNumberType.Mobile, active = true)
     val ongoingPatientEntry = OngoingNewPatientEntry(ongoingPersonalDetails, ongoingAddress, ongoingPhoneNumber)
     val abhayKumar = patientRepository.saveOngoingEntry(ongoingPatientEntry)
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
@@ -297,7 +297,7 @@ class PatientRepositoryAndroidTest {
 
     val opd2 = OngoingNewPatientEntry.PersonalDetails("Alok Kumar", "15/08/1940", null, Gender.Transgender)
     val opa2 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.MOBILE, active = true)
+    val opn2 = OngoingNewPatientEntry.PhoneNumber("3418959", PatientPhoneNumberType.Mobile, active = true)
     val ope2 = OngoingNewPatientEntry(opd2, opa2, opn2)
     patientRepository.saveOngoingEntry(ope2)
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
@@ -305,7 +305,7 @@ class PatientRepositoryAndroidTest {
 
     val opd3 = OngoingNewPatientEntry.PersonalDetails("Abhishek Kumar", null, "68", Gender.Transgender)
     val opa3 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.MOBILE, active = true)
+    val opn3 = OngoingNewPatientEntry.PhoneNumber("9989159", PatientPhoneNumberType.Mobile, active = true)
     val ope3 = OngoingNewPatientEntry(opd3, opa3, opn3)
     val abhishekKumar = patientRepository.saveOngoingEntry(ope3)
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
@@ -313,7 +313,7 @@ class PatientRepositoryAndroidTest {
 
     val opd4 = OngoingNewPatientEntry.PersonalDetails("Abshot Kumar", null, "67", Gender.Transgender)
     val opa4 = OngoingNewPatientEntry.Address("Arambol", "Arambol", "Goa")
-    val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.MOBILE, active = true)
+    val opn4 = OngoingNewPatientEntry.PhoneNumber("1991591", PatientPhoneNumberType.Mobile, active = true)
     val ope4 = OngoingNewPatientEntry(opd4, opa4, opn4)
     val abshotKumar = patientRepository.saveOngoingEntry(ope4)
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
@@ -851,14 +851,14 @@ class PatientRepositoryAndroidTest {
             testData.patientPhoneNumber(
                 patientUuid = originalSavedPatient.uuid,
                 number = "111111111",
-                phoneType = PatientPhoneNumberType.LANDLINE,
+                phoneType = PatientPhoneNumberType.Landline,
                 createdAt = Instant.now(clock),
                 updatedAt = Instant.now(clock)
             ),
             testData.patientPhoneNumber(
                 patientUuid = originalSavedPatient.uuid,
                 number = "2222222222",
-                phoneType = PatientPhoneNumberType.MOBILE,
+                phoneType = PatientPhoneNumberType.Mobile,
                 createdAt = Instant.now(clock),
                 updatedAt = Instant.now(clock)
             )
@@ -872,7 +872,7 @@ class PatientRepositoryAndroidTest {
     val updatedAfter = Duration.ofDays(1L)
     (clock as TestUtcClock).advanceBy(updatedAfter)
 
-    val phoneNumberToUpdate = patientProfile.phoneNumbers[1].copy(number = "12345678", phoneType = PatientPhoneNumberType.LANDLINE)
+    val phoneNumberToUpdate = patientProfile.phoneNumbers[1].copy(number = "12345678", phoneType = PatientPhoneNumberType.Landline)
 
     patientRepository.updatePhoneNumberForPatient(originalSavedPatient.uuid, phoneNumberToUpdate).blockingAwait()
 
@@ -885,7 +885,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(phoneNumber).isNotNull()
     assertThat(phoneNumber!!.number).isEqualTo("12345678")
-    assertThat(phoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.LANDLINE)
+    assertThat(phoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.Landline)
     assertThat(phoneNumber.updatedAt).isEqualTo(patientProfile.phoneNumbers[1].updatedAt.plus(updatedAfter))
     assertThat(phoneNumber.updatedAt).isNotEqualTo(phoneNumber.createdAt)
 
@@ -912,7 +912,7 @@ class PatientRepositoryAndroidTest {
             testData.patientPhoneNumber(
                 patientUuid = originalSavedPatient.uuid,
                 number = "111111111",
-                phoneType = PatientPhoneNumberType.LANDLINE,
+                phoneType = PatientPhoneNumberType.Landline,
                 createdAt = Instant.now(clock),
                 updatedAt = Instant.now(clock))),
         businessIds = emptyList())
@@ -926,7 +926,7 @@ class PatientRepositoryAndroidTest {
     patientRepository.createPhoneNumberForPatient(
         patientUuid = originalSavedPatient.uuid,
         number = "2222222222",
-        phoneNumberType = PatientPhoneNumberType.MOBILE,
+        phoneNumberType = PatientPhoneNumberType.Mobile,
         active = true
     ).blockingAwait()
 
@@ -943,7 +943,7 @@ class PatientRepositoryAndroidTest {
     assertThat(savedPhoneNumber.createdAt).isEqualTo(Instant.now(clock))
     assertThat(savedPhoneNumber.createdAt).isEqualTo(savedPhoneNumber.updatedAt)
     assertThat(savedPhoneNumber.number).isEqualTo("2222222222")
-    assertThat(savedPhoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.MOBILE)
+    assertThat(savedPhoneNumber.phoneType).isEqualTo(PatientPhoneNumberType.Mobile)
 
     val patient = patientRepository.patient(originalSavedPatient.uuid)
         .unwrapJust()

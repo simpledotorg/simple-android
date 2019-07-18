@@ -289,7 +289,7 @@ class PatientEditScreenController @Inject constructor(
 
           } else {
             patientRepository
-                .createPhoneNumberForPatient(patientUuid, entry.phoneNumber, phoneNumberType = PatientPhoneNumberType.MOBILE, active = true)
+                .createPhoneNumberForPatient(patientUuid, entry.phoneNumber, phoneNumberType = PatientPhoneNumberType.Mobile, active = true)
                 .toSingleDefault(true)
           }
         }

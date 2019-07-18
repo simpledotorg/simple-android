@@ -7,7 +7,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.patient.PatientPhoneNumberType.MOBILE
+import org.simple.clinic.patient.PatientPhoneNumberType.Mobile
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
@@ -58,7 +58,7 @@ class AddPhoneNumberDialogController @Inject constructor(
         .withLatestFrom(patientUuidStream)
         .flatMap { (newNumber, patientUuid) ->
           repository
-              .createPhoneNumberForPatient(patientUuid, newNumber, phoneNumberType = MOBILE, active = true)
+              .createPhoneNumberForPatient(patientUuid, newNumber, phoneNumberType = Mobile, active = true)
               .andThen(Observable.just({ ui: Ui -> ui.dismiss() }))
         }
 

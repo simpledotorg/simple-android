@@ -101,7 +101,7 @@ data class OngoingNewPatientEntry(
    */
   data class PersonalDetails(val fullName: String, val dateOfBirth: String?, val age: String?, val gender: Gender?)
 
-  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.MOBILE, val active: Boolean = true)
+  data class PhoneNumber(val number: String, val type: PatientPhoneNumberType = PatientPhoneNumberType.Mobile, val active: Boolean = true)
 
   data class Address(val colonyOrVillage: String, val district: String, val state: String)
 }

@@ -38,12 +38,13 @@ class PatientSearchViewController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        populateSearchResults(replayedEvents),
+        populateSearchResultsFromName(replayedEvents),
+        populateSearchResultsFromPhoneNumber(replayedEvents),
         openPatientSummary(replayedEvents),
         createNewPatient(replayedEvents))
   }
 
-  private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun populateSearchResultsFromName(events: Observable<UiEvent>): Observable<UiChange> {
     val patientNames = events
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
@@ -61,6 +62,40 @@ class PatientSearchViewController @Inject constructor(
           val searchResults = currentFacilityStream.switchMap { facility ->
             patientRepository
                 .search(name = patientName)
+                .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility))
+          }
+
+          Observables.combineLatest(searchResults, currentFacilityStream)
+              // We can't understand why, but search is occasionally
+              // running on the main thread. This is a temporary solution.
+              .subscribeOn(Schedulers.io())
+        }
+        .map { (results, currentFacility) ->
+          { ui: Ui ->
+            ui.updateSearchResults(generateListItems(results, currentFacility))
+            ui.setEmptyStateVisible(results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty())
+          }
+        }
+  }
+
+  private fun populateSearchResultsFromPhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
+    val searchByPhoneNumberStream = events
+        .ofType<SearchPatientCriteria>()
+        .map { it.searchPatientBy }
+        .ofType<SearchPatientBy.PhoneNumber>()
+        .map { it.searchText }
+
+    val viewCreated = events.ofType<SearchResultsViewCreated>()
+
+    return Observables.combineLatest(viewCreated, searchByPhoneNumberStream)
+        .flatMap { (_, phoneNumber) ->
+          val loggedInUserStream = userSession.requireLoggedInUser()
+
+          val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
+
+          val searchResults = currentFacilityStream.switchMap { facility ->
+            patientRepository
+                .searchByPhoneNumber(phoneNumber = phoneNumber)
                 .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility))
           }
 

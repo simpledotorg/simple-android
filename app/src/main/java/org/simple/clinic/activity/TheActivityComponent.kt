@@ -49,6 +49,7 @@ import org.simple.clinic.registration.location.RegistrationLocationPermissionScr
 import org.simple.clinic.registration.name.RegistrationFullNameScreen
 import org.simple.clinic.registration.phone.RegistrationPhoneScreen
 import org.simple.clinic.registration.pin.RegistrationPinScreen
+import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreen
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
@@ -125,6 +126,7 @@ interface TheActivityComponent {
   fun inject(target: PhoneMaskBottomSheet)
   fun inject(target: PatientSearchResultView)
   fun inject(target: AllPatientsInFacilityView)
+  fun inject(target: RegistrationLoadingScreen)
 
   @Subcomponent.Builder
   interface Builder {

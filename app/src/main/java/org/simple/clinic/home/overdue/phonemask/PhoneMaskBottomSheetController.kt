@@ -72,7 +72,7 @@ class PhoneMaskBottomSheetController @Inject constructor(
     return PatientDetails(
         phoneNumber = phoneNumber.number,
         name = patient.fullName,
-        genderLetterRes = patient.gender.displayLetterRes,
+        gender = patient.gender,
         age = ageValue(patient)
     )
   }

@@ -52,6 +52,7 @@ class PatientSearchViewControllerTest {
   private val user = PatientMocker.loggedInUser()
 
   private val patientName = "name"
+  private val phoneNumber: String = "123456"
 
   @Before
   fun setUp() {
@@ -60,6 +61,7 @@ class PatientSearchViewControllerTest {
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
     whenever(patientRepository.search(patientName)).thenReturn(Observable.never())
+    whenever(patientRepository.searchByPhoneNumber(phoneNumber)).thenReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -116,7 +118,7 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when there are patients only in current facility, then "Other Results" header should not be shown`() {
+  fun `when searching by name and there are patients only in current facility, then "Other Results" header should not be shown`() {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
@@ -150,7 +152,7 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when there are patients only in other facilities, then current facility header with "no results" should be shown`() {
+  fun `when searching by name and there are patients only in other facilities, then current facility header with "no results" should be shown`() {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
@@ -208,7 +210,129 @@ class PatientSearchViewControllerTest {
   private fun `params for search by parameters on register click`(): List<SearchPatientBy> {
     return listOf(
         SearchPatientBy.Name(searchText = patientName),
-        SearchPatientBy.PhoneNumber(searchText = "123456")
+        SearchPatientBy.PhoneNumber(searchText = phoneNumber)
     )
+  }
+
+  @Test
+  fun `when searching patients by phone returns results, the results should be displayed`() {
+    // given
+    val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
+    val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
+    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
+    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
+    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid1, patientUuid2)))
+        .thenReturn(Flowable.just(listOf(
+            PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
+            PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
+        )))
+    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+        .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
+
+    // when
+    uiEvents.onNext(SearchResultsViewCreated)
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
+
+    // then
+    verify(screen).updateSearchResults(listOf(
+        InCurrentFacilityHeader(facilityName = currentFacility.name),
+        SearchResultRow(
+            searchResult = patientSearchResult1,
+            currentFacility = currentFacility
+        ),
+        NotInCurrentFacilityHeader,
+        SearchResultRow(
+            searchResult = patientSearchResult2,
+            currentFacility = currentFacility
+        )
+    ))
+    verify(screen).setEmptyStateVisible(false)
+  }
+
+  @Test
+  fun `when searching patients by phone returns no results, the empty state should be displayed`() {
+    // given
+    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+        .thenReturn(Observable.just(emptyList()))
+    whenever(bloodPressureDao.patientToFacilityIds(emptyList()))
+        .thenReturn(Flowable.just(emptyList()))
+
+    // when
+    uiEvents.onNext(SearchResultsViewCreated)
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
+
+    // then
+    verify(screen).updateSearchResults(emptyList())
+    verify(screen).setEmptyStateVisible(true)
+  }
+
+  @Test
+  fun `when searching by phone and there are patients only in current facility, then "Other Results" header should not be shown`() {
+    // given
+    val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
+    val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
+    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
+    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
+    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid1, patientUuid2)))
+        .thenReturn(Flowable.just(listOf(
+            PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
+            PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = currentFacility.uuid)
+        )))
+    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+        .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
+
+    // when
+    uiEvents.onNext(SearchResultsViewCreated)
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
+
+    // then
+    verify(screen).updateSearchResults(listOf(
+        InCurrentFacilityHeader(facilityName = currentFacility.name),
+        SearchResultRow(
+            searchResult = patientSearchResult1,
+            currentFacility = currentFacility
+        ),
+        SearchResultRow(
+            searchResult = patientSearchResult2,
+            currentFacility = currentFacility
+        )
+    ))
+    verify(screen).setEmptyStateVisible(false)
+  }
+
+  @Test
+  fun `when searching by phone and there are patients only in other facilities, then current facility header with "no results" should be shown`() {
+    // given
+    val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
+    val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
+    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
+    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
+    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid1, patientUuid2)))
+        .thenReturn(Flowable.just(listOf(
+            PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = otherFacility.uuid),
+            PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
+        )))
+    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+        .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
+
+    // then
+    uiEvents.onNext(SearchResultsViewCreated)
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
+
+    // then
+    verify(screen).updateSearchResults(listOf(
+        InCurrentFacilityHeader(facilityName = currentFacility.name),
+        SearchResultsItemType.NoPatientsInCurrentFacility,
+        NotInCurrentFacilityHeader,
+        SearchResultRow(
+            searchResult = patientSearchResult1,
+            currentFacility = currentFacility
+        ),
+        SearchResultRow(
+            searchResult = patientSearchResult2,
+            currentFacility = currentFacility
+        )
+    ))
+    verify(screen).setEmptyStateVisible(false)
   }
 }

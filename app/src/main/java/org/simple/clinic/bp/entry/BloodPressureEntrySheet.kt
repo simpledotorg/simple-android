@@ -43,7 +43,7 @@ class BloodPressureEntrySheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: BloodPressureEntrySheetController
 
-  @field:[Inject Named("bp_entry")]
+  @Inject
   lateinit var dateFormatter: DateTimeFormatter
 
   private val rootLayout by bindView<LinearLayoutWithPreImeKeyEventListener>(R.id.bloodpressureentry_root)

@@ -14,6 +14,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.allpatientsinfacility.di.AllPatientsInFacilityModule
 import org.simple.clinic.bp.entry.BloodPressureEntrySheet
 import org.simple.clinic.bp.entry.ConfirmRemoveBloodPressureDialog
+import org.simple.clinic.bp.entry.di.BloodPressureEntryModule
 import org.simple.clinic.drugs.selection.PrescribedDrugScreen
 import org.simple.clinic.drugs.selection.dosage.DosagePickerSheet
 import org.simple.clinic.drugs.selection.entry.CustomPrescriptionEntrySheet
@@ -141,7 +142,8 @@ interface TheActivityComponent {
 @Module(includes = [
   PatientsModule::class,
   SearchResultsModule::class,
-  AllPatientsInFacilityModule::class
+  AllPatientsInFacilityModule::class,
+  BloodPressureEntryModule::class
 ])
 class TheActivityModule {
 

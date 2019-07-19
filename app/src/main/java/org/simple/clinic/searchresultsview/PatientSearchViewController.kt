@@ -13,9 +13,7 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.patient.PartitionSearchResultsByVisitedFacility
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSearchResults
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader

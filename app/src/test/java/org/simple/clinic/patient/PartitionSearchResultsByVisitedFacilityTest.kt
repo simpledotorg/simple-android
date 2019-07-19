@@ -7,6 +7,8 @@ import io.reactivex.Observable
 import org.junit.Test
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.PatientToFacilityId
+import org.simple.clinic.searchresultsview.PartitionSearchResultsByVisitedFacility
+import org.simple.clinic.searchresultsview.PatientSearchResults
 import java.util.UUID
 
 class PartitionSearchResultsByVisitedFacilityTest {

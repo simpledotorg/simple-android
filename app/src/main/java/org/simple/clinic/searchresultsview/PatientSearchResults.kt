@@ -1,8 +1,8 @@
-package org.simple.clinic.patient
+package org.simple.clinic.searchresultsview
+
+import org.simple.clinic.patient.PatientSearchResult
 
 data class PatientSearchResults(
     val visitedCurrentFacility: List<PatientSearchResult>,
     val notVisitedCurrentFacility: List<PatientSearchResult>
 )
-
-fun PatientSearchResults.allPatientSearchResults() = visitedCurrentFacility + notVisitedCurrentFacility

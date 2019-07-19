@@ -7,6 +7,9 @@ import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.home.HomeScreenKey
+import org.simple.clinic.router.screen.RouterDirection
+import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -16,6 +19,9 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
 
   @Inject
   lateinit var controller: RegistrationLoadingScreenController
+
+  @Inject
+  lateinit var screenRouter: ScreenRouter
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -31,7 +37,7 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
   }
 
   fun openHomeScreen() {
-    TODO("not implemented")
+    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 
   fun showError() {

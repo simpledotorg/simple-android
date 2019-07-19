@@ -263,11 +263,14 @@ class UserSession @Inject constructor(
         .flatMap { registrationApi.createUser(it) }
         .flatMap {
           storeUserAndAccessToken(it)
-              .toSingleDefault(RegistrationResult.Success() as RegistrationResult)
+              .toSingleDefault(RegistrationResult.Success as RegistrationResult)
         }
         .onErrorReturn { e ->
           Timber.e(e)
-          RegistrationResult.Error()
+          when (e) {
+            is IOException -> RegistrationResult.NetworkError
+            else -> RegistrationResult.UnexpectedError
+          }
         }
         .doOnSuccess { Timber.i("Registration result: $it") }
   }

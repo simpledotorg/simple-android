@@ -2,7 +2,9 @@ package org.simple.clinic.registration
 
 sealed class RegistrationResult {
 
-  class Success : RegistrationResult()
+  object Success : RegistrationResult()
 
-  class Error : RegistrationResult()
+  object UnexpectedError : RegistrationResult()
+
+  object NetworkError : RegistrationResult()
 }

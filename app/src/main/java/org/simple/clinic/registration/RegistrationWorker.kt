@@ -22,7 +22,7 @@ class RegistrationWorker(context: Context, workerParams: WorkerParameters) : Wor
         .map { result ->
           when (result) {
             is RegistrationResult.Success -> Result.success()
-            is RegistrationResult.Error -> Result.retry()
+            is RegistrationResult.UnexpectedError, RegistrationResult.NetworkError -> Result.retry()
           }
         }
         .blockingGet()

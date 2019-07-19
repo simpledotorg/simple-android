@@ -38,3 +38,4 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
     TODO("not implemented")
   }
 }
+ 

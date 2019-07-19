@@ -30,8 +30,6 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.overdue.communication.Communication
-import org.simple.clinic.overdue.communication.CommunicationRepository
 import org.simple.clinic.patient.PatientStatus.Active
 import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.PatientStatus.Inactive
@@ -75,9 +73,6 @@ class PatientRepositoryAndroidTest {
 
   @Inject
   lateinit var appointmentRepository: AppointmentRepository
-
-  @Inject
-  lateinit var communicationRepository: CommunicationRepository
 
   @Inject
   lateinit var medicalHistoryRepository: MedicalHistoryRepository
@@ -423,7 +418,6 @@ class PatientRepositoryAndroidTest {
     val appointmentPayloads = rangeOfRecords.map { testData.appointmentPayload(patientUuid = patientUuid) }
 
     val appointmentUuid = appointmentPayloads.first().uuid
-    val communicationPayloads = rangeOfRecords.map { testData.communicationPayload(appointmentUuid = appointmentUuid) }
     val medicalHistoryPayloads = rangeOfRecords.map { testData.medicalHistoryPayload(patientUuid = patientUuid) }
 
     Completable.mergeArray(
@@ -431,7 +425,6 @@ class PatientRepositoryAndroidTest {
         bloodPressureRepository.mergeWithLocalData(bloodPressurePayloads),
         prescriptionRepository.mergeWithLocalData(prescriptionPayloads),
         appointmentRepository.mergeWithLocalData(appointmentPayloads),
-        communicationRepository.mergeWithLocalData(communicationPayloads),
         medicalHistoryRepository.mergeWithLocalData(medicalHistoryPayloads)
     ).blockingAwait()
 
@@ -451,7 +444,6 @@ class PatientRepositoryAndroidTest {
     assertThat(database.userDao().userImmediate()).isNotNull()
     assertThat(database.userFacilityMappingDao().mappingsForUser(user.uuid).blockingFirst()).isNotEmpty()
     assertThat(database.appointmentDao().count().blockingFirst()).isGreaterThan(0)
-    assertThat(database.communicationDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isGreaterThan(0)
     assertThat(reportsFile!!.exists()).isTrue()
 
@@ -464,7 +456,6 @@ class PatientRepositoryAndroidTest {
     assertThat(database.bloodPressureDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.prescriptionDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.appointmentDao().count().blockingFirst()).isEqualTo(0)
-    assertThat(database.communicationDao().count().blockingFirst()).isEqualTo(0)
     assertThat(database.medicalHistoryDao().count().blockingFirst()).isEqualTo(0)
     assertThat(reportsFile.exists()).isFalse()
 
@@ -1165,54 +1156,6 @@ class PatientRepositoryAndroidTest {
           updatedAt = createdAt
       )
     }
-  }
-
-  @Test
-  fun verify_communications_do_not_affect_recent_patients() {
-    val facilityUuid = UUID.randomUUID()
-    val appointmentUuid1 = UUID.randomUUID()
-    val recentPatient1 = savePatientWithAppointment(
-        appointmentUuid = appointmentUuid1,
-        facilityUuid = facilityUuid
-    )
-    val appointmentUuid2 = UUID.randomUUID()
-    val recentPatient2 = savePatientWithAppointment(
-        appointmentUuid = appointmentUuid2,
-        facilityUuid = facilityUuid
-    )
-    val appointmentUuid3 = UUID.randomUUID()
-    val recentPatient3 = savePatientWithAppointment(
-        appointmentUuid = appointmentUuid3,
-        facilityUuid = facilityUuid
-    )
-
-    saveCommunication(appointmentUuid = appointmentUuid1)
-    saveCommunication(appointmentUuid = appointmentUuid2)
-    saveCommunication(
-        appointmentUuid = appointmentUuid3,
-        deletedAt = Instant.now()
-    )
-
-    val recentPatients = patientRepository
-        .recentPatients(facilityUuid)
-        .blockingFirst()
-    assertThat(recentPatients).isEqualTo(listOf(
-        recentPatient3,
-        recentPatient2,
-        recentPatient1
-    ))
-  }
-
-  private fun saveCommunication(
-      appointmentUuid: UUID,
-      deletedAt: Instant? = null
-  ): Communication {
-    val communication = testData.communication(
-        appointmentUuid = appointmentUuid,
-        deletedAt = deletedAt
-    )
-    database.communicationDao().save(listOf(communication))
-    return communication
   }
 
   @Test

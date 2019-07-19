@@ -16,7 +16,6 @@ import org.simple.clinic.medicalhistory.MedicalHistoryRepositoryAndroidTest
 import org.simple.clinic.medicalhistory.MedicalHistorySyncAndroidTest
 import org.simple.clinic.overdue.AppointmentRepositoryAndroidTest
 import org.simple.clinic.overdue.AppointmentSyncAndroidTest
-import org.simple.clinic.overdue.communication.CommunicationRepositoryAndroidTest
 import org.simple.clinic.patient.PatientRepositoryAndroidTest
 import org.simple.clinic.patient.PatientSyncAndroidTest
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapterAndroidTest
@@ -50,7 +49,6 @@ interface TestAppComponent : AppComponent {
   fun inject(target: UserDaoAndroidTest)
   fun inject(target: AppointmentSyncAndroidTest)
   fun inject(target: AppointmentRepositoryAndroidTest)
-  fun inject(target: CommunicationRepositoryAndroidTest)
   fun inject(target: AuthenticationRule)
   fun inject(target: MedicalHistorySyncAndroidTest)
   fun inject(target: MedicalHistoryRepositoryAndroidTest)

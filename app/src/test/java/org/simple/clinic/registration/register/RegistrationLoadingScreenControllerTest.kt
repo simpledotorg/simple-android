@@ -12,7 +12,9 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.registration.RegistrationResult
-import org.simple.clinic.registration.RegistrationResult.*
+import org.simple.clinic.registration.RegistrationResult.NetworkError
+import org.simple.clinic.registration.RegistrationResult.Success
+import org.simple.clinic.registration.RegistrationResult.UnexpectedError
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -45,8 +47,8 @@ class RegistrationLoadingScreenControllerTest {
     verify(userSession).register()
     when (results) {
       Success -> verify(screen).openHomeScreen()
-      NetworkError -> verify(screen).showError()
-      UnexpectedError -> verify(screen).showError()
+      NetworkError -> verify(screen).showNetworkError()
+      UnexpectedError -> verify(screen).showUnexpectedError()
     }
     verifyNoMoreInteractions(screen)
   }

@@ -426,7 +426,6 @@ class PatientRepository @Inject constructor(
             database.bloodPressureDao().clearData()
             database.prescriptionDao().clearData()
             database.appointmentDao().clear()
-            database.communicationDao().clear()
             database.medicalHistoryDao().clear()
           }
         }

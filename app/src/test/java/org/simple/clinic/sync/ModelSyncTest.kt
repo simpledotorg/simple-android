@@ -19,7 +19,6 @@ import org.simple.clinic.drugs.sync.PrescriptionSync
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentSync
-import org.simple.clinic.overdue.communication.CommunicationSync
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.protocol.sync.ProtocolSync
 import org.simple.clinic.sync.ModelSyncTest.SyncOperation.PULL
@@ -86,17 +85,6 @@ class ModelSyncTest {
                   userSession = userSession,
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider)
-            },
-            setOf(PUSH, PULL)),
-        listOf<Any>(
-            { syncCoordinator: SyncCoordinator, userSession: UserSession ->
-              CommunicationSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  api = mock(),
-                  configProvider = syncConfigProvider,
-                  userSession = userSession,
-                  lastPullToken = mock())
             },
             setOf(PUSH, PULL)),
         listOf<Any>(
@@ -277,17 +265,6 @@ class ModelSyncTest {
             shouldPushHappen = false),
         testCase(
             modelSyncProvider = { syncCoordinator, userSession ->
-              CommunicationSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  api = mock(),
-                  lastPullToken = mock(),
-                  configProvider = syncConfigProvider,
-                  userSession = userSession)
-            },
-            shouldPushHappen = false),
-        testCase(
-            modelSyncProvider = { syncCoordinator, userSession ->
               MedicalHistorySync(
                   syncCoordinator = syncCoordinator,
                   repository = mock(),
@@ -402,17 +379,6 @@ class ModelSyncTest {
                   userSession = userSession,
                   lastPullToken = mock(),
                   configProvider = syncConfigProvider)
-            },
-            shouldPullHappen = false),
-        testCase(
-            modelSyncProvider = { syncCoordinator, userSession ->
-              CommunicationSync(
-                  syncCoordinator = syncCoordinator,
-                  repository = mock(),
-                  api = mock(),
-                  lastPullToken = mock(),
-                  configProvider = syncConfigProvider,
-                  userSession = userSession)
             },
             shouldPullHappen = false),
         testCase(

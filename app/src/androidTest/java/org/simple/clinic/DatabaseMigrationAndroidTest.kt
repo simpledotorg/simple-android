@@ -14,7 +14,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.ExpectedException
 import org.junit.runner.RunWith
-import org.simple.clinic.patient.PatientPhoneNumberType
 import org.simple.clinic.storage.inTransaction
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
@@ -2683,6 +2682,15 @@ class DatabaseMigrationAndroidTest {
     val dbV42 = helper.migrateTo(42)
     verifyPatientPhoneNumber(dbV42, mobileUuid, "mobile")
     verifyPatientPhoneNumber(dbV42, landlineUuid, "landline")
+  }
+
+  @Test
+  fun drop_communication_table_from_42_to_43() {
+    val dbV42 = helper.createDatabase(42)
+    dbV42.assertTableExists("Communication")
+
+    val dbV43 = helper.migrateTo(43)
+    dbV43.assertTableDoesNotExist("Communication")
   }
 }
 

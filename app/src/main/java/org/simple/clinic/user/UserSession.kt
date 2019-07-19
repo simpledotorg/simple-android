@@ -83,7 +83,6 @@ class UserSession @Inject constructor(
     @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
     @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
     @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
-    @Named("last_communication_pull_token") private val communicationSyncPullToken: Preference<Optional<String>>,
     @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>,
     @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>
 ) {
@@ -463,7 +462,6 @@ class UserSession @Inject constructor(
           bpSyncPullToken.delete()
           prescriptionSyncPullToken.delete()
           appointmentSyncPullToken.delete()
-          communicationSyncPullToken.delete()
           medicalHistorySyncPullToken.delete()
         })
         .andThen(bruteForceProtection.resetFailedAttempts())

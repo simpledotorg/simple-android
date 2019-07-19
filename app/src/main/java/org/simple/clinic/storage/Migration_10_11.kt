@@ -1,9 +1,8 @@
 package org.simple.clinic.storage
 
-import androidx.sqlite.db.SupportSQLiteDatabase
 import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.overdue.communication.Communication
 
 /**
  * Renames 'id' -> 'uuid' in [Appointment] and [Communication]

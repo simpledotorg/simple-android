@@ -2,9 +2,12 @@ package org.simple.clinic.registration.register
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.LinearLayout
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
+import kotlinx.android.synthetic.main.screen_registration_loading.view.*
+import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.HomeScreenKey
@@ -41,11 +44,15 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
   }
 
   fun showNetworkError() {
-    TODO("not implemented")
+    errorTitle.text = resources.getString(R.string.registrationloader_error_internet_connection_title)
+    errorMessage.visibility = View.GONE
+    viewSwitcher.showNext()
   }
 
   fun showUnexpectedError() {
-    TODO("not implemented")
+    errorTitle.text = resources.getString(R.string.registrationloader_error_unexpected_title)
+    errorMessage.text = resources.getString(R.string.registrationloader_error_unexpected_message)
+    errorMessage.visibility = View.VISIBLE
+    viewSwitcher.showNext()
   }
 }
- 

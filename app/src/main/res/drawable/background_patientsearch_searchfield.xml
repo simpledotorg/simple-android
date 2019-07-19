@@ -2,9 +2,9 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
   android:shape="rectangle">
 
-  <corners android:radius="@dimen/findorregisterpatienttoolbar_bg_corners" />
+  <corners android:radius="@dimen/patientsearch_searchfield_bg_corners" />
 
   <stroke
-    android:width="@dimen/findorregisterpatienttoolbar_bg_stroke"
+    android:width="@dimen/patientsearch_searchfield_bg_stroke"
     android:color="@color/grey3" />
 </shape>

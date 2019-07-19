@@ -1,4 +1,4 @@
-package org.simple.clinic.patient
+package org.simple.clinic.searchresultsview
 
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
@@ -7,6 +7,9 @@ import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.patient.FacilityUuid
+import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.patient.PatientUuid
 
 class PartitionSearchResultsByVisitedFacility(
     private val bloodPressureDao: BloodPressureMeasurement.RoomDao,

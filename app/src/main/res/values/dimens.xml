@@ -47,8 +47,8 @@
 
   <dimen name="allpatientsinfacility_fastscrollpopup_size">48dp</dimen>
 
-  <dimen name="findorregisterpatienttoolbar_bg_corners">4dp</dimen>
-  <dimen name="findorregisterpatienttoolbar_bg_stroke">1dp</dimen>
+  <dimen name="patientsearch_searchfield_bg_corners">4dp</dimen>
+  <dimen name="patientsearch_searchfield_bg_stroke">1dp</dimen>
 
   <dimen name="addidtopatientsearch_searchfield_bg_corners">4dp</dimen>
 </resources>

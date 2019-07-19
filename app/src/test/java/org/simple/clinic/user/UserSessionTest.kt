@@ -99,7 +99,6 @@ class UserSessionTest {
 
   private val dataSync = mock<DataSync>()
   private val medicalHistoryPullToken = mock<Preference<Optional<String>>>()
-  private val communicationPullToken = mock<Preference<Optional<String>>>()
   private val appointmentPullToken = mock<Preference<Optional<String>>>()
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
   private val bpPullToken = mock<Preference<Optional<String>>>()
@@ -128,7 +127,6 @@ class UserSessionTest {
       bpSyncPullToken = bpPullToken,
       prescriptionSyncPullToken = prescriptionPullToken,
       appointmentSyncPullToken = appointmentPullToken,
-      communicationSyncPullToken = communicationPullToken,
       medicalHistorySyncPullToken = medicalHistoryPullToken,
       ongoingLoginEntryRepository = ongoingLoginEntryRepository,
       onboardingComplete = onboardingCompletePreference)
@@ -485,7 +483,6 @@ class UserSessionTest {
     verify(patientPullToken).delete()
     verify(bpPullToken).delete()
     verify(appointmentPullToken).delete()
-    verify(communicationPullToken).delete()
     verify(medicalHistoryPullToken).delete()
     verify(prescriptionPullToken).delete()
     assertThat(bruteForceReset).isTrue()

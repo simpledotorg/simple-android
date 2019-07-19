@@ -16,8 +16,6 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
 import org.simple.clinic.overdue.Appointment
 import org.simple.clinic.overdue.AppointmentCancelReason
 import org.simple.clinic.overdue.AppointmentPayload
-import org.simple.clinic.overdue.communication.Communication
-import org.simple.clinic.overdue.communication.CommunicationPayload
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.OngoingNewPatientEntry
@@ -555,50 +553,6 @@ class TestData @Inject constructor(
         remindOn = remindOn,
         agreedToVisit = agreedToVisit,
         appointmentType = appointmentType,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt)
-  }
-
-  fun communication(
-      syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
-      uuid: UUID = UUID.randomUUID(),
-      appointmentUuid: UUID = UUID.randomUUID(),
-      userUuid: UUID = qaUserUuid(),
-      type: Communication.Type = randomOfEnum(Communication.Type::class),
-      result: Communication.Result = randomOfEnum(Communication.Result::class),
-      createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
-  ): Communication {
-    return Communication(
-        uuid = uuid,
-        appointmentUuid = appointmentUuid,
-        userUuid = userUuid,
-        type = type,
-        result = result,
-        syncStatus = syncStatus,
-        createdAt = createdAt,
-        updatedAt = updatedAt,
-        deletedAt = deletedAt)
-  }
-
-  fun communicationPayload(
-      uuid: UUID = UUID.randomUUID(),
-      appointmentUuid: UUID = UUID.randomUUID(),
-      userUuid: UUID = qaUserUuid(),
-      type: Communication.Type = randomOfEnum(Communication.Type::class),
-      result: Communication.Result = randomOfEnum(Communication.Result::class),
-      createdAt: Instant = Instant.now(),
-      updatedAt: Instant = Instant.now(),
-      deletedAt: Instant? = null
-  ): CommunicationPayload {
-    return CommunicationPayload(
-        uuid = uuid,
-        appointmentUuid = appointmentUuid,
-        userUuid = userUuid,
-        type = type,
-        result = result,
         createdAt = createdAt,
         updatedAt = updatedAt,
         deletedAt = deletedAt)

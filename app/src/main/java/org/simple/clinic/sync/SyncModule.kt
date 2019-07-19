@@ -20,7 +20,6 @@ import org.simple.clinic.medicalhistory.sync.MedicalHistorySync
 import org.simple.clinic.overdue.AppointmentModule
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.overdue.AppointmentSync
-import org.simple.clinic.overdue.communication.CommunicationModule
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.sync.PatientSync
 import org.simple.clinic.patient.sync.PatientSyncModule
@@ -38,7 +37,6 @@ import javax.inject.Named
   PrescriptionModule::class,
   FacilityModule::class,
   AppointmentModule::class,
-  CommunicationModule::class,
   MedicalHistoryModule::class,
   ProtocolModule::class,
   ReportsModule::class,

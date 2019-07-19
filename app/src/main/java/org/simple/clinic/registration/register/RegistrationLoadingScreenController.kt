@@ -4,7 +4,9 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.registration.RegistrationResult.NetworkError
+import org.simple.clinic.registration.RegistrationResult.Success
+import org.simple.clinic.registration.RegistrationResult.UnexpectedError
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -23,8 +25,9 @@ class RegistrationLoadingScreenController @Inject constructor(
         .flatMapSingle { userSession.register() }
         .map {
           when (it) {
-            is RegistrationResult.Success -> { ui: Ui -> ui.openHomeScreen() }
-            is RegistrationResult.Error -> { ui: Ui -> ui.showError() }
+            Success -> { ui: Ui -> ui.openHomeScreen() }
+            NetworkError -> { ui: Ui -> ui.showError() }
+            UnexpectedError -> { ui: Ui -> ui.showError() }
           }
         }
   }

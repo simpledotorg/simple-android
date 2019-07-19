@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.registration.RegistrationResult
+import org.simple.clinic.registration.RegistrationResult.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -43,8 +44,9 @@ class RegistrationLoadingScreenControllerTest {
 
     verify(userSession).register()
     when (results) {
-      is RegistrationResult.Success -> verify(screen).openHomeScreen()
-      is RegistrationResult.Error -> verify(screen).showError()
+      Success -> verify(screen).openHomeScreen()
+      NetworkError -> verify(screen).showError()
+      UnexpectedError -> verify(screen).showError()
     }
     verifyNoMoreInteractions(screen)
   }
@@ -52,7 +54,8 @@ class RegistrationLoadingScreenControllerTest {
   @Suppress("unused")
   fun `params for testing user registration`() =
       listOf<RegistrationResult>(
-          RegistrationResult.Success(),
-          RegistrationResult.Error()
+          Success,
+          NetworkError,
+          UnexpectedError
       )
 }

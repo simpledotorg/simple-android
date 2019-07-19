@@ -410,4 +410,10 @@
   <string name="allpatientsinfacility_nopatients_message">You will be able to see all the patients registered at your facility here.</string>
   <string name="allpatientsinfacility_nopatients_title">No patients at %1$s</string>
   <string name="allpatientsinfacility_foundpatients_header">All Patients: %1$s</string>
+
+  <!--Registration loader screen -->
+  <string name="registrationloader_error_unexpected_title">Something went wrong</string>
+  <string name="registrationloader_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
+  <string name="registrationloader_error_internet_connection_title">No internet connection</string>
+  <string name="registrationloader_retry">Try again</string>
 </resources>

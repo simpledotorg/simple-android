@@ -1,12 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.registration.register.RegistrationLoadingScreen xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent"
-  android:background="@color/grey4">
+  android:background="@color/grey4"
+  android:orientation="vertical">
 
-  <ProgressBar
+
+  <org.simple.clinic.widgets.ViewFlipperWithDebugPreview
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center" />
+    android:layout_height="match_parent"
+    app:debug_displayedChild="1">
 
+    <ProgressBar
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center" />
+
+    <LinearLayout
+      android:id="@+id/registrationloader_error_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical">
+
+      <ImageButton
+        android:id="@+id/registrationloader_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:backgroundTint="@color/grey4"
+        android:padding="16dp"
+        android:src="@drawable/ic_arrow_back_24dp"
+        android:tint="@color/grey1"
+        tools:ignore="ContentDescription" />
+
+      <LinearLayout
+        android:id="@+id/registrationloader_error_container"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:layout_marginBottom="@dimen/spacing_44"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+          android:id="@+id/registrationloader_error_title"
+          style="@style/Clinic.V2.TextAppearance.H6.Grey1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          tools:text="@string/registrationloader_error_unexpected_title" />
+
+        <TextView
+          android:id="@+id/registrationloader_error_message"
+          style="@style/Clinic.V2.TextAppearance.Body1Center.Grey1"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/spacing_48"
+          android:layout_marginStart="@dimen/spacing_48"
+          android:layout_marginTop="@dimen/spacing_8"
+          android:gravity="center_horizontal"
+          tools:text="@string/registrationloader_error_unexpected_message" />
+
+        <Button
+          android:id="@+id/registrationloader_error_retry"
+          style="@style/Widget.AppCompat.Button.Borderless.Colored"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginEnd="@dimen/spacing_40"
+          android:layout_marginStart="@dimen/spacing_40"
+          android:layout_marginTop="@dimen/spacing_24"
+          android:background="@drawable/button_outline_ripple_blue1"
+          android:text="@string/registrationloader_retry"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1" />
+      </LinearLayout>
+    </LinearLayout>
+  </org.simple.clinic.widgets.ViewFlipperWithDebugPreview>
 </org.simple.clinic.registration.register.RegistrationLoadingScreen>

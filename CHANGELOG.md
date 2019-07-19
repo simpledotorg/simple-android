@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Next Release
+### Internal
+- Remove unused Communication model
 
 ## On Demo
 ### Feature

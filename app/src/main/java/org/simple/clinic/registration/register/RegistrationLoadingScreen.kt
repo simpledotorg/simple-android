@@ -40,7 +40,11 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
   }
 
-  fun showError() {
+  fun showNetworkError() {
+    TODO("not implemented")
+  }
+
+  fun showUnexpectedError() {
     TODO("not implemented")
   }
 }

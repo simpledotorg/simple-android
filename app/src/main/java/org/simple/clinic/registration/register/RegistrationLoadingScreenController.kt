@@ -26,8 +26,8 @@ class RegistrationLoadingScreenController @Inject constructor(
         .map {
           when (it) {
             Success -> { ui: Ui -> ui.openHomeScreen() }
-            NetworkError -> { ui: Ui -> ui.showError() }
-            UnexpectedError -> { ui: Ui -> ui.showError() }
+            NetworkError -> { ui: Ui -> ui.showNetworkError() }
+            UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
           }
         }
   }

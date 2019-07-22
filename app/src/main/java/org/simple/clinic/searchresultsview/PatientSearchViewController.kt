@@ -45,17 +45,16 @@ class PatientSearchViewController @Inject constructor(
   }
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchResultsFromPatientName = events
+    val searchResultsStream = events
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
-        .ofType<SearchPatientBy.Name>()
-        .flatMap { patientRepository.search(ByName(it.searchText)) }
-
-    val searchResultsFromPatientPhoneNumber = events
-        .ofType<SearchPatientCriteria>()
-        .map { it.searchPatientBy }
-        .ofType<SearchPatientBy.PhoneNumber>()
-        .flatMap { patientRepository.search(ByPhoneNumber(it.searchText)) }
+        .map { searchPatientBy ->
+          when (searchPatientBy) {
+            is SearchPatientBy.Name -> ByName(searchPatientBy.searchText)
+            is SearchPatientBy.PhoneNumber -> ByPhoneNumber(searchPatientBy.searchText)
+          }
+        }
+        .flatMap(patientRepository::search)
 
     val currentFacilityStream = userSession
         .requireLoggedInUser()
@@ -63,7 +62,7 @@ class PatientSearchViewController @Inject constructor(
         .replay()
         .refCount()
 
-    return Observable.merge(searchResultsFromPatientName, searchResultsFromPatientPhoneNumber)
+    return searchResultsStream
         .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
         .withLatestFrom(currentFacilityStream)
         .map { (results, currentFacility) ->

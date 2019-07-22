@@ -20,7 +20,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
-import org.simple.clinic.patient.PatientSearchCriteria.*
+import org.simple.clinic.patient.PatientSearchCriteria.ByName
+import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
@@ -68,7 +69,11 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when searching patients by name returns results, the results should be displayed`() {
+  @Parameters(method = "params for search criteria")
+  fun `when searching patients by name returns results, the results should be displayed`(
+      searchCriteria: PatientSearchCriteria,
+      searchPatientBy: SearchPatientBy
+  ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
@@ -79,12 +84,12 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
         )))
-    whenever(patientRepository.search(ByName(patientName)))
+    whenever(patientRepository.search(searchCriteria))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -103,16 +108,20 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when searching patients by name returns no results, the empty state should be displayed`() {
+  @Parameters(method = "params for search criteria")
+  fun `when searching patients by name returns no results, the empty state should be displayed`(
+      searchCriteria: PatientSearchCriteria,
+      searchPatientBy: SearchPatientBy
+  ) {
     // given
-    whenever(patientRepository.search(ByName(patientName)))
+    whenever(patientRepository.search(searchCriteria))
         .thenReturn(Observable.just(emptyList()))
     whenever(bloodPressureDao.patientToFacilityIds(emptyList()))
         .thenReturn(Flowable.just(emptyList()))
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
 
     // then
     verify(screen).updateSearchResults(emptyList())
@@ -120,7 +129,11 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when searching by name and there are patients only in current facility, then "Other Results" header should not be shown`() {
+  @Parameters(method = "params for search criteria")
+  fun `when searching by name and there are patients only in current facility, then "Other Results" header should not be shown`(
+      searchCriteria: PatientSearchCriteria,
+      searchPatientBy: SearchPatientBy
+  ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
@@ -131,12 +144,12 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = currentFacility.uuid)
         )))
-    whenever(patientRepository.search(ByName(patientName)))
+    whenever(patientRepository.search(searchCriteria))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -154,7 +167,11 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  fun `when searching by name and there are patients only in other facilities, then current facility header with "no results" should be shown`() {
+  @Parameters(method = "params for search criteria")
+  fun `when searching by name and there are patients only in other facilities, then current facility header with "no results" should be shown`(
+      searchCriteria: PatientSearchCriteria,
+      searchPatientBy: SearchPatientBy
+  ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
@@ -165,12 +182,12 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = otherFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
         )))
-    whenever(patientRepository.search(ByName(patientName)))
+    whenever(patientRepository.search(searchCriteria))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // then
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.Name(searchText = patientName)))
+    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -187,6 +204,27 @@ class PatientSearchViewControllerTest {
         )
     ))
     verify(screen).setEmptyStateVisible(false)
+  }
+
+  @Suppress("Unused")
+  private fun `params for search criteria`(): List<List<Any>> {
+    fun testCase(
+        searchCriteria: PatientSearchCriteria,
+        searchPatientBy: SearchPatientBy
+    ): List<Any> {
+      return listOf(searchCriteria, searchPatientBy)
+    }
+
+    return listOf(
+        testCase(
+            searchCriteria = ByName(patientName = patientName),
+            searchPatientBy = SearchPatientBy.Name(searchText = patientName)
+        ),
+        testCase(
+            searchCriteria = ByPhoneNumber(phoneNumber = phoneNumber),
+            searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)
+        )
+    )
   }
 
   @Test
@@ -214,127 +252,5 @@ class PatientSearchViewControllerTest {
         SearchPatientBy.Name(searchText = patientName),
         SearchPatientBy.PhoneNumber(searchText = phoneNumber)
     )
-  }
-
-  @Test
-  fun `when searching patients by phone returns results, the results should be displayed`() {
-    // given
-    val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
-    val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
-    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
-    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
-    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid1, patientUuid2)))
-        .thenReturn(Flowable.just(listOf(
-            PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
-            PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
-        )))
-    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
-        .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
-
-    // when
-    uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
-
-    // then
-    verify(screen).updateSearchResults(listOf(
-        InCurrentFacilityHeader(facilityName = currentFacility.name),
-        SearchResultRow(
-            searchResult = patientSearchResult1,
-            currentFacility = currentFacility
-        ),
-        NotInCurrentFacilityHeader,
-        SearchResultRow(
-            searchResult = patientSearchResult2,
-            currentFacility = currentFacility
-        )
-    ))
-    verify(screen).setEmptyStateVisible(false)
-  }
-
-  @Test
-  fun `when searching patients by phone returns no results, the empty state should be displayed`() {
-    // given
-    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
-        .thenReturn(Observable.just(emptyList()))
-    whenever(bloodPressureDao.patientToFacilityIds(emptyList()))
-        .thenReturn(Flowable.just(emptyList()))
-
-    // when
-    uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
-
-    // then
-    verify(screen).updateSearchResults(emptyList())
-    verify(screen).setEmptyStateVisible(true)
-  }
-
-  @Test
-  fun `when searching by phone and there are patients only in current facility, then "Other Results" header should not be shown`() {
-    // given
-    val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
-    val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
-    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
-    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
-    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid1, patientUuid2)))
-        .thenReturn(Flowable.just(listOf(
-            PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
-            PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = currentFacility.uuid)
-        )))
-    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
-        .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
-
-    // when
-    uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
-
-    // then
-    verify(screen).updateSearchResults(listOf(
-        InCurrentFacilityHeader(facilityName = currentFacility.name),
-        SearchResultRow(
-            searchResult = patientSearchResult1,
-            currentFacility = currentFacility
-        ),
-        SearchResultRow(
-            searchResult = patientSearchResult2,
-            currentFacility = currentFacility
-        )
-    ))
-    verify(screen).setEmptyStateVisible(false)
-  }
-
-  @Test
-  fun `when searching by phone and there are patients only in other facilities, then current facility header with "no results" should be shown`() {
-    // given
-    val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
-    val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
-    val patientSearchResult1 = PatientMocker.patientSearchResult(patientUuid1)
-    val patientSearchResult2 = PatientMocker.patientSearchResult(patientUuid2)
-    whenever(bloodPressureDao.patientToFacilityIds(listOf(patientUuid1, patientUuid2)))
-        .thenReturn(Flowable.just(listOf(
-            PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = otherFacility.uuid),
-            PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
-        )))
-    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
-        .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
-
-    // then
-    uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)))
-
-    // then
-    verify(screen).updateSearchResults(listOf(
-        InCurrentFacilityHeader(facilityName = currentFacility.name),
-        SearchResultsItemType.NoPatientsInCurrentFacility,
-        NotInCurrentFacilityHeader,
-        SearchResultRow(
-            searchResult = patientSearchResult1,
-            currentFacility = currentFacility
-        ),
-        SearchResultRow(
-            searchResult = patientSearchResult2,
-            currentFacility = currentFacility
-        )
-    ))
-    verify(screen).setEmptyStateVisible(false)
   }
 }

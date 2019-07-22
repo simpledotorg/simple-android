@@ -24,7 +24,6 @@ import org.simple.clinic.location.LocationUpdate
 import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.registration.RegistrationConfig
-import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RuntimePermissionResult.DENIED
@@ -42,7 +41,6 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
     private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
     private val userSession: UserSession,
-    private val registrationScheduler: RegistrationScheduler,
     private val locationRepository: LocationRepository,
     private val configProvider: Single<RegistrationConfig>,
     private val elapsedRealtimeClock: ElapsedRealtimeClock,
@@ -213,8 +211,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
               .map { it.copy(facilityId = facility.uuid) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
               .andThen(userSession.loginFromOngoingRegistrationEntry())
-              .andThen(registrationScheduler.schedule())
-              .andThen(Observable.just({ ui: Ui -> ui.openHomeScreen() }))
+              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationScreen() }))
         }
   }
 }

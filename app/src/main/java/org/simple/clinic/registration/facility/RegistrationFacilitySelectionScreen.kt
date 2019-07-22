@@ -28,9 +28,8 @@ import org.simple.clinic.facility.change.FacilitiesUpdateType
 import org.simple.clinic.facility.change.FacilitiesUpdateType.FIRST_UPDATE
 import org.simple.clinic.facility.change.FacilitiesUpdateType.SUBSEQUENT_UPDATE
 import org.simple.clinic.facility.change.FacilityListItem
-import org.simple.clinic.home.HomeScreenKey
 import org.simple.clinic.location.LOCATION_PERMISSION
-import org.simple.clinic.router.screen.RouterDirection
+import org.simple.clinic.registration.register.RegistrationLoadingScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.RuntimePermissions
 import org.simple.clinic.widgets.RecyclerViewUserScrollDetector
@@ -185,7 +184,7 @@ class RegistrationFacilitySelectionScreen(context: Context, attrs: AttributeSet)
     recyclerViewAdapter.submitList(facilityItems)
   }
 
-  fun openHomeScreen() {
-    screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
+  fun openRegistrationScreen() {
+    screenRouter.push(RegistrationLoadingScreenKey())
   }
 }

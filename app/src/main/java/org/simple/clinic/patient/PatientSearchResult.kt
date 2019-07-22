@@ -103,6 +103,13 @@ data class PatientSearchResult(
       ORDER BY AllSearchResults.fullName COLLATE NOCASE ASC
     """)
     fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
+
+    @Suppress("AndroidUnresolvedRoomSqlReference")
+    @Query("""
+        $mainQuery WHERE phoneNumber LIKE '%' || :phoneNumber || '%'
+        ORDER BY P.fullName COLLATE NOCASE ASC
+    """)
+    fun searchByPhoneNumber(phoneNumber: String): Flowable<List<PatientSearchResult>>
   }
 
   data class PatientNameAndId(val uuid: UUID, val fullName: String)

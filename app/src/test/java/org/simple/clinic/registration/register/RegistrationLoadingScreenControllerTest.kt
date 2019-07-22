@@ -1,5 +1,6 @@
 package org.simple.clinic.registration.register
 
+import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -60,4 +61,15 @@ class RegistrationLoadingScreenControllerTest {
           NetworkError,
           UnexpectedError
       )
+
+  @Test
+  fun `when retry button is clicked in error state then loader should show and register api should be called`() {
+    whenever(userSession.register()).thenReturn(Single.just(Success))
+
+    uiEvents.onNext(RegisterErrorRetryClicked)
+
+    val inorder = inOrder(screen, userSession)
+    inorder.verify(userSession).register()
+    inorder.verify(screen).openHomeScreen()
+  }
 }

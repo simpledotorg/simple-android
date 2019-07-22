@@ -20,8 +20,15 @@ class RegistrationLoadingScreenController @Inject constructor(
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
-    return events
-        .ofType<ScreenCreated>()
+    return registerOnStart(events)
+  }
+
+  private fun registerOnStart(events: Observable<UiEvent>): Observable<UiChange> {
+
+    val retryClicks = events.ofType<RegisterErrorRetryClicked>()
+    val creates = events.ofType<ScreenCreated>()
+
+    return Observable.merge(creates, retryClicks)
         .flatMapSingle { userSession.register() }
         .map {
           when (it) {

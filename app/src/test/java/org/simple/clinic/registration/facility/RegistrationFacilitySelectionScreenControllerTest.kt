@@ -37,7 +37,6 @@ import org.simple.clinic.location.LocationUpdate.Available
 import org.simple.clinic.location.LocationUpdate.Unavailable
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.registration.RegistrationConfig
-import org.simple.clinic.registration.RegistrationScheduler
 import org.simple.clinic.user.OngoingRegistrationEntry
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Distance
@@ -64,7 +63,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private val screen = mock<RegistrationFacilitySelectionScreen>()
   private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()
-  private val registrationScheduler = mock<RegistrationScheduler>()
   private val locationRepository = mock<LocationRepository>()
   private val userSession = mock<UserSession>()
   private val testComputationScheduler = TestScheduler()
@@ -93,7 +91,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
         facilitySync = facilitySync,
         facilityRepository = facilityRepository,
         userSession = userSession,
-        registrationScheduler = registrationScheduler,
         locationRepository = locationRepository,
         configProvider = configProvider.firstOrError(),
         elapsedRealtimeClock = elapsedRealtimeClock,
@@ -405,15 +402,13 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
     whenever(userSession.loginFromOngoingRegistrationEntry()).thenReturn(Completable.complete())
-    whenever(registrationScheduler.schedule()).thenReturn(Completable.complete())
 
     val facility1 = PatientMocker.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
-    val inOrder = inOrder(userSession, registrationScheduler, screen)
+    val inOrder = inOrder(userSession, screen)
     inOrder.verify(userSession).loginFromOngoingRegistrationEntry()
-    inOrder.verify(registrationScheduler).schedule()
-    inOrder.verify(screen).openHomeScreen()
+    inOrder.verify(screen).openRegistrationScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
   }
 

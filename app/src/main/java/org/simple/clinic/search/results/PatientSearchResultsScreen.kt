@@ -16,8 +16,8 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
-import org.simple.clinic.searchresultsview.SearchPatientBy
-import org.simple.clinic.searchresultsview.SearchPatientCriteria
+import org.simple.clinic.searchresultsview.SearchPatientInput
+import org.simple.clinic.searchresultsview.SearchPatientWithInput
 import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -75,13 +75,13 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     return searchResultsView
         .upstreamUiEvents
         .ofType<RegisterNewPatient>()
-        .map { PatientSearchResultRegisterNewPatient(extractPatientName(it.searchBy)) }
+        .map { PatientSearchResultRegisterNewPatient(extractPatientName(it.searchPatientInput)) }
   }
 
-  private fun extractPatientName(searchBy: SearchPatientBy): String {
-    return when (searchBy) {
-      is SearchPatientBy.Name -> searchBy.searchText
-      is SearchPatientBy.PhoneNumber -> TODO("not yet implemented")
+  private fun extractPatientName(searchPatientInput: SearchPatientInput): String {
+    return when (searchPatientInput) {
+      is SearchPatientInput.Name -> searchPatientInput.searchText
+      is SearchPatientInput.PhoneNumber -> TODO("not yet implemented")
     }
   }
 
@@ -102,7 +102,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
     searchResultsView
         .downstreamUiEvents
-        .onNext(SearchPatientCriteria(SearchPatientBy.Name(screenKey.fullName)))
+        .onNext(SearchPatientWithInput(SearchPatientInput.Name(screenKey.fullName)))
     return Observable.just(PatientSearchResultsScreenCreated(screenKey))
   }
 

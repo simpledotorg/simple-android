@@ -12,6 +12,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchCriteria.ByName
+import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
@@ -47,13 +49,13 @@ class PatientSearchViewController @Inject constructor(
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
         .ofType<SearchPatientBy.Name>()
-        .flatMap { patientRepository.search(it.searchText) }
+        .flatMap { patientRepository.search(ByName(it.searchText)) }
 
     val searchResultsFromPatientPhoneNumber = events
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
         .ofType<SearchPatientBy.PhoneNumber>()
-        .flatMap { patientRepository.searchByPhoneNumber(it.searchText) }
+        .flatMap { patientRepository.search(ByPhoneNumber(it.searchText)) }
 
     val currentFacilityStream = userSession
         .requireLoggedInUser()

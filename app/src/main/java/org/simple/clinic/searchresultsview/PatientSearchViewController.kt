@@ -46,12 +46,12 @@ class PatientSearchViewController @Inject constructor(
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val searchResultsStream = events
-        .ofType<SearchPatientCriteria>()
-        .map { it.searchPatientBy }
+        .ofType<SearchPatientWithInput>()
+        .map { it.searchPatientInput }
         .map { searchPatientBy ->
           when (searchPatientBy) {
-            is SearchPatientBy.Name -> ByName(searchPatientBy.searchText)
-            is SearchPatientBy.PhoneNumber -> ByPhoneNumber(searchPatientBy.searchText)
+            is SearchPatientInput.Name -> ByName(searchPatientBy.searchText)
+            is SearchPatientInput.PhoneNumber -> ByPhoneNumber(searchPatientBy.searchText)
           }
         }
         .flatMap(patientRepository::search)
@@ -107,8 +107,8 @@ class PatientSearchViewController @Inject constructor(
 
   private fun createNewPatient(events: Observable<UiEvent>): Observable<UiChange> {
     val searchPatientByStream = events
-        .ofType<SearchPatientCriteria>()
-        .map { it.searchPatientBy }
+        .ofType<SearchPatientWithInput>()
+        .map { it.searchPatientInput }
 
     return events.ofType<RegisterNewPatientClicked>()
         .withLatestFrom(searchPatientByStream)

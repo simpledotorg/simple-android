@@ -4,10 +4,8 @@ import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
-import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
-import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -38,47 +36,24 @@ class PatientSearchViewController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        populateSearchResultsFromName(replayedEvents),
-        populateSearchResultsFromPhoneNumber(replayedEvents),
         openPatientSummary(replayedEvents),
-        createNewPatient(replayedEvents))
+        createNewPatient(replayedEvents),
+        populateSearchResults(replayedEvents)
+    )
   }
 
-  private fun populateSearchResultsFromName(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchByPatientNameStream = events
+  private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
+    val searchResultsFromPatientName = events
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
         .ofType<SearchPatientBy.Name>()
-        .map { it.searchText }
+        .flatMap { patientRepository.search(it.searchText) }
 
-    val viewCreated = events.ofType<SearchResultsViewCreated>()
-
-    val currentFacilityStream = userSession
-        .requireLoggedInUser()
-        .switchMap(facilityRepository::currentFacility)
-        .replay()
-        .refCount()
-
-    return Observables.combineLatest(viewCreated, searchByPatientNameStream) { _, patientName -> patientName}
-        .flatMap(patientRepository::search)
-        .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
-        .withLatestFrom(currentFacilityStream)
-        .map { (results, currentFacility) ->
-          { ui: Ui ->
-            ui.updateSearchResults(generateListItems(results, currentFacility))
-            ui.setEmptyStateVisible(results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty())
-          }
-        }
-  }
-
-  private fun populateSearchResultsFromPhoneNumber(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchByPhoneNumberStream = events
+    val searchResultsFromPatientPhoneNumber = events
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
         .ofType<SearchPatientBy.PhoneNumber>()
-        .map { it.searchText }
-
-    val viewCreated = events.ofType<SearchResultsViewCreated>()
+        .flatMap { patientRepository.searchByPhoneNumber(it.searchText) }
 
     val currentFacilityStream = userSession
         .requireLoggedInUser()
@@ -86,8 +61,7 @@ class PatientSearchViewController @Inject constructor(
         .replay()
         .refCount()
 
-    return Observables.combineLatest(viewCreated, searchByPhoneNumberStream) { _, phoneNumber -> phoneNumber}
-        .flatMap(patientRepository::searchByPhoneNumber)
+    return Observable.merge(searchResultsFromPatientName, searchResultsFromPatientPhoneNumber)
         .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
         .withLatestFrom(currentFacilityStream)
         .map { (results, currentFacility) ->

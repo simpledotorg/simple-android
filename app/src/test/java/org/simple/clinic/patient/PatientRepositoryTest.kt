@@ -25,6 +25,7 @@ import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.MockAnalyticsReporter
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.FacilityRepository
+import org.simple.clinic.patient.PatientSearchCriteria.ByName
 import org.simple.clinic.patient.PatientSearchResult.PatientNameAndId
 import org.simple.clinic.patient.businessid.BusinessId
 import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
@@ -264,7 +265,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
     repository
-        .search("name")
+        .search(ByName("name"))
         .ignoreElements()
         .blockingAwait()
 
@@ -299,7 +300,7 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.searchByIds(any(), any())).thenReturn(Single.just(results))
     whenever(database.patientSearchDao().nameAndId(any())).thenReturn(Flowable.just(emptyList()))
 
-    val actualResults = repository.search("name").blockingFirst()
+    val actualResults = repository.search(ByName("name")).blockingFirst()
     assertThat(actualResults).isEqualTo(expectedResults)
   }
 
@@ -357,7 +358,7 @@ class PatientRepositoryTest {
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)
 
     repository
-        .search("search")
+        .search(ByName("search"))
         .blockingFirst()
 
     val receivedEvents = reporter.receivedEvents

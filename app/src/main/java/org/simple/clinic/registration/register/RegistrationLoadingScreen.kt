@@ -31,6 +31,10 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
 
     TheActivity.component.inject(this)
 
+    loaderBack.setOnClickListener {
+      screenRouter.pop()
+    }
+
     bindUiToController(
         ui = this,
         events = Observable.merge(screenCreates(), retryClicks()),

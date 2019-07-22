@@ -5,7 +5,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.analytics.OperationTimingTracker
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -66,40 +65,37 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchByName(name: String): Observable<List<PatientSearchResult>> {
-    val timingTracker = OperationTimingTracker("Search Patient", utcClock)
-
-    val fetchPatientNameAnalytics = "Fetch Name and Id"
-    val fuzzyFilterPatientNameAnalytics = "Fuzzy Filtering By Name"
-    val fetchPatientDetailsAnalytics = "Fetch Patient Details"
-
-    val patientUuidsMatchingName = database.patientSearchDao()
-        .nameAndId(PatientStatus.Active)
-        .toObservable()
-        .switchMapSingle {
-          timingTracker.stop(fetchPatientNameAnalytics)
-          timingTracker.start(fuzzyFilterPatientNameAnalytics)
-          searchPatientByName.search(name, it)
-              .doOnSuccess { timingTracker.stop(fuzzyFilterPatientNameAnalytics) }
-        }
-
-    return Observables.combineLatest(patientUuidsMatchingName, configProvider)
-        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
+    return findPatientIdsMatchingName(name)
         .switchMapSingle { matchingUuidsSortedByScore ->
           when {
             matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
-            else -> {
-              database.patientSearchDao()
-                  .searchByIds(matchingUuidsSortedByScore, PatientStatus.Active)
-                  .doOnSubscribe { timingTracker.start(fetchPatientDetailsAnalytics) }
-                  .map { results ->
-                    timingTracker.stop(fetchPatientDetailsAnalytics)
-                    val resultsByUuid = results.associateBy { it.uuid }
-                    matchingUuidsSortedByScore.map { resultsByUuid.getValue(it) }
-                  }
-            }
+            else -> searchResultsByPatientUuids(matchingUuidsSortedByScore)
           }
         }
-        .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
+  }
+
+  private fun searchResultsByPatientUuids(patientUuids: List<UUID>): Single<List<PatientSearchResult>> {
+    return database.patientSearchDao()
+        .searchByIds(patientUuids, PatientStatus.Active)
+        .map { results ->
+          // This is needed to maintain the order of the search results
+          // so that its in the same order of the list of the UUIDs.
+          // Otherwise, the order is dependent on the SQLite default
+          // implementation.
+          val resultsByUuid = results.associateBy { it.uuid }
+          patientUuids.map { resultsByUuid.getValue(it) }
+        }
+  }
+
+  private fun findPatientIdsMatchingName(name: String): Observable<List<UUID>> {
+    val allPatientUuidsMatchingName = database
+        .patientSearchDao()
+        .nameAndId(PatientStatus.Active)
+        .toObservable()
+        .switchMapSingle { searchPatientByName.search(name, it) }
+
+    return Observables.combineLatest(allPatientUuidsMatchingName, configProvider)
+        .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }
   }
 
   private fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {

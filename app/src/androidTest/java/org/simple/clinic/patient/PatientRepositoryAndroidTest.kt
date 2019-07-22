@@ -57,6 +57,7 @@ import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
+import java.util.Locale
 import java.util.UUID
 import javax.inject.Inject
 
@@ -1935,5 +1936,147 @@ class PatientRepositoryAndroidTest {
         updatedAt = initialTime.plusSeconds(50)
     )
     verifyRecentPatientOrder(patient2, patient1)
+  }
+
+  @Test
+  fun searching_for_a_patient_by_phone_number_must_return_all_patients_with_a_matching_phone_number() {
+    fun createPatientWithPhoneNumber(
+        patientUuid: UUID,
+        phoneNumber: String?
+    ) {
+      val patientProfile = testData
+          .patientProfile(patientUuid = patientUuid, generatePhoneNumber = !phoneNumber.isNullOrBlank())
+          .let { patientProfile ->
+            patientProfile.copy(
+                patient = patientProfile.patient.copy(fullName = "Patient"),
+                phoneNumbers = patientProfile
+                    .phoneNumbers
+                    .take(1)
+                    .map { it.copy(number = phoneNumber!!) }
+            )
+          }
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    fun searchResults(phoneNumber: String): Set<UUID> {
+      return patientRepository
+          .searchByPhoneNumber(phoneNumber)
+          .blockingFirst()
+          .map { it.uuid }
+          .toSet()
+    }
+
+    // given
+    val patientWithExactlyMatchingNumber = UUID.fromString("d47ae2e7-7453-4a6f-806e-88eb130823d8")
+    createPatientWithPhoneNumber(
+        patientUuid = patientWithExactlyMatchingNumber,
+        phoneNumber = "1234567890"
+    )
+    val patientWithFirstPartMatchingNumber = UUID.fromString("bd050289-29c3-4459-8d33-50e8d77469d2")
+    createPatientWithPhoneNumber(
+        patientUuid = patientWithFirstPartMatchingNumber,
+        phoneNumber = "1234588888"
+    )
+    val patientWithLastPartMatchingNumber = UUID.fromString("ff3552b7-83f2-47f6-b840-c6ce12de6ad5")
+    createPatientWithPhoneNumber(
+        patientUuid = patientWithLastPartMatchingNumber,
+        phoneNumber = "1111167890"
+    )
+    val patientWithMiddlePartMatchingNumber = UUID.fromString("b7aa9310-6ae9-4ac2-b040-762f5cc5a505")
+    createPatientWithPhoneNumber(
+        patientUuid = patientWithMiddlePartMatchingNumber,
+        phoneNumber = "1114567800"
+    )
+    val patientWithNoPartMatchingNumber = UUID.fromString("0d955585-6887-451f-9b20-94587938a09d")
+    createPatientWithPhoneNumber(
+        patientUuid = patientWithNoPartMatchingNumber,
+        phoneNumber = "0000000000"
+    )
+    val patientWithoutAnyNumber = UUID.fromString("e8ad5b9a-2b27-4d20-9257-c9c456d5f168")
+    createPatientWithPhoneNumber(
+        patientUuid = patientWithoutAnyNumber,
+        phoneNumber = null
+    )
+
+    // when
+    val searchResultsWithExactMatch = searchResults("1234567890")
+    val searchResultsWithFirstPartMatching = searchResults("12345")
+    val searchResultsWithLastPartMatching = searchResults("67890")
+    val searchResultsWithMiddlePartMatching = searchResults("45678")
+    val searchResultsWithNoPartMatching = searchResults("22222")
+
+    // then
+    assertThat(searchResultsWithExactMatch)
+        .containsExactly(patientWithExactlyMatchingNumber)
+    assertThat(searchResultsWithFirstPartMatching)
+        .containsExactly(
+            patientWithFirstPartMatchingNumber,
+            patientWithExactlyMatchingNumber
+        )
+    assertThat(searchResultsWithLastPartMatching)
+        .containsExactly(
+            patientWithLastPartMatchingNumber,
+            patientWithExactlyMatchingNumber
+        )
+    assertThat(searchResultsWithMiddlePartMatching)
+        .containsExactly(
+            patientWithMiddlePartMatchingNumber,
+            patientWithExactlyMatchingNumber
+        )
+    assertThat(searchResultsWithNoPartMatching)
+        .isEmpty()
+  }
+
+  @Test
+  fun searching_for_a_patient_by_phone_number_must_return_results_ordered_by_patient_name() {
+    fun createPatientWithPhoneNumber(
+        patientName: String,
+        phoneNumber: String
+    ) {
+
+      val patientProfile = testData
+          .patientProfile(patientUuid = UUID.randomUUID(), generatePhoneNumber = !phoneNumber.isBlank())
+          .let { patientProfile ->
+            patientProfile.copy(
+                patient = patientProfile.patient.copy(fullName = patientName),
+                phoneNumbers = patientProfile
+                    .phoneNumbers
+                    .take(1)
+                    .map { it.copy(number = phoneNumber) }
+            )
+          }
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    fun searchResults(phoneNumber: String): List<String> {
+      return patientRepository
+          .searchByPhoneNumber(phoneNumber)
+          .blockingFirst()
+          .map { it.fullName }
+    }
+
+    // given
+    createPatientWithPhoneNumber(patientName = "Abhinav", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(patientName = "Chitra", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(patientName = "abhinav", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(patientName = "Fatima", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(patientName = "esther d' souza", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(patientName = "Dhruv Saxena", phoneNumber = "1234567890")
+    createPatientWithPhoneNumber(patientName = "Dhruv Acharya", phoneNumber = "1234567890")
+
+    // when
+    val searchResults = searchResults(phoneNumber = "1234567890")
+        // Converting to lowercase because the ordering of the search results for names which are
+        // exactly the same but in different cases is undefined. Different runs of the tests will
+        // sometimes report the names "Abhinav" and "abhinav" as ["Abhinav", "abhinav"] and
+        // sometimes as ["abhinav", "Abhinav"], which causes flakiness.
+        .map { it.toLowerCase(Locale.ENGLISH) }
+
+    // then
+    assertThat(searchResults)
+        .containsExactly("abhinav", "abhinav", "chitra", "dhruv acharya", "dhruv saxena", "esther d' souza", "fatima")
+        .inOrder()
   }
 }

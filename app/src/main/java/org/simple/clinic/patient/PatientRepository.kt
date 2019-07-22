@@ -94,7 +94,10 @@ class PatientRepository @Inject constructor(
   }
 
   fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
-    TODO("not implemented")
+    return database
+        .patientSearchDao()
+        .searchByPhoneNumber(phoneNumber)
+        .toObservable()
   }
 
   private fun savePatient(patient: Patient): Completable = Completable.fromAction { database.patientDao().save(patient) }

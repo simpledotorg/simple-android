@@ -56,6 +56,20 @@ class PatientRepository @Inject constructor(
 
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
+  fun search(criteria: PatientSearchCriteria): Observable<List<PatientSearchResult>> {
+    return when(criteria) {
+      is PatientSearchCriteria.ByName -> search(criteria.patientName)
+      is PatientSearchCriteria.ByPhoneNumber -> search(criteria.phoneNumber)
+    }
+  }
+
+  @Deprecated(
+      message = "use the criteria version of the search method",
+      replaceWith = ReplaceWith(
+          expression = "search(PatientSearchCriteria.ByName(name))",
+          imports = ["org.simple.clinic.patient.PatientSearchCriteria"]
+      )
+  )
   fun search(name: String): Observable<List<PatientSearchResult>> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)
 
@@ -93,6 +107,13 @@ class PatientRepository @Inject constructor(
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
   }
 
+  @Deprecated(
+      message = "use the criteria version of the search method",
+      replaceWith = ReplaceWith(
+          expression = "search(PatientSearchCriteria.ByPhoneNumber(name))",
+          imports = ["org.simple.clinic.patient.PatientSearchCriteria"]
+      )
+  )
   fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
     return database
         .patientSearchDao()

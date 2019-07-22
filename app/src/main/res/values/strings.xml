@@ -415,5 +415,6 @@
   <string name="registrationloader_error_unexpected_title">Something went wrong</string>
   <string name="registrationloader_error_unexpected_message">Please try again after some time or get in touch with your supervisor.</string>
   <string name="registrationloader_error_internet_connection_title">No internet connection</string>
+  <!--suppress UnusedResources -->
   <string name="registrationloader_retry">Try again</string>
 </resources>

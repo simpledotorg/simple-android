@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Next Release
+
+## On Demo
 ### Feature
 - All patients that have visited the current facility will be shown in the patient search screen
 

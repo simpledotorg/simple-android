@@ -69,7 +69,7 @@ class PartitionSearchResultsByVisitedFacilityTest {
 
     // when
     val testObserver = Observable.just(patientSearchResults)
-        .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao = bloodPressureDao, facility = facilityA))
+        .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao = bloodPressureDao, facilityStream = Observable.just(facilityA)))
         .test()
 
     // then
@@ -78,5 +78,65 @@ class PartitionSearchResultsByVisitedFacilityTest {
         notVisitedCurrentFacility = listOf(patient2InFacilityC, patient1InFacilityB, patient1InFacilityC)
     )
     testObserver.assertValue(expected)
+  }
+
+  @Test
+  fun `when the facility changes, the results should be grouped by the new facility`() {
+    val facilityA = PatientMocker.facility(UUID.fromString("39e23001-955a-4771-a3fe-f58d046eeea3"))
+    val facilityB = PatientMocker.facility(UUID.fromString("20b88227-6809-49c9-b68b-46d8e1db02cb"))
+
+    val patient1InFacilityA = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("82406b52-6b21-4a71-8114-0ea0bd58a859"),
+        fullName = "patient 1 In Facility A"
+    )
+    val patient2InFacilityA = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("3e6a13e8-d5f9-47cb-960c-b64b651d972b"),
+        fullName = "patient 2 In Facility A"
+    )
+    val patient3InFacilityA = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("629fe81e-43ff-45b1-9081-88ccccefd3b6"),
+        fullName = "patient 3 In Facility A"
+    )
+    val patient1InFacilityB = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("a30e84a5-1545-4f96-8274-1bc826d2ce91"),
+        fullName = "patient 1 In Facility B"
+    )
+
+    val patientSearchResults = listOf(
+        patient1InFacilityA,
+        patient3InFacilityA,
+        patient1InFacilityB,
+        patient2InFacilityA
+    )
+
+    val patientUuids = patientSearchResults.map { it.uuid }
+
+    val bloodPressureDao = mock<BloodPressureMeasurement.RoomDao>()
+    whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
+        .thenReturn(Flowable.just(listOf(
+            PatientToFacilityId(patientUuid = patient1InFacilityA.uuid, facilityUuid = facilityA.uuid),
+            PatientToFacilityId(patientUuid = patient2InFacilityA.uuid, facilityUuid = facilityA.uuid),
+            PatientToFacilityId(patientUuid = patient3InFacilityA.uuid, facilityUuid = facilityA.uuid),
+            PatientToFacilityId(patientUuid = patient1InFacilityB.uuid, facilityUuid = facilityB.uuid)
+        )))
+
+    // when
+    val testObserver = Observable.just(patientSearchResults)
+        .compose(PartitionSearchResultsByVisitedFacility(
+            bloodPressureDao = bloodPressureDao,
+            facilityStream = Observable.just(facilityA, facilityB)
+        ))
+        .test()
+
+    // then
+    val expectedFirst = PatientSearchResults(
+        visitedCurrentFacility = listOf(patient1InFacilityA, patient3InFacilityA, patient2InFacilityA),
+        notVisitedCurrentFacility = listOf(patient1InFacilityB)
+    )
+    val expectedSecond = PatientSearchResults(
+        visitedCurrentFacility = listOf(patient1InFacilityB),
+        notVisitedCurrentFacility = listOf(patient1InFacilityA, patient3InFacilityA, patient2InFacilityA)
+    )
+    testObserver.assertValues(expectedFirst, expectedSecond)
   }
 }

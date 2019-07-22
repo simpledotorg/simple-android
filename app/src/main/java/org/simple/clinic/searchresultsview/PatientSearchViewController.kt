@@ -45,7 +45,7 @@ class PatientSearchViewController @Inject constructor(
   }
 
   private fun populateSearchResultsFromName(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientNames = events
+    val searchByPatientNameStream = events
         .ofType<SearchPatientCriteria>()
         .map { it.searchPatientBy }
         .ofType<SearchPatientBy.Name>()
@@ -53,23 +53,16 @@ class PatientSearchViewController @Inject constructor(
 
     val viewCreated = events.ofType<SearchResultsViewCreated>()
 
-    return Observables.combineLatest(viewCreated, patientNames)
-        .flatMap { (_, patientName) ->
-          val loggedInUserStream = userSession.requireLoggedInUser()
+    val currentFacilityStream = userSession
+        .requireLoggedInUser()
+        .switchMap(facilityRepository::currentFacility)
+        .replay()
+        .refCount()
 
-          val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
-
-          val searchResults = currentFacilityStream.switchMap { facility ->
-            patientRepository
-                .search(name = patientName)
-                .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility))
-          }
-
-          Observables.combineLatest(searchResults, currentFacilityStream)
-              // We can't understand why, but search is occasionally
-              // running on the main thread. This is a temporary solution.
-              .subscribeOn(Schedulers.io())
-        }
+    return Observables.combineLatest(viewCreated, searchByPatientNameStream) { _, patientName -> patientName}
+        .flatMap(patientRepository::search)
+        .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
+        .withLatestFrom(currentFacilityStream)
         .map { (results, currentFacility) ->
           { ui: Ui ->
             ui.updateSearchResults(generateListItems(results, currentFacility))
@@ -87,23 +80,16 @@ class PatientSearchViewController @Inject constructor(
 
     val viewCreated = events.ofType<SearchResultsViewCreated>()
 
-    return Observables.combineLatest(viewCreated, searchByPhoneNumberStream)
-        .flatMap { (_, phoneNumber) ->
-          val loggedInUserStream = userSession.requireLoggedInUser()
+    val currentFacilityStream = userSession
+        .requireLoggedInUser()
+        .switchMap(facilityRepository::currentFacility)
+        .replay()
+        .refCount()
 
-          val currentFacilityStream = loggedInUserStream.switchMap { facilityRepository.currentFacility(it) }
-
-          val searchResults = currentFacilityStream.switchMap { facility ->
-            patientRepository
-                .searchByPhoneNumber(phoneNumber = phoneNumber)
-                .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, facility))
-          }
-
-          Observables.combineLatest(searchResults, currentFacilityStream)
-              // We can't understand why, but search is occasionally
-              // running on the main thread. This is a temporary solution.
-              .subscribeOn(Schedulers.io())
-        }
+    return Observables.combineLatest(viewCreated, searchByPhoneNumberStream) { _, phoneNumber -> phoneNumber}
+        .flatMap(patientRepository::searchByPhoneNumber)
+        .compose(PartitionSearchResultsByVisitedFacility(bloodPressureDao, currentFacilityStream))
+        .withLatestFrom(currentFacilityStream)
         .map { (results, currentFacility) ->
           { ui: Ui ->
             ui.updateSearchResults(generateListItems(results, currentFacility))

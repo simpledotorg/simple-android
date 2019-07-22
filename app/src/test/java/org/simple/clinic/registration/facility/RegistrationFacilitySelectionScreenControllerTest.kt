@@ -72,7 +72,6 @@ class RegistrationFacilitySelectionScreenControllerTest {
   private lateinit var controller: RegistrationFacilitySelectionScreenController
 
   private val configTemplate = RegistrationConfig(
-      retryBackOffDelayInMinutes = 0,
       locationListenerExpiry = Duration.ofSeconds(0),
       locationUpdateInterval = Duration.ofSeconds(0),
       proximityThresholdForNearbyFacilities = Distance.ofKilometers(0.0),

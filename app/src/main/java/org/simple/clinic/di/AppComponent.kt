@@ -7,7 +7,6 @@ import org.simple.clinic.activity.TheActivityComponent
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.login.OtpSmsReceiver
 import org.simple.clinic.newentry.clearbutton.ClearFieldImageButton
-import org.simple.clinic.registration.RegistrationWorker
 import org.simple.clinic.storage.Migration_27_28
 import org.simple.clinic.storage.Migration_29_30
 import org.simple.clinic.storage.Migration_34_35
@@ -24,7 +23,6 @@ interface AppComponent {
   fun inject(target: ReleaseClinicApp)
   fun inject(target: SyncWorker)
   fun inject(target: ClearFieldImageButton)
-  fun inject(target: RegistrationWorker)
   fun inject(target: OtpSmsReceiver)
   fun inject(target: DataSync)
   fun inject(target: Migration_27_28)

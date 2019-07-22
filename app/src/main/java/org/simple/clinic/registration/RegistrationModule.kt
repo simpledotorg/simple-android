@@ -20,7 +20,6 @@ open class RegistrationModule {
   @Provides
   open fun config(): Single<RegistrationConfig> {
     return Single.just(RegistrationConfig(
-        retryBackOffDelayInMinutes = 1,
         locationListenerExpiry = Duration.ofSeconds(5),
         locationUpdateInterval = Duration.ofSeconds(1),
         proximityThresholdForNearbyFacilities = Distance.ofKilometers(2.0),

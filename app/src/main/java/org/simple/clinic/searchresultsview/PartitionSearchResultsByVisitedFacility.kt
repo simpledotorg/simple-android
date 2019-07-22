@@ -13,17 +13,8 @@ import org.simple.clinic.patient.PatientUuid
 
 class PartitionSearchResultsByVisitedFacility(
     private val bloodPressureDao: BloodPressureMeasurement.RoomDao,
-    private val facility: Facility
+    private val facilityStream: Observable<Facility>
 ) : ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
-
-  // TODO 22-Jul-2019: Remove the blocking observable
-  constructor(
-      bloodPressureDao: BloodPressureMeasurement.RoomDao,
-      facilityStream: Observable<Facility>
-  ) : this(
-      bloodPressureDao = bloodPressureDao,
-      facility = facilityStream.blockingFirst()
-  )
 
   override fun apply(upstream: Observable<List<PatientSearchResult>>): ObservableSource<PatientSearchResults> {
     val searchResults = upstream.replay().refCount()
@@ -36,22 +27,31 @@ class PartitionSearchResultsByVisitedFacility(
               .toObservable()
         }
 
-    return Observables.combineLatest(searchResults, patientToFacilityUuidStream)
-        .map { (patients, patientToFacilities) ->
+    return Observables.combineLatest(searchResults, patientToFacilityUuidStream, facilityStream)
+        .map { (patients, patientToFacilities, facility) ->
           val patientsToVisitedFacilities = mapPatientsToVisitedFacilities(patientToFacilities)
 
-          val hasVisitedCurrentFacility: (PatientSearchResult) -> Boolean = { searchResult ->
-            val patientUuid = searchResult.uuid
-            patientsToVisitedFacilities[patientUuid]?.contains(facility.uuid) ?: false
+          val (patientsInCurrentFacility, patientsInOtherFacility) = patients.partition { patientSearchResult ->
+            hasPatientVisitedFacility(
+                patientsToVisitedFacilities = patientsToVisitedFacilities,
+                facilityUuid = facility.uuid,
+                patientUuid = patientSearchResult.uuid
+            )
           }
-
-          val (patientsInCurrentFacility, patientsInOtherFacility) = patients.partition(hasVisitedCurrentFacility)
 
           PatientSearchResults(
               visitedCurrentFacility = patientsInCurrentFacility,
               notVisitedCurrentFacility = patientsInOtherFacility
           )
         }
+  }
+
+  private fun hasPatientVisitedFacility(
+      patientsToVisitedFacilities: Map<PatientUuid, Set<FacilityUuid>>,
+      facilityUuid: FacilityUuid,
+      patientUuid: PatientUuid
+  ): Boolean {
+    return patientsToVisitedFacilities[patientUuid]?.contains(facilityUuid) ?: false
   }
 
   private fun mapPatientsToVisitedFacilities(patientToFacilities: List<PatientToFacilityId>): Map<PatientUuid, Set<FacilityUuid>> {

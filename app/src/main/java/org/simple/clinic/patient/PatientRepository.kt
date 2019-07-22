@@ -10,6 +10,8 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
+import org.simple.clinic.patient.PatientSearchCriteria.ByName
+import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
@@ -57,20 +59,13 @@ class PatientRepository @Inject constructor(
   private var ongoingNewPatientEntry: OngoingNewPatientEntry = OngoingNewPatientEntry()
 
   fun search(criteria: PatientSearchCriteria): Observable<List<PatientSearchResult>> {
-    return when(criteria) {
-      is PatientSearchCriteria.ByName -> search(criteria.patientName)
-      is PatientSearchCriteria.ByPhoneNumber -> search(criteria.phoneNumber)
+    return when (criteria) {
+      is ByName -> searchByName(criteria.patientName)
+      is ByPhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
     }
   }
 
-  @Deprecated(
-      message = "use the criteria version of the search method",
-      replaceWith = ReplaceWith(
-          expression = "search(PatientSearchCriteria.ByName(name))",
-          imports = ["org.simple.clinic.patient.PatientSearchCriteria"]
-      )
-  )
-  fun search(name: String): Observable<List<PatientSearchResult>> {
+  private fun searchByName(name: String): Observable<List<PatientSearchResult>> {
     val timingTracker = OperationTimingTracker("Search Patient", utcClock)
 
     val fetchPatientNameAnalytics = "Fetch Name and Id"
@@ -107,14 +102,7 @@ class PatientRepository @Inject constructor(
         .doOnSubscribe { timingTracker.start(fetchPatientNameAnalytics) }
   }
 
-  @Deprecated(
-      message = "use the criteria version of the search method",
-      replaceWith = ReplaceWith(
-          expression = "search(PatientSearchCriteria.ByPhoneNumber(name))",
-          imports = ["org.simple.clinic.patient.PatientSearchCriteria"]
-      )
-  )
-  fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
+  private fun searchByPhoneNumber(phoneNumber: String): Observable<List<PatientSearchResult>> {
     return database
         .patientSearchDao()
         .searchByPhoneNumber(phoneNumber)

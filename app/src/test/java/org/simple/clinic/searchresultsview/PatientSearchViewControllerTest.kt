@@ -19,6 +19,8 @@ import org.simple.clinic.bp.PatientToFacilityId
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchCriteria.*
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
@@ -60,8 +62,8 @@ class PatientSearchViewControllerTest {
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-    whenever(patientRepository.search(patientName)).thenReturn(Observable.never())
-    whenever(patientRepository.searchByPhoneNumber(phoneNumber)).thenReturn(Observable.never())
+    whenever(patientRepository.search(ByName(patientName))).thenReturn(Observable.never())
+    whenever(patientRepository.search(ByPhoneNumber(phoneNumber))).thenReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -77,7 +79,7 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
         )))
-    whenever(patientRepository.search(patientName))
+    whenever(patientRepository.search(ByName(patientName)))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // when
@@ -103,7 +105,7 @@ class PatientSearchViewControllerTest {
   @Test
   fun `when searching patients by name returns no results, the empty state should be displayed`() {
     // given
-    whenever(patientRepository.search(patientName))
+    whenever(patientRepository.search(ByName(patientName)))
         .thenReturn(Observable.just(emptyList()))
     whenever(bloodPressureDao.patientToFacilityIds(emptyList()))
         .thenReturn(Flowable.just(emptyList()))
@@ -129,7 +131,7 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = currentFacility.uuid)
         )))
-    whenever(patientRepository.search(patientName))
+    whenever(patientRepository.search(ByName(patientName)))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // when
@@ -163,7 +165,7 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = otherFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
         )))
-    whenever(patientRepository.search(patientName))
+    whenever(patientRepository.search(ByName(patientName)))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // then
@@ -226,7 +228,7 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
         )))
-    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // when
@@ -252,7 +254,7 @@ class PatientSearchViewControllerTest {
   @Test
   fun `when searching patients by phone returns no results, the empty state should be displayed`() {
     // given
-    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
         .thenReturn(Observable.just(emptyList()))
     whenever(bloodPressureDao.patientToFacilityIds(emptyList()))
         .thenReturn(Flowable.just(emptyList()))
@@ -278,7 +280,7 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = currentFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = currentFacility.uuid)
         )))
-    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // when
@@ -312,7 +314,7 @@ class PatientSearchViewControllerTest {
             PatientToFacilityId(patientUuid = patientUuid1, facilityUuid = otherFacility.uuid),
             PatientToFacilityId(patientUuid = patientUuid2, facilityUuid = otherFacility.uuid)
         )))
-    whenever(patientRepository.searchByPhoneNumber(phoneNumber))
+    whenever(patientRepository.search(ByPhoneNumber(phoneNumber)))
         .thenReturn(Observable.just(listOf(patientSearchResult1, patientSearchResult2)))
 
     // then

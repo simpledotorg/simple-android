@@ -16,6 +16,15 @@ class PartitionSearchResultsByVisitedFacility(
     private val facility: Facility
 ) : ObservableTransformer<List<PatientSearchResult>, PatientSearchResults> {
 
+  // TODO 22-Jul-2019: Remove the blocking observable
+  constructor(
+      bloodPressureDao: BloodPressureMeasurement.RoomDao,
+      facilityStream: Observable<Facility>
+  ) : this(
+      bloodPressureDao = bloodPressureDao,
+      facility = facilityStream.blockingFirst()
+  )
+
   override fun apply(upstream: Observable<List<PatientSearchResult>>): ObservableSource<PatientSearchResults> {
     val searchResults = upstream.replay().refCount()
 

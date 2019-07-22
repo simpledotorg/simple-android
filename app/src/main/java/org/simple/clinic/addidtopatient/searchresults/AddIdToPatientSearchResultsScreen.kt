@@ -16,8 +16,8 @@ import org.simple.clinic.newentry.PatientEntryScreenKey
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
-import org.simple.clinic.searchresultsview.SearchPatientBy
-import org.simple.clinic.searchresultsview.SearchPatientCriteria
+import org.simple.clinic.searchresultsview.SearchPatientInput
+import org.simple.clinic.searchresultsview.SearchPatientWithInput
 import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -113,7 +113,7 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
     val screenKey = screenRouter.key<AddIdToPatientSearchResultsScreenKey>(this)
     searchResultsView
         .downstreamUiEvents
-        .onNext(SearchPatientCriteria(SearchPatientBy.Name(screenKey.fullName)))
+        .onNext(SearchPatientWithInput(SearchPatientInput.Name(searchText = screenKey.fullName)))
     return Observable.just(AddIdToPatientSearchResultsScreenCreated(screenKey.fullName, screenKey.identifier))
   }
 

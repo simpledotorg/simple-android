@@ -72,7 +72,7 @@ class PatientSearchViewControllerTest {
   @Parameters(method = "params for search criteria")
   fun `when searching patients by name returns results, the results should be displayed`(
       searchCriteria: PatientSearchCriteria,
-      searchPatientBy: SearchPatientBy
+      searchPatientInput: SearchPatientInput
   ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
@@ -89,7 +89,7 @@ class PatientSearchViewControllerTest {
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
+    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -111,7 +111,7 @@ class PatientSearchViewControllerTest {
   @Parameters(method = "params for search criteria")
   fun `when searching patients by name returns no results, the empty state should be displayed`(
       searchCriteria: PatientSearchCriteria,
-      searchPatientBy: SearchPatientBy
+      searchPatientInput: SearchPatientInput
   ) {
     // given
     whenever(patientRepository.search(searchCriteria))
@@ -121,7 +121,7 @@ class PatientSearchViewControllerTest {
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
+    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
 
     // then
     verify(screen).updateSearchResults(emptyList())
@@ -132,7 +132,7 @@ class PatientSearchViewControllerTest {
   @Parameters(method = "params for search criteria")
   fun `when searching by name and there are patients only in current facility, then "Other Results" header should not be shown`(
       searchCriteria: PatientSearchCriteria,
-      searchPatientBy: SearchPatientBy
+      searchPatientInput: SearchPatientInput
   ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
@@ -149,7 +149,7 @@ class PatientSearchViewControllerTest {
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
+    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -170,7 +170,7 @@ class PatientSearchViewControllerTest {
   @Parameters(method = "params for search criteria")
   fun `when searching by name and there are patients only in other facilities, then current facility header with "no results" should be shown`(
       searchCriteria: PatientSearchCriteria,
-      searchPatientBy: SearchPatientBy
+      searchPatientInput: SearchPatientInput
   ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
@@ -187,7 +187,7 @@ class PatientSearchViewControllerTest {
 
     // then
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy = searchPatientBy))
+    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -210,19 +210,19 @@ class PatientSearchViewControllerTest {
   private fun `params for search criteria`(): List<List<Any>> {
     fun testCase(
         searchCriteria: PatientSearchCriteria,
-        searchPatientBy: SearchPatientBy
+        searchPatientInput: SearchPatientInput
     ): List<Any> {
-      return listOf(searchCriteria, searchPatientBy)
+      return listOf(searchCriteria, searchPatientInput)
     }
 
     return listOf(
         testCase(
             searchCriteria = ByName(patientName = patientName),
-            searchPatientBy = SearchPatientBy.Name(searchText = patientName)
+            searchPatientInput = SearchPatientInput.Name(searchText = patientName)
         ),
         testCase(
             searchCriteria = ByPhoneNumber(phoneNumber = phoneNumber),
-            searchPatientBy = SearchPatientBy.PhoneNumber(searchText = phoneNumber)
+            searchPatientInput = SearchPatientInput.PhoneNumber(searchText = phoneNumber)
         )
     )
   }
@@ -238,19 +238,19 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search by parameters on register click")
-  fun `when register new patient clicked then RegisterNewPatient event should be emitted`(searchPatientBy: SearchPatientBy) {
+  fun `when register new patient clicked then RegisterNewPatient event should be emitted`(searchPatientInput: SearchPatientInput) {
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientCriteria(searchPatientBy))
+    uiEvents.onNext(SearchPatientWithInput(searchPatientInput))
     uiEvents.onNext(RegisterNewPatientClicked)
 
-    verify(screen).registerNewPatient(RegisterNewPatient(searchPatientBy))
+    verify(screen).registerNewPatient(RegisterNewPatient(searchPatientInput))
   }
 
   @Suppress("Unused")
-  private fun `params for search by parameters on register click`(): List<SearchPatientBy> {
+  private fun `params for search by parameters on register click`(): List<SearchPatientInput> {
     return listOf(
-        SearchPatientBy.Name(searchText = patientName),
-        SearchPatientBy.PhoneNumber(searchText = phoneNumber)
+        SearchPatientInput.Name(searchText = patientName),
+        SearchPatientInput.PhoneNumber(searchText = phoneNumber)
     )
   }
 }

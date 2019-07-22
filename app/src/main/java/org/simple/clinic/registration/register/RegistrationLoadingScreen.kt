@@ -33,11 +33,18 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
 
     bindUiToController(
         ui = this,
-        events = Observable.just<UiEvent>(ScreenCreated()),
+        events = Observable.merge(screenCreates(), retryClicks()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
   }
+
+  private fun screenCreates() = Observable.just<UiEvent>(ScreenCreated())
+
+  private fun retryClicks() = RxView
+      .clicks(errorRetryButton)
+      .map { RegisterErrorRetryClicked }
+      .doAfterNext { showLoader() }
 
   fun openHomeScreen() {
     screenRouter.clearHistoryAndPush(HomeScreenKey(), RouterDirection.FORWARD)
@@ -53,6 +60,10 @@ class RegistrationLoadingScreen(context: Context, attrs: AttributeSet) : LinearL
     errorTitle.text = resources.getString(R.string.registrationloader_error_unexpected_title)
     errorMessage.text = resources.getString(R.string.registrationloader_error_unexpected_message)
     errorMessage.visibility = View.VISIBLE
+    viewSwitcher.showNext()
+  }
+
+  fun showLoader() {
     viewSwitcher.showNext()
   }
 }

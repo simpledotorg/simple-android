@@ -3,6 +3,7 @@
 ## Next Release
 ### Internal
 - Remove unused Communication model
+- Remove deprecated `validate` function and `Result` enum from `UserInputDateValidator`
 
 ## On Demo
 ### Feature

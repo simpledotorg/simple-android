@@ -14,7 +14,7 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.VALID
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 import org.threeten.bp.format.DateTimeFormatter
@@ -77,7 +77,7 @@ class OngoingNewPatientEntryTest {
 
     val mockDobValidator = mock<UserInputDateValidator>()
     whenever(mockDobValidator.dateInUserTimeZone()).thenReturn(LocalDate.now(UTC))
-    whenever(mockDobValidator.validate2("01/01/3000")).thenReturn(DateIsInFuture)
+    whenever(mockDobValidator.validate("01/01/3000")).thenReturn(DateIsInFuture)
 
     val mockNumValidator = mock<PhoneNumberValidator>()
     whenever(mockNumValidator.validate("phone-number", LANDLINE_OR_MOBILE)).thenReturn(VALID)

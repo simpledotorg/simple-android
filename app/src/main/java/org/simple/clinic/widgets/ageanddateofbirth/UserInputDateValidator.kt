@@ -13,29 +13,29 @@ class UserInputDateValidator @Inject constructor(
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) {
 
-  sealed class Result2 {
-    data class Valid(val parsedDate: LocalDate) : Result2()
-    sealed class Invalid : Result2() {
+  sealed class Result {
+    data class Valid(val parsedDate: LocalDate) : Result()
+    sealed class Invalid : Result() {
       object InvalidPattern : Invalid()
       object DateIsInFuture : Invalid()
     }
   }
 
-  fun validate2(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result2 {
+  fun validate(dateText: String, nowDate: LocalDate = dateInUserTimeZone()): Result {
     try {
       if (dateText.isBlank()) {
-        return Result2.Invalid.InvalidPattern
+        return Result.Invalid.InvalidPattern
       }
 
       val parsedDate = dateOfBirthFormat.parse(dateText, LocalDate::from)
       return when {
-        parsedDate > nowDate -> Result2.Invalid.DateIsInFuture
-        else -> Result2.Valid(parsedDate)
+        parsedDate > nowDate -> Result.Invalid.DateIsInFuture
+        else -> Result.Valid(parsedDate)
       }
 
     } catch (e: Exception) {
       return when (e) {
-        is DateTimeParseException -> Result2.Invalid.InvalidPattern
+        is DateTimeParseException -> Result.Invalid.InvalidPattern
         else -> throw e
       }
     }

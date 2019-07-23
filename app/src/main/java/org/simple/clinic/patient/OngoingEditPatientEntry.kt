@@ -15,9 +15,9 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 
 data class OngoingEditPatientEntry(
     val name: String,
@@ -66,7 +66,7 @@ data class OngoingEditPatientEntry(
     }
 
     if (ageOrDateOfBirth is EitherAgeOrDateOfBirth.EntryWithDateOfBirth) {
-      when (dobValidator.validate2(ageOrDateOfBirth.dateOfBirth)) {
+      when (dobValidator.validate(ageOrDateOfBirth.dateOfBirth)) {
         InvalidPattern -> errors.add(INVALID_DATE_OF_BIRTH)
         DateIsInFuture -> errors.add(DATE_OF_BIRTH_IN_FUTURE)
         is Valid -> { /* Nothing to do here. */ }

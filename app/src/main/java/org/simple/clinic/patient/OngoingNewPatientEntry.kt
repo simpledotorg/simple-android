@@ -21,9 +21,9 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_T
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 
 /**
  * Represents user input on the UI, which is why every field is a String.
@@ -52,7 +52,7 @@ data class OngoingNewPatientEntry(
         errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
       } else if (dateOfBirth != null) {
-        val dobValidationResult = dobValidator.validate2(dateOfBirth)
+        val dobValidationResult = dobValidator.validate(dateOfBirth)
         errors += when (dobValidationResult) {
           InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
           DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)

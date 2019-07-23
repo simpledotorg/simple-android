@@ -48,9 +48,9 @@ import org.simple.clinic.util.toLocalDateAtZone
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
@@ -351,10 +351,10 @@ class BloodPressureEntrySheetControllerTest {
   @Parameters(method = "params for checking valid date input")
   fun `when save is clicked, date entry is active, but input is invalid then BP measurement should not be saved`(
       openAs: OpenAs,
-      result: UserInputDateValidator.Result2
+      result: UserInputDateValidator.Result
   ) {
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
-    whenever(dateValidator.validate2(any(), any())).thenReturn(result)
+    whenever(dateValidator.validate(any(), any())).thenReturn(result)
 
     uiEvents.onNext(BloodPressureEntrySheetCreated(openAs))
     uiEvents.onNext(BloodPressureScreenChanged(DATE_ENTRY))
@@ -370,7 +370,7 @@ class BloodPressureEntrySheetControllerTest {
     }
 
     verify(sheet, never()).setBpSavedResultAndFinish()
-    verify(dateValidator).validate2("01/04/1909")
+    verify(dateValidator).validate("01/04/1909")
   }
 
   @Suppress("Unused")
@@ -393,7 +393,7 @@ class BloodPressureEntrySheetControllerTest {
         .thenReturn(ErrorSystolicEmpty)
         .thenReturn(Success(130, 110))
 
-    whenever(dateValidator.validate2(any(), any()))
+    whenever(dateValidator.validate(any(), any()))
         .thenReturn(InvalidPattern)
         .thenReturn(Valid(inputDate))
 
@@ -434,7 +434,7 @@ class BloodPressureEntrySheetControllerTest {
     val existingBp = PatientMocker.bp(systolic = 9000, diastolic = 8999, createdAt = oldCreatedAt, updatedAt = oldCreatedAt, recordedAt = oldCreatedAt)
 
     val newInputDate = LocalDate.of(1991, 2, 14)
-    whenever(dateValidator.validate2(any(), any())).thenReturn(Valid(newInputDate))
+    whenever(dateValidator.validate(any(), any())).thenReturn(Valid(newInputDate))
     whenever(bpValidator.validate(any(), any())).thenReturn(Success(120, 110))
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.bp()))
     whenever(bloodPressureRepository.measurement(existingBp.uuid)).thenReturn(Observable.just(existingBp))
@@ -469,10 +469,10 @@ class BloodPressureEntrySheetControllerTest {
   @Parameters(method = "params for showing date validation errors")
   fun `when save is clicked, date entry is active and input is invalid then validation errors should be shown`(
       openAs: OpenAs,
-      errorResult: UserInputDateValidator.Result2,
+      errorResult: UserInputDateValidator.Result,
       uiChangeVerification: UiChange
   ) {
-    whenever(dateValidator.validate2(any(), any())).thenReturn(errorResult)
+    whenever(dateValidator.validate(any(), any())).thenReturn(errorResult)
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.never())
 
     uiEvents.run {
@@ -689,7 +689,7 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
 
     with(uiEvents) {
       onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
@@ -716,7 +716,7 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
 
     with(uiEvents) {
       onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
@@ -743,7 +743,7 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
 
     val bp = PatientMocker.bp(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
@@ -773,7 +773,7 @@ class BloodPressureEntrySheetControllerTest {
     val diastolic = 110.toString()
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
+    whenever(dateValidator.validate(eq("01/24/1991"), any())).thenReturn(InvalidPattern)
 
     val bp = PatientMocker.bp(patientUuid = patientUuid)
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(bp))
@@ -804,7 +804,7 @@ class BloodPressureEntrySheetControllerTest {
     val localDate = LocalDate.of(2016, 5, 10)
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("10/05/1916"), any())).thenReturn(Valid(localDate))
+    whenever(dateValidator.validate(eq("10/05/1916"), any())).thenReturn(Valid(localDate))
 
     with(uiEvents) {
       onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
@@ -833,7 +833,7 @@ class BloodPressureEntrySheetControllerTest {
     val localDate = LocalDate.of(2016, 5, 10)
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("10/05/1916"), any())).thenReturn(Valid(localDate))
+    whenever(dateValidator.validate(eq("10/05/1916"), any())).thenReturn(Valid(localDate))
 
     with(uiEvents) {
       onNext(BloodPressureEntrySheetCreated(OpenAs.New(patientUuid)))
@@ -862,7 +862,7 @@ class BloodPressureEntrySheetControllerTest {
     val inputDate = LocalDate.of(2016, 5, 10)
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("01/02/1916"), any())).thenReturn(Valid(inputDate))
+    whenever(dateValidator.validate(eq("01/02/1916"), any())).thenReturn(Valid(inputDate))
     whenever(bloodPressureRepository.saveMeasurement(any(), any(), any(), any(), any(), any()))
         .thenReturn(Single.just(PatientMocker.bp(patientUuid = patientUuid)))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
@@ -915,7 +915,7 @@ class BloodPressureEntrySheetControllerTest {
     val newInputDate = LocalDate.of(1991, 2, 14)
 
     whenever(bpValidator.validate(systolic, diastolic)).thenReturn(Success(systolic.toInt(), diastolic.toInt()))
-    whenever(dateValidator.validate2(eq("01/02/1916"), any())).thenReturn(Valid(newInputDate))
+    whenever(dateValidator.validate(eq("01/02/1916"), any())).thenReturn(Valid(newInputDate))
     whenever(appointmentRepository.markAppointmentsCreatedBeforeTodayAsVisited(patientUuid)).thenReturn(Completable.complete())
     whenever(bloodPressureRepository.measurement(any())).thenReturn(Observable.just(existingBp))
 

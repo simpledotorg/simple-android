@@ -34,9 +34,9 @@ import org.simple.clinic.util.exhaustive
 import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.Valid
 import org.threeten.bp.LocalDate
 import java.util.UUID
 import javax.inject.Inject
@@ -391,7 +391,7 @@ class BloodPressureEntrySheetController @Inject constructor(
 
     val validations = Observables.combineLatest(screenChanges, dateChanges)
         .map { (_, date) ->
-          val validationResult = dateValidator.validate2(date)
+          val validationResult = dateValidator.validate(date)
           BloodPressureDateValidated(date, validationResult)
         }
 

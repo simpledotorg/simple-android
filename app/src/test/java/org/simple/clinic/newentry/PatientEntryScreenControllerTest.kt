@@ -49,6 +49,8 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset.UTC
 
@@ -124,7 +126,7 @@ class PatientEntryScreenControllerTest {
   fun `when save button is clicked then a patient record should be created from the form input`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
+    whenever(dobValidator.validate2(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
@@ -185,7 +187,7 @@ class PatientEntryScreenControllerTest {
   fun `when screen is paused then ongoing patient entry should be saved`() {
     whenever(patientRepository.ongoingEntry()).thenReturn(Single.just(OngoingNewPatientEntry()))
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    whenever(dobValidator.validate(any(), any())).thenReturn(Result.VALID)
+    whenever(dobValidator.validate2(any(), any())).thenReturn(Valid(LocalDate.parse("1993-04-12")))
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
 
     uiEvents.onNext(PatientFullNameTextChanged("Ashok"))
@@ -219,16 +221,16 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientStateTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    whenever(dobValidator.validate("33/33/3333")).thenReturn(Result.DATE_IS_IN_FUTURE)
+    whenever(dobValidator.validate2("33/33/3333")).thenReturn(Invalid.DateIsInFuture)
     uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    whenever(dobValidator.validate(" ")).thenReturn(Result.INVALID_PATTERN)
+    whenever(dobValidator.validate2(" ")).thenReturn(Invalid.InvalidPattern)
     uiEvents.onNext(PatientAgeTextChanged(" "))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    whenever(dobValidator.validate("16/07/2018")).thenReturn(Result.INVALID_PATTERN)
+    whenever(dobValidator.validate2("16/07/2018")).thenReturn(Invalid.InvalidPattern)
     uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
@@ -264,16 +266,16 @@ class PatientEntryScreenControllerTest {
     uiEvents.onNext(PatientStateTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    whenever(dobValidator.validate("33/33/3333")).thenReturn(Result.DATE_IS_IN_FUTURE)
+    whenever(dobValidator.validate2("33/33/3333")).thenReturn(Invalid.DateIsInFuture)
     uiEvents.onNext(PatientDateOfBirthTextChanged("33/33/3333"))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    whenever(dobValidator.validate(" ")).thenReturn(Result.INVALID_PATTERN)
+    whenever(dobValidator.validate2(" ")).thenReturn(Invalid.InvalidPattern)
     uiEvents.onNext(PatientAgeTextChanged(" "))
     uiEvents.onNext(PatientDateOfBirthTextChanged(""))
     uiEvents.onNext(PatientEntrySaveClicked())
 
-    whenever(dobValidator.validate("16/07/2018")).thenReturn(Result.INVALID_PATTERN)
+    whenever(dobValidator.validate2("16/07/2018")).thenReturn(Invalid.InvalidPattern)
     uiEvents.onNext(PatientDateOfBirthTextChanged("16/07/2018"))
     uiEvents.onNext(PatientEntrySaveClicked())
 

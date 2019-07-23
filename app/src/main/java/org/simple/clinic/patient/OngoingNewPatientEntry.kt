@@ -1,9 +1,5 @@
 package org.simple.clinic.patient
 
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.DATE_IS_IN_FUTURE
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.INVALID_PATTERN
-import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result.VALID
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_ABSENT
 import org.simple.clinic.patient.PatientEntryValidationError.BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 import org.simple.clinic.patient.PatientEntryValidationError.COLONY_OR_VILLAGE_EMPTY
@@ -24,6 +20,10 @@ import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.BLANK
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_LONG
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Result.LENGTH_TOO_SHORT
 import org.simple.clinic.registration.phone.PhoneNumberValidator.Type.LANDLINE_OR_MOBILE
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.DateIsInFuture
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Invalid.InvalidPattern
+import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator.Result2.Valid
 
 /**
  * Represents user input on the UI, which is why every field is a String.
@@ -52,11 +52,11 @@ data class OngoingNewPatientEntry(
         errors += BOTH_DATEOFBIRTH_AND_AGE_PRESENT
 
       } else if (dateOfBirth != null) {
-        val dobValidationResult = dobValidator.validate(dateOfBirth)
+        val dobValidationResult = dobValidator.validate2(dateOfBirth)
         errors += when (dobValidationResult) {
-          INVALID_PATTERN -> listOf(INVALID_DATE_OF_BIRTH)
-          DATE_IS_IN_FUTURE -> listOf(DATE_OF_BIRTH_IN_FUTURE)
-          VALID -> listOf()
+          InvalidPattern -> listOf(INVALID_DATE_OF_BIRTH)
+          DateIsInFuture -> listOf(DATE_OF_BIRTH_IN_FUTURE)
+          is Valid -> emptyList()
         }
       }
       if (fullName.isBlank()) {

@@ -12,8 +12,8 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSearchCriteria.ByName
-import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
@@ -50,8 +50,8 @@ class PatientSearchViewController @Inject constructor(
         .map { it.searchPatientInput }
         .map { searchPatientBy ->
           when (searchPatientBy) {
-            is SearchPatientInput.Name -> ByName(searchPatientBy.searchText)
-            is SearchPatientInput.PhoneNumber -> ByPhoneNumber(searchPatientBy.searchText)
+            is SearchPatientInput.Name -> Name(searchPatientBy.searchText)
+            is SearchPatientInput.PhoneNumber -> PhoneNumber(searchPatientBy.searchText)
           }
         }
         .flatMap(patientRepository::search)

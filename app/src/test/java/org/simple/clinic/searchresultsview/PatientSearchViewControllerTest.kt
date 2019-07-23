@@ -20,8 +20,8 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
-import org.simple.clinic.patient.PatientSearchCriteria.ByName
-import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
@@ -63,8 +63,8 @@ class PatientSearchViewControllerTest {
 
     whenever(userSession.requireLoggedInUser()).thenReturn(Observable.just(user))
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(currentFacility))
-    whenever(patientRepository.search(ByName(patientName))).thenReturn(Observable.never())
-    whenever(patientRepository.search(ByPhoneNumber(phoneNumber))).thenReturn(Observable.never())
+    whenever(patientRepository.search(Name(patientName))).thenReturn(Observable.never())
+    whenever(patientRepository.search(PhoneNumber(phoneNumber))).thenReturn(Observable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -217,11 +217,11 @@ class PatientSearchViewControllerTest {
 
     return listOf(
         testCase(
-            searchCriteria = ByName(patientName = patientName),
+            searchCriteria = Name(patientName = patientName),
             searchPatientInput = SearchPatientInput.Name(searchText = patientName)
         ),
         testCase(
-            searchCriteria = ByPhoneNumber(phoneNumber = phoneNumber),
+            searchCriteria = PhoneNumber(phoneNumber = phoneNumber),
             searchPatientInput = SearchPatientInput.PhoneNumber(searchText = phoneNumber)
         )
     )

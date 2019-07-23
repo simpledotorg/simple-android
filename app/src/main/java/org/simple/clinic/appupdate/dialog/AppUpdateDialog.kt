@@ -8,6 +8,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.R
 
 class AppUpdateDialog : DialogFragment() {
@@ -37,10 +38,8 @@ class AppUpdateDialog : DialogFragment() {
   }
 
   private fun launchPlayStoreForUpdate() {
-    val appPackageName = "org.simple.clinic"
     val intent = Intent(ACTION_VIEW).apply {
-      data = Uri.parse(
-          "https://play.google.com/store/apps/details?id=$appPackageName")
+      data = Uri.parse("https://play.google.com/store/apps/details?id=${BuildConfig.APPLICATION_ID}")
     }
     startActivity(intent)
   }

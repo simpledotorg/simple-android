@@ -9,8 +9,8 @@ import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
-import org.simple.clinic.patient.PatientSearchCriteria.ByName
-import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
 import org.simple.clinic.patient.businessid.BusinessId
@@ -59,8 +59,8 @@ class PatientRepository @Inject constructor(
 
   fun search(criteria: PatientSearchCriteria): Observable<List<PatientSearchResult>> {
     return when (criteria) {
-      is ByName -> searchByName(criteria.patientName)
-      is ByPhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
+      is Name -> searchByName(criteria.patientName)
+      is PhoneNumber -> searchByPhoneNumber(criteria.phoneNumber)
     }
   }
 

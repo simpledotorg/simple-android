@@ -1,4 +1,4 @@
-package org.simple.clinic.allpatientsinfacility
+package org.simple.clinic.util.scheduler
 
 import io.reactivex.Scheduler
 

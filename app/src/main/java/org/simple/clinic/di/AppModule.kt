@@ -7,7 +7,7 @@ import android.os.Vibrator
 import androidx.work.WorkManager
 import dagger.Module
 import dagger.Provides
-import org.simple.clinic.allpatientsinfacility.SchedulersProvider
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.appupdate.AppUpdateModule
 import org.simple.clinic.crash.CrashReporterModule
 import org.simple.clinic.facility.change.FacilityChangeModule
@@ -22,7 +22,7 @@ import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
-import org.simple.clinic.util.DefaultSchedulersProvider
+import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
 import org.simple.clinic.util.ElapsedRealtimeClock
 import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock

@@ -9,6 +9,7 @@ import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.google.android.play.core.install.model.AppUpdateType.FLEXIBLE
 import com.google.android.play.core.install.model.UpdateAvailability
 import io.reactivex.Observable
+import org.simple.clinic.BuildConfig
 import org.simple.clinic.appupdate.AppUpdateState.AppUpdateStateError
 import org.simple.clinic.appupdate.AppUpdateState.DontShowAppUpdate
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
@@ -72,7 +73,7 @@ class CheckAppUpdateAvailability @Inject constructor(
 }
 
 private val isVersionApplicableForUpdate = { availableVersionCode: Int, appContext: Application, config: AppUpdateConfig ->
-  val packageInfo = appContext.packageManager.getPackageInfo(appContext.packageName, 0)
+  val packageInfo = appContext.packageManager.getPackageInfo(BuildConfig.APPLICATION_ID, 0)
 
   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
     val longVersionCode = packageInfo.longVersionCode

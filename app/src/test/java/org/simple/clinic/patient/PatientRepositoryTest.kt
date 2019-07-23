@@ -17,7 +17,6 @@ import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -36,6 +35,8 @@ import org.simple.clinic.patient.sync.PatientPhoneNumberPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.advanceTimeBy
+import org.simple.clinic.util.scheduler.TestSchedulersProvider
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Duration
 import org.threeten.bp.format.DateTimeFormatter
@@ -68,6 +69,7 @@ class PatientRepositoryTest {
   private val dateOfBirthFormat = DateTimeFormatter.ISO_DATE
   private val user = PatientMocker.loggedInUser()
   private val facility = PatientMocker.facility()
+  private val schedulersProvider = TestSchedulersProvider()
 
   @Before
   fun setUp() {
@@ -82,6 +84,7 @@ class PatientRepositoryTest {
         configProvider = Observable.fromCallable { config },
         reportsRepository = mock(),
         businessIdMetaDataAdapter = businessIdMetaAdapter,
+        schedulersProvider = schedulersProvider,
         dateOfBirthFormat = dateOfBirthFormat)
 
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
@@ -324,7 +327,6 @@ class PatientRepositoryTest {
   }
 
   @Test
-  @Ignore("temporarily disabled")
   fun `the timing of all parts of search patient flow must be reported to analytics`() {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
@@ -342,19 +344,19 @@ class PatientRepositoryTest {
     whenever(patientSearchResultDao.nameAndId(any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(PatientNameAndId(patientUuid, "Name")))
-                .doOnNext { clock.advanceBy(timeTakenToFetchPatientNameAndId) }
+                .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFetchPatientNameAndId) }
                 .toFlowable(BackpressureStrategy.LATEST)
         )
     whenever(searchPatientByName.search(any(), any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(patientUuid))
-                .doOnNext { clock.advanceBy(timeTakenToFuzzyFilterPatientNames) }
+                .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFuzzyFilterPatientNames) }
                 .firstOrError()
         )
     whenever(patientSearchResultDao.searchByIds(any(), any()))
         .thenReturn(
             BehaviorSubject.createDefault(listOf(PatientMocker.patientSearchResult(uuid = patientUuid)))
-                .doOnNext { clock.advanceBy(timeTakenToFetchPatientDetails) }
+                .doOnNext { schedulersProvider.testScheduler.advanceTimeBy(timeTakenToFetchPatientDetails) }
                 .firstOrError()
         )
     whenever(database.patientSearchDao()).thenReturn(patientSearchResultDao)

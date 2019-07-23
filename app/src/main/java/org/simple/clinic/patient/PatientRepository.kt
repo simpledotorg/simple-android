@@ -5,6 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -29,6 +30,8 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.minus
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
 import org.threeten.bp.Instant
@@ -52,6 +55,7 @@ class PatientRepository @Inject constructor(
     private val configProvider: Observable<PatientConfig>,
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
+    private val schedulersProvider: SchedulersProvider,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
@@ -66,33 +70,81 @@ class PatientRepository @Inject constructor(
 
   private fun searchByName(name: String): Observable<List<PatientSearchResult>> {
     return findPatientIdsMatchingName(name)
-        .switchMapSingle { matchingUuidsSortedByScore ->
+        .switchMap { matchingUuidsSortedByScore ->
           when {
-            matchingUuidsSortedByScore.isEmpty() -> Single.just(emptyList())
+            matchingUuidsSortedByScore.isEmpty() -> Observable.just(emptyList())
             else -> searchResultsByPatientUuids(matchingUuidsSortedByScore)
           }
         }
   }
 
-  private fun searchResultsByPatientUuids(patientUuids: List<UUID>): Single<List<PatientSearchResult>> {
-    return database.patientSearchDao()
-        .searchByIds(patientUuids, PatientStatus.Active)
-        .map { results ->
-          // This is needed to maintain the order of the search results
-          // so that its in the same order of the list of the UUIDs.
-          // Otherwise, the order is dependent on the SQLite default
-          // implementation.
-          val resultsByUuid = results.associateBy { it.uuid }
-          patientUuids.map { resultsByUuid.getValue(it) }
+  private fun searchResultsByPatientUuids(patientUuids: List<UUID>): Observable<List<PatientSearchResult>> {
+    val timestampScheduler = schedulersProvider.computation()
+
+    return Observable.just(database.patientSearchDao())
+        .timestamp(timestampScheduler)
+        .flatMap { timedStartQuery ->
+          timedStartQuery
+              .value()
+              .searchByIds(patientUuids, PatientStatus.Active)
+              .toObservable()
+              .map { results ->
+                // This is needed to maintain the order of the search results
+                // so that its in the same order of the list of the UUIDs.
+                // Otherwise, the order is dependent on the SQLite default
+                // implementation.
+                val resultsByUuid = results.associateBy { it.uuid }
+                patientUuids.map { resultsByUuid.getValue(it) }
+              }
+              .timestamp(timestampScheduler)
+              .doOnNext { timedEndQuery ->
+                val timeRequired = (timedEndQuery - timedStartQuery)
+                Analytics.reportTimeTaken("Search Patient:Fetch Patient Details", timeRequired)
+              }
+              .map { it.value() }
         }
   }
 
   private fun findPatientIdsMatchingName(name: String): Observable<List<UUID>> {
-    val allPatientUuidsMatchingName = database
-        .patientSearchDao()
-        .nameAndId(PatientStatus.Active)
-        .toObservable()
-        .switchMapSingle { searchPatientByName.search(name, it) }
+    val timestampScheduler = schedulersProvider.computation()
+
+    return Observable.just(database.patientSearchDao())
+        .timestamp(timestampScheduler)
+        .flatMap { timedStartQuery ->
+          timedStartQuery
+              .value()
+              .nameAndId(PatientStatus.Active)
+              .toObservable()
+              .timestamp(timestampScheduler)
+              .doOnNext { timedEndQuery ->
+                val timeRequired = (timedEndQuery - timedStartQuery)
+                Analytics.reportTimeTaken("Search Patient:Fetch Name and Id", timeRequired)
+              }
+              .map { it.value() }
+        }
+        .switchMap { patientNamesAndIds -> findPatientsWithNameMatching(patientNamesAndIds, name) }
+  }
+
+  private fun findPatientsWithNameMatching(
+      allPatientNamesAndIds: List<PatientSearchResult.PatientNameAndId>,
+      name: String
+  ): Observable<List<UUID>> {
+    val timestampScheduler = schedulersProvider.computation()
+
+    val allPatientUuidsMatchingName = Observable.just(searchPatientByName)
+        .timestamp(timestampScheduler)
+        .flatMap { timedStartQuery ->
+          timedStartQuery
+              .value()
+              .search(searchTerm = name, names = allPatientNamesAndIds)
+              .toObservable()
+              .timestamp(timestampScheduler)
+              .doOnNext { timedEndQuery ->
+                val timeRequired = (timedEndQuery - timedStartQuery)
+                Analytics.reportTimeTaken("Search Patient:Fuzzy Filtering By Name", timeRequired)
+              }
+              .map { it.value() }
+        }
 
     return Observables.combineLatest(allPatientUuidsMatchingName, configProvider)
         .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }

@@ -30,8 +30,8 @@ import org.simple.clinic.overdue.Appointment.Status.Cancelled
 import org.simple.clinic.overdue.Appointment.Status.Scheduled
 import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientSearchCriteria.ByName
-import org.simple.clinic.patient.PatientSearchCriteria.ByPhoneNumber
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.PatientStatus.Active
 import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.PatientStatus.Inactive
@@ -266,7 +266,7 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .subscribe()
 
-    val combinedPatient = patientRepository.search(ByName(patientName = "kumar"))
+    val combinedPatient = patientRepository.search(Name(patientName = "kumar"))
         .blockingFirst()
         .first()
 
@@ -316,17 +316,17 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val search0 = patientRepository.search(ByName("Vinod")).blockingFirst()
+    val search0 = patientRepository.search(Name("Vinod")).blockingFirst()
     assertThat(search0).hasSize(0)
 
-    val search1 = patientRepository.search(ByName("Alok")).blockingFirst()
+    val search1 = patientRepository.search(Name("Alok")).blockingFirst()
     val person1 = search1.first()
     assertThat(search1).hasSize(1)
     assertThat(person1.fullName).isEqualTo("Alok Kumar")
     assertThat(person1.dateOfBirth).isEqualTo(LocalDate.parse("1940-08-15"))
     assertThat(person1.phoneNumber).isEqualTo("3418959")
 
-    val search2 = patientRepository.search(ByName("ab")).blockingFirst()
+    val search2 = patientRepository.search(Name("ab")).blockingFirst()
     val expectedResultsInSearch2 = setOf(abhayKumar, abhishekKumar, abshotKumar)
 
     assertThat(search2).hasSize(expectedResultsInSearch2.size)
@@ -389,7 +389,7 @@ class PatientRepositoryAndroidTest {
     val patient3WithNoBps = createPatientProfile(fullName = "Patient with no BPs")
     patientRepository.save(listOf(patient3WithNoBps)).blockingAwait()
 
-    val searchResults = patientRepository.search(ByName("patient"))
+    val searchResults = patientRepository.search(Name("patient"))
         .blockingFirst()
         .groupBy { it.uuid }
         .mapValues { (_, results) -> results.first() }
@@ -474,13 +474,13 @@ class PatientRepositoryAndroidTest {
         .andThen(patientRepository.saveOngoingEntryAsPatient(loggedInUser, currentFacility))
         .blockingGet()
 
-    val searchResults = patientRepository.search(ByName(patientName = "Ashok")).blockingFirst()
+    val searchResults = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
     assertThat(searchResults).isNotEmpty()
     assertThat(searchResults.first().fullName).isEqualTo("Ashok Kumar")
 
     patientRepository.updatePatientStatusToDead(patient.uuid).blockingAwait()
 
-    val searchResultsAfterUpdate = patientRepository.search(ByName(patientName = "Ashok")).blockingFirst()
+    val searchResultsAfterUpdate = patientRepository.search(Name(patientName = "Ashok")).blockingFirst()
     assertThat(patientRepository.recordCount().blockingFirst()).isEqualTo(1)
     assertThat(searchResultsAfterUpdate).isEmpty()
 
@@ -548,7 +548,7 @@ class PatientRepositoryAndroidTest {
 
     assertThat(
         patientRepository
-            .search(ByName(patientName = "ame"))
+            .search(Name(patientName = "ame"))
             .blockingFirst()
             .size
     ).isEqualTo(config.limitOfSearchResults)
@@ -1963,7 +1963,7 @@ class PatientRepositoryAndroidTest {
 
     fun searchResults(phoneNumber: String): Set<UUID> {
       return patientRepository
-          .search(ByPhoneNumber(phoneNumber))
+          .search(PhoneNumber(phoneNumber))
           .blockingFirst()
           .map { it.uuid }
           .toSet()
@@ -2054,7 +2054,7 @@ class PatientRepositoryAndroidTest {
 
     fun searchResults(phoneNumber: String): List<String> {
       return patientRepository
-          .search(ByPhoneNumber(phoneNumber))
+          .search(PhoneNumber(phoneNumber))
           .blockingFirst()
           .map { it.fullName }
     }

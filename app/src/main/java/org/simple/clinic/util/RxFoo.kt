@@ -4,6 +4,7 @@ import io.reactivex.Maybe
 import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
+import io.reactivex.schedulers.Timed
 import org.threeten.bp.Duration
 import java.util.concurrent.TimeUnit
 
@@ -12,3 +13,9 @@ inline fun <reified U> Single<*>.ofType(): Maybe<U> =
         .cast(U::class.java)
 
 fun Observables.timer(duration: Duration): Observable<Long> = Observable.timer(duration.toMillis(), TimeUnit.MILLISECONDS)
+
+operator fun Timed<*>.minus(timed: Timed<*>): Duration {
+  val durationMillis = time(TimeUnit.MILLISECONDS) - timed.time(TimeUnit.MILLISECONDS)
+
+  return Duration.ofMillis(durationMillis)
+}

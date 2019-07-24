@@ -18,6 +18,8 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
+import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 
 typealias Ui = ScheduleAppointmentSheet
@@ -42,9 +44,74 @@ class ScheduleAppointmentSheetController @Inject constructor(
         dateIncrements(replayedEvents),
         dateDecrements(replayedEvents),
         schedulingSkips(replayedEvents),
-        scheduleCreates(replayedEvents)
+        scheduleCreates(replayedEvents),
+        incrementDecrements(replayedEvents),
+        enableIncrements(replayedEvents),
+        enableDecrements(replayedEvents),
+        showSelectedCalendarDate(replayedEvents)
     )
   }
+
+  private fun incrementDecrements(events: Observable<UiEvent>): Observable<UiChange> =
+      latestIndex(events)
+          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
+            possibleAppointments[latestIndex]
+          }
+          .distinctUntilChanged()
+          .map { appointment -> { ui: Ui -> ui.updateScheduledAppointment(appointment) } }
+
+  private fun enableIncrements(events: Observable<UiEvent>): Observable<UiChange> =
+      latestIndex(events)
+          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
+            latestIndex < possibleAppointments.lastIndex
+          }
+          .distinctUntilChanged()
+          .map { enable -> { ui: Ui -> ui.enableIncrementButton(enable) } }
+
+  private fun enableDecrements(events: Observable<UiEvent>): Observable<UiChange> =
+      latestIndex(events)
+          .map { it > 0 }
+          .distinctUntilChanged()
+          .map { enable -> { ui: Ui -> ui.enableDecrementButton(enable) } }
+
+  private fun showSelectedCalendarDate(events: Observable<UiEvent>): Observable<UiChange> =
+      events
+          .ofType<AppointmentCalendarDateSelected>()
+          .map {
+            val days = Period.between(LocalDate.now(utcClock), LocalDate.of(it.year, it.month, it.dayOfMonth)).days
+            ScheduleAppointment(
+                displayText = "$days days",
+                timeAmount = days,
+                chronoUnit = ChronoUnit.DAYS
+            )
+          }
+          .map { { ui: Ui -> ui.updateScheduledAppointment(it) } }
+
+  private fun latestIndex(events: Observable<UiEvent>) =
+      latestDateAction(events)
+          .scan(0) { index, action ->
+            when (action) {
+              AppointmentDateIncremented2 -> index + 1
+              AppointmentDateDecremented2 -> index - 1
+              is ScheduleAppointmentSheetCreated2 -> action.possibleAppointments.indexOf(action.defaultAppointment)
+              else -> index
+            }
+          }
+          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
+            latestIndex.coerceIn(0, possibleAppointments.lastIndex)
+          }
+
+  private fun latestDateAction(events: Observable<UiEvent>) =
+      Observable.merge(
+          events.ofType<AppointmentDateIncremented2>(),
+          events.ofType<AppointmentDateDecremented2>(),
+          events.ofType<ScheduleAppointmentSheetCreated2>()
+      )
+
+  private fun possibleAppointments(events: Observable<UiEvent>) =
+      events
+          .ofType<ScheduleAppointmentSheetCreated2>()
+          .map { it.possibleAppointments }
 
   private fun setupDefaultState(events: Observable<UiEvent>): Observable<UiChange> {
     return events.ofType<ScheduleAppointmentSheetCreated>()

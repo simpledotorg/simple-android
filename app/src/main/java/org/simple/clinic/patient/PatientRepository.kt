@@ -80,26 +80,29 @@ class PatientRepository @Inject constructor(
 
   private fun searchResultsByPatientUuids(patientUuids: List<UUID>): Observable<List<PatientSearchResult>> {
     val timestampScheduler = schedulersProvider.computation()
+    val analyticsName = "Search Patient:Fetch Patient Details"
 
-    return Observable.just(database.patientSearchDao())
+    val loadSearchResultsForUuids = database.patientSearchDao()
+        .searchByIds(patientUuids, PatientStatus.Active)
+        .toObservable()
+        .map { results ->
+          // This is needed to maintain the order of the search results
+          // so that its in the same order of the list of the UUIDs.
+          // Otherwise, the order is dependent on the SQLite default
+          // implementation.
+          val resultsByUuid = results.associateBy { it.uuid }
+          patientUuids.map { resultsByUuid.getValue(it) }
+        }
+
+    return Observable.just(loadSearchResultsForUuids)
         .timestamp(timestampScheduler)
         .flatMap { timedStartQuery ->
           timedStartQuery
               .value()
-              .searchByIds(patientUuids, PatientStatus.Active)
-              .toObservable()
-              .map { results ->
-                // This is needed to maintain the order of the search results
-                // so that its in the same order of the list of the UUIDs.
-                // Otherwise, the order is dependent on the SQLite default
-                // implementation.
-                val resultsByUuid = results.associateBy { it.uuid }
-                patientUuids.map { resultsByUuid.getValue(it) }
-              }
               .timestamp(timestampScheduler)
               .doOnNext { timedEndQuery ->
                 val timeRequired = (timedEndQuery - timedStartQuery)
-                Analytics.reportTimeTaken("Search Patient:Fetch Patient Details", timeRequired)
+                Analytics.reportTimeTaken(analyticsName, timeRequired)
               }
               .map { it.value() }
         }
@@ -107,18 +110,22 @@ class PatientRepository @Inject constructor(
 
   private fun findPatientIdsMatchingName(name: String): Observable<List<UUID>> {
     val timestampScheduler = schedulersProvider.computation()
+    val analyticsName = "Search Patient:Fetch Name and Id"
 
-    return Observable.just(database.patientSearchDao())
+    val loadAllPatientNamesAndIds = database
+        .patientSearchDao()
+        .nameAndId(PatientStatus.Active)
+        .toObservable()
+
+    return Observable.just(loadAllPatientNamesAndIds)
         .timestamp(timestampScheduler)
         .flatMap { timedStartQuery ->
           timedStartQuery
               .value()
-              .nameAndId(PatientStatus.Active)
-              .toObservable()
               .timestamp(timestampScheduler)
               .doOnNext { timedEndQuery ->
                 val timeRequired = (timedEndQuery - timedStartQuery)
-                Analytics.reportTimeTaken("Search Patient:Fetch Name and Id", timeRequired)
+                Analytics.reportTimeTaken(analyticsName, timeRequired)
               }
               .map { it.value() }
         }
@@ -130,18 +137,21 @@ class PatientRepository @Inject constructor(
       name: String
   ): Observable<List<UUID>> {
     val timestampScheduler = schedulersProvider.computation()
+    val analyticsName = "Search Patient:Fuzzy Filtering By Name"
 
-    val allPatientUuidsMatchingName = Observable.just(searchPatientByName)
+    val patientUuidsMatchingName = searchPatientByName
+        .search(searchTerm = name, names = allPatientNamesAndIds)
+        .toObservable()
+
+    val allPatientUuidsMatchingName = Observable.just(patientUuidsMatchingName)
         .timestamp(timestampScheduler)
         .flatMap { timedStartQuery ->
           timedStartQuery
               .value()
-              .search(searchTerm = name, names = allPatientNamesAndIds)
-              .toObservable()
               .timestamp(timestampScheduler)
               .doOnNext { timedEndQuery ->
                 val timeRequired = (timedEndQuery - timedStartQuery)
-                Analytics.reportTimeTaken("Search Patient:Fuzzy Filtering By Name", timeRequired)
+                Analytics.reportTimeTaken(analyticsName, timeRequired)
               }
               .map { it.value() }
         }

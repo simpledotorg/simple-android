@@ -6,16 +6,22 @@ import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.login.LoginResult
+import org.simple.clinic.user.RequestLoginOtp
+import org.simple.clinic.user.RequestLoginOtp.Result.NetworkError
+import org.simple.clinic.user.RequestLoginOtp.Result.OtherError
+import org.simple.clinic.user.RequestLoginOtp.Result.ServerError
+import org.simple.clinic.user.RequestLoginOtp.Result.Success
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
+import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = LoginPinScreen
 typealias UiChange = (Ui) -> Unit
 
 class LoginPinScreenController @Inject constructor(
-    private val userSession: UserSession
+    private val userSession: UserSession,
+    private val requestLoginOtp: RequestLoginOtp
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -39,24 +45,35 @@ class LoginPinScreenController @Inject constructor(
   }
 
   private fun submitClicks(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<LoginPinAuthenticated>()
+    val enteredPin = events
+        .ofType<LoginPinAuthenticated>()
         .map { it.pin }
-        .flatMapSingle { pin ->
-          val uiChanges = userSession.requestLoginOtp()
-              .map { result ->
-                when (result) {
-                  is LoginResult.Success -> { ui: Ui -> ui.openHomeScreen() }
-                  is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-                  else -> { ui: Ui -> ui.showUnexpectedError() }
-                }
-              }
-              // This handles the case where listening for SMS fails.
-              .onErrorReturn { { ui: Ui -> ui.showUnexpectedError() } }
 
-          userSession.ongoingLoginEntry()
-              .map { entry -> entry.copy(pin = pin) }
-              .flatMapCompletable { userSession.saveOngoingLoginEntry(it) }
-              .andThen(uiChanges)
+    val updateLoginEntry = enteredPin
+        .flatMapSingle { pin ->
+          userSession
+              .ongoingLoginEntry()
+              .map { it.copy(pin = pin) }
+        }
+        .flatMapSingle { newEntry ->
+          userSession
+              .saveOngoingLoginEntry(newEntry)
+              .toSingleDefault(newEntry)
+        }
+
+    return updateLoginEntry
+        .flatMapSingle { entry -> requestLoginOtp.requestForUser(entry.uuid) }
+        .doOnNext { result ->
+          if (result is OtherError) {
+            Timber.e(result.cause)
+          }
+        }
+        .map { result ->
+          when (result) {
+            is Success -> { ui: Ui -> ui.openHomeScreen() }
+            is NetworkError -> { ui: Ui -> ui.showNetworkError() }
+            is ServerError, is OtherError -> { ui: Ui -> ui.showUnexpectedError() }
+          }
         }
   }
 

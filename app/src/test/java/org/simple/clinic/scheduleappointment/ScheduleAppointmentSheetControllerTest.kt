@@ -4,6 +4,7 @@ import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
+import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
@@ -102,7 +103,7 @@ class ScheduleAppointmentSheetControllerTest {
     }
 
     if (current == size - 1) {
-      verify(sheet, never()).updateDisplayedDate(any())
+      verify(sheet, never()).updateScheduledAppointment(any())
       verify(sheet, never()).enableIncrementButton(any())
       verify(sheet, never()).enableDecrementButton(any())
     }
@@ -117,7 +118,7 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentDateDecremented(current, size))
 
     if (current == 0) {
-      verify(sheet, never()).updateDisplayedDate(any())
+      verify(sheet, never()).updateScheduledAppointment(any())
       verify(sheet, never()).enableIncrementButton(any())
       verify(sheet, never()).enableDecrementButton(any())
     }
@@ -236,5 +237,116 @@ class ScheduleAppointmentSheetControllerTest {
       verify(repository, never()).schedule(any(), any(), any(), any())
     }
     verify(sheet).closeSheet()
+  }
+
+  @Test
+  fun `when default appointment is set, then update scheduled appointment`() {
+    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+
+    val possibleAppointments = listOf(
+        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        defaultAppointment,
+        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+    )
+
+    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+        possibleAppointments = possibleAppointments,
+        defaultAppointment = defaultAppointment
+    ))
+
+    verify(sheet).updateScheduledAppointment(defaultAppointment)
+    verify(sheet).enableIncrementButton(true)
+    verify(sheet).enableDecrementButton(true)
+
+    verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `when incremented, then next appointment in the list should be scheduled`() {
+    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val thirdAppointment = ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+
+    val possibleAppointments = listOf(
+        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        defaultAppointment,
+        thirdAppointment
+    )
+
+    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+        possibleAppointments = possibleAppointments,
+        defaultAppointment = defaultAppointment
+    ))
+    uiEvents.onNext(AppointmentDateIncremented2)
+
+    verify(sheet).updateScheduledAppointment(defaultAppointment)
+    verify(sheet).enableIncrementButton(true)
+    verify(sheet).enableDecrementButton(true)
+
+    uiEvents.onNext(AppointmentDateIncremented2)
+
+    verify(sheet).updateScheduledAppointment(thirdAppointment)
+    verify(sheet).enableIncrementButton(false)
+
+    verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `when decremented, then previous appointment in the list should be scheduled`() {
+    val firstAppointment = ScheduleAppointment("1 day", 1, ChronoUnit.DAYS)
+    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+
+    val possibleAppointments = listOf(
+        firstAppointment,
+        defaultAppointment,
+        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+    )
+
+    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+        possibleAppointments = possibleAppointments,
+        defaultAppointment = defaultAppointment
+    ))
+
+    verify(sheet).updateScheduledAppointment(defaultAppointment)
+    verify(sheet).enableIncrementButton(true)
+    verify(sheet).enableDecrementButton(true)
+
+    uiEvents.onNext(AppointmentDateDecremented2)
+
+    verify(sheet).updateScheduledAppointment(firstAppointment)
+    verify(sheet).enableDecrementButton(false)
+
+    verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `when date is selected and date is incremented, the nearest date should be chosen`() {
+    val twoDaysAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+
+    val possibleAppointments = listOf(
+        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        twoDaysAppointment,
+        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+    )
+
+    uiEvents.onNext(ScheduleAppointmentSheetCreated2(possibleAppointments, twoDaysAppointment))
+
+    verify(sheet).updateScheduledAppointment(ScheduleAppointment("2 days", 2, ChronoUnit.DAYS))
+    verify(sheet).enableIncrementButton(true)
+    verify(sheet).enableDecrementButton(true)
+
+    val threeDaysFromNow = LocalDate.now(utcClock).plusDays(3)
+    val year = threeDaysFromNow.year
+    val month = threeDaysFromNow.monthValue
+    val dayOfMonth = threeDaysFromNow.dayOfMonth
+
+    uiEvents.onNext(AppointmentCalendarDateSelected(
+        year = year,
+        month = month,
+        dayOfMonth = dayOfMonth
+    ))
+
+    verify(sheet).updateScheduledAppointment(ScheduleAppointment("3 days", 3, ChronoUnit.DAYS))
+
+    verifyNoMoreInteractions(sheet)
   }
 }

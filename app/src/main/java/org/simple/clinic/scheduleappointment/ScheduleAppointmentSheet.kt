@@ -1,5 +1,6 @@
 package org.simple.clinic.scheduleappointment
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
@@ -11,10 +12,12 @@ import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
+import io.reactivex.subjects.Subject
 import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToControllerWithoutDelay
+import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -65,6 +68,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   @Inject
   lateinit var controller: ScheduleAppointmentSheetController
 
+  @Inject
+  lateinit var utcClock: UtcClock
+
   private var currentIndex = 0
 
   private val decrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_decrement_date)
@@ -75,6 +81,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private val doneButton by bindView<Button>(R.id.scheduleappointment_done)
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
+  private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -89,7 +96,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             decrementClicks(),
             incrementClicks(),
             notNowClicks(),
-            doneClicks()
+            doneClicks(),
+            calendarDateSelectedEvents
         ),
         controller = controller,
         screenDestroys = onDestroys
@@ -103,7 +111,11 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private fun showCalendar(date: LocalDate) {
     DatePickerDialog(
         this, { _, year, month, dayOfMonth ->
-
+      calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(
+          year = year,
+          month = month,
+          dayOfMonth = dayOfMonth
+      ))
     }, date.year, date.monthValue - 1, date.dayOfMonth).show()
   }
 
@@ -112,18 +124,12 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     super.onDestroy()
   }
 
-  private fun screenCreates(): Observable<UiEvent> {
-    val uuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
-    return Observable.just(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = possibleDates.indexOf(oneMonth),
-        patientUuid = uuid,
-        numberOfDates = possibleDates.size
-    ))
-  }
+  private fun screenCreates(): Observable<UiEvent> =
+      Observable.just(ScheduleAppointmentSheetCreated2(possibleDates, oneMonth))
 
-  private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented(currentIndex, possibleDates.size) }
+  private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented2 }
 
-  private fun decrementClicks() = RxView.clicks(decrementDateButton).map { AppointmentDateDecremented(currentIndex, possibleDates.size) }
+  private fun decrementClicks() = RxView.clicks(decrementDateButton).map { AppointmentDateDecremented2 }
 
   private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped() }
 
@@ -137,6 +143,17 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   fun updateDisplayedDate(newIndex: Int) {
     currentIndex = newIndex
     currentDateTextView.text = possibleDates[currentIndex].displayText
+  }
+
+  @SuppressLint("SetTextI18n")
+  fun updateDisplayedDate(year: Int, month: Int, dayOfMonth: Int) {
+    calendarButton.text = "$year, $month, $dayOfMonth"
+  }
+
+  @SuppressLint("SetTextI18n")
+  fun updateScheduledAppointment(appointment: ScheduleAppointment) {
+    calendarButton.text = LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit).toString()
+    currentDateTextView.text = appointment.displayText
   }
 
   fun enableIncrementButton(state: Boolean) {

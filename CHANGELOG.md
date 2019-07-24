@@ -5,6 +5,9 @@
 - Remove unused Communication model
 - Remove deprecated `validate` function and `Result` enum from `UserInputDateValidator`
 
+### Fixes
+- Fix taking the user to the production app play store page when install app update is clicked from sandbox or demo build
+
 ## On Demo
 ### Feature
 - All patients that have visited the current facility will be shown in the patient search screen

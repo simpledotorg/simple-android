@@ -5,7 +5,7 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.analytics.RxTimingAnalytics
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -30,7 +30,6 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.UtcClock
-import org.simple.clinic.util.minus
 import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.util.toOptional
 import org.simple.clinic.widgets.ageanddateofbirth.UserInputDateValidator
@@ -79,10 +78,7 @@ class PatientRepository @Inject constructor(
   }
 
   private fun searchResultsByPatientUuids(patientUuids: List<UUID>): Observable<List<PatientSearchResult>> {
-    val timestampScheduler = schedulersProvider.computation()
-    val analyticsName = "Search Patient:Fetch Patient Details"
-
-    val loadSearchResultsForUuids = database.patientSearchDao()
+    return database.patientSearchDao()
         .searchByIds(patientUuids, PatientStatus.Active)
         .toObservable()
         .map { results ->
@@ -93,42 +89,23 @@ class PatientRepository @Inject constructor(
           val resultsByUuid = results.associateBy { it.uuid }
           patientUuids.map { resultsByUuid.getValue(it) }
         }
-
-    return Observable.just(loadSearchResultsForUuids)
-        .timestamp(timestampScheduler)
-        .flatMap { timedStartQuery ->
-          timedStartQuery
-              .value()
-              .timestamp(timestampScheduler)
-              .doOnNext { timedEndQuery ->
-                val timeRequired = (timedEndQuery - timedStartQuery)
-                Analytics.reportTimeTaken(analyticsName, timeRequired)
-              }
-              .map { it.value() }
-        }
+        .compose(RxTimingAnalytics(
+            analyticsName = "Search Patient:Fetch Patient Details",
+            timestampScheduler = schedulersProvider.computation()
+        ))
   }
 
   private fun findPatientIdsMatchingName(name: String): Observable<List<UUID>> {
-    val timestampScheduler = schedulersProvider.computation()
-    val analyticsName = "Search Patient:Fetch Name and Id"
-
     val loadAllPatientNamesAndIds = database
         .patientSearchDao()
         .nameAndId(PatientStatus.Active)
         .toObservable()
 
-    return Observable.just(loadAllPatientNamesAndIds)
-        .timestamp(timestampScheduler)
-        .flatMap { timedStartQuery ->
-          timedStartQuery
-              .value()
-              .timestamp(timestampScheduler)
-              .doOnNext { timedEndQuery ->
-                val timeRequired = (timedEndQuery - timedStartQuery)
-                Analytics.reportTimeTaken(analyticsName, timeRequired)
-              }
-              .map { it.value() }
-        }
+    return loadAllPatientNamesAndIds
+        .compose(RxTimingAnalytics(
+            analyticsName = "Search Patient:Fetch Name and Id",
+            timestampScheduler = schedulersProvider.computation()
+        ))
         .switchMap { patientNamesAndIds -> findPatientsWithNameMatching(patientNamesAndIds, name) }
   }
 
@@ -136,25 +113,14 @@ class PatientRepository @Inject constructor(
       allPatientNamesAndIds: List<PatientSearchResult.PatientNameAndId>,
       name: String
   ): Observable<List<UUID>> {
-    val timestampScheduler = schedulersProvider.computation()
-    val analyticsName = "Search Patient:Fuzzy Filtering By Name"
 
-    val patientUuidsMatchingName = searchPatientByName
+    val allPatientUuidsMatchingName = searchPatientByName
         .search(searchTerm = name, names = allPatientNamesAndIds)
         .toObservable()
-
-    val allPatientUuidsMatchingName = Observable.just(patientUuidsMatchingName)
-        .timestamp(timestampScheduler)
-        .flatMap { timedStartQuery ->
-          timedStartQuery
-              .value()
-              .timestamp(timestampScheduler)
-              .doOnNext { timedEndQuery ->
-                val timeRequired = (timedEndQuery - timedStartQuery)
-                Analytics.reportTimeTaken(analyticsName, timeRequired)
-              }
-              .map { it.value() }
-        }
+        .compose(RxTimingAnalytics(
+            analyticsName = "Search Patient:Fuzzy Filtering By Name",
+            timestampScheduler = schedulersProvider.computation()
+        ))
 
     return Observables.combineLatest(allPatientUuidsMatchingName, configProvider)
         .map { (uuids, config) -> uuids.take(config.limitOfSearchResults) }

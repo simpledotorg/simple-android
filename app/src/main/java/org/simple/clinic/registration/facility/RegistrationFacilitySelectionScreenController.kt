@@ -210,8 +210,8 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
           userSession.ongoingRegistrationEntry()
               .map { it.copy(facilityId = facility.uuid) }
               .flatMapCompletable { userSession.saveOngoingRegistrationEntry(it) }
-              .andThen(userSession.loginFromOngoingRegistrationEntry())
-              .andThen(Observable.just({ ui: Ui -> ui.openRegistrationScreen() }))
+              .andThen(userSession.saveOngoingRegistrationEntryAsUser())
+              .andThen(Observable.just { ui: Ui -> ui.openRegistrationScreen() })
         }
   }
 }

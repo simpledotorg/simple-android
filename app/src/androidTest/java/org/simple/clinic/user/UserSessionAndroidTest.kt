@@ -108,7 +108,7 @@ class UserSessionAndroidTest {
     val selectedFacility = facilities.first()
     val ongoingRegistrationEntry = testData.ongoingRegistrationEntry(registrationFacility = selectedFacility)
     userSession.saveOngoingRegistrationEntry(ongoingRegistrationEntry)
-        .andThen(userSession.loginFromOngoingRegistrationEntry())
+        .andThen(userSession.saveOngoingRegistrationEntryAsUser())
         .blockingAwait()
 
     assertThat(userSession.isUserLoggedIn()).isTrue()
@@ -155,7 +155,7 @@ class UserSessionAndroidTest {
 
     val registrationResult = userSession
         .saveOngoingRegistrationEntry(ongoingRegistrationEntry)
-        .andThen(userSession.loginFromOngoingRegistrationEntry())
+        .andThen(userSession.saveOngoingRegistrationEntryAsUser())
         .andThen(userSession.register())
         .blockingGet()
 

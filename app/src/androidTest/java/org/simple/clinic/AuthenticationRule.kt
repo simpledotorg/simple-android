@@ -74,7 +74,7 @@ class AuthenticationRule : TestRule {
           registrationFacility = registerFacilityAt)
 
       val registrationResult = userSession.saveOngoingRegistrationEntry(registrationEntry)
-          .andThen(userSession.loginFromOngoingRegistrationEntry())
+          .andThen(userSession.saveOngoingRegistrationEntryAsUser())
           .andThen(userSession.register())
           .blockingGet()
 

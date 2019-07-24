@@ -168,7 +168,7 @@ class UserSession @Inject constructor(
         }
   }
 
-  fun loginFromOngoingRegistrationEntry(): Completable {
+  fun saveOngoingRegistrationEntryAsUser(): Completable {
     val ongoingEntry = ongoingRegistrationEntry().cache()
 
     return ongoingEntry
@@ -186,7 +186,6 @@ class UserSession @Inject constructor(
               loggedInStatus = NOT_LOGGED_IN)
           storeUser(user, entry.facilityId!!)
         }
-        .andThen(clearOngoingRegistrationEntry())
   }
 
   fun findExistingUser(phoneNumber: String): Single<FindUserResult> {

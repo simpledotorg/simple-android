@@ -7,8 +7,9 @@ import org.simple.clinic.login.LoginOtpSmsListener
 import retrofit2.HttpException
 import java.io.IOException
 import java.util.UUID
+import javax.inject.Inject
 
-class RequestLoginOtp(
+class RequestLoginOtp @Inject constructor(
     private val loginApi: LoginApi,
     private val loginOtpSmsListener: LoginOtpSmsListener
 ) {

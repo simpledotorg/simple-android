@@ -12,6 +12,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.user.OngoingLoginEntry
+import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
@@ -24,15 +25,17 @@ class LoginPinScreenControllerTest {
 
   private val screen = mock<LoginPinScreen>()
   private val userSession = mock<UserSession>()
+  private val requestLoginOtp = mock<RequestLoginOtp>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
-  private lateinit var controller: LoginPinScreenController
+  private val controller = LoginPinScreenController(
+      userSession = userSession,
+      requestLoginOtp = requestLoginOtp
+  )
 
   @Before
   fun setUp() {
-    controller = LoginPinScreenController(userSession)
-
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -48,26 +51,33 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when PIN is submitted, request login otp and open home screen`() {
-    val ongoingLoginEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999232323")
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
+    val loginUserUuid = UUID.fromString("582099ce-e146-4aa5-8302-85dbbfa1b407")
+    val ongoingLoginEntry = OngoingLoginEntry(uuid = loginUserUuid, phoneNumber = "9999232323")
+    whenever(userSession.ongoingLoginEntry())
+        .thenReturn(Single.just(ongoingLoginEntry))
+    whenever(userSession.saveOngoingLoginEntry(any()))
+        .thenReturn(Completable.complete())
+    whenever(requestLoginOtp.requestForUser(loginUserUuid))
+        .thenReturn(Single.just(RequestLoginOtp.Result.Success))
 
     uiEvents.onNext(LoginPinAuthenticated("0000"))
 
     verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(uuid = ongoingLoginEntry.uuid, phoneNumber = "9999232323", pin = "0000"))
-    verify(userSession).requestLoginOtp()
+    verify(requestLoginOtp).requestForUser(loginUserUuid)
     verify(screen).openHomeScreen()
   }
 
   @Test
   fun `if request otp api call throws any errors, show errors`() {
-    val ongoingEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9999323232")
-    whenever(userSession.ongoingLoginEntry()).thenReturn(Single.just(ongoingEntry))
-    whenever(userSession.saveOngoingLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.requestLoginOtp())
-        .thenReturn(Single.just(LoginResult.NetworkError))
-        .thenReturn(Single.just(LoginResult.UnexpectedError))
+    val loginUserUuid = UUID.fromString("582099ce-e146-4aa5-8302-85dbbfa1b407")
+    val ongoingEntry = OngoingLoginEntry(uuid = loginUserUuid, phoneNumber = "9999323232")
+    whenever(userSession.ongoingLoginEntry())
+        .thenReturn(Single.just(ongoingEntry))
+    whenever(userSession.saveOngoingLoginEntry(any()))
+        .thenReturn(Completable.complete())
+    whenever(requestLoginOtp.requestForUser(loginUserUuid))
+        .thenReturn(Single.just(RequestLoginOtp.Result.NetworkError))
+        .thenReturn(Single.just(RequestLoginOtp.Result.OtherError(RuntimeException())))
 
     uiEvents.onNext(LoginPinAuthenticated("0000"))
     uiEvents.onNext(LoginPinAuthenticated("0000"))

@@ -30,6 +30,7 @@ class RegistrationLoadingScreenController @Inject constructor(
 
     return Observable.merge(creates, retryClicks)
         .flatMapSingle { userSession.register() }
+        .doOnNext { if (it is Success) userSession.clearOngoingRegistrationEntry().subscribe() }
         .map {
           when (it) {
             Success -> { ui: Ui -> ui.openHomeScreen() }

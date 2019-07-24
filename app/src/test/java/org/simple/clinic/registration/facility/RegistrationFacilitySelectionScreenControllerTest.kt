@@ -400,15 +400,14 @@ class RegistrationFacilitySelectionScreenControllerTest {
         createdAt = Instant.now())
     whenever(userSession.ongoingRegistrationEntry()).thenReturn(Single.just(ongoingEntry))
     whenever(userSession.saveOngoingRegistrationEntry(any())).thenReturn(Completable.complete())
-    whenever(userSession.loginFromOngoingRegistrationEntry()).thenReturn(Completable.complete())
+    whenever(userSession.saveOngoingRegistrationEntryAsUser()).thenReturn(Completable.complete())
 
     val facility1 = PatientMocker.facility(name = "Hoshiarpur", uuid = UUID.randomUUID())
     uiEvents.onNext(RegistrationFacilityClicked(facility1))
 
-    val inOrder = inOrder(userSession, screen)
-    inOrder.verify(userSession).loginFromOngoingRegistrationEntry()
-    inOrder.verify(screen).openRegistrationScreen()
+    verify(screen).openRegistrationScreen()
     verify(userSession).saveOngoingRegistrationEntry(ongoingEntry.copy(facilityId = facility1.uuid))
+    verify(userSession).saveOngoingRegistrationEntryAsUser()
   }
 
   @Test

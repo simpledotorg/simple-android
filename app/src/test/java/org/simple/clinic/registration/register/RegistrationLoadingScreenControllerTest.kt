@@ -5,6 +5,7 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
@@ -42,12 +43,16 @@ class RegistrationLoadingScreenControllerTest {
   @Test
   fun `when screen is created then user registration api should be called`(results: RegistrationResult) {
     whenever(userSession.register()).thenReturn(Single.just(results))
+    whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.complete())
 
     uiEvents.onNext(ScreenCreated())
 
     verify(userSession).register()
     when (results) {
-      Success -> verify(screen).openHomeScreen()
+      Success -> {
+        verify(userSession).clearOngoingRegistrationEntry()
+        verify(screen).openHomeScreen()
+      }
       NetworkError -> verify(screen).showNetworkError()
       UnexpectedError -> verify(screen).showUnexpectedError()
     }
@@ -65,11 +70,13 @@ class RegistrationLoadingScreenControllerTest {
   @Test
   fun `when retry button is clicked in error state then loader should show and register api should be called`() {
     whenever(userSession.register()).thenReturn(Single.just(Success))
+    whenever(userSession.clearOngoingRegistrationEntry()).thenReturn(Completable.never())
 
     uiEvents.onNext(RegisterErrorRetryClicked)
 
     val inorder = inOrder(screen, userSession)
     inorder.verify(userSession).register()
+    inorder.verify(userSession).clearOngoingRegistrationEntry()
     inorder.verify(screen).openHomeScreen()
   }
 }

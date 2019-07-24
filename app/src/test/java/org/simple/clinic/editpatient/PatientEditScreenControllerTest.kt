@@ -388,11 +388,9 @@ class PatientEditScreenControllerTest {
   @Test
   @Parameters(method = "params for date of birth should be validated")
   fun `when save is clicked, the date of birth should be validated`(
-      dateOfBirth: String,
-      userInputDateOfBirthValidationResult: UserInputDateValidator.Result,
-      expectedError: PatientEditValidationError
+      dateOfBirthTestParams: DateOfBirthTestParams
   ) {
-    whenever(dobValidator.validate(any(), any())).thenReturn(userInputDateOfBirthValidationResult)
+    whenever(dobValidator.validate(any(), any())).thenReturn(dateOfBirthTestParams.dobValidationResult)
     whenever(numberValidator.validate(any(), any())).thenReturn(VALID)
     whenever(patientRepository.patient(any())).thenReturn(Observable.just(PatientMocker.patient().toOptional()))
     whenever(patientRepository.address(any())).thenReturn(Observable.just(PatientMocker.address().toOptional()))
@@ -409,18 +407,25 @@ class PatientEditScreenControllerTest {
     uiEvents.onNext(PatientEditDistrictTextChanged("District"))
     uiEvents.onNext(PatientEditPatientNameTextChanged("Name"))
     uiEvents.onNext(PatientEditStateTextChanged("State"))
-    uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirth))
+    uiEvents.onNext(PatientEditDateOfBirthTextChanged(dateOfBirthTestParams.dateOfBirth))
     uiEvents.onNext(PatientEditSaveClicked())
 
-    verify(screen).showValidationErrors(setOf(expectedError))
+    verify(screen).showValidationErrors(setOf(dateOfBirthTestParams.expectedError))
   }
 
-  fun `params for date of birth should be validated`(): List<List<Any>> {
+  @Suppress("Unused")
+  private fun `params for date of birth should be validated`(): List<DateOfBirthTestParams> {
     return listOf(
-        listOf("01/01/2000", InvalidPattern, INVALID_DATE_OF_BIRTH),
-        listOf("01/01/2000", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
+        DateOfBirthTestParams("01/01/2000", InvalidPattern, INVALID_DATE_OF_BIRTH),
+        DateOfBirthTestParams("01/01/2000", DateIsInFuture, DATE_OF_BIRTH_IN_FUTURE)
     )
   }
+
+  data class DateOfBirthTestParams(
+      val dateOfBirth: String,
+      val dobValidationResult: UserInputDateValidator.Result,
+      val expectedError: PatientEditValidationError
+  )
 
   @Test
   @Parameters(method = "params for validating all fields on save clicks")

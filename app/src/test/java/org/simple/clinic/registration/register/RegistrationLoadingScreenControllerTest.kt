@@ -1,6 +1,5 @@
 package org.simple.clinic.registration.register
 
-import com.nhaarman.mockito_kotlin.inOrder
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
@@ -74,9 +73,8 @@ class RegistrationLoadingScreenControllerTest {
 
     uiEvents.onNext(RegisterErrorRetryClicked)
 
-    val inorder = inOrder(screen, userSession)
-    inorder.verify(userSession).register()
-    inorder.verify(userSession).clearOngoingRegistrationEntry()
-    inorder.verify(screen).openHomeScreen()
+    verify(userSession).register()
+    verify(userSession).clearOngoingRegistrationEntry()
+    verify(screen).openHomeScreen()
   }
 }

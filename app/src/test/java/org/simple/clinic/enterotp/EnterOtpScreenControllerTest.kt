@@ -23,6 +23,8 @@ import org.simple.clinic.login.LoginResult.ServerError
 import org.simple.clinic.login.LoginResult.Success
 import org.simple.clinic.login.LoginResult.UnexpectedError
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.RequestLoginOtp
+import org.simple.clinic.user.RequestLoginOtp.Result
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
@@ -30,6 +32,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class EnterOtpScreenControllerTest {
@@ -37,19 +40,17 @@ class EnterOtpScreenControllerTest {
   @get:Rule
   val rxErrorsRule = RxErrorsRule()
 
-  private lateinit var controller: EnterOtpScreenController
-  private lateinit var userSession: UserSession
-  private lateinit var screen: EnterOtpScreen
+  private val userSession = mock<UserSession>()
+  private val screen = mock<EnterOtpScreen>()
+  private val uiEvents = PublishSubject.create<UiEvent>()
+  private val requestLoginOtp = mock<RequestLoginOtp>()
 
-  private val uiEvents: PublishSubject<UiEvent> = PublishSubject.create()
+  private val loggedInUserUuid = UUID.fromString("13e563ba-a148-4b5d-838d-e38d42dca72c")
+
+  private val controller = EnterOtpScreenController(userSession, requestLoginOtp)
 
   @Before
   fun setUp() {
-    userSession = mock()
-    screen = mock()
-
-    controller = EnterOtpScreenController(userSession)
-
     uiEvents
         .compose(controller)
         .subscribe { uiChange -> uiChange(screen) }
@@ -228,10 +229,10 @@ class EnterOtpScreenControllerTest {
 
   @Suppress("Unused")
   fun `params for login call progress test`() = arrayOf<Any>(
-      LoginResult.Success,
-      LoginResult.NetworkError,
-      LoginResult.ServerError("Test"),
-      LoginResult.UnexpectedError
+      Success,
+      NetworkError,
+      ServerError("Test"),
+      UnexpectedError
   )
 
   @Test
@@ -264,8 +265,13 @@ class EnterOtpScreenControllerTest {
   @Test
   fun `when resend sms is clicked, the request otp flow should be triggered`() {
     var otpRequested = false
-    whenever(userSession.requestLoginOtp())
-        .thenReturn(Single.just(LoginResult.Success as LoginResult).doOnSuccess { otpRequested = true })
+    val requestOtpSingle = Single
+        .just(Result.Success as Result)
+        .doOnSubscribe { otpRequested = true }
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(requestOtpSingle)
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -274,7 +280,10 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call is made, the progress must be shown`() {
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(Single.just(Result.Success as Result))
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -283,7 +292,10 @@ class EnterOtpScreenControllerTest {
 
   @Test
   fun `when the resend sms call is made, any error must be hidden`() {
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(LoginResult.Success))
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(Single.just(Result.Success as Result))
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -293,9 +305,12 @@ class EnterOtpScreenControllerTest {
   @Test
   @Parameters(method = "params for hiding progress on request otp")
   fun `when the resend sms call completes, the progress must be hidden`(
-      result: Single<LoginResult>
+      result: Result
   ) {
-    whenever(userSession.requestLoginOtp()).thenReturn(result)
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(Single.just(result))
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -304,84 +319,96 @@ class EnterOtpScreenControllerTest {
 
 
   @Suppress("Unused")
-  private fun `params for hiding progress on request otp`(): List<List<Any>> {
+  private fun `params for hiding progress on request otp`(): List<Result> {
     return listOf(
-        listOf(Single.just(LoginResult.Success)),
-        listOf(Single.just(LoginResult.NetworkError)),
-        listOf(Single.just(LoginResult.ServerError("error"))),
-        listOf(Single.just(LoginResult.UnexpectedError))
+        Result.Success,
+        Result.OtherError(RuntimeException()),
+        Result.NetworkError,
+        Result.ServerError(500)
     )
   }
 
   @Test
   @Parameters(method = "params for showing SMS sent message")
-  fun `when the resend sms call succeeds, the sms sent message must be shown`(
-      result: Single<LoginResult>,
-      shouldShowMessage: Boolean
-  ) {
-    whenever(userSession.requestLoginOtp()).thenReturn(result)
+  fun `when the resend sms call succeeds, the sms sent message must be shown`(params: SmsSendShowMessageTestParams) {
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(Single.just(params.result))
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
-    if (shouldShowMessage) {
+    if (params.shouldShowMessage) {
       verify(screen).showSmsSentMessage()
     } else {
       verify(screen, never()).showSmsSentMessage()
     }
   }
 
+  data class SmsSendShowMessageTestParams(val result: Result, val shouldShowMessage: Boolean)
+
   @Suppress("Unused")
-  private fun `params for showing SMS sent message`(): List<List<Any>> {
+  private fun `params for showing SMS sent message`(): List<SmsSendShowMessageTestParams> {
     return listOf(
-        listOf(Single.just(LoginResult.Success), true),
-        listOf(Single.just(LoginResult.NetworkError), false),
-        listOf(Single.just(LoginResult.ServerError("error")), false),
-        listOf(Single.just(LoginResult.UnexpectedError), false)
+        SmsSendShowMessageTestParams(result = Result.Success, shouldShowMessage = true),
+        SmsSendShowMessageTestParams(result = Result.NetworkError, shouldShowMessage = false),
+        SmsSendShowMessageTestParams(result = Result.OtherError(RuntimeException()), shouldShowMessage = false),
+        SmsSendShowMessageTestParams(result = Result.ServerError(400), shouldShowMessage = false)
     )
   }
 
   @Test
   @Parameters(method = "params for show error on request otp")
-  fun `when the resend sms call completes, the error must be shown`(
-      result: Single<LoginResult>,
-      verification: (Ui) -> Unit
-  ) {
-    whenever(userSession.requestLoginOtp()).thenReturn(result)
+  fun `when the resend sms call completes, the error must be shown`(params: SmsSendShowErrorParams) {
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(Single.just(params.result))
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
-    verification(screen)
+    params.verifications.invoke(screen)
   }
 
+  data class SmsSendShowErrorParams(
+      val result: Result,
+      // FIXME 25-Jul-19: This should be broken into separate tests
+      val verifications: (Ui) -> Unit
+  )
+
   @Suppress("Unused")
-  private fun `params for show error on request otp`(): List<List<Any>> {
+  private fun `params for show error on request otp`(): List<SmsSendShowErrorParams> {
     return listOf(
-        listOf<Any>(
-            Single.just(LoginResult.Success),
-            { screen: Ui ->
+        SmsSendShowErrorParams(
+            result = Result.Success,
+            verifications = { screen: Ui ->
               verify(screen, never()).showNetworkError()
               verify(screen, never()).showServerError(any())
               verify(screen, never()).showUnexpectedError()
-            }),
-        listOf<Any>(
-            Single.just(LoginResult.UnexpectedError),
-            { screen: Ui -> verify(screen).showUnexpectedError() }),
-        listOf<Any>(
-            Single.just(LoginResult.NetworkError),
-            { screen: Ui -> verify(screen).showNetworkError() }),
-        listOf<Any>(
-            Single.just(LoginResult.ServerError("Error 1")),
-            { screen: Ui -> verify(screen).showServerError("Error 1") }),
-        listOf<Any>(
-            Single.just(LoginResult.NetworkError),
-            { screen: Ui -> verify(screen).showNetworkError() })
+            }
+        ),
+        SmsSendShowErrorParams(
+            result = Result.NetworkError,
+            verifications = { screen: Ui -> verify(screen).showNetworkError() }
+        ),
+        SmsSendShowErrorParams(
+            result = Result.OtherError(RuntimeException()),
+            verifications = { screen: Ui -> verify(screen).showUnexpectedError() }
+        ),
+        SmsSendShowErrorParams(
+            result = Result.ServerError(400),
+            verifications = { screen: Ui -> verify(screen).showUnexpectedError() }
+        )
     )
   }
 
   @Test
   @Parameters(method = "params for clear PIN on request otp")
-  fun `when the resend sms call fails, the PIN must be cleared`(result: LoginResult) {
-    whenever(userSession.requestLoginOtp()).thenReturn(Single.just(result))
+  fun `when the resend sms call fails, the PIN must be cleared`(result: Result) {
+    whenever(requestLoginOtp.requestForUser(loggedInUserUuid))
+        .thenReturn(Single.just(result))
+    whenever(userSession.requireLoggedInUser())
+        .thenReturn(Observable.just(PatientMocker.loggedInUser(uuid = loggedInUserUuid)))
 
     uiEvents.onNext(EnterOtpResendSmsClicked())
 
@@ -389,11 +416,10 @@ class EnterOtpScreenControllerTest {
   }
 
   @Suppress("Unused")
-  private fun `params for clear PIN on request otp`(): List<Any> {
+  private fun `params for clear PIN on request otp`(): List<Result> {
     return listOf(
-        LoginResult.UnexpectedError,
-        LoginResult.ServerError("Error 1"),
-        LoginResult.ServerError("Error 2"),
-        LoginResult.NetworkError)
+        Result.OtherError(RuntimeException()),
+        Result.ServerError(400),
+        Result.NetworkError)
   }
 }

@@ -38,6 +38,7 @@ import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.threeten.bp.ZoneId
 import timber.log.Timber
 import java.util.UUID
@@ -107,7 +108,7 @@ class TestClinicApp : ClinicApp() {
           ) = NoOpCrashReporter()
         })
         .loginModule(object : LoginModule() {
-          override fun loginSmsListener(app: Application): LoginOtpSmsListener {
+          override fun loginSmsListener(app: Application, schedulersProvider: SchedulersProvider): LoginOtpSmsListener {
             return object : LoginOtpSmsListener {
               override fun listenForLoginOtp(): Completable = Completable.complete()
             }

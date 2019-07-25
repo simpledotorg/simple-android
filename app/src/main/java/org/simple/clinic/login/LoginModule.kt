@@ -15,6 +15,7 @@ import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
 import org.simple.clinic.util.StringPreferenceConverter
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 import javax.inject.Named
@@ -44,7 +45,9 @@ open class LoginModule {
   }
 
   @Provides
-  open fun loginSmsListener(app: Application): LoginOtpSmsListener = LoginOtpSmsListenerImpl(app)
+  open fun loginSmsListener(app: Application, schedulersProvider: SchedulersProvider): LoginOtpSmsListener {
+    return LoginOtpSmsListenerImpl(app, schedulersProvider)
+  }
 
   @Provides
   fun ongoingLoginEntryDao(appDatabase: AppDatabase): OngoingLoginEntry.RoomDao {

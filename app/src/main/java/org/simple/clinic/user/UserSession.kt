@@ -14,12 +14,10 @@ import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
-import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
 import org.simple.clinic.login.LoginErrorResponse
-import org.simple.clinic.login.LoginOtpSmsListener
 import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
@@ -37,7 +35,6 @@ import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
@@ -61,7 +58,6 @@ class UserSession @Inject constructor(
     private val loginApi: LoginApi,
     private val registrationApi: RegistrationApi,
     private val moshi: Moshi,
-    private val facilitySync: FacilitySync,
     private val facilityRepository: FacilityRepository,
     private val sharedPreferences: SharedPreferences,
     private val appDatabase: AppDatabase,
@@ -69,7 +65,6 @@ class UserSession @Inject constructor(
     // This is Lazy to work around a cyclic dependency between
     // DataSync, UserSession, and PatientRepository.
     private val dataSync: Lazy<DataSync>,
-    private val loginOtpSmsListener: LoginOtpSmsListener,
     private val ongoingLoginEntryRepository: OngoingLoginEntryRepository,
     private val bruteForceProtection: BruteForceProtection,
     private val fileStorage: FileStorage,
@@ -131,37 +126,6 @@ class UserSession @Inject constructor(
         .subscribeOn(Schedulers.io())
         .onErrorComplete()
         .subscribe()
-  }
-
-  fun requestLoginOtp(): Single<LoginResult> {
-    val ongoingEntry = ongoingLoginEntry().cache()
-    return ongoingEntry
-        .doOnSubscribe { Timber.i("Requesting login OTP") }
-        .flatMap {
-          loginOtpSmsListener.listenForLoginOtp()
-              .onErrorComplete()
-              // LoginOtpSmsListenerImpl depends on a Google Play Services task
-              // which emits the result on the main thread.
-              .observeOn(Schedulers.io())
-              .toSingleDefault(it)
-        }
-        .flatMap {
-          loginApi.requestLoginOtp(it.uuid)
-              .andThen(Completable.fromAction {
-                appDatabase.userDao()
-                    .updateLoggedInStatusForUser(it.uuid, OTP_REQUESTED)
-              })
-              .toSingleDefault(LoginResult.Success as LoginResult)
-        }
-        .onErrorReturn { error ->
-          when (error) {
-            is IOException -> LoginResult.NetworkError
-            else -> {
-              Timber.e(error)
-              LoginResult.UnexpectedError
-            }
-          }
-        }
   }
 
   fun saveOngoingRegistrationEntryAsUser(): Completable {

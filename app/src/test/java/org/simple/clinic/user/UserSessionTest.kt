@@ -75,7 +75,6 @@ class UserSessionTest {
   private val loginApi = mock<LoginApi>()
   private val registrationApi = mock<RegistrationApi>()
   private val accessTokenPref = mock<Preference<Optional<String>>>()
-  private val facilitySync = mock<FacilitySync>()
   private val facilityRepository = mock<FacilityRepository>()
   private val patientRepository = mock<PatientRepository>()
   private val sharedPrefs = mock<SharedPreferences>()
@@ -101,7 +100,6 @@ class UserSessionTest {
   private val prescriptionPullToken = mock<Preference<Optional<String>>>()
   private val bpPullToken = mock<Preference<Optional<String>>>()
   private val patientPullToken = mock<Preference<Optional<String>>>()
-  private val loginOtpSmsListener = mock<LoginOtpSmsListener>()
   private val fileStorage = mock<FileStorage>()
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
@@ -110,13 +108,11 @@ class UserSessionTest {
       loginApi = loginApi,
       registrationApi = registrationApi,
       moshi = moshi,
-      facilitySync = facilitySync,
       facilityRepository = facilityRepository,
       sharedPreferences = sharedPrefs,
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
       dataSync = dagger.Lazy { dataSync },
-      loginOtpSmsListener = loginOtpSmsListener,
       accessTokenPreference = accessTokenPref,
       bruteForceProtection = bruteForceProtection,
       fileStorage = fileStorage,
@@ -135,7 +131,6 @@ class UserSessionTest {
     RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
 
     whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(facilitySync.sync()).thenReturn(Completable.complete())
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(appDatabase.userDao()).thenReturn(userDao)
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
@@ -308,49 +303,6 @@ class UserSessionTest {
         .test()
         .await()
         .assertValue(false)
-  }
-
-  @Test
-  fun `when requesting login otp fails, the local logged in status must not be updated`() {
-    whenever(loginOtpSmsListener.listenForLoginOtp()).thenReturn(Completable.complete())
-    whenever(loginApi.requestLoginOtp(any()))
-        .thenReturn(
-            Completable.error(RuntimeException()),
-            Completable.error(IOException())
-        )
-
-    userSession.requestLoginOtp().blockingGet()
-    verify(userDao, never()).updateLoggedInStatusForUser(any(), any())
-
-    userSession.requestLoginOtp().blockingGet()
-    verify(userDao, never()).updateLoggedInStatusForUser(any(), any())
-  }
-
-  @Test
-  fun `when requesting for login otp, the sms received event must be listened to`() {
-    var listenedForSms = false
-
-    whenever(loginOtpSmsListener.listenForLoginOtp())
-        .thenReturn(Completable.complete().doOnComplete { listenedForSms = true })
-
-    whenever(loginApi.requestLoginOtp(any()))
-        .thenReturn(Completable.complete())
-
-    userSession.requestLoginOtp().blockingGet()
-
-    assertThat(listenedForSms).isTrue()
-  }
-
-  @Test
-  fun `when listening for sms fails, the request otp call must still be made`() {
-    whenever(loginOtpSmsListener.listenForLoginOtp()).thenReturn(Completable.error(RuntimeException()))
-
-    var loginCallMade = false
-    whenever(loginApi.requestLoginOtp(any()))
-        .thenReturn(Completable.complete().doOnComplete { loginCallMade = true })
-    userSession.requestLoginOtp().blockingGet()
-
-    assertThat(loginCallMade).isTrue()
   }
 
   @Test

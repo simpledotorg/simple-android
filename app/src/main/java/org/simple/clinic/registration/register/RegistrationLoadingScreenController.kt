@@ -28,15 +28,32 @@ class RegistrationLoadingScreenController @Inject constructor(
     val retryClicks = events.ofType<RegisterErrorRetryClicked>()
     val creates = events.ofType<ScreenCreated>()
 
-    return Observable.merge(creates, retryClicks)
-        .flatMapSingle { userSession.register() }
-        .doOnNext { if (it is Success) userSession.clearOngoingRegistrationEntry().subscribe() }
-        .map {
-          when (it) {
-            Success -> { ui: Ui -> ui.openHomeScreen() }
-            NetworkError -> { ui: Ui -> ui.showNetworkError() }
-            UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
-          }
+    val register = Observable
+        .merge(creates, retryClicks)
+        .flatMap {
+          userSession
+              .register()
+              .toObservable()
         }
+        .replay()
+        .refCount()
+
+    val clearOngoingEntry = register
+        .filter { it is Success }
+        .flatMap {
+          userSession.clearOngoingRegistrationEntry()
+              .andThen(Observable.never<UiChange>())
+        }
+
+    val showScreenChanges = register.map {
+      { ui: Ui ->
+        when (it) {
+          Success -> ui.openHomeScreen()
+          NetworkError -> ui.showNetworkError()
+          UnexpectedError -> ui.showUnexpectedError()
+        }
+      }
+    }
+    return showScreenChanges.mergeWith(clearOngoingEntry)
   }
 }

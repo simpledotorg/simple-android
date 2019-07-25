@@ -12,6 +12,7 @@ import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = EnterOtpScreen
@@ -114,39 +115,47 @@ class EnterOtpScreenController @Inject constructor(
   private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<EnterOtpResendSmsClicked>()
-        .flatMapSingle {
-          userSession
-              .requireLoggedInUser()
-              .firstOrError()
-              .map { it.uuid }
-        }
-        .flatMap { userUuid ->
-          requestLoginOtp
-              .requestForUser(userUuid)
-              .flatMapObservable { result ->
-                Observable.merge(
-                    showMessageOnResendLoginSmsResult(result),
-                    Observable.just { ui: Ui ->
-                      ui.hideProgress()
-                      ui.clearPin()
-                    })
-              }
-              .startWith { ui: Ui ->
-                ui.hideError()
-                ui.showProgress()
-              }
-        }
+        .flatMapSingle { loggedInUserUuid() }
+        .flatMap(this::requestLoginOtpForUser)
   }
 
-  private fun showMessageOnResendLoginSmsResult(result: RequestLoginOtp.Result): Observable<UiChange> {
-    return Single.just(result)
-        .map {
-          when (it) {
-            is RequestLoginOtp.Result.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-            is RequestLoginOtp.Result.ServerError, is RequestLoginOtp.Result.OtherError -> { ui: Ui -> ui.showUnexpectedError() }
-            is RequestLoginOtp.Result.Success -> { ui: Ui -> ui.showSmsSentMessage() }
-          }
-        }
+  private fun requestLoginOtpForUser(userUuid: UUID): Observable<UiChange> {
+    val showProgressBeforeRequestingOtp = { ui: Ui ->
+      ui.hideError()
+      ui.showProgress()
+    }
+
+    return requestLoginOtp
+        .requestForUser(userUuid)
         .toObservable()
+        .map(this::handleRequestLoginOtpResult)
+        .startWith(showProgressBeforeRequestingOtp)
+  }
+
+  private fun handleRequestLoginOtpResult(result: RequestLoginOtp.Result): UiChange {
+    return { ui: Ui ->
+      showMessageOnResendLoginSmsResult(ui, result)
+      hideProgressAfterRequestingOtp(ui)
+    }
+  }
+
+  private fun loggedInUserUuid(): Single<UUID> {
+    return userSession
+        .requireLoggedInUser()
+        .firstOrError()
+        .map { it.uuid }
+  }
+
+  private fun showMessageOnResendLoginSmsResult(ui: Ui, result: RequestLoginOtp.Result) {
+    when (result) {
+      is RequestLoginOtp.Result.NetworkError -> ui.showNetworkError()
+      is RequestLoginOtp.Result.ServerError, is RequestLoginOtp.Result.OtherError -> ui.showUnexpectedError()
+      is RequestLoginOtp.Result.Success -> ui.showSmsSentMessage()
+    }
+  }
+
+  private fun hideProgressAfterRequestingOtp(ui: Ui) {
+    ui.hideProgress()
+    ui.clearPin()
   }
 }

@@ -8,6 +8,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.login.LoginResult
 import org.simple.clinic.user.NewlyVerifiedUser
+import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
@@ -18,7 +19,10 @@ typealias UiChange = (Ui) -> Unit
 
 private const val OTP_LENGTH = 6
 
-class EnterOtpScreenController @Inject constructor(private val userSession: UserSession) : ObservableTransformer<UiEvent, UiChange> {
+class EnterOtpScreenController @Inject constructor(
+    private val userSession: UserSession,
+    private val requestLoginOtp: RequestLoginOtp
+) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -108,17 +112,24 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
   }
 
   private fun resendSms(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<EnterOtpResendSmsClicked>()
-        .flatMap {
+    return events
+        .ofType<EnterOtpResendSmsClicked>()
+        .flatMapSingle {
           userSession
-              .requestLoginOtp()
-              .flatMapObservable { loginResult ->
+              .requireLoggedInUser()
+              .firstOrError()
+              .map { it.uuid }
+        }
+        .flatMap { userUuid ->
+          requestLoginOtp
+              .requestForUser(userUuid)
+              .flatMapObservable { result ->
                 Observable.merge(
-                    showMessageOnLoginResult(loginResult),
-                    Observable.just({ ui: Ui ->
+                    showMessageOnResendLoginSmsResult(result),
+                    Observable.just { ui: Ui ->
                       ui.hideProgress()
                       ui.clearPin()
-                    }))
+                    })
               }
               .startWith { ui: Ui ->
                 ui.hideError()
@@ -127,14 +138,13 @@ class EnterOtpScreenController @Inject constructor(private val userSession: User
         }
   }
 
-  private fun showMessageOnLoginResult(loginResult: LoginResult): Observable<UiChange> {
-    return Single.just(loginResult)
+  private fun showMessageOnResendLoginSmsResult(result: RequestLoginOtp.Result): Observable<UiChange> {
+    return Single.just(result)
         .map {
           when (it) {
-            is LoginResult.NetworkError -> { ui: Ui -> ui.showNetworkError() }
-            is LoginResult.ServerError -> { ui: Ui -> ui.showServerError(it.error) }
-            is LoginResult.UnexpectedError -> { ui: Ui -> ui.showUnexpectedError() }
-            is LoginResult.Success -> { ui: Ui -> ui.showSmsSentMessage() }
+            is RequestLoginOtp.Result.NetworkError -> { ui: Ui -> ui.showNetworkError() }
+            is RequestLoginOtp.Result.ServerError, is RequestLoginOtp.Result.OtherError -> { ui: Ui -> ui.showUnexpectedError() }
+            is RequestLoginOtp.Result.Success -> { ui: Ui -> ui.showSmsSentMessage() }
           }
         }
         .toObservable()

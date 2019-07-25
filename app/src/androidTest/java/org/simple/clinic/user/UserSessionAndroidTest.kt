@@ -185,23 +185,6 @@ class UserSessionAndroidTest {
   }
 
   @Test
-  fun when_login_otp_is_requested_successfully_it_must_update_the_logged_in_status_of_the_user() {
-    val ongoingLoginEntry = userSession.requireLoggedInUser()
-        .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
-        .blockingFirst()
-
-    appDatabase.userDao().updateLoggedInStatusForUser(testData.qaUserUuid(), NOT_LOGGED_IN)
-
-    val requestOtpResult = userSession
-        .saveOngoingLoginEntry(ongoingLoginEntry)
-        .andThen(userSession.requestLoginOtp())
-        .blockingGet()
-
-    assertThat(requestOtpResult).isInstanceOf(LoginResult.Success::class.java)
-    assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(OTP_REQUESTED)
-  }
-
-  @Test
   fun unauthorizing_the_user_must_work_as_expected() {
     assertThat(userSession.loggedInUserImmediate()!!.loggedInStatus).isEqualTo(LOGGED_IN)
 

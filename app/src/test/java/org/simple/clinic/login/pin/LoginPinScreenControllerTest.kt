@@ -10,7 +10,6 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.simple.clinic.login.LoginResult
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
 import org.simple.clinic.user.UserSession
@@ -29,6 +28,13 @@ class LoginPinScreenControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
 
+  private val loginUserUuid = UUID.fromString("582099ce-e146-4aa5-8302-85dbbfa1b407")
+  private val ongoingLoginEntry = OngoingLoginEntry(
+      uuid = loginUserUuid,
+      pinDigest = "",
+      phoneNumber = ""
+  )
+
   private val controller = LoginPinScreenController(
       userSession = userSession,
       requestLoginOtp = requestLoginOtp
@@ -36,23 +42,24 @@ class LoginPinScreenControllerTest {
 
   @Before
   fun setUp() {
+    whenever(requestLoginOtp.requestForUser(loginUserUuid))
+        .thenReturn(Single.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
   fun `when screen starts, show phone number`() {
+    val phoneNumber = "phone-number"
     whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "9977228833", pinDigest = "")))
+        .thenReturn(Single.just(ongoingLoginEntry.copy(phoneNumber = phoneNumber)))
 
     uiEvents.onNext(PinScreenCreated())
 
-    verify(screen).showPhoneNumber("9977228833")
+    verify(screen).showPhoneNumber(phoneNumber)
   }
 
   @Test
   fun `when PIN is submitted, request login otp and open home screen`() {
-    val loginUserUuid = UUID.fromString("582099ce-e146-4aa5-8302-85dbbfa1b407")
-    val ongoingLoginEntry = OngoingLoginEntry(uuid = loginUserUuid, phoneNumber = "9999232323")
     whenever(userSession.ongoingLoginEntry())
         .thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any()))
@@ -62,25 +69,23 @@ class LoginPinScreenControllerTest {
 
     uiEvents.onNext(LoginPinAuthenticated("0000"))
 
-    verify(userSession).saveOngoingLoginEntry(OngoingLoginEntry(uuid = ongoingLoginEntry.uuid, phoneNumber = "9999232323", pin = "0000"))
     verify(requestLoginOtp).requestForUser(loginUserUuid)
     verify(screen).openHomeScreen()
   }
 
   @Test
   fun `if request otp api call throws any errors, show errors`() {
-    val loginUserUuid = UUID.fromString("582099ce-e146-4aa5-8302-85dbbfa1b407")
-    val ongoingEntry = OngoingLoginEntry(uuid = loginUserUuid, phoneNumber = "9999323232")
     whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(ongoingEntry))
+        .thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any()))
         .thenReturn(Completable.complete())
     whenever(requestLoginOtp.requestForUser(loginUserUuid))
         .thenReturn(Single.just(RequestLoginOtp.Result.NetworkError))
         .thenReturn(Single.just(RequestLoginOtp.Result.OtherError(RuntimeException())))
 
-    uiEvents.onNext(LoginPinAuthenticated("0000"))
-    uiEvents.onNext(LoginPinAuthenticated("0000"))
+    val enteredPin = "0000"
+    uiEvents.onNext(LoginPinAuthenticated(enteredPin))
+    uiEvents.onNext(LoginPinAuthenticated(enteredPin))
 
     verify(screen).showNetworkError()
     verify(screen).showUnexpectedError()
@@ -107,12 +112,28 @@ class LoginPinScreenControllerTest {
 
   @Test
   fun `when the screen is created, the pin digest to verify must be forwarded to the screen`() {
-    val ongoingLoginEntry = OngoingLoginEntry(uuid = UUID.randomUUID(), pinDigest = "digest", phoneNumber = "")
+    val pinDigest = "digest"
     whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just<OngoingLoginEntry>(ongoingLoginEntry))
+        .thenReturn(Single.just(ongoingLoginEntry.copy(pinDigest = pinDigest)))
 
     uiEvents.onNext(PinScreenCreated())
 
-    verify(screen).submitWithPinDigest(ongoingLoginEntry.pinDigest!!)
+    verify(screen).submitWithPinDigest(pinDigest)
+  }
+
+  @Test
+  fun `when PIN is submitted, update the saved login entry with the new PIN`() {
+    // given
+    val newPin = "new-pin"
+    whenever(userSession.ongoingLoginEntry())
+        .thenReturn(Single.just(ongoingLoginEntry))
+    whenever(userSession.saveOngoingLoginEntry(ongoingLoginEntry.copy(pin = newPin)))
+        .thenReturn(Completable.complete())
+
+    // when
+    uiEvents.onNext(LoginPinAuthenticated(newPin))
+
+    // then
+    verify(userSession).saveOngoingLoginEntry(ongoingLoginEntry.copy(pin = newPin))
   }
 }

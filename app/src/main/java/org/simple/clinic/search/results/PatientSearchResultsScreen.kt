@@ -13,11 +13,13 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.newentry.PatientEntryScreenKey
+import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
-import org.simple.clinic.searchresultsview.SearchPatientInput
-import org.simple.clinic.searchresultsview.SearchPatientWithInput
+import org.simple.clinic.searchresultsview.SearchPatientWithCriteria
 import org.simple.clinic.searchresultsview.SearchResultClicked
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -75,13 +77,13 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     return searchResultsView
         .upstreamUiEvents
         .ofType<RegisterNewPatient>()
-        .map { PatientSearchResultRegisterNewPatient(extractPatientName(it.searchPatientInput)) }
+        .map { PatientSearchResultRegisterNewPatient(extractPatientName(it.criteria)) }
   }
 
-  private fun extractPatientName(searchPatientInput: SearchPatientInput): String {
-    return when (searchPatientInput) {
-      is SearchPatientInput.Name -> searchPatientInput.searchText
-      is SearchPatientInput.PhoneNumber -> TODO("not yet implemented")
+  private fun extractPatientName(criteria: PatientSearchCriteria): String {
+    return when (criteria) {
+      is Name -> criteria.patientName
+      is PhoneNumber -> TODO("not yet implemented")
     }
   }
 
@@ -102,7 +104,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
     searchResultsView
         .downstreamUiEvents
-        .onNext(SearchPatientWithInput(SearchPatientInput.Name(screenKey.fullName)))
+        .onNext(SearchPatientWithCriteria(Name(screenKey.fullName)))
     return Observable.just(PatientSearchResultsScreenCreated(screenKey))
   }
 

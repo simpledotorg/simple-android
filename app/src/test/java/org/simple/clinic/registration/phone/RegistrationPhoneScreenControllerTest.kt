@@ -199,6 +199,7 @@ class RegistrationPhoneScreenControllerTest {
     verify(screen).openLoginPinEntryScreen()
   }
 
+  // TODO 26-07-19 : Check validity of this test since it no longer makes a network call (facility sync)
   @Test
   fun `when the phone number belongs to an existing user and creating ongoing entry fails, an error should be shown`() {
     val inputNumber = "1234567890"

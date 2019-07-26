@@ -70,10 +70,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search criteria")
-  fun `when searching patients by name returns results, the results should be displayed`(
-      searchCriteria: PatientSearchCriteria,
-      searchPatientInput: SearchPatientInput
-  ) {
+  fun `when searching patients by name returns results, the results should be displayed`(searchCriteria: PatientSearchCriteria) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
     val patientUuid2 = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88")
@@ -89,7 +86,7 @@ class PatientSearchViewControllerTest {
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
+    uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -109,10 +106,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search criteria")
-  fun `when searching patients by name returns no results, the empty state should be displayed`(
-      searchCriteria: PatientSearchCriteria,
-      searchPatientInput: SearchPatientInput
-  ) {
+  fun `when searching patients by name returns no results, the empty state should be displayed`(searchCriteria: PatientSearchCriteria) {
     // given
     whenever(patientRepository.search(searchCriteria))
         .thenReturn(Observable.just(emptyList()))
@@ -121,7 +115,7 @@ class PatientSearchViewControllerTest {
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
+    uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
     verify(screen).updateSearchResults(emptyList())
@@ -131,8 +125,7 @@ class PatientSearchViewControllerTest {
   @Test
   @Parameters(method = "params for search criteria")
   fun `when searching by name and there are patients only in current facility, then "Other Results" header should not be shown`(
-      searchCriteria: PatientSearchCriteria,
-      searchPatientInput: SearchPatientInput
+      searchCriteria: PatientSearchCriteria
   ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
@@ -149,7 +142,7 @@ class PatientSearchViewControllerTest {
 
     // when
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
+    uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -169,8 +162,7 @@ class PatientSearchViewControllerTest {
   @Test
   @Parameters(method = "params for search criteria")
   fun `when searching by name and there are patients only in other facilities, then current facility header with "no results" should be shown`(
-      searchCriteria: PatientSearchCriteria,
-      searchPatientInput: SearchPatientInput
+      searchCriteria: PatientSearchCriteria
   ) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
@@ -187,7 +179,7 @@ class PatientSearchViewControllerTest {
 
     // then
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientWithInput(searchPatientInput = searchPatientInput))
+    uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
 
     // then
     verify(screen).updateSearchResults(listOf(
@@ -206,27 +198,6 @@ class PatientSearchViewControllerTest {
     verify(screen).setEmptyStateVisible(false)
   }
 
-  @Suppress("Unused")
-  private fun `params for search criteria`(): List<List<Any>> {
-    fun testCase(
-        searchCriteria: PatientSearchCriteria,
-        searchPatientInput: SearchPatientInput
-    ): List<Any> {
-      return listOf(searchCriteria, searchPatientInput)
-    }
-
-    return listOf(
-        testCase(
-            searchCriteria = Name(patientName = patientName),
-            searchPatientInput = SearchPatientInput.Name(searchText = patientName)
-        ),
-        testCase(
-            searchCriteria = PhoneNumber(phoneNumber = phoneNumber),
-            searchPatientInput = SearchPatientInput.PhoneNumber(searchText = phoneNumber)
-        )
-    )
-  }
-
   @Test
   fun `when search result clicked then SearchResultClicked event should be emitted`() {
     val searchResult = PatientMocker.patientSearchResult()
@@ -237,20 +208,18 @@ class PatientSearchViewControllerTest {
   }
 
   @Test
-  @Parameters(method = "params for search by parameters on register click")
-  fun `when register new patient clicked then RegisterNewPatient event should be emitted`(searchPatientInput: SearchPatientInput) {
+  @Parameters(method = "params for search criteria")
+  fun `when register new patient clicked then RegisterNewPatient event should be emitted`(criteria: PatientSearchCriteria) {
     uiEvents.onNext(SearchResultsViewCreated)
-    uiEvents.onNext(SearchPatientWithInput(searchPatientInput))
+    uiEvents.onNext(SearchPatientWithCriteria(criteria))
     uiEvents.onNext(RegisterNewPatientClicked)
 
-    verify(screen).registerNewPatient(RegisterNewPatient(searchPatientInput))
+    verify(screen).registerNewPatient(RegisterNewPatient(criteria))
   }
 
   @Suppress("Unused")
-  private fun `params for search by parameters on register click`(): List<SearchPatientInput> {
-    return listOf(
-        SearchPatientInput.Name(searchText = patientName),
-        SearchPatientInput.PhoneNumber(searchText = phoneNumber)
-    )
-  }
+  private fun `params for search criteria`(): List<PatientSearchCriteria> = listOf(
+      Name(patientName = patientName),
+      PhoneNumber(phoneNumber = phoneNumber)
+  )
 }

@@ -12,8 +12,6 @@ import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSearchCriteria.Name
-import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
 import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
@@ -46,14 +44,8 @@ class PatientSearchViewController @Inject constructor(
 
   private fun populateSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val searchResultsStream = events
-        .ofType<SearchPatientWithInput>()
-        .map { it.searchPatientInput }
-        .map { searchPatientBy ->
-          when (searchPatientBy) {
-            is SearchPatientInput.Name -> Name(searchPatientBy.searchText)
-            is SearchPatientInput.PhoneNumber -> PhoneNumber(searchPatientBy.searchText)
-          }
-        }
+        .ofType<SearchPatientWithCriteria>()
+        .map { it.criteria }
         .flatMap(patientRepository::search)
 
     val currentFacilityStream = userSession
@@ -106,14 +98,14 @@ class PatientSearchViewController @Inject constructor(
   }
 
   private fun createNewPatient(events: Observable<UiEvent>): Observable<UiChange> {
-    val searchPatientByStream = events
-        .ofType<SearchPatientWithInput>()
-        .map { it.searchPatientInput }
+    val searchPatientWithCriteriaStream = events
+        .ofType<SearchPatientWithCriteria>()
+        .map { it.criteria }
 
     return events.ofType<RegisterNewPatientClicked>()
-        .withLatestFrom(searchPatientByStream)
-        .map { (_, searchPatientBy) ->
-          { ui: Ui -> ui.registerNewPatient(RegisterNewPatient(searchPatientBy)) }
+        .withLatestFrom(searchPatientWithCriteriaStream)
+        .map { (_, patientSearchCriteria) ->
+          { ui: Ui -> ui.registerNewPatient(RegisterNewPatient(patientSearchCriteria)) }
         }
   }
 }

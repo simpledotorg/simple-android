@@ -1,8 +1,13 @@
 package org.simple.clinic.patient
 
-sealed class PatientSearchCriteria {
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-  data class Name(val patientName: String): PatientSearchCriteria()
+sealed class PatientSearchCriteria : Parcelable {
 
-  data class PhoneNumber(val phoneNumber: String): PatientSearchCriteria()
+  @Parcelize
+  data class Name(val patientName: String) : PatientSearchCriteria()
+
+  @Parcelize
+  data class PhoneNumber(val phoneNumber: String) : PatientSearchCriteria()
 }

@@ -15,7 +15,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.appupdate.AppUpdateState.ShowAppUpdate
 import org.simple.clinic.appupdate.CheckAppUpdateAvailability
 import org.simple.clinic.patient.PatientConfig
-import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
@@ -44,7 +43,6 @@ typealias UiChange = (Ui) -> Unit
 
 class PatientsScreenController @Inject constructor(
     private val userSession: UserSession,
-    private val dataSync: DataSync,
     private val configProvider: Observable<PatientConfig>,
     private val checkAppUpdate: CheckAppUpdateAvailability,
     private val utcClock: UtcClock,
@@ -114,19 +112,10 @@ class PatientsScreenController @Inject constructor(
   }
 
   private fun refreshUserStatus() {
-    val refreshUser = userSession.refreshLoggedInUser()
+    userSession.refreshLoggedInUser()
         .subscribeOn(io())
         .onErrorComplete()
         .doOnComplete { approvalStatusUpdatedAtPref.set(Instant.now()) }
-
-    val syncData = userSession.canSyncData()
-        .take(1)
-        .observeOn(io())
-        .filter { canSyncData -> canSyncData }
-        .flatMapCompletable { dataSync.sync(null) }
-
-    refreshUser
-        .andThen(syncData)
         .subscribe()
   }
 

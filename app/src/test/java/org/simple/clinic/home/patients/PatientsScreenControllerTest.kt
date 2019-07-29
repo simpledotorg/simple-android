@@ -79,13 +79,12 @@ class PatientsScreenControllerTest {
 
     controller = PatientsScreenController(
         userSession = userSession,
-        dataSync = dataSync,
-        approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
-        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         configProvider = configEmitter,
         checkAppUpdate = checkAppUpdate,
         utcClock = utcClock,
         userClock = userClock,
+        approvalStatusUpdatedAtPref = approvalStatusApprovedAt,
+        hasUserDismissedApprovedStatusPref = hasUserDismissedApprovedStatus,
         appUpdateDialogShownAtPref = appUpdateDialogShownPref
     )
 
@@ -239,33 +238,6 @@ class PatientsScreenControllerTest {
     uiEvents.onNext(UserApprovedStatusDismissed())
 
     verify(hasUserDismissedApprovedStatus).set(true)
-  }
-
-  @Test
-  @Parameters("false", "true")
-  fun `when user is refreshed then patient data should be synced if the can sync data flag is set`(
-      canUserSyncData: Boolean
-  ) {
-    whenever(userSession.loggedInUser())
-        .thenReturn(Observable.just(PatientMocker.loggedInUser(status = WaitingForApproval).toOptional()))
-
-    whenever(userSession.canSyncData()).thenReturn(Observable.just(canUserSyncData))
-
-    whenever(userSession.refreshLoggedInUser()).thenReturn(Completable.complete())
-    whenever(hasUserDismissedApprovedStatus.asObservable()).thenReturn(Observable.just(false))
-    whenever(hasUserDismissedApprovedStatus.get()).thenReturn(false)
-    whenever(approvalStatusApprovedAt.get()).thenReturn(Instant.now())
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
-
-    uiEvents.onNext(ScreenCreated())
-
-    verify(userSession).refreshLoggedInUser()
-
-    if (canUserSyncData) {
-      verify(dataSync).sync(null)
-    } else {
-      verify(dataSync, never()).sync(null)
-    }
   }
 
   @Test

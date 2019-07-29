@@ -8,7 +8,7 @@
 ### Fixes
 - Fix taking the user to the production app play store page when install app update is clicked from sandbox or demo build
 
-## On Demo
+## 2019-07-29-4866
 ### Feature
 - All patients that have visited the current facility will be shown in the patient search screen
 - Make BP date entry optional

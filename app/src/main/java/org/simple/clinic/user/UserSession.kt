@@ -287,7 +287,7 @@ class UserSession @Inject constructor(
     return storeUser(user, response.userPayload.registrationFacilityId)
   }
 
-  private fun storeUser(user: User, facilityUuid: UUID): Completable {
+  fun storeUser(user: User, facilityUuid: UUID): Completable {
     return Completable
         .fromAction { appDatabase.userDao().createOrUpdate(user) }
         .doOnSubscribe { Timber.i("Storing user") }

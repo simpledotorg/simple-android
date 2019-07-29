@@ -1,9 +1,9 @@
 package org.simple.clinic.login.pin
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
-import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
@@ -16,9 +16,12 @@ import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.user.OngoingLoginEntry
 import org.simple.clinic.user.RequestLoginOtp
+import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.user.UserStatus
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import java.util.UUID
 
 class LoginPinScreenControllerTest {
@@ -37,7 +40,12 @@ class LoginPinScreenControllerTest {
   private val ongoingLoginEntry = OngoingLoginEntry(
       uuid = loginUserUuid,
       pinDigest = "",
-      phoneNumber = ""
+      phoneNumber = "",
+      fullName = "",
+      registrationFacilityUuid = UUID.randomUUID(),
+      status = UserStatus.WaitingForApproval,
+      createdAt = Instant.now(),
+      updatedAt = Instant.now()
   )
 
   private val controller = LoginPinScreenController(
@@ -52,6 +60,8 @@ class LoginPinScreenControllerTest {
         .thenReturn(Single.never())
     whenever(facilitySync.pullWithResult())
         .thenReturn(Single.never())
+    whenever(userSession.storeUser(any(), any()))
+        .thenReturn(Completable.never())
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
   }
 
@@ -67,40 +77,32 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `when PIN is submitted, request login otp and open home screen`() {
-    whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any()))
-        .thenReturn(Completable.complete())
-    whenever(requestLoginOtp.requestForUser(loginUserUuid))
-        .thenReturn(Single.just(RequestLoginOtp.Result.Success))
-    whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.Success()))
-
-    uiEvents.onNext(LoginPinAuthenticated("0000"))
-
-    verify(requestLoginOtp).requestForUser(loginUserUuid)
-    verify(screen).openHomeScreen()
-  }
-
-  @Test
   fun `if request otp api call throws any errors, show errors`() {
     whenever(userSession.ongoingLoginEntry())
         .thenReturn(Single.just(ongoingLoginEntry))
     whenever(userSession.saveOngoingLoginEntry(any()))
         .thenReturn(Completable.complete())
-    whenever(requestLoginOtp.requestForUser(loginUserUuid))
-        .thenReturn(Single.just(RequestLoginOtp.Result.NetworkError))
-        .thenReturn(Single.just(RequestLoginOtp.Result.OtherError(RuntimeException())))
     whenever(facilitySync.pullWithResult())
         .thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(requestLoginOtp.requestForUser(loginUserUuid))
+        .thenReturn(
+            Single.just(RequestLoginOtp.Result.NetworkError),
+            Single.just(RequestLoginOtp.Result.OtherError(RuntimeException()))
+        )
 
     val enteredPin = "0000"
-    uiEvents.onNext(LoginPinAuthenticated(enteredPin))
-    uiEvents.onNext(LoginPinAuthenticated(enteredPin))
 
+    uiEvents.onNext(LoginPinAuthenticated(enteredPin))
+    verify(requestLoginOtp).requestForUser(loginUserUuid)
     verify(screen).showNetworkError()
+    verify(screen, never()).openHomeScreen()
+
+    clearInvocations(screen, requestLoginOtp)
+
+    uiEvents.onNext(LoginPinAuthenticated(enteredPin))
+    verify(requestLoginOtp).requestForUser(loginUserUuid)
     verify(screen).showUnexpectedError()
+    verify(screen, never()).openHomeScreen()
   }
 
   @Test
@@ -140,27 +142,6 @@ class LoginPinScreenControllerTest {
   }
 
   @Test
-  fun `when PIN is submitted, sync facilities, request login OTP and open the home screen`() {
-    // given
-    whenever(userSession.ongoingLoginEntry())
-        .thenReturn(Single.just(ongoingLoginEntry))
-    whenever(userSession.saveOngoingLoginEntry(any()))
-        .thenReturn(Completable.complete())
-    whenever(requestLoginOtp.requestForUser(loginUserUuid))
-        .thenReturn(Single.just(RequestLoginOtp.Result.Success))
-    whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.Success()))
-
-    // when
-    uiEvents.onNext(LoginPinAuthenticated("0000"))
-
-    // then
-    verify(facilitySync).pullWithResult()
-    verify(requestLoginOtp).requestForUser(loginUserUuid)
-    verify(screen).openHomeScreen()
-  }
-
-  @Test
   fun `when PIN is submitted and sync facilities fails, show errors`() {
     // given
     whenever(userSession.ongoingLoginEntry())
@@ -177,12 +158,65 @@ class LoginPinScreenControllerTest {
 
     // when
     uiEvents.onNext(LoginPinAuthenticated("0000"))
+    verify(screen).showNetworkError()
+
+    clearInvocations(screen)
+
+    uiEvents.onNext(LoginPinAuthenticated("0000"))
+    verify(screen).showUnexpectedError()
+
+    verify(requestLoginOtp, never()).requestForUser(loginUserUuid)
+  }
+
+  @Test
+  fun `when PIN is submitted, sync facilities, request login OTP, save the logged in user and open the home screen`() {
+    // given
+    val registrationFacilityUuid = UUID.fromString("5314616f-35bb-4a4d-99b1-13f5849de82e")
+    val phoneNumber = "phone number"
+    val pinDigest = "pin digest"
+    val fullName = "name"
+    val status = UserStatus.ApprovedForSyncing
+    val createdAt = Instant.parse("2019-07-25T06:01:03.325Z")
+    val updatedAt = Instant.parse("2019-07-26T06:01:03.325Z")
+    val ongoingLoginEntry = ongoingLoginEntry
+        .copy(
+            phoneNumber = phoneNumber,
+            pinDigest = pinDigest,
+            fullName = fullName,
+            registrationFacilityUuid = registrationFacilityUuid,
+            status = status,
+            createdAt = createdAt,
+            updatedAt = updatedAt
+        )
+    val expectedUser = User(
+        uuid = loginUserUuid,
+        fullName = fullName,
+        phoneNumber = phoneNumber,
+        pinDigest = pinDigest,
+        status = status,
+        createdAt = createdAt,
+        updatedAt = updatedAt,
+        loggedInStatus = User.LoggedInStatus.OTP_REQUESTED
+    )
+
+    whenever(userSession.ongoingLoginEntry())
+        .thenReturn(Single.just(ongoingLoginEntry))
+    whenever(userSession.saveOngoingLoginEntry(any()))
+        .thenReturn(Completable.complete())
+    whenever(requestLoginOtp.requestForUser(loginUserUuid))
+        .thenReturn(Single.just(RequestLoginOtp.Result.Success))
+    whenever(facilitySync.pullWithResult())
+        .thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
+        .thenReturn(Completable.complete())
+
+    // when
     uiEvents.onNext(LoginPinAuthenticated("0000"))
 
     // then
-    verify(facilitySync, times(2)).pullWithResult()
-    verify(requestLoginOtp, never()).requestForUser(loginUserUuid)
-    verify(screen).showNetworkError()
-    verify(screen).showUnexpectedError()
+    verify(facilitySync).pullWithResult()
+    verify(requestLoginOtp).requestForUser(loginUserUuid)
+    verify(userSession).storeUser(user = expectedUser, facilityUuid = registrationFacilityUuid)
+    verify(screen).openHomeScreen()
   }
 }

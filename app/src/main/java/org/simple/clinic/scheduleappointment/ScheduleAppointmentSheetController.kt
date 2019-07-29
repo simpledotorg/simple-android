@@ -91,9 +91,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
       events
           .ofType<AppointmentChooseCalendarClicks>()
           .withLatestFrom(latestAppointment(events)) { _, appointment ->
-            { ui: Ui ->
-              ui.showCalendar(LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit))
-            }
+            { ui: Ui -> ui.showCalendar(toLocalDate(appointment)) }
           }
 
   private fun latestAppointment(events: Observable<UiEvent>) =
@@ -228,10 +226,6 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    val toLocalDate = { appointment: ScheduleAppointment ->
-      LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
-    }
-
     val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated>()
         .map { it.patientUuid }
 
@@ -248,4 +242,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
               .map { { ui: Ui -> ui.closeSheet() } }
         }
   }
+
+  fun toLocalDate(appointment: ScheduleAppointment): LocalDate =
+      LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
 }

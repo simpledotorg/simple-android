@@ -18,8 +18,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
-import org.threeten.bp.Period
-import org.threeten.bp.temporal.ChronoUnit
+import org.threeten.bp.temporal.ChronoUnit.DAYS
 import javax.inject.Inject
 
 typealias Ui = ScheduleAppointmentSheet
@@ -48,7 +47,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
         incrementDecrements(replayedEvents),
         enableIncrements(replayedEvents),
         enableDecrements(replayedEvents),
-        showSelectedCalendarDate(replayedEvents)
+        showSelectedCalendarDate(replayedEvents),
+        showCalendar(replayedEvents)
     )
   }
 
@@ -78,14 +78,29 @@ class ScheduleAppointmentSheetController @Inject constructor(
       events
           .ofType<AppointmentCalendarDateSelected>()
           .map {
-            val days = Period.between(LocalDate.now(utcClock), LocalDate.of(it.year, it.month, it.dayOfMonth)).days
+            val days = DAYS.between(LocalDate.now(utcClock), LocalDate.of(it.year, it.month, it.dayOfMonth))
             ScheduleAppointment(
                 displayText = "$days days",
-                timeAmount = days,
-                chronoUnit = ChronoUnit.DAYS
+                timeAmount = days.toInt(),
+                chronoUnit = DAYS
             )
           }
           .map { { ui: Ui -> ui.updateScheduledAppointment(it) } }
+
+  private fun showCalendar(events: Observable<UiEvent>): Observable<UiChange> =
+      events
+          .ofType<AppointmentChooseCalendarClicks>()
+          .withLatestFrom(latestAppointment(events)) { _, appointment ->
+            { ui: Ui ->
+              ui.showCalendar(LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit))
+            }
+          }
+
+  private fun latestAppointment(events: Observable<UiEvent>) =
+      latestIndex(events)
+          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
+            possibleAppointments[latestIndex]
+          }
 
   private fun latestIndex(events: Observable<UiEvent>) =
       latestDateAction(events)

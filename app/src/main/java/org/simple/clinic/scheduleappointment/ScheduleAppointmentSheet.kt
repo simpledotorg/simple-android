@@ -97,26 +97,12 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             incrementClicks(),
             notNowClicks(),
             doneClicks(),
+            chooseCalendarClicks(),
             calendarDateSelectedEvents
         ),
         controller = controller,
         screenDestroys = onDestroys
     )
-
-    calendarButton.setOnClickListener {
-      showCalendar(LocalDate.now())
-    }
-  }
-
-  private fun showCalendar(date: LocalDate) {
-    DatePickerDialog(
-        this, { _, year, month, dayOfMonth ->
-      calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(
-          year = year,
-          month = month,
-          dayOfMonth = dayOfMonth
-      ))
-    }, date.year, date.monthValue - 1, date.dayOfMonth).show()
   }
 
   override fun onDestroy() {
@@ -134,6 +120,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped() }
 
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentScheduled(possibleDates[currentIndex]) }
+
+  private fun chooseCalendarClicks() = RxView.clicks(calendarButton).map { AppointmentChooseCalendarClicks }
 
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
@@ -162,5 +150,16 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   fun enableDecrementButton(state: Boolean) {
     decrementDateButton.isEnabled = state
+  }
+
+  fun showCalendar(date: LocalDate) {
+    DatePickerDialog(
+        this, { _, year, month, dayOfMonth ->
+      calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(
+          year = year,
+          month = month + 1,
+          dayOfMonth = dayOfMonth
+      ))
+    }, date.year, date.monthValue - 1, date.dayOfMonth).show()
   }
 }

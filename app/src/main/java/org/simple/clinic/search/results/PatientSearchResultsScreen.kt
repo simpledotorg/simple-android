@@ -98,14 +98,21 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     }
 
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
-    toolbar.title = screenKey.fullName
+    toolbar.title = generateToolbarTitleForCriteria(screenKey.criteria)
+  }
+
+  private fun generateToolbarTitleForCriteria(patientSearchCriteria: PatientSearchCriteria): CharSequence {
+    return when (patientSearchCriteria) {
+      is Name -> patientSearchCriteria.patientName
+      is PhoneNumber -> patientSearchCriteria.phoneNumber
+    }
   }
 
   private fun screenCreates(): Observable<UiEvent> {
     val screenKey = screenRouter.key<PatientSearchResultsScreenKey>(this)
     searchResultsView
         .downstreamUiEvents
-        .onNext(SearchPatientWithCriteria(Name(screenKey.fullName)))
+        .onNext(SearchPatientWithCriteria(screenKey.criteria))
     return Observable.just(PatientSearchResultsScreenCreated(screenKey))
   }
 

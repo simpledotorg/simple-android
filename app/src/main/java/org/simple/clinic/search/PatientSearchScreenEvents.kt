@@ -3,7 +3,7 @@ package org.simple.clinic.search
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-data class SearchQueryNameChanged(val name: String) : UiEvent {
+data class SearchQueryTextChanged(val text: String) : UiEvent {
   override val analyticsName = "Patient Search:Search Query Changed"
 }
 

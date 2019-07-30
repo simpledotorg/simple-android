@@ -7,7 +7,8 @@ data class ScheduleAppointmentSheetCreated(val defaultDateIndex: Int, val patien
 
 data class ScheduleAppointmentSheetCreated2(
     val possibleAppointments: List<ScheduleAppointment>,
-    val defaultAppointment: ScheduleAppointment
+    val defaultAppointment: ScheduleAppointment,
+    val patientUuid: UUID
 ) : UiEvent
 
 data class AppointmentDateIncremented(val currentIndex: Int, val size: Int) : UiEvent {
@@ -24,6 +25,10 @@ data class AppointmentDateDecremented(val currentIndex: Int, val size: Int) : Ui
 
 object AppointmentDateDecremented2 : UiEvent {
   override val analyticsName = "Schedule Appointment:Decrement appointment due date 2"
+}
+
+object AppointmentDone : UiEvent {
+  override val analyticsName = "Schedule Appointment:Appointment done"
 }
 
 object AppointmentChooseCalendarClicks : UiEvent {

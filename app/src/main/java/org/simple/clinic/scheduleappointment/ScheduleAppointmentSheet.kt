@@ -37,7 +37,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             .putExtra(KEY_PATIENT_UUID, patientUuid)
   }
 
-  private val oneMonth = ScheduleAppointment("1 month", 1, MONTHS)
+  private val oneMonth = ScheduleAppointment.DEFAULT
 
   private val possibleDates = listOf(
       ScheduleAppointment("1 day", 1, DAYS),

@@ -276,7 +276,6 @@ class ScheduleAppointmentSheetControllerTest {
         possibleAppointments = possibleAppointments,
         defaultAppointment = defaultAppointment
     ))
-    uiEvents.onNext(AppointmentDateIncremented2)
 
     verify(sheet).updateScheduledAppointment(defaultAppointment)
     verify(sheet).enableIncrementButton(true)
@@ -325,7 +324,8 @@ class ScheduleAppointmentSheetControllerTest {
     val possibleAppointments = listOf(
         ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
         twoDaysAppointment,
-        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS),
+        ScheduleAppointment("4 days", 4, ChronoUnit.DAYS)
     )
 
     uiEvents.onNext(ScheduleAppointmentSheetCreated2(possibleAppointments, twoDaysAppointment))
@@ -346,6 +346,11 @@ class ScheduleAppointmentSheetControllerTest {
     ))
 
     verify(sheet).updateScheduledAppointment(ScheduleAppointment("3 days", 3, ChronoUnit.DAYS))
+
+    uiEvents.onNext(AppointmentDateIncremented2)
+
+    verify(sheet).updateScheduledAppointment(ScheduleAppointment("4 days", 4, ChronoUnit.DAYS))
+    verify(sheet).enableIncrementButton(false)
 
     verifyNoMoreInteractions(sheet)
   }

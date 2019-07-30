@@ -47,45 +47,30 @@ class ScheduleAppointmentSheetController @Inject constructor(
         incrementDecrements(replayedEvents),
         enableIncrements(replayedEvents),
         enableDecrements(replayedEvents),
-        showSelectedCalendarDate(replayedEvents),
         showCalendar(replayedEvents)
     )
   }
 
   private fun incrementDecrements(events: Observable<UiEvent>): Observable<UiChange> =
-      latestIndex(events)
-          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
-            possibleAppointments[latestIndex]
-          }
+      latestAppointment(events)
           .distinctUntilChanged()
           .map { appointment -> { ui: Ui -> ui.updateScheduledAppointment(appointment) } }
 
   private fun enableIncrements(events: Observable<UiEvent>): Observable<UiChange> =
-      latestIndex(events)
-          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
-            latestIndex < possibleAppointments.lastIndex
+      latestAppointment(events)
+          .withLatestFrom(possibleAppointments(events)) { latestAppointment, possibleAppointments ->
+            toLocalDate(latestAppointment) < toLocalDate(possibleAppointments.last())
           }
           .distinctUntilChanged()
           .map { enable -> { ui: Ui -> ui.enableIncrementButton(enable) } }
 
   private fun enableDecrements(events: Observable<UiEvent>): Observable<UiChange> =
-      latestIndex(events)
-          .map { it > 0 }
+      latestAppointment(events)
+          .withLatestFrom(possibleAppointments(events)) { latestAppointment, possibleAppointments ->
+            toLocalDate(latestAppointment) > toLocalDate(possibleAppointments.first())
+          }
           .distinctUntilChanged()
           .map { enable -> { ui: Ui -> ui.enableDecrementButton(enable) } }
-
-  private fun showSelectedCalendarDate(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<AppointmentCalendarDateSelected>()
-          .map {
-            val days = DAYS.between(LocalDate.now(utcClock), LocalDate.of(it.year, it.month, it.dayOfMonth))
-            ScheduleAppointment(
-                displayText = "$days days",
-                timeAmount = days.toInt(),
-                chronoUnit = DAYS
-            )
-          }
-          .map { { ui: Ui -> ui.updateScheduledAppointment(it) } }
 
   private fun showCalendar(events: Observable<UiEvent>): Observable<UiChange> =
       events
@@ -94,31 +79,73 @@ class ScheduleAppointmentSheetController @Inject constructor(
             { ui: Ui -> ui.showCalendar(toLocalDate(appointment)) }
           }
 
-  private fun latestAppointment(events: Observable<UiEvent>) =
-      latestIndex(events)
-          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
-            possibleAppointments[latestIndex]
-          }
-
-  private fun latestIndex(events: Observable<UiEvent>) =
+  private fun latestAppointment(events: Observable<UiEvent>): Observable<ScheduleAppointment> =
       latestDateAction(events)
-          .scan(0) { index, action ->
-            when (action) {
-              AppointmentDateIncremented2 -> index + 1
-              AppointmentDateDecremented2 -> index - 1
-              is ScheduleAppointmentSheetCreated2 -> action.possibleAppointments.indexOf(action.defaultAppointment)
-              else -> index
-            }
+          .withLatestFrom(possibleAppointments(events))
+          .scan(ScheduleAppointment.DEFAULT) { latestAppointment, (action, possibleAppointments) ->
+            newAppointment(action, latestAppointment, possibleAppointments)
           }
-          .withLatestFrom(possibleAppointments(events)) { latestIndex, possibleAppointments ->
-            latestIndex.coerceIn(0, possibleAppointments.lastIndex)
-          }
+          .skip(1)
+
+  private fun newAppointment(
+      action: UiEvent,
+      latestAppointment: ScheduleAppointment,
+      possibleAppointments: List<ScheduleAppointment>
+  ): ScheduleAppointment =
+      when (action) {
+        AppointmentDateIncremented2 -> nextAppointment(latestAppointment, possibleAppointments)
+        AppointmentDateDecremented2 -> previousAppointment(latestAppointment, possibleAppointments)
+        is ScheduleAppointmentSheetCreated2 -> action.defaultAppointment
+        is AppointmentCalendarDateSelected -> toScheduleAppointment(action)
+        else -> ScheduleAppointment.DEFAULT
+      }
+
+  private fun toScheduleAppointment(dateSelected: AppointmentCalendarDateSelected): ScheduleAppointment {
+    val days = DAYS.between(LocalDate.now(utcClock), LocalDate.of(
+        dateSelected.year,
+        dateSelected.month,
+        dateSelected.dayOfMonth
+    ))
+    return ScheduleAppointment(
+        displayText = "$days days",
+        timeAmount = days.toInt(),
+        chronoUnit = DAYS
+    )
+  }
+
+  private fun nextAppointment(
+      latestAppointment: ScheduleAppointment,
+      possibleAppointments: List<ScheduleAppointment>
+  ): ScheduleAppointment {
+    val latestDate = toLocalDate(latestAppointment)
+    possibleAppointments.forEachIndexed { index, appointment ->
+      val appointmentLocalDate = toLocalDate(appointment)
+      if (appointmentLocalDate == latestDate) return possibleAppointments[index + 1]
+      else if (appointmentLocalDate > latestDate) return possibleAppointments[index]
+    }
+    return ScheduleAppointment.DEFAULT
+  }
+
+  private fun previousAppointment(
+      latestAppointment: ScheduleAppointment,
+      possibleAppointments: List<ScheduleAppointment>
+  ): ScheduleAppointment {
+    val latestDate = toLocalDate(latestAppointment)
+    val reversedPossibleAppointments = possibleAppointments.reversed()
+    reversedPossibleAppointments.forEachIndexed { index, appointment ->
+      val appointmentLocalDate = toLocalDate(appointment)
+      if (appointmentLocalDate == latestDate) return reversedPossibleAppointments[index + 1]
+      else if (appointmentLocalDate < latestDate) return reversedPossibleAppointments[index]
+    }
+    return ScheduleAppointment.DEFAULT
+  }
 
   private fun latestDateAction(events: Observable<UiEvent>) =
       Observable.merge(
           events.ofType<AppointmentDateIncremented2>(),
           events.ofType<AppointmentDateDecremented2>(),
-          events.ofType<ScheduleAppointmentSheetCreated2>()
+          events.ofType<ScheduleAppointmentSheetCreated2>(),
+          events.ofType<AppointmentCalendarDateSelected>()
       )
 
   private fun possibleAppointments(events: Observable<UiEvent>) =

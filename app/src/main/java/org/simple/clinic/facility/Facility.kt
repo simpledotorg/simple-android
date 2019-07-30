@@ -1,6 +1,5 @@
 package org.simple.clinic.facility
 
-import android.os.Parcelable
 import androidx.room.Dao
 import androidx.room.Embedded
 import androidx.room.Entity
@@ -9,14 +8,12 @@ import androidx.room.OnConflictStrategy
 import androidx.room.PrimaryKey
 import androidx.room.Query
 import io.reactivex.Flowable
-import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.location.Coordinates
 import org.simple.clinic.patient.SyncStatus
 import org.threeten.bp.Instant
 import java.util.UUID
 
 @Entity
-@Parcelize
 data class Facility(
 
     @PrimaryKey
@@ -56,7 +53,7 @@ data class Facility(
     val syncStatus: SyncStatus,
 
     val deletedAt: Instant?
-) : Parcelable {
+) {
 
   @Dao
   interface RoomDao {

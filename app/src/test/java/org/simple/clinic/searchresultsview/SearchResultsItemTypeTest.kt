@@ -7,7 +7,8 @@ import java.util.UUID
 
 class SearchResultsItemTypeTest {
 
-  private val currentFacility = PatientMocker.facility(UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70"))
+  private val currentFacilityUuid = UUID.fromString("69cf85c8-6788-4071-b985-0536ae606b70")
+  private val currentFacility = PatientMocker.facility(currentFacilityUuid)
 
   @Test
   fun `list items must be generated from the search results`() {
@@ -32,12 +33,12 @@ class SearchResultsItemTypeTest {
         SearchResultsItemType.InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultsItemType.SearchResultRow(
             searchResult = patientSearchResult1,
-            currentFacility = currentFacility
+            currentFacilityUuid = currentFacilityUuid
         ),
         SearchResultsItemType.NotInCurrentFacilityHeader,
         SearchResultsItemType.SearchResultRow(
             searchResult = patientSearchResult2,
-            currentFacility = currentFacility
+            currentFacilityUuid = currentFacilityUuid
         )
     )
     assertThat(listItems).isEqualTo(expected)
@@ -66,11 +67,11 @@ class SearchResultsItemTypeTest {
         SearchResultsItemType.InCurrentFacilityHeader(facilityName = currentFacility.name),
         SearchResultsItemType.SearchResultRow(
             searchResult = patientSearchResult1,
-            currentFacility = currentFacility
+            currentFacilityUuid = currentFacilityUuid
         ),
         SearchResultsItemType.SearchResultRow(
             searchResult = patientSearchResult2,
-            currentFacility = currentFacility
+            currentFacilityUuid = currentFacilityUuid
         )
     )
     assertThat(listItems).isEqualTo(expected)
@@ -101,11 +102,11 @@ class SearchResultsItemTypeTest {
         SearchResultsItemType.NotInCurrentFacilityHeader,
         SearchResultsItemType.SearchResultRow(
             searchResult = patientSearchResult1,
-            currentFacility = currentFacility
+            currentFacilityUuid = currentFacilityUuid
         ),
         SearchResultsItemType.SearchResultRow(
             searchResult = patientSearchResult2,
-            currentFacility = currentFacility
+            currentFacilityUuid = currentFacilityUuid
         )
     )
     assertThat(listItems).isEqualTo(expected)

@@ -4,11 +4,12 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import java.util.UUID
 
 @Parcelize
 data class AllPatientsInFacilityUiState(
     val patientsQueried: Boolean,
-    val facility: Facility? = null,
+    val facilityUiState: FacilityUiState? = null,
     val patients: List<PatientSearchResult> = emptyList()
 ) : Parcelable {
   companion object {
@@ -16,7 +17,7 @@ data class AllPatientsInFacilityUiState(
   }
 
   fun facilityFetched(facility: Facility): AllPatientsInFacilityUiState =
-      copy(facility = facility)
+      copy(facilityUiState = FacilityUiState(facility.uuid, facility.name))
 
   fun noPatients(): AllPatientsInFacilityUiState =
       copy(patients = emptyList(), patientsQueried = true)
@@ -24,3 +25,9 @@ data class AllPatientsInFacilityUiState(
   fun hasPatients(patientSearchResults: List<PatientSearchResult>): AllPatientsInFacilityUiState =
       copy(patients = patientSearchResults, patientsQueried = true)
 }
+
+@Parcelize
+data class FacilityUiState(
+    val uuid: UUID,
+    val name: String
+) : Parcelable

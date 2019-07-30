@@ -80,10 +80,11 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
         .map { PatientSearchResultRegisterNewPatient(extractPatientName(it.criteria)) }
   }
 
+  // TODO 30-Jul-19: Will be removed when pre-filling registration entry with phone number is implemented
   private fun extractPatientName(criteria: PatientSearchCriteria): String {
     return when (criteria) {
       is Name -> criteria.patientName
-      is PhoneNumber -> TODO("not yet implemented")
+      is PhoneNumber -> ""
     }
   }
 

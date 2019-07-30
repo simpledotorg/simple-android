@@ -253,16 +253,17 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated>()
+    val patientUuidStream = events.ofType<ScheduleAppointmentSheetCreated2>()
         .map { it.patientUuid }
 
     val currentFacilityStream = userSession
         .requireLoggedInUser()
         .switchMap { user -> facilityRepository.currentFacility(user) }
 
-    return events.ofType<AppointmentScheduled>()
-        .map { toLocalDate(it.selectedDateState) }
-        .withLatestFrom(patientUuidStream, currentFacilityStream)
+    return events.ofType<AppointmentDone>()
+        .withLatestFrom(latestAppointment(events), patientUuidStream, currentFacilityStream) { _, latestAppointment, uuid, currentFacility ->
+          Triple(toLocalDate(latestAppointment), uuid, currentFacility)
+        }
         .flatMapSingle { (date, uuid, currentFacility) ->
           appointmentRepository
               .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual, currentFacility = currentFacility)

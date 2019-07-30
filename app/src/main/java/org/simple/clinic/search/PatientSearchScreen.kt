@@ -16,6 +16,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -109,7 +110,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun openPatientSearchResultsScreen(name: String) {
-    screenRouter.push(PatientSearchResultsScreenKey(name))
+    screenRouter.push(PatientSearchResultsScreenKey(PatientSearchCriteria.Name(name)))
   }
 
   fun setEmptyFullNameErrorVisible(visible: Boolean) {

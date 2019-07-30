@@ -9,11 +9,6 @@ import org.simple.clinic.router.screen.FullScreenKey
 @Parcelize
 data class PatientSearchResultsScreenKey(val criteria: PatientSearchCriteria) : FullScreenKey {
 
-  constructor(fullName: String) : this(PatientSearchCriteria.Name(fullName))
-
-  val fullName: String
-    get() = (criteria as PatientSearchCriteria.Name).patientName
-
   @IgnoredOnParcel
   override val analyticsName = "Patient Search Results"
 

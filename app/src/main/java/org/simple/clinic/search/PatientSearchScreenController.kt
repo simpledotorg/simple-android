@@ -37,8 +37,8 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
   private fun validateQuery(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
       val nameChanges = events
-          .ofType<SearchQueryNameChanged>()
-          .map { it.name.trim() }
+          .ofType<SearchQueryTextChanged>()
+          .map { it.text.trim() }
 
       val validationErrors = events.ofType<SearchClicked>()
           .withLatestFrom(nameChanges)
@@ -62,7 +62,7 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         .map {
           { ui: Ui ->
             when (it) {
-              FULL_NAME_EMPTY -> ui.setEmptyFullNameErrorVisible(true)
+              FULL_NAME_EMPTY -> ui.setEmptyTextFieldErrorVisible(true)
             }
           }
         }
@@ -70,14 +70,14 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
 
   private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<SearchQueryNameChanged>()
-        .map { { ui: Ui -> ui.setEmptyFullNameErrorVisible(false) } }
+        .ofType<SearchQueryTextChanged>()
+        .map { { ui: Ui -> ui.setEmptyTextFieldErrorVisible(false) } }
   }
 
   private fun openSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val nameChanges = events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.trim() }
+        .ofType<SearchQueryTextChanged>()
+        .map { it.text.trim() }
 
     val validationErrors = events
         .ofType<SearchQueryValidated>()
@@ -103,8 +103,8 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
 
   private fun toggleAllPatientsVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.isNotBlank() }
+        .ofType<SearchQueryTextChanged>()
+        .map { it.text.isNotBlank() }
         .map { isSearchQueryPresent ->
           { ui: Ui ->
             if (isSearchQueryPresent) {
@@ -118,8 +118,8 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
 
   private fun toggleSearchButtonVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.isNotBlank() }
+        .ofType<SearchQueryTextChanged>()
+        .map { it.text.isNotBlank() }
         .map { isSearchQueryPresent ->
           { ui: Ui ->
             if (isSearchQueryPresent) {

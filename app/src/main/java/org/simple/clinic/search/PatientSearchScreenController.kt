@@ -49,23 +49,25 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
           .map { it.text.trim() }
 
       val validationErrors = events.ofType<SearchClicked>()
-          .withLatestFrom(textChanges)
-          .map { (_, text) ->
-            val errors = mutableListOf<PatientSearchValidationError>()
-
-            if (text.isBlank()) {
-              errors += INPUT_EMPTY
-            }
-            SearchQueryValidated(errors)
-          }
+          .withLatestFrom(textChanges) { _, text -> text }
+          .map(this::validateInput)
 
       events.mergeWith(validationErrors)
     }
   }
 
+  private fun validateInput(inputText: String): SearchQueryValidationResult {
+    return if (inputText.isBlank()) {
+      SearchQueryValidationResult.Invalid(listOf(INPUT_EMPTY))
+    } else {
+      SearchQueryValidationResult.Valid(inputText)
+    }
+  }
+
   private fun showValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SearchQueryValidated>()
-        .flatMapIterable { it.validationErrors }
+    return events
+        .ofType<SearchQueryValidationResult.Invalid>()
+        .flatMapIterable { it.errors }
         .doOnNext { Analytics.reportInputValidationError(it.analyticsName) }
         .map {
           { ui: Ui ->
@@ -83,21 +85,17 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
   }
 
   private fun openSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    val validationErrors = events
-        .ofType<SearchQueryValidated>()
-        .map { it.validationErrors }
-        .distinctUntilChanged()
-
     val searchClicks = events
         .ofType<SearchClicked>()
 
-    val textChanges = events
-        .ofType<SearchQueryTextChanged>()
-        .map { it.text.trim() }
+    val inputValidationResultStream = events.ofType<SearchQueryValidationResult>()
 
-    return Observables.combineLatest(searchClicks, validationErrors)
-        .filter { (_, errors) -> errors.isEmpty() }
-        .withLatestFrom(textChanges) { _, text -> text }
+    val successfullyValidatedInputStream = Observables
+        .combineLatest(searchClicks, inputValidationResultStream) { _, validationResult -> validationResult }
+        .ofType<SearchQueryValidationResult.Valid>()
+
+    return successfullyValidatedInputStream
+        .map { it.text }
         .map(this::searchCriteriaFromInput)
         .map(this::openSearchResultsBasedOnInput)
   }

@@ -6,22 +6,22 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_allpatientsinfacility_facility_header.*
 import kotlinx.android.synthetic.main.list_patient_search.*
 import org.simple.clinic.R
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import java.util.Locale
+import java.util.UUID
 
 sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacilityListItem.Event> {
 
   companion object {
     fun mapSearchResultsToListItems(
-        facility: Facility,
+        facilityUiState: FacilityUiState,
         patientSearchResults: List<PatientSearchResult>
     ): List<AllPatientsInFacilityListItem> {
       return patientSearchResults
-          .map { patientSearchResult -> SearchResult(facility, patientSearchResult) }
-          .let { searchResultItems -> listOf(FacilityHeader(facility.name)) + searchResultItems }
+          .map { patientSearchResult -> SearchResult(facilityUiState.uuid, patientSearchResult) }
+          .let { searchResultItems -> listOf(FacilityHeader(facilityUiState.name)) + searchResultItems }
     }
   }
 
@@ -45,7 +45,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
   }
 
   data class SearchResult(
-      val facility: Facility,
+      val facilityUuid: UUID,
       val patientSearchResult: PatientSearchResult
   ) : AllPatientsInFacilityListItem() {
 
@@ -57,7 +57,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
         holder: ViewHolderX,
         subject: Subject<Event>
     ) {
-      holder.patientSearchResultView.render(patientSearchResult, facility)
+      holder.patientSearchResultView.render(patientSearchResult, facilityUuid)
       holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(patientSearchResult)) }
     }
 

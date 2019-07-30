@@ -19,6 +19,7 @@ import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.toLocalDateAtZone
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -48,17 +49,17 @@ class PatientSearchResultItemView(
     TheActivity.component.inject(this)
   }
 
-  fun render(searchResult: PatientSearchResult, currentFacility: Facility) {
+  fun render(searchResult: PatientSearchResult, currentFacilityUuid: UUID) {
     renderPatientNameAgeAndGender(searchResult)
     renderPatientAddress(searchResult.address)
     renderPatientDateOfBirth(searchResult.dateOfBirth)
     renderPatientPhoneNumber(searchResult.phoneNumber)
-    renderLastRecordedBloodPressure(searchResult.lastBp, currentFacility)
+    renderLastRecordedBloodPressure(searchResult.lastBp, currentFacilityUuid)
   }
 
   private fun renderLastRecordedBloodPressure(
       lastBp: PatientSearchResult.LastBp?,
-      currentFacility: Facility
+      currentFacilityUuid: UUID
   ) {
     if (lastBp == null) {
       lastBpContainer.visibility = View.GONE
@@ -68,7 +69,7 @@ class PatientSearchResultItemView(
       val lastBpDate = lastBp.takenOn.toLocalDateAtZone(userClock.zone)
       val formattedLastBpDate = dateTimeFormatter.format(lastBpDate)
 
-      val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacility.uuid
+      val isCurrentFacility = lastBp.takenAtFacilityUuid == currentFacilityUuid
       if (isCurrentFacility) {
         lastBpLabel.text = formattedLastBpDate
       } else {

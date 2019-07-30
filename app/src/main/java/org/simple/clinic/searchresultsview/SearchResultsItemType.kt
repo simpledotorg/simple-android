@@ -9,6 +9,7 @@ import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
 
@@ -116,7 +117,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
 
   data class SearchResultRow(
       private val searchResult: PatientSearchResult,
-      private val currentFacility: Facility
+      private val currentFacilityUuid: UUID
   ) : SearchResultsItemType<ViewHolder>(searchResult.hashCode().toLong()) {
 
     companion object {
@@ -124,7 +125,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
           searchResults: List<PatientSearchResult>,
           currentFacility: Facility
       ): List<SearchResultRow> {
-        return searchResults.map { searchResult -> SearchResultRow(searchResult, currentFacility) }
+        return searchResults.map { searchResult -> SearchResultRow(searchResult, currentFacility.uuid) }
       }
     }
 
@@ -137,7 +138,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
         uiEvents.onNext(SearchResultClicked(searchResult))
       }
 
-      patientSearchResultView.render(searchResult, currentFacility)
+      patientSearchResultView.render(searchResult, currentFacilityUuid)
     }
   }
 }

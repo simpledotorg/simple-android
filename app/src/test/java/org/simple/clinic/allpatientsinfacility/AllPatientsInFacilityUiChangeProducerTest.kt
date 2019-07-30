@@ -69,7 +69,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
     viewStateSubject.onNext(noPatientsFoundInFacilityState)
 
     // then
-    verify(view).showNoPatientsFound(facility.name)
+    verify(view).showNoPatientsFound(noPatientsFoundInFacilityState.facilityUiState!!.name)
     verifyNoMoreInteractions(view)
   }
 
@@ -87,7 +87,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
     viewStateSubject.onNext(hasPatientsInFacilityState)
 
     // then
-    verify(view).showPatients(facility, patientSearchResults)
+    verify(view).showPatients(FacilityUiState(facility.uuid, facility.name), patientSearchResults)
     verifyNoMoreInteractions(view)
   }
 }

@@ -28,7 +28,7 @@ class AllPatientsInFacilityUiChangeProducer @Inject constructor(
   ): Observable<AllPatientsInFacilityUiChange> {
     return queriedPatientsStates
         .filter { it.patients.isNotEmpty() }
-        .map { { ui: AllPatientsInFacilityUi -> ui.showPatients(it.facility!!, it.patients) } }
+        .map { { ui: AllPatientsInFacilityUi -> ui.showPatients(it.facilityUiState!!, it.patients) } }
   }
 
   private fun noPatientsInFacilityUiChanges(
@@ -36,6 +36,6 @@ class AllPatientsInFacilityUiChangeProducer @Inject constructor(
   ): Observable<AllPatientsInFacilityUiChange> {
     return queriedPatientsStates
         .filter { it.patients.isEmpty() }
-        .map { { view: AllPatientsInFacilityUi -> view.showNoPatientsFound(it.facility!!.name) } }
+        .map { { view: AllPatientsInFacilityUi -> view.showNoPatientsFound(it.facilityUiState!!.name) } }
   }
 }

@@ -20,14 +20,14 @@ class AllPatientsInFacilityListItemTest {
     )
 
     // when
-    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(facility, patientSearchResults)
+    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(FacilityUiState(facility.uuid, facility.name), patientSearchResults)
 
     // then
     val expectedListItems = listOf(
         FacilityHeader("Test Facility"),
-        SearchResult(facility, patientSearchResults[0]),
-        SearchResult(facility, patientSearchResults[1]),
-        SearchResult(facility, patientSearchResults[2])
+        SearchResult(facility.uuid, patientSearchResults[0]),
+        SearchResult(facility.uuid, patientSearchResults[1]),
+        SearchResult(facility.uuid, patientSearchResults[2])
     )
     assertThat(listItems).isEqualTo(expectedListItems)
   }

@@ -20,7 +20,6 @@ import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
@@ -31,6 +30,7 @@ class AllPatientsInFacilityView(
     context: Context,
     attributeSet: AttributeSet
 ) : FrameLayout(context, attributeSet), AllPatientsInFacilityUi {
+
   companion object {
     private val FEATURE_STATE_KEY = AllPatientsInFacilityView::class.java.name
     private val VIEW_STATE_KEY = FEATURE_STATE_KEY + "ViewState"
@@ -114,10 +114,10 @@ class AllPatientsInFacilityView(
     noPatientsLabel.text = resources.getString(R.string.allpatientsinfacility_nopatients_title, facilityName)
   }
 
-  override fun showPatients(facility: Facility, patientSearchResults: List<PatientSearchResult>) {
+  override fun showPatients(facilityUiState: FacilityUiState, patientSearchResults: List<PatientSearchResult>) {
     patientsList.visibility = View.VISIBLE
     noPatientsContainer.visibility = View.GONE
-    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(facility, patientSearchResults)
+    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(facilityUiState, patientSearchResults)
     searchResultsAdapter.submitList(listItems)
   }
 

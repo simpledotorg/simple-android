@@ -110,8 +110,14 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     super.onDestroy()
   }
 
-  private fun screenCreates(): Observable<UiEvent> =
-      Observable.just(ScheduleAppointmentSheetCreated2(possibleDates, oneMonth))
+  private fun screenCreates(): Observable<UiEvent> {
+    val patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
+    return Observable.just(ScheduleAppointmentSheetCreated2(
+        possibleAppointments = possibleDates,
+        defaultAppointment = oneMonth,
+        patientUuid = patientUuid
+    ))
+  }
 
   private fun incrementClicks() = RxView.clicks(incrementDateButton).map { AppointmentDateIncremented2 }
 
@@ -119,7 +125,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped() }
 
-  private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentScheduled(possibleDates[currentIndex]) }
+  private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
 
   private fun chooseCalendarClicks() = RxView.clicks(calendarButton).map { AppointmentChooseCalendarClicks }
 

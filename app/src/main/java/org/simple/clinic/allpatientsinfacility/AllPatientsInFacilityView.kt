@@ -64,8 +64,7 @@ class AllPatientsInFacilityView(
 
     setupAllPatientsList()
     setupInitialViewVisibility()
-    forwardListItemEventsToDownstream()
-    forwardListScrolledEventsToDownstream()
+    forwardListEventsToDownstream()
 
     binding = ViewControllerBinding.bindToView(
         view = this,
@@ -75,24 +74,25 @@ class AllPatientsInFacilityView(
   }
 
   @SuppressLint("CheckResult")
-  private fun forwardListItemEventsToDownstream() {
-    searchResultsAdapter
-        .itemEvents
-        .ofType<SearchResultClicked>()
-        .map { it.patientSearchResult.uuid }
-        .map(::AllPatientsInFacilitySearchResultClicked)
+  private fun forwardListEventsToDownstream() {
+    Observable.merge(searchResultClicks(), listScrollEvents())
         .takeUntil(RxView.detaches(this))
         .subscribe(downstreamUiEvents::onNext)
   }
 
-  @SuppressLint("CheckResult")
-  private fun forwardListScrolledEventsToDownstream() {
-    RxRecyclerView
+  private fun searchResultClicks(): Observable<UiEvent> {
+    return searchResultsAdapter
+        .itemEvents
+        .ofType<SearchResultClicked>()
+        .map { it.patientSearchResult.uuid }
+        .map(::AllPatientsInFacilitySearchResultClicked)
+  }
+
+  private fun listScrollEvents(): Observable<UiEvent> {
+    return RxRecyclerView
         .scrollStateChanges(patientsList)
         .filter { it == RecyclerView.SCROLL_STATE_DRAGGING }
         .map { AllPatientsInFacilityListScrolled }
-        .takeUntil(RxView.detaches(this))
-        .subscribe { downstreamUiEvents.onNext(it) }
   }
 
   private fun setupInitialViewVisibility() {

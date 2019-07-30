@@ -1,6 +1,7 @@
 package org.simple.clinic.search
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -31,7 +32,7 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when search is clicked with empty name then a validation error should be shown`() {
+  fun `when search is clicked with no input then a validation error should be shown`() {
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 
@@ -39,15 +40,18 @@ class PatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when name changes then any validation error on name should be removed`() {
+  fun `when input changes then any validation error on input should be removed`() {
     uiEvents.onNext(SearchQueryTextChanged("Anish"))
-    uiEvents.onNext(SearchQueryTextChanged("Anish Acharya"))
+    verify(screen).setEmptyTextFieldErrorVisible(false)
 
-    verify(screen, times(2)).setEmptyTextFieldErrorVisible(false)
+    clearInvocations(screen)
+
+    uiEvents.onNext(SearchQueryTextChanged("123"))
+    verify(screen).setEmptyTextFieldErrorVisible(false)
   }
 
   @Test
-  fun `when search is clicked with empty name then patients shouldn't be searched`() {
+  fun `when search is clicked with empty input then patients shouldn't be searched`() {
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked())
 

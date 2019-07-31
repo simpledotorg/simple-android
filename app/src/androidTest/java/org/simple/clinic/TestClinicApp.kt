@@ -29,6 +29,9 @@ import org.simple.clinic.remoteconfig.ConfigReader
 import org.simple.clinic.security.pin.BruteForceProtectionConfig
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
+import org.simple.clinic.sync.DataSync
+import org.simple.clinic.sync.DataSyncOnApprovalModule
+import org.simple.clinic.sync.IDataSyncOnApproval
 import org.simple.clinic.sync.SyncScheduler
 import org.simple.clinic.user.LoggedInUserHttpInterceptor
 import org.simple.clinic.user.UserSession
@@ -134,6 +137,14 @@ class TestClinicApp : ClinicApp() {
             }
           }
         })
+        .dataSyncOnApprovalModule(object : DataSyncOnApprovalModule() {
+          override fun bindSyncDataOnApproval(userSession: UserSession, dataSync: DataSync): IDataSyncOnApproval {
+            return object : IDataSyncOnApproval {
+              override fun sync() {}
+            }
+          }
+        })
+
         .build()
   }
 }

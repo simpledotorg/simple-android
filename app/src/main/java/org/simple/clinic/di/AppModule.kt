@@ -20,6 +20,7 @@ import org.simple.clinic.screen.KeyChangeAnimatorModule
 import org.simple.clinic.security.pin.BruteForceProtectionModule
 import org.simple.clinic.storage.StorageModule
 import org.simple.clinic.summary.PatientSummaryModule
+import org.simple.clinic.sync.DataSyncOnApprovalModule
 import org.simple.clinic.sync.SyncModule
 import org.simple.clinic.sync.indicator.SyncIndicatorModule
 import org.simple.clinic.util.scheduler.DefaultSchedulersProvider
@@ -48,7 +49,8 @@ import java.util.Locale
   IdentifierDisplayAdapterModule::class,
   KeyChangeAnimatorModule::class,
   OnboardingModule::class,
-  AppUpdateModule::class
+  AppUpdateModule::class,
+  DataSyncOnApprovalModule::class
 ])
 open class AppModule(private val appContext: Application) {
 

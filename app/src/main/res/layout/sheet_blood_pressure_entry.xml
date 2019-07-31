@@ -19,7 +19,7 @@
     android:outAnimation="@anim/bloodpressureentry_bp_exit_to_left"
     android:paddingBottom="@dimen/spacing_8"
     android:paddingTop="@dimen/spacing_12"
-    app:debug_displayedChild="1"
+    app:debug_displayedChild="0"
     tools:background="@color/white">
 
     <LinearLayout
@@ -150,7 +150,7 @@
 
       <Button
         android:id="@+id/bloodpressureentry_bp_date"
-        style="@style/Clinic.V2.BpEntryDateButton"
+        style="@style/Clinic.V2.NoBackgroundRippleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

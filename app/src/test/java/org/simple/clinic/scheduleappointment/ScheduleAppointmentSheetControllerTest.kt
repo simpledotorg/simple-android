@@ -78,7 +78,7 @@ class ScheduleAppointmentSheetControllerTest {
     val date = LocalDate.now(utcClock).plus(1, ChronoUnit.MONTHS)
     val possibleAppointments = listOf(ScheduleAppointment.DEFAULT)
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
         possibleAppointments = possibleAppointments,
         defaultAppointment = ScheduleAppointment.DEFAULT,
         patientUuid = uuid
@@ -109,7 +109,7 @@ class ScheduleAppointmentSheetControllerTest {
     ))
 
     val possibleAppointments = listOf(ScheduleAppointment.DEFAULT)
-    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
         patientUuid = uuid,
         possibleAppointments = possibleAppointments,
         defaultAppointment = ScheduleAppointment.DEFAULT
@@ -139,7 +139,7 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
         possibleAppointments = possibleAppointments,
         defaultAppointment = defaultAppointment,
         patientUuid = UUID.randomUUID()
@@ -163,7 +163,7 @@ class ScheduleAppointmentSheetControllerTest {
         thirdAppointment
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
         possibleAppointments = possibleAppointments,
         defaultAppointment = defaultAppointment,
         patientUuid = UUID.randomUUID()
@@ -173,7 +173,7 @@ class ScheduleAppointmentSheetControllerTest {
     verify(sheet).enableIncrementButton(true)
     verify(sheet).enableDecrementButton(true)
 
-    uiEvents.onNext(AppointmentDateIncremented2)
+    uiEvents.onNext(AppointmentDateIncremented)
 
     verify(sheet).updateScheduledAppointment(thirdAppointment)
     verify(sheet).enableIncrementButton(false)
@@ -192,7 +192,7 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
         possibleAppointments = possibleAppointments,
         defaultAppointment = defaultAppointment,
         patientUuid = UUID.randomUUID()
@@ -202,7 +202,7 @@ class ScheduleAppointmentSheetControllerTest {
     verify(sheet).enableIncrementButton(true)
     verify(sheet).enableDecrementButton(true)
 
-    uiEvents.onNext(AppointmentDateDecremented2)
+    uiEvents.onNext(AppointmentDateDecremented)
 
     verify(sheet).updateScheduledAppointment(firstAppointment)
     verify(sheet).enableDecrementButton(false)
@@ -221,7 +221,7 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointment("4 days", 4, ChronoUnit.DAYS)
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(
         possibleAppointments = possibleAppointments,
         defaultAppointment = twoDaysAppointment,
         patientUuid = UUID.randomUUID()
@@ -244,7 +244,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     verify(sheet).updateScheduledAppointment(ScheduleAppointment("3 days", 3, ChronoUnit.DAYS))
 
-    uiEvents.onNext(AppointmentDateIncremented2)
+    uiEvents.onNext(AppointmentDateIncremented)
 
     verify(sheet).updateScheduledAppointment(ScheduleAppointment("4 days", 4, ChronoUnit.DAYS))
     verify(sheet).enableIncrementButton(false)

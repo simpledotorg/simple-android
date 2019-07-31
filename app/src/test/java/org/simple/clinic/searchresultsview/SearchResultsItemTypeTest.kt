@@ -3,6 +3,11 @@ package org.simple.clinic.searchresultsview
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
+import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
+import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
+import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
+import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import java.util.UUID
 
 class SearchResultsItemTypeTest {
@@ -30,14 +35,32 @@ class SearchResultsItemTypeTest {
 
     // then
     val expected = listOf(
-        SearchResultsItemType.InCurrentFacilityHeader(facilityName = currentFacility.name),
-        SearchResultsItemType.SearchResultRow(
-            searchResult = patientSearchResult1,
+        InCurrentFacilityHeader(facilityName = currentFacility.name),
+        SearchResultRow(
+            searchResultViewModel = PatientSearchResultViewModel(
+                uuid = patientSearchResult1.uuid,
+                fullName = patientSearchResult1.fullName,
+                gender = patientSearchResult1.gender,
+                age = patientSearchResult1.age,
+                dateOfBirth = patientSearchResult1.dateOfBirth,
+                address = patientSearchResult1.address,
+                phoneNumber = patientSearchResult1.phoneNumber,
+                lastBp = patientSearchResult1.lastBp
+            ),
             currentFacilityUuid = currentFacilityUuid
         ),
-        SearchResultsItemType.NotInCurrentFacilityHeader,
-        SearchResultsItemType.SearchResultRow(
-            searchResult = patientSearchResult2,
+        NotInCurrentFacilityHeader,
+        SearchResultRow(
+            searchResultViewModel = PatientSearchResultViewModel(
+                uuid = patientSearchResult2.uuid,
+                fullName = patientSearchResult2.fullName,
+                gender = patientSearchResult2.gender,
+                age = patientSearchResult2.age,
+                dateOfBirth = patientSearchResult2.dateOfBirth,
+                address = patientSearchResult2.address,
+                phoneNumber = patientSearchResult2.phoneNumber,
+                lastBp = patientSearchResult2.lastBp
+            ),
             currentFacilityUuid = currentFacilityUuid
         )
     )
@@ -64,15 +87,30 @@ class SearchResultsItemTypeTest {
 
     // then
     val expected = listOf(
-        SearchResultsItemType.InCurrentFacilityHeader(facilityName = currentFacility.name),
-        SearchResultsItemType.SearchResultRow(
-            searchResult = patientSearchResult1,
+        InCurrentFacilityHeader(facilityName = currentFacility.name),
+        SearchResultRow(
+            searchResultViewModel = PatientSearchResultViewModel(
+                uuid = patientSearchResult1.uuid,
+                fullName = patientSearchResult1.fullName,
+                gender = patientSearchResult1.gender,
+                age = patientSearchResult1.age,
+                dateOfBirth = patientSearchResult1.dateOfBirth,
+                address = patientSearchResult1.address,
+                phoneNumber = patientSearchResult1.phoneNumber,
+                lastBp = patientSearchResult1.lastBp
+            ),
             currentFacilityUuid = currentFacilityUuid
         ),
-        SearchResultsItemType.SearchResultRow(
-            searchResult = patientSearchResult2,
-            currentFacilityUuid = currentFacilityUuid
-        )
+        SearchResultRow(searchResultViewModel = PatientSearchResultViewModel(
+            uuid = patientSearchResult2.uuid,
+            fullName = patientSearchResult2.fullName,
+            gender = patientSearchResult2.gender,
+            age = patientSearchResult2.age,
+            dateOfBirth = patientSearchResult2.dateOfBirth,
+            address = patientSearchResult2.address,
+            phoneNumber = patientSearchResult2.phoneNumber,
+            lastBp = patientSearchResult2.lastBp
+        ), currentFacilityUuid = currentFacilityUuid)
     )
     assertThat(listItems).isEqualTo(expected)
   }
@@ -97,15 +135,33 @@ class SearchResultsItemTypeTest {
 
     // then
     val expected = listOf(
-        SearchResultsItemType.InCurrentFacilityHeader(facilityName = currentFacility.name),
-        SearchResultsItemType.NoPatientsInCurrentFacility,
-        SearchResultsItemType.NotInCurrentFacilityHeader,
-        SearchResultsItemType.SearchResultRow(
-            searchResult = patientSearchResult1,
+        InCurrentFacilityHeader(facilityName = currentFacility.name),
+        NoPatientsInCurrentFacility,
+        NotInCurrentFacilityHeader,
+        SearchResultRow(
+            searchResultViewModel = PatientSearchResultViewModel(
+                uuid = patientSearchResult1.uuid,
+                fullName = patientSearchResult1.fullName,
+                gender = patientSearchResult1.gender,
+                age = patientSearchResult1.age,
+                dateOfBirth = patientSearchResult1.dateOfBirth,
+                address = patientSearchResult1.address,
+                phoneNumber = patientSearchResult1.phoneNumber,
+                lastBp = patientSearchResult1.lastBp
+            ),
             currentFacilityUuid = currentFacilityUuid
         ),
-        SearchResultsItemType.SearchResultRow(
-            searchResult = patientSearchResult2,
+        SearchResultRow(
+            searchResultViewModel = PatientSearchResultViewModel(
+                uuid = patientSearchResult2.uuid,
+                fullName = patientSearchResult2.fullName,
+                gender = patientSearchResult2.gender,
+                age = patientSearchResult2.age,
+                dateOfBirth = patientSearchResult2.dateOfBirth,
+                address = patientSearchResult2.address,
+                phoneNumber = patientSearchResult2.phoneNumber,
+                lastBp = patientSearchResult2.lastBp
+            ),
             currentFacilityUuid = currentFacilityUuid
         )
     )

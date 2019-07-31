@@ -75,7 +75,7 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
     return searchResultsView
         .upstreamUiEvents
         .ofType<SearchResultClicked>()
-        .map { AddIdToPatientSearchResultClicked(it.searchResult) }
+        .map { AddIdToPatientSearchResultClicked(it.patientUuid) }
   }
 
   private fun registerNewPatientClicks(): Observable<UiEvent> {

@@ -7,7 +7,6 @@ import androidx.cardview.widget.CardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
@@ -51,20 +50,12 @@ class PatientSearchResultItemView(
     TheActivity.component.inject(this)
   }
 
-  fun render(searchResult: PatientSearchResult, currentFacilityUuid: UUID) {
-    renderPatientNameAgeAndGender(searchResult.fullName, searchResult.gender, searchResult.age, searchResult.dateOfBirth)
-    renderPatientAddress(searchResult.address)
-    renderPatientDateOfBirth(searchResult.dateOfBirth)
-    renderPatientPhoneNumber(searchResult.phoneNumber)
-    renderLastRecordedBloodPressure(searchResult.lastBp, currentFacilityUuid)
-  }
-
-  fun render(searchResult: PatientSearchResultUiState, currentFacilityUuid: UUID) {
-    renderPatientNameAgeAndGender(searchResult.fullName, searchResult.gender, searchResult.age, searchResult.dateOfBirth)
-    renderPatientAddress(searchResult.address)
-    renderPatientDateOfBirth(searchResult.dateOfBirth)
-    renderPatientPhoneNumber(searchResult.phoneNumber)
-    renderLastRecordedBloodPressure(searchResult.lastBp, currentFacilityUuid)
+  fun render(model: PatientSearchResultViewModel, currentFacilityUuid: UUID) {
+    renderPatientNameAgeAndGender(model.fullName, model.gender, model.age, model.dateOfBirth)
+    renderPatientAddress(model.address)
+    renderPatientDateOfBirth(model.dateOfBirth)
+    renderPatientPhoneNumber(model.phoneNumber)
+    renderLastRecordedBloodPressure(model.lastBp, currentFacilityUuid)
   }
 
   private fun renderLastRecordedBloodPressure(
@@ -139,4 +130,15 @@ class PatientSearchResultItemView(
         resources.getString(gender.displayLetterRes),
         ageString)
   }
+
+  data class PatientSearchResultViewModel(
+      val uuid: UUID,
+      val fullName: String,
+      val gender: Gender,
+      val age: Age?,
+      val dateOfBirth: LocalDate?,
+      val address: PatientAddress,
+      val phoneNumber: String?,
+      val lastBp: PatientSearchResult.LastBp?
+  )
 }

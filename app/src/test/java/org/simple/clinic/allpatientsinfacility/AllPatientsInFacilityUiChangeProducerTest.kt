@@ -77,6 +77,7 @@ class AllPatientsInFacilityUiChangeProducerTest {
   fun `when a facility has patients, then show the patients search result list`() {
     // given
     val patientSearchResults = listOf(PatientMocker.patientSearchResult())
+        .map(::PatientSearchResultUiState)
 
     val hasPatientsInFacilityState = AllPatientsInFacilityUiState
         .FETCHING_PATIENTS

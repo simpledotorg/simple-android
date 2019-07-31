@@ -17,10 +17,13 @@ class AllPatientsInFacilityListItemTest {
         PatientMocker.patientSearchResult(uuid = UUID.fromString("a8b66bb7-231f-45af-9216-866e2ef0eae8")),
         PatientMocker.patientSearchResult(uuid = UUID.fromString("d80d26e8-5a16-4397-94b7-acce4a65f63c")),
         PatientMocker.patientSearchResult(uuid = UUID.fromString("ed6ce886-cb27-4574-93c9-a4fc133ff734"))
-    )
+    ).map(::PatientSearchResultUiState)
 
     // when
-    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(FacilityUiState(facility.uuid, facility.name), patientSearchResults)
+    val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(
+        FacilityUiState(facility.uuid, facility.name),
+        patientSearchResults
+    )
 
     // then
     val expectedListItems = listOf(

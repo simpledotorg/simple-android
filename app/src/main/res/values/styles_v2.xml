@@ -475,7 +475,7 @@
   </style>
 
   <style name="Clinic.V2.NoBackgroundRippleButton">
-    <item name="android:background">?attr/selectableItemBackground</item>
+    <item name="android:background">?selectableItemBackground</item>
     <item name="android:paddingTop">@dimen/spacing_12</item>
     <item name="android:paddingBottom">@dimen/spacing_12</item>
     <item name="android:paddingStart">@dimen/spacing_24</item>

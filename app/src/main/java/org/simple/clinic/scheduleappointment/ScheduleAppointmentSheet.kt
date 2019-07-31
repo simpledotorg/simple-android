@@ -17,7 +17,8 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToControllerWithoutDelay
-import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.UserClock
+import org.simple.clinic.util.toUtcInstant
 import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
@@ -70,7 +71,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   lateinit var controller: ScheduleAppointmentSheetController
 
   @Inject
-  lateinit var utcClock: UtcClock
+  lateinit var userClock: UserClock
 
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
@@ -137,13 +138,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   @SuppressLint("SetTextI18n")
-  fun updateDisplayedDate(year: Int, month: Int, dayOfMonth: Int) {
-    calendarButton.text = "$year, $month, $dayOfMonth"
-  }
-
-  @SuppressLint("SetTextI18n")
   fun updateScheduledAppointment(appointment: ScheduleAppointment) {
-    val localDate = LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
+    val localDate = LocalDate.now(userClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
     calendarButton.text = dateFormatter.format(localDate)
     currentDateTextView.text = appointment.displayText
   }
@@ -157,13 +153,19 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   fun showCalendar(date: LocalDate) {
-    DatePickerDialog(
+    val datePickerDialog = DatePickerDialog(
         this, { _, year, month, dayOfMonth ->
       calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(
           year = year,
           month = month + 1,
           dayOfMonth = dayOfMonth
       ))
-    }, date.year, date.monthValue - 1, date.dayOfMonth).show()
+    }, date.year, date.monthValue - 1, date.dayOfMonth)
+
+    datePickerDialog.datePicker.apply {
+      minDate = System.currentTimeMillis()
+      maxDate = LocalDate.now(userClock).plusYears(1).toUtcInstant(userClock).toEpochMilli()
+    }
+    datePickerDialog.show()
   }
 }

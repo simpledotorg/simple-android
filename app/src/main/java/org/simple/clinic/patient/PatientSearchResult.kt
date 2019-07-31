@@ -12,7 +12,6 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-@Parcelize
 data class PatientSearchResult(
 
     val uuid: UUID,
@@ -53,7 +52,7 @@ data class PatientSearchResult(
 
     @Embedded(prefix = "bp_")
     val lastBp: LastBp?
-) : Parcelable {
+) {
 
   override fun toString(): String {
     return "Name: $fullName, UUID: $uuid, Facility UUID: ${lastBp?.takenAtFacilityUuid}"

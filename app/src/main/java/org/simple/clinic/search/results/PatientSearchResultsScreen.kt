@@ -70,7 +70,7 @@ class PatientSearchResultsScreen(context: Context, attrs: AttributeSet) : Relati
     return searchResultsView
         .upstreamUiEvents
         .ofType<SearchResultClicked>()
-        .map { PatientSearchResultClicked(it.searchResult) }
+        .map { PatientSearchResultClicked(it.patientUuid) }
   }
 
   private fun registerNewPatientClicks(): Observable<UiEvent> {

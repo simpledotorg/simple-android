@@ -8,6 +8,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.PatientSearchResultItemView
+import org.simple.clinic.widgets.PatientSearchResultItemView.*
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
@@ -116,16 +117,31 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
   }
 
   data class SearchResultRow(
-      private val searchResult: PatientSearchResult,
+      private val searchResultViewModel: PatientSearchResultViewModel,
       private val currentFacilityUuid: UUID
-  ) : SearchResultsItemType<ViewHolder>(searchResult.hashCode().toLong()) {
+  ) : SearchResultsItemType<ViewHolder>(searchResultViewModel.hashCode().toLong()) {
 
     companion object {
       fun forSearchResults(
           searchResults: List<PatientSearchResult>,
           currentFacility: Facility
       ): List<SearchResultRow> {
-        return searchResults.map { searchResult -> SearchResultRow(searchResult, currentFacility.uuid) }
+        return searchResults
+            .map(::mapPatientSearchResultToViewModel)
+            .map { searchResultViewModel -> SearchResultRow(searchResultViewModel, currentFacility.uuid) }
+      }
+
+      private fun mapPatientSearchResultToViewModel(searchResult: PatientSearchResult): PatientSearchResultViewModel {
+        return PatientSearchResultViewModel(
+            uuid = searchResult.uuid,
+            fullName = searchResult.fullName,
+            gender = searchResult.gender,
+            age = searchResult.age,
+            dateOfBirth = searchResult.dateOfBirth,
+            address = searchResult.address,
+            phoneNumber = searchResult.phoneNumber,
+            lastBp = searchResult.lastBp
+        )
       }
     }
 
@@ -135,10 +151,10 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
       val patientSearchResultView = viewHolder.itemView.findViewById<PatientSearchResultItemView>(R.id.patientSearchResultView)
 
       patientSearchResultView.setOnClickListener {
-        uiEvents.onNext(SearchResultClicked(searchResult))
+        uiEvents.onNext(SearchResultClicked(searchResultViewModel.uuid))
       }
 
-      patientSearchResultView.render(searchResult, currentFacilityUuid)
+      patientSearchResultView.render(searchResultViewModel, currentFacilityUuid)
     }
   }
 }

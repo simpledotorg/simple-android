@@ -11,7 +11,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
@@ -19,6 +18,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
+import java.util.UUID
 
 class AddIdToPatientSearchResultsControllerTest {
 
@@ -39,11 +39,11 @@ class AddIdToPatientSearchResultsControllerTest {
 
   @Test
   fun `when patient search result is clicked, then patient summary must be opened`() {
-    val patientSearchResult = PatientMocker.patientSearchResult()
+    val patientUuid = UUID.fromString("951ad528-1952-4840-aad6-511371736a15")
 
-    uiEvents.onNext(AddIdToPatientSearchResultClicked(patientSearchResult))
+    uiEvents.onNext(AddIdToPatientSearchResultClicked(patientUuid))
 
-    verify(screen).openPatientSummaryScreen(patientSearchResult.uuid)
+    verify(screen).openPatientSummaryScreen(patientUuid)
   }
 
   @Test

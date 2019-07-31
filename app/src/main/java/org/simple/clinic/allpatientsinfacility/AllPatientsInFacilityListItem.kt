@@ -1,12 +1,14 @@
 package org.simple.clinic.allpatientsinfacility
 
 import android.annotation.SuppressLint
+import androidx.annotation.VisibleForTesting
 import androidx.recyclerview.widget.DiffUtil
 import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_allpatientsinfacility_facility_header.*
 import kotlinx.android.synthetic.main.list_patient_search.*
 import org.simple.clinic.R
 import org.simple.clinic.widgets.ItemAdapter
+import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import java.util.Locale
 import java.util.UUID
@@ -19,8 +21,23 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
         patientSearchResults: List<PatientSearchResultUiState>
     ): List<AllPatientsInFacilityListItem> {
       return patientSearchResults
+          .map(this::mapSearchResultUiStateToViewModel)
           .map { patientSearchResult -> SearchResult(facilityUiState.uuid, patientSearchResult) }
           .let { searchResultItems -> listOf(FacilityHeader(facilityUiState.name)) + searchResultItems }
+    }
+
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun mapSearchResultUiStateToViewModel(searchResultUiState: PatientSearchResultUiState): PatientSearchResultViewModel {
+      return PatientSearchResultViewModel(
+          uuid = searchResultUiState.uuid,
+          fullName = searchResultUiState.fullName,
+          gender = searchResultUiState.gender,
+          age = searchResultUiState.age,
+          dateOfBirth = searchResultUiState.dateOfBirth,
+          address = searchResultUiState.address,
+          phoneNumber = searchResultUiState.phoneNumber,
+          lastBp = searchResultUiState.lastBp
+      )
     }
   }
 
@@ -45,7 +62,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
 
   data class SearchResult(
       val facilityUuid: UUID,
-      val patientSearchResultUiState: PatientSearchResultUiState
+      val searchResultViewModel: PatientSearchResultViewModel
   ) : AllPatientsInFacilityListItem() {
 
     override fun layoutResId(): Int {
@@ -56,12 +73,12 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
         holder: ViewHolderX,
         subject: Subject<Event>
     ) {
-      holder.patientSearchResultView.render(patientSearchResultUiState, facilityUuid)
-      holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(patientSearchResultUiState.uuid)) }
+      holder.patientSearchResultView.render(searchResultViewModel, facilityUuid)
+      holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(searchResultViewModel.uuid)) }
     }
 
     override fun sectionTitle(locale: Locale): SectionTitle {
-      return SectionTitle.Text(patientSearchResultUiState.fullName.take(1).toUpperCase(locale))
+      return SectionTitle.Text(searchResultViewModel.fullName.take(1).toUpperCase(locale))
     }
   }
 
@@ -79,7 +96,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
     override fun areItemsTheSame(oldItem: AllPatientsInFacilityListItem, newItem: AllPatientsInFacilityListItem): Boolean {
       return when {
         oldItem is FacilityHeader && newItem is FacilityHeader -> true
-        oldItem is SearchResult && newItem is SearchResult -> oldItem.patientSearchResultUiState.uuid == newItem.patientSearchResultUiState.uuid
+        oldItem is SearchResult && newItem is SearchResult -> oldItem.searchResultViewModel.uuid == newItem.searchResultViewModel.uuid
         else -> false
       }
     }

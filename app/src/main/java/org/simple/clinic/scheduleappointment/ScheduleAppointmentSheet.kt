@@ -22,6 +22,7 @@ import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import org.threeten.bp.temporal.ChronoUnit.MONTHS
 import java.util.UUID
@@ -70,6 +71,9 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   @Inject
   lateinit var utcClock: UtcClock
+
+  @Inject
+  lateinit var dateFormatter: DateTimeFormatter
 
   private var currentIndex = 0
 
@@ -146,7 +150,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   @SuppressLint("SetTextI18n")
   fun updateScheduledAppointment(appointment: ScheduleAppointment) {
-    calendarButton.text = LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit).toString()
+    val localDate = LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
+    calendarButton.text = dateFormatter.format(localDate)
     currentDateTextView.text = appointment.displayText
   }
 

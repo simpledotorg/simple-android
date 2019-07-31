@@ -67,9 +67,11 @@
 
   <Button
     android:id="@+id/scheduleappointment_calendar_button"
+    style="@style/Clinic.V2.NoBackgroundRippleButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.Blue1"
     tools:text="Calendar" />
 
   <LinearLayout

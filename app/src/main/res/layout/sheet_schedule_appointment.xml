@@ -11,11 +11,11 @@
     style="@style/Clinic.V2.TextAppearance.H6.Grey0"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_24"
     android:ellipsize="end"
     android:gravity="center"
-    android:maxLines="1"
-    android:paddingBottom="@dimen/textsize_18"
-    android:paddingTop="@dimen/textsize_18"
     android:text="@string/scheduleappointment_next_visit_in">
 
     <requestFocus />
@@ -27,7 +27,7 @@
     android:layout_marginBottom="20dp"
     android:layout_marginEnd="44dp"
     android:layout_marginStart="44dp"
-    android:layout_marginTop="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/spacing_32"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
@@ -102,7 +102,7 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_4"
       android:layout_marginStart="@dimen/spacing_8"
-      android:layout_weight="1.05"
+      android:layout_weight="1"
       android:gravity="center"
       android:paddingBottom="21dp"
       android:paddingTop="21dp"

@@ -399,6 +399,18 @@ class UserSession @Inject constructor(
   fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
     Timber.i("Syncing and clearing all patient related data")
 
+    val updateUserStatusToResettingPin = requireLoggedInUser()
+        .firstOrError()
+        .flatMapCompletable { user -> updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
+
+    val clearStoredPullTokens = Completable.fromAction {
+      patientSyncPullToken.delete()
+      bpSyncPullToken.delete()
+      prescriptionSyncPullToken.delete()
+      appointmentSyncPullToken.delete()
+      medicalHistorySyncPullToken.delete()
+    }
+
     return dataSync
         .get()
         .sync(null)
@@ -407,20 +419,9 @@ class UserSession @Inject constructor(
         .timeout(timeoutSeconds, TimeUnit.SECONDS)
         .onErrorComplete()
         .andThen(patientRepository.clearPatientData())
-        .andThen(Completable.fromAction {
-          patientSyncPullToken.delete()
-          bpSyncPullToken.delete()
-          prescriptionSyncPullToken.delete()
-          appointmentSyncPullToken.delete()
-          medicalHistorySyncPullToken.delete()
-        })
+        .andThen(clearStoredPullTokens)
         .andThen(bruteForceProtection.resetFailedAttempts())
-        .andThen(requireLoggedInUser().firstOrError().flatMapCompletable { user ->
-          // TODO: Move this to a separate method which can be called from wherever
-          Completable.fromAction {
-            appDatabase.userDao().updateLoggedInStatusForUser(user.uuid, RESETTING_PIN)
-          }
-        })
+        .andThen(updateUserStatusToResettingPin)
   }
 
   fun resetPin(pin: String): Single<ForgotPinResult> {
@@ -461,16 +462,7 @@ class UserSession @Inject constructor(
     return loggedInUser()
         .filterAndUnwrapJust()
         .firstOrError()
-        .flatMapCompletable { user ->
-          Completable.fromAction {
-            appDatabase
-                .userDao()
-                .updateLoggedInStatusForUser(
-                    userUuId = user.uuid,
-                    loggedInStatus = UNAUTHORIZED
-                )
-          }
-        }
+        .flatMapCompletable { user -> updateLoggedInStatusForUser(user.uuid, UNAUTHORIZED) }
   }
 
   fun isUserUnauthorized(): Observable<Boolean> {
@@ -478,6 +470,17 @@ class UserSession @Inject constructor(
         .filterAndUnwrapJust()
         .map { user -> user.loggedInStatus == UNAUTHORIZED }
         .distinctUntilChanged()
+  }
+
+  private fun updateLoggedInStatusForUser(
+      userUuid: UUID,
+      newLoggedInStatus: User.LoggedInStatus
+  ): Completable {
+    return Completable.fromAction {
+      appDatabase
+          .userDao()
+          .updateLoggedInStatusForUser(userUuid, newLoggedInStatus)
+    }
   }
 
   sealed class LogoutResult {

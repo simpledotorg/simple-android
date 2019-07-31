@@ -6,7 +6,6 @@ import io.reactivex.subjects.Subject
 import kotlinx.android.synthetic.main.list_allpatientsinfacility_facility_header.*
 import kotlinx.android.synthetic.main.list_patient_search.*
 import org.simple.clinic.R
-import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import java.util.Locale
@@ -17,7 +16,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
   companion object {
     fun mapSearchResultsToListItems(
         facilityUiState: FacilityUiState,
-        patientSearchResults: List<PatientSearchResult>
+        patientSearchResults: List<PatientSearchResultUiState>
     ): List<AllPatientsInFacilityListItem> {
       return patientSearchResults
           .map { patientSearchResult -> SearchResult(facilityUiState.uuid, patientSearchResult) }
@@ -46,7 +45,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
 
   data class SearchResult(
       val facilityUuid: UUID,
-      val patientSearchResult: PatientSearchResult
+      val patientSearchResultUiState: PatientSearchResultUiState
   ) : AllPatientsInFacilityListItem() {
 
     override fun layoutResId(): Int {
@@ -57,17 +56,17 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
         holder: ViewHolderX,
         subject: Subject<Event>
     ) {
-      holder.patientSearchResultView.render(patientSearchResult, facilityUuid)
-      holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(patientSearchResult)) }
+      holder.patientSearchResultView.render(patientSearchResultUiState, facilityUuid)
+      holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(patientSearchResultUiState.uuid)) }
     }
 
     override fun sectionTitle(locale: Locale): SectionTitle {
-      return SectionTitle.Text(patientSearchResult.fullName.take(1).toUpperCase(locale))
+      return SectionTitle.Text(patientSearchResultUiState.fullName.take(1).toUpperCase(locale))
     }
   }
 
   sealed class Event {
-    data class SearchResultClicked(val patientSearchResult: PatientSearchResult) : AllPatientsInFacilityListItem.Event()
+    data class SearchResultClicked(val patientUuid: UUID) : AllPatientsInFacilityListItem.Event()
   }
 
   sealed class SectionTitle {
@@ -80,7 +79,7 @@ sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacil
     override fun areItemsTheSame(oldItem: AllPatientsInFacilityListItem, newItem: AllPatientsInFacilityListItem): Boolean {
       return when {
         oldItem is FacilityHeader && newItem is FacilityHeader -> true
-        oldItem is SearchResult && newItem is SearchResult -> oldItem.patientSearchResult.uuid == newItem.patientSearchResult.uuid
+        oldItem is SearchResult && newItem is SearchResult -> oldItem.patientSearchResultUiState.uuid == newItem.patientSearchResultUiState.uuid
         else -> false
       }
     }

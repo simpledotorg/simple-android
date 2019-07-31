@@ -7,7 +7,9 @@ import androidx.cardview.widget.CardView
 import kotlinx.android.synthetic.main.view_patient_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
-import org.simple.clinic.facility.Facility
+import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
+import org.simple.clinic.patient.Age
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientAddress
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.patient.displayIconRes
@@ -50,7 +52,15 @@ class PatientSearchResultItemView(
   }
 
   fun render(searchResult: PatientSearchResult, currentFacilityUuid: UUID) {
-    renderPatientNameAgeAndGender(searchResult)
+    renderPatientNameAgeAndGender(searchResult.fullName, searchResult.gender, searchResult.age, searchResult.dateOfBirth)
+    renderPatientAddress(searchResult.address)
+    renderPatientDateOfBirth(searchResult.dateOfBirth)
+    renderPatientPhoneNumber(searchResult.phoneNumber)
+    renderLastRecordedBloodPressure(searchResult.lastBp, currentFacilityUuid)
+  }
+
+  fun render(searchResult: PatientSearchResultUiState, currentFacilityUuid: UUID) {
+    renderPatientNameAgeAndGender(searchResult.fullName, searchResult.gender, searchResult.age, searchResult.dateOfBirth)
     renderPatientAddress(searchResult.address)
     renderPatientDateOfBirth(searchResult.dateOfBirth)
     renderPatientPhoneNumber(searchResult.phoneNumber)
@@ -110,23 +120,23 @@ class PatientSearchResultItemView(
     }
   }
 
-  private fun renderPatientNameAgeAndGender(searchResult: PatientSearchResult) {
-    genderLabel.setImageResource(searchResult.gender.displayIconRes)
+  private fun renderPatientNameAgeAndGender(fullName: String, gender: Gender, age: Age?, dateOfBirth: LocalDate?) {
+    genderLabel.setImageResource(gender.displayIconRes)
 
-    val age = when (searchResult.age) {
+    val ageString = when (age) {
       null -> {
-        estimateCurrentAge(searchResult.dateOfBirth!!, utcClock)
+        estimateCurrentAge(dateOfBirth!!, utcClock)
       }
       else -> {
-        val (recordedAge, ageRecordedAtTimestamp, _) = searchResult.age
+        val (recordedAge, ageRecordedAtTimestamp, _) = age
         estimateCurrentAge(recordedAge, ageRecordedAtTimestamp, utcClock)
       }
     }
 
     patientNameAgeGenderLabel.text = resources.getString(
         R.string.patientsearchresults_item_name_with_gender_and_age,
-        searchResult.fullName,
-        resources.getString(searchResult.gender.displayLetterRes),
-        age)
+        fullName,
+        resources.getString(gender.displayLetterRes),
+        ageString)
   }
 }

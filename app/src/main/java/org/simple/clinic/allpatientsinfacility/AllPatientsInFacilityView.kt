@@ -20,7 +20,6 @@ import org.simple.clinic.ViewControllerBinding
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.AllPatientsInFacilityListItemCallback
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListItem.Event.SearchResultClicked
-import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.UiEvent
 import java.util.Locale
@@ -84,7 +83,7 @@ class AllPatientsInFacilityView(
     return searchResultsAdapter
         .itemEvents
         .ofType<SearchResultClicked>()
-        .map { it.patientSearchResult.uuid }
+        .map { it.patientUuid }
         .map(::AllPatientsInFacilitySearchResultClicked)
   }
 
@@ -114,7 +113,7 @@ class AllPatientsInFacilityView(
     noPatientsLabel.text = resources.getString(R.string.allpatientsinfacility_nopatients_title, facilityName)
   }
 
-  override fun showPatients(facilityUiState: FacilityUiState, patientSearchResults: List<PatientSearchResult>) {
+  override fun showPatients(facilityUiState: FacilityUiState, patientSearchResults: List<PatientSearchResultUiState>) {
     patientsList.visibility = View.VISIBLE
     noPatientsContainer.visibility = View.GONE
     val listItems = AllPatientsInFacilityListItem.mapSearchResultsToListItems(facilityUiState, patientSearchResults)

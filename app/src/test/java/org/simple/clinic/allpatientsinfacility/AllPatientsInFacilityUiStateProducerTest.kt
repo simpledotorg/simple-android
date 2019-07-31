@@ -98,7 +98,7 @@ class AllPatientsInFacilityUiStateProducerTest {
 
     // then
     val facilityFetchedState = initialState.facilityFetched(facility)
-    val hasPatientsState = facilityFetchedState.hasPatients(patientSearchResults)
+    val hasPatientsState = facilityFetchedState.hasPatients(patientSearchResults.map(::PatientSearchResultUiState))
 
     with(testObserver) {
       assertNoErrors()

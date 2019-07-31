@@ -4,8 +4,10 @@ import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.plumbing.BaseUiStateProducer
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.scheduler.SchedulersProvider
@@ -55,7 +57,8 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
               .withLatestFrom(states) { facility, state -> state.facilityFetched(facility) }
 
           val patientsViewStates = sharedFacilities
-              .switchMap { patientRepository.allPatientsInFacility(it).subscribeOn(schedulersProvider.io()) }
+              .switchMap(this::loadSearchResultsFromRepository)
+              .map(this::mapSearchResultsToUiStates)
               .withLatestFrom(facilityViewStates)
               .map { (searchResults, state) ->
                 if (searchResults.isEmpty()) state.noPatients() else state.hasPatients(searchResults)
@@ -63,6 +66,16 @@ class AllPatientsInFacilityUiStateProducer @Inject constructor(
 
           Observable.merge(facilityViewStates, patientsViewStates)
         }
+  }
+
+  private fun mapSearchResultsToUiStates(searchResults: List<PatientSearchResult>): List<PatientSearchResultUiState> {
+    return searchResults.map(::PatientSearchResultUiState)
+  }
+
+  private fun loadSearchResultsFromRepository(facility: Facility): Observable<List<PatientSearchResult>> {
+    return patientRepository
+        .allPatientsInFacility(facility)
+        .subscribeOn(schedulersProvider.io())
   }
 
   private fun screenRestoredUseCase(

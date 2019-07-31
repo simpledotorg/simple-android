@@ -7,9 +7,9 @@ import javax.inject.Inject
 class SyncDataOnApproval @Inject constructor(
     private val userSession: UserSession,
     private val dataSync: DataSync
-) {
+) : IDataSyncOnApproval {
 
-  fun sync() {
+  override fun sync() {
     val shouldSync = userSession
         .canSyncData()
         .distinctUntilChanged()

@@ -14,7 +14,7 @@ import org.simple.clinic.crash.CrashBreadcrumbsTimberTree
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.protocol.SyncProtocolsOnLogin
-import org.simple.clinic.sync.SyncDataOnApproval
+import org.simple.clinic.sync.IDataSyncOnApproval
 import org.simple.clinic.user.UnauthorizeUser
 import org.simple.clinic.util.AppArchTaskExecutorDelegate
 import timber.log.Timber
@@ -39,7 +39,7 @@ abstract class ClinicApp : Application() {
   lateinit var unauthorizeUser: UnauthorizeUser
 
   @Inject
-  lateinit var syncDataOnApproval: SyncDataOnApproval
+  lateinit var dataSyncOnApproval: IDataSyncOnApproval
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
@@ -73,7 +73,7 @@ abstract class ClinicApp : Application() {
 
     updateAnalyticsUserId.listen(Schedulers.io())
     syncProtocolsOnLogin.listen()
-    syncDataOnApproval.sync()
+    dataSyncOnApproval.sync()
 
     // TODO: Enable this once the feature is complete
     // unauthorizeUser.listen(Schedulers.io())

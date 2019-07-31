@@ -68,7 +68,7 @@ class PatientSearchViewControllerTest {
   @Test
   fun `when search result clicked then SearchResultClicked event should be emitted`() {
     val searchResult = PatientMocker.patientSearchResult()
-    val searchResultClicked = SearchResultClicked(searchResult)
+    val searchResultClicked = SearchResultClicked(searchResult.uuid)
     uiEvents.onNext(searchResultClicked)
 
     verify(screen).searchResultClicked(searchResultClicked)

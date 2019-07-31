@@ -34,7 +34,7 @@ class PatientSearchResultsController @Inject constructor(
 
   private fun openPatientSummary(events: Observable<UiEvent>): ObservableSource<UiChange> =
       events.ofType<PatientSearchResultClicked>()
-          .map { it.searchResult.uuid }
+          .map { it.patientUuid }
           .map { patientUuid ->
             { ui: Ui -> ui.openPatientSummaryScreen(patientUuid) }
           }

@@ -90,9 +90,9 @@ class ScheduleAppointmentSheetController @Inject constructor(
       possibleAppointments: List<ScheduleAppointment>
   ): ScheduleAppointment =
       when (action) {
-        AppointmentDateIncremented2 -> nextAppointment(latestAppointment, possibleAppointments)
-        AppointmentDateDecremented2 -> previousAppointment(latestAppointment, possibleAppointments)
-        is ScheduleAppointmentSheetCreated2 -> action.defaultAppointment
+        AppointmentDateIncremented -> nextAppointment(latestAppointment, possibleAppointments)
+        AppointmentDateDecremented -> previousAppointment(latestAppointment, possibleAppointments)
+        is ScheduleAppointmentSheetCreated -> action.defaultAppointment
         is AppointmentCalendarDateSelected -> toScheduleAppointment(action)
         else -> ScheduleAppointment.DEFAULT
       }
@@ -139,15 +139,15 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun latestDateAction(events: Observable<UiEvent>) =
       Observable.merge(
-          events.ofType<AppointmentDateIncremented2>(),
-          events.ofType<AppointmentDateDecremented2>(),
-          events.ofType<ScheduleAppointmentSheetCreated2>(),
+          events.ofType<AppointmentDateIncremented>(),
+          events.ofType<AppointmentDateDecremented>(),
+          events.ofType<ScheduleAppointmentSheetCreated>(),
           events.ofType<AppointmentCalendarDateSelected>()
       )
 
   private fun possibleAppointments(events: Observable<UiEvent>) =
       events
-          .ofType<ScheduleAppointmentSheetCreated2>()
+          .ofType<ScheduleAppointmentSheetCreated>()
           .map { it.possibleAppointments }
 
   private fun schedulingSkips(events: Observable<UiEvent>): Observable<UiChange> {
@@ -205,7 +205,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun patientUuid(events: Observable<UiEvent>) =
       events
-          .ofType<ScheduleAppointmentSheetCreated2>()
+          .ofType<ScheduleAppointmentSheetCreated>()
           .map { it.patientUuid }
 
   fun toLocalDate(appointment: ScheduleAppointment): LocalDate =

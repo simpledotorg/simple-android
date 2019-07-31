@@ -75,8 +75,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
 
-  private var currentIndex = 0
-
   private val decrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_decrement_date)
   private val incrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_increment_date)
   private val calendarButton by bindView<Button>(R.id.scheduleappointment_calendar_button)
@@ -127,7 +125,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun decrementClicks() = RxView.clicks(decrementDateButton).map { AppointmentDateDecremented2 }
 
-  private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped() }
+  private fun notNowClicks() = RxView.clicks(notNowButton).map { SchedulingSkipped }
 
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
 
@@ -136,11 +134,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
     finish()
-  }
-
-  fun updateDisplayedDate(newIndex: Int) {
-    currentIndex = newIndex
-    currentDateTextView.text = possibleDates[currentIndex].displayText
   }
 
   @SuppressLint("SetTextI18n")

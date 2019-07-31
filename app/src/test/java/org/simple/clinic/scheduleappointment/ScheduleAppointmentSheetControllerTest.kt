@@ -72,87 +72,11 @@ class ScheduleAppointmentSheetControllerTest {
   }
 
   @Test
-  fun `when sheet is created, a date should immediately be displayed to the user`() {
-    val current = 17
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(current, uuid, 20))
-
-    verify(sheet).updateDisplayedDate(current)
-  }
-
-  @Test
-  @Parameters(method = "paramsForIncrementingAndDecrementing")
-  fun `when increment button is clicked, appointment due date should increase`(
-      current: Int,
-      size: Int
-  ) {
-    uiEvents.onNext(AppointmentDateIncremented(current, size))
-
-    if (current == 0) {
-      verify(sheet).updateDisplayedDate(current + 1)
-      verify(sheet).enableDecrementButton(true)
-    }
-
-    if (current != size - 2) {
-      verify(sheet).updateDisplayedDate(current + 1)
-      verify(sheet).enableIncrementButton(true)
-    }
-
-    if (current == size - 2) {
-      verify(sheet).updateDisplayedDate(current + 1)
-      verify(sheet).enableIncrementButton(false)
-    }
-
-    if (current == size - 1) {
-      verify(sheet, never()).updateScheduledAppointment(any())
-      verify(sheet, never()).enableIncrementButton(any())
-      verify(sheet, never()).enableDecrementButton(any())
-    }
-  }
-
-  @Test
-  @Parameters(method = "paramsForIncrementingAndDecrementing")
-  fun `when decrement button is clicked, appointment due date should decrease`(
-      current: Int,
-      size: Int
-  ) {
-    uiEvents.onNext(AppointmentDateDecremented(current, size))
-
-    if (current == 0) {
-      verify(sheet, never()).updateScheduledAppointment(any())
-      verify(sheet, never()).enableIncrementButton(any())
-      verify(sheet, never()).enableDecrementButton(any())
-    }
-
-    if (current == 1) {
-      verify(sheet).updateDisplayedDate(current - 1)
-      verify(sheet).enableDecrementButton(false)
-    }
-
-    if (current != 0) {
-      verify(sheet).updateDisplayedDate(current - 1)
-    }
-
-    if (current == size - 1) {
-      verify(sheet).updateDisplayedDate(current - 1)
-      verify(sheet).enableIncrementButton(true)
-    }
-  }
-
-  fun paramsForIncrementingAndDecrementing() = arrayOf(
-      arrayOf(3, 9),
-      arrayOf(1, 9),
-      arrayOf(7, 9),
-      arrayOf(2, 9)
-  )
-
-  @Test
   fun `when done is clicked, appointment should be scheduled with the correct due date`() {
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val date = LocalDate.now(utcClock).plus(1, ChronoUnit.MONTHS)
-    val possibleAppointments = listOf(
-        ScheduleAppointment.DEFAULT
-    )
+    val possibleAppointments = listOf(ScheduleAppointment.DEFAULT)
 
     uiEvents.onNext(ScheduleAppointmentSheetCreated2(
         possibleAppointments = possibleAppointments,
@@ -164,50 +88,6 @@ class ScheduleAppointmentSheetControllerTest {
 
     verify(repository).schedule(uuid, date, Manual, facility)
     verify(sheet).closeSheet()
-  }
-
-  @Test
-  fun `when last appointment date is chosen on sheet creation, then increment button should be disabled`() {
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = 3,
-        patientUuid = uuid,
-        numberOfDates = 4
-    ))
-
-    verify(sheet).enableIncrementButton(false)
-  }
-
-  @Test
-  fun `when not-last appointment date is chosen on sheet creation, then increment button should be enabled`() {
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = 2,
-        patientUuid = uuid,
-        numberOfDates = 4
-    ))
-
-    verify(sheet).enableIncrementButton(true)
-  }
-
-  @Test
-  fun `when first appointment date is chosen on sheet creation, then decrement button should be disabled`() {
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = 0,
-        patientUuid = uuid,
-        numberOfDates = 4
-    ))
-
-    verify(sheet).enableDecrementButton(false)
-  }
-
-  @Test
-  fun `when not-first appointment date is chosen on sheet creation, then decrement button should be enabled`() {
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = 1,
-        patientUuid = uuid,
-        numberOfDates = 4
-    ))
-
-    verify(sheet).enableDecrementButton(true)
   }
 
   @Test
@@ -227,12 +107,14 @@ class ScheduleAppointmentSheetControllerTest {
         overduePeriodForLowestRiskLevel = Period.ofDays(365),
         appointmentDuePeriodForDefaulters = Period.ofDays(30)
     ))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        defaultDateIndex = 3,
+
+    val possibleAppointments = listOf(ScheduleAppointment.DEFAULT)
+    uiEvents.onNext(ScheduleAppointmentSheetCreated2(
         patientUuid = uuid,
-        numberOfDates = 4
+        possibleAppointments = possibleAppointments,
+        defaultAppointment = ScheduleAppointment.DEFAULT
     ))
-    uiEvents.onNext(SchedulingSkipped())
+    uiEvents.onNext(SchedulingSkipped)
 
     if (shouldAutomaticAppointmentBeScheduled) {
       verify(repository).schedule(

@@ -24,8 +24,8 @@
 
   <!-- Patient search -->
   <string name="patientsearch_search">Next</string>
-  <string name="patientsearch_error_empty_fullname">Enter patient’s full name</string>
-  <string name="patientsearch_hint">Enter patient’s name</string>
+  <string name="patientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
+  <string name="patientsearch_hint">Name or phone number</string>
 
   <!-- Patient search results -->
   <string name="patientsearchresults_empty_state">No patients match</string>

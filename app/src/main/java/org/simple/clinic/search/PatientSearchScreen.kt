@@ -17,6 +17,8 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResult
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -109,8 +111,8 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
         .subscribe { hideKeyboard() }
   }
 
-  fun openPatientSearchResultsScreen(name: String) {
-    screenRouter.push(PatientSearchResultsScreenKey(PatientSearchCriteria.Name(name)))
+  fun openSearchResultsScreen(criteria: PatientSearchCriteria) {
+    screenRouter.push(PatientSearchResultsScreenKey(criteria))
   }
 
   fun setEmptyTextFieldErrorVisible(visible: Boolean) {

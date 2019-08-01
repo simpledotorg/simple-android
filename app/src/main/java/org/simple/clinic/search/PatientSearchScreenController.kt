@@ -5,7 +5,6 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
@@ -28,7 +27,7 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
-        .compose(validateQuery())
+        .compose(InputValidator())
         .compose(ReportAnalyticsEvents())
         .replay()
 
@@ -40,28 +39,6 @@ class PatientSearchScreenController @Inject constructor() : ObservableTransforme
         toggleAllPatientsVisibility(replayedEvents),
         toggleSearchButtonVisibility(replayedEvents)
     )
-  }
-
-  private fun validateQuery(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val textChanges = events
-          .ofType<SearchQueryTextChanged>()
-          .map { it.text.trim() }
-
-      val validationErrors = events.ofType<SearchClicked>()
-          .withLatestFrom(textChanges) { _, text -> text }
-          .map(this::validateInput)
-
-      events.mergeWith(validationErrors)
-    }
-  }
-
-  private fun validateInput(inputText: String): SearchQueryValidationResult {
-    return if (inputText.isBlank()) {
-      SearchQueryValidationResult.Invalid(listOf(INPUT_EMPTY))
-    } else {
-      SearchQueryValidationResult.Valid(inputText)
-    }
   }
 
   private fun showValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {

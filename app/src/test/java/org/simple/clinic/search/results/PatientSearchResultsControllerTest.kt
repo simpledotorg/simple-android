@@ -11,7 +11,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.simple.clinic.patient.OngoingNewPatientEntry
-import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
@@ -50,14 +49,7 @@ class PatientSearchResultsControllerTest {
   fun `when register new patient is clicked, then patient entry screen must be opened`() {
     // given
     val fullName = "name"
-    val ongoingEntry = OngoingNewPatientEntry(
-        personalDetails = PersonalDetails(
-            fullName = fullName,
-            dateOfBirth = null,
-            age = null,
-            gender = null
-        )
-    )
+    val ongoingEntry = OngoingNewPatientEntry.withFullName(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry))
         .thenReturn(Completable.complete())
@@ -74,7 +66,7 @@ class PatientSearchResultsControllerTest {
   fun `when register new patient is clicked after searching with phone number, the number must be used to create the ongoing entry`() {
     // given
     val phoneNumber = "123456"
-    val ongoingEntry = OngoingNewPatientEntry(phoneNumber = OngoingNewPatientEntry.PhoneNumber(number = phoneNumber))
+    val ongoingEntry = OngoingNewPatientEntry.withPhoneNumber(phoneNumber)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry))
         .thenReturn(Completable.complete())

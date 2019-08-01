@@ -37,6 +37,23 @@ data class OngoingNewPatientEntry(
     val identifier: Identifier? = null
 ) {
 
+  companion object {
+    fun withFullName(fullName: String): OngoingNewPatientEntry {
+      return OngoingNewPatientEntry(
+          personalDetails = PersonalDetails(
+              fullName = fullName,
+              dateOfBirth = null,
+              age = null,
+              gender = null
+          )
+      )
+    }
+
+    fun withPhoneNumber(phoneNumber: String): OngoingNewPatientEntry {
+      return OngoingNewPatientEntry(phoneNumber = PhoneNumber(number = phoneNumber))
+    }
+  }
+
   fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): ArrayList<PatientEntryValidationError> {
     val errors = ArrayList<PatientEntryValidationError>()
 

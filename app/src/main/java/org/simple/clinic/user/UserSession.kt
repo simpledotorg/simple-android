@@ -183,7 +183,7 @@ class UserSession @Inject constructor(
                 }
 
                 val user = userFromPayload(userPayload, finalLoggedInStatus)
-                storeUser(user, userPayload.registrationFacilityId)
+                updateUser(user)
               }
         }
   }
@@ -293,6 +293,12 @@ class UserSession @Inject constructor(
         .doOnSubscribe { Timber.i("Storing user") }
         .andThen(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), currentFacility = facilityUuid))
         .doOnError { Timber.e(it) }
+  }
+
+  fun updateUser(user: User): Completable {
+    return Completable
+        .fromAction { appDatabase.userDao().createOrUpdate(user) }
+        .doOnSubscribe { Timber.i("Updating user") }
   }
 
   private fun <T : Any> readErrorResponseJson(error: HttpException, clazz: KClass<T>): T {

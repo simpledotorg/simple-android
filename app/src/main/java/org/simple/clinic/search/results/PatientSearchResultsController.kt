@@ -8,6 +8,7 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -36,19 +37,26 @@ class PatientSearchResultsController @Inject constructor(
             { ui: Ui -> ui.openPatientSummaryScreen(patientUuid) }
           }
 
-  private fun registerNewPatient(events: Observable<UiEvent>): Observable<UiChange> =
-      events.ofType<PatientSearchResultRegisterNewPatient>()
-          .map { it.patientName }
-          .map { patientName ->
-            OngoingNewPatientEntry(OngoingNewPatientEntry.PersonalDetails(
-                fullName = patientName,
-                dateOfBirth = null,
-                age = null,
-                gender = null))
-          }
-          .flatMap {
-            patientRepository
-                .saveOngoingEntry(it)
-                .andThen(Observable.just({ ui: Ui -> ui.openPatientEntryScreen() }))
-          }
+  private fun registerNewPatient(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<PatientSearchResultRegisterNewPatient>()
+        .map { it.searchCriteria }
+        .map(this::createOngoingEntryFromSearchCriteria)
+        .flatMap {
+          patientRepository
+              .saveOngoingEntry(it)
+              .andThen(Observable.just({ ui: Ui -> ui.openPatientEntryScreen() }))
+        }
+  }
+
+  private fun createOngoingEntryFromSearchCriteria(searchCriteria: PatientSearchCriteria): OngoingNewPatientEntry {
+    return when (searchCriteria) {
+      is PatientSearchCriteria.Name -> OngoingNewPatientEntry(OngoingNewPatientEntry.PersonalDetails(
+          fullName = searchCriteria.patientName,
+          dateOfBirth = null,
+          age = null,
+          gender = null))
+      is PatientSearchCriteria.PhoneNumber -> OngoingNewPatientEntry(phoneNumber = OngoingNewPatientEntry.PhoneNumber(number = searchCriteria.phoneNumber))
+    }
+  }
 }

@@ -4,8 +4,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import org.junit.Before
@@ -34,8 +32,9 @@ class PatientSearchResultsControllerTest {
 
   @Before
   fun setUp() {
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-    uiEvents.compose(controller).subscribe { uiChange -> uiChange(screen) }
+    uiEvents
+        .compose(controller)
+        .subscribe { uiChange -> uiChange(screen) }
   }
 
   @Test
@@ -49,19 +48,42 @@ class PatientSearchResultsControllerTest {
 
   @Test
   fun `when register new patient is clicked, then patient entry screen must be opened`() {
-    whenever(patientRepository.saveOngoingEntry(
-        OngoingNewPatientEntry(
-            personalDetails = PersonalDetails(
-                fullName = "name",
-                dateOfBirth = null,
-                age = null,
-                gender = null
-            )
+    // given
+    val fullName = "name"
+    val ongoingEntry = OngoingNewPatientEntry(
+        personalDetails = PersonalDetails(
+            fullName = fullName,
+            dateOfBirth = null,
+            age = null,
+            gender = null
         )
-    )).thenReturn(Completable.complete())
+    )
 
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name("name")))
+    whenever(patientRepository.saveOngoingEntry(ongoingEntry))
+        .thenReturn(Completable.complete())
 
+    // when
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name(fullName)))
+
+    // then
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
+    verify(screen).openPatientEntryScreen()
+  }
+
+  @Test
+  fun `when register new patient is clicked after searching with phone number, the number must be used to create the ongoing entry`() {
+    // given
+    val phoneNumber = "123456"
+    val ongoingEntry = OngoingNewPatientEntry(phoneNumber = OngoingNewPatientEntry.PhoneNumber(number = phoneNumber))
+
+    whenever(patientRepository.saveOngoingEntry(ongoingEntry))
+        .thenReturn(Completable.complete())
+
+    // when
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.PhoneNumber(phoneNumber)))
+
+    // then
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
     verify(screen).openPatientEntryScreen()
   }
 }

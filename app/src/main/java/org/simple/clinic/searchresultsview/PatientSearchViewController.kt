@@ -53,8 +53,7 @@ class PatientSearchViewController @Inject constructor(
         .withLatestFrom(currentFacilityStream)
         .map { (results, currentFacility) ->
           { ui: Ui ->
-            ui.updateSearchResults(SearchResultsItemType.generateListItems(results, currentFacility))
-            ui.setEmptyStateVisible(results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty())
+            ui.updateSearchResults(results, currentFacility)
           }
         }
   }

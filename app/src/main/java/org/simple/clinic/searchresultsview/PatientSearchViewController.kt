@@ -1,6 +1,5 @@
 package org.simple.clinic.searchresultsview
 
-import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -9,13 +8,8 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.bp.BloodPressureMeasurement
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.searchresultsview.SearchResultsItemType.InCurrentFacilityHeader
-import org.simple.clinic.searchresultsview.SearchResultsItemType.NoPatientsInCurrentFacility
-import org.simple.clinic.searchresultsview.SearchResultsItemType.NotInCurrentFacilityHeader
-import org.simple.clinic.searchresultsview.SearchResultsItemType.SearchResultRow
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -59,37 +53,10 @@ class PatientSearchViewController @Inject constructor(
         .withLatestFrom(currentFacilityStream)
         .map { (results, currentFacility) ->
           { ui: Ui ->
-            ui.updateSearchResults(generateListItems(results, currentFacility))
+            ui.updateSearchResults(SearchResultsItemType.generateListItems(results, currentFacility))
             ui.setEmptyStateVisible(results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty())
           }
         }
-  }
-
-  private fun generateListItems(
-      results: PatientSearchResults,
-      currentFacility: Facility
-  ): List<SearchResultsItemType<out ViewHolder>> {
-    if (results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty()) return emptyList()
-
-    val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {
-      results.visitedCurrentFacility.map {
-        SearchResultRow(it, currentFacility)
-      }
-    } else {
-      listOf(NoPatientsInCurrentFacility)
-    }
-
-    val itemsInOtherFacility = if (results.notVisitedCurrentFacility.isNotEmpty()) {
-      listOf(NotInCurrentFacilityHeader) +
-          results.notVisitedCurrentFacility.map {
-            SearchResultRow(it, currentFacility)
-          }
-    } else {
-      emptyList()
-    }
-    return listOf(InCurrentFacilityHeader(facilityName = currentFacility.name)) +
-        itemsInCurrentFacility +
-        itemsInOtherFacility
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

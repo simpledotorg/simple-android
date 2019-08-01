@@ -8,6 +8,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
@@ -39,12 +40,12 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .replay()
 
     return Observable.mergeArray(
-        schedulingSkips(replayedEvents),
-        scheduleCreates(replayedEvents),
         incrementDecrements(replayedEvents),
         enableIncrements(replayedEvents),
         enableDecrements(replayedEvents),
-        showCalendar(replayedEvents)
+        showCalendar(replayedEvents),
+        schedulingSkips(replayedEvents),
+        scheduleCreates(replayedEvents)
     )
   }
 
@@ -161,13 +162,13 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .replay()
         .refCount()
 
-    val currentFacilityStream = userSession
-        .requireLoggedInUser()
-        .switchMap { user -> facilityRepository.currentFacility(user) }
-
     val saveAppointmentAndCloseSheet = isPatientDefaulterStream
         .filter { isPatientDefaulter -> isPatientDefaulter }
-        .withLatestFrom(patientUuid(events), configProvider.toObservable(), currentFacilityStream) { _, patientUuid, config, currentFacilty ->
+        .withLatestFrom(
+            patientUuid(events),
+            configProvider.toObservable(),
+            currentFacilityStream()
+        ) { _, patientUuid, config, currentFacilty ->
           Triple(patientUuid, config, currentFacilty)
         }
         .flatMapSingle { (patientUuid, config, currentFacility) ->
@@ -187,26 +188,36 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
   }
 
-  private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
-    val currentFacilityStream = userSession
-        .requireLoggedInUser()
-        .switchMap { user -> facilityRepository.currentFacility(user) }
-
-    return events.ofType<AppointmentDone>()
-        .withLatestFrom(latestAppointment(events), patientUuid(events), currentFacilityStream) { _, latestAppointment, uuid, currentFacility ->
-          Triple(toLocalDate(latestAppointment), uuid, currentFacility)
-        }
-        .flatMapSingle { (date, uuid, currentFacility) ->
-          appointmentRepository
-              .schedule(patientUuid = uuid, appointmentDate = date, appointmentType = Manual, currentFacility = currentFacility)
-              .map { { ui: Ui -> ui.closeSheet() } }
-        }
-  }
+  private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> =
+      events
+          .ofType<AppointmentDone>()
+          .withLatestFrom(
+              latestAppointment(events),
+              patientUuid(events),
+              currentFacilityStream()
+          ) { _, latestAppointment, uuid, currentFacility ->
+            Triple(toLocalDate(latestAppointment), uuid, currentFacility)
+          }
+          .flatMapSingle { (date, uuid, currentFacility) ->
+            appointmentRepository
+                .schedule(
+                    patientUuid = uuid,
+                    appointmentDate = date,
+                    appointmentType = Manual,
+                    currentFacility = currentFacility
+                )
+                .map { { ui: Ui -> ui.closeSheet() } }
+          }
 
   private fun patientUuid(events: Observable<UiEvent>) =
       events
           .ofType<ScheduleAppointmentSheetCreated>()
           .map { it.patientUuid }
+
+  private fun currentFacilityStream(): Observable<Facility> =
+      userSession
+          .requireLoggedInUser()
+          .switchMap(facilityRepository::currentFacility)
 
   fun toLocalDate(appointment: ScheduleAppointment): LocalDate =
       LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)

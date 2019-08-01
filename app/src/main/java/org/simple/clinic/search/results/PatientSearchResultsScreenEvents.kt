@@ -12,8 +12,6 @@ data class PatientSearchResultClicked(val searchResult: PatientSearchResult) : U
 
 data class PatientSearchResultRegisterNewPatient(val searchCriteria: PatientSearchCriteria) : UiEvent {
 
-  constructor(patientName: String) : this(PatientSearchCriteria.Name(patientName))
-
   val patientName: String
     get() = (searchCriteria as PatientSearchCriteria.Name).patientName
 

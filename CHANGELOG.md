@@ -7,6 +7,7 @@
 
 ### Fixes
 - Fix taking the user to the production app play store page when install app update is clicked from sandbox or demo build
+- Fix crash on overdue list when scrolling quickly when the screen is still loading appointments
 
 ## 2019-07-29-4866
 ### Feature

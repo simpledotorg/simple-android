@@ -1,6 +1,9 @@
 # CHANGELOG
 
 ## Next Release
+### Feature
+- Search by phone number support from the screen to find patient without scanning
+
 ### Internal
 - Remove unused Communication model
 - Remove deprecated `validate` function and `Result` enum from `UserInputDateValidator`

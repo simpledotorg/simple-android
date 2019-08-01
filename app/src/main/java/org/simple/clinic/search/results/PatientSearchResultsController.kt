@@ -9,6 +9,8 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -42,21 +44,19 @@ class PatientSearchResultsController @Inject constructor(
         .ofType<PatientSearchResultRegisterNewPatient>()
         .map { it.searchCriteria }
         .map(this::createOngoingEntryFromSearchCriteria)
-        .flatMap {
-          patientRepository
-              .saveOngoingEntry(it)
-              .andThen(Observable.just({ ui: Ui -> ui.openPatientEntryScreen() }))
-        }
+        .flatMap(this::saveEntryAndGoToRegisterPatientScreen)
   }
 
   private fun createOngoingEntryFromSearchCriteria(searchCriteria: PatientSearchCriteria): OngoingNewPatientEntry {
     return when (searchCriteria) {
-      is PatientSearchCriteria.Name -> OngoingNewPatientEntry(OngoingNewPatientEntry.PersonalDetails(
-          fullName = searchCriteria.patientName,
-          dateOfBirth = null,
-          age = null,
-          gender = null))
-      is PatientSearchCriteria.PhoneNumber -> OngoingNewPatientEntry(phoneNumber = OngoingNewPatientEntry.PhoneNumber(number = searchCriteria.phoneNumber))
+      is Name -> OngoingNewPatientEntry.withFullName(searchCriteria.patientName)
+      is PhoneNumber -> OngoingNewPatientEntry.withPhoneNumber(searchCriteria.phoneNumber)
     }
+  }
+
+  private fun saveEntryAndGoToRegisterPatientScreen(ongoingNewPatientEntry: OngoingNewPatientEntry): Observable<UiChange> {
+    return patientRepository
+        .saveOngoingEntry(ongoingNewPatientEntry)
+        .andThen(Observable.just({ ui: Ui -> ui.openPatientEntryScreen() }))
   }
 }

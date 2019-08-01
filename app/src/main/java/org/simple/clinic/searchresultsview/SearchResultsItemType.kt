@@ -15,6 +15,33 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
   companion object {
     private const val HEADER_NOT_IN_CURRENT_FACILITY = 0L
     private const val HEADER_NO_PATIENTS_IN_CURRENT_FACILITY = 1L
+
+    fun generateListItems(
+        results: PatientSearchResults,
+        currentFacility: Facility
+    ): List<SearchResultsItemType<out ViewHolder>> {
+      if (results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty()) return emptyList()
+
+      val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {
+        results.visitedCurrentFacility.map {
+          SearchResultRow(it, currentFacility)
+        }
+      } else {
+        listOf(NoPatientsInCurrentFacility)
+      }
+
+      val itemsInOtherFacility = if (results.notVisitedCurrentFacility.isNotEmpty()) {
+        listOf(NotInCurrentFacilityHeader) +
+            results.notVisitedCurrentFacility.map {
+              SearchResultRow(it, currentFacility)
+            }
+      } else {
+        emptyList()
+      }
+      return listOf(InCurrentFacilityHeader(facilityName = currentFacility.name)) +
+          itemsInCurrentFacility +
+          itemsInOtherFacility
+    }
   }
 
   override lateinit var uiEvents: Subject<UiEvent>

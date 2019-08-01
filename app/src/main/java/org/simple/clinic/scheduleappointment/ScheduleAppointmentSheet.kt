@@ -26,6 +26,7 @@ import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import org.threeten.bp.temporal.ChronoUnit.MONTHS
+import org.threeten.bp.temporal.ChronoUnit.WEEKS
 import java.util.UUID
 import javax.inject.Inject
 
@@ -52,7 +53,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
       ScheduleAppointment("8 days", 8, DAYS),
       ScheduleAppointment("9 days", 9, DAYS),
       ScheduleAppointment("10 days", 10, DAYS),
-      ScheduleAppointment("20 days", 20, DAYS),
+      ScheduleAppointment("2 weeks", 2, WEEKS),
+      ScheduleAppointment("3 weeks", 3, WEEKS),
       oneMonth,
       ScheduleAppointment("2 months", 2, MONTHS),
       ScheduleAppointment("3 months", 3, MONTHS),

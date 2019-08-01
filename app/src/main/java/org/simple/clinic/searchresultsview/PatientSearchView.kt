@@ -19,6 +19,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
@@ -82,9 +83,22 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
           .clicks(newPatientButton)
           .map { RegisterNewPatientClicked }
 
-  fun updateSearchResults(results: List<SearchResultsItemType<out ViewHolder>>) {
-    results.forEach { it.uiEvents = downstreamUiEvents }
-    adapter.update(results)
+  fun updateSearchResults(
+      results: PatientSearchResults,
+      currentFacility: Facility
+  ) {
+    if (results.hasNoResults) {
+      setEmptyStateVisible(true)
+      adapter.update(emptyList())
+    } else {
+      setEmptyStateVisible(false)
+      SearchResultsItemType
+          .generateListItems(results, currentFacility)
+          .let { listItems ->
+            listItems.forEach { it.uiEvents = downstreamUiEvents }
+            adapter.update(listItems)
+          }
+    }
   }
 
   fun searchResultClicked(searchResultClickedEvent: SearchResultClicked) {

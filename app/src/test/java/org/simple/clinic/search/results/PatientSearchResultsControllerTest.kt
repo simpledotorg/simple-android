@@ -16,6 +16,7 @@ import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.OngoingNewPatientEntry.PersonalDetails
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
@@ -59,7 +60,7 @@ class PatientSearchResultsControllerTest {
         )
     )).thenReturn(Completable.complete())
 
-    uiEvents.onNext(PatientSearchResultRegisterNewPatient(patientName = "name"))
+    uiEvents.onNext(PatientSearchResultRegisterNewPatient(PatientSearchCriteria.Name("name")))
 
     verify(screen).openPatientEntryScreen()
   }

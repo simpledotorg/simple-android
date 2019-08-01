@@ -12,9 +12,6 @@ data class PatientSearchResultClicked(val searchResult: PatientSearchResult) : U
 
 data class PatientSearchResultRegisterNewPatient(val searchCriteria: PatientSearchCriteria) : UiEvent {
 
-  val patientName: String
-    get() = (searchCriteria as PatientSearchCriteria.Name).patientName
-
   override val analyticsName: String
     get() {
       val criteriaAnalyticsName = when (searchCriteria) {

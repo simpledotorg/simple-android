@@ -17,8 +17,6 @@ import org.simple.clinic.login.LoginResult
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.OTP_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.util.RxErrorsRule
 import java.util.UUID
@@ -62,12 +60,12 @@ class UserSessionAndroidTest {
         .map { OngoingLoginEntry(uuid = it.uuid, phoneNumber = it.phoneNumber, pin = testData.qaUserPin()) }
         .blockingFirst()
 
-    val lawgon = userSession
+    val loginResult = userSession
         .saveOngoingLoginEntry(ongoingLoginEntry)
         .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
         .blockingGet()
 
-    assertThat(lawgon).isInstanceOf(LoginResult.Success::class.java)
+    assertThat(loginResult).isInstanceOf(LoginResult.Success::class.java)
     val (accessToken) = userSession.accessToken()
     assertThat(accessToken).isNotNull()
 
@@ -81,12 +79,12 @@ class UserSessionAndroidTest {
   fun when_incorrect_login_params_are_given_then_login_should_fail() {
     userSession.logout().blockingGet()
 
-    val lawgon = userSession
+    val loginResult = userSession
         .saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "9919299", "0102"))
         .andThen(userSession.loginWithOtp(testData.qaUserOtp()))
         .blockingGet()
 
-    assertThat(lawgon).isInstanceOf(LoginResult.ServerError::class.java)
+    assertThat(loginResult).isInstanceOf(LoginResult.ServerError::class.java)
     assertThat(userSession.isUserLoggedIn()).isFalse()
 
     val (accessToken) = userSession.accessToken()

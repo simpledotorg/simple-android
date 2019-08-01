@@ -6,7 +6,6 @@ import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.transition.TransitionManager
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import kotterknife.bindView
@@ -76,7 +75,6 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun handleEmptyList(isEmpty: Boolean) {
-    TransitionManager.beginDelayedTransition(this)
     viewForEmptyList.visibleOrGone(isEmpty)
     overdueRecyclerView.visibleOrGone(isEmpty.not())
   }

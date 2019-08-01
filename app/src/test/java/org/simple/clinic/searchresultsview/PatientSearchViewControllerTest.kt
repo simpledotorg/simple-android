@@ -11,6 +11,7 @@ import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -70,6 +71,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search criteria")
+  @Ignore("will move testing of generation of presentation items to another test")
   fun `when searching patients by name returns results, the results should be displayed`(searchCriteria: PatientSearchCriteria) {
     // given
     val patientUuid1 = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470")
@@ -106,6 +108,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search criteria")
+  @Ignore("will move testing of generation of presentation items to another test")
   fun `when searching patients by name returns no results, the empty state should be displayed`(searchCriteria: PatientSearchCriteria) {
     // given
     whenever(patientRepository.search(searchCriteria))
@@ -124,6 +127,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search criteria")
+  @Ignore("will move testing of generation of presentation items to another test")
   fun `when searching by name and there are patients only in current facility, then "Other Results" header should not be shown`(
       searchCriteria: PatientSearchCriteria
   ) {
@@ -161,6 +165,7 @@ class PatientSearchViewControllerTest {
 
   @Test
   @Parameters(method = "params for search criteria")
+  @Ignore("will move testing of generation of presentation items to another test")
   fun `when searching by name and there are patients only in other facilities, then current facility header with "no results" should be shown`(
       searchCriteria: PatientSearchCriteria
   ) {
@@ -215,6 +220,64 @@ class PatientSearchViewControllerTest {
     uiEvents.onNext(RegisterNewPatientClicked)
 
     verify(screen).registerNewPatient(RegisterNewPatient(criteria))
+  }
+
+  @Test
+  @Parameters(method = "params for search criteria")
+  fun `when searching patients returns results, the results should be displayed`(searchCriteria: PatientSearchCriteria) {
+    // given
+    val searchResult1InCurrentFacility = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("1d5f18d9-43f7-4e7f-92d3-a4f641709470"),
+        fullName = "Anish Acharya in CHC Bagta"
+    )
+    val searchResult2InCurrentFacility = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("6aba53eb-c8dd-452c-b640-c11c6df94f8a"),
+        fullName = "Deepa in CHC Bagta"
+    )
+    val searchResult3InCurrentFacility = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("65965892-7218-4ca1-bfca-e7b037751802"),
+        fullName = "Vinay in CHC Bagta"
+    )
+    val searchResult1InOtherFacility = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("139bfac5-1adc-43fa-9406-d1000fb67a88"),
+        fullName = "Sanchita in CHC Ballianwali"
+    )
+    val searchResult2InOtherFacility = PatientMocker.patientSearchResult(
+        uuid = UUID.fromString("760c7342-b0f2-4130-9d4c-c5f18336d4b8"),
+        fullName = "Daniel in CHC Ballianwali"
+    )
+
+    val allSearchResults = listOf(
+        searchResult1InCurrentFacility,
+        searchResult2InOtherFacility,
+        searchResult3InCurrentFacility,
+        searchResult2InCurrentFacility,
+        searchResult1InOtherFacility
+    )
+    val patientUuids = allSearchResults.map { it.uuid }
+    val patientAndFacilityIdsToReturn = listOf(
+        PatientToFacilityId(patientUuid = searchResult1InCurrentFacility.uuid, facilityUuid = currentFacility.uuid),
+        PatientToFacilityId(patientUuid = searchResult2InCurrentFacility.uuid, facilityUuid = currentFacility.uuid),
+        PatientToFacilityId(patientUuid = searchResult3InCurrentFacility.uuid, facilityUuid = currentFacility.uuid),
+        PatientToFacilityId(patientUuid = searchResult1InOtherFacility.uuid, facilityUuid = otherFacility.uuid),
+        PatientToFacilityId(patientUuid = searchResult2InOtherFacility.uuid, facilityUuid = otherFacility.uuid)
+    )
+
+    whenever(bloodPressureDao.patientToFacilityIds(patientUuids))
+        .thenReturn(Flowable.just(patientAndFacilityIdsToReturn))
+    whenever(patientRepository.search(searchCriteria))
+        .thenReturn(Observable.just(allSearchResults))
+
+    // when
+    uiEvents.onNext(SearchResultsViewCreated)
+    uiEvents.onNext(SearchPatientWithCriteria(searchCriteria))
+
+    // then
+    val expectedSearchResults = PatientSearchResults(
+        visitedCurrentFacility = listOf(searchResult1InCurrentFacility, searchResult3InCurrentFacility, searchResult2InCurrentFacility),
+        notVisitedCurrentFacility = listOf(searchResult2InOtherFacility, searchResult1InOtherFacility)
+    )
+    verify(screen).updateSearchResults(expectedSearchResults, currentFacility)
   }
 
   @Suppress("Unused")

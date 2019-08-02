@@ -4,14 +4,9 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.RadioButton
-import android.widget.RadioGroup
 import android.widget.RelativeLayout
-import android.widget.ScrollView
-import android.widget.TextView
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
 import androidx.transition.ChangeBounds
 import androidx.transition.Fade
@@ -23,21 +18,22 @@ import com.jakewharton.rxbinding2.widget.RxRadioGroup
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.screen_manual_patient_entry.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.crash.CrashReporter
 import org.simple.clinic.medicalhistory.newentry.NewMedicalHistoryScreenKey
+import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.Gender.Female
 import org.simple.clinic.patient.Gender.Male
 import org.simple.clinic.patient.Gender.Transgender
 import org.simple.clinic.patient.Gender.Unknown
 import org.simple.clinic.patient.OngoingNewPatientEntry
+import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.toOptional
-import org.simple.clinic.widgets.PrimarySolidButtonWithFrame
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -45,7 +41,6 @@ import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.BOTH_VISIBLE
 import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthAndAgeVisibility.DATE_OF_BIRTH_VISIBLE
-import org.simple.clinic.widgets.ageanddateofbirth.DateOfBirthEditText
 import org.simple.clinic.widgets.scrollToChild
 import org.simple.clinic.widgets.setCompoundDrawableStartWithTint
 import org.simple.clinic.widgets.setTextAndCursor
@@ -70,34 +65,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   @Inject
   lateinit var crashReporter: CrashReporter
-
-  private val backButton by bindView<View>(R.id.patiententry_back)
-  private val formScrollView by bindView<ScrollView>(R.id.patiententry_form_scrollview)
-  private val fullNameEditText by bindView<EditText>(R.id.patiententry_full_name)
-  private val fullNameInputLayout by bindView<TextInputLayout>(R.id.patiententry_full_name_inputlayout)
-  private val phoneNumberEditText by bindView<EditText>(R.id.patiententry_phone_number)
-  private val phoneNumberInputLayout by bindView<TextInputLayout>(R.id.patiententry_phone_number_inputlayout)
-  private val dateOfBirthEditText by bindView<DateOfBirthEditText>(R.id.patiententry_date_of_birth)
-  private val dateOfBirthInputLayout by bindView<TextInputLayout>(R.id.patiententry_date_of_birth_inputlayout)
-  private val dateOfBirthEditTextContainer by bindView<ViewGroup>(R.id.patiententry_date_of_birth_container)
-  private val ageEditText by bindView<EditText>(R.id.patiententry_age)
-  private val ageEditTextInputLayout by bindView<TextInputLayout>(R.id.patiententry_age_inputlayout)
-  private val ageEditTextContainer by bindView<ViewGroup>(R.id.patiententry_age_container)
-  private val dateOfBirthAndAgeSeparator by bindView<View>(R.id.patiententry_dateofbirth_and_age_separator)
-  private val genderRadioGroup by bindView<RadioGroup>(R.id.patiententry_gender_radiogroup)
-  private val femaleRadioButton by bindView<RadioButton>(R.id.patiententry_gender_female)
-  private val maleRadioButton by bindView<RadioButton>(R.id.patiententry_gender_male)
-  private val transgenderRadioButton by bindView<RadioButton>(R.id.patiententry_gender_transgender)
-  private val genderErrorTextView by bindView<TextView>(R.id.patiententry_gender_validation_error)
-  private val colonyOrVillageEditText by bindView<EditText>(R.id.patiententry_colony_or_village)
-  private val colonyOrVillageInputLayout by bindView<TextInputLayout>(R.id.patiententry_colony_or_village_inputlayout)
-  private val districtEditText by bindView<EditText>(R.id.patiententry_district)
-  private val districtInputLayout by bindView<TextInputLayout>(R.id.patiententry_district_inputlayout)
-  private val stateEditText by bindView<EditText>(R.id.patiententry_state)
-  private val stateInputLayout by bindView<TextInputLayout>(R.id.patiententry_state_inputlayout)
-  private val saveButtonFrame by bindView<PrimarySolidButtonWithFrame>(R.id.patiententry_save)
-  private val identifierContainer by bindView<View>(R.id.patiententry_identifier_container)
-  private val identifierTextView by bindView<TextView>(R.id.patiententry_identifier)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -159,9 +126,9 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
 
   private fun genderChanges(): Observable<PatientGenderChanged> {
     val radioIdToGenders = mapOf(
-        R.id.patiententry_gender_female to Female,
-        R.id.patiententry_gender_male to Male,
-        R.id.patiententry_gender_transgender to Transgender)
+        R.id.femaleRadioButton to Female,
+        R.id.maleRadioButton to Male,
+        R.id.transgenderRadioButton to Transgender)
 
     return RxRadioGroup.checkedChanges(genderRadioGroup)
         .map { checkedId ->
@@ -186,24 +153,27 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     colonyOrVillageEditText.setTextAndCursor(entry.address?.colonyOrVillage)
     districtEditText.setTextAndCursor(entry.address?.district)
     stateEditText.setTextAndCursor(entry.address?.state)
+    entry.personalDetails?.gender?.let(this::prefillGender)
+    entry.identifier?.let(this::prefillIdentifier)
+  }
 
-    entry.personalDetails?.gender?.let {
-      val genderButton: RadioButton? = when (it) {
-        Male -> maleRadioButton
-        Female -> femaleRadioButton
-        Transgender -> transgenderRadioButton
-        is Unknown -> {
-          crashReporter.report(IllegalStateException("Heads-up: unknown gender ${it.actualValue} found in ${PatientEntryScreen::class.java.name}"))
-          null
-        }
+  private fun prefillIdentifier(identifier: Identifier) {
+    val identifierDisplayString = identifierDisplayAdapter.valueAsText(identifier)
+    identifierTextView.text = identifierDisplayString
+  }
+
+  private fun prefillGender(gender: Gender) {
+    val genderButton: RadioButton? = when (gender) {
+      Male -> maleRadioButton
+      Female -> femaleRadioButton
+      Transgender -> transgenderRadioButton
+      is Unknown -> {
+        crashReporter.report(IllegalStateException("Heads-up: unknown gender ${gender.actualValue} found in ${PatientEntryScreen::class.java.name}"))
+        null
       }
-
-      genderButton?.isChecked = true
     }
 
-    identifierTextView.text = entry.identifier?.let { identifier ->
-      identifierDisplayAdapter.valueAsText(identifier)
-    }
+    genderButton?.isChecked = true
   }
 
   fun openMedicalHistoryEntryScreen() {
@@ -329,7 +299,7 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
         stateInputLayout)
 
     val isGenderErrorView: (View) -> Boolean = {
-      it.id == R.id.patiententry_gender_validation_error
+      it.id == R.id.genderErrorTextView
     }
 
     val firstFieldWithError = views

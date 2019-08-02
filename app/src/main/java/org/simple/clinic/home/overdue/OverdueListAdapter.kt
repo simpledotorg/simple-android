@@ -20,9 +20,7 @@ import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import java.util.UUID
 
-class OverdueListAdapter(
-    private val onToggleCardExpansion: (Int) -> Unit
-) : RecyclerView.Adapter<OverdueListViewHolder>() {
+class OverdueListAdapter : RecyclerView.Adapter<OverdueListViewHolder>() {
 
   companion object {
     private const val OVERDUE_PATIENT = R.layout.item_overdue_list_patient
@@ -45,7 +43,7 @@ class OverdueListAdapter(
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
-    return OverdueListViewHolder.Patient(layout, itemClicks, onToggleCardExpansion)
+    return OverdueListViewHolder.Patient(layout, itemClicks)
   }
 
   override fun onBindViewHolder(holder: OverdueListViewHolder, position: Int) {
@@ -78,8 +76,7 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
 
   class Patient(
       override val containerView: View,
-      private val eventStream: Subject<UiEvent>,
-      private val onToggleCardExpansion: (Int) -> Unit
+      private val eventStream: Subject<UiEvent>
   ) : OverdueListViewHolder(containerView) {
 
     fun bind(overdueAppointmentListItem: OverdueListItem.Patient) {
@@ -99,7 +96,7 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
         containerView.post {
           val itemLocation = containerView.locationRectOnScreen()
           val itemBottomWithMargin = itemLocation.bottom + containerView.marginLayoutParams.bottomMargin
-          onToggleCardExpansion(itemBottomWithMargin)
+          eventStream.onNext(CardExpansionToggled(itemBottomWithMargin))
         }
       }
       callButton.setOnClickListener {
@@ -153,5 +150,7 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
       val shouldShowPhoneNumberView = overdueAppointmentListItem.cardExpanded && overdueAppointmentListItem.phoneNumber != null
       phoneNumberTextView.visibleOrGone(shouldShowPhoneNumberView)
     }
+
+    data class CardExpansionToggled(val cardBottomWithMargin: Int) : UiEvent
   }
 }

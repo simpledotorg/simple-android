@@ -386,20 +386,6 @@ class UserSessionTest {
   }
 
   @Test
-  fun `after clearing patient related data during forgot PIN flow, the user status must be set to RESETTING_PIN`() {
-    whenever(dataSync.sync(null)).thenReturn(Completable.complete())
-
-    val user = PatientMocker.loggedInUser()
-    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-
-    userSession.syncAndClearData(patientRepository)
-        .test()
-        .await()
-
-    verify(userDao).updateLoggedInStatusForUser(user.uuid, RESETTING_PIN)
-  }
-
-  @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
 

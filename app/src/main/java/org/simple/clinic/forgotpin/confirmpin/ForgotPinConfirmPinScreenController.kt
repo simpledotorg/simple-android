@@ -9,11 +9,12 @@ import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.ForgotPinResult
 import org.simple.clinic.user.ForgotPinResult.NetworkError
 import org.simple.clinic.user.ForgotPinResult.Success
 import org.simple.clinic.user.ForgotPinResult.UnexpectedError
 import org.simple.clinic.user.ForgotPinResult.UserNotFound
+import org.simple.clinic.user.User
+import org.simple.clinic.user.User.LoggedInStatus.*
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -94,9 +95,20 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .share()
 
     val makeResetPinCall = validPin
-        .flatMapSingle { userSession.syncAndClearData(patientRepository, syncRetryCount = 1).toSingleDefault(it) }
+        .flatMapSingle {
+          userSession
+              .syncAndClearData(patientRepository, syncRetryCount = 1)
+              .toSingleDefault(it)
+        }
+        .flatMapSingle { newPin ->
+          userSession
+              .requireLoggedInUser()
+              .firstOrError()
+              .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
+              .toSingleDefault(newPin)
+        }
         .flatMapSingle { userSession.resetPin(it) }
-        .onErrorReturn { ForgotPinResult.UnexpectedError(it) }
+        .onErrorReturn { UnexpectedError(it) }
         .share()
 
     val showErrorsOnResetPinCall = makeResetPinCall

@@ -13,11 +13,12 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.home.overdue.OverdueListViewHolder.Patient.CardExpansionToggled
+import org.simple.clinic.home.overdue.OverdueListItem.Patient
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.locationRectOnScreen
 import org.simple.clinic.widgets.visibleOrGone
@@ -35,7 +36,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var controller: OverdueScreenController
 
-  private val overdueListAdapter = OverdueListAdapter()
+  private val overdueListAdapter = ItemAdapter(OverdueListItem.OverdueListItemDiffCallback())
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
@@ -58,21 +59,21 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         ui = this,
         events = Observable.merge(
             screenCreates(),
-            overdueListAdapter.uiEvents
+            overdueListAdapter.itemEvents
         ),
         controller = controller,
         screenDestroys = screenDestroys
     )
 
     setupCardExpansionEvents(
-        cardExpansionToggledStream = overdueListAdapter.uiEvents.ofType(CardExpansionToggled::class.java),
+        cardExpansionToggledStream = overdueListAdapter.itemEvents.ofType(Patient.CardExpansionToggled::class.java),
         screenDestroys = screenDestroys
     )
   }
 
   @SuppressLint("CheckResult")
   private fun setupCardExpansionEvents(
-      cardExpansionToggledStream: Observable<CardExpansionToggled>,
+      cardExpansionToggledStream: Observable<Patient.CardExpansionToggled>,
       screenDestroys: Observable<ScreenDestroyed>
   ) {
     cardExpansionToggledStream
@@ -93,7 +94,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun updateList(overdueListItems: List<OverdueListItem>) {
-    overdueListAdapter.items = overdueListItems
+    overdueListAdapter.submitList(overdueListItems)
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

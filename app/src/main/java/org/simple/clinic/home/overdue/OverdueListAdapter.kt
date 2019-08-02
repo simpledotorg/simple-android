@@ -5,13 +5,11 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.extensions.LayoutContainer
+import kotlinx.android.synthetic.main.item_overdue_list_patient.*
 import org.simple.clinic.R
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
@@ -76,24 +74,13 @@ sealed class OverdueListItem {
   }
 }
 
-sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
 
   class Patient(
-      itemView: View,
+      override val containerView: View,
       private val eventStream: Subject<UiEvent>,
       private val onToggleCardExpansion: (Int) -> Unit
-  ) : OverdueListViewHolder(itemView) {
-
-    private val patientNameTextView by bindView<TextView>(R.id.overdue_patient_name_age)
-    private val patientBPTextView by bindView<TextView>(R.id.overdue_patient_bp)
-    private val overdueDaysTextView by bindView<TextView>(R.id.overdue_days)
-    private val isAtHighRiskTextView by bindView<TextView>(R.id.overdue_high_risk_label)
-    private val callButton by bindView<ImageButton>(R.id.overdue_patient_call)
-    private val actionsContainer by bindView<LinearLayout>(R.id.overdue_actions_container)
-    private val phoneNumberTextView by bindView<TextView>(R.id.overdue_patient_phone_number)
-    private val agreedToVisitTextView by bindView<TextView>(R.id.overdue_agreed_to_visit)
-    private val remindLaterTextView by bindView<TextView>(R.id.overdue_reminder_later)
-    private val removeFromListTextView by bindView<TextView>(R.id.overdue_remove_from_list)
+  ) : OverdueListViewHolder(containerView) {
 
     fun bind(overdueAppointmentListItem: OverdueListItem.Patient) {
       setupEvents(overdueAppointmentListItem)
@@ -101,7 +88,7 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
     }
 
     private fun setupEvents(overdueAppointmentListItem: OverdueListItem.Patient) {
-      itemView.setOnClickListener {
+      containerView.setOnClickListener {
         overdueAppointmentListItem.cardExpanded = overdueAppointmentListItem.cardExpanded.not()
         if (overdueAppointmentListItem.cardExpanded) {
           eventStream.onNext(AppointmentExpanded(overdueAppointmentListItem.patientUuid))
@@ -109,9 +96,9 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
         updateBottomLayoutVisibility(overdueAppointmentListItem)
         updatePhoneNumberViewVisibility(overdueAppointmentListItem)
 
-        itemView.post {
-          val itemLocation = itemView.locationRectOnScreen()
-          val itemBottomWithMargin = itemLocation.bottom + itemView.marginLayoutParams.bottomMargin
+        containerView.post {
+          val itemLocation = containerView.locationRectOnScreen()
+          val itemBottomWithMargin = itemLocation.bottom + containerView.marginLayoutParams.bottomMargin
           onToggleCardExpansion(itemBottomWithMargin)
         }
       }
@@ -130,7 +117,7 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
     }
 
     private fun render(overdueAppointmentListItem: OverdueListItem.Patient) {
-      val context = itemView.context
+      val context = containerView.context
 
       patientNameTextView.text = context.getString(R.string.overdue_list_item_name_age, overdueAppointmentListItem.name, overdueAppointmentListItem.age)
       patientNameTextView.setCompoundDrawableStart(overdueAppointmentListItem.gender.displayIconRes)

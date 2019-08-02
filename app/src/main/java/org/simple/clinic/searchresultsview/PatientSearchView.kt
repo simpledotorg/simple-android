@@ -93,7 +93,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     } else {
       setEmptyStateVisible(false)
       SearchResultsItemType
-          .generateListItems(results, currentFacility)
+          .from(results, currentFacility)
           .let { listItems ->
             listItems.forEach { it.uiEvents = downstreamUiEvents }
             adapter.update(listItems)

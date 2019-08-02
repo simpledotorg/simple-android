@@ -1,5 +1,6 @@
 package org.simple.clinic.forgotpin.confirmpin
 
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
@@ -95,20 +96,10 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         .share()
 
     val makeResetPinCall = validPin
-        .flatMapSingle {
-          userSession
-              .syncAndClearData(patientRepository, syncRetryCount = 1)
-              .toSingleDefault(it)
-        }
-        .flatMapSingle { newPin ->
-          userSession
-              .requireLoggedInUser()
-              .firstOrError()
-              .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
-              .toSingleDefault(newPin)
-        }
-        .flatMapSingle { userSession.resetPin(it) }
-        .onErrorReturn { UnexpectedError(it) }
+        .flatMapSingle { newPin -> syncAndClearPatientData().toSingleDefault(newPin) }
+        .flatMapSingle { newPin -> setUserLoggedInStatusToResettingPin().toSingleDefault(newPin) }
+        .flatMapSingle(userSession::resetPin)
+        .onErrorReturn(::UnexpectedError)
         .share()
 
     val showErrorsOnResetPinCall = makeResetPinCall
@@ -129,5 +120,16 @@ class ForgotPinConfirmPinScreenController @Inject constructor(
         showErrorsOnResetPinCall,
         openHomeOnResetPinCallSuccess
     )
+  }
+
+  private fun setUserLoggedInStatusToResettingPin(): Completable {
+    return userSession
+        .requireLoggedInUser()
+        .firstOrError()
+        .flatMapCompletable { user -> userSession.updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
+  }
+
+  private fun syncAndClearPatientData(): Completable {
+    return userSession.syncAndClearData(patientRepository, syncRetryCount = 1)
   }
 }

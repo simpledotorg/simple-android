@@ -22,7 +22,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.generateListItems(
+    val listItems = SearchResultsItemType.from(
         results = searchResults,
         currentFacility = currentFacility
     )
@@ -56,7 +56,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.generateListItems(
+    val listItems = SearchResultsItemType.from(
         results = searchResults,
         currentFacility = currentFacility
     )
@@ -89,7 +89,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.generateListItems(
+    val listItems = SearchResultsItemType.from(
         results = searchResults,
         currentFacility = currentFacility
     )
@@ -120,7 +120,7 @@ class SearchResultsItemTypeTest {
     )
 
     // when
-    val listItems = SearchResultsItemType.generateListItems(searchResults, currentFacility)
+    val listItems = SearchResultsItemType.from(searchResults, currentFacility)
 
     // then
     assertThat(listItems).isEmpty()

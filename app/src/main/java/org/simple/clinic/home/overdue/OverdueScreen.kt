@@ -58,14 +58,14 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
         ui = this,
         events = Observable.merge(
             screenCreates(),
-            overdueListAdapter.itemClicks
+            overdueListAdapter.uiEvents
         ),
         controller = controller,
         screenDestroys = screenDestroys
     )
 
     setupCardExpansionEvents(
-        cardExpansionToggledStream = overdueListAdapter.itemClicks.ofType(CardExpansionToggled::class.java),
+        cardExpansionToggledStream = overdueListAdapter.uiEvents.ofType(CardExpansionToggled::class.java),
         screenDestroys = screenDestroys
     )
   }

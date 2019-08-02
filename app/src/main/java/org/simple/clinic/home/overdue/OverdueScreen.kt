@@ -1,5 +1,6 @@
 package org.simple.clinic.home.overdue
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
@@ -12,6 +13,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.home.overdue.OverdueListViewHolder.Patient.CardExpansionToggled
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
@@ -33,7 +35,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var controller: OverdueScreenController
 
-  private val overdueListAdapter = OverdueListAdapter(this::scrollTillExpandedCardIsVisible)
+  private val overdueListAdapter = OverdueListAdapter()
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
@@ -48,6 +50,10 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     overdueRecyclerView.adapter = overdueListAdapter
     overdueRecyclerView.layoutManager = LinearLayoutManager(context)
 
+    val screenDestroys = RxView
+        .detaches(this)
+        .map { ScreenDestroyed() }
+
     bindUiToController(
         ui = this,
         events = Observable.merge(
@@ -55,8 +61,24 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
             overdueListAdapter.itemClicks
         ),
         controller = controller,
-        screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
+        screenDestroys = screenDestroys
     )
+
+    setupCardExpansionEvents(
+        cardExpansionToggledStream = overdueListAdapter.itemClicks.ofType(CardExpansionToggled::class.java),
+        screenDestroys = screenDestroys
+    )
+  }
+
+  @SuppressLint("CheckResult")
+  private fun setupCardExpansionEvents(
+      cardExpansionToggledStream: Observable<CardExpansionToggled>,
+      screenDestroys: Observable<ScreenDestroyed>
+  ) {
+    cardExpansionToggledStream
+        .takeUntil(screenDestroys)
+        .map { it.cardBottomWithMargin }
+        .subscribe(this::scrollTillExpandedCardIsVisible)
   }
 
   private fun screenCreates() = Observable.just(OverdueScreenCreated())

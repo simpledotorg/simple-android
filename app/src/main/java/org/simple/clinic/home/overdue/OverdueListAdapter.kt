@@ -6,6 +6,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import kotlinx.android.extensions.LayoutContainer
@@ -32,7 +33,9 @@ class OverdueListAdapter : RecyclerView.Adapter<OverdueListViewHolder>() {
       notifyDataSetChanged()
     }
 
-  val itemClicks: Subject<UiEvent> = PublishSubject.create()
+  private val eventsSubject: Subject<UiEvent> = PublishSubject.create()
+
+  val uiEvents: Observable<UiEvent> = eventsSubject.hide()
 
   override fun getItemViewType(position: Int) =
       when (items[position]) {
@@ -43,12 +46,12 @@ class OverdueListAdapter : RecyclerView.Adapter<OverdueListViewHolder>() {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OverdueListViewHolder {
     val layout = LayoutInflater.from(parent.context).inflate(viewType, parent, false)
-    return OverdueListViewHolder.Patient(layout, itemClicks)
+    return OverdueListViewHolder.Patient(layout)
   }
 
   override fun onBindViewHolder(holder: OverdueListViewHolder, position: Int) {
     if (holder is OverdueListViewHolder.Patient) {
-      holder.bind(items[position] as OverdueListItem.Patient)
+      holder.bind(items[position] as OverdueListItem.Patient, eventsSubject)
     }
   }
 }
@@ -74,21 +77,24 @@ sealed class OverdueListItem {
 
 sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
 
-  class Patient(
-      override val containerView: View,
-      private val eventStream: Subject<UiEvent>
-  ) : OverdueListViewHolder(containerView) {
+  class Patient(override val containerView: View) : OverdueListViewHolder(containerView) {
 
-    fun bind(overdueAppointmentListItem: OverdueListItem.Patient) {
-      setupEvents(overdueAppointmentListItem)
+    fun bind(
+        overdueAppointmentListItem: OverdueListItem.Patient,
+        eventsSubject: Subject<UiEvent>
+    ) {
+      setupEvents(overdueAppointmentListItem, eventsSubject)
       render(overdueAppointmentListItem)
     }
 
-    private fun setupEvents(overdueAppointmentListItem: OverdueListItem.Patient) {
+    private fun setupEvents(
+        overdueAppointmentListItem: OverdueListItem.Patient,
+        eventSubject: Subject<UiEvent>
+    ) {
       containerView.setOnClickListener {
         overdueAppointmentListItem.cardExpanded = overdueAppointmentListItem.cardExpanded.not()
         if (overdueAppointmentListItem.cardExpanded) {
-          eventStream.onNext(AppointmentExpanded(overdueAppointmentListItem.patientUuid))
+          eventSubject.onNext(AppointmentExpanded(overdueAppointmentListItem.patientUuid))
         }
         updateBottomLayoutVisibility(overdueAppointmentListItem)
         updatePhoneNumberViewVisibility(overdueAppointmentListItem)
@@ -96,20 +102,20 @@ sealed class OverdueListViewHolder(itemView: View) : RecyclerView.ViewHolder(ite
         containerView.post {
           val itemLocation = containerView.locationRectOnScreen()
           val itemBottomWithMargin = itemLocation.bottom + containerView.marginLayoutParams.bottomMargin
-          eventStream.onNext(CardExpansionToggled(itemBottomWithMargin))
+          eventSubject.onNext(CardExpansionToggled(itemBottomWithMargin))
         }
       }
       callButton.setOnClickListener {
-        eventStream.onNext(CallPatientClicked(overdueAppointmentListItem.patientUuid))
+        eventSubject.onNext(CallPatientClicked(overdueAppointmentListItem.patientUuid))
       }
       agreedToVisitTextView.setOnClickListener {
-        eventStream.onNext(AgreedToVisitClicked(overdueAppointmentListItem.appointmentUuid))
+        eventSubject.onNext(AgreedToVisitClicked(overdueAppointmentListItem.appointmentUuid))
       }
       remindLaterTextView.setOnClickListener {
-        eventStream.onNext(RemindToCallLaterClicked(overdueAppointmentListItem.appointmentUuid))
+        eventSubject.onNext(RemindToCallLaterClicked(overdueAppointmentListItem.appointmentUuid))
       }
       removeFromListTextView.setOnClickListener {
-        eventStream.onNext(RemoveFromListClicked(overdueAppointmentListItem.appointmentUuid, overdueAppointmentListItem.patientUuid))
+        eventSubject.onNext(RemoveFromListClicked(overdueAppointmentListItem.appointmentUuid, overdueAppointmentListItem.patientUuid))
       }
     }
 

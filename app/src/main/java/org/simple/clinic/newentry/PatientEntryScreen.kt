@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.view.inputmethod.EditorInfo
+import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RelativeLayout
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator
@@ -34,6 +35,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapter
 import org.simple.clinic.util.toOptional
+import org.simple.clinic.util.unsafeLazy
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.TheActivityLifecycle
@@ -66,6 +68,25 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
   @Inject
   lateinit var crashReporter: CrashReporter
 
+  private val allTextInputFields: List<EditText> by unsafeLazy {
+    listOf(
+        fullNameEditText,
+        phoneNumberEditText,
+        ageEditText,
+        dateOfBirthEditText,
+        colonyOrVillageEditText,
+        districtEditText,
+        stateEditText
+    )
+  }
+
+  /**
+   * We show the keyboard for the first empty text field when we prefill the text fields. However,
+   * this should only be done the first time the prefill happens and not afterwards. This is used
+   * to track the fact that we've already shown it.
+   **/
+  private var alreadyFocusedOnEmptyTextField: Boolean = false
+
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -74,7 +95,6 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     }
     TheActivity.component.inject(this)
 
-    phoneNumberEditText.showKeyboard()
     backButton.setOnClickListener { screenRouter.pop() }
 
     // Not sure why, but setting android:nextFocusDown in XML isn't working,
@@ -155,6 +175,16 @@ class PatientEntryScreen(context: Context, attrs: AttributeSet) : RelativeLayout
     stateEditText.setTextAndCursor(entry.address?.state)
     entry.personalDetails?.gender?.let(this::prefillGender)
     entry.identifier?.let(this::prefillIdentifier)
+
+    showKeyboardForFirstEmptyTextField()
+  }
+
+  private fun showKeyboardForFirstEmptyTextField() {
+    if (!alreadyFocusedOnEmptyTextField) {
+      val firstEmptyTextField = allTextInputFields.firstOrNull { it.text.isNullOrBlank() }
+      firstEmptyTextField?.showKeyboard()
+      alreadyFocusedOnEmptyTextField = true
+    }
   }
 
   private fun prefillIdentifier(identifier: Identifier) {

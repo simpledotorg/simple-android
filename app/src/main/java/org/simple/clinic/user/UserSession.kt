@@ -35,7 +35,6 @@ import org.simple.clinic.storage.files.FileStorage
 import org.simple.clinic.sync.DataSync
 import org.simple.clinic.user.User.LoggedInStatus.LOGGED_IN
 import org.simple.clinic.user.User.LoggedInStatus.NOT_LOGGED_IN
-import org.simple.clinic.user.User.LoggedInStatus.RESETTING_PIN
 import org.simple.clinic.user.User.LoggedInStatus.RESET_PIN_REQUESTED
 import org.simple.clinic.user.User.LoggedInStatus.UNAUTHORIZED
 import org.simple.clinic.user.UserStatus.ApprovedForSyncing
@@ -399,10 +398,6 @@ class UserSession @Inject constructor(
   fun syncAndClearData(patientRepository: PatientRepository, syncRetryCount: Int = 0, timeoutSeconds: Long = 15L): Completable {
     Timber.i("Syncing and clearing all patient related data")
 
-    val updateUserStatusToResettingPin = requireLoggedInUser()
-        .firstOrError()
-        .flatMapCompletable { user -> updateLoggedInStatusForUser(user.uuid, RESETTING_PIN) }
-
     val clearStoredPullTokens = Completable.fromAction {
       patientSyncPullToken.delete()
       bpSyncPullToken.delete()
@@ -421,7 +416,6 @@ class UserSession @Inject constructor(
         .andThen(patientRepository.clearPatientData())
         .andThen(clearStoredPullTokens)
         .andThen(bruteForceProtection.resetFailedAttempts())
-        .andThen(updateUserStatusToResettingPin)
   }
 
   fun resetPin(pin: String): Single<ForgotPinResult> {
@@ -472,7 +466,7 @@ class UserSession @Inject constructor(
         .distinctUntilChanged()
   }
 
-  private fun updateLoggedInStatusForUser(
+  fun updateLoggedInStatusForUser(
       userUuid: UUID,
       newLoggedInStatus: User.LoggedInStatus
   ): Completable {

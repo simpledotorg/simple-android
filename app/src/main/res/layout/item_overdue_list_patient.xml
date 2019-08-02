@@ -27,7 +27,7 @@
         tools:ignore="RtlSymmetry">
 
         <TextView
-          android:id="@+id/overdue_patient_name_age"
+          android:id="@+id/patientNameTextView"
           style="@style/Clinic.V2.TextAppearance.Subtitle1Left.Blue1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -52,7 +52,7 @@
             android:textAllCaps="true" />
 
           <TextView
-            android:id="@+id/overdue_patient_bp"
+            android:id="@+id/patientBPTextView"
             style="@style/Clinic.V2.TextAppearance.Body2Left.Grey1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
         </LinearLayout>
 
         <org.simple.clinic.widgets.TintableCompoundDrawableTextView
-          android:id="@+id/overdue_patient_phone_number"
+          android:id="@+id/phoneNumberTextView"
           style="@style/Clinic.V2.TextAppearance.Body2Left.Numeric.Grey1"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
           android:layout_marginStart="@dimen/spacing_56">
 
           <TextView
-            android:id="@+id/overdue_high_risk_label"
+            android:id="@+id/isAtHighRiskTextView"
             style="@style/Clinic.V2.TextAppearance.Body2Left.White100"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -88,7 +88,7 @@
             android:text="@string/overduelist_high_risk" />
 
           <TextView
-            android:id="@+id/overdue_days"
+            android:id="@+id/overdueDaysTextView"
             style="@style/Clinic.V2.TextAppearance.Body2Left.Red1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -97,7 +97,7 @@
       </LinearLayout>
 
       <ImageButton
-        android:id="@+id/overdue_patient_call"
+        android:id="@+id/callButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical|end"
@@ -111,7 +111,7 @@
     </LinearLayout>
 
     <LinearLayout
-      android:id="@+id/overdue_actions_container"
+      android:id="@+id/actionsContainer"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_below="@+id/patient_details"
@@ -131,7 +131,7 @@
         android:textAllCaps="true" />
 
       <TextView
-        android:id="@+id/overdue_agreed_to_visit"
+        android:id="@+id/agreedToVisitTextView"
         style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -146,7 +146,7 @@
         android:background="@color/grey3" />
 
       <TextView
-        android:id="@+id/overdue_reminder_later"
+        android:id="@+id/remindLaterTextView"
         style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -161,7 +161,7 @@
         android:background="@color/grey3" />
 
       <TextView
-        android:id="@+id/overdue_remove_from_list"
+        android:id="@+id/removeFromListTextView"
         style="@style/Clinic.V2.OverdueListAction"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

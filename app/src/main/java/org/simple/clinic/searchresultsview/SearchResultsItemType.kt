@@ -16,31 +16,68 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
     private const val HEADER_NOT_IN_CURRENT_FACILITY = 0L
     private const val HEADER_NO_PATIENTS_IN_CURRENT_FACILITY = 1L
 
-    fun generateListItems(
+    fun from(
         results: PatientSearchResults,
         currentFacility: Facility
     ): List<SearchResultsItemType<out ViewHolder>> {
-      if (results.visitedCurrentFacility.isEmpty() && results.notVisitedCurrentFacility.isEmpty()) return emptyList()
-
-      val itemsInCurrentFacility = if (results.visitedCurrentFacility.isNotEmpty()) {
-        results.visitedCurrentFacility.map {
-          SearchResultRow(it, currentFacility)
-        }
-      } else {
-        listOf(NoPatientsInCurrentFacility)
+      return when {
+        results.hasNoResults -> emptyList()
+        else -> generateSearchResultListItems(results, currentFacility)
       }
+    }
 
-      val itemsInOtherFacility = if (results.notVisitedCurrentFacility.isNotEmpty()) {
-        listOf(NotInCurrentFacilityHeader) +
-            results.notVisitedCurrentFacility.map {
-              SearchResultRow(it, currentFacility)
-            }
+    private fun generateSearchResultListItems(
+        results: PatientSearchResults,
+        currentFacility: Facility
+    ): List<SearchResultsItemType<ViewHolder>> {
+      val itemsInCurrentFacility = SearchResultRow
+          .forSearchResults(results.visitedCurrentFacility, currentFacility)
+          .let { searchResultRowsInCurrentFacility ->
+            listItemsForCurrentFacility(
+                currentFacility = currentFacility,
+                searchResultRows = searchResultRowsInCurrentFacility
+            )
+          }
+
+      val itemsInOtherFacility = SearchResultRow
+          .forSearchResults(results.notVisitedCurrentFacility, currentFacility)
+          .let(::listItemsForOtherFacilities)
+
+      return itemsInCurrentFacility + itemsInOtherFacility
+    }
+
+    private fun listItemsForCurrentFacility(
+        currentFacility: Facility,
+        searchResultRows: List<SearchResultRow>
+    ): List<SearchResultsItemType<ViewHolder>> {
+
+      val currentFacilityHeader = InCurrentFacilityHeader(currentFacility.name)
+
+      return if (searchResultRows.isNotEmpty()) {
+        listOf(
+            currentFacilityHeader,
+            *searchResultRows.toTypedArray()
+        )
+      } else {
+        listOf(
+            currentFacilityHeader,
+            NoPatientsInCurrentFacility
+        )
+      }
+    }
+
+    private fun listItemsForOtherFacilities(
+        searchResultRows: List<SearchResultRow>
+    ): List<SearchResultsItemType<ViewHolder>> {
+
+      return if (searchResultRows.isNotEmpty()) {
+        listOf(
+            NotInCurrentFacilityHeader,
+            *searchResultRows.toTypedArray()
+        )
       } else {
         emptyList()
       }
-      return listOf(InCurrentFacilityHeader(facilityName = currentFacility.name)) +
-          itemsInCurrentFacility +
-          itemsInOtherFacility
     }
   }
 
@@ -81,6 +118,15 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
       private val searchResult: PatientSearchResult,
       private val currentFacility: Facility
   ) : SearchResultsItemType<ViewHolder>(searchResult.hashCode().toLong()) {
+
+    companion object {
+      fun forSearchResults(
+          searchResults: List<PatientSearchResult>,
+          currentFacility: Facility
+      ): List<SearchResultRow> {
+        return searchResults.map { searchResult -> SearchResultRow(searchResult, currentFacility) }
+      }
+    }
 
     override fun getLayout(): Int = R.layout.list_patient_search
 

@@ -116,9 +116,9 @@
           android:layout_height="wrap_content"
           android:layout_marginTop="@dimen/spacing_4"
           android:background="@drawable/background_patiententry_identifier"
+          android:drawablePadding="@dimen/spacing_12"
           android:padding="@dimen/spacing_4"
           android:textAppearance="@style/Clinic.V2.TextAppearance.Body1Left.Numeric.Grey0"
-          android:drawablePadding="@dimen/spacing_12"
           tools:drawableStart="@drawable/patient_id_card"
           tools:drawableTint="@color/grey1"
           tools:text="123 4567" />
@@ -170,9 +170,9 @@
           android:layout_marginEnd="@dimen/spacing_16"
           android:layout_marginStart="@dimen/spacing_16"
           android:layout_marginTop="@dimen/spacing_24"
-          android:background="@color/window_background"
           android:text="@string/patiententry_dateofbirth_and_age_separator"
-          android:textAllCaps="true" />
+          android:textAllCaps="true"
+          android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />
 
         <FrameLayout
           android:id="@+id/dateOfBirthEditTextContainer"

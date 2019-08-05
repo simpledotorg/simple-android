@@ -3,22 +3,13 @@ package org.simple.clinic.home.overdue
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.Age
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalDateTime
-import org.threeten.bp.Period
-import org.threeten.bp.ZoneOffset.UTC
-import org.threeten.bp.temporal.ChronoUnit.DAYS
-import timber.log.Timber
 import javax.inject.Inject
 
 typealias Ui = OverdueScreen
@@ -61,22 +52,7 @@ class OverdueScreenController @Inject constructor(
         .refCount()
 
     val overduePatientsStream = overdueAppointmentsStream
-        .map { appointments ->
-          appointments.map {
-            OverdueListItem.Patient(
-                appointmentUuid = it.appointment.uuid,
-                patientUuid = it.appointment.patientUuid,
-                name = it.fullName,
-                gender = it.gender,
-                age = ageFromDateOfBirth(it.dateOfBirth, it.age),
-                phoneNumber = it.phoneNumber?.number,
-                bpSystolic = it.bloodPressure.systolic,
-                bpDiastolic = it.bloodPressure.diastolic,
-                bpDaysAgo = calculateDaysAgoFromInstant(it.bloodPressure.recordedAt),
-                overdueDays = calculateOverdueDays(it.appointment.scheduledDate),
-                isAtHighRisk = it.isAtHighRisk)
-          }
-        }
+        .map(OverdueListItem.Companion::from)
         .map { overduePatients ->
           { ui: Ui -> ui.updateList(overduePatients) }
         }
@@ -86,29 +62,6 @@ class OverdueScreenController @Inject constructor(
         .map { { ui: Ui -> ui.handleEmptyList(it) } }
 
     return Observable.merge(overduePatientsStream, emptyStateStream)
-  }
-
-  private fun ageFromDateOfBirth(dateOfBirth: LocalDate?, age: Age?): Int {
-    return if (age == null) {
-      Period.between(dateOfBirth!!, LocalDate.now(UTC)).years
-
-    } else {
-      val ageUpdatedAt = LocalDateTime.ofInstant(age.updatedAt, UTC)
-      val updatedAtLocalDate = LocalDate.of(ageUpdatedAt.year, ageUpdatedAt.month, ageUpdatedAt.dayOfMonth)
-      val yearsSinceThen = Period.between(updatedAtLocalDate, LocalDate.now(UTC)).years
-      val ageWhenRecorded = age.value
-
-      ageWhenRecorded + yearsSinceThen
-    }
-  }
-
-  private fun calculateDaysAgoFromInstant(instant: Instant): Int {
-    val localDateTime = LocalDateTime.ofInstant(instant, UTC)
-    return calculateOverdueDays(LocalDate.of(localDateTime.year, localDateTime.month, localDateTime.dayOfMonth))
-  }
-
-  private fun calculateOverdueDays(date: LocalDate): Int {
-    return DAYS.between(date, LocalDate.now(UTC)).toInt()
   }
 
   private fun openPhoneMaskBottomSheet(events: Observable<UiEvent>): Observable<UiChange> =

@@ -3,8 +3,10 @@ package org.simple.clinic.util
 import org.threeten.bp.Clock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
+import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZoneOffset.UTC
 
 class TestUtcClock : UtcClock() {
@@ -30,9 +32,13 @@ class TestUtcClock : UtcClock() {
   }
 }
 
-class TestUserClock : UserClock() {
+class TestUserClock (instant: Instant) : UserClock() {
 
-  private var clock = fixed(Instant.EPOCH, UTC)
+  constructor(): this(Instant.EPOCH)
+
+  constructor(localDate: LocalDate, zoneOffset: ZoneOffset = UTC): this(localDate.atStartOfDay(zoneOffset).toInstant())
+
+  private var clock = fixed(instant, UTC)
 
   override fun withZone(zone: ZoneId): Clock = clock.withZone(zone)
 

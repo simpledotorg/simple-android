@@ -23,7 +23,6 @@ import org.simple.clinic.util.randomGender
 import org.simple.clinic.util.randomPatientPhoneNumberType
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneOffset
 import org.threeten.bp.ZoneOffset.UTC
 import java.util.Random
 import java.util.UUID
@@ -44,7 +43,7 @@ object PatientMocker {
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       status: PatientStatus = PatientStatus.Active,
       gender: Gender = randomGender(),
-      dateOfBirth: LocalDate? = LocalDate.now(ZoneOffset.UTC),
+      dateOfBirth: LocalDate? = LocalDate.now(UTC),
       age: Age? = null,
       createdAt: Instant = Instant.now(),
       updatedAt: Instant = Instant.now(),
@@ -272,10 +271,26 @@ object PatientMocker {
   }
 
   fun overdueAppointment(
+      userUuid: UUID = UUID.randomUUID(),
+      facilityUuid: UUID = UUID.randomUUID(),
+      patientUuid: UUID = UUID.randomUUID(),
+      bpUuid: UUID = UUID.randomUUID(),
+      phoneNumberUuid: UUID = UUID.randomUUID(),
+      appointmentUuid: UUID = UUID.randomUUID(),
       name: String = "somebody",
-      bloodPressureMeasurement: BloodPressureMeasurement = bp(),
+      bloodPressureMeasurement: BloodPressureMeasurement = bp(
+          uuid = bpUuid,
+          userUuid = userUuid,
+          facilityUuid = facilityUuid,
+          patientUuid = patientUuid
+      ),
       riskLevelIndex: Int? = null,
-      riskLevel: OverdueAppointment.RiskLevel? = null
+      riskLevel: OverdueAppointment.RiskLevel? = null,
+      gender: Gender = Gender.Transgender,
+      dateOfBirth: LocalDate? = LocalDate.now(UTC).minusYears(30),
+      age: Age? = null,
+      phoneNumber: PatientPhoneNumber? = phoneNumber(uuid = phoneNumberUuid, patientUuid = patientUuid),
+      appointment: Appointment = appointment(uuid = appointmentUuid, patientUuid = patientUuid, facilityUuid = facilityUuid)
   ): OverdueAppointment {
     if ((riskLevel == null) == (riskLevelIndex == null)) {
       throw AssertionError("Both riskLevel and riskLevelIndex cannot be null or non-null")
@@ -289,11 +304,11 @@ object PatientMocker {
 
     return OverdueAppointment(
         fullName = name,
-        gender = mock(),
-        dateOfBirth = LocalDate.now(ZoneOffset.UTC).minusYears(30),
-        age = null,
-        phoneNumber = mock(),
-        appointment = appointment(),
+        gender = gender,
+        dateOfBirth = dateOfBirth,
+        age = age,
+        phoneNumber = phoneNumber,
+        appointment = appointment,
         bloodPressure = bloodPressureMeasurement,
         riskLevelIndex = calculatedRiskLevel
     )

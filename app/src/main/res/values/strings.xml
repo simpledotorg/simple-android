@@ -153,7 +153,7 @@
 
   <!-- Patient summary -->
   <string name="patientsummary_contentdescription_up_button">Go back</string>
-  <string name="patientsummary_prescriptions_last_updated">Updated</string>
+  <string name="patientsummary_prescriptions_last_updated">Updated %s</string>
   <string name="patientsummary_prescriptions_add">Add medicines</string>
   <string name="patientsummary_prescriptions_update">Update medicines</string>
   <string name="patientsummary_bp_add_new">New BP</string>

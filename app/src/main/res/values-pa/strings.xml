@@ -28,7 +28,7 @@
     <string name="bloodpressureentry_systolic">ਸਿਸਟੌਲਿਕ</string>
     <string name="bloodpressureentry_diastolic">ਡਾਇਸਟੋਲਿਕ</string>
     <string name="patientsummary_contentdescription_up_button">ਵਾਪਸ ਜਾਓ</string>
-    <string name="patientsummary_prescriptions_last_updated">ਅਪਡੇਟ ਹੋਇਆ</string>
+    <string name="patientsummary_prescriptions_last_updated">ਅਪਡੇਟ ਹੋਇਆ %s</string>
     <string name="patientsummary_prescriptions_update">ਅਪਡੇਟ</string>
     <string name="patientsummary_bp_add_new">ਨਵਾਂ ਬੀ ਪੀ</string>
     <string name="patientsummary_finish_saving_patient">ਹੋ ਗਿਆ</string>

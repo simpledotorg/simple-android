@@ -18,6 +18,7 @@ import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderShe
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.locationRectOnScreen
@@ -35,6 +36,9 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
 
   @Inject
   lateinit var controller: OverdueScreenController
+
+  @Inject
+  lateinit var userClock: UserClock
 
   private val overdueListAdapter = ItemAdapter(OverdueListItem.OverdueListItemDiffCallback())
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
@@ -93,8 +97,8 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     }
   }
 
-  fun updateList(overdueListItems: List<OverdueListItem>) {
-    overdueListAdapter.submitList(overdueListItems)
+  fun updateList(overdueAppointments: List<OverdueAppointment>) {
+    overdueListAdapter.submitList(OverdueListItem.from(overdueAppointments, userClock))
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

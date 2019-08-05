@@ -64,24 +64,13 @@ class OverdueScreenControllerTest {
   }
 
   @Test
-  fun `when screen is created, and overdue list is retrieved, show it`() {
-    whenever(repository.overdueAppointments(facility))
-        .thenReturn(Observable.just(listOf(PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST))))
-
-    uiEvents.onNext(OverdueScreenCreated())
-
-    verify(screen).updateList(any())
-    verify(screen).handleEmptyList(false)
-    verifyNoMoreInteractions(screen)
-  }
-
-  @Test
   fun `when screen is created, and overdue list is empty, show empty list UI`() {
-    whenever(repository.overdueAppointments(facility)).thenReturn(Observable.just(listOf()))
+    whenever(repository.overdueAppointments(facility))
+        .thenReturn(Observable.just(emptyList()))
 
     uiEvents.onNext(OverdueScreenCreated())
 
-    verify(screen).updateList(any())
+    verify(screen).updateList(emptyList())
     verify(screen).handleEmptyList(true)
     verifyNoMoreInteractions(screen)
   }
@@ -128,32 +117,21 @@ class OverdueScreenControllerTest {
 
   @Test
   fun `when screen is created then the overdue appointments must be displayed`() {
+    // given
     val overdueAppointments = listOf(
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST),
-        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW, phoneNumber = null),
+        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW),
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
     )
+    whenever(repository.overdueAppointments(facility))
+        .thenReturn(Observable.just(overdueAppointments))
 
-    whenever(repository.overdueAppointments(facility)).thenReturn(Observable.just(overdueAppointments))
-
+    // when
     uiEvents.onNext(OverdueScreenCreated())
 
-    val expectedOverdueListItems = overdueAppointments.map { overdueAppointment ->
-      OverdueListItem.Patient(
-          appointmentUuid = overdueAppointment.appointment.uuid,
-          patientUuid = overdueAppointment.appointment.patientUuid,
-          name = overdueAppointment.fullName,
-          gender = overdueAppointment.gender,
-          age = 30,
-          phoneNumber = overdueAppointment.phoneNumber?.number,
-          bpSystolic = overdueAppointment.bloodPressure.systolic,
-          bpDiastolic = overdueAppointment.bloodPressure.diastolic,
-          bpDaysAgo = 0,
-          overdueDays = 0,
-          isAtHighRisk = overdueAppointment.isAtHighRisk
-      )
-    }
-
-    verify(screen).updateList(expectedOverdueListItems)
+    // then
+    verify(screen).handleEmptyList(false)
+    verify(screen).updateList(overdueAppointments)
+    verifyNoMoreInteractions(screen)
   }
 }

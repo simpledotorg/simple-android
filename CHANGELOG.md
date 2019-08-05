@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Next Release
+### Fixes
+- Fix searching by phone number shows duplicate results for patients with multiple BPs
 
 ## On Demo
 ### Feature

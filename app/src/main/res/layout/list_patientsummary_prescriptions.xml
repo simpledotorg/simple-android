@@ -3,15 +3,24 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8"
-  tools:ignore="MissingPrefix">
+  android:layout_margin="@dimen/spacing_8">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:layout_marginStart="@dimen/spacing_8"
     android:orientation="vertical">
+
+    <org.simple.clinic.widgets.OmegaCenterIconButton
+      android:id="@+id/patientsummary_prescriptions_update"
+      style="@style/Clinic.V2.Button.WithIcon.Blue2"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_8"
+      android:drawableStart="@drawable/ic_add_medicines"
+      tools:text="@string/patientsummary_prescriptions_update" />
 
     <LinearLayout
       android:id="@+id/patientsummary_prescriptions_summary_container"
@@ -19,51 +28,25 @@
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_12"
       android:layout_marginStart="@dimen/spacing_12"
+      android:layout_marginTop="@dimen/spacing_16"
       android:baselineAligned="false"
-      android:orientation="horizontal"
-      android:paddingTop="@dimen/spacing_24">
+      android:orientation="vertical">
 
       <LinearLayout
         android:id="@+id/patientsummary_prescriptions_container"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_weight="1"
         android:orientation="vertical" />
 
-      <LinearLayout
-        android:layout_width="wrap_content"
+      <TextView
+        android:id="@+id/patientsummary_prescriptions_last_updated_timestamp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:gravity="end"
-        android:orientation="vertical">
-
-        <TextView
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginTop="8dp"
-          android:text="@string/patientsummary_prescriptions_last_updated"
-          android:textColor="@color/gray_500" />
-
-        <TextView
-          android:id="@+id/patientsummary_prescriptions_last_updated_timestamp"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_marginBottom="@dimen/spacing_16"
-          android:textSize="@dimen/textsize_16"
-          tools:text="30 days ago" />
-      </LinearLayout>
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center"
+        android:textColor="@color/grey1"
+        tools:text="Updated today" />
     </LinearLayout>
-
-    <org.simple.clinic.widgets.OmegaCenterIconButton
-      android:id="@+id/patientsummary_prescriptions_update"
-      style="@style/Clinic.V2.Button.WithIcon.Blue2"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginBottom="@dimen/spacing_24"
-      android:layout_marginEnd="8dp"
-      android:layout_marginStart="8dp"
-      android:layout_marginTop="@dimen/summary_prescriptions_update_when_empty"
-      android:drawableStart="@drawable/ic_add_medicines" />
   </LinearLayout>
 </androidx.cardview.widget.CardView>

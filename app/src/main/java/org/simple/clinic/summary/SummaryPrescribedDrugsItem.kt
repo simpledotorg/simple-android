@@ -1,5 +1,6 @@
 package org.simple.clinic.summary
 
+import android.annotation.SuppressLint
 import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import org.simple.clinic.summary.SummaryListAdapterIds.PRESCRIBED_DRUGS
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setTopMarginRes
+import org.simple.clinic.widgets.visibleOrGone
 import timber.log.Timber
 
 data class SummaryPrescribedDrugsItem(
@@ -34,10 +36,7 @@ data class SummaryPrescribedDrugsItem(
   }
 
   override fun bind(holder: DrugsSummaryViewHolder, position: Int) {
-    holder.summaryViewGroup.visibility = when {
-      prescriptions.isEmpty() -> View.GONE
-      else -> View.VISIBLE
-    }
+    holder.summaryViewGroup.visibleOrGone(prescriptions.isNotEmpty())
 
     holder.setButtonText(prescriptions)
 
@@ -56,7 +55,9 @@ data class SummaryPrescribedDrugsItem(
       Timber.i("Last updated prescribedDrug: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
 
       val lastUpdatedTimestamp = RelativeTimestampGenerator().generate(lastUpdatedPrescription.updatedAt)
-      holder.lastUpdatedTimestampTextView.text = lastUpdatedTimestamp.displayText(holder.itemView.context)
+
+      @SuppressLint("SetTextI18n")
+      holder.lastUpdatedTimestampTextView.text = "Updated " + lastUpdatedTimestamp.displayText(holder.itemView.context)
     }
 
     holder.updateButton.setTopMarginRes(when {
@@ -83,12 +84,11 @@ data class SummaryPrescribedDrugsItem(
 
     fun setButtonText(prescriptions: List<PrescribedDrug>) {
       updateButton.text =
-        if ( prescriptions.isEmpty() ) {
-          itemView.context.getString(R.string.patientsummary_prescriptions_add)
-        }
-        else {
-          itemView.context.getString(R.string.patientsummary_prescriptions_update)
-        }
+          if (prescriptions.isEmpty()) {
+            itemView.context.getString(R.string.patientsummary_prescriptions_add)
+          } else {
+            itemView.context.getString(R.string.patientsummary_prescriptions_update)
+          }
     }
   }
 

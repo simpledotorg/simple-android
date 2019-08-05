@@ -10,7 +10,6 @@ import org.simple.clinic.R
 import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.displayIconRes
-import org.simple.clinic.util.RealUserClock
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.estimateCurrentAge
 import org.simple.clinic.util.toLocalDateAtZone
@@ -23,17 +22,12 @@ import org.simple.clinic.widgets.setCompoundDrawableStart
 import org.simple.clinic.widgets.visibleOrGone
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
-import org.threeten.bp.ZoneId
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 
 sealed class OverdueListItem : ItemAdapter.Item<UiEvent> {
 
   companion object {
-    fun from(appointments: List<OverdueAppointment>): List<OverdueListItem> {
-      return appointments.map { overdueAppointment -> Patient.from(overdueAppointment, RealUserClock(ZoneId.of("UTC"))) }
-    }
-
     fun from(appointments: List<OverdueAppointment>, clock: UserClock): List<OverdueListItem> {
       return appointments.map { overdueAppointment -> Patient.from(overdueAppointment, clock) }
     }

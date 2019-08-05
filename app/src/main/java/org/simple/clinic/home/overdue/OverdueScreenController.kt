@@ -52,9 +52,8 @@ class OverdueScreenController @Inject constructor(
         .refCount()
 
     val overduePatientsStream = overdueAppointmentsStream
-        .map(OverdueListItem.Companion::from)
-        .map { overduePatients ->
-          { ui: Ui -> ui.updateList(overduePatients) }
+        .map { overdueAppointments ->
+          { ui: Ui -> ui.updateList(overdueAppointments) }
         }
 
     val emptyStateStream = overdueAppointmentsStream

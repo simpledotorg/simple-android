@@ -475,4 +475,12 @@ object PatientMocker {
         businessIds = emptyList()
     )
   }
+
+  fun age(
+      ageValue: Int,
+      updatedAt: Instant = Instant.now(),
+      computedDateOfBirth: LocalDate = LocalDate.now(UTC)
+  ): Age {
+    return Age(value = ageValue, updatedAt = updatedAt, computedDateOfBirth = computedDateOfBirth)
+  }
 }

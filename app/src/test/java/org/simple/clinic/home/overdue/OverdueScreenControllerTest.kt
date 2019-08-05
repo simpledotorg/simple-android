@@ -130,7 +130,7 @@ class OverdueScreenControllerTest {
   fun `when screen is created then the overdue appointments must be displayed`() {
     val overdueAppointments = listOf(
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.HIGHEST),
-        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW),
+        PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.LOW, phoneNumber = null),
         PatientMocker.overdueAppointment(riskLevel = OverdueAppointment.RiskLevel.NONE)
     )
 
@@ -145,7 +145,7 @@ class OverdueScreenControllerTest {
           name = overdueAppointment.fullName,
           gender = overdueAppointment.gender,
           age = 30,
-          phoneNumber = null,
+          phoneNumber = overdueAppointment.phoneNumber?.number,
           bpSystolic = overdueAppointment.bloodPressure.systolic,
           bpDiastolic = overdueAppointment.bloodPressure.diastolic,
           bpDaysAgo = 0,

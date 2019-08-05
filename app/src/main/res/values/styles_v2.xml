@@ -300,7 +300,9 @@
     <item name="android:textColor">?colorAccent</item>
     <item name="android:paddingTop">0dp</item>
     <item name="android:paddingBottom">0dp</item>
-    <item name="android:drawablePadding">8dp</item>
+    <item name="android:drawablePadding">@dimen/spacing_8</item>
+    <item name="android:textSize">@dimen/textsize_16</item>
+    <item name="android:letterSpacing" tools:ignore="NewApi">0.07</item>
   </style>
 
   <style name="Clinic.V2.Button.WithIcon.Blue1">

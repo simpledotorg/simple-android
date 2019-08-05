@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import android.annotation.SuppressLint
 import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.View
@@ -48,16 +47,16 @@ data class SummaryPrescribedDrugsItem(
         drugViewHolder.bind(drug)
       }
 
-      val lastUpdatedPrescription = prescriptions
-          .sortedByDescending { it.updatedAt.toEpochMilli() }
-          .first()
+      val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt.toEpochMilli() }!!
 
       Timber.i("Last updated prescribedDrug: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
 
       val lastUpdatedTimestamp = RelativeTimestampGenerator().generate(lastUpdatedPrescription.updatedAt)
 
-      @SuppressLint("SetTextI18n")
-      holder.lastUpdatedTimestampTextView.text = "Updated " + lastUpdatedTimestamp.displayText(holder.itemView.context)
+      holder.lastUpdatedTimestampTextView.text = holder.itemView.resources.getString(
+          R.string.patientsummary_prescriptions_last_updated,
+          lastUpdatedTimestamp.displayText(holder.itemView.context)
+      )
     }
 
     holder.updateButton.setTopMarginRes(when {

@@ -1,6 +1,8 @@
 # CHANGELOG
 
 ## Next Release
+
+## On Demo
 ### Feature
 - Search by phone number support from the screen to find patient without scanning
 

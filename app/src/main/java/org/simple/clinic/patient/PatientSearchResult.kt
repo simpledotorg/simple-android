@@ -66,16 +66,17 @@ data class PatientSearchResult(
           PA.uuid addr_uuid, PA.colonyOrVillage addr_colonyOrVillage, PA.district addr_district, PA.state addr_state, PA.country addr_country,
           PA.createdAt addr_createdAt, PA.updatedAt addr_updatedAt,
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
-          BP.recordedAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
+          BP.uuid bp_uuid, BP.recordedAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
           FROM Patient P
           INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
-        		SELECT BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
+        		SELECT BP.uuid, BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
         		FROM (
-                SELECT BP.patientUuid, BP.recordedAt, BP.facilityUuid
+                SELECT BP.uuid, BP.patientUuid, BP.recordedAt, BP.facilityUuid
                 FROM BloodPressureMeasurement BP
                 WHERE BP.deletedAt IS NULL
+                GROUP BY BP.patientUuid HAVING MAX (BP.recordedAt)
                 ORDER BY BP.recordedAt DESC
             ) BP
         		INNER JOIN Facility F ON BP.facilityUuid = F.uuid
@@ -83,12 +84,10 @@ data class PatientSearchResult(
     """
     }
 
-    @Query("""$mainQuery WHERE P.uuid IN (:uuids) AND P.status = :status GROUP BY P.uuid""")
+    @Query("""$mainQuery WHERE P.uuid IN (:uuids) AND P.status = :status""")
     fun searchByIds(uuids: List<UUID>, status: PatientStatus): Single<List<PatientSearchResult>>
 
-    @Query("""
-      SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status
-    """)
+    @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status""")
     fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
@@ -99,7 +98,6 @@ data class PatientSearchResult(
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
           WHERE BP.deletedAt IS NULL AND P.status = :status AND BP.facilityUuid = :facilityUuid
       ) PatientsAtFacility ON AllSearchResults.uuid = PatientsAtFacility.uuid
-      GROUP BY AllSearchResults.uuid 
       ORDER BY AllSearchResults.fullName COLLATE NOCASE ASC
     """)
     fun searchInFacilityAndSortByName(facilityUuid: UUID, status: PatientStatus): Flowable<List<PatientSearchResult>>
@@ -115,6 +113,7 @@ data class PatientSearchResult(
   data class PatientNameAndId(val uuid: UUID, val fullName: String)
 
   data class LastBp(
+      val uuid: UUID,
       val takenOn: Instant,
       val takenAtFacilityName: String,
       val takenAtFacilityUuid: UUID

@@ -32,6 +32,7 @@ import org.simple.clinic.overdue.Appointment.Status.Visited
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
+import org.simple.clinic.patient.PatientSearchResult.LastBp
 import org.simple.clinic.patient.PatientStatus.Active
 import org.simple.clinic.patient.PatientStatus.Dead
 import org.simple.clinic.patient.PatientStatus.Inactive
@@ -51,9 +52,11 @@ import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
+import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.toOptional
 import org.simple.clinic.util.unwrapJust
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -340,11 +343,15 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun deleted_blood_pressures_should_be_excluded_when_searching_for_patients() {
+    // given
     val now = Instant.now(clock)
     val currentFacility = facilityRepository.currentFacility(loggedInUser).blockingFirst()
 
-    fun createPatientProfile(fullName: String): PatientProfile {
-      return testData.patientProfile()
+    fun createPatientProfile(
+        patientUuid: UUID,
+        fullName: String
+    ): PatientProfile {
+      return testData.patientProfile(patientUuid = patientUuid)
           .let { profile ->
             profile.copy(patient = profile.patient.copy(
                 fullName = fullName,
@@ -352,8 +359,14 @@ class PatientRepositoryAndroidTest {
           }
     }
 
-    fun createBp(patientUuid: UUID, recordedAt: Instant, deletedAt: Instant? = null): BloodPressureMeasurement {
+    fun createBp(
+        bpUuid: UUID,
+        patientUuid: UUID,
+        recordedAt: Instant,
+        deletedAt: Instant? = null
+    ): BloodPressureMeasurement {
       return testData.bloodPressureMeasurement(
+          uuid = bpUuid,
           patientUuid = patientUuid,
           facilityUuid = currentFacility.uuid,
           userUuid = loggedInUser.uuid,
@@ -362,43 +375,70 @@ class PatientRepositoryAndroidTest {
           recordedAt = recordedAt)
     }
 
-    val patient0WithLatestBpDeleted = createPatientProfile(fullName = "Patient with latest BP deleted")
-    val bpsForPatient0 = listOf(
-        createBp(patient0WithLatestBpDeleted.patient.uuid, recordedAt = now.plusSeconds(2L)),
-        createBp(patient0WithLatestBpDeleted.patient.uuid, recordedAt = now),
-        createBp(patient0WithLatestBpDeleted.patient.uuid, recordedAt = now.plusSeconds(5L), deletedAt = now))
-    patientRepository.save(listOf(patient0WithLatestBpDeleted))
-        .andThen(bloodPressureRepository.save(bpsForPatient0))
+    val patientWithLatestBpDeleted = createPatientProfile(
+        patientUuid = UUID.fromString("2e4f08a3-f224-4647-8010-709f1a696272"),
+        fullName = "Patient with latest BP deleted"
+    )
+    val bpsForPatientWithLatestBpDeleted = listOf(
+        createBp(UUID.fromString("b234458d-fa2c-4909-8891-f8c27999004b"), patientWithLatestBpDeleted.patientUuid, recordedAt = now.plusSeconds(2L)),
+        createBp(UUID.fromString("eeeb56bd-a191-4dbb-8d0d-a811b246e856"), patientWithLatestBpDeleted.patientUuid, recordedAt = now),
+        createBp(UUID.fromString("6e6be627-2b76-4acc-b932-342cd693663e"), patientWithLatestBpDeleted.patientUuid, recordedAt = now.plusSeconds(5L), deletedAt = now)
+    )
+    patientRepository.save(listOf(patientWithLatestBpDeleted))
+        .andThen(bloodPressureRepository.save(bpsForPatientWithLatestBpDeleted))
         .blockingAwait()
 
-    val patient1WithOneDeletedBp = createPatientProfile(fullName = "Patient with only one deleted BP")
-    val bpsForPatient1 = listOf(
-        createBp(patient1WithOneDeletedBp.patient.uuid, recordedAt = now, deletedAt = now))
-    patientRepository.save(listOf(patient1WithOneDeletedBp))
-        .andThen(bloodPressureRepository.save(bpsForPatient1))
+    val patientWithOneDeletedBp = createPatientProfile(
+        patientUuid = UUID.fromString("bc6116a5-4417-4f0e-869b-c01039aa1b67"),
+        fullName = "Patient with only one deleted BP"
+    )
+    val bpsForPatientWithOneDeletedBp = listOf(
+        createBp(UUID.fromString("08e5c49c-88f7-4612-9d79-0b994af80036"), patientWithOneDeletedBp.patientUuid, recordedAt = now, deletedAt = now)
+    )
+    patientRepository.save(listOf(patientWithOneDeletedBp))
+        .andThen(bloodPressureRepository.save(bpsForPatientWithOneDeletedBp))
         .blockingAwait()
 
-    val patient2WithTwoDeletedBps = createPatientProfile(fullName = "Patient with two deleted BPs")
-    val bpsForPatient2 = listOf(
-        createBp(patient2WithTwoDeletedBps.patient.uuid, recordedAt = now, deletedAt = now),
-        createBp(patient2WithTwoDeletedBps.patient.uuid, recordedAt = now.plusSeconds(1L), deletedAt = now))
-    patientRepository.save(listOf(patient2WithTwoDeletedBps))
-        .andThen(bloodPressureRepository.save(bpsForPatient2))
+    val patientWithTwoDeletedBps = createPatientProfile(
+        patientUuid = UUID.fromString("8d8419bf-205f-4ccf-8262-e29eb42ba437"),
+        fullName = "Patient with two deleted BPs"
+    )
+    val bpsForPatientWithTwoDeletedBps = listOf(
+        createBp(UUID.fromString("37c0ae26-f91e-4845-8c5b-3ac4550902f3"), patientWithTwoDeletedBps.patientUuid, recordedAt = now, deletedAt = now),
+        createBp(UUID.fromString("d40861d5-bf3a-4418-a7e5-0f5bedcb416d"), patientWithTwoDeletedBps.patientUuid, recordedAt = now.plusSeconds(1L), deletedAt = now)
+    )
+    patientRepository.save(listOf(patientWithTwoDeletedBps))
+        .andThen(bloodPressureRepository.save(bpsForPatientWithTwoDeletedBps))
         .blockingAwait()
 
-    val patient3WithNoBps = createPatientProfile(fullName = "Patient with no BPs")
-    patientRepository.save(listOf(patient3WithNoBps)).blockingAwait()
+    val patientWithNoBps = createPatientProfile(
+        patientUuid = UUID.fromString("83b29eae-3600-420a-9289-7997571bf623"),
+        fullName = "Patient with no BPs"
+    )
+    patientRepository.save(listOf(patientWithNoBps)).blockingAwait()
 
+    // when
     val searchResults = patientRepository.search(Name("patient"))
         .blockingFirst()
-        .groupBy { it.uuid }
-        .mapValues { (_, results) -> results.first() }
+        .associateBy { it.uuid }
 
+    // then
     assertThat(searchResults.size).isEqualTo(4)
-    assertThat(searchResults[patient0WithLatestBpDeleted.patient.uuid]!!.lastBp!!.takenOn).isEqualTo(now.plusSeconds(2L))
-    assertThat(searchResults[patient1WithOneDeletedBp.patient.uuid]!!.lastBp).isNull()
-    assertThat(searchResults[patient2WithTwoDeletedBps.patient.uuid]!!.lastBp).isNull()
-    assertThat(searchResults[patient3WithNoBps.patient.uuid]!!.lastBp).isNull()
+    val expectedLastBpWithPatientWithLatestBpDeleted = LastBp(
+        uuid = UUID.fromString("b234458d-fa2c-4909-8891-f8c27999004b"),
+        takenOn = now.plusSeconds(2L),
+        takenAtFacilityName = currentFacility.name,
+        takenAtFacilityUuid = currentFacility.uuid
+    )
+    assertThat(searchResults.getValue(patientWithLatestBpDeleted.patientUuid).lastBp)
+        .isEqualTo(expectedLastBpWithPatientWithLatestBpDeleted)
+
+    assertThat(searchResults.getValue(patientWithOneDeletedBp.patientUuid).lastBp)
+        .isNull()
+    assertThat(searchResults.getValue(patientWithTwoDeletedBps.patientUuid).lastBp)
+        .isNull()
+    assertThat(searchResults.getValue(patientWithNoBps.patientUuid).lastBp)
+        .isNull()
   }
 
   @Test
@@ -1891,6 +1931,9 @@ class PatientRepositoryAndroidTest {
     recordBp(uuid = uuidOfBp2OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityA.uuid, recordedAt = oneSecondEarlier)
     recordBp(uuid = uuidOfBp3OfPatientB, patientUuid = uuidOfPatientB, facilityUuid = facilityB.uuid, recordedAt = now)
 
+    val uuidOfPatientC = UUID.fromString("9fe841eb-5ae3-404b-99d6-87455cc87eda")
+    createPatient(patientUuid = uuidOfPatientC, patientName = "Patient with no BPs")
+
     // when
     fun patientsInFacility(facility: Facility): List<PatientSearchResult> {
       return patientRepository
@@ -1898,8 +1941,8 @@ class PatientRepositoryAndroidTest {
           .blockingFirst()
     }
 
-    data class PatientUuidAndLatestBpRecorded(val patientUuid: UUID, val latestBpRecordedAt: Instant) {
-      constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastBp!!.takenOn)
+    data class PatientUuidAndLatestBpRecorded(val patientUuid: UUID, val lastBp: LastBp) {
+      constructor(patientSearchResult: PatientSearchResult) : this(patientSearchResult.uuid, patientSearchResult.lastBp!!)
     }
 
     val patientsAndLatestBpRecordedAtFacilityA = patientsInFacility(facilityA)
@@ -1910,15 +1953,47 @@ class PatientRepositoryAndroidTest {
     // then
     assertThat(patientsAndLatestBpRecordedAtFacilityA)
         .containsExactly(
-            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientA, latestBpRecordedAt = oneSecondLater),
-            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientB, latestBpRecordedAt = fiveSecondsLater)
+            PatientUuidAndLatestBpRecorded(
+                patientUuid = uuidOfPatientA,
+                lastBp = LastBp(
+                    uuid = uuidOfBp1OfPatientA,
+                    takenOn = oneSecondLater,
+                    takenAtFacilityUuid = facilityA.uuid,
+                    takenAtFacilityName = facilityA.name
+                )
+            ),
+            PatientUuidAndLatestBpRecorded(
+                patientUuid = uuidOfPatientB,
+                lastBp = LastBp(
+                    uuid = uuidOfBp1OfPatientB,
+                    takenOn = fiveSecondsLater,
+                    takenAtFacilityUuid = facilityB.uuid,
+                    takenAtFacilityName = facilityB.name
+                )
+            )
         )
         .inOrder()
 
     assertThat(patientsAndLatestBpRecordedAtFacilityB)
         .containsExactly(
-            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientA, latestBpRecordedAt = oneSecondLater),
-            PatientUuidAndLatestBpRecorded(patientUuid = uuidOfPatientB, latestBpRecordedAt = fiveSecondsLater)
+            PatientUuidAndLatestBpRecorded(
+                patientUuid = uuidOfPatientA,
+                lastBp = LastBp(
+                    uuid = uuidOfBp1OfPatientA,
+                    takenOn = oneSecondLater,
+                    takenAtFacilityUuid = facilityA.uuid,
+                    takenAtFacilityName = facilityA.name
+                )
+            ),
+            PatientUuidAndLatestBpRecorded(
+                patientUuid = uuidOfPatientB,
+                lastBp = LastBp(
+                    uuid = uuidOfBp1OfPatientB,
+                    takenOn = fiveSecondsLater,
+                    takenAtFacilityUuid = facilityB.uuid,
+                    takenAtFacilityName = facilityB.name
+                )
+            )
         )
         .inOrder()
   }
@@ -2080,5 +2155,109 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResults)
         .containsExactly("abhinav", "abhinav", "chitra", "dhruv acharya", "dhruv saxena", "esther d' souza", "fatima")
         .inOrder()
+  }
+
+  @Test
+  fun searching_for_a_patient_by_phone_number_must_return_results_with_the_latest_bp_set() {
+    fun createPatientWithBps(
+        patientUuid: UUID,
+        bpMeasurements: List<BloodPressureMeasurement>
+    ) {
+
+      val patientProfile = testData
+          .patientProfile(patientUuid = patientUuid, generatePhoneNumber = false)
+          .let { patientProfile ->
+            patientProfile.copy(
+                phoneNumbers = listOf(testData.patientPhoneNumber(patientUuid = patientUuid, number = "1234567890"))
+            )
+          }
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      bloodPressureRepository.save(bpMeasurements).blockingAwait()
+    }
+
+    fun searchResults(phoneNumber: String): Map<UUID, Optional<LastBp>> {
+      return patientRepository
+          .search(PhoneNumber(phoneNumber))
+          .blockingFirst()
+          .associateBy({ it.uuid }, { it.lastBp.toOptional() })
+    }
+
+    // given
+    val facilityUuid = testData.qaFacility().uuid
+    val facilityName = testData.qaFacility().name
+
+    val instant = Instant.parse("2019-01-01T00:00:00Z")
+
+    val patientWithNoBps = UUID.fromString("4e3bf233-7e28-4b80-9547-a2d9370ee64f")
+
+    val patientWithOneBp = UUID.fromString("b8eeec92-4dfe-4b69-96f7-ff022ddaadbc")
+    val bpUuidOfPatientWithOneBp = UUID.fromString("71ffbfcd-fa76-4d4e-8083-fac89bff9e89")
+
+    val patientWithMultipleBps = UUID.fromString("6a2d9f6b-bf5a-4132-9999-df2a7333cf49")
+    val oldestBpUuidOfPatientWithMultipleBps = UUID.fromString("9a1fe98e-39eb-481b-a215-cba8ad079960")
+    val newerNonDeletedBpUuidOfPatientWithMultipleBps = UUID.fromString("46aa741e-8f18-4ba8-a278-41706eb21f80")
+    val latestDeletedBpUuidOfPatientWithMultipleBps = UUID.fromString("919dfaef-4c37-4a11-a1f0-1e96147a55fd")
+
+    createPatientWithBps(
+        patientUuid = patientWithNoBps,
+        bpMeasurements = emptyList()
+    )
+    createPatientWithBps(
+        patientUuid = patientWithOneBp,
+        bpMeasurements = listOf(
+            testData.bloodPressureMeasurement(
+                uuid = bpUuidOfPatientWithOneBp,
+                patientUuid = patientWithOneBp,
+                recordedAt = instant,
+                facilityUuid = facilityUuid
+            )
+        )
+    )
+    createPatientWithBps(
+        patientUuid = patientWithMultipleBps,
+        bpMeasurements = listOf(
+            testData.bloodPressureMeasurement(
+                uuid = oldestBpUuidOfPatientWithMultipleBps,
+                patientUuid = patientWithMultipleBps,
+                recordedAt = instant,
+                facilityUuid = facilityUuid
+            ),
+            testData.bloodPressureMeasurement(
+                uuid = newerNonDeletedBpUuidOfPatientWithMultipleBps,
+                patientUuid = patientWithMultipleBps,
+                recordedAt = instant.plusSeconds(1L),
+                facilityUuid = facilityUuid
+            ),
+            testData.bloodPressureMeasurement(
+                uuid = latestDeletedBpUuidOfPatientWithMultipleBps,
+                patientUuid = patientWithMultipleBps,
+                recordedAt = instant.plusSeconds(2L),
+                deletedAt = instant.plusSeconds(5L),
+                facilityUuid = facilityUuid
+            )
+        )
+    )
+
+    // when
+    val searchResults = searchResults(phoneNumber = "1234567890")
+
+    // then
+    val expectedResults = mapOf(
+        patientWithNoBps to None,
+        patientWithOneBp to LastBp(
+            uuid = bpUuidOfPatientWithOneBp,
+            takenOn = instant,
+            takenAtFacilityName = facilityName,
+            takenAtFacilityUuid = facilityUuid
+        ).toOptional(),
+        patientWithMultipleBps to LastBp(
+            uuid = newerNonDeletedBpUuidOfPatientWithMultipleBps,
+            takenOn = instant.plusSeconds(1L),
+            takenAtFacilityName = facilityName,
+            takenAtFacilityUuid = facilityUuid
+        ).toOptional()
+    )
+    assertThat(searchResults).isEqualTo(expectedResults)
   }
 }

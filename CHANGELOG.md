@@ -3,6 +3,8 @@
 ## On Demo
 ### Feature
 - Search by phone number support from the screen to find patient without scanning
+- Add a loading screen for registration
+- Handle changes in user sync approval status
 
 ### Internal
 - Remove unused Communication model

@@ -13,7 +13,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.home.overdue.OverdueListItem.Patient
+import org.simple.clinic.home.overdue.OverdueListItem.AppointmentRow
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
@@ -70,14 +70,14 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     )
 
     setupCardExpansionEvents(
-        cardExpansionToggledStream = overdueListAdapter.itemEvents.ofType(Patient.CardExpansionToggled::class.java),
+        cardExpansionToggledStream = overdueListAdapter.itemEvents.ofType(AppointmentRow.CardExpansionToggled::class.java),
         screenDestroys = screenDestroys
     )
   }
 
   @SuppressLint("CheckResult")
   private fun setupCardExpansionEvents(
-      cardExpansionToggledStream: Observable<Patient.CardExpansionToggled>,
+      cardExpansionToggledStream: Observable<AppointmentRow.CardExpansionToggled>,
       screenDestroys: Observable<ScreenDestroyed>
   ) {
     cardExpansionToggledStream

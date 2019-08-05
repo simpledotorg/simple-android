@@ -29,11 +29,11 @@ sealed class OverdueListItem : ItemAdapter.Item<UiEvent> {
 
   companion object {
     fun from(appointments: List<OverdueAppointment>, clock: UserClock): List<OverdueListItem> {
-      return appointments.map { overdueAppointment -> Patient.from(overdueAppointment, clock) }
+      return appointments.map { overdueAppointment -> AppointmentRow.from(overdueAppointment, clock) }
     }
   }
 
-  data class Patient(
+  data class AppointmentRow(
       val appointmentUuid: UUID,
       val patientUuid: UUID,
       val name: String,
@@ -49,8 +49,8 @@ sealed class OverdueListItem : ItemAdapter.Item<UiEvent> {
 
     companion object {
 
-      fun from(overdueAppointment: OverdueAppointment, clock: UserClock): Patient {
-        return Patient(
+      fun from(overdueAppointment: OverdueAppointment, clock: UserClock): AppointmentRow {
+        return AppointmentRow(
             appointmentUuid = overdueAppointment.appointment.uuid,
             patientUuid = overdueAppointment.appointment.patientUuid,
             name = overdueAppointment.fullName,
@@ -178,7 +178,7 @@ sealed class OverdueListItem : ItemAdapter.Item<UiEvent> {
 
   class OverdueListItemDiffCallback : DiffUtil.ItemCallback<OverdueListItem>() {
     override fun areItemsTheSame(oldItem: OverdueListItem, newItem: OverdueListItem): Boolean {
-      return (oldItem as Patient).patientUuid == (newItem as Patient).patientUuid
+      return (oldItem as AppointmentRow).patientUuid == (newItem as AppointmentRow).patientUuid
     }
 
     @SuppressLint("DiffUtilEquals")

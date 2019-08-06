@@ -8,10 +8,12 @@ import com.nhaarman.mockito_kotlin.times
 import com.nhaarman.mockito_kotlin.verify
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
+import junitparams.Parameters
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -56,17 +58,7 @@ class AddIdToPatientSearchScreenControllerTest {
     uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked)
 
-    verify(screen, never()).openAddIdToPatientSearchResultsScreen(any())
-  }
-
-  @Test
-  fun `when input is present, and search is clicked, search results screen should open`() {
-    val fullName = "bar"
-
-    uiEvents.onNext(SearchQueryTextChanged(fullName))
-    uiEvents.onNext(SearchClicked)
-
-    verify(screen).openAddIdToPatientSearchResultsScreen(fullName)
+    verify(screen, never()).openAddIdToPatientSearchResultsScreen(any<PatientSearchCriteria>())
   }
 
   @Test
@@ -114,5 +106,56 @@ class AddIdToPatientSearchScreenControllerTest {
 
     // then
     verify(screen).showSearchButton()
+  }
+
+  @Test
+  @Parameters(value = [
+    "123|123",
+    " 123|123",
+    "123 |123",
+    "  123    |123",
+    "\t123|123",
+    "123\t|123",
+    "\t123\t|123",
+    "987654321|987654321",
+    "98765 12345|9876512345",
+    "98765\t12345|9876512345"
+  ])
+  fun `when the search query is all digits and search is clicked, search by phone number must be done`(
+      input: String,
+      expectedPhoneNumberToSearch: String
+  ) {
+    // when
+    uiEvents.onNext(SearchQueryTextChanged(input))
+    uiEvents.onNext(SearchClicked)
+
+    // then
+    verify(screen).openAddIdToPatientSearchResultsScreen(PatientSearchCriteria.PhoneNumber(expectedPhoneNumberToSearch))
+  }
+
+  @Test
+  @Parameters(value = [
+    "asb|asb",
+    " asb|asb",
+    "asb |asb",
+    "  asb   |asb",
+    " anish acharya |anish acharya",
+    "anish 123|anish 123",
+    "123 anish|123 anish",
+    "\tasb|asb",
+    "asb\t|asb",
+    "\t asb \t\t|asb",
+    " anish acharya |anish acharya",
+    "anish 123|anish 123",
+    "123 anish|123 anish"
+  ])
+  fun `when the search query is not all digits and search is clicked, search results screen should open`(
+      input: String,
+      expectedNameToSearch: String
+  ) {
+    uiEvents.onNext(SearchQueryTextChanged(input))
+    uiEvents.onNext(SearchClicked)
+
+    verify(screen).openAddIdToPatientSearchResultsScreen(PatientSearchCriteria.Name(expectedNameToSearch))
   }
 }

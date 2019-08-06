@@ -5,11 +5,11 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
-import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchValidationError.INPUT_EMPTY
 import org.simple.clinic.analytics.Analytics
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -17,6 +17,11 @@ private typealias Ui = AddIdToPatientSearchScreen
 private typealias UiChange = (Ui) -> Unit
 
 class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTransformer<UiEvent, UiChange> {
+
+  /**
+   * Regular expression that matches digits with interleaved white spaces
+   **/
+  private val digitsRegex = Regex("[\\s*\\d+]+")
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -65,12 +70,21 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
         .combineLatest(searchClicks, inputValidationResultStream) { _, validationResult -> validationResult }
         .ofType<SearchQueryValidationResult.Valid>()
 
-
     return successfullyValidatedInputStream
         .map { it.text }
-        .map { text ->
-          { ui: Ui -> ui.openAddIdToPatientSearchResultsScreen(text) }
-        }
+        .map(this::searchCriteriaFromInput)
+        .map(this::openSearchResultsBasedOnInput)
+  }
+
+  private fun searchCriteriaFromInput(inputString: String): PatientSearchCriteria {
+    return when {
+      digitsRegex.matches(inputString) -> PatientSearchCriteria.PhoneNumber(inputString.filterNot { it.isWhitespace() })
+      else -> PatientSearchCriteria.Name(inputString)
+    }
+  }
+
+  private fun openSearchResultsBasedOnInput(patientSearchCriteria: PatientSearchCriteria): UiChange {
+    return { ui: Ui -> ui.openAddIdToPatientSearchResultsScreen(patientSearchCriteria) }
   }
 
   private fun openPatientSummary(events: Observable<UiEvent>): Observable<UiChange> {

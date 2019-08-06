@@ -53,6 +53,7 @@ import org.simple.clinic.registration.pin.RegistrationPinScreen
 import org.simple.clinic.registration.register.RegistrationLoadingScreen
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.scanid.ScanSimpleIdScreen
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentModule
 import org.simple.clinic.scheduleappointment.ScheduleAppointmentSheet
 import org.simple.clinic.search.PatientSearchScreen
 import org.simple.clinic.search.results.PatientSearchResultsScreen
@@ -145,7 +146,8 @@ interface TheActivityComponent {
   PatientsModule::class,
   SearchResultsModule::class,
   AllPatientsInFacilityModule::class,
-  BloodPressureEntryModule::class
+  BloodPressureEntryModule::class,
+  ScheduleAppointmentModule::class
 ])
 class TheActivityModule {
 

@@ -17,6 +17,7 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityListScrolled
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResultClicked
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
@@ -139,9 +140,13 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
         .subscribe { enterPatientNameInputContainer.hideKeyboard() }
   }
 
-  fun openAddIdToPatientSearchResultsScreen(name: String) {
+  fun openAddIdToPatientSearchResultsScreen(criteria: PatientSearchCriteria) {
     screenRouter.push(AddIdToPatientSearchResultsScreenKey(
-        fullName = name,
+        // TODO: Remove in future commit
+        fullName = when (criteria) {
+          is PatientSearchCriteria.Name -> criteria.patientName
+          else -> ""
+        },
         identifier = screenKey.identifier
     ))
   }

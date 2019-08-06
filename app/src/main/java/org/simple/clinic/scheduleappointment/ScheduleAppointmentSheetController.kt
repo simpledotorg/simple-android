@@ -113,9 +113,9 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun showCalendar(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<AppointmentChooseCalendarClicks>()
+        .ofType<ManuallySelectAppointmentDateClicked>()
         .withLatestFrom(latestAppointmentSubject) { _, appointment ->
-          { ui: Ui -> ui.showCalendar(toLocalDate(appointment)) }
+          { ui: Ui -> ui.showManualDateSelector(toLocalDate(appointment)) }
         }
   }
 

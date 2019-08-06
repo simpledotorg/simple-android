@@ -388,8 +388,8 @@
 
   <!-- Add ID to Patient: Search -->
   <string name="addidtopatientsearch_search">Next</string>
-  <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name</string>
-  <string name="addidtopatientsearch_hint">Enter patient’s name</string>
+  <string name="addidtopatientsearch_error_empty_fullname">Enter patient’s full name or phone number</string>
+  <string name="addidtopatientsearch_hint">Name or phone number</string>
   <string name="addidtopatientsearch_add">Add %1$s\u0020</string>
   <string name="addidtopatientsearch_to_patient">\u0020to\u2026</string>
 

@@ -71,7 +71,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
             incrementClicks(),
             notNowClicks(),
             doneClicks(),
-            chooseCalendarClicks(),
+            appointmentDateClicks(),
             calendarDateSelectedEvents
         ),
         controller = controller,
@@ -99,7 +99,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
 
-  private fun chooseCalendarClicks() = RxView.clicks(calendarButton).map { AppointmentChooseCalendarClicks }
+  private fun appointmentDateClicks() = RxView.clicks(calendarButton).map { ManuallySelectAppointmentDateClicked }
 
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
@@ -122,7 +122,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     decrementDateButton.isEnabled = state
   }
 
-  fun showCalendar(date: LocalDate) {
+  fun showManualDateSelector(date: LocalDate) {
     val datePickerDialog = DatePickerDialog(
         this, { _, year, month, dayOfMonth ->
       calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(

@@ -1,6 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
@@ -237,5 +238,37 @@ class ScheduleAppointmentSheetControllerTest {
     verify(sheet).enableIncrementButton(false)
 
     verifyNoMoreInteractions(sheet)
+  }
+
+  @Test
+  fun `when the manually select appointment date button is clicked, the date picker must be shown set to the last selected appointment date`() {
+    // given
+    val possibleAppointments = listOf(
+        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
+        ScheduleAppointment("1 week", 1, ChronoUnit.WEEKS)
+    )
+    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+
+    // when
+    scheduledAppointmentConfigSubject.onNext(config)
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")))
+
+    // then
+    uiEvents.onNext(ManuallySelectAppointmentDateClicked)
+    verify(sheet).showManualDateSelector(LocalDate.parse("2019-01-03"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateIncremented)
+    uiEvents.onNext(ManuallySelectAppointmentDateClicked)
+    verify(sheet).showManualDateSelector(LocalDate.parse("2019-01-08"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
+    uiEvents.onNext(AppointmentDateDecremented)
+    uiEvents.onNext(ManuallySelectAppointmentDateClicked)
+    verify(sheet).showManualDateSelector(LocalDate.parse("2019-01-02"))
+    clearInvocations(sheet)
   }
 }

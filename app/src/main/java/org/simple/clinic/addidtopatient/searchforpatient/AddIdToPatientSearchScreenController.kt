@@ -20,8 +20,8 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
+        .compose(InputValidator())
         .compose(ReportAnalyticsEvents())
-        .compose(validateQuery())
         .replay()
 
     return Observable.mergeArray(
@@ -34,29 +34,9 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
     )
   }
 
-  private fun validateQuery(): ObservableTransformer<UiEvent, UiEvent> {
-    return ObservableTransformer { events ->
-      val nameChanges = events
-          .ofType<SearchQueryTextChanged>()
-          .map { it.text.trim() }
-
-      val validationErrors = events.ofType<SearchClicked>()
-          .withLatestFrom(nameChanges)
-          .map { (_, name) ->
-            val errors = mutableListOf<AddIdToPatientSearchValidationError>()
-
-            if (name.isBlank()) {
-              errors += INPUT_EMPTY
-            }
-            SearchQueryValidated(errors)
-          }
-
-      events.mergeWith(validationErrors)
-    }
-  }
-
   private fun showValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
-    return events.ofType<SearchQueryValidated>()
+    return events
+        .ofType<SearchQueryValidationResult.Invalid>()
         .flatMapIterable { it.validationErrors }
         .doOnNext { Analytics.reportInputValidationError(it.analyticsName) }
         .map {
@@ -75,22 +55,21 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
   }
 
   private fun openSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
-    val nameChanges = events
-        .ofType<SearchQueryTextChanged>()
-        .map { it.text.trim() }
-
-    val validationErrors = events
-        .ofType<SearchQueryValidated>()
-        .map { it.validationErrors }
-        .distinctUntilChanged()
+    val inputValidationResultStream = events
+        .ofType<SearchQueryValidationResult>()
 
     val searchClicks = events
         .ofType<SearchClicked>()
 
-    return Observables.combineLatest(searchClicks, validationErrors)
-        .filter { (_, errors) -> errors.isEmpty() }
-        .withLatestFrom(nameChanges) { _, name ->
-          { ui: Ui -> ui.openAddIdToPatientSearchResultsScreen(name) }
+    val successfullyValidatedInputStream = Observables
+        .combineLatest(searchClicks, inputValidationResultStream) { _, validationResult -> validationResult }
+        .ofType<SearchQueryValidationResult.Valid>()
+
+
+    return successfullyValidatedInputStream
+        .map { it.text }
+        .map { text ->
+          { ui: Ui -> ui.openAddIdToPatientSearchResultsScreen(text) }
         }
   }
 

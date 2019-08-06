@@ -46,13 +46,14 @@ class ScheduleAppointmentSheetControllerTest {
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val uuid = UUID.randomUUID()
   private val clock = TestUtcClock()
   private val configStream = PublishSubject.create<AppointmentConfig>()
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
   private val userSubject = PublishSubject.create<User>()
   private val scheduledAppointmentConfigSubject = PublishSubject.create<ScheduleAppointmentConfig>()
+
+  private val patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")
 
   val controller = ScheduleAppointmentSheetController(
       config = scheduledAppointmentConfigSubject,
@@ -87,11 +88,11 @@ class ScheduleAppointmentSheetControllerTest {
         possibleAppointments = possibleAppointments,
         defaultAppointment = oneMonth
     ))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = uuid))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     uiEvents.onNext(AppointmentDone)
 
-    verify(repository).schedule(uuid, date, Manual, facility)
+    verify(repository).schedule(patientUuid, date, Manual, facility)
     verify(sheet).closeSheet()
   }
 
@@ -104,7 +105,7 @@ class ScheduleAppointmentSheetControllerTest {
       isPatientDefaulter: Boolean,
       shouldAutomaticAppointmentBeScheduled: Boolean
   ) {
-    whenever(patientRepository.isPatientDefaulter(uuid)).thenReturn(Observable.just(isPatientDefaulter))
+    whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     configStream.onNext(AppointmentConfig(
@@ -113,12 +114,12 @@ class ScheduleAppointmentSheetControllerTest {
         appointmentDuePeriodForDefaulters = Period.ofDays(30)
     ))
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = uuid))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
     uiEvents.onNext(SchedulingSkipped)
 
     if (shouldAutomaticAppointmentBeScheduled) {
       verify(repository).schedule(
-          patientUuid = uuid,
+          patientUuid = patientUuid,
           appointmentDate = LocalDate.now(clock).plus(Period.ofDays(30)),
           appointmentType = Automatic,
           currentFacility = facility
@@ -140,7 +141,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
     verify(sheet).enableIncrementButton(true)
@@ -151,54 +152,58 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when incremented, then next appointment in the list should be scheduled`() {
-    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
-    val thirdAppointment = ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
-
+    // given
     val possibleAppointments = listOf(
         ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
-        defaultAppointment,
-        thirdAppointment
+        ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
+        ScheduleAppointment("7 days", 7, ChronoUnit.DAYS)
     )
+    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
-    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
+    // when
+    scheduledAppointmentConfigSubject.onNext(config)
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
+    // then
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
-    verify(sheet).enableIncrementButton(true)
-    verify(sheet).enableDecrementButton(true)
+    clearInvocations(sheet)
 
     uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"))
+    clearInvocations(sheet)
 
-    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-04"))
-    verify(sheet).enableIncrementButton(false)
-
-    verifyNoMoreInteractions(sheet)
+    uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-04")))
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"))
   }
 
   @Test
   fun `when decremented, then previous appointment in the list should be scheduled`() {
-    val firstAppointment = ScheduleAppointment("1 day", 1, ChronoUnit.DAYS)
-    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
-
+    // given
     val possibleAppointments = listOf(
-        firstAppointment,
-        defaultAppointment,
-        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
+        ScheduleAppointment("7 days", 7, ChronoUnit.DAYS)
     )
+    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
-    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
+    // when
+    scheduledAppointmentConfigSubject.onNext(config)
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
+    //then
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
-    verify(sheet).enableIncrementButton(true)
-    verify(sheet).enableDecrementButton(true)
+    clearInvocations(sheet)
 
     uiEvents.onNext(AppointmentDateDecremented)
-
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-02"))
-    verify(sheet).enableDecrementButton(false)
+    clearInvocations(sheet)
 
-    verifyNoMoreInteractions(sheet)
+    uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.parse("2019-01-07")))
+    uiEvents.onNext(AppointmentDateDecremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
   }
 
   @Test
@@ -213,7 +218,7 @@ class ScheduleAppointmentSheetControllerTest {
     )
 
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, twoDaysAppointment))
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
     verify(sheet).enableIncrementButton(true)
@@ -249,7 +254,7 @@ class ScheduleAppointmentSheetControllerTest {
 
     // when
     scheduledAppointmentConfigSubject.onNext(config)
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)

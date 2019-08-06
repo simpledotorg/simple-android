@@ -11,8 +11,6 @@
   <color name="window_background">@color/grey4</color>
   <color name="window_background_auth">#EBEFF0</color>
 
-  <color name="patientsummary_edit_label_color">@color/blue1</color>
-
   <color name="textinputlayout_error">@color/color_error</color>
   <color name="snackbar_action">@color/green2</color>
 </resources>

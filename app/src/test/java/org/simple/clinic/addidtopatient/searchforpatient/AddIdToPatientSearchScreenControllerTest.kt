@@ -1,6 +1,7 @@
 package org.simple.clinic.addidtopatient.searchforpatient
 
 import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.clearInvocations
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.times
@@ -32,34 +33,37 @@ class AddIdToPatientSearchScreenControllerTest {
   }
 
   @Test
-  fun `when search is clicked with empty name then a validation error should be shown`() {
-    uiEvents.onNext(SearchQueryNameChanged(""))
+  fun `when search is clicked with empty input then a validation error should be shown`() {
+    uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked)
 
-    verify(screen).setEmptyFullNameErrorVisible(true)
+    verify(screen).setEmptySearchQueryErrorVisible(true)
   }
 
   @Test
-  fun `when name changes then any validation error on name should be removed`() {
-    uiEvents.onNext(SearchQueryNameChanged("Anish"))
-    uiEvents.onNext(SearchQueryNameChanged("Anish Acharya"))
+  fun `when name changes then any validation error on input should be removed`() {
+    uiEvents.onNext(SearchQueryTextChanged("Anish"))
+    verify(screen, times(1)).setEmptySearchQueryErrorVisible(false)
 
-    verify(screen, times(2)).setEmptyFullNameErrorVisible(false)
+    clearInvocations(screen)
+
+    uiEvents.onNext(SearchQueryTextChanged("Anish Acharya"))
+    verify(screen, times(1)).setEmptySearchQueryErrorVisible(false)
   }
 
   @Test
-  fun `when search is clicked with empty name then patients shouldn't be searched`() {
-    uiEvents.onNext(SearchQueryNameChanged(""))
+  fun `when search is clicked with empty input then patients shouldn't be searched`() {
+    uiEvents.onNext(SearchQueryTextChanged(""))
     uiEvents.onNext(SearchClicked)
 
     verify(screen, never()).openAddIdToPatientSearchResultsScreen(any())
   }
 
   @Test
-  fun `when full name is present, and search is clicked, search results screen should open`() {
+  fun `when input is present, and search is clicked, search results screen should open`() {
     val fullName = "bar"
 
-    uiEvents.onNext(SearchQueryNameChanged(fullName))
+    uiEvents.onNext(SearchQueryTextChanged(fullName))
     uiEvents.onNext(SearchClicked)
 
     verify(screen).openAddIdToPatientSearchResultsScreen(fullName)
@@ -79,7 +83,7 @@ class AddIdToPatientSearchScreenControllerTest {
   @Test
   fun `when the search query is blank, the all patients list must be shown`() {
     // when
-    uiEvents.onNext(SearchQueryNameChanged(""))
+    uiEvents.onNext(SearchQueryTextChanged(""))
 
     // then
     verify(screen).showAllPatientsInFacility()
@@ -88,7 +92,7 @@ class AddIdToPatientSearchScreenControllerTest {
   @Test
   fun `when the search query is blank, the search button must be hidden`() {
     // when
-    uiEvents.onNext(SearchQueryNameChanged(""))
+    uiEvents.onNext(SearchQueryTextChanged(""))
 
     // then
     verify(screen).hideSearchButton()
@@ -97,7 +101,7 @@ class AddIdToPatientSearchScreenControllerTest {
   @Test
   fun `when the search query is not blank, the all patients list must be hidden`() {
     // when
-    uiEvents.onNext(SearchQueryNameChanged("a"))
+    uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
     verify(screen).hideAllPatientsInFacility()
@@ -106,7 +110,7 @@ class AddIdToPatientSearchScreenControllerTest {
   @Test
   fun `when the search query is not blank, the search button must be shown`() {
     // when
-    uiEvents.onNext(SearchQueryNameChanged("a"))
+    uiEvents.onNext(SearchQueryTextChanged("a"))
 
     // then
     verify(screen).showSearchButton()

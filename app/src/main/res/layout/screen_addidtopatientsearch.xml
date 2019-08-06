@@ -60,7 +60,7 @@
         tools:ignore="ContentDescription" />
 
       <EditText
-        android:id="@+id/patientNameEditText"
+        android:id="@+id/searchQueryEditText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -81,7 +81,7 @@
         style="@style/Clinic.V2.ClearEditTextButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cleareableField="@id/patientNameEditText" />
+        app:cleareableField="@id/searchQueryEditText" />
     </LinearLayout>
   </FrameLayout>
 

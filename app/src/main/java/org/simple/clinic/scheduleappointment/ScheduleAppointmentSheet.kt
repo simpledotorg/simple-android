@@ -24,6 +24,7 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
 
@@ -106,10 +107,11 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   @SuppressLint("SetTextI18n")
-  fun updateScheduledAppointment(appointment: ScheduleAppointment) {
-    val localDate = LocalDate.now(userClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
-    calendarButton.text = dateFormatter.format(localDate)
-    currentDateTextView.text = appointment.displayText
+  fun updateScheduledAppointment(appointmentDate: LocalDate) {
+    calendarButton.text = dateFormatter.format(appointmentDate)
+
+    val daysTillAppointment = ChronoUnit.DAYS.between(LocalDate.now(userClock), appointmentDate)
+    currentDateTextView.text = "$daysTillAppointment days"
   }
 
   fun enableIncrementButton(state: Boolean) {

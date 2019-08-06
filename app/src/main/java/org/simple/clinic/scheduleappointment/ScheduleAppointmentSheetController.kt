@@ -120,11 +120,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun toScheduleAppointment(dateSelected: AppointmentCalendarDateSelected): ScheduleAppointment {
-    val days = DAYS.between(LocalDate.now(utcClock), LocalDate.of(
-        dateSelected.year,
-        dateSelected.month,
-        dateSelected.dayOfMonth
-    ))
+    val days = DAYS.between(LocalDate.now(utcClock), dateSelected.selectedDate)
     return ScheduleAppointment(
         displayText = "$days days",
         timeAmount = days.toInt(),

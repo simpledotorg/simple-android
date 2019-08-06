@@ -224,11 +224,7 @@ class ScheduleAppointmentSheetControllerTest {
     val month = threeDaysFromNow.monthValue
     val dayOfMonth = threeDaysFromNow.dayOfMonth
 
-    uiEvents.onNext(AppointmentCalendarDateSelected(
-        year = year,
-        month = month,
-        dayOfMonth = dayOfMonth
-    ))
+    uiEvents.onNext(AppointmentCalendarDateSelected(LocalDate.of(year, month, dayOfMonth)))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-04"))
 

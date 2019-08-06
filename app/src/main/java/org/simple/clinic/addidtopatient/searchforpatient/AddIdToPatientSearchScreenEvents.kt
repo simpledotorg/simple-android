@@ -4,7 +4,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
-data class SearchQueryNameChanged(val name: String) : UiEvent {
+data class SearchQueryTextChanged(val text: String) : UiEvent {
   override val analyticsName = "Add ID to Patient Search:Search Query Changed"
 }
 

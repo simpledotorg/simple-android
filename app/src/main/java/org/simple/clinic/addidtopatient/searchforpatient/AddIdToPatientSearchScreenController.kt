@@ -8,7 +8,7 @@ import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
-import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchValidationError.FULL_NAME_EMPTY
+import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchValidationError.INPUT_EMPTY
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
@@ -37,8 +37,8 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
   private fun validateQuery(): ObservableTransformer<UiEvent, UiEvent> {
     return ObservableTransformer { events ->
       val nameChanges = events
-          .ofType<SearchQueryNameChanged>()
-          .map { it.name.trim() }
+          .ofType<SearchQueryTextChanged>()
+          .map { it.text.trim() }
 
       val validationErrors = events.ofType<SearchClicked>()
           .withLatestFrom(nameChanges)
@@ -46,7 +46,7 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
             val errors = mutableListOf<AddIdToPatientSearchValidationError>()
 
             if (name.isBlank()) {
-              errors += FULL_NAME_EMPTY
+              errors += INPUT_EMPTY
             }
             SearchQueryValidated(errors)
           }
@@ -62,7 +62,7 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
         .map {
           { ui: Ui ->
             when (it) {
-              FULL_NAME_EMPTY -> ui.setEmptyFullNameErrorVisible(true)
+              INPUT_EMPTY -> ui.setEmptySearchQueryErrorVisible(true)
             }
           }
         }
@@ -70,14 +70,14 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
 
   private fun resetValidationErrors(events: Observable<UiEvent>): Observable<UiChange> {
     return events
-        .ofType<SearchQueryNameChanged>()
-        .map { { ui: Ui -> ui.setEmptyFullNameErrorVisible(false) } }
+        .ofType<SearchQueryTextChanged>()
+        .map { { ui: Ui -> ui.setEmptySearchQueryErrorVisible(false) } }
   }
 
   private fun openSearchResults(events: Observable<UiEvent>): Observable<UiChange> {
     val nameChanges = events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.trim() }
+        .ofType<SearchQueryTextChanged>()
+        .map { it.text.trim() }
 
     val validationErrors = events
         .ofType<SearchQueryValidated>()
@@ -103,8 +103,8 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
 
   private fun toggleAllPatientsVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.isNotBlank() }
+        .ofType<SearchQueryTextChanged>()
+        .map { it.text.isNotBlank() }
         .map { isSearchQueryPresent ->
           { ui: Ui ->
             if (isSearchQueryPresent) {
@@ -118,8 +118,8 @@ class AddIdToPatientSearchScreenController @Inject constructor() : ObservableTra
 
   private fun toggleSearchButtonVisibility(events: Observable<UiEvent>): ObservableSource<UiChange> {
     return events
-        .ofType<SearchQueryNameChanged>()
-        .map { it.name.isNotBlank() }
+        .ofType<SearchQueryTextChanged>()
+        .map { it.text.isNotBlank() }
         .map { isSearchQueryPresent ->
           { ui: Ui ->
             if (isSearchQueryPresent) {

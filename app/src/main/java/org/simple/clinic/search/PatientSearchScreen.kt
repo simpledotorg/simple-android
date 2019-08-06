@@ -17,8 +17,6 @@ import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilitySearchResult
 import org.simple.clinic.allpatientsinfacility.AllPatientsInFacilityView
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.PatientSearchCriteria
-import org.simple.clinic.patient.PatientSearchCriteria.Name
-import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.search.results.PatientSearchResultsScreenKey
 import org.simple.clinic.summary.OpenIntention
@@ -61,7 +59,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     backButton.setOnClickListener {
       screenRouter.pop()
     }
-    patientNameEditText.showKeyboard()
+    searchQueryEditText.showKeyboard()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
@@ -69,7 +67,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     bindUiToController(
         ui = this,
         events = Observable.merge(
-            nameChanges(),
+            searchTextChanges(),
             searchClicks(),
             patientClickEvents()
         ),
@@ -78,15 +76,16 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
     )
   }
 
-  private fun nameChanges() =
-      RxTextView
-          .textChanges(patientNameEditText)
-          .map(CharSequence::toString)
-          .map(::SearchQueryTextChanged)
+  private fun searchTextChanges(): Observable<UiEvent> {
+    return RxTextView
+        .textChanges(searchQueryEditText)
+        .map(CharSequence::toString)
+        .map(::SearchQueryTextChanged)
+  }
 
   private fun searchClicks(): Observable<SearchClicked> {
     val imeSearchClicks = RxTextView
-        .editorActionEvents(patientNameEditText)
+        .editorActionEvents(searchQueryEditText)
         .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
 
     return RxView
@@ -116,7 +115,7 @@ class PatientSearchScreen(context: Context, attrs: AttributeSet) : RelativeLayou
   }
 
   fun setEmptyTextFieldErrorVisible(visible: Boolean) {
-    patientNameEditText.error = if (visible) {
+    searchQueryEditText.error = if (visible) {
       resources.getString(R.string.patientsearch_error_empty_fullname)
     } else null
   }

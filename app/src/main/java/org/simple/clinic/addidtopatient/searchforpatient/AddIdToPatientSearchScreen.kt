@@ -69,7 +69,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
       screenRouter.pop()
     }
     displayScreenTitle()
-    patientNameEditText.showKeyboard()
+    searchQueryEditText.showKeyboard()
 
     val screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     hideKeyboardWhenAllPatientsListIsScrolled(screenDestroys)
@@ -77,7 +77,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     bindUiToController(
         ui = this,
         events = Observable.merge(
-            nameChanges(),
+            searchQueryChanges(),
             searchClicks(),
             patientClickEvents()
         ),
@@ -104,15 +104,16 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
         .build()
   }
 
-  private fun nameChanges() =
-      RxTextView
-          .textChanges(patientNameEditText)
-          .map(CharSequence::toString)
-          .map(::SearchQueryNameChanged)
+  private fun searchQueryChanges(): Observable<UiEvent> {
+    return RxTextView
+        .textChanges(searchQueryEditText)
+        .map(CharSequence::toString)
+        .map(::SearchQueryTextChanged)
+  }
 
   private fun searchClicks(): Observable<SearchClicked> {
     val imeSearchClicks = RxTextView
-        .editorActionEvents(patientNameEditText)
+        .editorActionEvents(searchQueryEditText)
         .filter { it.actionId() == EditorInfo.IME_ACTION_SEARCH }
 
     return RxView
@@ -145,8 +146,8 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
     ))
   }
 
-  fun setEmptyFullNameErrorVisible(visible: Boolean) {
-    patientNameEditText.error = if (visible) {
+  fun setEmptySearchQueryErrorVisible(visible: Boolean) {
+    searchQueryEditText.error = if (visible) {
       resources.getString(R.string.addidtopatientsearch_error_empty_fullname)
     } else null
   }

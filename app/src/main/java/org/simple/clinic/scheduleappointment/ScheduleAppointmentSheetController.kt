@@ -6,6 +6,7 @@ import io.reactivex.Single
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
 import io.reactivex.rxkotlin.withLatestFrom
+import io.reactivex.subjects.BehaviorSubject
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.Facility
@@ -19,6 +20,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
+import org.threeten.bp.temporal.ChronoUnit
 import org.threeten.bp.temporal.ChronoUnit.DAYS
 import javax.inject.Inject
 
@@ -26,6 +28,7 @@ typealias Ui = ScheduleAppointmentSheet
 typealias UiChange = (Ui) -> Unit
 
 class ScheduleAppointmentSheetController @Inject constructor(
+    private val config: Observable<ScheduleAppointmentConfig>,
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val configProvider: Single<AppointmentConfig>,
@@ -34,69 +37,91 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
+  private val latestAppointmentSubject = BehaviorSubject.create<ScheduleAppointment>()
+
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
         .compose(ReportAnalyticsEvents())
         .replay()
 
+    val possibleAppointmentsStream = config
+        .map { it.possibleAppointments }
+        .share()
+
     return Observable.mergeArray(
         incrementDecrements(replayedEvents),
-        enableIncrements(replayedEvents),
-        enableDecrements(replayedEvents),
+        enableIncrements(replayedEvents, possibleAppointmentsStream),
+        enableDecrements(replayedEvents, possibleAppointmentsStream),
         showCalendar(replayedEvents),
         schedulingSkips(replayedEvents),
         scheduleCreates(replayedEvents)
     )
   }
 
-  private fun incrementDecrements(events: Observable<UiEvent>): Observable<UiChange> =
-      latestAppointment(events)
-          .distinctUntilChanged()
-          .map { appointment -> { ui: Ui -> ui.updateScheduledAppointment(appointment) } }
+  private fun incrementDecrements(events: Observable<UiEvent>): Observable<UiChange> {
+    val selectDefaultAppointmentOnSheetCreated = events
+        .ofType<ScheduleAppointmentSheetCreated>()
+        .withLatestFrom(config) { _, config -> config }
+        .map { it.defaultAppointment }
 
-  private fun enableIncrements(events: Observable<UiEvent>): Observable<UiChange> =
-      latestAppointment(events)
-          .withLatestFrom(possibleAppointments(events)) { latestAppointment, possibleAppointments ->
+    val selectNextAppointmentDate = events
+        .ofType<AppointmentDateIncremented>()
+        .withLatestFrom(latestAppointmentSubject, config) { _, lastScheduledAppointment, config ->
+          nextAppointment(lastScheduledAppointment, config.possibleAppointments)
+        }
+
+    val selectPreviousAppointmentDate = events
+        .ofType<AppointmentDateDecremented>()
+        .withLatestFrom(latestAppointmentSubject, config) { _, lastScheduledAppointment, config ->
+          previousAppointment(lastScheduledAppointment, config.possibleAppointments)
+        }
+
+    val selectCalendarDate = events
+        .ofType<AppointmentCalendarDateSelected>()
+        .map(this::toScheduleAppointment)
+
+    return Observable
+        .merge(
+            selectDefaultAppointmentOnSheetCreated,
+            selectNextAppointmentDate,
+            selectPreviousAppointmentDate,
+            selectCalendarDate
+        )
+        .distinctUntilChanged()
+        .doOnNext { latestAppointmentSubject.onNext(it) }
+        .map { appointment -> { ui: Ui -> ui.updateScheduledAppointment(appointment) } }
+  }
+
+  private fun enableIncrements(
+      events: Observable<UiEvent>,
+      possibleAppointmentsStream: Observable<List<ScheduleAppointment>>
+  ): Observable<UiChange> =
+      latestAppointmentSubject
+          .withLatestFrom(possibleAppointmentsStream) { latestAppointment, possibleAppointments ->
             toLocalDate(latestAppointment) < toLocalDate(possibleAppointments.last())
           }
           .distinctUntilChanged()
           .map { enable -> { ui: Ui -> ui.enableIncrementButton(enable) } }
 
-  private fun enableDecrements(events: Observable<UiEvent>): Observable<UiChange> =
-      latestAppointment(events)
-          .withLatestFrom(possibleAppointments(events)) { latestAppointment, possibleAppointments ->
-            toLocalDate(latestAppointment) > toLocalDate(possibleAppointments.first())
-          }
-          .distinctUntilChanged()
-          .map { enable -> { ui: Ui -> ui.enableDecrementButton(enable) } }
+  private fun enableDecrements(
+      events: Observable<UiEvent>,
+      possibleAppointmentsStream: Observable<List<ScheduleAppointment>>
+  ): Observable<UiChange> {
+    return latestAppointmentSubject
+        .withLatestFrom(possibleAppointmentsStream) { latestAppointment, possibleAppointments ->
+          toLocalDate(latestAppointment) > toLocalDate(possibleAppointments.first())
+        }
+        .distinctUntilChanged()
+        .map { enable -> { ui: Ui -> ui.enableDecrementButton(enable) } }
+  }
 
-  private fun showCalendar(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<AppointmentChooseCalendarClicks>()
-          .withLatestFrom(latestAppointment(events)) { _, appointment ->
-            { ui: Ui -> ui.showCalendar(toLocalDate(appointment)) }
-          }
-
-  private fun latestAppointment(events: Observable<UiEvent>): Observable<ScheduleAppointment> =
-      latestDateAction(events)
-          .withLatestFrom(possibleAppointments(events))
-          .scan(ScheduleAppointment.DEFAULT) { latestAppointment, (action, possibleAppointments) ->
-            newAppointment(action, latestAppointment, possibleAppointments)
-          }
-          .skip(1)
-
-  private fun newAppointment(
-      action: UiEvent,
-      latestAppointment: ScheduleAppointment,
-      possibleAppointments: List<ScheduleAppointment>
-  ): ScheduleAppointment =
-      when (action) {
-        AppointmentDateIncremented -> nextAppointment(latestAppointment, possibleAppointments)
-        AppointmentDateDecremented -> previousAppointment(latestAppointment, possibleAppointments)
-        is ScheduleAppointmentSheetCreated -> action.defaultAppointment
-        is AppointmentCalendarDateSelected -> toScheduleAppointment(action)
-        else -> ScheduleAppointment.DEFAULT
-      }
+  private fun showCalendar(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<AppointmentChooseCalendarClicks>()
+        .withLatestFrom(latestAppointmentSubject) { _, appointment ->
+          { ui: Ui -> ui.showCalendar(toLocalDate(appointment)) }
+        }
+  }
 
   private fun toScheduleAppointment(dateSelected: AppointmentCalendarDateSelected): ScheduleAppointment {
     val days = DAYS.between(LocalDate.now(utcClock), LocalDate.of(
@@ -121,7 +146,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
       if (appointmentLocalDate == latestDate) return possibleAppointments[index + 1]
       else if (appointmentLocalDate > latestDate) return possibleAppointments[index]
     }
-    return ScheduleAppointment.DEFAULT
+    return ScheduleAppointment(displayText = "1 month", timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
   }
 
   private fun previousAppointment(
@@ -135,21 +160,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
       if (appointmentLocalDate == latestDate) return reversedPossibleAppointments[index + 1]
       else if (appointmentLocalDate < latestDate) return reversedPossibleAppointments[index]
     }
-    return ScheduleAppointment.DEFAULT
+    return ScheduleAppointment(displayText = "1 month", timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
   }
-
-  private fun latestDateAction(events: Observable<UiEvent>) =
-      Observable.merge(
-          events.ofType<AppointmentDateIncremented>(),
-          events.ofType<AppointmentDateDecremented>(),
-          events.ofType<ScheduleAppointmentSheetCreated>(),
-          events.ofType<AppointmentCalendarDateSelected>()
-      )
-
-  private fun possibleAppointments(events: Observable<UiEvent>) =
-      events
-          .ofType<ScheduleAppointmentSheetCreated>()
-          .map { it.possibleAppointments }
 
   private fun schedulingSkips(events: Observable<UiEvent>): Observable<UiChange> {
     val combinedStreams = Observables.combineLatest(
@@ -192,7 +204,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
       events
           .ofType<AppointmentDone>()
           .withLatestFrom(
-              latestAppointment(events),
+              latestAppointmentSubject,
               patientUuid(events),
               currentFacilityStream()
           ) { _, latestAppointment, uuid, currentFacility ->

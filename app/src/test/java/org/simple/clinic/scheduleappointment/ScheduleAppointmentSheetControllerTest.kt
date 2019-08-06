@@ -51,8 +51,10 @@ class ScheduleAppointmentSheetControllerTest {
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
   private val userSubject = PublishSubject.create<User>()
+  private val scheduledAppointmentConfigSubject = PublishSubject.create<ScheduleAppointmentConfig>()
 
   val controller = ScheduleAppointmentSheetController(
+      config = scheduledAppointmentConfigSubject,
       appointmentRepository = repository,
       patientRepository = patientRepository,
       configProvider = configStream.firstOrError(),
@@ -76,13 +78,14 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val date = LocalDate.now(utcClock).plus(1, ChronoUnit.MONTHS)
-    val possibleAppointments = listOf(ScheduleAppointment.DEFAULT)
+    val oneMonth = ScheduleAppointment(displayText = "1 month", timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
+    val possibleAppointments = listOf(oneMonth)
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
+    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(
         possibleAppointments = possibleAppointments,
-        defaultAppointment = ScheduleAppointment.DEFAULT,
-        patientUuid = uuid
+        defaultAppointment = oneMonth
     ))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = uuid))
 
     uiEvents.onNext(AppointmentDone)
 
@@ -108,12 +111,7 @@ class ScheduleAppointmentSheetControllerTest {
         appointmentDuePeriodForDefaulters = Period.ofDays(30)
     ))
 
-    val possibleAppointments = listOf(ScheduleAppointment.DEFAULT)
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        patientUuid = uuid,
-        possibleAppointments = possibleAppointments,
-        defaultAppointment = ScheduleAppointment.DEFAULT
-    ))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = uuid))
     uiEvents.onNext(SchedulingSkipped)
 
     if (shouldAutomaticAppointmentBeScheduled) {
@@ -139,11 +137,8 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        possibleAppointments = possibleAppointments,
-        defaultAppointment = defaultAppointment,
-        patientUuid = UUID.randomUUID()
-    ))
+    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
 
     verify(sheet).updateScheduledAppointment(defaultAppointment)
     verify(sheet).enableIncrementButton(true)
@@ -163,11 +158,8 @@ class ScheduleAppointmentSheetControllerTest {
         thirdAppointment
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        possibleAppointments = possibleAppointments,
-        defaultAppointment = defaultAppointment,
-        patientUuid = UUID.randomUUID()
-    ))
+    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
 
     verify(sheet).updateScheduledAppointment(defaultAppointment)
     verify(sheet).enableIncrementButton(true)
@@ -192,11 +184,8 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        possibleAppointments = possibleAppointments,
-        defaultAppointment = defaultAppointment,
-        patientUuid = UUID.randomUUID()
-    ))
+    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
 
     verify(sheet).updateScheduledAppointment(defaultAppointment)
     verify(sheet).enableIncrementButton(true)
@@ -221,11 +210,8 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointment("4 days", 4, ChronoUnit.DAYS)
     )
 
-    uiEvents.onNext(ScheduleAppointmentSheetCreated(
-        possibleAppointments = possibleAppointments,
-        defaultAppointment = twoDaysAppointment,
-        patientUuid = UUID.randomUUID()
-    ))
+    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, twoDaysAppointment))
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = UUID.randomUUID()))
 
     verify(sheet).updateScheduledAppointment(ScheduleAppointment("2 days", 2, ChronoUnit.DAYS))
     verify(sheet).enableIncrementButton(true)

@@ -24,9 +24,6 @@ import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.format.DateTimeFormatter
-import org.threeten.bp.temporal.ChronoUnit.DAYS
-import org.threeten.bp.temporal.ChronoUnit.MONTHS
-import org.threeten.bp.temporal.ChronoUnit.WEEKS
 import java.util.UUID
 import javax.inject.Inject
 
@@ -39,35 +36,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
         Intent(context, ScheduleAppointmentSheet::class.java)
             .putExtra(KEY_PATIENT_UUID, patientUuid)
   }
-
-  private val oneMonth = ScheduleAppointment.DEFAULT
-
-  private val possibleDates = listOf(
-      ScheduleAppointment("1 day", 1, DAYS),
-      ScheduleAppointment("2 days", 2, DAYS),
-      ScheduleAppointment("3 days", 3, DAYS),
-      ScheduleAppointment("4 days", 4, DAYS),
-      ScheduleAppointment("5 days", 5, DAYS),
-      ScheduleAppointment("6 days", 6, DAYS),
-      ScheduleAppointment("7 days", 7, DAYS),
-      ScheduleAppointment("8 days", 8, DAYS),
-      ScheduleAppointment("9 days", 9, DAYS),
-      ScheduleAppointment("10 days", 10, DAYS),
-      ScheduleAppointment("2 weeks", 2, WEEKS),
-      ScheduleAppointment("3 weeks", 3, WEEKS),
-      oneMonth,
-      ScheduleAppointment("2 months", 2, MONTHS),
-      ScheduleAppointment("3 months", 3, MONTHS),
-      ScheduleAppointment("4 months", 4, MONTHS),
-      ScheduleAppointment("5 months", 5, MONTHS),
-      ScheduleAppointment("6 months", 6, MONTHS),
-      ScheduleAppointment("7 months", 7, MONTHS),
-      ScheduleAppointment("8 months", 8, MONTHS),
-      ScheduleAppointment("9 months", 9, MONTHS),
-      ScheduleAppointment("10 months", 10, MONTHS),
-      ScheduleAppointment("11 months", 11, MONTHS),
-      ScheduleAppointment("12 months", 12, MONTHS)
-  )
 
   @Inject
   lateinit var controller: ScheduleAppointmentSheetController
@@ -118,8 +86,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   private fun screenCreates(): Observable<UiEvent> {
     val patientUuid = intent.extras.getSerializable(KEY_PATIENT_UUID) as UUID
     return Observable.just(ScheduleAppointmentSheetCreated(
-        possibleAppointments = possibleDates,
-        defaultAppointment = oneMonth,
         patientUuid = patientUuid
     ))
   }

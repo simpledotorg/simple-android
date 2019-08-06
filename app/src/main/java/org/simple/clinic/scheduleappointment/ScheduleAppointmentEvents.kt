@@ -4,8 +4,6 @@ import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 
 data class ScheduleAppointmentSheetCreated(
-    val possibleAppointments: List<ScheduleAppointment>,
-    val defaultAppointment: ScheduleAppointment,
     val patientUuid: UUID
 ) : UiEvent
 

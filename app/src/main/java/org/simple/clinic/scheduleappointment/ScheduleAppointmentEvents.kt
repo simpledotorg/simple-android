@@ -1,6 +1,7 @@
 package org.simple.clinic.scheduleappointment
 
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.LocalDate
 import java.util.UUID
 
 data class ScheduleAppointmentSheetCreated(
@@ -23,11 +24,7 @@ object ManuallySelectAppointmentDateClicked : UiEvent {
   override val analyticsName = "Schedule Appointment:Manually Select Appointment Date"
 }
 
-data class AppointmentCalendarDateSelected(
-    val year: Int,
-    val month: Int,
-    val dayOfMonth: Int
-) : UiEvent {
+data class AppointmentCalendarDateSelected(val selectedDate: LocalDate) : UiEvent {
   override val analyticsName = "Schedule Appointment:Appointment calendar date selected"
 }
 

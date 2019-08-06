@@ -22,6 +22,7 @@ import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.temporal.ChronoUnit
 import org.threeten.bp.temporal.ChronoUnit.DAYS
+import java.util.UUID
 import javax.inject.Inject
 
 typealias Ui = ScheduleAppointmentSheet
@@ -50,8 +51,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
     return Observable.mergeArray(
         incrementDecrements(replayedEvents),
-        enableIncrements(replayedEvents, possibleAppointmentsStream),
-        enableDecrements(replayedEvents, possibleAppointmentsStream),
+        enableIncrements(possibleAppointmentsStream),
+        enableDecrements(possibleAppointmentsStream),
         showCalendar(replayedEvents),
         schedulingSkips(replayedEvents),
         scheduleCreates(replayedEvents)
@@ -89,24 +90,19 @@ class ScheduleAppointmentSheetController @Inject constructor(
         )
         .distinctUntilChanged()
         .doOnNext { latestAppointmentSubject.onNext(it) }
-        .map { appointment -> { ui: Ui -> ui.updateScheduledAppointment(appointment) } }
+        .map { appointment -> { ui: Ui -> ui.updateScheduledAppointment(toLocalDate(appointment)) } }
   }
 
-  private fun enableIncrements(
-      events: Observable<UiEvent>,
-      possibleAppointmentsStream: Observable<List<ScheduleAppointment>>
-  ): Observable<UiChange> =
-      latestAppointmentSubject
-          .withLatestFrom(possibleAppointmentsStream) { latestAppointment, possibleAppointments ->
-            toLocalDate(latestAppointment) < toLocalDate(possibleAppointments.last())
-          }
-          .distinctUntilChanged()
-          .map { enable -> { ui: Ui -> ui.enableIncrementButton(enable) } }
+  private fun enableIncrements(possibleAppointmentsStream: Observable<List<ScheduleAppointment>>): Observable<UiChange> {
+    return latestAppointmentSubject
+        .withLatestFrom(possibleAppointmentsStream) { latestAppointment, possibleAppointments ->
+          toLocalDate(latestAppointment) < toLocalDate(possibleAppointments.last())
+        }
+        .distinctUntilChanged()
+        .map { enable -> { ui: Ui -> ui.enableIncrementButton(enable) } }
+  }
 
-  private fun enableDecrements(
-      events: Observable<UiEvent>,
-      possibleAppointmentsStream: Observable<List<ScheduleAppointment>>
-  ): Observable<UiChange> {
+  private fun enableDecrements(possibleAppointmentsStream: Observable<List<ScheduleAppointment>>): Observable<UiChange> {
     return latestAppointmentSubject
         .withLatestFrom(possibleAppointmentsStream) { latestAppointment, possibleAppointments ->
           toLocalDate(latestAppointment) > toLocalDate(possibleAppointments.first())
@@ -200,37 +196,41 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
   }
 
-  private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> =
-      events
-          .ofType<AppointmentDone>()
-          .withLatestFrom(
-              latestAppointmentSubject,
-              patientUuid(events),
-              currentFacilityStream()
-          ) { _, latestAppointment, uuid, currentFacility ->
-            Triple(toLocalDate(latestAppointment), uuid, currentFacility)
-          }
-          .flatMapSingle { (date, uuid, currentFacility) ->
-            appointmentRepository
-                .schedule(
-                    patientUuid = uuid,
-                    appointmentDate = date,
-                    appointmentType = Manual,
-                    currentFacility = currentFacility
-                )
-                .map { { ui: Ui -> ui.closeSheet() } }
-          }
+  private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
+    return events
+        .ofType<AppointmentDone>()
+        .withLatestFrom(
+            latestAppointmentSubject,
+            patientUuid(events),
+            currentFacilityStream()
+        ) { _, latestAppointment, uuid, currentFacility ->
+          Triple(toLocalDate(latestAppointment), uuid, currentFacility)
+        }
+        .flatMapSingle { (date, uuid, currentFacility) ->
+          appointmentRepository
+              .schedule(
+                  patientUuid = uuid,
+                  appointmentDate = date,
+                  appointmentType = Manual,
+                  currentFacility = currentFacility
+              )
+              .map { { ui: Ui -> ui.closeSheet() } }
+        }
+  }
 
-  private fun patientUuid(events: Observable<UiEvent>) =
-      events
-          .ofType<ScheduleAppointmentSheetCreated>()
-          .map { it.patientUuid }
+  private fun patientUuid(events: Observable<UiEvent>): Observable<UUID> {
+    return events
+        .ofType<ScheduleAppointmentSheetCreated>()
+        .map { it.patientUuid }
+  }
 
-  private fun currentFacilityStream(): Observable<Facility> =
-      userSession
-          .requireLoggedInUser()
-          .switchMap(facilityRepository::currentFacility)
+  private fun currentFacilityStream(): Observable<Facility> {
+    return userSession
+        .requireLoggedInUser()
+        .switchMap(facilityRepository::currentFacility)
+  }
 
-  fun toLocalDate(appointment: ScheduleAppointment): LocalDate =
-      LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
+  fun toLocalDate(appointment: ScheduleAppointment): LocalDate {
+    return LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
+  }
 }

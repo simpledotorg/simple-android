@@ -1,8 +1,6 @@
 package org.simple.clinic.summary
 
 import android.annotation.SuppressLint
-import androidx.core.content.res.ResourcesCompat
-import android.text.style.ForegroundColorSpan
 import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -10,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.xwray.groupie.Item
 import com.xwray.groupie.ViewHolder
 import io.reactivex.subjects.Subject
@@ -18,8 +17,6 @@ import org.simple.clinic.R
 import org.simple.clinic.bp.BloodPressureMeasurement
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
-import org.simple.clinic.util.Truss
-import org.simple.clinic.util.Unicode
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.setPaddingBottom
 import org.simple.clinic.widgets.setPaddingTop
@@ -62,14 +59,7 @@ data class SummaryBloodPressureListItem(
     }
     holder.readingsTextView.setTextAppearanceCompat(readingsTextAppearanceResId)
 
-    val colorSpanForEditLabel = ForegroundColorSpan(ResourcesCompat.getColor(resources, R.color.patientsummary_edit_label_color, context.theme))
-    holder.daysAgoTextView.text = Truss()
-        .pushSpan(colorSpanForEditLabel)
-        .append(resources.getString(R.string.patientsummary_bp_edit))
-        .popSpan()
-        .append(" ${Unicode.bullet} ")
-        .append(daysAgo.displayText(context))
-        .build()
+    holder.daysAgoTextView.text = daysAgo.displayText(context)
 
     val measurementImageTint = when {
       level.isUrgent() -> R.color.patientsummary_bp_reading_high

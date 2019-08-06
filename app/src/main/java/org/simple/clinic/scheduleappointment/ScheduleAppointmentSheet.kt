@@ -7,6 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.DatePicker
 import android.widget.ImageButton
 import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
@@ -27,6 +28,8 @@ import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
+
+private typealias DatePickerDialogListener = (view: DatePicker, year: Int, month: Int, dayOfMonth: Int) -> Unit
 
 class ScheduleAppointmentSheet : BottomSheetActivity() {
 
@@ -123,14 +126,11 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   fun showManualDateSelector(date: LocalDate) {
-    val datePickerDialog = DatePickerDialog(
-        this, { _, year, month, dayOfMonth ->
-      calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(
-          year = year,
-          month = month + 1,
-          dayOfMonth = dayOfMonth
-      ))
-    }, date.year, date.monthValue - 1, date.dayOfMonth)
+    val listener: DatePickerDialogListener = { _, year, month, dayOfMonth ->
+      val selectedAppointmentDate = LocalDate.of(year, month + 1, dayOfMonth)
+      calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(selectedAppointmentDate))
+    }
+    val datePickerDialog = DatePickerDialog(this, listener, date.year, date.monthValue - 1, date.dayOfMonth)
 
     datePickerDialog.datePicker.apply {
       minDate = System.currentTimeMillis()

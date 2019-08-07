@@ -12,7 +12,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.Appointment
-import org.simple.clinic.overdue.Appointment.AppointmentType.Automatic
 import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
@@ -54,7 +53,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         enableIncrements(configuredAppointmentDatesStream),
         enableDecrements(configuredAppointmentDatesStream),
         showManualAppointmentDateSelector(replayedEvents),
-        schedulingSkips(replayedEvents),
+        scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         scheduleCreates(replayedEvents)
     )
   }
@@ -142,7 +141,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         ?: throw RuntimeException("Cannot find configured appointment date before $latestAppointmentScheduledDate")
   }
 
-  private fun schedulingSkips(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun scheduleAutomaticAppointmentForDefaulters(events: Observable<UiEvent>): Observable<UiChange> {
     val combinedStreams = Observables.combineLatest(
         events.ofType<SchedulingSkipped>(),
         patientUuid(events),
@@ -163,18 +162,18 @@ class ScheduleAppointmentSheetController @Inject constructor(
           Triple(patientUuid, config, currentFacilty)
         }
         .flatMapSingle { (patientUuid, config, currentFacility) ->
-          appointmentRepository
-              .schedule(
-                  patientUuid = patientUuid,
-                  appointmentDate = LocalDate.now(utcClock).plus(config.appointmentDuePeriodForDefaulters),
-                  appointmentType = Automatic,
-                  currentFacility = currentFacility)
-              .map { { ui: Ui -> ui.closeSheet() } }
+          scheduleAppointmentForPatient(
+              uuid = patientUuid,
+              date = LocalDate.now(utcClock).plus(config.appointmentDuePeriodForDefaulters),
+              currentFacility = currentFacility,
+              appointmentType = Appointment.AppointmentType.Automatic
+          )
         }
+        .map { Ui::closeSheet }
 
     val closeSheetWithoutSavingAppointment = isPatientDefaulterStream
         .filter { isPatientDefaulter -> isPatientDefaulter.not() }
-        .map { { ui: Ui -> ui.closeSheet() } }
+        .map { Ui::closeSheet }
 
     return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
   }
@@ -189,20 +188,21 @@ class ScheduleAppointmentSheetController @Inject constructor(
         ) { _, lastScheduledAppointmentDate, uuid, currentFacility ->
           Triple(lastScheduledAppointmentDate, uuid, currentFacility)
         }
-        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date, currentFacility) }
+        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date, currentFacility, Manual) }
         .map { Ui::closeSheet }
   }
 
   private fun scheduleAppointmentForPatient(
       uuid: UUID,
       date: LocalDate,
-      currentFacility: Facility
+      currentFacility: Facility,
+      appointmentType: Appointment.AppointmentType
   ): Single<Appointment> {
     return appointmentRepository
         .schedule(
             patientUuid = uuid,
             appointmentDate = date,
-            appointmentType = Manual,
+            appointmentType = appointmentType,
             currentFacility = currentFacility
         )
   }

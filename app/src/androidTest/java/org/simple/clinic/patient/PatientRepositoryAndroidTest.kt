@@ -2260,4 +2260,40 @@ class PatientRepositoryAndroidTest {
     )
     assertThat(searchResults).isEqualTo(expectedResults)
   }
+
+  @Test
+  fun searching_for_patients_by_short_code_must_return_all_the_matching_results() {
+    fun createPatientWithBPPassport(patientUuid: UUID, bpPassportId: String) {
+
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid)
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository
+          .addIdentifierToPatient(
+              patientUuid = patientProfile.patient.uuid,
+              identifier = Identifier(bpPassportId, BpPassport),
+              assigningUser = loggedInUser,
+              assigningFacility = currentFacility
+          )
+          .blockingGet()
+    }
+
+
+    //given
+    createPatientWithBPPassport(UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff"), "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8")
+    createPatientWithBPPassport(UUID.fromString("0803356a-1079-46ac-9a3b-5763be2b5506"), "17671df1-1727-45f2-bf06-0e02c990c847")
+    createPatientWithBPPassport(UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d"), "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8")
+    createPatientWithBPPassport(UUID.fromString("0a549d43-7288-4633-b968-2ed91736edbe"), "884402f4-6066-41ac-a8b4-06a620d0ca5d")
+    createPatientWithBPPassport(UUID.fromString("b551fec9-b707-43e8-aa44-2ad444943229"), "199b123e-4664-4720-a184-494598d9b37d")
+
+    val searchedShortCode = "3824770"
+
+    //when
+    val shortCodeSearchResults = patientRepository.searchByShortCode(searchedShortCode).blockingFirst()
+
+    //then
+    assertThat(shortCodeSearchResults.map { it.uuid.toString() })
+        .containsExactly("97d05796-614c-46de-a10a-e12cf595f4ff", "4e642ef2-1991-42ae-ba61-a10809c78f5d")
+  }
+
 }

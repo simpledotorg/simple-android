@@ -15,6 +15,7 @@ import androidx.room.TypeConverter
 import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import io.reactivex.Flowable
+import io.reactivex.Single
 import org.simple.clinic.patient.Patient
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType
 import org.simple.clinic.patient.sync.BusinessIdPayload
@@ -126,6 +127,9 @@ data class BusinessId(
       ORDER BY createdAt DESC LIMIT 1
       """)
     fun latestForPatientByType(patientUuid: UUID, identifierType: IdentifierType): Flowable<List<BusinessId>>
+
+    @Query("SELECT * FROM BusinessId WHERE identifierType = :identifierType")
+    fun allBusinessIdsWithType(identifierType: IdentifierType): Single<List<BusinessId>>
   }
 }
 

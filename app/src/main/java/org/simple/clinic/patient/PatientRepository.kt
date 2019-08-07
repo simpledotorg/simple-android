@@ -21,6 +21,8 @@ import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.filter.SearchPatientByName
+import org.simple.clinic.patient.shortcode.UuidShortCode
+import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
 import org.simple.clinic.reports.ReportsRepository
@@ -55,6 +57,7 @@ class PatientRepository @Inject constructor(
     private val reportsRepository: ReportsRepository,
     private val businessIdMetaDataAdapter: BusinessIdMetaDataAdapter,
     private val schedulersProvider: SchedulersProvider,
+    private val uuidShortCodeCreator: UuidShortCodeCreator,
     @Named("date_for_user_input") private val dateOfBirthFormat: DateTimeFormatter
 ) : SynceableRepository<PatientProfile, PatientPayload> {
 
@@ -586,6 +589,29 @@ class PatientRepository @Inject constructor(
         .patientSearchDao()
         .searchInFacilityAndSortByName(facility.uuid, PatientStatus.Active)
         .toObservable()
+  }
+
+  fun searchByShortCode(shortCode: String): Observable<List<PatientSearchResult>> {
+    val allPatients = database
+        .businessIdDao()
+        .allBusinessIdsWithType(BpPassport)
+        .toObservable()
+
+    val shortCodeSearchResult = allPatients
+        .map { businessIds ->
+          businessIds
+              .map { businessId -> Pair(businessId.patientUuid, uuidShortCodeCreator.createFromUuid(UUID.fromString(businessId.identifier.value))) }
+              .filter { (_, uuidShortCode) ->
+                shortCode == when (uuidShortCode) {
+                  is UuidShortCode.CompleteShortCode -> uuidShortCode.shortCode
+                  is UuidShortCode.IncompleteShortCode -> uuidShortCode.shortCode
+                }
+              }
+              .map { (uuid, _) -> uuid }
+        }
+
+    return shortCodeSearchResult
+        .flatMapSingle { database.patientSearchDao().searchByIds(it, PatientStatus.Active) }
   }
 
   private data class BusinessIdMetaAndVersion(val metaData: String, val metaDataVersion: MetaDataVersion)

@@ -10,7 +10,7 @@ import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import java.util.UUID
 
-class OverdueListItemTest {
+class OverdueAppointmentRowTest {
 
   private val userClock = TestUserClock(LocalDate.parse("2019-01-05"))
 
@@ -66,11 +66,11 @@ class OverdueListItemTest {
     val appointments = listOf(appointmentDelayedBy4Days, appointmentDelayedByOneWeek)
 
     // when
-    val overdueListItems = OverdueListItem.from(appointments, userClock)
+    val overdueListItems = OverdueAppointmentRow.from(appointments, userClock)
 
     // then
     val expectedListItems = listOf(
-        OverdueListItem.AppointmentRow(
+        OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("65d790f3-a9ea-4a83-bce1-8d1ea8539c67"),
             patientUuid = UUID.fromString("c88a4835-40e5-476b-9a6f-2f850c48ecdb"),
             name = "Anish Acharya",
@@ -83,7 +83,7 @@ class OverdueListItemTest {
             isAtHighRisk = false,
             age = 34
         ),
-        OverdueListItem.AppointmentRow(
+        OverdueAppointmentRow(
             appointmentUuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),
             patientUuid = UUID.fromString("0c35a015-d823-4cc5-be77-21ce026c5780"),
             name = "Deepa",

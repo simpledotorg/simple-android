@@ -13,7 +13,6 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
-import org.simple.clinic.home.overdue.OverdueListItem.AppointmentRow
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
 import org.simple.clinic.home.overdue.phonemask.PhoneMaskBottomSheet
 import org.simple.clinic.home.overdue.removepatient.RemoveAppointmentScreen
@@ -40,7 +39,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   @Inject
   lateinit var userClock: UserClock
 
-  private val overdueListAdapter = ItemAdapter(OverdueListItem.OverdueListItemDiffCallback())
+  private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())
   private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
   private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
@@ -70,14 +69,14 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
     )
 
     setupCardExpansionEvents(
-        cardExpansionToggledStream = overdueListAdapter.itemEvents.ofType(AppointmentRow.CardExpansionToggled::class.java),
+        cardExpansionToggledStream = overdueListAdapter.itemEvents.ofType(OverdueAppointmentRow.CardExpansionToggled::class.java),
         screenDestroys = screenDestroys
     )
   }
 
   @SuppressLint("CheckResult")
   private fun setupCardExpansionEvents(
-      cardExpansionToggledStream: Observable<AppointmentRow.CardExpansionToggled>,
+      cardExpansionToggledStream: Observable<OverdueAppointmentRow.CardExpansionToggled>,
       screenDestroys: Observable<ScreenDestroyed>
   ) {
     cardExpansionToggledStream
@@ -98,7 +97,7 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   }
 
   fun updateList(overdueAppointments: List<OverdueAppointment>) {
-    overdueListAdapter.submitList(OverdueListItem.from(overdueAppointments, userClock))
+    overdueListAdapter.submitList(OverdueAppointmentRow.from(overdueAppointments, userClock))
   }
 
   fun handleEmptyList(isEmpty: Boolean) {

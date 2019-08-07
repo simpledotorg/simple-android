@@ -81,7 +81,7 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val date = LocalDate.now(clock).plus(1, ChronoUnit.MONTHS)
-    val oneMonth = ScheduleAppointment(displayText = "1 month", timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
+    val oneMonth = ScheduleAppointment(timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
     val possibleAppointments = listOf(oneMonth)
 
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(
@@ -132,12 +132,12 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when default appointment is set, then update scheduled appointment`() {
-    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val defaultAppointment = ScheduleAppointment(2, ChronoUnit.DAYS)
 
     val possibleAppointments = listOf(
-        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        ScheduleAppointment(1, ChronoUnit.DAYS),
         defaultAppointment,
-        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS)
+        ScheduleAppointment(3, ChronoUnit.DAYS)
     )
 
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
@@ -154,11 +154,11 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when incremented, then next appointment in the list should be scheduled`() {
     // given
     val possibleAppointments = listOf(
-        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
-        ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
-        ScheduleAppointment("7 days", 7, ChronoUnit.DAYS)
+        ScheduleAppointment(1, ChronoUnit.DAYS),
+        ScheduleAppointment(2, ChronoUnit.DAYS),
+        ScheduleAppointment(7, ChronoUnit.DAYS)
     )
-    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val defaultAppointment = ScheduleAppointment(2, ChronoUnit.DAYS)
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
@@ -182,11 +182,11 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when decremented, then previous appointment in the list should be scheduled`() {
     // given
     val possibleAppointments = listOf(
-        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
-        ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
-        ScheduleAppointment("7 days", 7, ChronoUnit.DAYS)
+        ScheduleAppointment(1, ChronoUnit.DAYS),
+        ScheduleAppointment(2, ChronoUnit.DAYS),
+        ScheduleAppointment(7, ChronoUnit.DAYS)
     )
-    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val defaultAppointment = ScheduleAppointment(2, ChronoUnit.DAYS)
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
@@ -208,13 +208,13 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when date is selected and date is incremented, the nearest date should be chosen`() {
-    val twoDaysAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val twoDaysAppointment = ScheduleAppointment(2, ChronoUnit.DAYS)
 
     val possibleAppointments = listOf(
-        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
+        ScheduleAppointment(1, ChronoUnit.DAYS),
         twoDaysAppointment,
-        ScheduleAppointment("3 days", 3, ChronoUnit.DAYS),
-        ScheduleAppointment("4 days", 4, ChronoUnit.DAYS)
+        ScheduleAppointment(3, ChronoUnit.DAYS),
+        ScheduleAppointment(4, ChronoUnit.DAYS)
     )
 
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, twoDaysAppointment))
@@ -245,11 +245,11 @@ class ScheduleAppointmentSheetControllerTest {
   fun `when the manually select appointment date button is clicked, the date picker must be shown set to the last selected appointment date`() {
     // given
     val possibleAppointments = listOf(
-        ScheduleAppointment("1 day", 1, ChronoUnit.DAYS),
-        ScheduleAppointment("2 days", 2, ChronoUnit.DAYS),
-        ScheduleAppointment("1 week", 1, ChronoUnit.WEEKS)
+        ScheduleAppointment(1, ChronoUnit.DAYS),
+        ScheduleAppointment(2, ChronoUnit.DAYS),
+        ScheduleAppointment(1, ChronoUnit.WEEKS)
     )
-    val defaultAppointment = ScheduleAppointment("2 days", 2, ChronoUnit.DAYS)
+    val defaultAppointment = ScheduleAppointment(2, ChronoUnit.DAYS)
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when

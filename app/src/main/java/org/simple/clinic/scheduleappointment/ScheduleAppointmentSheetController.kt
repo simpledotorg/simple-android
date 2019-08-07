@@ -49,7 +49,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .share()
 
     return Observable.mergeArray(
-        incrementDecrements(replayedEvents, configuredAppointmentDatesStream),
+        scheduleAppointments(replayedEvents, configuredAppointmentDatesStream),
         enableIncrements(configuredAppointmentDatesStream),
         enableDecrements(configuredAppointmentDatesStream),
         showManualAppointmentDateSelector(replayedEvents),
@@ -58,43 +58,59 @@ class ScheduleAppointmentSheetController @Inject constructor(
     )
   }
 
-  private fun incrementDecrements(
+  private fun scheduleAppointments(
       events: Observable<UiEvent>,
       configuredAppointmentDatesStream: Observable<List<LocalDate>>
   ): Observable<UiChange> {
-    val selectDefaultAppointmentOnSheetCreated = events
-        .ofType<ScheduleAppointmentSheetCreated>()
-        .withLatestFrom(config) { _, config -> config.defaultAppointment }
-        .map(this::localDateFromScheduleAppointment)
 
-    val selectNextAppointmentDate = events
-        .ofType<AppointmentDateIncremented>()
-        .withLatestFrom(latestAppointmentDateScheduledSubject, configuredAppointmentDatesStream)
-        { _, lastScheduledAppointmentDate, configuredAppointmentDates ->
-          nextConfiguredAppointmentDate(lastScheduledAppointmentDate, configuredAppointmentDates)
-        }
+    return Observable
+        .merge(
+            scheduleDefaultAppointmentDateForSheetCreates(events),
+            scheduleOnNextConfiguredAppointmentDate(events, configuredAppointmentDatesStream),
+            scheduleOnPreviousConfiguredAppointmentDate(events, configuredAppointmentDatesStream),
+            scheduleOnExactDate(events)
+        )
+        .distinctUntilChanged()
+        .doOnNext(latestAppointmentDateScheduledSubject::onNext)
+        .map { appointmentDate -> { ui: Ui -> ui.updateScheduledAppointment(appointmentDate) } }
+  }
 
-    val selectPreviousAppointmentDate = events
+  private fun scheduleOnExactDate(events: Observable<UiEvent>): Observable<LocalDate> {
+    return events
+        .ofType<AppointmentCalendarDateSelected>()
+        .map { it.selectedDate }
+  }
+
+  private fun scheduleOnPreviousConfiguredAppointmentDate(
+      events: Observable<UiEvent>,
+      configuredAppointmentDatesStream: Observable<List<LocalDate>>
+  ): Observable<LocalDate> {
+    return events
         .ofType<AppointmentDateDecremented>()
         .withLatestFrom(latestAppointmentDateScheduledSubject, configuredAppointmentDatesStream)
         { _, lastScheduledAppointmentDate, configuredAppointmentDates ->
           previousConfiguredAppointmentDate(lastScheduledAppointmentDate, configuredAppointmentDates)
         }
+  }
 
-    val selectCalendarDate = events
-        .ofType<AppointmentCalendarDateSelected>()
-        .map { it.selectedDate }
+  private fun scheduleOnNextConfiguredAppointmentDate(
+      events: Observable<UiEvent>,
+      configuredAppointmentDatesStream: Observable<List<LocalDate>>
+  ): Observable<LocalDate> {
+    return events
+        .ofType<AppointmentDateIncremented>()
+        .withLatestFrom(latestAppointmentDateScheduledSubject, configuredAppointmentDatesStream)
+        { _, lastScheduledAppointmentDate, configuredAppointmentDates ->
+          nextConfiguredAppointmentDate(lastScheduledAppointmentDate, configuredAppointmentDates)
+        }
+  }
 
-    return Observable
-        .merge(
-            selectDefaultAppointmentOnSheetCreated,
-            selectNextAppointmentDate,
-            selectPreviousAppointmentDate,
-            selectCalendarDate
-        )
-        .distinctUntilChanged()
-        .doOnNext(latestAppointmentDateScheduledSubject::onNext)
-        .map { appointmentDate -> { ui: Ui -> ui.updateScheduledAppointment(appointmentDate) } }
+  private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<LocalDate> {
+    val selectDefaultAppointmentOnSheetCreated = events
+        .ofType<ScheduleAppointmentSheetCreated>()
+        .withLatestFrom(config) { _, config -> config.defaultAppointment }
+        .map(this::localDateFromScheduleAppointment)
+    return selectDefaultAppointmentOnSheetCreated
   }
 
   private fun enableIncrements(configuredAppointmentDateStream: Observable<List<LocalDate>>): Observable<UiChange> {

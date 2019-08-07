@@ -2,12 +2,14 @@ package org.simple.clinic.home.overdue
 
 import com.google.common.truth.Truth.assertThat
 import org.junit.Test
+import org.simple.clinic.patient.Age
 import org.simple.clinic.patient.Gender
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.util.TestUserClock
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneOffset.UTC
 import java.util.UUID
 
 class OverdueAppointmentRowTest {
@@ -51,9 +53,10 @@ class OverdueAppointmentRowTest {
                 recordedAt = Instant.now(userClock).minus(twoWeeks)
             ),
             dateOfBirth = null,
-            age = PatientMocker.age(
-                ageValue = 45,
-                updatedAt = Instant.now(userClock).minus(oneYear)
+            age = Age(
+                value = 45,
+                updatedAt = Instant.now(userClock).minus(oneYear),
+                computedDateOfBirth = LocalDate.now(UTC)
             ),
             appointment = PatientMocker.appointment(
                 uuid = UUID.fromString("4f13f6d3-05dc-4248-891b-b5ebd6f56987"),

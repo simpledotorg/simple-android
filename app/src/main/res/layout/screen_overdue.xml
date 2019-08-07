@@ -5,7 +5,7 @@
   android:layout_height="match_parent">
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/overdue_list"
+    android:id="@+id/overdueRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToPadding="false"
@@ -13,7 +13,7 @@
     android:visibility="gone" />
 
   <LinearLayout
-    android:id="@+id/overdue_list_empty_layout"
+    android:id="@+id/viewForEmptyList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"

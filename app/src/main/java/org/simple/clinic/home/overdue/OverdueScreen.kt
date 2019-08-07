@@ -3,14 +3,11 @@ package org.simple.clinic.home.overdue
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.screen_overdue.view.*
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.home.overdue.appointmentreminder.AppointmentReminderSheet
@@ -40,8 +37,6 @@ class OverdueScreen(context: Context, attrs: AttributeSet) : RelativeLayout(cont
   lateinit var userClock: UserClock
 
   private val overdueListAdapter = ItemAdapter(OverdueAppointmentRow.DiffCallback())
-  private val overdueRecyclerView by bindView<RecyclerView>(R.id.overdue_list)
-  private val viewForEmptyList by bindView<LinearLayout>(R.id.overdue_list_empty_layout)
 
   override fun onFinishInflate() {
     super.onFinishInflate()

@@ -65,7 +65,7 @@ class AllPatientsInFacilityView(
 
   private fun searchResultClicks(): Observable<UiEvent> {
     return searchResultsAdapter
-        .listItemEvents
+        .itemEvents
         .ofType<SearchResultClicked>()
         .map { it.patientSearchResult.uuid }
         .map(::AllPatientsInFacilitySearchResultClicked)

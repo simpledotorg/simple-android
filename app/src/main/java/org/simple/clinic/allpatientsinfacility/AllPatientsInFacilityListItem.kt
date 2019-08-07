@@ -8,10 +8,11 @@ import kotlinx.android.synthetic.main.list_patient_search.*
 import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.widgets.ItemAdapter
 import org.simple.clinic.widgets.recyclerview.ViewHolderX
 import java.util.Locale
 
-sealed class AllPatientsInFacilityListItem {
+sealed class AllPatientsInFacilityListItem : ItemAdapter.Item<AllPatientsInFacilityListItem.Event> {
 
   companion object {
     fun mapSearchResultsToListItems(
@@ -24,22 +25,17 @@ sealed class AllPatientsInFacilityListItem {
     }
   }
 
-  abstract val layoutResId: Int
-
-  abstract fun render(
-      holder: ViewHolderX,
-      eventSubject: Subject<Event>
-  )
-
   abstract fun sectionTitle(locale: Locale): SectionTitle
 
   data class FacilityHeader(val facilityName: String) : AllPatientsInFacilityListItem() {
 
-    override val layoutResId = R.layout.list_allpatientsinfacility_facility_header
+    override fun layoutResId(): Int {
+      return R.layout.list_allpatientsinfacility_facility_header
+    }
 
     override fun render(
         holder: ViewHolderX,
-        eventSubject: Subject<Event>
+        subject: Subject<Event>
     ) {
       val resources = holder.itemView.resources
       holder.facilityLabel.text = resources.getString(R.string.allpatientsinfacility_foundpatients_header, facilityName)
@@ -53,14 +49,16 @@ sealed class AllPatientsInFacilityListItem {
       val patientSearchResult: PatientSearchResult
   ) : AllPatientsInFacilityListItem() {
 
-    override val layoutResId = R.layout.list_patient_search
+    override fun layoutResId(): Int {
+      return R.layout.list_patient_search
+    }
 
     override fun render(
         holder: ViewHolderX,
-        eventSubject: Subject<Event>
+        subject: Subject<Event>
     ) {
       holder.patientSearchResultView.render(patientSearchResult, facility)
-      holder.itemView.setOnClickListener { eventSubject.onNext(Event.SearchResultClicked(patientSearchResult)) }
+      holder.itemView.setOnClickListener { subject.onNext(Event.SearchResultClicked(patientSearchResult)) }
     }
 
     override fun sectionTitle(locale: Locale): SectionTitle {

@@ -26,7 +26,7 @@ class AppointmentRepository @Inject constructor(
     private val appointmentDao: Appointment.RoomDao,
     private val overdueDao: OverdueAppointment.RoomDao,
     private val utcClock: UtcClock,
-    private val appointmentConfigProvider: Single<AppointmentConfig>
+    private val appointmentConfigProvider: Observable<AppointmentConfig>
 ) : SynceableRepository<Appointment, AppointmentPayload> {
 
   fun schedule(
@@ -122,7 +122,6 @@ class AppointmentRepository @Inject constructor(
 
   fun overdueAppointments(facility: Facility): Observable<List<OverdueAppointment>> {
     return appointmentConfigProvider
-        .toObservable()
         .flatMap { appointmentConfig ->
           val today = LocalDate.now(utcClock)
           overdueDao

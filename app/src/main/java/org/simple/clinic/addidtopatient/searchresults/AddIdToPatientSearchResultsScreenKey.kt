@@ -3,12 +3,13 @@ package org.simple.clinic.addidtopatient.searchresults
 import kotlinx.android.parcel.IgnoredOnParcel
 import kotlinx.android.parcel.Parcelize
 import org.simple.clinic.R
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
 data class AddIdToPatientSearchResultsScreenKey(
-    val fullName: String,
+    val criteria: PatientSearchCriteria,
     val identifier: Identifier
 ) : FullScreenKey {
 
@@ -16,4 +17,10 @@ data class AddIdToPatientSearchResultsScreenKey(
   override val analyticsName = "Add ID to Patient: Search Results"
 
   override fun layoutRes() = R.layout.screen_addidtopatientsearchresults
+
+  val fullName: String
+    get() = when (criteria) {
+      is PatientSearchCriteria.Name -> criteria.patientName
+      is PatientSearchCriteria.PhoneNumber -> ""
+    }
 }

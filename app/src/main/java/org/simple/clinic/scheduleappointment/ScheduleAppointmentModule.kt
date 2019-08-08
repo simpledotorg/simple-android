@@ -3,7 +3,6 @@ package org.simple.clinic.scheduleappointment
 import dagger.Module
 import dagger.Provides
 import io.reactivex.Observable
-import org.threeten.bp.temporal.ChronoUnit
 
 @Module
 class ScheduleAppointmentModule {
@@ -11,33 +10,33 @@ class ScheduleAppointmentModule {
   @Provides
   fun providesScheduleAppointmentConfig(): Observable<ScheduleAppointmentConfig> {
     return Observable.just(ScheduleAppointmentConfig(
-        possibleAppointments = listOf(
-            ScheduleAppointment(1, ChronoUnit.DAYS),
-            ScheduleAppointment(2, ChronoUnit.DAYS),
-            ScheduleAppointment(3, ChronoUnit.DAYS),
-            ScheduleAppointment(4, ChronoUnit.DAYS),
-            ScheduleAppointment(5, ChronoUnit.DAYS),
-            ScheduleAppointment(6, ChronoUnit.DAYS),
-            ScheduleAppointment(7, ChronoUnit.DAYS),
-            ScheduleAppointment(8, ChronoUnit.DAYS),
-            ScheduleAppointment(9, ChronoUnit.DAYS),
-            ScheduleAppointment(10, ChronoUnit.DAYS),
-            ScheduleAppointment(2, ChronoUnit.WEEKS),
-            ScheduleAppointment(3, ChronoUnit.WEEKS),
-            ScheduleAppointment(1, ChronoUnit.MONTHS),
-            ScheduleAppointment(2, ChronoUnit.MONTHS),
-            ScheduleAppointment(3, ChronoUnit.MONTHS),
-            ScheduleAppointment(4, ChronoUnit.MONTHS),
-            ScheduleAppointment(5, ChronoUnit.MONTHS),
-            ScheduleAppointment(6, ChronoUnit.MONTHS),
-            ScheduleAppointment(7, ChronoUnit.MONTHS),
-            ScheduleAppointment(8, ChronoUnit.MONTHS),
-            ScheduleAppointment(9, ChronoUnit.MONTHS),
-            ScheduleAppointment(10, ChronoUnit.MONTHS),
-            ScheduleAppointment(11, ChronoUnit.MONTHS),
-            ScheduleAppointment(12, ChronoUnit.MONTHS)
+        periodsToScheduleAppointmentsIn = listOf(
+            ScheduleAppointmentIn.days(1),
+            ScheduleAppointmentIn.days(2),
+            ScheduleAppointmentIn.days(3),
+            ScheduleAppointmentIn.days(4),
+            ScheduleAppointmentIn.days(5),
+            ScheduleAppointmentIn.days(6),
+            ScheduleAppointmentIn.days(7),
+            ScheduleAppointmentIn.days(8),
+            ScheduleAppointmentIn.days(9),
+            ScheduleAppointmentIn.days(10),
+            ScheduleAppointmentIn.weeks(2),
+            ScheduleAppointmentIn.weeks(3),
+            ScheduleAppointmentIn.months(1),
+            ScheduleAppointmentIn.months(2),
+            ScheduleAppointmentIn.months(3),
+            ScheduleAppointmentIn.months(4),
+            ScheduleAppointmentIn.months(5),
+            ScheduleAppointmentIn.months(6),
+            ScheduleAppointmentIn.months(7),
+            ScheduleAppointmentIn.months(8),
+            ScheduleAppointmentIn.months(9),
+            ScheduleAppointmentIn.months(10),
+            ScheduleAppointmentIn.months(11),
+            ScheduleAppointmentIn.months(12)
         ),
-        defaultAppointment = ScheduleAppointment(1, ChronoUnit.MONTHS)
+        scheduleAppointmentInByDefault = ScheduleAppointmentIn.months(1)
     ))
   }
 }

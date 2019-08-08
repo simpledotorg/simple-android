@@ -110,7 +110,8 @@ class ScheduleAppointmentSheetControllerTest {
     configStream.onNext(AppointmentConfig(
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
         overduePeriodForLowestRiskLevel = Period.ofDays(365),
-        appointmentDuePeriodForDefaulters = Period.ofDays(30)
+        appointmentDuePeriodForDefaulters = Period.ofDays(30),
+        scheduleAppointmentConfigProvider = scheduledAppointmentConfigSubject
     ))
 
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))

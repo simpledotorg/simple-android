@@ -5,18 +5,21 @@
   android:layout_height="match_parent">
 
   <androidx.appcompat.widget.Toolbar
-    android:id="@+id/scansimpleid_toolbar"
+    android:id="@+id/toolBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
     app:title="@string/scansimpleid_title" />
 
   <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
-    android:id="@+id/scansimpleid_code_scanner_view"
+    android:id="@+id/qrCodeScannerView"
     android:layout_width="match_parent"
     android:layout_height="0dp"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintTop_toTopOf="parent">
+
+    <requestFocus />
+  </org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView>
 
   <ImageView
     android:layout_width="wrap_content"
@@ -27,4 +30,27 @@
     app:layout_constraintTop_toTopOf="parent"
     app:srcCompat="@drawable/ic_scan_qr_viewfinder" />
 
+  <androidx.cardview.widget.CardView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:background="@color/white100"
+    android:visibility="gone"
+    app:layout_constraintBottom_toBottomOf="@+id/qrCodeScannerView"
+    app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
+    app:layout_constraintStart_toStartOf="parent">
+
+    <EditText
+      android:id="@+id/editText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center"
+      android:ems="10"
+      android:hint="123 4567"
+      android:imeOptions="actionGo"
+      android:inputType="number"
+      android:maxEms="7" />
+  </androidx.cardview.widget.CardView>
 </org.simple.clinic.scanid.ScanSimpleIdScreen>

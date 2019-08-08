@@ -2,12 +2,11 @@ package org.simple.clinic.scanid
 
 import android.content.Context
 import android.util.AttributeSet
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
+import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
-import kotterknife.bindView
-import org.simple.clinic.R
+import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
@@ -20,7 +19,6 @@ import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.hideKeyboard
-import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
@@ -36,9 +34,6 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var utcClock: UtcClock
 
-  private val qrCodeScannerView by bindView<QrCodeScannerView>(R.id.scansimpleid_code_scanner_view)
-  private val toolBar by bindView<Toolbar>(R.id.scansimpleid_toolbar)
-
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -52,7 +47,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     bindUiToController(
         ui = this,
-        events = qrScans(),
+        events = Observable.mergeArray(qrScans(), doneClicks()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -62,6 +57,12 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     return qrCodeScannerView
         .scans()
         .map(::ScanSimpleIdScreenQrCodeScanned)
+  }
+
+  private fun doneClicks(): Observable<UiEvent> {
+    return RxTextView
+        .editorActionEvents(editText)
+        .map { ShortCodeSearched }
   }
 
   fun openPatientSummary(patientUuid: UUID) {

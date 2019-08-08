@@ -45,59 +45,60 @@ class UuidShortCodeCreatorTest {
     }
 
     val uuid = UUID.fromString("bc301458-a39b-48d3-8666-9f39373e2d0d")
+
     return listOf(
         testCase(
             uuid = uuid,
             shortCodeLength = 4,
-            expectedShortCode = UuidShortCode.CompleteShortCode(uuid, "bc30"),
+            expectedShortCode = UuidShortCode(uuid, "bc30", 4),
             isCharacterAllowed = { it in setOf('b', 'c', '3', '0') }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 6,
-            expectedShortCode = UuidShortCode.CompleteShortCode(uuid, "bc303b"),
+            expectedShortCode = UuidShortCode(uuid, "bc303b", 6),
             isCharacterAllowed = { it in setOf('b', 'c', '3', '0') }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 6,
-            expectedShortCode = UuidShortCode.CompleteShortCode(uuid, "301458"),
+            expectedShortCode = UuidShortCode(uuid, "301458", 6),
             isCharacterAllowed = { it.isDigit() }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 8,
-            expectedShortCode = UuidShortCode.CompleteShortCode(uuid, "30145839"),
+            expectedShortCode = UuidShortCode(uuid, "30145839", 8),
             isCharacterAllowed = { it.isDigit() }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 7,
-            expectedShortCode = UuidShortCode.CompleteShortCode(uuid, "bcabdfe"),
+            expectedShortCode = UuidShortCode(uuid, "bcabdfe", 7),
             isCharacterAllowed = { it.isLetter() }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 10,
-            expectedShortCode = UuidShortCode.CompleteShortCode(uuid, "bc301458a3"),
+            expectedShortCode = UuidShortCode(uuid, "bc301458a3", 10),
             isCharacterAllowed = { it.isLetterOrDigit() }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 3,
-            expectedShortCode = UuidShortCode.IncompleteShortCode(uuid, "bb", 3),
+            expectedShortCode = UuidShortCode(uuid, "bb", 3),
             isCharacterAllowed = { it in setOf('b') }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 5,
-            expectedShortCode = UuidShortCode.IncompleteShortCode(uuid, "bb2", 5),
+            expectedShortCode = UuidShortCode(uuid, "bb2", 5),
             isCharacterAllowed = { it in setOf('b', '2') }
         ),
         testCase(
             uuid = uuid,
             shortCodeLength = 9,
-            expectedShortCode = UuidShortCode.IncompleteShortCode(uuid, "333333e", 9),
+            expectedShortCode = UuidShortCode(uuid, "333333e", 9),
             isCharacterAllowed = { it in setOf('3', 'e') }
         )
     )

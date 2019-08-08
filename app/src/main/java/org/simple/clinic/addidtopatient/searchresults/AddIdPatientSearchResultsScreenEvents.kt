@@ -8,14 +8,7 @@ import org.simple.clinic.widgets.UiEvent
 data class AddIdToPatientSearchResultsScreenCreated(
     val criteria: PatientSearchCriteria,
     val identifier: Identifier
-) : UiEvent {
-
-  val patientName: String
-    get() = when (criteria) {
-      is PatientSearchCriteria.Name -> criteria.patientName
-      is PatientSearchCriteria.PhoneNumber -> ""
-    }
-}
+) : UiEvent
 
 data class AddIdToPatientSearchResultClicked(val searchResult: PatientSearchResult) : UiEvent {
   override val analyticsName = "Add ID to Patient Search Results:Search Result Clicked"

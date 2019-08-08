@@ -49,8 +49,8 @@ class PatientSearchResultsController @Inject constructor(
 
   private fun createOngoingEntryFromSearchCriteria(searchCriteria: PatientSearchCriteria): OngoingNewPatientEntry {
     return when (searchCriteria) {
-      is Name -> OngoingNewPatientEntry.withFullName(searchCriteria.patientName)
-      is PhoneNumber -> OngoingNewPatientEntry.withPhoneNumber(searchCriteria.phoneNumber)
+      is Name -> OngoingNewPatientEntry.fromFullName(searchCriteria.patientName)
+      is PhoneNumber -> OngoingNewPatientEntry.fromPhoneNumber(searchCriteria.phoneNumber)
     }
   }
 

@@ -49,7 +49,7 @@ class PatientSearchResultsControllerTest {
   fun `when register new patient is clicked, then patient entry screen must be opened`() {
     // given
     val fullName = "name"
-    val ongoingEntry = OngoingNewPatientEntry.withFullName(fullName)
+    val ongoingEntry = OngoingNewPatientEntry.fromFullName(fullName)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry))
         .thenReturn(Completable.complete())
@@ -66,7 +66,7 @@ class PatientSearchResultsControllerTest {
   fun `when register new patient is clicked after searching with phone number, the number must be used to create the ongoing entry`() {
     // given
     val phoneNumber = "123456"
-    val ongoingEntry = OngoingNewPatientEntry.withPhoneNumber(phoneNumber)
+    val ongoingEntry = OngoingNewPatientEntry.fromPhoneNumber(phoneNumber)
 
     whenever(patientRepository.saveOngoingEntry(ongoingEntry))
         .thenReturn(Completable.complete())

@@ -1,6 +1,5 @@
 package org.simple.clinic.addidtopatient.searchresults
 
-import com.nhaarman.mockito_kotlin.any
 import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
@@ -14,8 +13,10 @@ import org.junit.Test
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.patient.PatientSearchCriteria
+import org.simple.clinic.patient.PatientSearchCriteria.Name
+import org.simple.clinic.patient.PatientSearchCriteria.PhoneNumber
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 
@@ -47,22 +48,43 @@ class AddIdToPatientSearchResultsControllerTest {
 
   @Test
   fun `when register new patient is clicked, then patient entry screen must be opened`() {
-    whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
-    val identifier = Identifier(value = "identifier", type = Identifier.IdentifierType.BpPassport)
-    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(PatientSearchCriteria.Name(patientName = "name"), identifier = identifier))
+    // given
+    val fullName = "name"
+    val identifier = Identifier(value = "identifier", type = BpPassport)
+    val ongoingEntry = OngoingNewPatientEntry
+        .fromFullName(fullName)
+        .withIdentifier(identifier)
 
+    whenever(patientRepository.saveOngoingEntry(ongoingEntry))
+        .thenReturn(Completable.complete())
+
+    // when
+    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(criteria = Name(fullName), identifier = identifier))
     uiEvents.onNext(AddIdToPatientSearchResultRegisterNewPatientClicked)
 
-    val expectedEntryToSave = OngoingNewPatientEntry(
-        personalDetails = OngoingNewPatientEntry.PersonalDetails(
-            fullName = "name",
-            dateOfBirth = null,
-            age = null,
-            gender = null
-        ),
-        identifier = identifier
-    )
-    verify(patientRepository).saveOngoingEntry(expectedEntryToSave)
+    // then
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
+    verify(screen).openPatientEntryScreen()
+  }
+
+  @Test
+  fun `when register new patient is clicked after searching with phone number, the number must be used to create the ongoing entry`() {
+    // given
+    val phoneNumber = "123456"
+    val identifier = Identifier(value = "identifier", type = BpPassport)
+    val ongoingEntry = OngoingNewPatientEntry
+        .fromPhoneNumber(phoneNumber)
+        .withIdentifier(identifier)
+
+    whenever(patientRepository.saveOngoingEntry(ongoingEntry))
+        .thenReturn(Completable.complete())
+
+    // when
+    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(criteria = PhoneNumber(phoneNumber), identifier = identifier))
+    uiEvents.onNext(AddIdToPatientSearchResultRegisterNewPatientClicked)
+
+    // then
+    verify(patientRepository).saveOngoingEntry(ongoingEntry)
     verify(screen).openPatientEntryScreen()
   }
 }

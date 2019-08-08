@@ -1,6 +1,5 @@
 package org.simple.clinic.summary
 
-import android.text.style.TypefaceSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import kotterknife.bindView
 import org.simple.clinic.R
 import org.simple.clinic.drugs.PrescribedDrug
 import org.simple.clinic.summary.SummaryListAdapterIds.PRESCRIBED_DRUGS
+import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.widgets.UiEvent
 import org.simple.clinic.widgets.visibleOrGone
@@ -90,13 +90,14 @@ data class SummaryPrescribedDrugsItem(
 
     fun bind(drug: PrescribedDrug) {
       val summaryBuilder = Truss()
+      summaryBuilder.append(drug.name)
       if (drug.dosage.isNullOrBlank().not()) {
+        val dosageTextAppearance = TextAppearanceWithLetterSpacingSpan(itemView.context, R.style.Clinic_V2_TextAppearance_Body1Left_Grey1)
         summaryBuilder
-            .pushSpan(TypefaceSpan("sans-serif-medium"))
-            .append(drug.dosage!!)
+            .pushSpan(dosageTextAppearance)
+            .append("  ${drug.dosage}")
             .popSpan()
       }
-      summaryBuilder.append("   ${drug.name}")
       drugTextView.text = summaryBuilder.build()
     }
 

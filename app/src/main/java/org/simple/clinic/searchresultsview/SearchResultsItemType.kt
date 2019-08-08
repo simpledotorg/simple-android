@@ -7,7 +7,7 @@ import org.simple.clinic.R
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.summary.GroupieItemWithUiEvents
-import org.simple.clinic.widgets.PatientSearchResultView
+import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.UiEvent
 
 sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieItemWithUiEvents<T>(adapterId) {
@@ -131,7 +131,7 @@ sealed class SearchResultsItemType<T : ViewHolder>(adapterId: Long) : GroupieIte
     override fun getLayout(): Int = R.layout.list_patient_search
 
     override fun bind(viewHolder: ViewHolder, position: Int) {
-      val patientSearchResultView = viewHolder.itemView.findViewById<PatientSearchResultView>(R.id.patientSearchResultView)
+      val patientSearchResultView = viewHolder.itemView.findViewById<PatientSearchResultItemView>(R.id.patientSearchResultView)
 
       patientSearchResultView.setOnClickListener {
         uiEvents.onNext(SearchResultClicked(searchResult))

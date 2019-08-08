@@ -8,7 +8,7 @@ import org.simple.clinic.facility.Facility
 import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.summary.GroupieItemWithUiEvents
 import org.simple.clinic.widgets.PatientSearchResultItemView
-import org.simple.clinic.widgets.PatientSearchResultItemView.*
+import org.simple.clinic.widgets.PatientSearchResultItemView.PatientSearchResultViewModel
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
 

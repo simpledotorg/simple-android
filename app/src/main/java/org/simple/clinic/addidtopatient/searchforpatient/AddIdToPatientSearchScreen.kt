@@ -142,11 +142,7 @@ class AddIdToPatientSearchScreen(context: Context, attrs: AttributeSet) : Relati
 
   fun openAddIdToPatientSearchResultsScreen(criteria: PatientSearchCriteria) {
     screenRouter.push(AddIdToPatientSearchResultsScreenKey(
-        // TODO: Remove in future commit
-        fullName = when (criteria) {
-          is PatientSearchCriteria.Name -> criteria.patientName
-          else -> ""
-        },
+        criteria = criteria,
         identifier = screenKey.identifier
     ))
   }

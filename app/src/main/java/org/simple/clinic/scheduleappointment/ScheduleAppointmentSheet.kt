@@ -126,6 +126,13 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
   }
 
   fun showManualDateSelector(date: LocalDate) {
+    /*
+     * The DatePickerDialog uses 0-based indices for the Month (0 is January, 1 is February...),
+     * while LocalDate uses 1-based indices (1 is January, 2 is February...).
+     *
+     * So when we convert from LocalDate to the DatePicker (and vice versa), we have to adjust the
+     * month accordingly.
+     */
     val listener: DatePickerDialogListener = { _, year, month, dayOfMonth ->
       val selectedAppointmentDate = LocalDate.of(year, month + 1, dayOfMonth)
       calendarDateSelectedEvents.onNext(AppointmentCalendarDateSelected(selectedAppointmentDate))

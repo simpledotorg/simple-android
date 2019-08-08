@@ -113,7 +113,7 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
     val screenKey = screenRouter.key<AddIdToPatientSearchResultsScreenKey>(this)
     searchResultsView
         .downstreamUiEvents
-        .onNext(SearchPatientWithCriteria(Name(screenKey.fullName)))
+        .onNext(SearchPatientWithCriteria(screenKey.criteria))
     return Observable.just(AddIdToPatientSearchResultsScreenCreated(screenKey.fullName, screenKey.identifier))
   }
 

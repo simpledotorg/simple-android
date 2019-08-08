@@ -10,8 +10,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_16"
-    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_24"
+    android:layout_marginStart="@dimen/spacing_24"
     android:layout_marginTop="@dimen/summary_prescriptions_update_when_empty"
     android:orientation="vertical">
 
@@ -27,7 +27,7 @@
       android:id="@+id/patientsummary_prescriptions_summary_container"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_12"
+      android:layout_marginEnd="@dimen/spacing_4"
       android:layout_marginStart="@dimen/spacing_12"
       android:layout_marginTop="@dimen/spacing_16"
       android:baselineAligned="false"

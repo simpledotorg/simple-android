@@ -9,7 +9,6 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
-import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -52,15 +51,14 @@ class ScheduleAppointmentSheetControllerTest {
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
   private val userSubject = PublishSubject.create<User>()
-  private val scheduledAppointmentConfigSubject = BehaviorSubject.create<ScheduleAppointmentConfig>()
-
   private val patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")
 
   private val appointmentConfig: AppointmentConfig = AppointmentConfig(
       minimumOverduePeriodForHighRisk = Period.ofDays(30),
       overduePeriodForLowestRiskLevel = Period.ofDays(365),
       appointmentDuePeriodForDefaulters = Period.ofDays(30),
-      scheduleAppointmentConfigProvider = scheduledAppointmentConfigSubject
+      periodsToScheduleAppointmentsIn = listOf(ScheduleAppointmentIn.days(1)),
+      scheduleAppointmentInByDefault = ScheduleAppointmentIn.days(1)
   )
 
   val controller = ScheduleAppointmentSheetController(
@@ -87,14 +85,10 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
     val date = LocalDate.now(clock).plus(1, ChronoUnit.MONTHS)
-    val oneMonth = ScheduleAppointmentIn(timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
-    val possibleAppointments = listOf(oneMonth)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn(timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
+    val periodsToScheduleAppointmentsIn = listOf(scheduleAppointmentInByDefault)
 
-    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(
-        periodsToScheduleAppointmentsIn = possibleAppointments,
-        scheduleAppointmentInByDefault = oneMonth
-    ))
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     uiEvents.onNext(AppointmentDone)
@@ -115,7 +109,6 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
-    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(listOf(ScheduleAppointmentIn.days(1)), ScheduleAppointmentIn.days(1)))
     configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
     uiEvents.onNext(SchedulingSkipped)
@@ -135,16 +128,15 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when default appointment is set, then update scheduled appointment`() {
-    val defaultAppointment = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
 
-    val possibleAppointments = listOf(
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn(1, ChronoUnit.DAYS),
-        defaultAppointment,
+        scheduleAppointmentInByDefault,
         ScheduleAppointmentIn(3, ChronoUnit.DAYS)
     )
 
-    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
@@ -157,17 +149,15 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when incremented, then next appointment in the list should be scheduled`() {
     // given
-    val possibleAppointments = listOf(
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn(1, ChronoUnit.DAYS),
         ScheduleAppointmentIn(2, ChronoUnit.DAYS),
         ScheduleAppointmentIn(7, ChronoUnit.DAYS)
     )
-    val defaultAppointment = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
-    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
 
     // when
-    scheduledAppointmentConfigSubject.onNext(config)
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -186,17 +176,15 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when decremented, then previous appointment in the list should be scheduled`() {
     // given
-    val possibleAppointments = listOf(
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn(1, ChronoUnit.DAYS),
         ScheduleAppointmentIn(2, ChronoUnit.DAYS),
         ScheduleAppointmentIn(7, ChronoUnit.DAYS)
     )
-    val defaultAppointment = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
-    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
 
     // when
-    scheduledAppointmentConfigSubject.onNext(config)
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     //then
@@ -214,17 +202,16 @@ class ScheduleAppointmentSheetControllerTest {
 
   @Test
   fun `when date is selected and date is incremented, the nearest date should be chosen`() {
-    val twoDaysAppointment = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
-
-    val possibleAppointments = listOf(
+    // given
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn(1, ChronoUnit.DAYS),
-        twoDaysAppointment,
+        ScheduleAppointmentIn(2, ChronoUnit.DAYS),
         ScheduleAppointmentIn(3, ChronoUnit.DAYS),
         ScheduleAppointmentIn(4, ChronoUnit.DAYS)
     )
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
 
-    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, twoDaysAppointment))
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
@@ -251,17 +238,15 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `when the manually select appointment date button is clicked, the date picker must be shown set to the last selected appointment date`() {
     // given
-    val possibleAppointments = listOf(
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn(1, ChronoUnit.DAYS),
         ScheduleAppointmentIn(2, ChronoUnit.DAYS),
         ScheduleAppointmentIn(1, ChronoUnit.WEEKS)
     )
-    val defaultAppointment = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
-    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn(2, ChronoUnit.DAYS)
 
     // when
-    scheduledAppointmentConfigSubject.onNext(config)
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -284,19 +269,17 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `duplicate configured periods for scheduling appointment dates must be ignored`() {
     // given
-    val possibleAppointments = listOf(
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn.days(1),
         ScheduleAppointmentIn.days(2),
         ScheduleAppointmentIn.days(2),
         ScheduleAppointmentIn.weeks(1),
         ScheduleAppointmentIn.weeks(1)
     )
-    val defaultAppointment = ScheduleAppointmentIn.days(1)
-    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn.days(1)
 
     // when
-    scheduledAppointmentConfigSubject.onNext(config)
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -319,17 +302,15 @@ class ScheduleAppointmentSheetControllerTest {
   @Test
   fun `out of order configured periods for scheduling appointment dates must not affect the incrementing and decrementing of dates`() {
     // given
-    val possibleAppointments = listOf(
+    val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn.days(2),
         ScheduleAppointmentIn.weeks(1),
         ScheduleAppointmentIn.days(1)
     )
-    val defaultAppointment = ScheduleAppointmentIn.days(1)
-    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+    val scheduleAppointmentInByDefault = ScheduleAppointmentIn.days(1)
 
     // when
-    scheduledAppointmentConfigSubject.onNext(config)
-    configStream.onNext(appointmentConfig)
+    configStream.onNext(appointmentConfig.withScheduledAppointments(periodsToScheduleAppointmentsIn, scheduleAppointmentInByDefault))
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -348,4 +329,14 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(AppointmentDateDecremented)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-02"))
   }
+}
+
+private fun AppointmentConfig.withScheduledAppointments(
+    periodsToScheduleAppointmentsIn: List<ScheduleAppointmentIn>,
+    scheduleAppointmentInByDefault: ScheduleAppointmentIn
+): AppointmentConfig {
+  return this.copy(
+      periodsToScheduleAppointmentsIn = periodsToScheduleAppointmentsIn,
+      scheduleAppointmentInByDefault = scheduleAppointmentInByDefault
+  )
 }

@@ -57,7 +57,6 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun generateAppointmentDatesForScheduling(): Observable<List<LocalDate>> {
     return configProvider
-        .flatMap { it.scheduleAppointmentConfigProvider }
         .map { it.periodsToScheduleAppointmentsIn }
         .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
         .map { appointmentDates -> appointmentDates.distinct().sorted() }
@@ -113,7 +112,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<LocalDate> {
     val selectDefaultAppointmentOnSheetCreated = events
         .ofType<ScheduleAppointmentSheetCreated>()
-        .withLatestFrom(configProvider.flatMap { it.scheduleAppointmentConfigProvider }) { _, config -> config.scheduleAppointmentInByDefault }
+        .withLatestFrom(configProvider) { _, config -> config.scheduleAppointmentInByDefault }
         .map(this::localDateFromScheduleAppointment)
     return selectDefaultAppointmentOnSheetCreated
   }

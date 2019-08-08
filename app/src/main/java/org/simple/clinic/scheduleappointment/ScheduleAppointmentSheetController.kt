@@ -18,7 +18,6 @@ import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
-import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import java.util.UUID
@@ -31,7 +30,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val config: Observable<ScheduleAppointmentConfig>,
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
-    private val configProvider: Single<AppointmentConfig>,
+    private val configProvider: Observable<AppointmentConfig>,
     private val clock: UserClock,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository
@@ -167,7 +166,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     val combinedStreams = Observables.combineLatest(
         events.ofType<SchedulingSkipped>(),
         patientUuid(events),
-        configProvider.toObservable()
+        configProvider
     )
     val isPatientDefaulterStream = combinedStreams
         .switchMap { (_, patientUuid) -> patientRepository.isPatientDefaulter(patientUuid) }
@@ -178,7 +177,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .filter { isPatientDefaulter -> isPatientDefaulter }
         .withLatestFrom(
             patientUuid(events),
-            configProvider.toObservable(),
+            configProvider,
             currentFacilityStream()
         ) { _, patientUuid, config, currentFacilty ->
           Triple(patientUuid, config, currentFacilty)

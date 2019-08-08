@@ -13,7 +13,6 @@ import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
 import org.simple.clinic.newentry.PatientEntryScreenKey
-import org.simple.clinic.patient.PatientSearchCriteria.Name
 import org.simple.clinic.router.screen.ScreenRouter
 import org.simple.clinic.searchresultsview.PatientSearchView
 import org.simple.clinic.searchresultsview.RegisterNewPatient
@@ -111,10 +110,12 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
 
   private fun screenCreates(): Observable<UiEvent> {
     val screenKey = screenRouter.key<AddIdToPatientSearchResultsScreenKey>(this)
+
     searchResultsView
         .downstreamUiEvents
         .onNext(SearchPatientWithCriteria(screenKey.criteria))
-    return Observable.just(AddIdToPatientSearchResultsScreenCreated(screenKey.fullName, screenKey.identifier))
+
+    return Observable.just(AddIdToPatientSearchResultsScreenCreated(screenKey.criteria, screenKey.identifier))
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

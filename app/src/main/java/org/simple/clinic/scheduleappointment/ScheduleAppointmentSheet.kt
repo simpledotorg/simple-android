@@ -6,15 +6,12 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Button
 import android.widget.DatePicker
-import android.widget.ImageButton
-import android.widget.TextView
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.sheet_schedule_appointment.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToControllerWithoutDelay
@@ -48,13 +45,6 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   @Inject
   lateinit var dateFormatter: DateTimeFormatter
-
-  private val decrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_decrement_date)
-  private val incrementDateButton by bindView<ImageButton>(R.id.scheduleappointment_increment_date)
-  private val calendarButton by bindView<Button>(R.id.scheduleappointment_calendar_button)
-  private val currentDateTextView by bindView<TextView>(R.id.scheduleappointment_current_date)
-  private val notNowButton by bindView<Button>(R.id.scheduleappointment_not_now)
-  private val doneButton by bindView<Button>(R.id.scheduleappointment_done)
 
   private val onDestroys = PublishSubject.create<ScreenDestroyed>()
   private val calendarDateSelectedEvents: Subject<AppointmentCalendarDateSelected> = PublishSubject.create()
@@ -101,7 +91,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   private fun doneClicks() = RxView.clicks(doneButton).map { AppointmentDone }
 
-  private fun appointmentDateClicks() = RxView.clicks(calendarButton).map { ManuallySelectAppointmentDateClicked }
+  private fun appointmentDateClicks() = RxView.clicks(currentAppointmentDate).map { ManuallySelectAppointmentDateClicked }
 
   fun closeSheet() {
     setResult(Activity.RESULT_OK)
@@ -110,7 +100,7 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
 
   @SuppressLint("SetTextI18n")
   fun updateScheduledAppointment(appointmentDate: LocalDate) {
-    calendarButton.text = dateFormatter.format(appointmentDate)
+    currentAppointmentDate.text = dateFormatter.format(appointmentDate)
 
     val today = LocalDate.now(userClock)
     val timeToAppointment = TimeToAppointment.from(currentDate = today, appointmentDate = appointmentDate)

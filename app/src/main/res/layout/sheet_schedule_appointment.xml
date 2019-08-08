@@ -32,7 +32,7 @@
     android:orientation="horizontal">
 
     <ImageButton
-      android:id="@+id/scheduleappointment_decrement_date"
+      android:id="@+id/decrementDateButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackgroundBorderless"
@@ -42,7 +42,7 @@
       tools:ignore="ContentDescription" />
 
     <TextView
-      android:id="@+id/scheduleappointment_current_date"
+      android:id="@+id/currentDateTextView"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_8"
@@ -54,7 +54,7 @@
       tools:text="4 weeks" />
 
     <ImageButton
-      android:id="@+id/scheduleappointment_increment_date"
+      android:id="@+id/incrementDateButton"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:background="?selectableItemBackgroundBorderless"
@@ -66,7 +66,7 @@
   </LinearLayout>
 
   <Button
-    android:id="@+id/scheduleappointment_calendar_button"
+    android:id="@+id/currentAppointmentDate"
     style="@style/Clinic.V2.NoBackgroundRippleButton"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -84,7 +84,7 @@
     android:gravity="center_vertical">
 
     <Button
-      android:id="@+id/scheduleappointment_not_now"
+      android:id="@+id/notNowButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_4"
@@ -97,7 +97,7 @@
       tools:ignore="ButtonStyle" />
 
     <Button
-      android:id="@+id/scheduleappointment_done"
+      android:id="@+id/doneButton"
       android:layout_width="0dp"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_4"

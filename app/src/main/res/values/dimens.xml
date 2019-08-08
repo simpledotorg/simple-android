@@ -29,7 +29,6 @@
   <dimen name="medicalhistory_unselected_padding">20dp</dimen>
 
   <dimen name="summary_prescriptions_update_when_empty">@dimen/spacing_24</dimen>
-  <dimen name="summary_prescriptions_update_when_non_empty">@dimen/spacing_8</dimen>
 
   <dimen name="pinentry_content_bottom_spacing_with_forgot_pin">@dimen/spacing_12</dimen>
   <dimen name="pinentry_content_bottom_spacing_without_forgot_pin">@dimen/spacing_24</dimen>

@@ -38,7 +38,7 @@ data class OngoingNewPatientEntry(
 ) {
 
   companion object {
-    fun withFullName(fullName: String): OngoingNewPatientEntry {
+    fun fromFullName(fullName: String): OngoingNewPatientEntry {
       return OngoingNewPatientEntry(
           personalDetails = PersonalDetails(
               fullName = fullName,
@@ -49,9 +49,13 @@ data class OngoingNewPatientEntry(
       )
     }
 
-    fun withPhoneNumber(phoneNumber: String): OngoingNewPatientEntry {
+    fun fromPhoneNumber(phoneNumber: String): OngoingNewPatientEntry {
       return OngoingNewPatientEntry(phoneNumber = PhoneNumber(number = phoneNumber))
     }
+  }
+
+  fun withIdentifier(identifier: Identifier): OngoingNewPatientEntry {
+    return this.copy(identifier = identifier)
   }
 
   fun validationErrors(dobValidator: UserInputDateValidator, numberValidator: PhoneNumberValidator): ArrayList<PatientEntryValidationError> {

@@ -26,7 +26,7 @@ import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
-import org.simple.clinic.util.TestUtcClock
+import org.simple.clinic.util.TestUserClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.Period
@@ -46,7 +46,7 @@ class ScheduleAppointmentSheetControllerTest {
   private val userSession = mock<UserSession>()
 
   private val uiEvents = PublishSubject.create<UiEvent>()
-  private val clock = TestUtcClock()
+  private val clock = TestUserClock(LocalDate.parse("2019-01-01"))
   private val configStream = PublishSubject.create<AppointmentConfig>()
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
@@ -60,14 +60,13 @@ class ScheduleAppointmentSheetControllerTest {
       appointmentRepository = repository,
       patientRepository = patientRepository,
       configProvider = configStream.firstOrError(),
-      utcClock = clock,
+      clock = clock,
       userSession = userSession,
       facilityRepository = facilityRepository
   )
 
   @Before
   fun setUp() {
-    clock.setYear(2019)
     whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
     whenever(facilityRepository.currentFacility(user)).thenReturn(Observable.just(facility))
 
@@ -271,5 +270,71 @@ class ScheduleAppointmentSheetControllerTest {
     uiEvents.onNext(ManuallySelectAppointmentDateClicked)
     verify(sheet).showManualDateSelector(LocalDate.parse("2019-01-02"))
     clearInvocations(sheet)
+  }
+
+  @Test
+  fun `duplicate configured periods for scheduling appointment dates must be ignored`() {
+    // given
+    val possibleAppointments = listOf(
+        ScheduleAppointmentIn.days(1),
+        ScheduleAppointmentIn.days(2),
+        ScheduleAppointmentIn.days(2),
+        ScheduleAppointmentIn.weeks(1),
+        ScheduleAppointmentIn.weeks(1)
+    )
+    val defaultAppointment = ScheduleAppointmentIn.days(1)
+    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+
+    // when
+    scheduledAppointmentConfigSubject.onNext(config)
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
+
+    // then
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-02"))
+  }
+
+  @Test
+  fun `out of order configured periods for scheduling appointment dates must not affect the incrementing and decrementing of dates`() {
+    // given
+    val possibleAppointments = listOf(
+        ScheduleAppointmentIn.days(2),
+        ScheduleAppointmentIn.weeks(1),
+        ScheduleAppointmentIn.days(1)
+    )
+    val defaultAppointment = ScheduleAppointmentIn.days(1)
+    val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
+
+    // when
+    scheduledAppointmentConfigSubject.onNext(config)
+    uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
+
+    // then
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-02"))
   }
 }

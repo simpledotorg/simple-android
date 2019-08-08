@@ -17,6 +17,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.user.UserSession
+import org.simple.clinic.util.UserClock
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -31,7 +32,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val configProvider: Single<AppointmentConfig>,
-    private val utcClock: UtcClock,
+    private val clock: UserClock,
     private val userSession: UserSession,
     private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
@@ -43,9 +44,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    val configuredAppointmentDatesStream = config
-        .map { it.periodsToScheduleAppointmentsIn }
-        .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
+    val configuredAppointmentDatesStream = generateAppointmentDatesForScheduling()
         .share()
 
     return Observable.mergeArray(
@@ -56,6 +55,13 @@ class ScheduleAppointmentSheetController @Inject constructor(
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
         scheduleCreates(replayedEvents)
     )
+  }
+
+  private fun generateAppointmentDatesForScheduling(): Observable<List<LocalDate>> {
+    return config
+        .map { it.periodsToScheduleAppointmentsIn }
+        .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
+        .map { appointmentDates -> appointmentDates.distinct().sorted() }
   }
 
   private fun scheduleAppointments(
@@ -180,7 +186,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .flatMapSingle { (patientUuid, config, currentFacility) ->
           scheduleAppointmentForPatient(
               uuid = patientUuid,
-              date = LocalDate.now(utcClock).plus(config.appointmentDuePeriodForDefaulters),
+              date = LocalDate.now(clock).plus(config.appointmentDuePeriodForDefaulters),
               currentFacility = currentFacility,
               appointmentType = Appointment.AppointmentType.Automatic
           )
@@ -236,6 +242,6 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun localDateFromScheduleAppointment(appointment: ScheduleAppointmentIn): LocalDate {
-    return LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
+    return LocalDate.now(clock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
   }
 }

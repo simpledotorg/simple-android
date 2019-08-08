@@ -5,10 +5,14 @@ import io.reactivex.ObservableSource
 import io.reactivex.ObservableTransformer
 import io.reactivex.rxkotlin.Observables
 import io.reactivex.rxkotlin.ofType
+import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.businessid.Identifier
+import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
+import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
+import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
 import org.simple.clinic.widgets.UiEvent
@@ -39,9 +43,9 @@ class ScanSimpleIdScreenController @Inject constructor(
         .map { scannedQrCode ->
           try {
             val bpPassportCode = UUID.fromString(scannedQrCode)
-            ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode(bpPassportCode)
+            ValidPassportCode(bpPassportCode)
           } catch (e: IllegalArgumentException) {
-            ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
+            InvalidPassportCode
           }
         }
 
@@ -49,11 +53,30 @@ class ScanSimpleIdScreenController @Inject constructor(
   }
 
   private fun handleScannedBpPassportCodes(events: Observable<UiEvent>): Observable<UiChange> {
-    val scannedBpPassportCodeStream = events
-        .ofType<ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode>()
+    val showKeyboardEvents = events
+        .ofType<ShowKeyboardEvent>()
+
+    val hideKeyboardEvents = events
+        .ofType<HideKeyboardEvent>()
+
+    val keyboardEvents = Observable
+        .merge(showKeyboardEvents, hideKeyboardEvents)
+
+    val sharedScannedBpPassportCodeStream = events
+        .ofType<ValidPassportCode>()
+        .share()
+
+    val scannedBpPassportCodeStream = sharedScannedBpPassportCodeStream
+        .takeUntil(showKeyboardEvents)
         .take(1)
 
-    val foundPatientStream = scannedBpPassportCodeStream
+    val scannedBpPassportCodeStreamAfterHideKeyboard = sharedScannedBpPassportCodeStream
+        .withLatestFrom(keyboardEvents)
+        .filter { (_, keyboardEvent) -> keyboardEvent is HideKeyboardEvent }
+        .map { it.first }
+
+    val foundPatientStream = Observable
+        .merge(scannedBpPassportCodeStream, scannedBpPassportCodeStreamAfterHideKeyboard)
         .map { scannedCode -> scannedCode.bpPassportUuid }
         .flatMap { patientRepository.findPatientWithBusinessId(it.toString()) }
         .replay()
@@ -67,7 +90,7 @@ class ScanSimpleIdScreenController @Inject constructor(
         .combineLatest(foundPatientStream, scannedBpPassportCodeStream)
         .filter { (foundPatient, _) -> foundPatient is None }
         .map { (_, scannedBpPassportCode) -> scannedBpPassportCode.bpPassportUuid }
-        .map { bpPassportCode -> Identifier(value = bpPassportCode.toString(), type = Identifier.IdentifierType.BpPassport) }
+        .map { bpPassportCode -> Identifier(value = bpPassportCode.toString(), type = BpPassport) }
         .map { identifier -> { ui: Ui -> ui.openAddIdToPatientScreen(identifier) } }
 
     return openPatientSummary.mergeWith(openAddIdToPatientSearchScreen)

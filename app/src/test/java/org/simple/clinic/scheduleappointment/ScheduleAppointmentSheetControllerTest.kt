@@ -59,7 +59,7 @@ class ScheduleAppointmentSheetControllerTest {
       config = scheduledAppointmentConfigSubject,
       appointmentRepository = repository,
       patientRepository = patientRepository,
-      configProvider = configStream.firstOrError(),
+      configProvider = configStream,
       clock = clock,
       userSession = userSession,
       facilityRepository = facilityRepository

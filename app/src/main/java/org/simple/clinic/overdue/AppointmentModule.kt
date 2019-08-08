@@ -7,6 +7,8 @@ import dagger.Provides
 import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentConfig
+import org.simple.clinic.scheduleappointment.ScheduleAppointmentModule
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -15,15 +17,16 @@ import org.threeten.bp.Period
 import retrofit2.Retrofit
 import javax.inject.Named
 
-@Module
+@Module(includes = [ScheduleAppointmentModule::class])
 class AppointmentModule {
 
   @Provides
-  fun config(): Observable<AppointmentConfig> {
+  fun config(scheduleAppointmentConfigProvider: Observable<ScheduleAppointmentConfig>): Observable<AppointmentConfig> {
     return Observable.just(AppointmentConfig(
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
         overduePeriodForLowestRiskLevel = Period.ofDays(365),
-        appointmentDuePeriodForDefaulters = Period.ofDays(30)
+        appointmentDuePeriodForDefaulters = Period.ofDays(30),
+        scheduleAppointmentConfigProvider = scheduleAppointmentConfigProvider
     ))
   }
 

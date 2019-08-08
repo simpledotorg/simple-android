@@ -3,14 +3,16 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_margin="@dimen/spacing_8">
+  android:layout_marginBottom="@dimen/spacing_8"
+  android:layout_marginTop="@dimen/spacing_8">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_8"
-    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
+    android:layout_marginTop="@dimen/summary_prescriptions_update_when_empty"
     android:orientation="vertical">
 
     <org.simple.clinic.widgets.OmegaCenterIconButton
@@ -18,7 +20,6 @@
       style="@style/Clinic.V2.Button.WithIcon.Blue2"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/spacing_8"
       android:drawableStart="@drawable/ic_add_medicines"
       tools:text="@string/patientsummary_prescriptions_update" />
 

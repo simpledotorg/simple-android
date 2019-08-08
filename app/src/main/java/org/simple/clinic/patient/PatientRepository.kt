@@ -601,12 +601,7 @@ class PatientRepository @Inject constructor(
         .map { businessIds ->
           businessIds
               .map { businessId -> Pair(businessId.patientUuid, uuidShortCodeCreator.createFromUuid(UUID.fromString(businessId.identifier.value))) }
-              .filter { (_, uuidShortCode) ->
-                shortCode == when (uuidShortCode) {
-                  is UuidShortCode.CompleteShortCode -> uuidShortCode.shortCode
-                  is UuidShortCode.IncompleteShortCode -> uuidShortCode.shortCode
-                }
-              }
+              .filter { (_, uuidShortCode) -> shortCode == uuidShortCode.shortCode }
               .map { (uuid, _) -> uuid }
         }
 

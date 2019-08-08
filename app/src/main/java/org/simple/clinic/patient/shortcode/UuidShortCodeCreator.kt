@@ -17,11 +17,7 @@ class UuidShortCodeCreator(
         .filter { characterFilter.filter(it) }
         .take(requiredShortCodeLength)
 
-    return if (shortCode.length < requiredShortCodeLength) {
-      UuidShortCode.IncompleteShortCode(uuid, shortCode, requiredShortCodeLength)
-    } else {
-      UuidShortCode.CompleteShortCode(uuid, shortCode)
-    }
+    return UuidShortCode(uuid, shortCode, requiredShortCodeLength)
   }
 
   interface CharacterFilter {

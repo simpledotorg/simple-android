@@ -9,6 +9,7 @@ import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.Single
+import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -51,7 +52,7 @@ class ScheduleAppointmentSheetControllerTest {
   private val facility = PatientMocker.facility()
   private val user = PatientMocker.loggedInUser()
   private val userSubject = PublishSubject.create<User>()
-  private val scheduledAppointmentConfigSubject = PublishSubject.create<ScheduleAppointmentConfig>()
+  private val scheduledAppointmentConfigSubject = BehaviorSubject.create<ScheduleAppointmentConfig>()
 
   private val patientUuid = UUID.fromString("d44bf81f-4369-4bbc-a51b-52d88c54f065")
 
@@ -89,11 +90,11 @@ class ScheduleAppointmentSheetControllerTest {
     val oneMonth = ScheduleAppointmentIn(timeAmount = 1, chronoUnit = ChronoUnit.MONTHS)
     val possibleAppointments = listOf(oneMonth)
 
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(
         periodsToScheduleAppointmentsIn = possibleAppointments,
         scheduleAppointmentInByDefault = oneMonth
     ))
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     uiEvents.onNext(AppointmentDone)
@@ -114,7 +115,7 @@ class ScheduleAppointmentSheetControllerTest {
     whenever(patientRepository.isPatientDefaulter(patientUuid)).thenReturn(Observable.just(isPatientDefaulter))
     whenever(repository.schedule(any(), any(), any(), any())).thenReturn(Single.just(PatientMocker.appointment()))
 
-    val appointmentConfig = appointmentConfig
+    scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(listOf(ScheduleAppointmentIn.days(1)), ScheduleAppointmentIn.days(1)))
     configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
     uiEvents.onNext(SchedulingSkipped)
@@ -142,8 +143,8 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointmentIn(3, ChronoUnit.DAYS)
     )
 
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, defaultAppointment))
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
@@ -165,8 +166,8 @@ class ScheduleAppointmentSheetControllerTest {
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(config)
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -194,8 +195,8 @@ class ScheduleAppointmentSheetControllerTest {
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(config)
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     //then
@@ -222,8 +223,8 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointmentIn(4, ChronoUnit.DAYS)
     )
 
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(ScheduleAppointmentConfig(possibleAppointments, twoDaysAppointment))
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"))
@@ -259,8 +260,8 @@ class ScheduleAppointmentSheetControllerTest {
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(config)
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -294,8 +295,8 @@ class ScheduleAppointmentSheetControllerTest {
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(config)
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then
@@ -327,8 +328,8 @@ class ScheduleAppointmentSheetControllerTest {
     val config = ScheduleAppointmentConfig(possibleAppointments, defaultAppointment)
 
     // when
-    configStream.onNext(appointmentConfig)
     scheduledAppointmentConfigSubject.onNext(config)
+    configStream.onNext(appointmentConfig)
     uiEvents.onNext(ScheduleAppointmentSheetCreated(patientUuid = patientUuid))
 
     // then

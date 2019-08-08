@@ -27,7 +27,6 @@ typealias Ui = ScheduleAppointmentSheet
 typealias UiChange = (Ui) -> Unit
 
 class ScheduleAppointmentSheetController @Inject constructor(
-    private val config: Observable<ScheduleAppointmentConfig>,
     private val appointmentRepository: AppointmentRepository,
     private val patientRepository: PatientRepository,
     private val configProvider: Observable<AppointmentConfig>,
@@ -57,7 +56,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
   }
 
   private fun generateAppointmentDatesForScheduling(): Observable<List<LocalDate>> {
-    return config
+    return configProvider
+        .flatMap { it.scheduleAppointmentConfigProvider }
         .map { it.periodsToScheduleAppointmentsIn }
         .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
         .map { appointmentDates -> appointmentDates.distinct().sorted() }
@@ -113,7 +113,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<LocalDate> {
     val selectDefaultAppointmentOnSheetCreated = events
         .ofType<ScheduleAppointmentSheetCreated>()
-        .withLatestFrom(config) { _, config -> config.scheduleAppointmentInByDefault }
+        .withLatestFrom(configProvider.flatMap { it.scheduleAppointmentConfigProvider }) { _, config -> config.scheduleAppointmentInByDefault }
         .map(this::localDateFromScheduleAppointment)
     return selectDefaultAppointmentOnSheetCreated
   }

@@ -14,6 +14,7 @@ import org.junit.Test
 import org.simple.clinic.patient.OngoingNewPatientEntry
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchCriteria
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
@@ -48,7 +49,7 @@ class AddIdToPatientSearchResultsControllerTest {
   fun `when register new patient is clicked, then patient entry screen must be opened`() {
     whenever(patientRepository.saveOngoingEntry(any())).thenReturn(Completable.complete())
     val identifier = Identifier(value = "identifier", type = Identifier.IdentifierType.BpPassport)
-    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(patientName = "name", identifier = identifier))
+    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(PatientSearchCriteria.Name(patientName = "name"), identifier = identifier))
 
     uiEvents.onNext(AddIdToPatientSearchResultRegisterNewPatientClicked)
 

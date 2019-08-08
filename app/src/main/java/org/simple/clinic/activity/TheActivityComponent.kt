@@ -65,7 +65,7 @@ import org.simple.clinic.summary.linkId.LinkIdWithPatientView
 import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.InstantRxPreferencesConverter
-import org.simple.clinic.widgets.PatientSearchResultView
+import org.simple.clinic.widgets.PatientSearchResultItemView
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.threeten.bp.Instant
 import javax.inject.Named
@@ -123,7 +123,7 @@ interface TheActivityComponent {
   fun inject(target: LinkIdWithPatientView)
   fun inject(target: RecentPatientsScreen)
   fun inject(target: PhoneMaskBottomSheet)
-  fun inject(target: PatientSearchResultView)
+  fun inject(target: PatientSearchResultItemView)
   fun inject(target: AllPatientsInFacilityView)
   fun inject(target: RegistrationLoadingScreen)
   fun inject(target: LoggedOutOfDeviceDialog)

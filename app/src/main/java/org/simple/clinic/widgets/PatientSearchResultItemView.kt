@@ -22,7 +22,7 @@ import org.threeten.bp.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 
-class PatientSearchResultView(
+class PatientSearchResultItemView(
     context: Context,
     attributeSet: AttributeSet
 ) : CardView(context, attributeSet) {

@@ -3,6 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
   android:layout_marginBottom="@dimen/spacing_8"
   android:layout_marginTop="@dimen/spacing_8">
 
@@ -28,17 +29,18 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginEnd="@dimen/spacing_4"
-      android:layout_marginStart="@dimen/spacing_12"
       android:layout_marginTop="@dimen/spacing_16"
       android:baselineAligned="false"
       android:orientation="vertical">
 
-      <LinearLayout
+      <com.google.android.flexbox.FlexboxLayout
         android:id="@+id/patientsummary_prescriptions_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:orientation="vertical" />
+        app:alignContent="stretch"
+        app:alignItems="stretch"
+        app:flexWrap="wrap" />
 
       <TextView
         android:id="@+id/patientsummary_prescriptions_last_updated_timestamp"

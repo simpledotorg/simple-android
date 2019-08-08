@@ -44,8 +44,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .replay()
 
     val configuredAppointmentDatesStream = config
-        .map { it.possibleAppointments }
-        .map { possibleAppointments -> possibleAppointments.map(this::localDateFromScheduleAppointment) }
+        .map { it.periodsToScheduleAppointmentsIn }
+        .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
         .share()
 
     return Observable.mergeArray(
@@ -108,7 +108,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<LocalDate> {
     val selectDefaultAppointmentOnSheetCreated = events
         .ofType<ScheduleAppointmentSheetCreated>()
-        .withLatestFrom(config) { _, config -> config.defaultAppointment }
+        .withLatestFrom(config) { _, config -> config.scheduleAppointmentInByDefault }
         .map(this::localDateFromScheduleAppointment)
     return selectDefaultAppointmentOnSheetCreated
   }
@@ -235,7 +235,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .switchMap(facilityRepository::currentFacility)
   }
 
-  private fun localDateFromScheduleAppointment(appointment: ScheduleAppointment): LocalDate {
+  private fun localDateFromScheduleAppointment(appointment: ScheduleAppointmentIn): LocalDate {
     return LocalDate.now(utcClock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
   }
 }

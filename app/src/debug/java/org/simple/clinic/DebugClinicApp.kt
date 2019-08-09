@@ -28,7 +28,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorStatusCalculator
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.AppSignature
 import org.simple.clinic.widgets.ProxySystemKeyboardEnterToImeOption
-import org.simple.clinic.widgets.SimpleActivityLifecycleCallbacks
+import org.simple.clinic.activity.SimpleActivityLifecycleCallbacks
 import org.threeten.bp.Duration
 import timber.log.Timber
 import java.util.concurrent.TimeUnit

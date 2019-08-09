@@ -66,8 +66,6 @@ import org.simple.clinic.summary.updatephone.UpdatePhoneNumberDialog
 import org.simple.clinic.sync.indicator.SyncIndicatorView
 import org.simple.clinic.util.InstantRxPreferencesConverter
 import org.simple.clinic.widgets.PatientSearchResultView
-import org.simple.clinic.widgets.RxTheActivityLifecycle
-import org.simple.clinic.widgets.TheActivityLifecycle
 import org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
 import org.threeten.bp.Instant
 import javax.inject.Named

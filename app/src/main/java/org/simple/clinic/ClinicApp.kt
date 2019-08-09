@@ -74,9 +74,7 @@ abstract class ClinicApp : Application() {
     updateAnalyticsUserId.listen(Schedulers.io())
     syncProtocolsOnLogin.listen()
     dataSyncOnApproval.sync()
-
-    // TODO: Enable this once the feature is complete
-    // unauthorizeUser.listen(Schedulers.io())
+    unauthorizeUser.listen(Schedulers.io())
   }
 
   abstract fun buildDaggerGraph(): AppComponent

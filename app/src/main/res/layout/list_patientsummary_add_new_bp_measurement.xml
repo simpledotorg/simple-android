@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:layout_marginStart="@dimen/spacing_8"
   android:layout_marginTop="@dimen/spacing_8"
-  android:background="@color/white"
-  tools:ignore="MissingPrefix">
+  android:background="@color/white">
 
   <org.simple.clinic.widgets.OmegaCenterIconButton
     android:id="@+id/patientsummary_item_newbp"
     style="@style/Clinic.V2.Button.WithIcon.Blue2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/spacing_24"
+    android:layout_margin="@dimen/spacing_8"
     android:drawableStart="@drawable/ic_new_bp"
     android:text="@string/patientsummary_bp_add_new" />
 </androidx.cardview.widget.CardView>

@@ -1,4 +1,6 @@
-package org.simple.clinic.widgets
+package org.simple.clinic.activity
+
+import org.simple.clinic.widgets.UiEvent
 
 sealed class TheActivityLifecycle : UiEvent {
 

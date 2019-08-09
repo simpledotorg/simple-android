@@ -26,8 +26,6 @@ import org.simple.clinic.router.screen.KeyChangeAnimator
 import org.simple.clinic.router.screen.NestedKeyChanger
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
-import org.simple.clinic.screen.FullScreenKeyChangeAnimator
-import org.simple.clinic.widgets.TheActivityLifecycle
 import javax.inject.Inject
 
 class TheActivity : AppCompatActivity() {

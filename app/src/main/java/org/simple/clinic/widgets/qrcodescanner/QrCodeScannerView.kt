@@ -17,7 +17,7 @@ import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.ScreenDestroyed
-import org.simple.clinic.widgets.TheActivityLifecycle
+import org.simple.clinic.activity.TheActivityLifecycle
 import timber.log.Timber
 import javax.inject.Inject
 

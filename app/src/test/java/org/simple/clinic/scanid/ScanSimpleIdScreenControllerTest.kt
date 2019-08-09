@@ -132,6 +132,19 @@ class ScanSimpleIdScreenControllerTest {
     verifyNoMoreInteractions(screen)
   }
 
+  @Test
+  fun `when the keyboard is down, then don't process invalid QR code events`() {
+    // when
+    with(uiEvents) {
+      onNext(ShowKeyboardEvent)
+      onNext(HideKeyboardEvent)
+      onNext(InvalidPassportCode)
+    }
+
+    // then
+    verifyZeroInteractions(screen)
+  }
+
   @Suppress("Unused")
   private fun `params for scanning simple passport qr code`(): List<List<Any>> {
     fun testCase(patient: Optional<Patient>): List<Any> {

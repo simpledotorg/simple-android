@@ -84,8 +84,8 @@ class BloodPressureEntrySheetController @Inject constructor(
         closeSheetWhenEditedBpIsDeleted(replayedEvents),
         showDateValidationErrors(replayedEvents),
         hideDateValidationErrors(replayedEvents),
-        dismissSheetWhenBpIsSaved(replayedEvents),
-        closeSheetWhenUserBecomesUnauthorized())
+        dismissSheetWhenBpIsSaved(replayedEvents)
+    )
   }
 
   private fun automaticFocusChanges(events: Observable<UiEvent>): Observable<UiChange> {
@@ -542,13 +542,6 @@ class BloodPressureEntrySheetController @Inject constructor(
     return events
         .ofType<BloodPressureSaved>()
         .map { { ui: Ui -> ui.setBpSavedResultAndFinish() } }
-  }
-
-  private fun closeSheetWhenUserBecomesUnauthorized(): Observable<UiChange> {
-    return userSession
-        .requireLoggedInUser()
-        .filter { user -> user.loggedInStatus == User.LoggedInStatus.UNAUTHORIZED }
-        .map { { ui: Ui -> ui.finish() } }
   }
 
   sealed class SaveBpData {

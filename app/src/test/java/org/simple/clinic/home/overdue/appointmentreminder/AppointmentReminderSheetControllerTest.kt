@@ -6,7 +6,6 @@ import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Completable
-import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -14,11 +13,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.patient.PatientMocker
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
@@ -37,19 +32,12 @@ class AppointmentReminderSheetControllerTest {
 
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val appointmentUuid = UUID.randomUUID()
-  val user = PatientMocker.loggedInUser()
-  val userSubject = PublishSubject.create<User>()
-  val userSession = mock<UserSession>()
 
-  val controller = AppointmentReminderSheetController(repository, userSession)
+  val controller = AppointmentReminderSheetController(repository)
 
   @Before
   fun setUp() {
-    whenever(userSession.requireLoggedInUser()).thenReturn(userSubject)
-
     uiEvents.compose(controller).subscribe { uiChange -> uiChange(sheet) }
-
-    userSubject.onNext(user)
   }
 
   @Test
@@ -136,30 +124,6 @@ class AppointmentReminderSheetControllerTest {
 
     verify(repository).createReminder(appointmentUuid, LocalDate.now(ZoneOffset.UTC).plus(2L, ChronoUnit.WEEKS))
     verify(sheet).closeSheet()
-  }
-
-  @Test
-  @Parameters(value = [
-    "NOT_LOGGED_IN|false",
-    "OTP_REQUESTED|false",
-    "LOGGED_IN|false",
-    "RESETTING_PIN|false",
-    "RESET_PIN_REQUESTED|false",
-    "UNAUTHORIZED|true"
-  ])
-  fun `whenever the user status becomes unauthorized, then close the sheet`(
-      loggedInStatus: User.LoggedInStatus,
-      shouldCloseSheet: Boolean
-  ) {
-    verify(sheet, never()).finish()
-
-    userSubject.onNext(user.copy(loggedInStatus = loggedInStatus))
-
-    if(shouldCloseSheet) {
-      verify(sheet).finish()
-    } else {
-      verify(sheet, never()).finish()
-    }
   }
 }
 

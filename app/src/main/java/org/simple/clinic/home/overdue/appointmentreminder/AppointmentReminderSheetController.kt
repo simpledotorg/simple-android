@@ -7,8 +7,6 @@ import io.reactivex.rxkotlin.withLatestFrom
 import org.simple.clinic.ReplayUntilScreenIsDestroyed
 import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentRepository
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
 import org.threeten.bp.ZoneOffset
@@ -19,8 +17,7 @@ typealias Ui = AppointmentReminderSheet
 typealias UiChange = (Ui) -> Unit
 
 class AppointmentReminderSheetController @Inject constructor(
-    private val repository: AppointmentRepository,
-    private val userSession: UserSession
+    private val repository: AppointmentRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
@@ -32,8 +29,8 @@ class AppointmentReminderSheetController @Inject constructor(
         sheetCreates(replayedEvents),
         dateIncrements(replayedEvents),
         dateDecrements(replayedEvents),
-        saveReminder(replayedEvents),
-        closeSheetWhenUserBecomesUnauthorized())
+        saveReminder(replayedEvents)
+    )
   }
 
   private fun sheetCreates(events: Observable<UiEvent>): Observable<UiChange> {
@@ -104,12 +101,5 @@ class AppointmentReminderSheetController @Inject constructor(
               .createReminder(appointmentUuid = uuid, reminderDate = date)
               .andThen(Observable.just { ui: Ui -> ui.closeSheet() })
         }
-  }
-
-  private fun closeSheetWhenUserBecomesUnauthorized(): Observable<UiChange> {
-    return userSession
-        .requireLoggedInUser()
-        .filter { user -> user.loggedInStatus == User.LoggedInStatus.UNAUTHORIZED }
-        .map { { ui: Ui -> ui.finish() } }
   }
 }

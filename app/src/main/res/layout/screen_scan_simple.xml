@@ -9,7 +9,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/scansimpleid_title" />
+    app:title="@string/scansimpleid_title"
+    android:tag="Tool bar Scan Simple ID"/>
 
   <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
     android:id="@+id/qrCodeScannerView"
@@ -48,7 +49,7 @@
       android:layout_height="wrap_content"
       android:layout_gravity="center"
       android:ems="10"
-      android:hint="123 4567"
+      android:hint="@string/scansimpleid_hint_short_code"
       android:imeOptions="actionGo"
       android:inputType="number"
       android:maxEms="7" />

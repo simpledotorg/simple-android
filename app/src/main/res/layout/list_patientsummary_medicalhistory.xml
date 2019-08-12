@@ -4,7 +4,9 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:layout_marginBottom="@dimen/spacing_8"
-  android:layout_marginTop="@dimen/spacing_16"
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:layout_marginStart="@dimen/spacing_8"
+  android:layout_marginTop="@dimen/spacing_8"
   tools:ignore="MissingPrefix">
 
   <LinearLayout
@@ -17,8 +19,8 @@
     <TextView
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginEnd="@dimen/spacing_24"
-      android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginStart="@dimen/spacing_16"
       android:text="@string/patientsummary_medicalhistory_title"
       android:textAppearance="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
@@ -27,8 +29,8 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/spacing_8"
-      android:layout_marginEnd="@dimen/spacing_24"
-      android:layout_marginStart="@dimen/spacing_24"
+      android:layout_marginEnd="@dimen/spacing_16"
+      android:layout_marginStart="@dimen/spacing_16"
       android:layout_marginTop="@dimen/spacing_4"
       android:text="@string/patientsummary_medicalhistory_last_updated"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey1" />

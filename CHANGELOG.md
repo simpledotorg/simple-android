@@ -4,7 +4,7 @@
 ### Fixes
 - Fix searching by phone number shows duplicate results for patients with multiple BPs
 
-## On Demo
+## 2019-08-12-5048
 ### Feature
 - Search by phone number support from the screen to find patient without scanning
 - Add a loading screen for registration

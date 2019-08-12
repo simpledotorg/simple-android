@@ -105,8 +105,8 @@ class TheActivityController @Inject constructor(
     val localUser = userSession.loggedInUser().blockingFirst().toNullable()
 
     val canMoveToHomeScreen = when (localUser?.loggedInStatus) {
-      NOT_LOGGED_IN, RESETTING_PIN -> false
-      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED, UNAUTHORIZED -> true
+      NOT_LOGGED_IN, RESETTING_PIN, UNAUTHORIZED -> false
+      LOGGED_IN, OTP_REQUESTED, RESET_PIN_REQUESTED -> true
       null -> false
     }
 

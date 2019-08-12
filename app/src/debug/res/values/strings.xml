@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">DEBUG Simple</string>
+  <string name="app_name">Simple DEBUG</string>
   <!--suppress UnusedResources -->
-  <string name="leak_canary_display_activity_label">DEBUG Simple Leaks</string>
+  <string name="leak_canary_display_activity_label">Simple DEBUG Leaks</string>
 </resources>

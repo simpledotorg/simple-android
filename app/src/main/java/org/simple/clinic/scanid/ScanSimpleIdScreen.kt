@@ -62,7 +62,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   private fun doneClicks(): Observable<UiEvent> {
     return RxTextView
         .editorActionEvents(editText)
-        .map { ShortCodeSearched }
+        .map { ShortCodeSearched(ShortCodeInput(editText.text.toString())) }
   }
 
   fun openPatientSummary(patientUuid: UUID) {
@@ -78,5 +78,17 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   fun openAddIdToPatientScreen(identifier: Identifier) {
     screenRouter.popAndPush(AddIdToPatientSearchScreenKey(identifier), RouterDirection.FORWARD)
+  }
+
+  fun showShortCodeValidationError() {
+    TODO("not implemented")
+  }
+
+  fun hideShortCodeValidationError() {
+    TODO("not implemented")
+  }
+
+  fun openPatientShortCodeSearch(validShortCode: String) {
+    TODO("not implemented")
   }
 }

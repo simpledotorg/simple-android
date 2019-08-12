@@ -32,7 +32,10 @@ class ScanSimpleIdScreenController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    return handleScannedBpPassportCodes(replayedEvents)
+    return Observable.merge(
+        handleScannedBpPassportCodes(replayedEvents),
+        handleShortCodeSearch(replayedEvents)
+    )
   }
 
   private fun mergeWithScannedBpPassportCodes() = ObservableTransformer<UiEvent, UiEvent> { events ->
@@ -94,5 +97,31 @@ class ScanSimpleIdScreenController @Inject constructor(
         .map { identifier -> { ui: Ui -> ui.openAddIdToPatientScreen(identifier) } }
 
     return openPatientSummary.mergeWith(openAddIdToPatientSearchScreen)
+  }
+
+  private fun handleShortCodeSearch(events: Observable<UiEvent>): Observable<UiChange> {
+    val hideValidationErrors = events
+        .ofType<ShortCodeChanged>()
+        .map { { ui: Ui -> ui.hideShortCodeValidationError() } }
+
+    val shortCodes = events
+        .ofType<ShortCodeSearched>()
+        .map { it.shortCode }
+        .share()
+
+    val showValidationErrors = shortCodes
+        .filter { !it.isValid() }
+        .map { { ui: Ui -> ui.showShortCodeValidationError() } }
+
+    val openPatientSearchScreenChanges = shortCodes
+        .filter { it.isValid() }
+        .map { { ui: Ui -> ui.openPatientShortCodeSearch(it.shortCodeText) } }
+
+
+    return Observable.merge(
+        hideValidationErrors,
+        showValidationErrors,
+        openPatientSearchScreenChanges
+    )
   }
 }

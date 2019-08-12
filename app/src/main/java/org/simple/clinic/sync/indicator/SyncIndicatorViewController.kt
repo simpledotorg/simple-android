@@ -22,6 +22,7 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.ConnectToSync
 import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
+import org.simple.clinic.util.ResolvedError
 import org.simple.clinic.util.UtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
@@ -40,6 +41,11 @@ class SyncIndicatorViewController @Inject constructor(
     private val dataSync: DataSync,
     @Named("frequently_syncing_repositories") private val frequentlySyncingRepositories: ArrayList<SynceableRepository<*, *>>
 ) : ObservableTransformer<UiEvent, UiChange> {
+
+  private val errorTypesToShowErrorFor = setOf(
+      ResolvedError.NetworkRelated::class,
+      ResolvedError.Unexpected::class
+  )
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -114,6 +120,7 @@ class SyncIndicatorViewController @Inject constructor(
       dataSync
           .streamSyncErrors()
           .take(1)
+          .filter { error -> error::class in errorTypesToShowErrorFor }
           .map { { ui: Ui -> ui.showErrorDialog(it) } }
     }
 

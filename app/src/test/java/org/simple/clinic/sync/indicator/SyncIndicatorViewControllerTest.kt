@@ -29,13 +29,15 @@ import org.simple.clinic.sync.indicator.SyncIndicatorState.SyncPending
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Synced
 import org.simple.clinic.sync.indicator.SyncIndicatorState.Syncing
 import org.simple.clinic.util.ResolvedError
+import org.simple.clinic.util.ResolvedError.NetworkRelated
+import org.simple.clinic.util.ResolvedError.Unauthorized
+import org.simple.clinic.util.ResolvedError.Unexpected
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.TestUtcClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import org.threeten.bp.temporal.ChronoUnit
-import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 @RunWith(JUnitParamsRunner::class)
@@ -53,18 +55,16 @@ class SyncIndicatorViewControllerTest {
   private val uiEvents = PublishSubject.create<UiEvent>()
   private val configSubject = PublishSubject.create<SyncIndicatorConfig>()
 
-  lateinit var controller: SyncIndicatorViewController
+  private val controller = SyncIndicatorViewController(
+      lastSyncState = lastSyncStatePreference,
+      utcClock = utcClock,
+      configProvider = configSubject,
+      dataSync = dataSync,
+      frequentlySyncingRepositories = frequentlySyncingRepositories
+  )
 
   @Before
   fun setUp() {
-    controller = SyncIndicatorViewController(
-        lastSyncState = lastSyncStatePreference,
-        utcClock = utcClock,
-        configProvider = configSubject,
-        dataSync = dataSync,
-        frequentlySyncingRepositories = frequentlySyncingRepositories
-    )
-
     whenever(lastSyncStatePreference.asObservable()).thenReturn(lastSyncStateStream)
 
     uiEvents
@@ -123,26 +123,42 @@ class SyncIndicatorViewControllerTest {
     verify(dataSync).sync(SyncGroup.FREQUENT)
   }
 
-  @Test
-  @Parameters(method = "params for testing sync errors")
-  fun `when sync indicator is clicked and sync starts, appropriate failure dialog should show if any sync error is thrown`(error: ResolvedError) {
-    whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
-    whenever(dataSync.sync(SyncGroup.FREQUENT)).thenReturn(Completable.complete())
+  data class ShowFailureDialogParams(
+      val error: ResolvedError,
+      val shouldShowErrorDialog: Boolean
+  )
 
-    lastSyncStateStream.onNext(LastSyncedState(lastSyncProgress = SUCCESS))
+  @Test
+  @Parameters(method = "params for showing failure dialog")
+  fun `appropriate failure dialog should be shown for all sync errors except Unauthorized`(
+      testCase: ShowFailureDialogParams
+  ) {
+    val (error: ResolvedError,
+        shouldShowErrorDialog: Boolean) = testCase
+
+    // given
+    whenever(dataSync.sync(SyncGroup.FREQUENT)).thenReturn(Completable.complete())
+    whenever(dataSync.streamSyncErrors()).thenReturn(Observable.just(error))
+    lastSyncStateStream.onNext(LastSyncedState())
+
+    // when
     uiEvents.onNext(SyncIndicatorViewClicked)
 
-    verify(dataSync).sync(SyncGroup.FREQUENT)
-    verify(dataSync).streamSyncErrors()
-    verify(indicator).showErrorDialog(errorType = error)
+    // then
+    if (shouldShowErrorDialog) {
+      verify(indicator).showErrorDialog(error)
+    } else {
+      verify(indicator, never()).showErrorDialog(any())
+    }
   }
 
-  @Suppress("unused")
-  private fun `params for testing sync errors`(): List<Any> {
+  @Suppress("Unused")
+  private fun `params for showing failure dialog`(): List<ShowFailureDialogParams> {
     return listOf(
-        ResolvedError.NetworkRelated(UnknownHostException()),
-        ResolvedError.NetworkRelated(SocketTimeoutException()),
-        ResolvedError.Unexpected(RuntimeException())
+        ShowFailureDialogParams(NetworkRelated(UnknownHostException()), true),
+        ShowFailureDialogParams(NetworkRelated(UnknownHostException()), true),
+        ShowFailureDialogParams(Unexpected(RuntimeException()), true),
+        ShowFailureDialogParams(Unauthorized(RuntimeException()), false)
     )
   }
 

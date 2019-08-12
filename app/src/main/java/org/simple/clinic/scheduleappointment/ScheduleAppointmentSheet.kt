@@ -21,6 +21,7 @@ import org.simple.clinic.widgets.BottomSheetActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
+import org.threeten.bp.Period
 import org.threeten.bp.format.DateTimeFormatter
 import java.util.UUID
 import javax.inject.Inject
@@ -140,9 +141,17 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     val datePickerDialog = DatePickerDialog(this, listener, date.year, date.monthValue - 1, date.dayOfMonth)
 
     datePickerDialog.datePicker.apply {
-      minDate = System.currentTimeMillis()
-      maxDate = LocalDate.now(userClock).plusYears(1).toUtcInstant(userClock).toEpochMilli()
+      minDate = epochMillisForTimeInFuture(Period.ofDays(1))
+      maxDate = epochMillisForTimeInFuture(Period.ofYears(1))
     }
     datePickerDialog.show()
+  }
+
+  private fun epochMillisForTimeInFuture(period: Period): Long {
+    return LocalDate
+        .now(userClock)
+        .plus(period)
+        .toUtcInstant(userClock)
+        .toEpochMilli()
   }
 }

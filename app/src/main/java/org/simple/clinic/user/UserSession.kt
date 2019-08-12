@@ -367,14 +367,25 @@ class UserSession @Inject constructor(
         .map { if (it.isEmpty()) None else Just(it.first()) }
   }
 
+  @Deprecated(
+      message = "User can get logged out now and cleared; Don't use this function anymore",
+      replaceWith = ReplaceWith("loggedInUser")
+  )
   fun requireLoggedInUser(): Observable<User> {
-    return loggedInUser()
-        .map { (user) ->
-          if (user == null) {
-            throw AssertionError("User isn't logged in yet")
-          }
-          user
-        }
+    /*
+    * The earlier version of this method used to throw an error if the returned value from
+    * loggedInUser() was None, but we have added the logout feature which clears the database in the
+    * background.
+    *
+    * This means that subscribers can no longer assume that the user will ALWAYS be present in their
+    * specific use case, and must explicitly choose to either ignore or handle a User being None.
+    *
+    * Since this is not a very frequent case that a user will be logged out, we can change this
+    * function to instead just not emit anything (instead of throwing an exception) if the user gets
+    * cleared and deprecate this function. Callers can choose to migrate in stages since this
+    * function is being used EVERYWHERE.
+    **/
+    return loggedInUser().filterAndUnwrapJust()
   }
 
   // FIXME: Figure out a better way to add access tokens to network calls in a reactive fashion

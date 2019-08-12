@@ -10,8 +10,6 @@ import org.simple.clinic.ReportAnalyticsEvents
 import org.simple.clinic.overdue.AppointmentCancelReason.Dead
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.user.User
-import org.simple.clinic.user.UserSession
 import org.simple.clinic.widgets.UiEvent
 import javax.inject.Inject
 
@@ -20,8 +18,7 @@ typealias UiChange = (Ui) -> Unit
 
 class RemoveAppointmentScreenController @Inject constructor(
     private val appointmentRepository: AppointmentRepository,
-    private val patientRepository: PatientRepository,
-    private val userSession: UserSession
+    private val patientRepository: PatientRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
   override fun apply(events: Observable<UiEvent>): ObservableSource<UiChange> {
@@ -31,8 +28,8 @@ class RemoveAppointmentScreenController @Inject constructor(
 
     return Observable.merge(
         reasonClicks(replayedEvents),
-        doneClicks(replayedEvents),
-        closeSheetWhenUserBecomesUnauthorized())
+        doneClicks(replayedEvents)
+    )
   }
 
   private fun reasonClicks(events: Observable<UiEvent>): Observable<UiChange> {
@@ -85,12 +82,5 @@ class RemoveAppointmentScreenController @Inject constructor(
         }
 
     return Observable.merge(cancelWithReasonStream, markPatientStatusDeadStream, markPatientAlreadyVisitedStream)
-  }
-
-  private fun closeSheetWhenUserBecomesUnauthorized(): Observable<UiChange> {
-    return userSession
-        .requireLoggedInUser()
-        .filter { user -> user.loggedInStatus == User.LoggedInStatus.UNAUTHORIZED }
-        .map { { ui: Ui -> ui.finish() } }
   }
 }

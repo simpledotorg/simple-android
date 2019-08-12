@@ -616,32 +616,6 @@ class BloodPressureEntrySheetControllerTest {
   }
 
   @Test
-  @Parameters(value = [
-    "NOT_LOGGED_IN|false",
-    "OTP_REQUESTED|false",
-    "LOGGED_IN|false",
-    "RESETTING_PIN|false",
-    "RESET_PIN_REQUESTED|false",
-    "UNAUTHORIZED|true"
-  ])
-  fun `whenever the user status becomes unauthorized, then close the sheet`(
-      loggedInStatus: User.LoggedInStatus,
-      shouldCloseSheet: Boolean
-  ) {
-    whenever(facilityRepository.currentFacility(any<User>())).thenReturn(Observable.just(facility))
-
-    verify(sheet, never()).finish()
-
-    userSubject.onNext(user.copy(loggedInStatus = loggedInStatus))
-
-    if (shouldCloseSheet) {
-      verify(sheet).finish()
-    } else {
-      verify(sheet, never()).finish()
-    }
-  }
-
-  @Test
   fun `whenever the BP sheet is shown to add a new BP, then show today's date`() {
     val today = LocalDate.now(testUserClock)
 

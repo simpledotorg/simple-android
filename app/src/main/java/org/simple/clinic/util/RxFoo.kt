@@ -19,3 +19,7 @@ operator fun Timed<*>.minus(timed: Timed<*>): Duration {
 
   return Duration.ofMillis(durationMillis)
 }
+
+fun Observable<Boolean>.filterTrue(): Observable<Boolean> {
+  return this.filter { isTrue -> isTrue }
+}

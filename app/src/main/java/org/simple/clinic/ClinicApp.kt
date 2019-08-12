@@ -7,6 +7,7 @@ import androidx.work.Configuration
 import androidx.work.WorkManager
 import com.gabrielittner.threetenbp.LazyThreeTen
 import io.reactivex.schedulers.Schedulers
+import org.simple.clinic.activity.CloseActivitiesWhenUserIsUnauthorized
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.analytics.AnalyticsReporter
 import org.simple.clinic.analytics.UpdateAnalyticsUserId
@@ -40,6 +41,9 @@ abstract class ClinicApp : Application() {
 
   @Inject
   lateinit var dataSyncOnApproval: IDataSyncOnApproval
+
+  @Inject
+  lateinit var closeActivitiesWhenUserIsUnauthorized: CloseActivitiesWhenUserIsUnauthorized
 
   protected open val analyticsReporters = emptyList<AnalyticsReporter>()
 
@@ -75,6 +79,9 @@ abstract class ClinicApp : Application() {
     syncProtocolsOnLogin.listen()
     dataSyncOnApproval.sync()
     unauthorizeUser.listen(Schedulers.io())
+
+    registerActivityLifecycleCallbacks(closeActivitiesWhenUserIsUnauthorized)
+    closeActivitiesWhenUserIsUnauthorized.listen()
   }
 
   abstract fun buildDaggerGraph(): AppComponent

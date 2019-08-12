@@ -4,16 +4,17 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginBottom="@dimen/spacing_8"
+  android:layout_marginEnd="@dimen/spacing_8"
+  android:layout_marginStart="@dimen/spacing_8"
   android:layout_marginTop="@dimen/spacing_8">
 
   <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/spacing_16"
-    android:layout_marginEnd="@dimen/spacing_24"
-    android:layout_marginStart="@dimen/spacing_24"
-    android:layout_marginTop="@dimen/summary_prescriptions_update_when_empty"
+    android:layout_marginEnd="@dimen/spacing_8"
+    android:layout_marginStart="@dimen/spacing_8"
+    android:layout_marginTop="@dimen/spacing_8"
     android:orientation="vertical">
 
     <org.simple.clinic.widgets.OmegaCenterIconButton

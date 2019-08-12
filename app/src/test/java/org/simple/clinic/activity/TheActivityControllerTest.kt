@@ -246,7 +246,7 @@ class TheActivityControllerTest {
         testCase(
             hasCompletedOnboarding = true,
             loggedInStatus = UNAUTHORIZED,
-            expectedKeyType = HomeScreenKey::class.java
+            expectedKeyType = RegistrationPhoneScreenKey::class.java
         ),
         testCase(
             hasCompletedOnboarding = false,
@@ -276,7 +276,7 @@ class TheActivityControllerTest {
         testCase(
             hasCompletedOnboarding = false,
             loggedInStatus = UNAUTHORIZED,
-            expectedKeyType = HomeScreenKey::class.java
+            expectedKeyType = OnboardingScreenKey::class.java
         )
     )
   }

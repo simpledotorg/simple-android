@@ -363,6 +363,7 @@
 
   <!--Scan Simple ID-->
   <string name="scansimpleid_title">Scan card ID</string>
+  <string name="scansimpleid_hint_short_code">123 4567</string>
 
   <!--- Sync Indicator-->
   <string name="syncindicator_status_pending">Sync pending</string>

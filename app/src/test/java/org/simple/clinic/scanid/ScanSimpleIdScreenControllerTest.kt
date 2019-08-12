@@ -82,6 +82,8 @@ class ScanSimpleIdScreenControllerTest {
     }
   }
 
+  //TODO Add verification for camera status (hide/show)
+
   @Test
   fun `when the keyboard is up, then don't process valid QR code scan events`() {
     // given
@@ -166,6 +168,51 @@ class ScanSimpleIdScreenControllerTest {
     verifyNoMoreInteractions(screen)
   }
 
+  @Test
+  fun `when invalid short code is entered then show validation error`() {
+    //given
+    val shortCodeText = "3456"
+    val shortCodeInput = ShortCodeInput(shortCodeText)
+
+    //when
+    uiEvents.onNext(ShortCodeSearched(shortCodeInput))
+
+    //then
+    verify(screen).showShortCodeValidationError()
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when short code text changes, then hide validation error`() {
+    //given
+    val invalidShortCode = "3456"
+    val invalidShortCodeInput = ShortCodeInput(invalidShortCode)
+
+    uiEvents.onNext(ShortCodeSearched(invalidShortCodeInput))
+    verify(screen).showShortCodeValidationError()
+
+    //when
+    uiEvents.onNext(ShortCodeChanged)
+
+    //then
+    verify(screen).hideShortCodeValidationError()
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when user searches with a valid short code, then take the user to the patient search screen`() {
+    // given
+    val validShortCode = "1234567"
+    val validShortCodeInput = ShortCodeInput(validShortCode)
+
+    // when
+    uiEvents.onNext(ShortCodeSearched(validShortCodeInput))
+
+    // then
+    verify(screen).openPatientShortCodeSearch(validShortCode)
+    verifyNoMoreInteractions(screen)
+  }
+
   @Suppress("Unused")
   private fun `params for scanning simple passport qr code`(): List<List<Any>> {
     fun testCase(patient: Optional<Patient>): List<Any> {
@@ -174,7 +221,6 @@ class ScanSimpleIdScreenControllerTest {
 
     return listOf(
         testCase(None),
-        testCase(PatientMocker.patient().toOptional()),
         testCase(PatientMocker.patient().toOptional())
     )
   }

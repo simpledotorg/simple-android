@@ -1,9 +1,10 @@
 package org.simple.clinic.di
 
 import dagger.Component
-import org.simple.clinic.AuthenticationRule
 import org.simple.clinic.DatabaseMigrationAndroidTest
 import org.simple.clinic.FakerModule
+import org.simple.clinic.LocalAuthenticationRule
+import org.simple.clinic.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -31,6 +32,7 @@ import org.simple.clinic.sync.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest
+import org.simple.clinic.user.UserSessionServerIntegrationTest
 import org.simple.clinic.util.identifierdisplay.IdentifierDisplayAdapterAndroidTest
 
 @AppScope
@@ -49,7 +51,7 @@ interface TestAppComponent : AppComponent {
   fun inject(target: UserDaoAndroidTest)
   fun inject(target: AppointmentSyncAndroidTest)
   fun inject(target: AppointmentRepositoryAndroidTest)
-  fun inject(target: AuthenticationRule)
+  fun inject(target: LocalAuthenticationRule)
   fun inject(target: MedicalHistorySyncAndroidTest)
   fun inject(target: MedicalHistoryRepositoryAndroidTest)
   fun inject(target: RelativeTimestampGeneratorAndroidTest)
@@ -67,4 +69,6 @@ interface TestAppComponent : AppComponent {
   fun inject(target: BusinessIdMetaDataAdapterAndroidTest)
   fun inject(target: HelpSyncAndroidTest)
   fun inject(target: IdentifierDisplayAdapterAndroidTest)
+  fun inject(target: ServerAuthenticationRule)
+  fun inject(target: UserSessionServerIntegrationTest)
 }

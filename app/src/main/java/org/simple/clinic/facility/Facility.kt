@@ -102,5 +102,8 @@ data class Facility(
 
     @Query("SELECT COUNT(uuid) FROM facility WHERE syncStatus = :syncStatus")
     fun count(syncStatus: SyncStatus): Flowable<Int>
+
+    @Query("DELETE FROM Facility")
+    fun clear()
   }
 }

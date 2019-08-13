@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.patient.SyncStatus
@@ -45,14 +45,10 @@ class AppointmentSyncAndroidTest : BaseSyncCoordinatorAndroidTest<Appointment, A
       batchSize = BatchSize.VERY_SMALL,
       syncGroup = SyncGroup.FREQUENT))
 
-  private val authenticationRule = AuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   @get:Rule
   val ruleChain = RuleChain
-      .outerRule(authenticationRule)
-      .around(rxErrorsRule)!!
+      .outerRule(ServerAuthenticationRule())
+      .around(RxErrorsRule())!!
 
   @Before
   fun setUp() {

@@ -7,7 +7,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.medicalhistory.sync.MedicalHistoryPayload
@@ -52,17 +52,13 @@ class MedicalHistorySyncAndroidTest : BaseSyncCoordinatorAndroidTest<MedicalHist
       batchSize = BatchSize.VERY_SMALL,
       syncGroup = SyncGroup.FREQUENT))
 
-  private val authenticationRule = AuthenticationRule()
-
-  private val rxErrorsRule = RxErrorsRule()
-
   private val registerPatientRule = RegisterPatientRule(patientUuid = UUID.randomUUID())
 
   @get:Rule
   val ruleChain = RuleChain
-      .outerRule(authenticationRule)
+      .outerRule(ServerAuthenticationRule())
       .around(registerPatientRule)
-      .around(rxErrorsRule)!!
+      .around(RxErrorsRule())!!
 
   @Before
   fun setup() {

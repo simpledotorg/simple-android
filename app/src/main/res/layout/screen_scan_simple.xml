@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <org.simple.clinic.scanid.ScanSimpleIdScreen xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
 
@@ -8,9 +9,9 @@
     android:id="@+id/toolBar"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:tag="Tool bar Scan Simple ID"
     app:navigationIcon="@drawable/ic_arrow_back_24dp"
-    app:title="@string/scansimpleid_title"
-    android:tag="Tool bar Scan Simple ID"/>
+    app:title="@string/scansimpleid_title" />
 
   <org.simple.clinic.widgets.qrcodescanner.QrCodeScannerView
     android:id="@+id/qrCodeScannerView"
@@ -43,15 +44,33 @@
     app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
     app:layout_constraintStart_toStartOf="parent">
 
-    <EditText
-      android:id="@+id/editText"
-      android:layout_width="wrap_content"
+    <LinearLayout
+      android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_gravity="center"
-      android:ems="10"
-      android:hint="@string/scansimpleid_hint_short_code"
-      android:imeOptions="actionGo"
-      android:inputType="number"
-      android:maxEms="7" />
+      android:orientation="vertical">
+
+      <EditText
+        android:id="@+id/shortCodeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:ems="10"
+        android:hint="@string/scansimpleid_hint_short_code"
+        android:imeOptions="actionGo"
+        android:inputType="number"
+        android:maxEms="7" />
+
+      <TextView
+        android:id="@+id/shortCodeErrorText"
+        style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_8"
+        android:layout_marginTop="@dimen/spacing_8"
+        android:gravity="center_horizontal"
+        android:visibility="gone"
+        tools:text="@string/scansimpleid_shortcode_error"
+        tools:visibility="visible" />
+    </LinearLayout>
   </androidx.cardview.widget.CardView>
 </org.simple.clinic.scanid.ScanSimpleIdScreen>

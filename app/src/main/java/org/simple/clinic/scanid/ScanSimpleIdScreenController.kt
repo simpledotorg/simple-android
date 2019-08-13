@@ -64,6 +64,7 @@ class ScanSimpleIdScreenController @Inject constructor(
 
     val keyboardEvents = Observable
         .merge(showKeyboardEvents, hideKeyboardEvents)
+        .share()
 
     val sharedScannedBpPassportCodeStream = events
         .ofType<ValidPassportCode>()
@@ -96,7 +97,14 @@ class ScanSimpleIdScreenController @Inject constructor(
         .map { bpPassportCode -> Identifier(value = bpPassportCode.toString(), type = BpPassport) }
         .map { identifier -> { ui: Ui -> ui.openAddIdToPatientScreen(identifier) } }
 
-    return openPatientSummary.mergeWith(openAddIdToPatientSearchScreen)
+    val hideQrCodeScanner = showKeyboardEvents
+        .map { { ui: Ui -> ui.hideQrCodeScannerView() } }
+
+    return Observable.merge(
+        openPatientSummary,
+        openAddIdToPatientSearchScreen,
+        hideQrCodeScanner
+    )
   }
 
   private fun handleShortCodeSearch(events: Observable<UiEvent>): Observable<UiChange> {

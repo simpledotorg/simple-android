@@ -5,7 +5,6 @@ import io.bloco.faker.Faker
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.RegistrationResult
@@ -29,21 +28,15 @@ class AuthenticationRule : TestRule {
   lateinit var facilityApi: FacilitySyncApi
 
   @Inject
-  lateinit var facilityDao: Facility.RoomDao
+  lateinit var faker: Faker
 
   @Inject
-  lateinit var faker: Faker
+  lateinit var appDatabase: AppDatabase
 
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
         TestClinicApp.appComponent().inject(this@AuthenticationRule)
-
-        // Cannot figure out why, but we're occasionally seeing failed tests
-        // because facility syncing gets called with stale "last-pull" timestamp.
-        // As a workaround, the app data will now be cleared before running
-        // every test and not after.
-        logout()
 
         try {
           // Login also needs to happen inside this try block so that in case
@@ -63,7 +56,7 @@ class AuthenticationRule : TestRule {
         .map { it.payloads }
         .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
         .blockingGet()
-    facilityDao.save(facilities)
+    appDatabase.facilityDao().save(facilities)
 
     val registerFacilityAt = facilities.first()
 
@@ -93,6 +86,6 @@ class AuthenticationRule : TestRule {
   }
 
   private fun logout() {
-    userSession.logout().toCompletable().blockingAwait()
+    appDatabase.clearAllTables()
   }
 }

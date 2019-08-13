@@ -45,7 +45,7 @@ class AddIdToPatientSearchResultsController @Inject constructor(
     val screenCreates = events.ofType<AddIdToPatientSearchResultsScreenCreated>()
 
     return events.ofType<AddIdToPatientSearchResultRegisterNewPatientClicked>()
-        .withLatestFrom(screenCreates) { _, screenCreated -> screenCreated.criteria to screenCreated.identifier }
+        .withLatestFrom(screenCreates) { _, screenCreated -> screenCreated.searchCriteria to screenCreated.identifier }
         .map { (criteria, identifier) -> entryFromSearchCriteria(criteria, identifier) }
         .flatMap(this::saveEntryAndGoToEntryScreen)
   }

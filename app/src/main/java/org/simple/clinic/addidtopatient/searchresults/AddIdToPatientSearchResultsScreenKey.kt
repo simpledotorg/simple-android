@@ -9,7 +9,7 @@ import org.simple.clinic.router.screen.FullScreenKey
 
 @Parcelize
 data class AddIdToPatientSearchResultsScreenKey(
-    val criteria: PatientSearchCriteria,
+    val searchCriteria: PatientSearchCriteria,
     val identifier: Identifier
 ) : FullScreenKey {
 
@@ -19,8 +19,8 @@ data class AddIdToPatientSearchResultsScreenKey(
   override fun layoutRes() = R.layout.screen_addidtopatientsearchresults
 
   val fullName: String
-    get() = when (criteria) {
-      is PatientSearchCriteria.Name -> criteria.patientName
+    get() = when (searchCriteria) {
+      is PatientSearchCriteria.Name -> searchCriteria.patientName
       is PatientSearchCriteria.PhoneNumber -> ""
     }
 }

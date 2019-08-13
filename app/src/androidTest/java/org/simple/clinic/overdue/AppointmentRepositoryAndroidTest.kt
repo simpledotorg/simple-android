@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -91,7 +91,7 @@ class AppointmentRepositoryAndroidTest {
   private val testClock: TestUtcClock
     get() = clock as TestUtcClock
 
-  private val authenticationRule = AuthenticationRule()
+  private val authenticationRule = LocalAuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
 

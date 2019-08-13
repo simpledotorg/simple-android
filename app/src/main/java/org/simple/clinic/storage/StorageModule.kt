@@ -73,7 +73,7 @@ open class StorageModule(
 
   @Provides
   @AppScope
-  fun appDatabase(
+  open fun appDatabase(
       appContext: Application,
       factory: SupportSQLiteOpenHelper.Factory,
       migrations: ArrayList<Migration>

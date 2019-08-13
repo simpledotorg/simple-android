@@ -3,6 +3,7 @@ package org.simple.clinic.user
 import android.content.SharedPreferences
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -26,9 +27,11 @@ class UserDaoAndroidTest {
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+  }
 
+  @After
+  fun tearDown() {
     appDatabase.clearAllTables()
-    sharedPrefs.edit().clear().apply()
   }
 
   /**

@@ -12,12 +12,13 @@ import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
+import java.util.UUID
 import javax.inject.Inject
 
 /** Runs every test with an authenticated user.
  *
  **/
-class AuthenticationRule : TestRule {
+class ServerAuthenticationRule : TestRule {
 
   @Inject
   lateinit var userSession: UserSession
@@ -37,7 +38,7 @@ class AuthenticationRule : TestRule {
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
-        TestClinicApp.appComponent().inject(this@AuthenticationRule)
+        TestClinicApp.appComponent().inject(this@ServerAuthenticationRule)
 
         try {
           // Login also needs to happen inside this try block so that in case
@@ -56,11 +57,9 @@ class AuthenticationRule : TestRule {
     fetchFacilities()
     val registerFacilityAt = getFirstStoredFacility()
 
-    while (true) {
-      val registrationResult = registerUserAtFacility(registerFacilityAt)
-      if (registrationResult is RegistrationResult.Success) {
-        break
-      }
+    val registrationResult = registerUserAtFacility(registerFacilityAt)
+    if (registrationResult !is RegistrationResult.Success) {
+      throw RuntimeException("Could not register user because: $registrationResult")
     }
 
     verifyAccessTokenIsPresent()

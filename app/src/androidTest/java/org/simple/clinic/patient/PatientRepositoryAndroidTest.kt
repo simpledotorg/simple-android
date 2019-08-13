@@ -10,7 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.rules.RuleChain
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -107,7 +107,7 @@ class PatientRepositoryAndroidTest {
   @Inject
   lateinit var businessIdMetaDataAdapter: BusinessIdMetaDataAdapter
 
-  private val authenticationRule = AuthenticationRule()
+  private val authenticationRule = LocalAuthenticationRule()
 
   private val instantTaskExecutorRule = InstantTaskExecutorRule()
 
@@ -596,8 +596,6 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun editing_a_patients_phone_number_should_not_trigger_foreign_key_cascades_action() {
-    database.openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true)
-
     val patientUuid = UUID.randomUUID()
     val initialNumber = testData.phoneNumberPayload(number = "123")
     val initialPatient = testData.patientPayload(uuid = patientUuid, phoneNumbers = listOf(initialNumber))
@@ -621,8 +619,6 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun editing_a_patients_address_should_not_trigger_foreign_key_cascades_action() {
-    database.openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true)
-
     val patientUuid = UUID.randomUUID()
     val initialAddress = testData.addressPayload(district = "Gotham")
     val initialPatient = testData.patientPayload(uuid = patientUuid, address = initialAddress)
@@ -645,8 +641,6 @@ class PatientRepositoryAndroidTest {
 
   @Test
   fun editing_a_patients_profile_should_not_trigger_foreign_key_cascades_action() {
-    database.openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true)
-
     val patientUuid = UUID.randomUUID()
     val address = testData.addressPayload()
     val number = testData.phoneNumberPayload()

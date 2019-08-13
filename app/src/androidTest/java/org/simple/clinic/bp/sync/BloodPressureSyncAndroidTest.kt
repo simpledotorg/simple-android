@@ -7,7 +7,8 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
-import org.simple.clinic.AuthenticationRule
+import org.simple.clinic.LocalAuthenticationRule
+import org.simple.clinic.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.bp.BloodPressureMeasurement
@@ -47,7 +48,7 @@ class BloodPressureSyncAndroidTest : BaseSyncCoordinatorAndroidTest<BloodPressur
       batchSize = BatchSize.VERY_SMALL,
       syncGroup = SyncGroup.FREQUENT))
 
-  private val authenticationRule = AuthenticationRule()
+  private val authenticationRule = ServerAuthenticationRule()
 
   private val rxErrorsRule = RxErrorsRule()
 

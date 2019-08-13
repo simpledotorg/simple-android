@@ -17,10 +17,4 @@ data class AddIdToPatientSearchResultsScreenKey(
   override val analyticsName = "Add ID to Patient: Search Results"
 
   override fun layoutRes() = R.layout.screen_addidtopatientsearchresults
-
-  val fullName: String
-    get() = when (searchCriteria) {
-      is PatientSearchCriteria.Name -> searchCriteria.patientName
-      is PatientSearchCriteria.PhoneNumber -> ""
-    }
 }

@@ -100,10 +100,14 @@ class ScanSimpleIdScreenController @Inject constructor(
     val hideQrCodeScanner = showKeyboardEvents
         .map { { ui: Ui -> ui.hideQrCodeScannerView() } }
 
+    val showQrCodeScanner = hideKeyboardEvents
+        .map { { ui: Ui -> ui.showQrCodeScannerView() } }
+
     return Observable.merge(
         openPatientSummary,
         openAddIdToPatientSearchScreen,
-        hideQrCodeScanner
+        hideQrCodeScanner,
+        showQrCodeScanner
     )
   }
 

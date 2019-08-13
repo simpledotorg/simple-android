@@ -91,4 +91,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   fun openPatientShortCodeSearch(validShortCode: String) {
     TODO("not implemented")
   }
+
+  fun hideQrCodeScannerView() {
+    TODO("not implemented")
+  }
 }

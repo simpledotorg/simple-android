@@ -113,9 +113,9 @@ class AddIdToPatientSearchResultsScreen(context: Context, attrs: AttributeSet) :
 
     searchResultsView
         .downstreamUiEvents
-        .onNext(SearchPatientWithCriteria(screenKey.criteria))
+        .onNext(SearchPatientWithCriteria(screenKey.searchCriteria))
 
-    return Observable.just(AddIdToPatientSearchResultsScreenCreated(screenKey.criteria, screenKey.identifier))
+    return Observable.just(AddIdToPatientSearchResultsScreenCreated(screenKey.searchCriteria, screenKey.identifier))
   }
 
   fun openPatientSummaryScreen(patientUuid: UUID) {

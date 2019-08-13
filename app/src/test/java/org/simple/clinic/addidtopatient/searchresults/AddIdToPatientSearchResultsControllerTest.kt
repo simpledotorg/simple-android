@@ -59,7 +59,7 @@ class AddIdToPatientSearchResultsControllerTest {
         .thenReturn(Completable.complete())
 
     // when
-    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(criteria = Name(fullName), identifier = identifier))
+    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(searchCriteria = Name(fullName), identifier = identifier))
     uiEvents.onNext(AddIdToPatientSearchResultRegisterNewPatientClicked)
 
     // then
@@ -80,7 +80,7 @@ class AddIdToPatientSearchResultsControllerTest {
         .thenReturn(Completable.complete())
 
     // when
-    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(criteria = PhoneNumber(phoneNumber), identifier = identifier))
+    uiEvents.onNext(AddIdToPatientSearchResultsScreenCreated(searchCriteria = PhoneNumber(phoneNumber), identifier = identifier))
     uiEvents.onNext(AddIdToPatientSearchResultRegisterNewPatientClicked)
 
     // then

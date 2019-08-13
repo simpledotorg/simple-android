@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.never
 import com.nhaarman.mockito_kotlin.verify
 import com.nhaarman.mockito_kotlin.verifyNoMoreInteractions
-import com.nhaarman.mockito_kotlin.verifyZeroInteractions
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
@@ -82,7 +81,19 @@ class ScanSimpleIdScreenControllerTest {
     }
   }
 
-  //TODO Add verification for camera status (hide/show)
+  //TODO Add verification for camera status show
+
+  @Test
+  fun `when the keyboard is up, then hide the QR code scanner view`() {
+    // when
+    with(uiEvents) {
+      onNext(ShowKeyboardEvent)
+    }
+
+    // then
+    verify(screen).hideQrCodeScannerView()
+    verifyNoMoreInteractions(screen)
+  }
 
   @Test
   fun `when the keyboard is up, then don't process valid QR code scan events`() {
@@ -99,7 +110,8 @@ class ScanSimpleIdScreenControllerTest {
     }
 
     // then
-    verifyZeroInteractions(screen)
+    verify(screen).hideQrCodeScannerView()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -111,7 +123,8 @@ class ScanSimpleIdScreenControllerTest {
     }
 
     // then
-    verifyZeroInteractions(screen)
+    verify(screen).hideQrCodeScannerView()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -131,6 +144,7 @@ class ScanSimpleIdScreenControllerTest {
 
     // then
     verify(screen).openPatientSummary(patientUuid)
+    verify(screen).hideQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 
@@ -144,7 +158,8 @@ class ScanSimpleIdScreenControllerTest {
     }
 
     // then
-    verifyZeroInteractions(screen)
+    verify(screen).hideQrCodeScannerView()
+    verifyNoMoreInteractions(screen)
   }
 
   @Test
@@ -165,6 +180,7 @@ class ScanSimpleIdScreenControllerTest {
 
     // then
     verify(screen).openPatientSummary(patientUuid)
+    verify(screen).hideQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 

@@ -21,7 +21,6 @@ import org.simple.clinic.patient.businessid.BusinessIdMetaDataAdapter
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.patient.filter.SearchPatientByName
-import org.simple.clinic.patient.shortcode.UuidShortCode
 import org.simple.clinic.patient.shortcode.UuidShortCodeCreator
 import org.simple.clinic.patient.sync.PatientPayload
 import org.simple.clinic.registration.phone.PhoneNumberValidator
@@ -457,17 +456,7 @@ class PatientRepository @Inject constructor(
 
   fun clearPatientData(): Completable {
     return Completable
-        .fromCallable {
-          database.runInTransaction {
-            database.patientDao().clear()
-            database.phoneNumberDao().clear()
-            database.addressDao().clear()
-            database.bloodPressureDao().clearData()
-            database.prescriptionDao().clearData()
-            database.appointmentDao().clear()
-            database.medicalHistoryDao().clear()
-          }
-        }
+        .fromCallable { database.clearPatientData() }
         .andThen(reportsRepository.deleteReportsFile().toCompletable())
   }
 

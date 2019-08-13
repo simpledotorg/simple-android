@@ -406,12 +406,13 @@ class TestData @Inject constructor(
   }
 
   fun ongoingRegistrationEntry(
+      uuid: UUID = UUID.randomUUID(),
       phoneNumber: String = faker.number.number(10),
       pin: String = qaUserPin(),
       registrationFacility: Facility
   ): OngoingRegistrationEntry {
     return OngoingRegistrationEntry(
-        uuid = UUID.randomUUID(),
+        uuid = uuid,
         phoneNumber = phoneNumber,
         fullName = faker.name.name(),
         pin = pin,

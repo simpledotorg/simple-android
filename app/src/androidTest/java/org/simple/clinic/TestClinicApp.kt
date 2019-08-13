@@ -1,6 +1,8 @@
 package org.simple.clinic
 
 import android.app.Application
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteOpenHelper
 import com.tspoon.traceur.Traceur
 import io.reactivex.Completable
 import io.reactivex.Single
@@ -85,6 +87,11 @@ class TestClinicApp : ClinicApp() {
         })
         .storageModule(object : StorageModule(databaseName = "ignored", runDatabaseQueriesOnMainThread = true) {
           override fun sqliteOpenHelperFactory() = AppSqliteOpenHelperFactory(inMemory = true)
+
+          override fun appDatabase(appContext: Application, factory: SupportSQLiteOpenHelper.Factory, migrations: ArrayList<Migration>): AppDatabase {
+            return super.appDatabase(appContext, factory, migrations)
+                .apply { openHelper.writableDatabase.setForeignKeyConstraintsEnabled(true) }
+          }
         })
         .patientModule(object : PatientModule() {
           override fun provideAgeFuzzer(utcClock: UtcClock): AgeFuzzer {

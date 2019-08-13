@@ -47,7 +47,7 @@ class AddIdToPatientSearchResultsControllerTest {
   }
 
   @Test
-  fun `when register new patient is clicked, then patient entry screen must be opened`() {
+  fun `when searching with name and register new patient is clicked, then patient entry screen must be opened with name saved in ongoing patient entry`() {
     // given
     val fullName = "name"
     val identifier = Identifier(value = "identifier", type = BpPassport)
@@ -68,7 +68,7 @@ class AddIdToPatientSearchResultsControllerTest {
   }
 
   @Test
-  fun `when register new patient is clicked after searching with phone number, the number must be used to create the ongoing entry`() {
+  fun `when searching with phone number and register new patient is clicked, then patient entry screen must be opened with phone number saved in ongoing patient entry`() {
     // given
     val phoneNumber = "123456"
     val identifier = Identifier(value = "identifier", type = BpPassport)

@@ -1,14 +1,15 @@
 package org.simple.clinic.widgets
 
 import android.content.Context
-import androidx.annotation.ColorInt
 import android.util.AttributeSet
+import android.widget.Button
 import android.widget.FrameLayout
+import androidx.annotation.ColorInt
 import org.simple.clinic.R
 
 class PrimarySolidButtonWithFrame(context: Context, attributeSet: AttributeSet) : FrameLayout(context, attributeSet) {
 
-  val button by lazy { getChildAt(0) as PrimarySolidButton }
+  val button by lazy { getChildAt(0) as Button }
 
   @ColorInt
   private var frameBackgroundEnabledResId: Int = 0

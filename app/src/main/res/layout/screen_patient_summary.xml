@@ -111,10 +111,12 @@
     app:frameBackgroundDisabled="@color/grey3"
     app:frameBackgroundEnabled="@color/blue2">
 
-    <org.simple.clinic.widgets.PrimarySolidButton
-      style="@style/Clinic.V2.Button.Solid.WithoutIcon"
+    <org.simple.clinic.widgets.OmegaCenterIconButton
+      style="@style/Clinic.V2.Button.WithIcon.Blue1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_margin="6dp"
+      android:drawableStart="@drawable/ic_done_24dp"
       android:text="@string/patientsummary_finish_saving_patient"
       android:textAppearance="@style/Clinic.V2.TextAppearance.Button1.White100" />
   </org.simple.clinic.widgets.PrimarySolidButtonWithFrame>

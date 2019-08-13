@@ -2,11 +2,13 @@ package org.simple.clinic.scanid
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
+import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.addidtopatient.searchforpatient.AddIdToPatientSearchScreenKey
 import org.simple.clinic.bindUiToController
@@ -61,8 +63,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   private fun doneClicks(): Observable<UiEvent> {
     return RxTextView
-        .editorActionEvents(editText)
-        .map { ShortCodeSearched(ShortCodeInput(editText.text.toString())) }
+        .editorActionEvents(shortCodeText)
+        .map { ShortCodeSearched(ShortCodeInput(shortCodeText.text.toString())) }
   }
 
   fun openPatientSummary(patientUuid: UUID) {
@@ -81,11 +83,12 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun showShortCodeValidationError() {
-    TODO("not implemented")
+    shortCodeErrorText.visibility = View.VISIBLE
+    shortCodeErrorText.text = resources.getString(R.string.scansimpleid_shortcode_error)
   }
 
   fun hideShortCodeValidationError() {
-    TODO("not implemented")
+    shortCodeErrorText.visibility = View.GONE
   }
 
   fun openPatientShortCodeSearch(validShortCode: String) {

@@ -95,4 +95,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   fun hideQrCodeScannerView() {
     TODO("not implemented")
   }
+
+  fun showQrCodeScannerView() {
+    TODO("not implemented")
+  }
 }

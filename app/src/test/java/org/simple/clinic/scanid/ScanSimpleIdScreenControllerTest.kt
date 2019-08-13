@@ -81,17 +81,23 @@ class ScanSimpleIdScreenControllerTest {
     }
   }
 
-  //TODO Add verification for camera status show
-
   @Test
   fun `when the keyboard is up, then hide the QR code scanner view`() {
     // when
-    with(uiEvents) {
-      onNext(ShowKeyboardEvent)
-    }
+    uiEvents.onNext(ShowKeyboardEvent)
 
     // then
     verify(screen).hideQrCodeScannerView()
+    verifyNoMoreInteractions(screen)
+  }
+
+  @Test
+  fun `when the keyboard is dismissed, then show the QR code scanner view`() {
+    // when
+    uiEvents.onNext(HideKeyboardEvent)
+
+    // then
+    verify(screen).showQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 
@@ -145,6 +151,7 @@ class ScanSimpleIdScreenControllerTest {
     // then
     verify(screen).openPatientSummary(patientUuid)
     verify(screen).hideQrCodeScannerView()
+    verify(screen).showQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 
@@ -159,6 +166,7 @@ class ScanSimpleIdScreenControllerTest {
 
     // then
     verify(screen).hideQrCodeScannerView()
+    verify(screen).showQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 
@@ -181,6 +189,7 @@ class ScanSimpleIdScreenControllerTest {
     // then
     verify(screen).openPatientSummary(patientUuid)
     verify(screen).hideQrCodeScannerView()
+    verify(screen).showQrCodeScannerView()
     verifyNoMoreInteractions(screen)
   }
 

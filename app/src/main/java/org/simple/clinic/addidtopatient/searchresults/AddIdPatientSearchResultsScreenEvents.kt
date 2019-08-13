@@ -6,7 +6,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.widgets.UiEvent
 
 data class AddIdToPatientSearchResultsScreenCreated(
-    val criteria: PatientSearchCriteria,
+    val searchCriteria: PatientSearchCriteria,
     val identifier: Identifier
 ) : UiEvent
 

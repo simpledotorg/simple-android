@@ -116,4 +116,16 @@ abstract class AppDatabase : RoomDatabase() {
   abstract fun businessIdDao(): BusinessId.RoomDao
 
   abstract fun missingPhoneReminderDao(): MissingPhoneReminder.RoomDao
+
+  fun clearPatientData() {
+    runInTransaction {
+      patientDao().clear()
+      phoneNumberDao().clear()
+      addressDao().clear()
+      bloodPressureDao().clearData()
+      prescriptionDao().clearData()
+      appointmentDao().clear()
+      medicalHistoryDao().clear()
+    }
+  }
 }

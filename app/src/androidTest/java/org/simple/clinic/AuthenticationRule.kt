@@ -5,6 +5,7 @@ import io.bloco.faker.Faker
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.RegistrationResult
@@ -52,33 +53,54 @@ class AuthenticationRule : TestRule {
   }
 
   private fun register() {
-    val facilities = facilityApi.pull(10)
-        .map { it.payloads }
-        .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
-        .blockingGet()
-    appDatabase.facilityDao().save(facilities)
-
-    val registerFacilityAt = facilities.first()
+    fetchFacilities()
+    val registerFacilityAt = getFirstStoredFacility()
 
     while (true) {
-      val registrationEntry = testData.ongoingRegistrationEntry(
-          phoneNumber = faker.number.number(10),
-          pin = testData.qaUserPin(),
-          registrationFacility = registerFacilityAt)
-
-      val registrationResult = userSession.saveOngoingRegistrationEntry(registrationEntry)
-          .andThen(userSession.saveOngoingRegistrationEntryAsUser())
-          .andThen(userSession.register())
-          .blockingGet()
-
+      val registrationResult = registerUserAtFacility(registerFacilityAt)
       if (registrationResult is RegistrationResult.Success) {
         break
       }
     }
 
+    verifyAccessTokenIsPresent()
+    verifyUserCanSyncData()
+  }
+
+  private fun fetchFacilities() {
+    val facilities = facilityApi.pull(10)
+        .map { it.payloads }
+        .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
+        .blockingGet()
+    appDatabase.facilityDao().save(facilities)
+  }
+
+  private fun getFirstStoredFacility(): Facility {
+    return appDatabase
+        .facilityDao()
+        .all()
+        .blockingFirst()
+        .first()
+  }
+
+  private fun registerUserAtFacility(facility: Facility): RegistrationResult {
+    val registrationEntry = testData.ongoingRegistrationEntry(
+        phoneNumber = faker.number.number(10),
+        pin = testData.qaUserPin(),
+        registrationFacility = facility)
+
+    return userSession.saveOngoingRegistrationEntry(registrationEntry)
+        .andThen(userSession.saveOngoingRegistrationEntryAsUser())
+        .andThen(userSession.register())
+        .blockingGet()
+  }
+
+  private fun verifyAccessTokenIsPresent() {
     val (accessToken) = userSession.accessToken()
     assertThat(accessToken).isNotNull()
+  }
 
+  private fun verifyUserCanSyncData() {
     val (loggedInUser) = userSession.loggedInUser().blockingFirst()
     assertThat(userSession.isUserLoggedIn()).isTrue()
     assertThat(loggedInUser!!.status).isEqualTo(UserStatus.ApprovedForSyncing)

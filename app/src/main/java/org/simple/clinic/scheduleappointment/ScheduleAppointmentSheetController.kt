@@ -61,7 +61,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun generatePotentialAppointmentDatesForScheduling(): Observable<List<PotentialAppointmentDate>> {
     return configProvider
-        .map { it.periodsToScheduleAppointmentsIn }
+        .map { it.scheduleAppointmentsIn }
         .map(this::generatePotentialAppointmentDates)
         .map { appointmentDates -> appointmentDates.distinctBy { it.scheduledFor }.sorted() }
   }
@@ -121,7 +121,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
   private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
     return events
         .ofType<ScheduleAppointmentSheetCreated>()
-        .withLatestFrom(configProvider) { _, config -> config.scheduleAppointmentInByDefault }
+        .withLatestFrom(configProvider) { _, config -> config.defaultTimeToAppointment }
         .map(this::generatePotentialAppointmentDate)
   }
 
@@ -267,16 +267,14 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return exactMatchingTimeToAppointment ?: Days(ChronoUnit.DAYS.between(today, date).toInt())
   }
 
-  private fun generatePotentialAppointmentDate(scheduleAppointmentIn: ScheduleAppointmentIn): PotentialAppointmentDate {
+  private fun generatePotentialAppointmentDate(scheduleAppointmentIn: TimeToAppointment): PotentialAppointmentDate {
     val today = LocalDate.now(clock)
-    val timeToAppointment = scheduleAppointmentIn.timeToAppointment
-    return PotentialAppointmentDate(today.plus(timeToAppointment), timeToAppointment)
+    return PotentialAppointmentDate(today.plus(scheduleAppointmentIn), scheduleAppointmentIn)
   }
 
-  private fun generatePotentialAppointmentDates(scheduleAppointmentsIn: List<ScheduleAppointmentIn>): List<PotentialAppointmentDate> {
+  private fun generatePotentialAppointmentDates(scheduleAppointmentsIn: List<TimeToAppointment>): List<PotentialAppointmentDate> {
     val today = LocalDate.now(clock)
     return scheduleAppointmentsIn
-        .map { it.timeToAppointment }
         .map { timeToAppointment -> today.plus(timeToAppointment) to timeToAppointment }
         .map { (appointmentDate, timeToAppointment) -> PotentialAppointmentDate(appointmentDate, timeToAppointment) }
   }

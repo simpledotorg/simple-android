@@ -111,7 +111,7 @@ class RegistrationFacilitySelectionScreenController @Inject constructor(
         .flatMapSingle { count ->
           when (count) {
             0 -> facilitySync.pullWithResult()
-            else -> Single.just(FacilityPullResult.Success())
+            else -> Single.just(FacilityPullResult.Success)
           }
         }
 

@@ -35,11 +35,11 @@ class FacilitySync @Inject constructor(
 
   fun pullWithResult(): Single<FacilityPullResult> {
     return pull()
-        .toSingleDefault(FacilityPullResult.Success() as FacilityPullResult)
+        .toSingleDefault(FacilityPullResult.Success as FacilityPullResult)
         .onErrorReturn { e ->
           when (e) {
-            is IOException -> FacilityPullResult.NetworkError()
-            else -> FacilityPullResult.UnexpectedError()
+            is IOException -> FacilityPullResult.NetworkError
+            else -> FacilityPullResult.UnexpectedError
           }
         }
   }

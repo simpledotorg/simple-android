@@ -7,6 +7,8 @@ import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
 import org.simple.clinic.facility.Facility
+import org.simple.clinic.facility.FacilityPullResult
+import org.simple.clinic.facility.FacilitySync
 import org.simple.clinic.facility.FacilitySyncApi
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.registration.RegistrationResult
@@ -27,7 +29,7 @@ class ServerAuthenticationRule : TestRule {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var facilityApi: FacilitySyncApi
+  lateinit var facilitySync: FacilitySync
 
   @Inject
   lateinit var faker: Faker
@@ -70,11 +72,11 @@ class ServerAuthenticationRule : TestRule {
   }
 
   private fun fetchFacilities() {
-    val facilities = facilityApi.pull(10)
-        .map { it.payloads }
-        .map { facilities -> facilities.map { it.toDatabaseModel(SyncStatus.DONE) } }
+    val result = facilitySync
+        .pullWithResult()
         .blockingGet()
-    appDatabase.facilityDao().save(facilities)
+
+    assertThat(result).isEqualTo(FacilityPullResult.Success)
   }
 
   private fun getFirstStoredFacility(): Facility {

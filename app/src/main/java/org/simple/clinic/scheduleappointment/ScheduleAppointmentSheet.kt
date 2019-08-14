@@ -1,6 +1,5 @@
 package org.simple.clinic.scheduleappointment
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.DatePickerDialog
 import android.content.Context
@@ -99,12 +98,8 @@ class ScheduleAppointmentSheet : BottomSheetActivity() {
     finish()
   }
 
-  @SuppressLint("SetTextI18n")
-  fun updateScheduledAppointment(appointmentDate: LocalDate) {
+  fun updateScheduledAppointment(appointmentDate: LocalDate, timeToAppointment: TimeToAppointment) {
     currentAppointmentDate.text = dateFormatter.format(appointmentDate)
-
-    val today = LocalDate.now(userClock)
-    val timeToAppointment = TimeToAppointment.from(currentDate = today, appointmentDate = appointmentDate)
     currentDateTextView.text = displayTextForTimeToAppointment(timeToAppointment)
   }
 

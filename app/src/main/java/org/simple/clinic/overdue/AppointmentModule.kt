@@ -7,7 +7,9 @@ import dagger.Provides
 import io.reactivex.Observable
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.home.overdue.OverdueAppointment
-import org.simple.clinic.scheduleappointment.ScheduleAppointmentIn
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.OptionalRxPreferencesConverter
@@ -25,33 +27,33 @@ class AppointmentModule {
         minimumOverduePeriodForHighRisk = Period.ofDays(30),
         overduePeriodForLowestRiskLevel = Period.ofDays(365),
         appointmentDuePeriodForDefaulters = Period.ofDays(30),
-        periodsToScheduleAppointmentsIn = listOf(
-            ScheduleAppointmentIn.days(1),
-            ScheduleAppointmentIn.days(2),
-            ScheduleAppointmentIn.days(3),
-            ScheduleAppointmentIn.days(4),
-            ScheduleAppointmentIn.days(5),
-            ScheduleAppointmentIn.days(6),
-            ScheduleAppointmentIn.days(7),
-            ScheduleAppointmentIn.days(8),
-            ScheduleAppointmentIn.days(9),
-            ScheduleAppointmentIn.days(10),
-            ScheduleAppointmentIn.weeks(2),
-            ScheduleAppointmentIn.weeks(3),
-            ScheduleAppointmentIn.months(1),
-            ScheduleAppointmentIn.months(2),
-            ScheduleAppointmentIn.months(3),
-            ScheduleAppointmentIn.months(4),
-            ScheduleAppointmentIn.months(5),
-            ScheduleAppointmentIn.months(6),
-            ScheduleAppointmentIn.months(7),
-            ScheduleAppointmentIn.months(8),
-            ScheduleAppointmentIn.months(9),
-            ScheduleAppointmentIn.months(10),
-            ScheduleAppointmentIn.months(11),
-            ScheduleAppointmentIn.months(12)
+        scheduleAppointmentsIn = listOf(
+            Days(1),
+            Days(2),
+            Days(3),
+            Days(4),
+            Days(5),
+            Days(6),
+            Days(7),
+            Days(8),
+            Days(9),
+            Days(10),
+            Weeks(2),
+            Weeks(3),
+            Months(1),
+            Months(2),
+            Months(3),
+            Months(4),
+            Months(5),
+            Months(6),
+            Months(7),
+            Months(8),
+            Months(9),
+            Months(10),
+            Months(11),
+            Months(12)
         ),
-        scheduleAppointmentInByDefault = ScheduleAppointmentIn.months(1)
+        defaultTimeToAppointment = Months(1)
     ))
   }
 

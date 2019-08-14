@@ -7,6 +7,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
 import io.reactivex.Observable
+import io.reactivex.subjects.PublishSubject
 import kotlinx.android.synthetic.main.screen_scan_simple.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
@@ -36,6 +37,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var utcClock: UtcClock
 
+  private val keyboardEvents = PublishSubject.create<ScanSimpleIdScreenEvent>()
+
   override fun onFinishInflate() {
     super.onFinishInflate()
     if (isInEditMode) {
@@ -49,7 +52,7 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
     bindUiToController(
         ui = this,
-        events = Observable.mergeArray(qrScans(), doneClicks()),
+        events = Observable.mergeArray(qrScans(), keyboardEvents, doneClicks()),
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
@@ -96,10 +99,10 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun hideQrCodeScannerView() {
-    TODO("not implemented")
+    qrCodeScannerView.hideQrCodeScanner()
   }
 
   fun showQrCodeScannerView() {
-    TODO("not implemented")
+    qrCodeScannerView.showQrCodeScanner()
   }
 }

@@ -35,7 +35,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     private val facilityRepository: FacilityRepository
 ) : ObservableTransformer<UiEvent, UiChange> {
 
-  private val latestAppointmentDateScheduledSubject = BehaviorSubject.create<LocalDate>()
+  private val latestAppointmentDateScheduledSubject = BehaviorSubject.create<PotentialAppointmentDate>()
 
   override fun apply(events: Observable<UiEvent>): Observable<UiChange> {
     val replayedEvents = ReplayUntilScreenIsDestroyed(events)
@@ -55,16 +55,17 @@ class ScheduleAppointmentSheetController @Inject constructor(
     )
   }
 
-  private fun generateAppointmentDatesForScheduling(): Observable<List<LocalDate>> {
+  private fun generateAppointmentDatesForScheduling(): Observable<List<PotentialAppointmentDate>> {
     return configProvider
         .map { it.periodsToScheduleAppointmentsIn }
         .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
         .map { appointmentDates -> appointmentDates.distinct().sorted() }
+        .map(this::generatePotentialAppointmentDates)
   }
 
   private fun scheduleAppointments(
       events: Observable<UiEvent>,
-      configuredAppointmentDatesStream: Observable<List<LocalDate>>
+      configuredAppointmentDatesStream: Observable<List<PotentialAppointmentDate>>
   ): Observable<UiChange> {
 
     return Observable
@@ -76,19 +77,20 @@ class ScheduleAppointmentSheetController @Inject constructor(
         )
         .distinctUntilChanged()
         .doOnNext(latestAppointmentDateScheduledSubject::onNext)
-        .map { appointmentDate -> { ui: Ui -> ui.updateScheduledAppointment(appointmentDate) } }
+        .map { appointmentDate -> { ui: Ui -> ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment) } }
   }
 
-  private fun scheduleOnExactDate(events: Observable<UiEvent>): Observable<LocalDate> {
+  private fun scheduleOnExactDate(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
     return events
         .ofType<AppointmentCalendarDateSelected>()
         .map { it.selectedDate }
+        .map(this::generatePotentialAppointmentDate)
   }
 
   private fun scheduleOnPreviousConfiguredAppointmentDate(
       events: Observable<UiEvent>,
-      configuredAppointmentDatesStream: Observable<List<LocalDate>>
-  ): Observable<LocalDate> {
+      configuredAppointmentDatesStream: Observable<List<PotentialAppointmentDate>>
+  ): Observable<PotentialAppointmentDate> {
     return events
         .ofType<AppointmentDateDecremented>()
         .withLatestFrom(latestAppointmentDateScheduledSubject, configuredAppointmentDatesStream)
@@ -99,8 +101,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun scheduleOnNextConfiguredAppointmentDate(
       events: Observable<UiEvent>,
-      configuredAppointmentDatesStream: Observable<List<LocalDate>>
-  ): Observable<LocalDate> {
+      configuredAppointmentDatesStream: Observable<List<PotentialAppointmentDate>>
+  ): Observable<PotentialAppointmentDate> {
     return events
         .ofType<AppointmentDateIncremented>()
         .withLatestFrom(latestAppointmentDateScheduledSubject, configuredAppointmentDatesStream)
@@ -109,15 +111,15 @@ class ScheduleAppointmentSheetController @Inject constructor(
         }
   }
 
-  private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<LocalDate> {
-    val selectDefaultAppointmentOnSheetCreated = events
+  private fun scheduleDefaultAppointmentDateForSheetCreates(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
+    return events
         .ofType<ScheduleAppointmentSheetCreated>()
         .withLatestFrom(configProvider) { _, config -> config.scheduleAppointmentInByDefault }
         .map(this::localDateFromScheduleAppointment)
-    return selectDefaultAppointmentOnSheetCreated
+        .map(this::generatePotentialAppointmentDate)
   }
 
-  private fun enableIncrements(configuredAppointmentDateStream: Observable<List<LocalDate>>): Observable<UiChange> {
+  private fun enableIncrements(configuredAppointmentDateStream: Observable<List<PotentialAppointmentDate>>): Observable<UiChange> {
     return latestAppointmentDateScheduledSubject
         .withLatestFrom(configuredAppointmentDateStream) { latestAppointmentScheduledDate, configuredAppointmentDates ->
           latestAppointmentScheduledDate < configuredAppointmentDates.last()
@@ -126,7 +128,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .map { enable -> { ui: Ui -> ui.enableIncrementButton(enable) } }
   }
 
-  private fun enableDecrements(configuredAppointmentDateStream: Observable<List<LocalDate>>): Observable<UiChange> {
+  private fun enableDecrements(configuredAppointmentDateStream: Observable<List<PotentialAppointmentDate>>): Observable<UiChange> {
     return latestAppointmentDateScheduledSubject
         .withLatestFrom(configuredAppointmentDateStream) { latestAppointmentScheduledDate, configuredAppointmentDates ->
           latestAppointmentScheduledDate > configuredAppointmentDates.first()
@@ -139,26 +141,26 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return events
         .ofType<ManuallySelectAppointmentDateClicked>()
         .withLatestFrom(latestAppointmentDateScheduledSubject) { _, latestAppointmentScheduledDate ->
-          { ui: Ui -> ui.showManualDateSelector(latestAppointmentScheduledDate) }
+          { ui: Ui -> ui.showManualDateSelector(latestAppointmentScheduledDate.scheduledFor) }
         }
   }
 
   private fun nextConfiguredAppointmentDate(
-      latestAppointmentScheduledDate: LocalDate,
-      configuredAppointmentScheduledDates: List<LocalDate>
-  ): LocalDate {
+      latestAppointmentScheduledDate: PotentialAppointmentDate,
+      configuredAppointmentScheduledDates: List<PotentialAppointmentDate>
+  ): PotentialAppointmentDate {
     return configuredAppointmentScheduledDates
         .find { it > latestAppointmentScheduledDate }
         ?: throw RuntimeException("Cannot find configured appointment date after $latestAppointmentScheduledDate")
   }
 
   private fun previousConfiguredAppointmentDate(
-      latestAppointmentScheduledDate: LocalDate,
-      configuredAppointmentScheduledDates: List<LocalDate>
-  ): LocalDate {
+      latestAppointmentScheduledDate: PotentialAppointmentDate,
+      configuredAppointmentScheduledDates: List<PotentialAppointmentDate>
+  ): PotentialAppointmentDate {
     return configuredAppointmentScheduledDates
         .findLast { it < latestAppointmentScheduledDate }
-        ?: throw RuntimeException("Cannot find configured appointment date before $latestAppointmentScheduledDate")
+        ?: throw RuntimeException("Cannot find configured appointment date before ${latestAppointmentScheduledDate.scheduledFor}")
   }
 
   private fun scheduleAutomaticAppointmentForDefaulters(events: Observable<UiEvent>): Observable<UiChange> {
@@ -208,7 +210,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         ) { _, lastScheduledAppointmentDate, uuid, currentFacility ->
           Triple(lastScheduledAppointmentDate, uuid, currentFacility)
         }
-        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date, currentFacility, Manual) }
+        .flatMapSingle { (date, uuid, currentFacility) -> scheduleAppointmentForPatient(uuid, date.scheduledFor, currentFacility, Manual) }
         .map { Ui::closeSheet }
   }
 
@@ -241,5 +243,27 @@ class ScheduleAppointmentSheetController @Inject constructor(
 
   private fun localDateFromScheduleAppointment(appointment: ScheduleAppointmentIn): LocalDate {
     return LocalDate.now(clock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
+  }
+
+  private fun generatePotentialAppointmentDates(appointmentDates: List<LocalDate>): List<PotentialAppointmentDate> {
+    val today = LocalDate.now(clock)
+    return appointmentDates
+        .map { appointmentDate -> appointmentDate to TimeToAppointment.from(today, appointmentDate) }
+        .map { (appointmentDate, timeToAppointment) -> PotentialAppointmentDate(appointmentDate, timeToAppointment) }
+  }
+
+  private fun generatePotentialAppointmentDate(appointmentDate: LocalDate): PotentialAppointmentDate {
+    val today = LocalDate.now(clock)
+    val timeToAppointment = TimeToAppointment.from(today, appointmentDate)
+    return PotentialAppointmentDate(appointmentDate, timeToAppointment)
+  }
+
+  private data class PotentialAppointmentDate(
+      val scheduledFor: LocalDate,
+      val timeToAppointment: TimeToAppointment
+  ) : Comparable<PotentialAppointmentDate> {
+    override fun compareTo(other: PotentialAppointmentDate): Int {
+      return this.scheduledFor.compareTo(other.scheduledFor)
+    }
   }
 }

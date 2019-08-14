@@ -2,9 +2,9 @@ package org.simple.clinic.facility
 
 sealed class FacilityPullResult {
 
-  class Success : FacilityPullResult()
+  object Success : FacilityPullResult()
 
-  class NetworkError : FacilityPullResult()
+  object NetworkError : FacilityPullResult()
 
-  class UnexpectedError : FacilityPullResult()
+  object UnexpectedError : FacilityPullResult()
 }

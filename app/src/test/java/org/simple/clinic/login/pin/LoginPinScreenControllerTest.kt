@@ -83,7 +83,7 @@ class LoginPinScreenControllerTest {
     whenever(userSession.saveOngoingLoginEntry(any()))
         .thenReturn(Completable.complete())
     whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.Success()))
+        .thenReturn(Single.just(FacilityPullResult.Success))
     whenever(requestLoginOtp.requestForUser(loginUserUuid))
         .thenReturn(
             Single.just(RequestLoginOtp.Result.NetworkError),
@@ -152,8 +152,8 @@ class LoginPinScreenControllerTest {
         .thenReturn(Single.just(RequestLoginOtp.Result.NetworkError))
     whenever(facilitySync.pullWithResult())
         .thenReturn(
-            Single.just(FacilityPullResult.NetworkError()),
-            Single.just(FacilityPullResult.UnexpectedError())
+            Single.just(FacilityPullResult.NetworkError),
+            Single.just(FacilityPullResult.UnexpectedError)
         )
 
     // when
@@ -206,7 +206,7 @@ class LoginPinScreenControllerTest {
     whenever(requestLoginOtp.requestForUser(loginUserUuid))
         .thenReturn(Single.just(RequestLoginOtp.Result.Success))
     whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.Success()))
+        .thenReturn(Single.just(FacilityPullResult.Success))
     whenever(userSession.storeUser(expectedUser, registrationFacilityUuid))
         .thenReturn(Completable.complete())
 

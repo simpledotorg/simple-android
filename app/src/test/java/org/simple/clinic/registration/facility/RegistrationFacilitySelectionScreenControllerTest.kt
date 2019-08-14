@@ -105,7 +105,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = emptyList<Facility>()
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
@@ -225,7 +225,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = emptyList<Facility>()
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.never())
 
     uiEvents.onNext(ScreenCreated())
@@ -241,7 +241,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = emptyList<Facility>()
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
@@ -261,7 +261,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         PatientMocker.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
 
     val locationUpdates = PublishSubject.create<LocationUpdate>()
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(locationUpdates)
@@ -302,7 +302,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
     val facilities = listOf(PatientMocker.facility())
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(ScreenCreated())
@@ -317,7 +317,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
         PatientMocker.facility(name = "Facility 2"))
     whenever(facilityRepository.facilities(any())).thenReturn(Observable.just(facilities))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(facilities.size))
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
 
     uiEvents.onNext(ScreenCreated())
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
@@ -336,8 +336,8 @@ class RegistrationFacilitySelectionScreenControllerTest {
     whenever(facilityRepository.facilities()).thenReturn(Observable.just(emptyList()))
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(0))
     whenever(facilitySync.pullWithResult())
-        .thenReturn(Single.just(FacilityPullResult.UnexpectedError()))
-        .thenReturn(Single.just(FacilityPullResult.NetworkError()))
+        .thenReturn(Single.just(FacilityPullResult.UnexpectedError))
+        .thenReturn(Single.just(FacilityPullResult.NetworkError))
 
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))
     uiEvents.onNext(RegistrationFacilitySearchQueryChanged(query = ""))
@@ -352,7 +352,7 @@ class RegistrationFacilitySelectionScreenControllerTest {
   fun `when retry is clicked then the error should be cleared and facilities should be fetched again`() {
     whenever(facilityRepository.recordCount()).thenReturn(Observable.just(1))
     whenever(facilityRepository.facilities()).thenReturn(Observable.never())
-    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success()))
+    whenever(facilitySync.pullWithResult()).thenReturn(Single.just(FacilityPullResult.Success))
     whenever(locationRepository.streamUserLocation(any(), any())).thenReturn(Observable.just(Unavailable))
 
     uiEvents.onNext(RegistrationFacilityUserLocationUpdated(Unavailable))

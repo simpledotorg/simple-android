@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.view.LayoutInflater
+import android.view.View
 import android.widget.FrameLayout
 import com.budiyev.android.codescanner.AutoFocusMode
 import com.budiyev.android.codescanner.CodeScanner
@@ -15,6 +17,8 @@ import com.google.zxing.BarcodeFormat
 import com.jakewharton.rxbinding2.view.RxView
 import io.reactivex.Observable
 import io.reactivex.rxkotlin.ofType
+import kotlinx.android.synthetic.main.view_qrcode_scanner.view.*
+import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.widgets.ScreenDestroyed
 import org.simple.clinic.activity.TheActivityLifecycle
@@ -40,11 +44,12 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    LayoutInflater.from(context).inflate(R.layout.view_qrcode_scanner, this, true)
     if (isInEditMode) {
       return
     }
     TheActivity.component.inject(this)
-    addView(scannerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+    cameraView.addView(scannerView, LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
     initializeCodeScanner()
     bindCameraToActivityLifecycle()
   }
@@ -80,6 +85,16 @@ class QrCodeScannerView(context: Context, attrs: AttributeSet) : FrameLayout(con
         codeScanner.errorCallback = null
       }
     }
+  }
+
+  fun hideQrCodeScanner() {
+    cameraView.visibility = View.INVISIBLE
+    viewFinderImageView.visibility = View.INVISIBLE
+  }
+
+  fun showQrCodeScanner() {
+    cameraView.visibility = View.VISIBLE
+    viewFinderImageView.visibility = View.VISIBLE
   }
 
   private fun stopScanning() {

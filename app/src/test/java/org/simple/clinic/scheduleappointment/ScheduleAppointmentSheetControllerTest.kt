@@ -23,7 +23,7 @@ import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
-import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
+import org.simple.clinic.scheduleappointment.TimeToAppointment.*
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.RxErrorsRule
@@ -273,8 +273,11 @@ class ScheduleAppointmentSheetControllerTest {
         ScheduleAppointmentIn.days(1),
         ScheduleAppointmentIn.days(2),
         ScheduleAppointmentIn.days(2),
+        ScheduleAppointmentIn.days(7),
         ScheduleAppointmentIn.weeks(1),
-        ScheduleAppointmentIn.weeks(1)
+        ScheduleAppointmentIn.days(7),
+        ScheduleAppointmentIn.weeks(2),
+        ScheduleAppointmentIn.days(14)
     )
     val scheduleAppointmentInByDefault = ScheduleAppointmentIn.days(1)
 
@@ -291,6 +294,15 @@ class ScheduleAppointmentSheetControllerTest {
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     clearInvocations(sheet)
 
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-15"), Weeks(2))
+    verify(sheet).enableIncrementButton(false)
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
+    clearInvocations(sheet)
+
     uiEvents.onNext(AppointmentDateDecremented)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-03"), Days(2))
     clearInvocations(sheet)
@@ -304,8 +316,11 @@ class ScheduleAppointmentSheetControllerTest {
     // given
     val periodsToScheduleAppointmentsIn = listOf(
         ScheduleAppointmentIn.days(2),
+        ScheduleAppointmentIn.days(7),
         ScheduleAppointmentIn.weeks(1),
-        ScheduleAppointmentIn.days(1)
+        ScheduleAppointmentIn.days(1),
+        ScheduleAppointmentIn.weeks(2),
+        ScheduleAppointmentIn.days(14)
     )
     val scheduleAppointmentInByDefault = ScheduleAppointmentIn.days(1)
 
@@ -319,6 +334,14 @@ class ScheduleAppointmentSheetControllerTest {
     clearInvocations(sheet)
 
     uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateIncremented)
+    verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-15"), Weeks(2))
+    clearInvocations(sheet)
+
+    uiEvents.onNext(AppointmentDateDecremented)
     verify(sheet).updateScheduledAppointment(LocalDate.parse("2019-01-08"), Days(7))
     clearInvocations(sheet)
 

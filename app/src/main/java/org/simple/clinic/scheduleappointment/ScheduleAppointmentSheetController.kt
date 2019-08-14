@@ -20,6 +20,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.UiEvent
 import org.threeten.bp.LocalDate
+import org.threeten.bp.temporal.ChronoUnit
 import java.util.UUID
 import javax.inject.Inject
 
@@ -58,9 +59,8 @@ class ScheduleAppointmentSheetController @Inject constructor(
   private fun generateAppointmentDatesForScheduling(): Observable<List<PotentialAppointmentDate>> {
     return configProvider
         .map { it.periodsToScheduleAppointmentsIn }
-        .map { scheduleAppointmentIn -> scheduleAppointmentIn.map(this::localDateFromScheduleAppointment) }
-        .map { appointmentDates -> appointmentDates.distinct().sorted() }
         .map(this::generatePotentialAppointmentDates)
+        .map { appointmentDates -> appointmentDates.distinctBy { it.scheduledFor }.sorted() }
   }
 
   private fun scheduleAppointments(
@@ -115,7 +115,6 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return events
         .ofType<ScheduleAppointmentSheetCreated>()
         .withLatestFrom(configProvider) { _, config -> config.scheduleAppointmentInByDefault }
-        .map(this::localDateFromScheduleAppointment)
         .map(this::generatePotentialAppointmentDate)
   }
 
@@ -241,21 +240,24 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .switchMap(facilityRepository::currentFacility)
   }
 
-  private fun localDateFromScheduleAppointment(appointment: ScheduleAppointmentIn): LocalDate {
-    return LocalDate.now(clock).plus(appointment.timeAmount.toLong(), appointment.chronoUnit)
-  }
-
-  private fun generatePotentialAppointmentDates(appointmentDates: List<LocalDate>): List<PotentialAppointmentDate> {
-    val today = LocalDate.now(clock)
-    return appointmentDates
-        .map { appointmentDate -> appointmentDate to TimeToAppointment.from(today, appointmentDate) }
-        .map { (appointmentDate, timeToAppointment) -> PotentialAppointmentDate(appointmentDate, timeToAppointment) }
-  }
-
   private fun generatePotentialAppointmentDate(appointmentDate: LocalDate): PotentialAppointmentDate {
     val today = LocalDate.now(clock)
     val timeToAppointment = TimeToAppointment.from(today, appointmentDate)
     return PotentialAppointmentDate(appointmentDate, timeToAppointment)
+  }
+
+  private fun generatePotentialAppointmentDate(scheduleAppointmentIn: ScheduleAppointmentIn): PotentialAppointmentDate {
+    val today = LocalDate.now(clock)
+    val timeToAppointment = scheduleAppointmentIn.timeToAppointment
+    return PotentialAppointmentDate(today.plus(timeToAppointment), timeToAppointment)
+  }
+
+  private fun generatePotentialAppointmentDates(scheduleAppointmentsIn: List<ScheduleAppointmentIn>): List<PotentialAppointmentDate> {
+    val today = LocalDate.now(clock)
+    return scheduleAppointmentsIn
+        .map { it.timeToAppointment }
+        .map { timeToAppointment -> today.plus(timeToAppointment) to timeToAppointment }
+        .map { (appointmentDate, timeToAppointment) -> PotentialAppointmentDate(appointmentDate, timeToAppointment) }
   }
 
   private data class PotentialAppointmentDate(
@@ -266,4 +268,15 @@ class ScheduleAppointmentSheetController @Inject constructor(
       return this.scheduledFor.compareTo(other.scheduledFor)
     }
   }
+}
+
+private fun LocalDate.plus(timeToAppointment: TimeToAppointment): LocalDate {
+  return this.plus(
+      timeToAppointment.value.toLong(),
+      when (timeToAppointment) {
+        is TimeToAppointment.Days -> ChronoUnit.DAYS
+        is TimeToAppointment.Weeks -> ChronoUnit.WEEKS
+        is TimeToAppointment.Months -> ChronoUnit.MONTHS
+      }
+  )
 }

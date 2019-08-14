@@ -27,7 +27,7 @@ import javax.inject.Named
  * operation. We can't extend that test over here since facilities aren't supposed to be pushed from
  * the app at all.
  *
- * TODO: Revisit this when making a composite sync android test.
+ * TODO: Is this a meaningful test? Should this be a unit test instead?
  **/
 @RunWith(AndroidJUnit4::class)
 class FacilitySyncAndroidTest {

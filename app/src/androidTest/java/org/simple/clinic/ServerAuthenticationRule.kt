@@ -1,5 +1,6 @@
 package org.simple.clinic
 
+import android.content.SharedPreferences
 import com.google.common.truth.Truth.assertThat
 import io.bloco.faker.Faker
 import org.junit.rules.TestRule
@@ -12,7 +13,6 @@ import org.simple.clinic.registration.RegistrationResult
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.user.UserStatus
-import java.util.UUID
 import javax.inject.Inject
 
 /** Runs every test with an authenticated user.
@@ -35,6 +35,9 @@ class ServerAuthenticationRule : TestRule {
   @Inject
   lateinit var appDatabase: AppDatabase
 
+  @Inject
+  lateinit var sharedPreferences: SharedPreferences
+
   override fun apply(base: Statement, description: Description): Statement {
     return object : Statement() {
       override fun evaluate() {
@@ -42,12 +45,12 @@ class ServerAuthenticationRule : TestRule {
 
         try {
           // Login also needs to happen inside this try block so that in case
-          // of a failure, logout() still gets called to reset all app data.
+          // of a failure, clearData() still gets called to reset all app data.
           register()
           base.evaluate()
 
         } finally {
-          logout()
+          clearData()
         }
       }
     }
@@ -106,7 +109,11 @@ class ServerAuthenticationRule : TestRule {
     assertThat(loggedInUser.loggedInStatus).isEqualTo(User.LoggedInStatus.LOGGED_IN)
   }
 
-  private fun logout() {
-    appDatabase.clearAllTables()
+  private fun clearData() {
+    sharedPreferences.edit().clear().commit()
+    appDatabase.clearPatientData()
+
+    val loggedInUser  = appDatabase.userDao().userImmediate()!!
+    appDatabase.userDao().deleteUserAndFacilityMappings(loggedInUser, appDatabase.userFacilityMappingDao())
   }
 }

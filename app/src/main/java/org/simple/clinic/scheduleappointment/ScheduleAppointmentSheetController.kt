@@ -16,6 +16,9 @@ import org.simple.clinic.overdue.Appointment.AppointmentType.Manual
 import org.simple.clinic.overdue.AppointmentConfig
 import org.simple.clinic.overdue.AppointmentRepository
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
 import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.UserClock
 import org.simple.clinic.widgets.UiEvent
@@ -43,7 +46,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .compose(ReportAnalyticsEvents())
         .replay()
 
-    val configuredAppointmentDatesStream = generateAppointmentDatesForScheduling()
+    val configuredAppointmentDatesStream = generatePotentialAppointmentDatesForScheduling()
         .share()
 
     return Observable.mergeArray(
@@ -56,7 +59,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     )
   }
 
-  private fun generateAppointmentDatesForScheduling(): Observable<List<PotentialAppointmentDate>> {
+  private fun generatePotentialAppointmentDatesForScheduling(): Observable<List<PotentialAppointmentDate>> {
     return configProvider
         .map { it.periodsToScheduleAppointmentsIn }
         .map(this::generatePotentialAppointmentDates)
@@ -73,18 +76,22 @@ class ScheduleAppointmentSheetController @Inject constructor(
             scheduleDefaultAppointmentDateForSheetCreates(events),
             scheduleOnNextConfiguredAppointmentDate(events, configuredAppointmentDatesStream),
             scheduleOnPreviousConfiguredAppointmentDate(events, configuredAppointmentDatesStream),
-            scheduleOnExactDate(events)
+            scheduleOnExactDate(events, configuredAppointmentDatesStream)
         )
         .distinctUntilChanged()
         .doOnNext(latestAppointmentDateScheduledSubject::onNext)
         .map { appointmentDate -> { ui: Ui -> ui.updateScheduledAppointment(appointmentDate.scheduledFor, appointmentDate.timeToAppointment) } }
   }
 
-  private fun scheduleOnExactDate(events: Observable<UiEvent>): Observable<PotentialAppointmentDate> {
+  private fun scheduleOnExactDate(
+      events: Observable<UiEvent>,
+      configuredAppointmentDatesStream: Observable<List<PotentialAppointmentDate>>
+  ): Observable<PotentialAppointmentDate> {
     return events
         .ofType<AppointmentCalendarDateSelected>()
         .map { it.selectedDate }
-        .map(this::generatePotentialAppointmentDate)
+        .withLatestFrom(configuredAppointmentDatesStream)
+        .map { (appointmentDate, potentialAppointmentDates) -> generatePotentialAppointmentDate(appointmentDate, potentialAppointmentDates) }
   }
 
   private fun scheduleOnPreviousConfiguredAppointmentDate(
@@ -240,10 +247,24 @@ class ScheduleAppointmentSheetController @Inject constructor(
         .switchMap(facilityRepository::currentFacility)
   }
 
-  private fun generatePotentialAppointmentDate(appointmentDate: LocalDate): PotentialAppointmentDate {
-    val today = LocalDate.now(clock)
-    val timeToAppointment = TimeToAppointment.from(today, appointmentDate)
+  private fun generatePotentialAppointmentDate(
+      appointmentDate: LocalDate,
+      potentialAppointmentDates: List<PotentialAppointmentDate>
+  ): PotentialAppointmentDate {
+    val timeToAppointment = coerceTimeToAppointmentFromPotentialsForCalendarDate(potentialAppointmentDates, appointmentDate)
     return PotentialAppointmentDate(appointmentDate, timeToAppointment)
+  }
+
+  private fun coerceTimeToAppointmentFromPotentialsForCalendarDate(
+      potentialAppointmentDates: List<PotentialAppointmentDate>,
+      date: LocalDate
+  ): TimeToAppointment {
+    val today = LocalDate.now(clock)
+    val exactMatchingTimeToAppointment = potentialAppointmentDates
+        .find { potentialAppointmentDate -> potentialAppointmentDate.scheduledFor == date }
+        ?.timeToAppointment
+
+    return exactMatchingTimeToAppointment ?: Days(ChronoUnit.DAYS.between(today, date).toInt())
   }
 
   private fun generatePotentialAppointmentDate(scheduleAppointmentIn: ScheduleAppointmentIn): PotentialAppointmentDate {
@@ -274,9 +295,9 @@ private fun LocalDate.plus(timeToAppointment: TimeToAppointment): LocalDate {
   return this.plus(
       timeToAppointment.value.toLong(),
       when (timeToAppointment) {
-        is TimeToAppointment.Days -> ChronoUnit.DAYS
-        is TimeToAppointment.Weeks -> ChronoUnit.WEEKS
-        is TimeToAppointment.Months -> ChronoUnit.MONTHS
+        is Days -> ChronoUnit.DAYS
+        is Weeks -> ChronoUnit.WEEKS
+        is Months -> ChronoUnit.MONTHS
       }
   )
 }

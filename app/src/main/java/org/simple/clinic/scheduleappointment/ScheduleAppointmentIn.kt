@@ -1,22 +1,34 @@
 package org.simple.clinic.scheduleappointment
 
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Days
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Months
+import org.simple.clinic.scheduleappointment.TimeToAppointment.Weeks
 import org.threeten.bp.temporal.ChronoUnit
 
-data class ScheduleAppointmentIn(
-    val timeAmount: Int,
-    val chronoUnit: ChronoUnit
-) {
+// TODO: Use TimeToAppointment directly in the controller later
+data class ScheduleAppointmentIn(val timeToAppointment: TimeToAppointment) {
+
+  val timeAmount: Int
+    get() = timeToAppointment.value
+
+  val chronoUnit: ChronoUnit
+    get() = when (timeToAppointment) {
+      is Days -> ChronoUnit.DAYS
+      is Weeks -> ChronoUnit.WEEKS
+      is Months -> ChronoUnit.MONTHS
+    }
+
   companion object {
     fun days(days: Int): ScheduleAppointmentIn {
-      return ScheduleAppointmentIn(days, ChronoUnit.DAYS)
+      return ScheduleAppointmentIn(Days(days))
     }
 
     fun weeks(weeks: Int): ScheduleAppointmentIn {
-      return ScheduleAppointmentIn(weeks, ChronoUnit.WEEKS)
+      return ScheduleAppointmentIn(Weeks(weeks))
     }
 
     fun months(months: Int): ScheduleAppointmentIn {
-      return ScheduleAppointmentIn(months, ChronoUnit.MONTHS)
+      return ScheduleAppointmentIn(Months(months))
     }
   }
 }

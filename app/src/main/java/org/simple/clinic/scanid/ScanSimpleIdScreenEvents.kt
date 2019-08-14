@@ -22,7 +22,7 @@ sealed class ScanSimpleIdScreenPassportCodeScanned : ScanSimpleIdScreenEvent() {
 
 data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdScreenEvent()
 
-object ShowKeyboardEvent : ScanSimpleIdScreenEvent() // TODO Rename, drop the Event suffix
+object ShowKeyboardEvent : ScanSimpleIdScreenEvent()
 
 object HideKeyboardEvent : ScanSimpleIdScreenEvent()
 

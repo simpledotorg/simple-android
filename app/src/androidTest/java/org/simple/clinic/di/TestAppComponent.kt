@@ -3,8 +3,8 @@ package org.simple.clinic.di
 import dagger.Component
 import org.simple.clinic.DatabaseMigrationAndroidTest
 import org.simple.clinic.FakerModule
-import org.simple.clinic.LocalAuthenticationRule
-import org.simple.clinic.ServerAuthenticationRule
+import org.simple.clinic.rules.LocalAuthenticationRule
+import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.bp.BloodPressureRepositoryAndroidTest
 import org.simple.clinic.bp.sync.BloodPressureSyncAndroidTest
@@ -27,7 +27,7 @@ import org.simple.clinic.storage.DaoWithUpsertAndroidTest
 import org.simple.clinic.storage.files.AndroidFileStorageAndroidTest
 import org.simple.clinic.summary.RelativeTimestampGeneratorAndroidTest
 import org.simple.clinic.summary.addphone.MissingPhoneReminderRepositoryAndroidTest
-import org.simple.clinic.sync.RegisterPatientRule
+import org.simple.clinic.rules.RegisterPatientRule
 import org.simple.clinic.user.OngoingLoginEntryRepositoryTest
 import org.simple.clinic.user.UserDaoAndroidTest
 import org.simple.clinic.user.UserSessionAndroidTest

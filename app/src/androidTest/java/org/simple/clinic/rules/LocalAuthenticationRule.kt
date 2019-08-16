@@ -1,8 +1,11 @@
-package org.simple.clinic
+package org.simple.clinic.rules
 
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import org.simple.clinic.AppDatabase
+import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.user.User
 import org.simple.clinic.user.UserSession
 import java.util.UUID

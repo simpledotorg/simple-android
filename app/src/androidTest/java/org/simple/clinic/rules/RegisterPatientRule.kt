@@ -1,4 +1,4 @@
-package org.simple.clinic.sync
+package org.simple.clinic.rules
 
 import org.junit.rules.TestRule
 import org.junit.runner.Description

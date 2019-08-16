@@ -55,7 +55,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
         enableDecrements(configuredAppointmentDatesStream),
         showManualAppointmentDateSelector(replayedEvents),
         scheduleAutomaticAppointmentForDefaulters(replayedEvents),
-        scheduleCreates(replayedEvents)
+        scheduleAppointment(replayedEvents)
     )
   }
 
@@ -206,7 +206,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return Observable.merge(saveAppointmentAndCloseSheet, closeSheetWithoutSavingAppointment)
   }
 
-  private fun scheduleCreates(events: Observable<UiEvent>): Observable<UiChange> {
+  private fun scheduleAppointment(events: Observable<UiEvent>): Observable<UiChange> {
     return events
         .ofType<AppointmentDone>()
         .withLatestFrom(

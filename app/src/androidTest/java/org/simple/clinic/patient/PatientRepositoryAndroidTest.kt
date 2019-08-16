@@ -2259,7 +2259,7 @@ class PatientRepositoryAndroidTest {
   fun searching_for_patients_by_short_code_must_return_all_the_matching_results() {
     fun createPatientWithBPPassport(patientUuid: UUID, bpPassportId: String) {
 
-      val patientProfile = testData.patientProfile(patientUuid = patientUuid)
+      val patientProfile = testData.patientProfile(patientUuid = patientUuid, generateBusinessId = false)
 
       patientRepository.save(listOf(patientProfile)).blockingAwait()
       patientRepository
@@ -2290,4 +2290,106 @@ class PatientRepositoryAndroidTest {
         .containsExactly("97d05796-614c-46de-a10a-e12cf595f4ff", "4e642ef2-1991-42ae-ba61-a10809c78f5d")
   }
 
+  @Test
+  fun deleted_patients_must_be_excluded_when_searching_by_name() {
+    fun createPatient(
+        patientUuid: UUID,
+        patientName: String,
+        isDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientName = patientName,
+          patientStatus = Active,
+          patientDeletedAt = if (isDeleted) Instant.now() else null
+      )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    // given
+    val deletedPatientId = UUID.fromString("01447197-81ca-4eb8-b8bb-c0a16393f587")
+    createPatient(deletedPatientId, "Patient that is deleted", isDeleted = true)
+    val notDeletedPatientId = UUID.fromString("caef6b04-ed06-4d0c-8210-3ee0e51e6ee8")
+    createPatient(notDeletedPatientId, "Patient that is not deleted", isDeleted = false)
+
+    // when
+    val searchResults = patientRepository.search(Name("Patient")).blockingFirst()
+
+    // then
+    assertThat(searchResults).hasSize(1)
+    assertThat(searchResults.first().uuid).isEqualTo(notDeletedPatientId)
+  }
+
+  @Test
+  fun deleted_patients_must_be_excluded_when_searching_by_phone_number() {
+    fun createPatient(
+        patientUuid: UUID,
+        phoneNumber: String,
+        isDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientPhoneNumber = phoneNumber,
+          patientStatus = Active,
+          patientDeletedAt = if (isDeleted) Instant.now() else null
+      )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    // given
+    val deletedPatientId = UUID.fromString("01447197-81ca-4eb8-b8bb-c0a16393f587")
+    createPatient(deletedPatientId, "1234567890", isDeleted = true)
+    val notDeletedPatientId = UUID.fromString("caef6b04-ed06-4d0c-8210-3ee0e51e6ee8")
+    createPatient(notDeletedPatientId, "1234567890", isDeleted = false)
+
+    // when
+    val searchResults = patientRepository.search(PhoneNumber("1234567890")).blockingFirst()
+
+    // then
+    assertThat(searchResults).hasSize(1)
+    assertThat(searchResults.first().uuid).isEqualTo(notDeletedPatientId)
+  }
+
+  @Test
+  fun deleted_patients_must_be_excluded_when_searching_by_shortcode() {
+    fun createPatientWithBPPassport(
+        patientUuid: UUID,
+        bpPassportId: String,
+        isDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          generateBusinessId = false,
+          patientDeletedAt = if (isDeleted) Instant.now() else null
+      )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      patientRepository
+          .addIdentifierToPatient(
+              patientUuid = patientProfile.patient.uuid,
+              identifier = Identifier(bpPassportId, BpPassport),
+              assigningUser = loggedInUser,
+              assigningFacility = currentFacility
+          )
+          .blockingGet()
+    }
+
+
+    //given
+    val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
+    createPatientWithBPPassport(deletedPatientId, "3824f7e7-d0a9-4ae0-a0da-3230c53cdfb8", isDeleted = true)
+    val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
+    createPatientWithBPPassport(notDeletedPatientId, "3824f7e7-d0a8-4ae0-a0da-3230c53cdfb8", isDeleted = false)
+
+    val searchedShortCode = "3824770"
+
+    //when
+    val searchResults = patientRepository.searchByShortCode(searchedShortCode).blockingFirst()
+
+    //then
+    assertThat(searchResults).hasSize(1)
+    assertThat(searchResults.first().uuid).isEqualTo(notDeletedPatientId)
+  }
 }

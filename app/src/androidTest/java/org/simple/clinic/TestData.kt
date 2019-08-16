@@ -84,17 +84,27 @@ class TestData @Inject constructor(
       patientAddressUuid: UUID = UUID.randomUUID(),
       syncStatus: SyncStatus = randomOfEnum(SyncStatus::class),
       generatePhoneNumber: Boolean = faker.bool.bool(),
-      generateBusinessId: Boolean = faker.bool.bool()
+      generateBusinessId: Boolean = faker.bool.bool(),
+      patientStatus: PatientStatus = PatientStatus.Active,
+      patientDeletedAt: Instant? = null,
+      patientName: String = faker.name.name(),
+      patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null
   ): PatientProfile {
-    val phoneNumbers = if (generatePhoneNumber) listOf(patientPhoneNumber(patientUuid = patientUuid)) else emptyList()
+    val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
+      listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber))
+    } else {
+      emptyList()
+    }
     val businessIds = if (generateBusinessId) listOf(businessId(patientUuid = patientUuid)) else emptyList()
 
     return PatientProfile(
         patient = patient(
             uuid = patientUuid,
+            fullName = patientName,
             syncStatus = syncStatus,
             addressUuid = patientAddressUuid,
-            status = PatientStatus.Active
+            status = patientStatus,
+            deletedAt = patientDeletedAt
         ),
         address = patientAddress(uuid = patientAddressUuid),
         phoneNumbers = phoneNumbers,

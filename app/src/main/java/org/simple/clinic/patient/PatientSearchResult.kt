@@ -68,7 +68,7 @@ data class PatientSearchResult(
           PP.uuid phoneUuid, PP.number phoneNumber, PP.phoneType phoneType, PP.active phoneActive, PP.createdAt phoneCreatedAt, PP.updatedAt phoneUpdatedAt,
           BP.uuid bp_uuid, BP.recordedAt bp_takenOn, BP.facilityName bp_takenAtFacilityName, BP.facilityUuid bp_takenAtFacilityUuid
           FROM Patient P
-          INNER JOIN PatientAddress PA on PA.uuid = P.addressUuid
+          INNER JOIN PatientAddress PA ON PA.uuid = P.addressUuid
           LEFT JOIN PatientPhoneNumber PP ON PP.patientUuid = P.uuid
           LEFT JOIN (
         		SELECT BP.uuid, BP.patientUuid, BP.recordedAt, F.name facilityName, F.uuid facilityUuid
@@ -84,10 +84,10 @@ data class PatientSearchResult(
     """
     }
 
-    @Query("""$mainQuery WHERE P.uuid IN (:uuids) AND P.status = :status""")
+    @Query("""$mainQuery WHERE P.uuid IN (:uuids) AND P.status = :status AND P.deletedAt IS NULL""")
     fun searchByIds(uuids: List<UUID>, status: PatientStatus): Single<List<PatientSearchResult>>
 
-    @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status""")
+    @Query("""SELECT Patient.uuid, Patient.fullName FROM Patient WHERE Patient.status = :status AND Patient.deletedAt IS NULL""")
     fun nameAndId(status: PatientStatus): Flowable<List<PatientNameAndId>>
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
@@ -104,7 +104,7 @@ data class PatientSearchResult(
 
     @Suppress("AndroidUnresolvedRoomSqlReference")
     @Query("""
-        $mainQuery WHERE phoneNumber LIKE '%' || :phoneNumber || '%'
+        $mainQuery WHERE phoneNumber LIKE '%' || :phoneNumber || '%' AND P.deletedAt IS NULL
         ORDER BY P.fullName COLLATE NOCASE ASC
     """)
     fun searchByPhoneNumber(phoneNumber: String): Flowable<List<PatientSearchResult>>

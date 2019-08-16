@@ -1,8 +1,11 @@
 package org.simple.clinic.scanid
 
 import android.content.Context
+import android.graphics.Rect
 import android.util.AttributeSet
 import android.view.View
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.jakewharton.rxbinding2.view.RxView
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -37,7 +40,12 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   @Inject
   lateinit var utcClock: UtcClock
 
+  @Inject
+  lateinit var activity: TheActivity
+
   private val keyboardEvents = PublishSubject.create<ScanSimpleIdScreenEvent>()
+
+  private val keyboardVisibilityDetector = KeyboardVisibilityDetector()
 
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -56,6 +64,19 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
         controller = controller,
         screenDestroys = RxView.detaches(this).map { ScreenDestroyed() }
     )
+  }
+
+  override fun onAttachedToWindow() {
+    super.onAttachedToWindow()
+    keyboardVisibilityDetector.registerListener(this) { isVisible ->
+      val keyboardEvent = if (isVisible) ShowKeyboard else HideKeyboard
+      keyboardEvents.onNext(keyboardEvent)
+    }
+  }
+
+  override fun onDetachedFromWindow() {
+    keyboardVisibilityDetector.unregisterListener(this)
+    super.onDetachedFromWindow()
   }
 
   private fun qrScans(): Observable<UiEvent> {
@@ -95,7 +116,8 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
   }
 
   fun openPatientShortCodeSearch(validShortCode: String) {
-    TODO("not implemented")
+    Toast.makeText(activity, validShortCode, Toast.LENGTH_SHORT).show()
+    // TODO("not implemented")
   }
 
   fun hideQrCodeScannerView() {
@@ -104,5 +126,41 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
 
   fun showQrCodeScannerView() {
     qrCodeScannerView.showQrCodeScanner()
+  }
+}
+
+class KeyboardVisibilityDetector {
+  private var isKeyboardShowing = false
+  private var layoutListener: OnGlobalLayoutListener? = null
+
+  fun registerListener(view: View, visibilityChangeListener: (Boolean) -> Unit) {
+    if (layoutListener != null) {
+      throw IllegalStateException("A listener is already registered. You must call `unregisterListener` before calling `registerListener` again.")
+    }
+
+    layoutListener = OnGlobalLayoutListener {
+      val rect = Rect()
+      view.getWindowVisibleDisplayFrame(rect)
+      val screenHeight = view.rootView.height
+
+      val keypadHeight = screenHeight - rect.bottom
+
+      if (keypadHeight > screenHeight * 0.15) { // 0.15 is a magic number, completely irrational
+        if (!isKeyboardShowing) {
+          isKeyboardShowing = true
+          visibilityChangeListener(true)
+        }
+      } else {
+        if (isKeyboardShowing) {
+          isKeyboardShowing = false
+          visibilityChangeListener(false)
+        }
+      }
+    }
+    view.viewTreeObserver.addOnGlobalLayoutListener(layoutListener)
+  }
+
+  fun unregisterListener(view: View) {
+    view.viewTreeObserver.removeOnGlobalLayoutListener(layoutListener)
   }
 }

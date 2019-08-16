@@ -1,6 +1,10 @@
 # CHANGELOG
 
 ## Next Release
+### Feature
+- Search by phone number support from the screen to find patient after scanning a BP Passport
+- Older devices will automatically get cleared when the user logs in on a new device
+
 ### Fixes
 - Fix searching by phone number shows duplicate results for patients with multiple BPs
 

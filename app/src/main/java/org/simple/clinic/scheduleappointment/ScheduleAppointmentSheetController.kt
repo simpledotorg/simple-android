@@ -122,7 +122,7 @@ class ScheduleAppointmentSheetController @Inject constructor(
     return events
         .ofType<ScheduleAppointmentSheetCreated>()
         .withLatestFrom(configProvider) { _, config -> config.defaultTimeToAppointment }
-        .map(this::generatePotentialAppointmentDate)
+        .map(::generatePotentialAppointmentDate)
   }
 
   private fun enableIncrements(configuredAppointmentDateStream: Observable<List<PotentialAppointmentDate>>): Observable<UiChange> {

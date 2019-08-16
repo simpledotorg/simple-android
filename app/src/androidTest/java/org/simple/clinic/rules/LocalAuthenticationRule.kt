@@ -11,8 +11,8 @@ import org.simple.clinic.user.UserSession
 import java.util.UUID
 import javax.inject.Inject
 
-/** Runs every test with an authenticated user.
- *
+/**
+ * Runs every test with a local user.
  **/
 class LocalAuthenticationRule : TestRule {
 

@@ -1,4 +1,4 @@
-package org.simple.clinic
+package org.simple.clinic.rules
 
 import android.app.Application
 import android.content.SharedPreferences
@@ -10,6 +10,9 @@ import io.bloco.faker.Faker
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
+import org.simple.clinic.AppDatabase
+import org.simple.clinic.TestClinicApp
+import org.simple.clinic.TestData
 import org.simple.clinic.facility.Facility
 import org.simple.clinic.facility.FacilityPullResult
 import org.simple.clinic.facility.FacilitySync

@@ -262,7 +262,7 @@ class UserSession @Inject constructor(
   fun isOngoingRegistrationEntryPresent(): Single<Boolean> =
       Single.fromCallable { ongoingRegistrationEntry != null }
 
-  private fun storeUserAndAccessToken(response: LoginResponse): Completable {
+  fun storeUserAndAccessToken(response: LoginResponse): Completable {
     Timber.i("Storing user and access token. Is token blank? ${response.accessToken.isBlank()}")
     accessTokenPreference.set(Just(response.accessToken))
     return storeUser(

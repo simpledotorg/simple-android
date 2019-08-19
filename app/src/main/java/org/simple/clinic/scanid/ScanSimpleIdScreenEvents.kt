@@ -20,10 +20,22 @@ sealed class ScanSimpleIdScreenPassportCodeScanned : ScanSimpleIdScreenEvent() {
   }
 }
 
-data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdScreenEvent()
+data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdScreenEvent() {
+  override val analyticsName: String
+    get() = "Scan Simple Card:Short code searched"
+}
 
-object ShowKeyboardEvent : ScanSimpleIdScreenEvent()
+object ShowKeyboardEvent : ScanSimpleIdScreenEvent() {
+  override val analyticsName: String
+    get() = "Scan Simple Card:Show keyboard"
+}
 
-object HideKeyboardEvent : ScanSimpleIdScreenEvent()
+object HideKeyboardEvent : ScanSimpleIdScreenEvent() {
+  override val analyticsName: String
+    get() = "Scan Simple Card:Hide keyboard"
+}
 
-object ShortCodeChanged : ScanSimpleIdScreenEvent()
+object ShortCodeChanged : ScanSimpleIdScreenEvent() {
+  override val analyticsName: String
+    get() = "Scan Simple Card:Short code changed"
+}

@@ -25,12 +25,12 @@ data class ShortCodeSearched(val shortCode: ShortCodeInput) : ScanSimpleIdScreen
     get() = "Scan Simple Card:Short code searched"
 }
 
-object ShowKeyboardEvent : ScanSimpleIdScreenEvent() {
+object ShowKeyboard : ScanSimpleIdScreenEvent() {
   override val analyticsName: String
     get() = "Scan Simple Card:Show keyboard"
 }
 
-object HideKeyboardEvent : ScanSimpleIdScreenEvent() {
+object HideKeyboard : ScanSimpleIdScreenEvent() {
   override val analyticsName: String
     get() = "Scan Simple Card:Hide keyboard"
 }

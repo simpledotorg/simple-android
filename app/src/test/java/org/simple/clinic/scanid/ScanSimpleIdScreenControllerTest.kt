@@ -84,7 +84,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is up, then hide the QR code scanner view`() {
     // when
-    uiEvents.onNext(ShowKeyboardEvent)
+    uiEvents.onNext(ShowKeyboard)
 
     // then
     verify(screen).hideQrCodeScannerView()
@@ -94,7 +94,7 @@ class ScanSimpleIdScreenControllerTest {
   @Test
   fun `when the keyboard is dismissed, then show the QR code scanner view`() {
     // when
-    uiEvents.onNext(HideKeyboardEvent)
+    uiEvents.onNext(HideKeyboard)
 
     // then
     verify(screen).showQrCodeScannerView()
@@ -111,7 +111,7 @@ class ScanSimpleIdScreenControllerTest {
 
     // when
     with(uiEvents) {
-      onNext(ShowKeyboardEvent)
+      onNext(ShowKeyboard)
       onNext(ValidPassportCode(UUID.fromString(bpPassportUUid)))
     }
 
@@ -124,7 +124,7 @@ class ScanSimpleIdScreenControllerTest {
   fun `when the keyboard is up, then don't process invalid QR code scan events`() {
     // when
     with(uiEvents) {
-      onNext(ShowKeyboardEvent)
+      onNext(ShowKeyboard)
       onNext(InvalidPassportCode)
     }
 
@@ -143,8 +143,8 @@ class ScanSimpleIdScreenControllerTest {
 
     // when
     with(uiEvents) {
-      onNext(ShowKeyboardEvent)
-      onNext(HideKeyboardEvent)
+      onNext(ShowKeyboard)
+      onNext(HideKeyboard)
       onNext(ValidPassportCode(UUID.fromString(bpPassportUUid)))
     }
 
@@ -159,8 +159,8 @@ class ScanSimpleIdScreenControllerTest {
   fun `when the keyboard is down, then don't process invalid QR code events`() {
     // when
     with(uiEvents) {
-      onNext(ShowKeyboardEvent)
-      onNext(HideKeyboardEvent)
+      onNext(ShowKeyboard)
+      onNext(HideKeyboard)
       onNext(InvalidPassportCode)
     }
 
@@ -180,9 +180,9 @@ class ScanSimpleIdScreenControllerTest {
 
     // when
     with(uiEvents) {
-      onNext(ShowKeyboardEvent)
+      onNext(ShowKeyboard)
       onNext(ValidPassportCode(UUID.fromString("39d3296f-7e8d-40c6-8ec8-9a2b083b215a")))
-      onNext(HideKeyboardEvent)
+      onNext(HideKeyboard)
       onNext(ValidPassportCode(UUID.fromString(bpPassportUUid)))
     }
 

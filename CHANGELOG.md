@@ -3,6 +3,10 @@
 ## Next Release
 ### Feature
 - Exclude deleted patient records while searching by name or phone number
+- Exclude deleted patient records when loading the alphabetical patient log
+- Exclude deleted patients when loading overdue appointments
+- Exclude deleted patients when finding patient by scanning BP Passport
+- Exclude deleted appointments when loading overdue appointments
 - Update designs for patient summary screen
 
 ## On Demo

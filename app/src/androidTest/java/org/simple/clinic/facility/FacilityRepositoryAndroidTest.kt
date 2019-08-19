@@ -2,13 +2,12 @@ package org.simple.clinic.facility
 
 import androidx.test.runner.AndroidJUnit4
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.RuleChain
 import org.junit.runner.RunWith
 import org.simple.clinic.AppDatabase
-import org.simple.clinic.rules.LocalAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
 import org.simple.clinic.user.LoggedInUserFacilityMapping
@@ -36,21 +35,24 @@ class FacilityRepositoryAndroidTest {
   lateinit var facilityMappingDao: LoggedInUserFacilityMapping.RoomDao
 
   @get:Rule
-  val rule = RuleChain
-      .outerRule(LocalAuthenticationRule())
-      .around(RxErrorsRule())
+  val rule = RxErrorsRule()
 
-  private val user: User
-    get() = testData.qaUser()
+  private val user: User by lazy { testData.loggedInUser(uuid = UUID.fromString("3e78fb25-2ee2-442a-b7aa-21a87e067b9d")) }
 
   @Before
   fun setup() {
     TestClinicApp.appComponent().inject(this)
+    database.clearAllTables()
+    database.userDao().createOrUpdate(user)
+  }
+
+  @After
+  fun tearDown() {
+    database.clearAllTables()
   }
 
   @Test
   fun facilities_should_be_ordered_alphabetically() {
-    clearFacilities()
     val facilityB = testData.facility(uuid = UUID.randomUUID(), name = "Facility B")
     val facilityD = testData.facility(uuid = UUID.randomUUID(), name = "Phacility D")
     val facilityA = testData.facility(uuid = UUID.randomUUID(), name = "Facility A")
@@ -68,7 +70,6 @@ class FacilityRepositoryAndroidTest {
 
   @Test
   fun when_associating_a_user_with_facilities_then_only_one_facility_should_be_set_as_current_facility() {
-    clearFacilities()
     val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "facility1")
     val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "facility2")
     val facility3 = testData.facility(uuid = UUID.randomUUID(), name = "facility3")
@@ -158,7 +159,6 @@ class FacilityRepositoryAndroidTest {
 
   @Test
   fun when_search_query_is_blank_then_all_facilities_should_be_fetched() {
-    clearFacilities()
     val facility1 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 1")
     val facility2 = testData.facility(uuid = UUID.randomUUID(), name = "Facility 2")
     val facilities = listOf(facility1, facility2)
@@ -251,10 +251,5 @@ class FacilityRepositoryAndroidTest {
 
     val filteredFacilities = repository.facilitiesInCurrentGroup(searchQuery = "fac", user = user).blockingFirst()
     assertThat(filteredFacilities).isEqualTo(listOf(group1Facility))
-  }
-
-  private fun clearFacilities() {
-    facilityMappingDao.deleteMappingsForUser(user.uuid)
-    facilityDao.clear()
   }
 }

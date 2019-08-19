@@ -98,7 +98,9 @@ data class PatientSearchResult(
       INNER JOIN (
         SELECT DISTINCT P.uuid FROM Patient P
           INNER JOIN BloodPressureMeasurement BP ON BP.patientUuid = P.uuid
-          WHERE BP.deletedAt IS NULL AND P.status = :status AND BP.facilityUuid = :facilityUuid
+          WHERE
+            (P.deletedAt IS NULL AND P.status = :status) AND
+            (BP.deletedAt IS NULL AND BP.facilityUuid = :facilityUuid)
       ) PatientsAtFacility ON AllSearchResults.uuid = PatientsAtFacility.uuid
       ORDER BY AllSearchResults.fullName COLLATE NOCASE ASC
     """)

@@ -57,10 +57,10 @@ class ScanSimpleIdScreenController @Inject constructor(
 
   private fun handleScannedBpPassportCodes(events: Observable<UiEvent>): Observable<UiChange> {
     val showKeyboardEvents = events
-        .ofType<ShowKeyboardEvent>()
+        .ofType<ShowKeyboard>()
 
     val hideKeyboardEvents = events
-        .ofType<HideKeyboardEvent>()
+        .ofType<HideKeyboard>()
 
     val keyboardEvents = Observable
         .merge(showKeyboardEvents, hideKeyboardEvents)
@@ -76,7 +76,7 @@ class ScanSimpleIdScreenController @Inject constructor(
 
     val scannedBpPassportCodeStreamAfterHideKeyboard = sharedScannedBpPassportCodeStream
         .withLatestFrom(keyboardEvents)
-        .filter { (_, keyboardEvent) -> keyboardEvent is HideKeyboardEvent }
+        .filter { (_, keyboardEvent) -> keyboardEvent is HideKeyboard }
         .map { it.first }
 
     val foundPatientStream = Observable

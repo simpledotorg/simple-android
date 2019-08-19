@@ -2392,4 +2392,36 @@ class PatientRepositoryAndroidTest {
     assertThat(searchResults).hasSize(1)
     assertThat(searchResults.first().uuid).isEqualTo(notDeletedPatientId)
   }
+
+  @Test
+  fun deleted_patients_must_be_excluded_when_loading_all_patients_in_a_facility() {
+    fun recordPatientAtFacility(
+        patientUuid: UUID,
+        facility: Facility,
+        isDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          patientDeletedAt = if (isDeleted) Instant.now() else null
+      )
+      val bp = testData.bloodPressureMeasurement(patientUuid = patientUuid, facilityUuid = facility.uuid)
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+      bloodPressureRepository.save(listOf(bp)).blockingAwait()
+    }
+
+    //given
+    val facility = testData.qaFacility()
+    val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
+    recordPatientAtFacility(deletedPatientId, facility, isDeleted = true)
+    val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
+    recordPatientAtFacility(notDeletedPatientId, facility, isDeleted = false)
+
+    //when
+    val allPatientsInFacility = patientRepository.allPatientsInFacility(facility).blockingFirst()
+
+    //then
+    assertThat(allPatientsInFacility).hasSize(1)
+    assertThat(allPatientsInFacility.first().uuid).isEqualTo(notDeletedPatientId)
+  }
 }

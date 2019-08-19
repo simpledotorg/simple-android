@@ -4,9 +4,7 @@ import com.f2prateek.rx.preferences2.Preference
 import com.google.common.truth.Truth.assertThat
 import io.reactivex.Completable
 import io.reactivex.Single
-import org.junit.After
 import org.junit.Test
-import org.simple.clinic.network.FailAllNetworkCallsInterceptor
 import org.simple.clinic.patient.SyncStatus
 import org.simple.clinic.patient.SyncStatus.DONE
 import org.simple.clinic.patient.SyncStatus.PENDING
@@ -15,11 +13,6 @@ import org.simple.clinic.util.Optional
 
 // TODO: Use this class for all data sync tests.
 abstract class BaseSyncCoordinatorAndroidTest<T, P> {
-
-  @After
-  fun tearDown() {
-    FailAllNetworkCallsInterceptor.shouldFailAll = false
-  }
 
   @Test
   fun when_pending_sync_records_are_present_then_they_should_be_pushed_to_the_server_and_marked_as_synced_on_success() {

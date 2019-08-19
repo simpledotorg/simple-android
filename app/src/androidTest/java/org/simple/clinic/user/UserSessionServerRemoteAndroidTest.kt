@@ -5,6 +5,7 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.simple.clinic.AppDatabase
 import org.simple.clinic.rules.ServerAuthenticationRule
 import org.simple.clinic.TestClinicApp
 import org.simple.clinic.TestData
@@ -24,7 +25,7 @@ class UserSessionServerIntegrationTest {
   lateinit var testData: TestData
 
   @Inject
-  lateinit var appDatabase: org.simple.clinic.AppDatabase
+  lateinit var appDatabase: AppDatabase
 
   @Inject
   lateinit var sharedPreferences: SharedPreferences

@@ -1,9 +1,12 @@
 # CHANGELOG
 
 ## Next Release
+
+## On Demo
 ### Feature
 - Search by phone number support from the screen to find patient after scanning a BP Passport
 - Older devices will automatically get cleared when the user logs in on a new device
+- An exact date to schedule a patient visit can be picked from the schedule appointment screen
 
 ### Fixes
 - Fix searching by phone number shows duplicate results for patients with multiple BPs

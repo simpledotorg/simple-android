@@ -106,7 +106,9 @@ data class OverdueAppointment(
           LEFT JOIN PatientPhoneNumber PPN ON PPN.patientUuid = P.uuid
           LEFT JOIN MedicalHistory MH ON MH.patientUuid = P.uuid
 
-          WHERE A.facilityUuid = :facilityUuid
+          WHERE 
+            P.deletedAt IS NULL 
+            AND A.facilityUuid = :facilityUuid
             AND A.status = :scheduledStatus
             AND A.scheduledDate < :scheduledBefore
             AND PPN.number IS NOT NULL

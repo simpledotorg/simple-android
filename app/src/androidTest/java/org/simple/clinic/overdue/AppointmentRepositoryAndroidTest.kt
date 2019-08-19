@@ -950,4 +950,56 @@ class AppointmentRepositoryAndroidTest {
       assertThat(it.bloodPressure).isEqualTo(bpTwoForPatient2)
     }
   }
+
+  @Test
+  fun deleted_patients_must_be_excluded_when_loading_overdue_appointments() {
+    fun createOverdueAppointment(
+        patientUuid: UUID,
+        facilityUuid: UUID,
+        isPatientDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          generatePhoneNumber = true,
+          patientDeletedAt = if (isPatientDeleted) Instant.now() else null
+      )
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+
+      val bp = testData.bloodPressureMeasurement(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid
+      )
+      bpRepository.save(listOf(bp)).blockingAwait()
+
+      val appointment = testData.appointment(
+          patientUuid = patientUuid,
+          facilityUuid = facilityUuid,
+          scheduledDate = LocalDate.now(clock).minusDays(1),
+          status = Scheduled,
+          cancelReason = null
+      )
+      appointmentRepository.save(listOf(appointment)).blockingAwait()
+    }
+
+    //given
+    val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
+    createOverdueAppointment(
+        patientUuid = deletedPatientId,
+        facilityUuid = testData.qaUserFacilityUuid(),
+        isPatientDeleted = true
+    )
+    val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
+    createOverdueAppointment(
+        patientUuid = notDeletedPatientId,
+        facilityUuid = testData.qaUserFacilityUuid(),
+        isPatientDeleted = false
+    )
+
+    // when
+    val overdueAppointments = appointmentRepository.overdueAppointments(testData.qaFacility()).blockingFirst()
+
+    //then
+    assertThat(overdueAppointments).hasSize(1)
+    assertThat(overdueAppointments.first().appointment.patientUuid).isEqualTo(notDeletedPatientId)
+  }
 }

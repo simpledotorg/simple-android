@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## Next Release
+## On Demo
 ### Feature
 - Search by phone number support from the screen to find patient after scanning a BP Passport
 - Older devices will automatically get cleared when the user logs in on a new device

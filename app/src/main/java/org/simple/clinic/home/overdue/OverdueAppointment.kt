@@ -108,6 +108,7 @@ data class OverdueAppointment(
 
           WHERE 
             P.deletedAt IS NULL 
+            AND A.deletedAt IS NULL
             AND A.facilityUuid = :facilityUuid
             AND A.status = :scheduledStatus
             AND A.scheduledDate < :scheduledBefore

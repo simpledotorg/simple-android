@@ -88,14 +88,19 @@ class TestData @Inject constructor(
       patientStatus: PatientStatus = PatientStatus.Active,
       patientDeletedAt: Instant? = null,
       patientName: String = faker.name.name(),
-      patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null
+      patientPhoneNumber: String? = if (generatePhoneNumber) faker.phoneNumber.phoneNumber() else null,
+      businessId: BusinessId? = if (generateBusinessId) businessId(patientUuid = patientUuid) else null
   ): PatientProfile {
     val phoneNumbers = if (!patientPhoneNumber.isNullOrBlank()) {
       listOf(patientPhoneNumber(patientUuid = patientUuid, number = patientPhoneNumber))
     } else {
       emptyList()
     }
-    val businessIds = if (generateBusinessId) listOf(businessId(patientUuid = patientUuid)) else emptyList()
+    val businessIds = if (businessId != null) {
+      listOf(businessId)
+    } else {
+      emptyList()
+    }
 
     return PatientProfile(
         patient = patient(

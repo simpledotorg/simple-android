@@ -109,7 +109,9 @@ data class Patient(
     @Query("""
       SELECT P.* FROM Patient P
       INNER JOIN BusinessId B ON B.patientUuid == P.uuid
-      WHERE B.identifier == :identifier AND B.deletedAt IS NULL
+      WHERE 
+        (P.deletedAt IS NULL) AND
+        (B.identifier == :identifier AND B.deletedAt IS NULL)
       ORDER BY B.createdAt ASC
     """)
     abstract fun findPatientsWithBusinessId(identifier: String): Flowable<List<Patient>>

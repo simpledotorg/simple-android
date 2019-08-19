@@ -2424,4 +2424,56 @@ class PatientRepositoryAndroidTest {
     assertThat(allPatientsInFacility).hasSize(1)
     assertThat(allPatientsInFacility.first().uuid).isEqualTo(notDeletedPatientId)
   }
+
+  @Test
+  fun deleted_patients_must_be_excluded_when_finding_by_business_id() {
+    fun recordPatientWithBusinessId(
+        patientUuid: UUID,
+        bpPassportUuid: UUID,
+        identifier: String,
+        isDeleted: Boolean
+    ) {
+      val patientProfile = testData.patientProfile(
+          patientUuid = patientUuid,
+          businessId = testData.businessId(
+              uuid = bpPassportUuid,
+              patientUuid = patientUuid,
+              identifier = testData.identifier(value = identifier, type = BpPassport)
+          ),
+          patientDeletedAt = if (isDeleted) Instant.now() else null
+      )
+
+      patientRepository.save(listOf(patientProfile)).blockingAwait()
+    }
+
+    fun findPatientWithIdentifier(identifier: String): Optional<Patient> {
+      return patientRepository.findPatientWithBusinessId(identifier).blockingFirst()
+    }
+
+    //given
+    val deletedPatientId = UUID.fromString("97d05796-614c-46de-a10a-e12cf595f4ff")
+    val deletedPatientIdentifier = "2fc3e465-4d9b-4e30-8fd3-592055837a39"
+    recordPatientWithBusinessId(
+        patientUuid = deletedPatientId,
+        bpPassportUuid = UUID.fromString("764fd0ff-0e62-4f92-bef8-3e651e81a1fe"),
+        identifier = deletedPatientIdentifier,
+        isDeleted = true
+    )
+    val notDeletedPatientId = UUID.fromString("4e642ef2-1991-42ae-ba61-a10809c78f5d")
+    val notDeletedPatientIdentifier = "6dea3680-72a6-495b-ad5b-b52391af0dbf"
+    recordPatientWithBusinessId(
+        patientUuid = notDeletedPatientId,
+        bpPassportUuid = UUID.fromString("60aae36c-5d46-4fdd-8833-bfc55c8f4154"),
+        identifier = notDeletedPatientIdentifier,
+        isDeleted = false
+    )
+
+    // when
+    val resultForDeletedPatient = findPatientWithIdentifier(deletedPatientIdentifier)
+    val resultForNotDeletedPatient = findPatientWithIdentifier(notDeletedPatientIdentifier) as Just<Patient>
+
+    //then
+    assertThat(resultForDeletedPatient).isEqualTo(None)
+    assertThat(resultForNotDeletedPatient.value.uuid).isEqualTo(notDeletedPatientId)
+  }
 }

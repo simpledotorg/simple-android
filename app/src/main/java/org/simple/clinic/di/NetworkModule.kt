@@ -65,7 +65,7 @@ open class NetworkModule {
 
   @Provides
   @AppScope
-  open fun okHttpClient(
+  fun okHttpClient(
       loggedInInterceptor: LoggedInUserHttpInterceptor,
       appInfoHttpInterceptor: AppInfoHttpInterceptor,
       networkAnalyticsInterceptor: NetworkAnalyticsInterceptor,

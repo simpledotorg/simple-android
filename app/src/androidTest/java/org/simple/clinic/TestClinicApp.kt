@@ -9,7 +9,6 @@ import org.simple.clinic.di.TestAppModule
 import org.simple.clinic.di.TestCrashReporterModule
 import org.simple.clinic.di.TestDataSyncOnApprovalModule
 import org.simple.clinic.di.TestLoginModule
-import org.simple.clinic.di.TestNetworkModule
 import org.simple.clinic.di.TestPatientModule
 import org.simple.clinic.di.TestStorageModule
 import org.simple.clinic.sync.SyncScheduler
@@ -48,7 +47,6 @@ class TestClinicApp : ClinicApp() {
         .patientModule(TestPatientModule())
         .crashReporterModule(TestCrashReporterModule())
         .loginModule(TestLoginModule())
-        .networkModule(TestNetworkModule())
         .dataSyncOnApprovalModule(TestDataSyncOnApprovalModule())
         .build()
   }

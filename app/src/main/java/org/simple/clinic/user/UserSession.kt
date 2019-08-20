@@ -126,7 +126,7 @@ class UserSession @Inject constructor(
         .subscribeOn(schedulersProvider.io())
         .take(1)
         .filterAndUnwrapJust()
-        .map(Analytics::setUser)
+        .map(Analytics::setLoggedInUser)
         .subscribe()
   }
 
@@ -217,6 +217,7 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(RegistrationResult.Success as RegistrationResult)
         }
+        .doOnSuccess { reportUserLoggedInToAnalytics() }
         .onErrorReturn { e ->
           Timber.e(e)
           when (e) {

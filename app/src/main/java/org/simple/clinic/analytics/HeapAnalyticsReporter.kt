@@ -14,7 +14,7 @@ class HeapAnalyticsReporter(context: Context, debug: Boolean = false) : Analytic
     Heap.identify(id)
   }
 
-  override fun resetUserIdentity() {
+  override fun resetUser() {
     Heap.resetIdentity()
   }
 

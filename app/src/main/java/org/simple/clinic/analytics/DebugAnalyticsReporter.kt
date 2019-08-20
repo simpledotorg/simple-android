@@ -8,7 +8,7 @@ class DebugAnalyticsReporter : AnalyticsReporter {
     Timber.tag("Analytics").d("User ID: $id")
   }
 
-  override fun resetUserIdentity() {
+  override fun resetUser() {
     Timber.tag("Analytics").d("Reset User ID")
   }
 

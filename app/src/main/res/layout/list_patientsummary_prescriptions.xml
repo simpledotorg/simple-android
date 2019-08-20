@@ -21,6 +21,7 @@
     <org.simple.clinic.widgets.OmegaCenterIconButton
       android:id="@+id/patientsummary_prescriptions_update"
       style="@style/Clinic.V2.Button.WithIcon.Blue2"
+      android:textAppearance="@style/Clinic.V2.TextAppearance.Button1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:drawableStart="@drawable/ic_add_medicines"

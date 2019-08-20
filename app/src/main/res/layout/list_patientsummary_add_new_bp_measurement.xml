@@ -14,5 +14,6 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/spacing_8"
     android:drawableStart="@drawable/ic_new_bp"
-    android:text="@string/patientsummary_bp_add_new" />
+    android:text="@string/patientsummary_bp_add_new"
+    android:textAppearance="@style/Clinic.V2.TextAppearance.Button1" />
 </androidx.cardview.widget.CardView>

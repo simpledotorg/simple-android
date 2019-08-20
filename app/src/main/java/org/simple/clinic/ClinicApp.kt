@@ -75,7 +75,7 @@ abstract class ClinicApp : Application() {
       Analytics.addReporter(reporter)
     }
 
-    updateAnalyticsUserId.listen(Schedulers.io())
+    updateAnalyticsUserId.listen()
     syncProtocolsOnLogin.listen()
     dataSyncOnApproval.sync()
     unauthorizeUser.listen(Schedulers.io())

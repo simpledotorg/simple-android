@@ -39,7 +39,7 @@ object Analytics {
   fun clearUser() {
     reporters.forEach {
       it.safely("Error clearing user ID!") {
-        resetUserIdentity()
+        resetUser()
       }
     }
   }

@@ -59,7 +59,9 @@ buildscript {
       firebaseConfig      : '16.4.1',
       googleServices      : '4.0.1',
       playCore            : '1.6.1',
-      fastScroll          : '2.0.0'
+      fastScroll          : '2.0.0',
+      flexbox             : '1.1.0',
+      mixpanel            : '5.6.4'
   ]
 
   repositories {

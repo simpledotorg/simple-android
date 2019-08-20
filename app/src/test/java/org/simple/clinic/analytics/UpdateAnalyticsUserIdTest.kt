@@ -5,7 +5,6 @@ import com.nhaarman.mockito_kotlin.mock
 import com.nhaarman.mockito_kotlin.whenever
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
 import org.junit.After
@@ -18,7 +17,6 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
-import org.simple.clinic.util.toOptional
 
 @RunWith(JUnitParamsRunner::class)
 class UpdateAnalyticsUserIdTest {
@@ -45,7 +43,7 @@ class UpdateAnalyticsUserIdTest {
 
     updateAnalyticsUserId.listen(scheduler)
 
-    assertThat(reporter.userId).isNull()
+    assertThat(reporter.user).isNull()
   }
 
   @Test
@@ -96,20 +94,5 @@ class UpdateAnalyticsUserIdTest {
         arrayOf(None, Just(user1), user1.uuid.toString()),
         arrayOf(Just(user2), Just(user2.copy(loggedInStatus = User.LoggedInStatus.LOGGED_IN)), user2.uuid.toString())
     )
-  }
-
-  @Test
-  fun `when the stored user is marked as unauthorized, the user id must be cleared from analytics`() {
-    val userSubject = PublishSubject.create<Optional<User>>()
-    whenever(userSession.loggedInUser()).thenReturn(userSubject)
-    updateAnalyticsUserId.listen(scheduler)
-
-    val user = PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN)
-
-    userSubject.onNext(user.toOptional())
-    assertThat(reporter.userId).isEqualTo(user.uuid.toString())
-
-    userSubject.onNext(user.copy(loggedInStatus = User.LoggedInStatus.UNAUTHORIZED).toOptional())
-    assertThat(reporter.userId).isNull()
   }
 }

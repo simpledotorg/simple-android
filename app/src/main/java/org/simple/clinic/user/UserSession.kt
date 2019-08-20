@@ -217,7 +217,7 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(RegistrationResult.Success as RegistrationResult)
         }
-        .doOnSuccess { reportUserLoggedInToAnalytics() }
+        .doOnSuccess { reportUserRegisteredToAnalytics() }
         .onErrorReturn { e ->
           Timber.e(e)
           when (e) {
@@ -226,6 +226,15 @@ class UserSession @Inject constructor(
           }
         }
         .doOnSuccess { Timber.i("Registration result: $it") }
+  }
+
+  private fun reportUserRegisteredToAnalytics() {
+    loggedInUser()
+        .subscribeOn(schedulersProvider.io())
+        .take(1)
+        .filterAndUnwrapJust()
+        .map(Analytics::setNewlyRegisteredUser)
+        .subscribe()
   }
 
   private fun userToPayload(user: User, facilityUuids: List<UUID>): LoggedInUserPayload {

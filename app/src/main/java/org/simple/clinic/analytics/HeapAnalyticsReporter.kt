@@ -11,7 +11,7 @@ class HeapAnalyticsReporter(context: Context, debug: Boolean = false) : Analytic
     Heap.init(context.applicationContext, BuildConfig.HEAP_ID, debug)
   }
 
-  override fun setLoggedInUser(user: User) {
+  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
     Heap.identify(user.uuid.toString())
   }
 

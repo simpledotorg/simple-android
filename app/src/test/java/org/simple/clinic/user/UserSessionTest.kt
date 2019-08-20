@@ -979,7 +979,6 @@ class UserSessionTest {
         updatedAt = now
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
-    assertThat(reporter.user).isNull()
 
     val ongoingLoginEntry = OngoingLoginEntry(
         uuid = userUuid,
@@ -1017,12 +1016,15 @@ class UserSessionTest {
         .thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry())
         .thenReturn(Completable.complete())
+    assertThat(reporter.user).isNull()
+    assertThat(reporter.isANewRegistration).isNull()
 
     // when
     userSession.loginWithOtp(otp).blockingGet()
 
     // then
     assertThat(reporter.user).isEqualTo(user)
+    assertThat(reporter.isANewRegistration).isFalse()
   }
 
   @Test
@@ -1031,7 +1033,7 @@ class UserSessionTest {
     whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser(uuid = userUuid)
-    reporter.setLoggedInUser(user)
+    reporter.setLoggedInUser(user, false)
     assertThat(reporter.user).isNotNull()
 
     // when
@@ -1066,11 +1068,13 @@ class UserSessionTest {
         .thenReturn(Completable.complete())
 
     assertThat(reporter.user).isNull()
+    assertThat(reporter.isANewRegistration).isNull()
 
     // when
     userSession.register().blockingGet()
 
     // then
     assertThat(reporter.user).isEqualTo(user)
+    assertThat(reporter.isANewRegistration).isTrue()
   }
 }

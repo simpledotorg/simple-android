@@ -31,7 +31,15 @@ object Analytics {
   fun setLoggedInUser(user: User) {
     reporters.forEach {
       it.safely("Error setting logged in user!") {
-        setLoggedInUser(user)
+        setLoggedInUser(user, false)
+      }
+    }
+  }
+
+  fun setNewlyRegisteredUser(user: User) {
+    reporters.forEach {
+      it.safely("Error setting newly registered user!") {
+        setLoggedInUser(user, true)
       }
     }
   }

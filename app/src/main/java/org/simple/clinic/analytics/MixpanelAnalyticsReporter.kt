@@ -21,6 +21,7 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
       }
 
       mixpanel.people.identify(userId)
+      mixpanel.people.set("name", user.fullName)
     }
   }
 

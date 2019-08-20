@@ -40,6 +40,11 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when setting the newly registered user without any reporters, no error should be thrown`() {
+    Analytics.setNewlyRegisteredUser(user)
+  }
+
+  @Test
   fun `when reporting an audit event without any reporters, no error should be thrown`() {
     Analytics.reportViewedPatient(UUID.fromString("7cf6ce77-bb33-437a-97aa-935b9ea432aa"), "Test")
   }
@@ -114,6 +119,12 @@ class AnalyticsTest {
   }
 
   @Test
+  fun `when a reporter fails when setting the newly registered user, no  error should be thrown`() {
+    Analytics.addReporter(FailingAnalyticsReporter())
+    Analytics.setNewlyRegisteredUser(user)
+  }
+
+  @Test
   fun `when a reporter fails when sending an audit event, no error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
@@ -169,6 +180,17 @@ class AnalyticsTest {
 
     Analytics.setLoggedInUser(user)
     assertThat(reporter.user).isEqualTo(user)
+    assertThat(reporter.isANewRegistration).isFalse()
+  }
+
+  @Test
+  fun `when setting the newly registered user, the property must also be set on the reporters`() {
+    val reporter = MockAnalyticsReporter()
+    Analytics.addReporter(reporter)
+
+    Analytics.setNewlyRegisteredUser(user)
+    assertThat(reporter.user).isEqualTo(user)
+    assertThat(reporter.isANewRegistration).isTrue()
   }
 
   @Test
@@ -190,6 +212,24 @@ class AnalyticsTest {
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
     Analytics.setLoggedInUser(user)
+
+    assertThat(reporter1.user).isEqualTo(user)
+    assertThat(reporter3.user).isEqualTo(user)
+
+    Analytics.clearUser()
+
+    assertThat(reporter1.user).isNull()
+    assertThat(reporter3.user).isNull()
+  }
+
+  @Test
+  fun `when multiple reporters are present and one throws an error, the newly registered user must be set on the others`() {
+    val reporter1 = MockAnalyticsReporter()
+    val reporter2 = FailingAnalyticsReporter()
+    val reporter3 = MockAnalyticsReporter()
+
+    Analytics.addReporter(reporter1, reporter2, reporter3)
+    Analytics.setNewlyRegisteredUser(user)
 
     assertThat(reporter1.user).isEqualTo(user)
     assertThat(reporter3.user).isEqualTo(user)
@@ -305,7 +345,7 @@ class AnalyticsTest {
 
   private class FailingAnalyticsReporter : AnalyticsReporter {
 
-    override fun setLoggedInUser(user: User) {
+    override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
       throw RuntimeException()
     }
 

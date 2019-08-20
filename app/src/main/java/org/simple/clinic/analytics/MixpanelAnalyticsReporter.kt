@@ -9,11 +9,17 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
 
   private val mixpanel: MixpanelAPI = MixpanelAPI.getInstance(app, BuildConfig.MIXPANEL_TOKEN)
 
-  override fun setLoggedInUser(user: User) {
+  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
     synchronized(mixpanel) {
       val userId = user.uuid.toString()
 
-      mixpanel.identify(userId)
+      if (isANewRegistration) {
+        mixpanel.alias(userId, null)
+        mixpanel.identify(userId)
+      } else {
+        mixpanel.identify(userId)
+      }
+
       mixpanel.people.identify(userId)
     }
   }

@@ -5,10 +5,12 @@ import org.simple.clinic.user.User
 class MockAnalyticsReporter : AnalyticsReporter {
 
   var user: User? = null
+  var isANewRegistration: Boolean? = null
   val receivedEvents = mutableListOf<Event>()
 
-  override fun setLoggedInUser(user: User) {
+  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
     this.user = user
+    this.isANewRegistration = isANewRegistration
   }
 
   override fun createEvent(event: String, props: Map<String, Any>) {

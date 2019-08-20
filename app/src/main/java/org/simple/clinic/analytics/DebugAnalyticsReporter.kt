@@ -5,8 +5,8 @@ import timber.log.Timber
 
 class DebugAnalyticsReporter : AnalyticsReporter {
 
-  override fun setLoggedInUser(user: User) {
-    Timber.tag("Analytics").d("User: $user")
+  override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
+    Timber.tag("Analytics").d("User: $user; Is new registration: $isANewRegistration")
   }
 
   override fun resetUser() {

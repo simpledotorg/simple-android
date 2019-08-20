@@ -5,7 +5,7 @@ import timber.log.Timber
 
 interface AnalyticsReporter {
 
-  fun setLoggedInUser(user: User)
+  fun setLoggedInUser(user: User, isANewRegistration: Boolean)
 
   fun resetUser()
 

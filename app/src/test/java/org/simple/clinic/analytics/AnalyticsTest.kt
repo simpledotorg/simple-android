@@ -5,6 +5,7 @@ import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
 import org.simple.clinic.patient.PatientMocker
+import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -34,8 +35,8 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when setting the user id without any reporters, no error should be thrown`() {
-    Analytics.setUser(user)
+  fun `when setting the logged in user without any reporters, no error should be thrown`() {
+    Analytics.setLoggedInUser(user)
   }
 
   @Test
@@ -84,7 +85,7 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when clearing the user identity without any reporters, no error should be thrown`() {
+  fun `when clearing the user without any reporters, no error should be thrown`() {
     Analytics.clearUser()
   }
 
@@ -107,9 +108,9 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when a reporter fails when setting the user id, no  error should be thrown`() {
+  fun `when a reporter fails when setting the logged in user, no  error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.setUser(user)
+    Analytics.setLoggedInUser(user)
   }
 
   @Test
@@ -156,47 +157,47 @@ class AnalyticsTest {
   }
 
   @Test
-  fun `when a reporter fails clearing the user id, no  error should be thrown`() {
+  fun `when a reporter fails clearing the user, no  error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
     Analytics.clearUser()
   }
 
   @Test
-  fun `when setting the user id, the property must also be set on the reporters`() {
+  fun `when setting the logged in user, the property must also be set on the reporters`() {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
 
-    Analytics.setUser(user)
-    assertThat(reporter.userId).isEqualTo(user.uuid.toString())
+    Analytics.setLoggedInUser(user)
+    assertThat(reporter.user).isEqualTo(user)
   }
 
   @Test
-  fun `when clearing the user id, the user ID must be cleared from the reporters`() {
+  fun `when clearing the user, the user ID must be cleared from the reporters`() {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
 
-    Analytics.setUser(user)
-    assertThat(reporter.userId).isEqualTo(user.uuid.toString())
+    Analytics.setLoggedInUser(user)
+    assertThat(reporter.user).isEqualTo(user)
     Analytics.clearUser()
-    assertThat(reporter.userId).isNull()
+    assertThat(reporter.user).isNull()
   }
 
   @Test
-  fun `when multiple reporters are present and one throws an error, the user id must be set on the others`() {
+  fun `when multiple reporters are present and one throws an error, the logged in user must be set on the others`() {
     val reporter1 = MockAnalyticsReporter()
     val reporter2 = FailingAnalyticsReporter()
     val reporter3 = MockAnalyticsReporter()
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
-    Analytics.setUser(user)
+    Analytics.setLoggedInUser(user)
 
-    assertThat(reporter1.userId).isEqualTo(user.uuid.toString())
-    assertThat(reporter3.userId).isEqualTo(user.uuid.toString())
+    assertThat(reporter1.user).isEqualTo(user)
+    assertThat(reporter3.user).isEqualTo(user)
 
     Analytics.clearUser()
 
-    assertThat(reporter1.userId).isNull()
-    assertThat(reporter3.userId).isNull()
+    assertThat(reporter1.user).isNull()
+    assertThat(reporter3.user).isNull()
   }
 
   @Test
@@ -305,6 +306,10 @@ class AnalyticsTest {
   private class FailingAnalyticsReporter : AnalyticsReporter {
 
     override fun setUserIdentity(id: String) {
+      throw RuntimeException()
+    }
+
+    override fun setLoggedInUser(user: User) {
       throw RuntimeException()
     }
 

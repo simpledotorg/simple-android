@@ -12,6 +12,7 @@ import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
 import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
+import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.AppScope
 import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
@@ -43,6 +44,7 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.filterAndUnwrapJust
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import retrofit2.HttpException
 import timber.log.Timber
 import java.io.IOException
@@ -74,7 +76,8 @@ class UserSession @Inject constructor(
     @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
     @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
     @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>,
-    @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>
+    @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>,
+    val schedulersProvider: SchedulersProvider
 ) {
 
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
@@ -100,6 +103,7 @@ class UserSession @Inject constructor(
           storeUserAndAccessToken(it)
               .toSingleDefault(LoginResult.Success as LoginResult)
         }
+        .doOnSuccess { reportUserLoggedInToAnalytics() }
         .doOnSuccess { syncOnLoginResult() }
         .doOnSuccess { clearOngoingLoginEntry().subscribe() }
         .onErrorReturn { error ->
@@ -116,6 +120,15 @@ class UserSession @Inject constructor(
           }
         }
         .doOnSuccess { Timber.i("Login result: $it") }
+  }
+
+  private fun reportUserLoggedInToAnalytics() {
+    loggedInUser()
+        .subscribeOn(schedulersProvider.io())
+        .take(1)
+        .filterAndUnwrapJust()
+        .map(Analytics::setUser)
+        .subscribe()
   }
 
   private fun syncOnLoginResult() {

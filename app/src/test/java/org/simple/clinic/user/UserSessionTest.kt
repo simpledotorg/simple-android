@@ -17,8 +17,6 @@ import io.reactivex.BackpressureStrategy
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
-import io.reactivex.plugins.RxJavaPlugins
-import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.PublishSubject
 import junitparams.JUnitParamsRunner
 import junitparams.Parameters
@@ -106,6 +104,7 @@ class UserSessionTest {
   private val fileStorage = mock<FileStorage>()
   private val reportPendingRecords = mock<ReportPendingRecordsToAnalytics>()
   private val onboardingCompletePreference = mock<Preference<Boolean>>()
+  private val userUuid: UUID = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
 
   private val userSession = UserSession(
       loginApi = loginApi,
@@ -132,20 +131,12 @@ class UserSessionTest {
 
   @Before
   fun setUp() {
-    // Used for overriding IO scheduler for sync call on login.
-    RxJavaPlugins.setIoSchedulerHandler { Schedulers.trampoline() }
-
-    whenever(ongoingLoginEntryRepository.saveLoginEntry(any())).thenReturn(Completable.complete())
-    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.never())
     whenever(appDatabase.userDao()).thenReturn(userDao)
-    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
-    val userUuid = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
-    whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "982312441", pin = "")))
-    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.never())
+    whenever(ongoingLoginEntryRepository.entry()).thenReturn(Single.never())
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.never())
     whenever(userDao.user()).thenReturn(Flowable.never())
-
-    userSession.saveOngoingLoginEntry(OngoingLoginEntry(userUuid, "phone", "pin")).blockingAwait()
 
     Analytics.addReporter(reporter)
   }
@@ -167,9 +158,12 @@ class UserSessionTest {
       response: Single<LoginResponse>,
       expectedResultType: Class<LoginResult>
   ) {
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(loginApi.login(any())).thenReturn(response)
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
+    whenever(ongoingLoginEntryRepository.entry())
+        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
 
     val result = userSession.loginWithOtp("000000").blockingGet()
 
@@ -195,7 +189,10 @@ class UserSessionTest {
     var syncInvoked = false
 
     whenever(loginApi.login(any())).thenReturn(response)
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(dataSync.sync(null)).thenReturn(Completable.complete().doOnComplete { syncInvoked = true })
+    whenever(ongoingLoginEntryRepository.entry())
+        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
 
     userSession.loginWithOtp("000000").blockingGet()
 
@@ -227,6 +224,9 @@ class UserSessionTest {
       if (syncWillFail) Completable.error(RuntimeException()) else Completable.complete()
     }
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete())
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
+    whenever(ongoingLoginEntryRepository.entry())
+        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
 
     assertThat(userSession.loginWithOtp("000000").blockingGet()).isEqualTo(LoginResult.Success)
   }
@@ -314,7 +314,9 @@ class UserSessionTest {
 
   @Test
   fun `when performing sync and clear data, the sync must be triggered`() {
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -335,8 +337,10 @@ class UserSessionTest {
           if (retryIndex == retryCount - 1) Completable.complete() else Completable.error(RuntimeException())
         }.toTypedArray()
 
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(dataSync.sync(null))
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -353,8 +357,10 @@ class UserSessionTest {
     val emissionsAfterFirst: Array<Completable> = (0 until retryCount)
         .map { Completable.error(RuntimeException()) }.toTypedArray()
 
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(dataSync.sync(null))
         .thenReturn(Completable.error(RuntimeException()), *emissionsAfterFirst)
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -367,7 +373,9 @@ class UserSessionTest {
 
   @Test
   fun `if the sync succeeds when resetting the PIN, it should clear the patient related data`() {
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -382,6 +390,8 @@ class UserSessionTest {
   @Test
   fun `if the sync fails when resetting the PIN, it should clear the patient related data`() {
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
+    whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -396,6 +406,7 @@ class UserSessionTest {
   @Test
   fun `after clearing patient related data during forgot PIN flow, the sync timestamps must be cleared`() {
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
+    whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
 
     val user = PatientMocker.loggedInUser()
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
@@ -424,7 +435,7 @@ class UserSessionTest {
   ) {
     val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
-
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(passwordHasher.hash(any())).thenReturn(Single.just(hashed))
     whenever(loginApi.resetPin(any()))
         .thenReturn(Single.just(ForgotPinResponse(
@@ -483,7 +494,7 @@ class UserSessionTest {
         status = ApprovedForSyncing
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
-
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("new-digest"))
 
     val response = ForgotPinResponse(
@@ -517,7 +528,7 @@ class UserSessionTest {
         status = ApprovedForSyncing
     )
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
-
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(passwordHasher.hash(any())).thenReturn(Single.just("new-digest"))
 
     val response = ForgotPinResponse(
@@ -572,6 +583,7 @@ class UserSessionTest {
       expectedResult: ForgotPinResult
   ) {
     val currentUser = PatientMocker.loggedInUser(pinDigest = "old-digest", loggedInStatus = RESETTING_PIN)
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
     whenever(userDao.user()).thenReturn(Flowable.just(listOf(currentUser)))
 
     errorToThrow?.let { whenever(userDao.createOrUpdate(any())).doThrow(it) }
@@ -617,6 +629,9 @@ class UserSessionTest {
     whenever(loginApi.login(any())).thenReturn(response)
     whenever(dataSync.sync(null)).thenReturn(Completable.complete())
     whenever(ongoingLoginEntryRepository.clearLoginEntry()).thenReturn(Completable.complete().doOnComplete { entryCleared = true })
+    whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
+    whenever(ongoingLoginEntryRepository.entry())
+        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "", pin = "")))
 
     userSession.loginWithOtp("000000").blockingGet()
 

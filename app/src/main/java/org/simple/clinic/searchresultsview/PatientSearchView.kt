@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -47,6 +48,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   private val emptyStateView by bindView<View>(R.id.searchresults_empty_state)
   private val newPatientRationaleTextView by bindView<TextView>(R.id.searchresults_new_patient_rationale)
   private val newPatientButton by bindView<Button>(R.id.searchresults_new_patient)
+  private val loader by bindView<ProgressBar>(R.id.searchresults_loader)
 
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
@@ -87,6 +89,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
       results: PatientSearchResults,
       currentFacility: Facility
   ) {
+    loader.visibleOrGone(isVisible = false)
     if (results.hasNoResults) {
       setEmptyStateVisible(true)
       adapter.update(emptyList())
@@ -105,7 +108,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
     upstreamUiEvents.onNext(searchResultClickedEvent)
   }
 
-  fun setEmptyStateVisible(visible: Boolean) {
+  private fun setEmptyStateVisible(visible: Boolean) {
     emptyStateView.visibleOrGone(visible)
 
     newPatientRationaleTextView.setText(when {

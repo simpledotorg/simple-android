@@ -103,6 +103,7 @@ android {
       versionNameSuffix "-qa"
       buildConfigField "String", "API_ENDPOINT", "\"" + qaApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + qaHeapId + "\""
+      buildConfigField "String", "MIXPANEL_TOKEN", "\"" + qaMixpanelToken + "\""
       buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + qaMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
@@ -113,6 +114,7 @@ android {
       versionNameSuffix "-demo"
       buildConfigField "String", "API_ENDPOINT", "\"" + stagingApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + stagingHeapId + "\""
+      buildConfigField "String", "MIXPANEL_TOKEN", "\"" + stagingMixpanelToken + "\""
       buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + stagingMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
@@ -123,6 +125,7 @@ android {
       versionNameSuffix "-sandbox"
       buildConfigField "String", "API_ENDPOINT", "\"" + sandboxApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + sandboxHeapId + "\""
+      buildConfigField "String", "MIXPANEL_TOKEN", "\"" + sandboxMixpanelToken + "\""
       buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + sandboxMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "false"
     }
@@ -131,6 +134,7 @@ android {
       dimension 'track'
       buildConfigField "String", "API_ENDPOINT", "\"" + productionApiEndpoint + "\""
       buildConfigField "String", "HEAP_ID", "\"" + productionHeapId + "\""
+      buildConfigField "String", "MIXPANEL_TOKEN", "\"" + productionMixpanelToken + "\""
       buildConfigField "String", "MASKED_PHONE_NUMBER", "\"" + productionMaskedPhoneNumber + "\""
       buildConfigField "boolean", "DISABLE_SCREENSHOT", "true"
     }
@@ -282,7 +286,8 @@ dependencies {
   implementation "com.google.android.play:core:$versions.playCore"
 
   implementation "com.simplecityapps:recyclerview-fastscroll:$versions.fastScroll"
-  implementation "com.google.android:flexbox:1.1.0"
+  implementation "com.google.android:flexbox:$versions.flexbox"
+  implementation "com.mixpanel.android:mixpanel-android:$versions.mixpanel"
 }
 
 // This must always be present at the bottom of this file, as per:

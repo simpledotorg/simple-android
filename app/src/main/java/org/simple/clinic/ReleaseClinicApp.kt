@@ -2,6 +2,7 @@ package org.simple.clinic
 
 import android.annotation.SuppressLint
 import org.simple.clinic.analytics.HeapAnalyticsReporter
+import org.simple.clinic.analytics.MixpanelAnalyticsReporter
 import org.simple.clinic.di.AppComponent
 import org.simple.clinic.di.AppModule
 import org.simple.clinic.di.DaggerAppComponent
@@ -20,7 +21,10 @@ class ReleaseClinicApp : ClinicApp() {
   lateinit var syncIndicatorStatusCalculator: SyncIndicatorStatusCalculator
 
   override val analyticsReporters by unsafeLazy {
-    listOf(HeapAnalyticsReporter(this))
+    listOf(
+        HeapAnalyticsReporter(this),
+        MixpanelAnalyticsReporter(this)
+    )
   }
 
   override fun onCreate() {

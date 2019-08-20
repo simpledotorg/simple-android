@@ -4,13 +4,8 @@ import org.simple.clinic.user.User
 
 class MockAnalyticsReporter : AnalyticsReporter {
 
-  var userId: String? = null
   var user: User? = null
   val receivedEvents = mutableListOf<Event>()
-
-  override fun setUserIdentity(id: String) {
-    userId = id
-  }
 
   override fun setLoggedInUser(user: User) {
     this.user = user
@@ -21,7 +16,6 @@ class MockAnalyticsReporter : AnalyticsReporter {
   }
 
   override fun resetUser() {
-    userId = null
     user = null
   }
 
@@ -35,7 +29,6 @@ class MockAnalyticsReporter : AnalyticsReporter {
   }
 
   private fun clearUsers() {
-    userId = null
     user = null
   }
 

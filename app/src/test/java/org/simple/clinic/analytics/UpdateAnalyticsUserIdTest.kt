@@ -17,6 +17,7 @@ import org.simple.clinic.user.UserSession
 import org.simple.clinic.util.Just
 import org.simple.clinic.util.None
 import org.simple.clinic.util.Optional
+import java.util.UUID
 
 @RunWith(JUnitParamsRunner::class)
 class UpdateAnalyticsUserIdTest {
@@ -65,9 +66,9 @@ class UpdateAnalyticsUserIdTest {
     updateAnalyticsUserId.listen(scheduler)
 
     if (shouldSetUserId) {
-      assertThat(reporter.userId).isEqualTo(user.uuid.toString())
+      assertThat(reporter.user).isEqualTo(user)
     } else {
-      assertThat(reporter.userId).isNull()
+      assertThat(reporter.user).isNull()
     }
   }
 
@@ -76,23 +77,30 @@ class UpdateAnalyticsUserIdTest {
   fun `the user id must be set when the local user is updated to one that is logged in`(
       previousUser: Optional<User>,
       updatedUser: Optional<User>,
-      userIdThatMustBeSet: String
+      userThatMustBeSet: User
   ) {
     whenever(userSession.loggedInUser()).thenReturn(Observable.just(previousUser, updatedUser))
 
     updateAnalyticsUserId.listen(scheduler)
 
-    assertThat(reporter.userId).isEqualTo(userIdThatMustBeSet)
+    assertThat(reporter.user).isEqualTo(userThatMustBeSet)
   }
 
-  // Accessed via reflection for test params
   @Suppress("Unused")
   fun paramsForUpdatedUser(): Array<Array<Any>> {
-    val user1 = PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.LOGGED_IN)
-    val user2 = PatientMocker.loggedInUser(loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN)
+    val user1 = PatientMocker.loggedInUser(
+        uuid = UUID.fromString("ead5681e-3223-4062-8d71-741495480a68"),
+        loggedInStatus = User.LoggedInStatus.LOGGED_IN
+    )
+    val user2 = PatientMocker.loggedInUser(
+        uuid = UUID.fromString("ab2f5dbd-d00c-4e0e-8182-a578936983e6"),
+        loggedInStatus = User.LoggedInStatus.NOT_LOGGED_IN
+    )
+    val user2LoggedIn = user2.copy(loggedInStatus = User.LoggedInStatus.LOGGED_IN)
+
     return arrayOf(
-        arrayOf(None, Just(user1), user1.uuid.toString()),
-        arrayOf(Just(user2), Just(user2.copy(loggedInStatus = User.LoggedInStatus.LOGGED_IN)), user2.uuid.toString())
+        arrayOf(None, Just(user1), user1),
+        arrayOf(Just(user2), Just(user2LoggedIn), user2LoggedIn)
     )
   }
 }

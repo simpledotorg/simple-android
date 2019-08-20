@@ -305,10 +305,6 @@ class AnalyticsTest {
 
   private class FailingAnalyticsReporter : AnalyticsReporter {
 
-    override fun setUserIdentity(id: String) {
-      throw RuntimeException()
-    }
-
     override fun setLoggedInUser(user: User) {
       throw RuntimeException()
     }

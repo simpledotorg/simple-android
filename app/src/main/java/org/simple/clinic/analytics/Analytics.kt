@@ -28,14 +28,6 @@ object Analytics {
     reporters = reporters - reporter
   }
 
-  fun setUser(user: User) {
-    reporters.forEach {
-      it.safely("Error setting user!") {
-        setUserIdentity(user.uuid.toString())
-      }
-    }
-  }
-
   fun setLoggedInUser(user: User) {
     reporters.forEach {
       it.safely("Error setting logged in user!") {

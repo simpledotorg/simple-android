@@ -28,13 +28,13 @@ class UpdateAnalyticsUserId @Inject constructor(private val userSession: UserSes
     val setAnalyticsUserId = loggedInUserStream
         .filter { it.loggedInStatus in statesToSetUserIdFor }
         .flatMapCompletable { user ->
-          Completable.fromAction { Analytics.setUserId(user.uuid) }
+          Completable.fromAction { Analytics.setUser(user) }
         }
 
     val clearAnalyticsUserId = loggedInUserStream
         .filter { it.loggedInStatus == UNAUTHORIZED }
         .flatMapCompletable {
-          Completable.fromAction { Analytics.clearUserId() }
+          Completable.fromAction { Analytics.clearUser() }
         }
 
 

@@ -13,6 +13,7 @@ class HeapAnalyticsReporter(context: Context, debug: Boolean = false) : Analytic
 
   override fun setLoggedInUser(user: User, isANewRegistration: Boolean) {
     Heap.identify(user.uuid.toString())
+    Heap.addUserProperties(mapOf("name" to user.fullName))
   }
 
   override fun resetUser() {

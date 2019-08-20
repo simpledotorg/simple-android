@@ -1020,4 +1020,20 @@ class UserSessionTest {
     // then
     assertThat(reporter.userId).isEqualTo(userUuid.toString())
   }
+
+  @Test
+  fun `when user logout happens, clear the logged in user from analytics`() {
+    // given
+    whenever(reportPendingRecords.report()).thenReturn(Completable.complete())
+
+    val user = PatientMocker.loggedInUser(uuid = userUuid)
+    reporter.setLoggedInUser(user)
+    assertThat(reporter.user).isNotNull()
+
+    // when
+    userSession.logout().blockingGet()
+
+    // then
+    assertThat(reporter.user).isNull()
+  }
 }

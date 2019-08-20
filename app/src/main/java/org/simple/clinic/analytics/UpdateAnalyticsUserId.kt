@@ -21,7 +21,7 @@ class UpdateAnalyticsUserId @Inject constructor(private val userSession: UserSes
         .loggedInUser()
         .filterAndUnwrapJust()
         .filter { it.loggedInStatus in statesToSetUserIdFor }
-        .doOnNext(Analytics::setUser)
+        .doOnNext(Analytics::setLoggedInUser)
         .subscribeOn(scheduler)
         .subscribe()
   }

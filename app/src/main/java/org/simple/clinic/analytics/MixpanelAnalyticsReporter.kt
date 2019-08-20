@@ -15,7 +15,7 @@ class MixpanelAnalyticsReporter(app: ClinicApp) : AnalyticsReporter {
     }
   }
 
-  override fun resetUserIdentity() {
+  override fun resetUser() {
     synchronized(mixpanel) {
       mixpanel.reset()
     }

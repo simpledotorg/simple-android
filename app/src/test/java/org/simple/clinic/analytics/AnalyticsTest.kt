@@ -308,7 +308,7 @@ class AnalyticsTest {
       throw RuntimeException()
     }
 
-    override fun resetUserIdentity() {
+    override fun resetUser() {
       throw RuntimeException()
     }
 

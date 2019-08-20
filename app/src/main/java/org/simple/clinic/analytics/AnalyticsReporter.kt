@@ -6,7 +6,7 @@ interface AnalyticsReporter {
 
   fun setUserIdentity(id: String)
 
-  fun resetUserIdentity()
+  fun resetUser()
 
   fun createEvent(event: String, props: Map<String, Any>)
 

@@ -320,16 +320,18 @@ object PatientMocker {
       phone: String = "a phone",
       pinDigest: String = "a hash",
       status: UserStatus = UserStatus.WaitingForApproval,
-      loggedInStatus: User.LoggedInStatus = User.LoggedInStatus.LOGGED_IN
+      loggedInStatus: User.LoggedInStatus = User.LoggedInStatus.LOGGED_IN,
+      createdAt: Instant = Instant.now(),
+      updatedAt: Instant = Instant.now()
   ): User {
     return User(
         uuid = uuid,
         fullName = name,
         phoneNumber = phone,
         pinDigest = pinDigest,
-        createdAt = mock(),
+        createdAt = createdAt,
         status = status,
-        updatedAt = mock(),
+        updatedAt = updatedAt,
         loggedInStatus = loggedInStatus
     )
   }

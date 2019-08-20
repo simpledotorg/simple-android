@@ -36,8 +36,10 @@ import org.simple.clinic.facility.FacilityRepository
 import org.simple.clinic.forgotpin.ForgotPinResponse
 import org.simple.clinic.forgotpin.ResetPinRequest
 import org.simple.clinic.login.LoginApi
+import org.simple.clinic.login.LoginRequest
 import org.simple.clinic.login.LoginResponse
 import org.simple.clinic.login.LoginResult
+import org.simple.clinic.login.UserPayload
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.registration.FindUserResult
@@ -60,6 +62,8 @@ import org.simple.clinic.util.Just
 import org.simple.clinic.util.Optional
 import org.simple.clinic.util.RxErrorsRule
 import org.simple.clinic.util.assertLatestValue
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
+import org.threeten.bp.Instant
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -112,17 +116,19 @@ class UserSessionTest {
       appDatabase = appDatabase,
       passwordHasher = passwordHasher,
       dataSync = dagger.Lazy { dataSync },
-      accessTokenPreference = accessTokenPref,
+      ongoingLoginEntryRepository = ongoingLoginEntryRepository,
       bruteForceProtection = bruteForceProtection,
       fileStorage = fileStorage,
       reportPendingRecords = reportPendingRecords,
+      accessTokenPreference = accessTokenPref,
       patientSyncPullToken = patientPullToken,
       bpSyncPullToken = bpPullToken,
       prescriptionSyncPullToken = prescriptionPullToken,
       appointmentSyncPullToken = appointmentPullToken,
       medicalHistorySyncPullToken = medicalHistoryPullToken,
-      ongoingLoginEntryRepository = ongoingLoginEntryRepository,
-      onboardingComplete = onboardingCompletePreference)
+      onboardingComplete = onboardingCompletePreference,
+      schedulersProvider = TrampolineSchedulersProvider()
+  )
 
   @Before
   fun setUp() {
@@ -133,11 +139,13 @@ class UserSessionTest {
     whenever(patientRepository.clearPatientData()).thenReturn(Completable.complete())
     whenever(appDatabase.userDao()).thenReturn(userDao)
     whenever(facilityRepository.associateUserWithFacilities(any(), any(), any())).thenReturn(Completable.complete())
+    val userUuid = UUID.fromString("866bccab-0117-4471-9d5d-cf6f2f1a64c1")
     whenever(ongoingLoginEntryRepository.entry())
-        .thenReturn(Single.just(OngoingLoginEntry(uuid = UUID.randomUUID(), phoneNumber = "982312441", pin = "")))
+        .thenReturn(Single.just(OngoingLoginEntry(uuid = userUuid, phoneNumber = "982312441", pin = "")))
     whenever(bruteForceProtection.resetFailedAttempts()).thenReturn(Completable.complete())
+    whenever(userDao.user()).thenReturn(Flowable.never())
 
-    userSession.saveOngoingLoginEntry(OngoingLoginEntry(UUID.randomUUID(), "phone", "pin")).blockingAwait()
+    userSession.saveOngoingLoginEntry(OngoingLoginEntry(userUuid, "phone", "pin")).blockingAwait()
 
     Analytics.addReporter(reporter)
   }
@@ -927,5 +935,74 @@ class UserSessionTest {
             expectedIsUnauthorized = listOf(false, true, false, true)
         )
     )
+  }
+
+  @Test
+  fun `when the login happens, set the user information in analytics`() {
+    // given
+    val userUuid = UUID.fromString("48b2b280-0e03-4978-a380-b2aebb8c9328")
+    val facilityUuid = UUID.fromString("d838af0f-c480-49b4-b386-d6588ec1dea7")
+    val phoneNumber = "1234567890"
+    val fullName = "Anish Acharya"
+    val pinDigest = "pin digest"
+    val status = ApprovedForSyncing
+    val now = Instant.now()
+    val otp = "000000"
+    val pin = "1111"
+
+    val user = PatientMocker.loggedInUser(
+        uuid = userUuid,
+        name = fullName,
+        phone = phoneNumber,
+        pinDigest = pinDigest,
+        status = status,
+        loggedInStatus = LOGGED_IN,
+        createdAt = now,
+        updatedAt = now
+    )
+    whenever(userDao.user()).thenReturn(Flowable.just(listOf(user)))
+
+    val ongoingLoginEntry = OngoingLoginEntry(
+        uuid = userUuid,
+        phoneNumber = phoneNumber,
+        pin = pin,
+        fullName = fullName,
+        pinDigest = pinDigest,
+        registrationFacilityUuid = facilityUuid,
+        status = ApprovedForSyncing,
+        createdAt = now,
+        updatedAt = now
+    )
+    whenever(ongoingLoginEntryRepository.entry())
+        .thenReturn(Single.just(ongoingLoginEntry))
+
+    val userPayload = UserPayload(
+        phoneNumber = phoneNumber,
+        pin = pin,
+        otp = otp
+    )
+    val loggedInUserPayload = LoggedInUserPayload(
+        uuid = userUuid,
+        fullName = fullName,
+        phoneNumber = phoneNumber,
+        pinDigest = pinDigest,
+        registrationFacilityId = facilityUuid,
+        status = ApprovedForSyncing,
+        createdAt = now,
+        updatedAt = now
+    )
+    whenever(loginApi.login(LoginRequest(userPayload)))
+        .thenReturn(Single.just(LoginResponse("accessToken", loggedInUserPayload)))
+
+    whenever(facilityRepository.associateUserWithFacilities(user, listOf(facilityUuid), facilityUuid))
+        .thenReturn(Completable.complete())
+    whenever(ongoingLoginEntryRepository.clearLoginEntry())
+        .thenReturn(Completable.complete())
+
+    // when
+    userSession.loginWithOtp(otp).blockingGet()
+
+    // then
+    assertThat(reporter.userId).isEqualTo(userUuid.toString())
   }
 }

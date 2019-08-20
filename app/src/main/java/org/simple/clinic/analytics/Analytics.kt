@@ -36,6 +36,14 @@ object Analytics {
     }
   }
 
+  fun setLoggedInUser(user: User) {
+    reporters.forEach {
+      it.safely("Error setting logged in user!") {
+        setLoggedInUser(user)
+      }
+    }
+  }
+
   fun clearUser() {
     reporters.forEach {
       it.safely("Error clearing user ID!") {

@@ -1,11 +1,16 @@
 package org.simple.clinic.analytics
 
+import org.simple.clinic.user.User
 import timber.log.Timber
 
 class DebugAnalyticsReporter : AnalyticsReporter {
 
   override fun setUserIdentity(id: String) {
     Timber.tag("Analytics").d("User ID: $id")
+  }
+
+  override fun setLoggedInUser(user: User) {
+    Timber.tag("Analytics").d("User: $user")
   }
 
   override fun resetUser() {

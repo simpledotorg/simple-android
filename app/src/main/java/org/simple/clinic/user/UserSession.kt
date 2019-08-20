@@ -330,10 +330,6 @@ class UserSession @Inject constructor(
         }
   }
 
-  // FYI: RegistrationWorker doesn't get canceled when a user logs out.
-  // It's possible that the wrong user will get sent to the server for
-  // registration if another user logs in. This works for now because
-  // there is no way to log out, but this is something to keep in mind.
   fun logout(): Single<LogoutResult> {
     return Completable
         .concatArray(
@@ -344,6 +340,7 @@ class UserSession @Inject constructor(
         )
         .toSingleDefault(LogoutResult.Success as LogoutResult)
         .onErrorReturn { cause -> LogoutResult.Failure(cause) }
+        .doOnSuccess { Analytics.clearUser() }
   }
 
   private fun clearLocalDatabase(): Completable {

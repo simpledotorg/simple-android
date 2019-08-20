@@ -10,7 +10,6 @@ import io.reactivex.Observable
 import io.reactivex.Single
 import io.reactivex.rxkotlin.Singles
 import io.reactivex.rxkotlin.zipWith
-import io.reactivex.schedulers.Schedulers
 import org.simple.clinic.AppDatabase
 import org.simple.clinic.analytics.Analytics
 import org.simple.clinic.di.AppScope
@@ -70,14 +69,14 @@ class UserSession @Inject constructor(
     private val bruteForceProtection: BruteForceProtection,
     private val fileStorage: FileStorage,
     private val reportPendingRecords: ReportPendingRecordsToAnalytics,
+    private val schedulersProvider: SchedulersProvider,
     @Named("preference_access_token") private val accessTokenPreference: Preference<Optional<String>>,
     @Named("last_patient_pull_token") private val patientSyncPullToken: Preference<Optional<String>>,
     @Named("last_bp_pull_token") private val bpSyncPullToken: Preference<Optional<String>>,
     @Named("last_prescription_pull_token") private val prescriptionSyncPullToken: Preference<Optional<String>>,
     @Named("last_appointment_pull_token") private val appointmentSyncPullToken: Preference<Optional<String>>,
     @Named("last_medicalhistory_pull_token") private val medicalHistorySyncPullToken: Preference<Optional<String>>,
-    @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>,
-    val schedulersProvider: SchedulersProvider
+    @Named("onboarding_complete") private val onboardingComplete: Preference<Boolean>
 ) {
 
   private var ongoingRegistrationEntry: OngoingRegistrationEntry? = null
@@ -135,7 +134,7 @@ class UserSession @Inject constructor(
     dataSync
         .get()
         .sync(null)
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(schedulersProvider.io())
         .onErrorComplete()
         .subscribe()
   }
@@ -433,7 +432,7 @@ class UserSession @Inject constructor(
     return dataSync
         .get()
         .sync(null)
-        .subscribeOn(Schedulers.io())
+        .subscribeOn(schedulersProvider.io())
         .retry(syncRetryCount.toLong())
         .timeout(timeoutSeconds, TimeUnit.SECONDS)
         .onErrorComplete()

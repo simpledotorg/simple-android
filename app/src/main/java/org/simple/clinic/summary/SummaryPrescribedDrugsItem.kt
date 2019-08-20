@@ -46,7 +46,7 @@ data class SummaryPrescribedDrugsItem(
         drugViewHolder.bind(drug)
       }
 
-      val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt.toEpochMilli() }!!
+      val lastUpdatedPrescription = prescriptions.maxBy { it.updatedAt }!!
 
       Timber.i("Last updated prescribedDrug: ${lastUpdatedPrescription.name}: ${lastUpdatedPrescription.updatedAt}")
 

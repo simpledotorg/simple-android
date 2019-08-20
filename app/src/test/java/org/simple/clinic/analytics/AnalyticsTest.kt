@@ -4,11 +4,14 @@ import com.google.common.truth.Truth.assertThat
 import org.junit.After
 import org.junit.Test
 import org.simple.clinic.analytics.MockAnalyticsReporter.Event
+import org.simple.clinic.patient.PatientMocker
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
 
 class AnalyticsTest {
+
+  private val user = PatientMocker.loggedInUser(uuid = UUID.fromString("8d8c86a1-1c32-4e1b-96ba-a85bfee7b45c"))
 
   @After
   fun tearDown() {
@@ -32,12 +35,12 @@ class AnalyticsTest {
 
   @Test
   fun `when setting the user id without any reporters, no error should be thrown`() {
-    Analytics.setUserId(UUID.randomUUID())
+    Analytics.setUser(user)
   }
 
   @Test
   fun `when reporting an audit event without any reporters, no error should be thrown`() {
-    Analytics.reportViewedPatient(UUID.randomUUID(), "Test")
+    Analytics.reportViewedPatient(UUID.fromString("7cf6ce77-bb33-437a-97aa-935b9ea432aa"), "Test")
   }
 
   @Test
@@ -82,7 +85,7 @@ class AnalyticsTest {
 
   @Test
   fun `when clearing the user identity without any reporters, no error should be thrown`() {
-    Analytics.clearUserId()
+    Analytics.clearUser()
   }
 
   @Test
@@ -106,7 +109,7 @@ class AnalyticsTest {
   @Test
   fun `when a reporter fails when setting the user id, no  error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.setUserId(UUID.randomUUID())
+    Analytics.setUser(user)
   }
 
   @Test
@@ -155,7 +158,7 @@ class AnalyticsTest {
   @Test
   fun `when a reporter fails clearing the user id, no  error should be thrown`() {
     Analytics.addReporter(FailingAnalyticsReporter())
-    Analytics.clearUserId()
+    Analytics.clearUser()
   }
 
   @Test
@@ -163,9 +166,8 @@ class AnalyticsTest {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
 
-    val uuid = UUID.randomUUID()
-    Analytics.setUserId(uuid)
-    assertThat(reporter.userId).isEqualTo(uuid.toString())
+    Analytics.setUser(user)
+    assertThat(reporter.userId).isEqualTo(user.uuid.toString())
   }
 
   @Test
@@ -173,10 +175,9 @@ class AnalyticsTest {
     val reporter = MockAnalyticsReporter()
     Analytics.addReporter(reporter)
 
-    val uuid = UUID.randomUUID()
-    Analytics.setUserId(uuid)
-    assertThat(reporter.userId).isEqualTo(uuid.toString())
-    Analytics.clearUserId()
+    Analytics.setUser(user)
+    assertThat(reporter.userId).isEqualTo(user.uuid.toString())
+    Analytics.clearUser()
     assertThat(reporter.userId).isNull()
   }
 
@@ -187,13 +188,12 @@ class AnalyticsTest {
     val reporter3 = MockAnalyticsReporter()
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
-    val userId = UUID.randomUUID()
-    Analytics.setUserId(userId)
+    Analytics.setUser(user)
 
-    assertThat(reporter1.userId).isEqualTo(userId.toString())
-    assertThat(reporter3.userId).isEqualTo(userId.toString())
+    assertThat(reporter1.userId).isEqualTo(user.uuid.toString())
+    assertThat(reporter3.userId).isEqualTo(user.uuid.toString())
 
-    Analytics.clearUserId()
+    Analytics.clearUser()
 
     assertThat(reporter1.userId).isNull()
     assertThat(reporter3.userId).isNull()
@@ -207,8 +207,8 @@ class AnalyticsTest {
 
     Analytics.addReporter(reporter1, reporter2, reporter3)
 
-    val uuid1 = UUID.randomUUID()
-    val uuid2 = UUID.randomUUID()
+    val uuid1 = UUID.fromString("1eddd1cc-cd7e-4245-8eac-5e9471a9a6c0")
+    val uuid2 = UUID.fromString("62a869f6-ac56-47f4-a9b7-f86cd1a81ce0")
 
     Analytics.reportUserInteraction("Test 1")
     Analytics.reportUserInteraction("Test 2")

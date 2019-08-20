@@ -8,6 +8,7 @@ import android.net.NetworkCapabilities.TRANSPORT_LOWPAN
 import android.net.NetworkCapabilities.TRANSPORT_VPN
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.net.NetworkCapabilities.TRANSPORT_WIFI_AWARE
+import org.simple.clinic.user.User
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
 import java.util.UUID
@@ -27,17 +28,15 @@ object Analytics {
     reporters = reporters - reporter
   }
 
-  fun setUserId(uuid: UUID) {
+  fun setUser(user: User) {
     reporters.forEach {
-      it.safely("Error setting user ID!") {
-        val uuidString = uuid.toString()
-
-        setUserIdentity(uuidString)
+      it.safely("Error setting user!") {
+        setUserIdentity(user.uuid.toString())
       }
     }
   }
 
-  fun clearUserId() {
+  fun clearUser() {
     reporters.forEach {
       it.safely("Error clearing user ID!") {
         resetUserIdentity()

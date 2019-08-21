@@ -23,7 +23,13 @@ class ShortCodeSearchResultStateProducer(
         .flatMap {
           patientRepository
               .searchByShortCode(initialState.bpPassportNumber)
-              .withLatestFrom(states) { patientSearchResults, state -> state.patientsFetched(patientSearchResults) }
+              .withLatestFrom(states) { patientSearchResults, state ->
+                if (patientSearchResults.isNotEmpty()) {
+                  state.patientsFetched(patientSearchResults)
+                } else {
+                  state.noMatchingPatients()
+                }
+              }
         }
 
     return Observable.merge(

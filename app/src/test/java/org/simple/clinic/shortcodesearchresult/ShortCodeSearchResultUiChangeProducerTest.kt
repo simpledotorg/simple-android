@@ -54,4 +54,21 @@ class ShortCodeSearchResultUiChangeProducerTest {
     verify(ui).showSearchPatientButton()
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `it shows a no patients matched when patients are not found`() {
+    // given
+    val noMatchingPatients = ShortCodeSearchResultState
+        .fetchingPatients("1234567")
+        .noMatchingPatients()
+
+    // when
+    states.onNext(noMatchingPatients)
+
+    // then
+    verify(ui).hideLoading()
+    verify(ui).showNoPatientsMatched()
+    verify(ui).showSearchPatientButton()
+    verifyNoMoreInteractions(ui)
+  }
 }

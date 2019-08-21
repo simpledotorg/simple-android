@@ -7,6 +7,7 @@ import io.reactivex.subjects.PublishSubject
 import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
+import org.simple.clinic.patient.PatientSearchResult
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 
@@ -36,6 +37,26 @@ class ShortCodeSearchResultStateProducerTest {
     with(testObserver) {
       assertNoErrors()
       assertValues(fetchingPatientsState, fetchingPatientsState.patientsFetched(patientSearchResults))
+      assertNotTerminated()
+    }
+  }
+
+  @Test
+  fun `when the screen is created and there are no patients, then don't show any patients`() {
+    // given
+    val emptyPatientSearchResults = emptyList<PatientSearchResult>()
+    whenever(patientRepository.searchByShortCode(shortCode))
+        .thenReturn(Observable.just(emptyPatientSearchResults))
+
+    val testObserver = uiStates.test()
+
+    // when
+    uiEventsSubject.onNext(ScreenCreated())
+
+    // then
+    with(testObserver) {
+      assertNoErrors()
+      assertValues(fetchingPatientsState, fetchingPatientsState.noMatchingPatients())
       assertNotTerminated()
     }
   }

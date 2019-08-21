@@ -11,7 +11,8 @@ import org.simple.clinic.widgets.UiEvent
 
 class ShortCodeSearchResultStateProducer(
     private val initialState: ShortCodeSearchResultState,
-    private val patientRepository: PatientRepository
+    private val patientRepository: PatientRepository,
+    private val ui: ShortCodeSearchResultUi
 ) : BaseUiStateProducer<UiEvent, ShortCodeSearchResultState>() {
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
     val screenCreatedEvents = events.ofType<ScreenCreated>()
@@ -32,9 +33,14 @@ class ShortCodeSearchResultStateProducer(
               }
         }
 
+    val viewPatient = events.ofType<ViewPatient>()
+        .doOnNext { ui.openPatientSummary(it.patientUuid) }
+        .flatMap { Observable.empty<ShortCodeSearchResultState>() }
+
     return Observable.merge(
         initialStates,
-        fetchPatients
+        fetchPatients,
+        viewPatient
     )
   }
 }

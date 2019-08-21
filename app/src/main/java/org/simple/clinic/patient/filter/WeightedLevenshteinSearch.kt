@@ -5,6 +5,7 @@ import info.debatty.java.stringsimilarity.CharacterSubstitutionInterface
 import info.debatty.java.stringsimilarity.WeightedLevenshtein
 import io.reactivex.Single
 import org.simple.clinic.patient.PatientSearchResult
+import java.util.Locale
 import java.util.UUID
 
 class WeightedLevenshteinSearch(
@@ -74,5 +75,5 @@ class WeightedLevenshteinSearch(
       .filter { it.length >= minimumSearchTermLength }
       .map { namePart -> namePart.filter { it.isLetter() } }
       .filter { it.isNotBlank() }
-      .map { it.toLowerCase() }
+      .map { it.toLowerCase(Locale.ROOT) }
 }

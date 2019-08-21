@@ -14,13 +14,22 @@ class ShortCodeSearchResultStateProducer(
     private val patientRepository: PatientRepository,
     private val ui: ShortCodeSearchResultUi
 ) : BaseUiStateProducer<UiEvent, ShortCodeSearchResultState>() {
+
   override fun apply(events: Observable<UiEvent>): ObservableSource<ShortCodeSearchResultState> {
-    val screenCreatedEvents = events.ofType<ScreenCreated>()
 
-    val initialStates = screenCreatedEvents
-        .map { initialState }
+    return Observable.merge(
+        initialStates(events),
+        fetchPatients(events),
+        viewPatient(events),
+        searchPatient(events)
+    )
+  }
 
-    val fetchPatients = screenCreatedEvents
+  private fun initialStates(events: Observable<UiEvent>) = events.ofType<ScreenCreated>()
+      .map { initialState }
+
+  private fun fetchPatients(events: Observable<UiEvent>): Observable<ShortCodeSearchResultState> {
+    return events.ofType<ScreenCreated>()
         .flatMap {
           patientRepository
               .searchByShortCode(initialState.bpPassportNumber)
@@ -32,20 +41,17 @@ class ShortCodeSearchResultStateProducer(
                 }
               }
         }
+  }
 
-    val viewPatient = events.ofType<ViewPatient>()
+  private fun viewPatient(events: Observable<UiEvent>): Observable<ShortCodeSearchResultState> {
+    return events.ofType<ViewPatient>()
         .doOnNext { ui.openPatientSummary(it.patientUuid) }
         .flatMap { Observable.empty<ShortCodeSearchResultState>() }
+  }
 
-    val searchPatient = events.ofType<SearchPatient>()
+  private fun searchPatient(events: Observable<UiEvent>): Observable<ShortCodeSearchResultState> {
+    return events.ofType<SearchPatient>()
         .doOnNext { ui.openPatientSearch() }
         .flatMap { Observable.empty<ShortCodeSearchResultState>() }
-
-    return Observable.merge(
-        initialStates,
-        fetchPatients,
-        viewPatient,
-        searchPatient
-    )
   }
 }

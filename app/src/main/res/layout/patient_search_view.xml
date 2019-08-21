@@ -8,13 +8,13 @@
   tools:parentTag="RelativeLayout">
 
   <ProgressBar
-    android:id="@+id/searchresults_loader"
+    android:id="@+id/loader"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_centerInParent="true" />
 
   <RelativeLayout
-    android:id="@+id/searchresults_empty_state"
+    android:id="@+id/emptyStateView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/searchresults_new_patient_container"
@@ -54,7 +54,7 @@
   </RelativeLayout>
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/searchresults_results"
+    android:id="@+id/resultsRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_above="@+id/searchresults_new_patient_container"
@@ -73,7 +73,7 @@
     tools:ignore="UnusedAttribute">
 
     <TextView
-      android:id="@+id/searchresults_new_patient_rationale"
+      android:id="@+id/newPatientRationaleTextView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
@@ -84,7 +84,7 @@
       android:textAppearance="@style/Clinic.V2.TextAppearance.Body2Left.Grey0" />
 
     <org.simple.clinic.widgets.PrimarySolidButton
-      android:id="@+id/searchresults_new_patient"
+      android:id="@+id/newPatientButton"
       style="@style/Clinic.V2.Button.Solid.WithoutIcon.Blue1"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"

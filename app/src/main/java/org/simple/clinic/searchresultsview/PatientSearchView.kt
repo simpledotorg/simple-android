@@ -3,20 +3,15 @@ package org.simple.clinic.searchresultsview
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
-import android.view.View
-import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.jakewharton.rxbinding2.view.RxView
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
-import kotterknife.bindView
+import kotlinx.android.synthetic.main.patient_search_view.view.*
 import org.simple.clinic.R
 import org.simple.clinic.activity.TheActivity
 import org.simple.clinic.bindUiToController
@@ -44,12 +39,6 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
 
   private val adapter = GroupAdapter<ViewHolder>()
 
-  private val recyclerView by bindView<RecyclerView>(R.id.searchresults_results)
-  private val emptyStateView by bindView<View>(R.id.searchresults_empty_state)
-  private val newPatientRationaleTextView by bindView<TextView>(R.id.searchresults_new_patient_rationale)
-  private val newPatientButton by bindView<Button>(R.id.searchresults_new_patient)
-  private val loader by bindView<ProgressBar>(R.id.searchresults_loader)
-
   @SuppressLint("CheckResult")
   override fun onFinishInflate() {
     super.onFinishInflate()
@@ -73,8 +62,8 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
   }
 
   private fun setupScreen() {
-    recyclerView.layoutManager = LinearLayoutManager(context)
-    recyclerView.adapter = adapter
+    resultsRecyclerView.layoutManager = LinearLayoutManager(context)
+    resultsRecyclerView.adapter = adapter
   }
 
   private fun screenCreates(): Observable<UiEvent> =

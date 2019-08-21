@@ -90,4 +90,29 @@ class ShortCodeSearchResultStateProducerTest {
     verify(ui).openPatientSummary(patientUuid)
     verifyNoMoreInteractions(ui)
   }
+
+  @Test
+  fun `when enter patient name is clicked, then take the user to search patient screen`() {
+    // given
+    val patientSearchResults = listOf(PatientMocker.patientSearchResult())
+    val patientsFetched = ShortCodeSearchResultState
+        .fetchingPatients("1234567")
+        .patientsFetched(patientSearchResults)
+    uiStateProducer.states.onNext(patientsFetched) // TODO Fix `setState` in tests
+
+    val testObserver = uiStates.test()
+
+    // when
+    uiEventsSubject.onNext(SearchPatient)
+
+    // then
+    with(testObserver) {
+      assertNoErrors()
+      assertNoValues()
+      assertNotTerminated()
+    }
+
+    verify(ui).openPatientSearch()
+    verifyNoMoreInteractions(ui)
+  }
 }

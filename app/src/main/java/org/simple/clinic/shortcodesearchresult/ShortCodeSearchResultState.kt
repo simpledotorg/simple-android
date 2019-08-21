@@ -21,4 +21,7 @@ data class ShortCodeSearchResultState(
       patientSearchResults: List<PatientSearchResult>
   ): ShortCodeSearchResultState =
       this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = patientSearchResults)
+
+  fun noMatchingPatients(): ShortCodeSearchResultState =
+      this.copy(fetchPatientsAsyncOp = SUCCEEDED, patients = emptyList())
 }

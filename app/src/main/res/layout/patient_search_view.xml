@@ -17,7 +17,7 @@
     android:id="@+id/emptyStateView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/searchresults_new_patient_container"
+    android:layout_above="@+id/newPatientContainer"
     android:paddingBottom="@dimen/spacing_16"
     android:visibility="gone"
     tools:visibility="visible">
@@ -57,20 +57,21 @@
     android:id="@+id/resultsRecyclerView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_above="@+id/searchresults_new_patient_container"
+    android:layout_above="@+id/newPatientContainer"
     android:clipToPadding="false"
     android:paddingTop="@dimen/spacing_8"
     tools:listitem="@layout/list_patient_search"
     tools:visibility="gone" />
 
   <LinearLayout
-    android:id="@+id/searchresults_new_patient_container"
+    android:id="@+id/newPatientContainer"
     style="@style/Clinic.V2.BottomAlignedButtonFrame.Blue2"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:elevation="20dp"
     android:orientation="vertical"
-    tools:ignore="UnusedAttribute">
+    android:visibility="gone"
+    tools:visibility="visible">
 
     <TextView
       android:id="@+id/newPatientRationaleTextView"

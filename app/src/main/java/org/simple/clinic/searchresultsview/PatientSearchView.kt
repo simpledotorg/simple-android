@@ -79,6 +79,7 @@ class PatientSearchView(context: Context, attrs: AttributeSet) : RelativeLayout(
       currentFacility: Facility
   ) {
     loader.visibleOrGone(isVisible = false)
+    newPatientContainer.visibleOrGone(isVisible = true)
     if (results.hasNoResults) {
       setEmptyStateVisible(true)
       adapter.update(emptyList())

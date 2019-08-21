@@ -3,6 +3,7 @@
 ## Next Release
 ### Feature
 - Exclude deleted patient records while searching by name or phone number
+- Update designs for patient summary screen
 
 ## On Demo
 ### Feature

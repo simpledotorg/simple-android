@@ -6,3 +6,5 @@ import java.util.UUID
 sealed class ShortCodeSearchResultEvent : UiEvent
 
 data class ViewPatient(val patientUuid: UUID) : ShortCodeSearchResultEvent()
+
+object SearchPatient : ShortCodeSearchResultEvent()

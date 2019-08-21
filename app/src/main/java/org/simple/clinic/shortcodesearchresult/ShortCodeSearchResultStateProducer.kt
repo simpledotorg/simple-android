@@ -37,10 +37,15 @@ class ShortCodeSearchResultStateProducer(
         .doOnNext { ui.openPatientSummary(it.patientUuid) }
         .flatMap { Observable.empty<ShortCodeSearchResultState>() }
 
+    val searchPatient = events.ofType<SearchPatient>()
+        .doOnNext { ui.openPatientSearch() }
+        .flatMap { Observable.empty<ShortCodeSearchResultState>() }
+
     return Observable.merge(
         initialStates,
         fetchPatients,
-        viewPatient
+        viewPatient,
+        searchPatient
     )
   }
 }

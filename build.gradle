@@ -10,7 +10,7 @@ buildscript {
       room                : '2.0.0',
       supportTest         : '1.1.1',
       timber              : '4.7.0',
-      dagger              : '2.16',
+      dagger              : '2.24',
       butterKnife         : '8.8.1',
       kotterKnife         : 'e157638df1',
       coreTesting         : '2.0.0',

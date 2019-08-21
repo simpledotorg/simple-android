@@ -10,6 +10,9 @@
 - Update designs for patient summary screen
 - Show loader while patient search results load
 
+### Internal
+- Add Mixpanel analytics
+
 ## 2019-08-26-5229
 ### Feature
 - Search by phone number support from the screen to find patient after scanning a BP Passport

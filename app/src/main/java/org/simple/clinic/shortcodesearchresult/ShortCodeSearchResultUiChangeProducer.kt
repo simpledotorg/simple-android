@@ -3,7 +3,8 @@ package org.simple.clinic.shortcodesearchresult
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.Scheduler
-import org.simple.clinic.plumbing.AsyncOp
+import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
+import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
 import org.simple.clinic.plumbing.BaseUiChangeProducer
 
 typealias ShortCodeSearchResultUiChange = (ShortCodeSearchResultUi) -> Unit
@@ -13,22 +14,51 @@ class ShortCodeSearchResultUiChangeProducer(
 ) : BaseUiChangeProducer<ShortCodeSearchResultState, ShortCodeSearchResultUi>(uiScheduler) {
   override fun uiChanges(): ObservableTransformer<ShortCodeSearchResultState, ShortCodeSearchResultUiChange> {
     return ObservableTransformer<ShortCodeSearchResultState, ShortCodeSearchResultUiChange> { states ->
-      val showLoading = states
-          .filter { it.fetchPatientsAsyncOp == AsyncOp.IN_FLIGHT }
-          .map { { ui: ShortCodeSearchResultUi -> ui.showLoading() } }
+      Observable.merge(
+          showLoading(states),
+          showPatients(states),
+          showNoPatientsMatched(states)
+      )
+    }
+  }
 
-      val showPatients = states
-          .filter { it.fetchPatientsAsyncOp == AsyncOp.SUCCEEDED && it.patients.isNotEmpty() }
-          .map { state ->
-            { ui: ShortCodeSearchResultUi ->
-              ui.hideLoading()
-              ui.showSearchResults(state.patients)
-              ui.showSearchPatientButton()
+  private fun showLoading(
+      states: Observable<ShortCodeSearchResultState>
+  ): Observable<(ShortCodeSearchResultUi) -> Unit> {
+    return states
+        .filter { it.fetchPatientsAsyncOp == IN_FLIGHT }
+        .map { { ui: ShortCodeSearchResultUi -> ui.showLoading() } }
+  }
+
+  private fun showPatients(
+      states: Observable<ShortCodeSearchResultState>
+  ): Observable<(ShortCodeSearchResultUi) -> Unit> {
+    return states
+        .filter { it.fetchPatientsAsyncOp == SUCCEEDED && it.patients.isNotEmpty() }
+        .map { state ->
+          { ui: ShortCodeSearchResultUi ->
+            with(ui) {
+              hideLoading()
+              showSearchPatientButton()
+              showSearchResults(state.patients)
             }
           }
+        }
+  }
 
-      Observable
-          .merge(showLoading, showPatients)
-    }
+  private fun showNoPatientsMatched(
+      states: Observable<ShortCodeSearchResultState>
+  ): Observable<(ShortCodeSearchResultUi) -> Unit> {
+    return states
+        .filter { it.fetchPatientsAsyncOp == SUCCEEDED && it.patients.isEmpty() }
+        .map {
+          { ui: ShortCodeSearchResultUi ->
+            with(ui) {
+              hideLoading()
+              showSearchPatientButton()
+              showNoPatientsMatched()
+            }
+          }
+        }
   }
 }

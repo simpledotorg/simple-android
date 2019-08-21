@@ -10,4 +10,5 @@ interface ShortCodeSearchResultUi {
   fun hideLoading()
   fun showSearchResults(foundPatients: List<PatientSearchResult>)
   fun showSearchPatientButton()
+  fun showNoPatientsMatched()
 }

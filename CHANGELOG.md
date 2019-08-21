@@ -8,6 +8,7 @@
 - Exclude deleted patients when finding patient by scanning BP Passport
 - Exclude deleted appointments when loading overdue appointments
 - Update designs for patient summary screen
+- Show loader while patient search results load
 
 ## On Demo
 ### Feature

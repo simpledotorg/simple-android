@@ -12,9 +12,6 @@
     <string name="patiententry_date_of_birth_focused">ਦਿਨ/ਮਹੀਨਾ/ਸਾਲ</string>
     <string name="patiententry_dateofbirth_and_age_separator">ਜਾਂ</string>
     <string name="patiententry_age">ਉਮਰ</string>
-    <string name="patiententry_gender_female">@string/gender_female</string>
-    <string name="patiententry_gender_male">@string/gender_male</string>
-    <string name="patiententry_gender_transgender">@string/gender_transgender</string>
     <string name="patiententry_district">ਜਿਲ੍ਹਾ</string>
     <string name="patiententry_save_patient">ਮਰੀਜ਼ ਦੀ ਜਾਣਕਾਰੀ ਨੂੰ ਸੰਭਾਲੋ</string>
     <string name="patiententry_error_empty_fullname">ਨਾਮ ਖਾਲੀ ਨਹੀਂ ਹੋ ਸਕਦਾ</string>
@@ -45,6 +42,5 @@
     <string name="customprescription_drug_name_hint">ਦਵਾਈ ਦਾ ਨਾਮ</string>
     <string name="patientsummary_prescriptions_add">ਨਵੀਂ ਦਵਾਈ</string>
     <string name="loginpin_go_back">ਵਾਪਸ ਫੋਨ ਨੰਬਰ ਦੇ ਪਰਦੇ ਤੇ ਜਾਓ</string>
-    <string name="loginpin_error_check_internet_connection">ਕਿਰਪਾ ਕਰਕੇ ਆਪਣੇ ਇੰਟਰਨੈਟ ਕਨੈਕਸ਼ਨ ਦੀ ਜਾਂਚ ਕਰੋ.</string>
     <string name="tab_overdue">ਕਾਲ ਸੂਚੀ</string>
 </resources>

@@ -21,6 +21,7 @@ import org.simple.clinic.bindUiToController
 import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.router.screen.RouterDirection
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.scanid.ShortCodeValidationResult.Failure.Empty
 import org.simple.clinic.summary.OpenIntention
 import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.util.UtcClock
@@ -115,9 +116,14 @@ class ScanSimpleIdScreen(context: Context, attrs: AttributeSet) : ConstraintLayo
     screenRouter.popAndPush(AddIdToPatientSearchScreenKey(identifier), RouterDirection.FORWARD)
   }
 
-  fun showShortCodeValidationError(validationError: ShortCodeValidationResult) {
+  fun showShortCodeValidationError(failure: ShortCodeValidationResult) {
     shortCodeErrorText.visibility = View.VISIBLE
-    shortCodeErrorText.text = resources.getString(R.string.scansimpleid_shortcode_error)
+    val validationErrorMessage = if (failure == Empty) {
+      R.string.scansimpleid_shortcode_error_empty
+    } else {
+      R.string.scansimpleid_shortcode_error_not_required_length
+    }
+    shortCodeErrorText.text = resources.getString(validationErrorMessage)
   }
 
   fun hideShortCodeValidationError() {

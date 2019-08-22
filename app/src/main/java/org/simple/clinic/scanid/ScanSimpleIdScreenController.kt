@@ -40,7 +40,6 @@ class ScanSimpleIdScreenController @Inject constructor(
   }
 
   private fun mergeWithScannedBpPassportCodes() = ObservableTransformer<UiEvent, UiEvent> { events ->
-
     val scannedBpPassportCodes = events
         .ofType<ScanSimpleIdScreenQrCodeScanned>()
         .map { it.text }
@@ -140,7 +139,6 @@ class ScanSimpleIdScreenController @Inject constructor(
     val openPatientSearchScreenChanges = shortCodes
         .filter { it.isValid() }
         .map { { ui: Ui -> ui.openPatientShortCodeSearch(it.shortCodeText) } }
-
 
     return Observable.merge(
         hideValidationErrors,

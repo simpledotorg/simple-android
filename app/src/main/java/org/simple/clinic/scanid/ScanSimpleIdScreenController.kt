@@ -13,6 +13,7 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
+import org.simple.clinic.scanid.ShortCodeValidationResult.Failure
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -135,7 +136,7 @@ class ScanSimpleIdScreenController @Inject constructor(
 
     val showValidationErrors = shortCodes
         .map { it.validate() }
-        .filter { it != Success }
+        .filter { it is Failure }
         .map { { ui: Ui -> ui.showShortCodeValidationError(it) } }
 
     val openPatientSearchScreenChanges = shortCodes

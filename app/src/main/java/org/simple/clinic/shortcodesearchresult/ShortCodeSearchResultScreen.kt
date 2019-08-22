@@ -2,24 +2,30 @@ package org.simple.clinic.shortcodesearchresult
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.View
 import android.widget.RelativeLayout
+import kotlinx.android.synthetic.main.patient_search_view.view.*
 import kotlinx.android.synthetic.main.screen_shortcode_search_result.view.*
 import org.simple.clinic.R
 import org.simple.clinic.ViewControllerBinding
-import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.activity.TheActivity
+import org.simple.clinic.allpatientsinfacility.PatientSearchResultUiState
+import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.router.screen.ScreenRouter
+import org.simple.clinic.search.PatientSearchScreenKey
+import org.simple.clinic.summary.OpenIntention
+import org.simple.clinic.summary.PatientSummaryScreenKey
 import org.simple.clinic.text.style.TextAppearanceWithLetterSpacingSpan
 import org.simple.clinic.util.Truss
 import org.simple.clinic.util.Unicode
 import org.simple.clinic.util.UtcClock
+import org.simple.clinic.util.scheduler.SchedulersProvider
 import org.simple.clinic.widgets.UiEvent
+import org.threeten.bp.Instant
 import java.util.UUID
 import javax.inject.Inject
 
 class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : RelativeLayout(context, attributes), ShortCodeSearchResultUi {
-
-  @Inject
-  lateinit var uiStateProducer: ShortCodeSearchResultStateProducer
 
   @Inject
   lateinit var uiChangeProducer: ShortCodeSearchResultUiChangeProducer
@@ -30,17 +36,32 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   @Inject
   lateinit var screenRouter: ScreenRouter
 
+  @Inject
+  lateinit var patientRepository: PatientRepository
+
+  @Inject
+  lateinit var schedulersProvider: SchedulersProvider
+
+  private lateinit var screenKey: ShortCodeSearchResultScreenKey
+
   private lateinit var binding: ViewControllerBinding<UiEvent, ShortCodeSearchResultState, ShortCodeSearchResultUi>
 
   override fun onFinishInflate() {
     super.onFinishInflate()
+    if (isInEditMode) {
+      return
+    }
+
+    TheActivity.component.inject(this)
+    screenKey = screenRouter.key(this)
+
     setupToolBar()
 
+    val uiStateProducer = ShortCodeSearchResultStateProducer(screenKey.shortCode, patientRepository, this, schedulersProvider)
     binding = ViewControllerBinding.bindToView(this, uiStateProducer, uiChangeProducer)
   }
 
   private fun setupToolBar() {
-    val screenKey = screenRouter.key<ShortCodeSearchResultScreenKey>(this)
     val shortCode = screenKey.shortCode
 
     // This is guaranteed to be exactly 7 characters in length.
@@ -59,30 +80,30 @@ class ShortCodeSearchResultScreen(context: Context, attributes: AttributeSet) : 
   }
 
   override fun openPatientSummary(patientUuid: UUID) {
-    TODO("not implemented")
+    screenRouter.push(PatientSummaryScreenKey(patientUuid, OpenIntention.ViewExistingPatient, Instant.now(utcClock)))
   }
 
   override fun openPatientSearch() {
-    TODO("not implemented")
+    screenRouter.push(PatientSearchScreenKey())
   }
 
   override fun showLoading() {
-    TODO("not implemented")
+    loader.visibility = View.GONE
   }
 
   override fun hideLoading() {
-    TODO("not implemented")
+    loader.visibility = View.VISIBLE
   }
 
-  override fun showSearchResults(foundPatients: List<PatientSearchResult>) {
+  override fun showSearchResults(foundPatients: List<PatientSearchResultUiState>) {
     TODO("not implemented")
   }
 
   override fun showSearchPatientButton() {
-    TODO("not implemented")
+    newPatientContainer.visibility = View.VISIBLE
   }
 
   override fun showNoPatientsMatched() {
-    TODO("not implemented")
+    emptyStateView.visibility = View.VISIBLE
   }
 }

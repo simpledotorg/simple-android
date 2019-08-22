@@ -10,6 +10,7 @@ import org.junit.Test
 import org.simple.clinic.patient.PatientMocker
 import org.simple.clinic.patient.PatientRepository
 import org.simple.clinic.patient.PatientSearchResult
+import org.simple.clinic.util.scheduler.TrampolineSchedulersProvider
 import org.simple.clinic.widgets.ScreenCreated
 import org.simple.clinic.widgets.UiEvent
 import java.util.UUID
@@ -20,7 +21,7 @@ class ShortCodeSearchResultStateProducerTest {
   private val shortCode = "1234567"
   private val fetchingPatientsState = ShortCodeSearchResultState.fetchingPatients(shortCode)
   private val ui = mock<ShortCodeSearchResultUi>()
-  private val uiStateProducer = ShortCodeSearchResultStateProducer(fetchingPatientsState, patientRepository, ui)
+  private val uiStateProducer = ShortCodeSearchResultStateProducer(shortCode, patientRepository, ui, TrampolineSchedulersProvider())
   private val uiStates = uiEventsSubject
       .compose(uiStateProducer)
       .doOnNext { uiStateProducer.states.onNext(it) }

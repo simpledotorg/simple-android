@@ -6,12 +6,15 @@ import io.reactivex.Scheduler
 import org.simple.clinic.plumbing.AsyncOp.IN_FLIGHT
 import org.simple.clinic.plumbing.AsyncOp.SUCCEEDED
 import org.simple.clinic.plumbing.BaseUiChangeProducer
+import org.simple.clinic.util.scheduler.SchedulersProvider
+import javax.inject.Inject
 
 typealias ShortCodeSearchResultUiChange = (ShortCodeSearchResultUi) -> Unit
 
-class ShortCodeSearchResultUiChangeProducer(
-    uiScheduler: Scheduler
-) : BaseUiChangeProducer<ShortCodeSearchResultState, ShortCodeSearchResultUi>(uiScheduler) {
+class ShortCodeSearchResultUiChangeProducer @Inject constructor(
+    uiSchedulerProvider: SchedulersProvider
+) : BaseUiChangeProducer<ShortCodeSearchResultState, ShortCodeSearchResultUi>(uiSchedulerProvider.ui()) {
+
   override fun uiChanges(): ObservableTransformer<ShortCodeSearchResultState, ShortCodeSearchResultUiChange> {
     return ObservableTransformer { states ->
       Observable.merge(

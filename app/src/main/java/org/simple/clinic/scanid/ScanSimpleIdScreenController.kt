@@ -13,7 +13,6 @@ import org.simple.clinic.patient.businessid.Identifier
 import org.simple.clinic.patient.businessid.Identifier.IdentifierType.BpPassport
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.InvalidPassportCode
 import org.simple.clinic.scanid.ScanSimpleIdScreenPassportCodeScanned.ValidPassportCode
-import org.simple.clinic.scanid.ShortCodeValidationResult.NotEqualToRequiredLength
 import org.simple.clinic.scanid.ShortCodeValidationResult.Success
 import org.simple.clinic.util.None
 import org.simple.clinic.util.filterAndUnwrapJust
@@ -135,8 +134,9 @@ class ScanSimpleIdScreenController @Inject constructor(
         .share()
 
     val showValidationErrors = shortCodes
-        .filter { it.validate() != Success }
-        .map { { ui: Ui -> ui.showShortCodeValidationError(NotEqualToRequiredLength) } }
+        .map { it.validate() }
+        .filter { it != Success }
+        .map { { ui: Ui -> ui.showShortCodeValidationError(it) } }
 
     val openPatientSearchScreenChanges = shortCodes
         .filter { it.validate() == Success }

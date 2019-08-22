@@ -24,9 +24,9 @@
   <androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:layout_marginEnd="8dp"
-    android:layout_marginStart="8dp"
+    android:layout_marginBottom="@dimen/spacing_16"
+    android:layout_marginEnd="@dimen/spacing_16"
+    android:layout_marginStart="@dimen/spacing_16"
     android:background="@color/white100"
     app:layout_constraintBottom_toBottomOf="@+id/qrCodeScannerView"
     app:layout_constraintEnd_toEndOf="@+id/qrCodeScannerView"
@@ -35,16 +35,30 @@
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
+      android:layout_marginTop="@dimen/spacing_16"
+      android:layout_marginBottom="@dimen/spacing_16"
       android:orientation="vertical">
+
+      <TextView
+        android:text="@string/scansimpleid_type_bp_passport_number"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
+        style="@style/Clinic.V2.TextAppearance.H6.Grey0" />
 
       <EditText
         android:id="@+id/shortCodeText"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/spacing_128"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textAlignment="center"
         android:ems="10"
         android:hint="@string/scansimpleid_hint_short_code"
+        android:maxLength="7"
         android:imeOptions="actionSearch"
+        android:textSize="@dimen/textsize_20"
         android:inputType="number" />
 
       <TextView
@@ -52,11 +66,13 @@
         style="@style/Clinic.V2.TextAppearance.TextInputLayoutError"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/spacing_8"
-        android:layout_marginTop="@dimen/spacing_8"
+        android:layout_marginBottom="@dimen/spacing_4"
+        android:layout_marginTop="@dimen/spacing_4"
         android:gravity="center_horizontal"
         android:visibility="gone"
         tools:text="@string/scansimpleid_shortcode_error"
+        android:layout_marginStart="@dimen/spacing_8"
+        android:layout_marginEnd="@dimen/spacing_8"
         tools:visibility="visible" />
     </LinearLayout>
   </androidx.cardview.widget.CardView>
